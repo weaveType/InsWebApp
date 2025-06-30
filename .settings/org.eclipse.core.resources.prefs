@@ -5,5 +5,6 @@ encoding//src/main/resources/inswave/message/message-common_en.properties=UTF-8
 encoding//src/main/resources/inswave/message/message-common_ko.properties=UTF-8
 encoding//src/main/resources/inswave/properties/elfw.properties=UTF-8
 encoding//src/main/webapp=UTF-8
+encoding//src/main/webapp/ui/corporate/test1.xml=UTF-8
 encoding//src/test/java=UTF-8
 encoding/install=UTF-8
