@@ -1,0 +1,384 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ev="http://www.w3.org/2001/xml-events"
+    xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
+    <head meta_screenName="공고관리 대시보드">
+        <w2:type>COMPONENT</w2:type>
+        <w2:buildDate/>
+        <w2:MSA/>
+        <xf:model>
+            <w2:dataCollection baseNode="map"/>
+            <w2:workflowCollection/>
+        </xf:model>
+        <w2:layoutInfo/>
+        <w2:publicInfo method=""/>
+        <style type="text/css"><![CDATA[
+            /* 전체 레이아웃 */
+            .sub_contents {
+                padding: 30px;
+                background: linear-gradient(to bottom, #f8f9fa, #ffffff);
+                min-height: 100vh;
+            }
+            
+            /* 타이틀 섹션 */
+            .dashboard-header {
+                margin-bottom: 40px;
+                text-align: center;
+            }
+            
+            .main-title {
+                font-size: 36px;
+                font-weight: 700;
+                color: #2c3e50;
+                margin-bottom: 10px;
+            }
+            
+            .sub-title {
+                font-size: 18px;
+                color: #7f8c8d;
+                font-weight: 400;
+            }
+            
+            /* 통계 카드 스타일 */
+            .stats-container {
+                display: flex;
+                gap: 20px;
+                margin-bottom: 40px;
+            }
+            
+            .stat-card {
+                flex: 1;
+                background: white;
+                border-radius: 16px;
+                padding: 28px;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+                transition: all 0.3s ease;
+                border: 1px solid #e3e6ea;
+            }
+            
+            .stat-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+            }
+            
+            .stat-icon {
+                width: 56px;
+                height: 56px;
+                border-radius: 12px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 28px;
+                margin-bottom: 16px;
+            }
+            
+            .stat-icon.blue { background: #e3f2fd; }
+            .stat-icon.green { background: #e8f5e9; }
+            .stat-icon.orange { background: #fff3e0; }
+            .stat-icon.purple { background: #f3e5f5; }
+            
+            .stat-value {
+                font-size: 32px;
+                font-weight: 700;
+                color: #1a2332;
+                margin-bottom: 8px;
+            }
+            
+            .stat-label {
+                font-size: 16px;
+                color: #64748b;
+                font-weight: 500;
+            }
+            
+            /* 채용공고 관리 섹션 */
+            .recruitment-section {
+                background: white;
+                border-radius: 16px;
+                padding: 32px;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+                margin-bottom: 40px;
+                border: 1px solid #e3e6ea;
+            }
+            
+            .section-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 24px;
+            }
+            
+            .section-title {
+                font-size: 24px;
+                font-weight: 600;
+                color: #1a2332;
+            }
+            
+            .btn-primary {
+                background: linear-gradient(135deg, #4e7cff, #3364ff);
+                color: white;
+                border: none;
+                padding: 12px 28px;
+                border-radius: 10px;
+                font-size: 16px;
+                font-weight: 600;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                box-shadow: 0 4px 15px rgba(78, 124, 255, 0.25);
+            }
+            
+            .btn-primary:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 20px rgba(78, 124, 255, 0.35);
+            }
+            
+            /* Quick Actions 카드 */
+            .quick-actions {
+                display: flex;
+                gap: 24px;
+                margin-top: 40px;
+            }
+            
+            .action-card {
+                flex: 1;
+                background: white;
+                border-radius: 16px;
+                padding: 36px 28px;
+                text-align: center;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+                border: 1px solid #e3e6ea;
+                cursor: pointer;
+                transition: all 0.3s ease;
+            }
+            
+            .action-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+                border-color: #4e7cff;
+            }
+            
+            .action-icon {
+                width: 80px;
+                height: 80px;
+                margin: 0 auto 24px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 40px;
+                border-radius: 50%;
+                background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            }
+            
+            .action-card:nth-child(1) .action-icon {
+                background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            }
+            
+            .action-card:nth-child(2) .action-icon {
+                background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+            }
+            
+            .action-card:nth-child(3) .action-icon {
+                background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+            }
+            
+            .action-card:nth-child(4) .action-icon {
+                background: linear-gradient(135deg, #f3e5f5, #e1bee7);
+            }
+            
+            .action-title {
+                font-size: 20px;
+                font-weight: 600;
+                color: #1a2332;
+                margin-bottom: 12px;
+            }
+            
+            .action-desc {
+                font-size: 14px;
+                color: #64748b;
+                margin-bottom: 24px;
+                line-height: 1.6;
+            }
+            
+            .btn-secondary {
+                background: #f1f5f9;
+                color: #475569;
+                border: none;
+                padding: 10px 24px;
+                border-radius: 8px;
+                font-size: 14px;
+                font-weight: 600;
+                cursor: pointer;
+                transition: all 0.3s ease;
+            }
+            
+            .btn-secondary:hover {
+                background: #e2e8f0;
+                transform: translateY(-1px);
+            }
+            
+            /* 반응형 디자인 */
+            @media (max-width: 1200px) {
+                .stats-container, .quick-actions {
+                    flex-wrap: wrap;
+                }
+                
+                .stat-card, .action-card {
+                    flex: 0 0 calc(50% - 12px);
+                }
+            }
+            
+            @media (max-width: 768px) {
+                .stat-card, .action-card {
+                    flex: 0 0 100%;
+                }
+            }
+        ]]></style>
+        <script lazy="false" type="text/javascript"><![CDATA[
+scwin.onpageload = function() {
+    // 페이지 로드 시 초기화
+    scwin.initializeDashboard();
+};
+
+// 대시보드 초기화
+scwin.initializeDashboard = function() {
+    // 통계 데이터 로드 (실제 환경에서는 서버에서 가져옴)
+    scwin.loadStatistics();
+};
+
+// 통계 데이터 로드
+scwin.loadStatistics = function() {
+    // 샘플 데이터 설정
+    tbx_totalApplicants.setValue("247");
+    tbx_activeJobs.setValue("12");
+    tbx_pendingInterview.setValue("38");
+    tbx_finalAccepted.setValue("15");
+};
+
+// 새 공고 작성 버튼 클릭
+scwin.btn_newJob_onclick = function(e) {
+    $p.url("create_posting.xml");
+};
+
+// 채용 통계 클릭
+scwin.grp_quickAnalytics_onclick = function(e) {
+    // 통계 페이지로 이동
+    alert("채용 통계 페이지로 이동합니다.");
+    $p.url("RecruitmentStatistics.xml");
+};
+
+// 인재 스카우트 클릭
+scwin.grp_quickScout_onclick = function(e) {
+    // scout.xml로 이동
+     $p.url("scout.xml");
+};
+
+
+
+scwin.btn_create_posting_onclick = function (e) {
+
+};
+
+scwin.btn_recruitment_statistics_onclick = function (e) {
+    $p.url("RecruitmentStatistics.xml");
+};
+]]></script>
+    </head>
+    <body ev:onpageload="scwin.onpageload">
+        <xf:group class="sub_contents" id="">
+            <!-- 헤더 섹션 -->
+            <xf:group class="dashboard-header" id="">
+                <w2:textbox id="" label="채용관리 대시보드" class="main-title"></w2:textbox>
+                <w2:textbox id="" label="우리 회사의 채용현황을 한눈에 확인하세요" class="sub-title"></w2:textbox>
+            </xf:group>
+            
+            <!-- 통계 카드 섹션 -->
+            <xf:group class="stats-container" id="">
+                <!-- 총 지원자 -->
+                <xf:group class="stat-card" id="">
+                    <xf:group class="stat-icon blue" id="">
+                        <w2:span label="👥"></w2:span>
+                    </xf:group>
+                    <w2:textbox id="tbx_totalApplicants" label="0" class="stat-value"></w2:textbox>
+                    <w2:textbox id="" label="총 지원자" class="stat-label"></w2:textbox>
+                </xf:group>
+                
+                <!-- 활성 공고 -->
+                <xf:group class="stat-card" id="">
+                    <xf:group class="stat-icon green" id="">
+                        <w2:span label="📋"></w2:span>
+                    </xf:group>
+                    <w2:textbox id="tbx_activeJobs" label="0" class="stat-value"></w2:textbox>
+                    <w2:textbox id="" label="활성 공고" class="stat-label"></w2:textbox>
+                </xf:group>
+                
+                <!-- 면접 대기 -->
+                <xf:group class="stat-card" id="">
+                    <xf:group class="stat-icon orange" id="">
+                        <w2:span label="⏰"></w2:span>
+                    </xf:group>
+                    <w2:textbox id="tbx_pendingInterview" label="0" class="stat-value"></w2:textbox>
+                    <w2:textbox id="" label="면접 대기" class="stat-label"></w2:textbox>
+                </xf:group>
+                
+                <!-- 최종 합격 -->
+                <xf:group class="stat-card" id="">
+                    <xf:group class="stat-icon purple" id="">
+                        <w2:span label="✅"></w2:span>
+                    </xf:group>
+                    <w2:textbox id="tbx_finalAccepted" label="0" class="stat-value"></w2:textbox>
+                    <w2:textbox id="" label="최종 합격" class="stat-label"></w2:textbox>
+                </xf:group>
+            </xf:group>
+            
+            <!-- 채용공고 관리 섹션 -->
+            <xf:group class="recruitment-section" id="">
+                <xf:group class="section-header" id="">
+                    <w2:textbox id="" label="채용공고 관리" class="section-title"></w2:textbox>
+                    <xf:trigger id="btn_newJob" type="button" class="btn-primary" ev:onclick="scwin.btn_newJob_onclick">
+                        <xf:label><![CDATA[➕ 새 공고 작성]]></xf:label>
+                    </xf:trigger>
+                </xf:group>
+                <w2:textbox id="" label="현재 진행 중인 채용공고를 관리하고 새로운 공고를 작성할 수 있습니다." 
+                    style="color:#64748b;font-size:14px;"></w2:textbox>
+            </xf:group>
+            
+            <!-- Quick Actions 영역 -->
+            <xf:group class="quick-actions" id="">
+                <!-- 새 공고 작성 카드 -->
+                <xf:group class="action-card" id="grp_quickNewJob" ev:onclick="scwin.grp_quickNewJob_onclick">
+                    <xf:group class="action-icon" id="">
+                        <w2:span label="📝"></w2:span>
+                    </xf:group>
+                    <w2:textbox id="" label="새 공고 작성" class="action-title"></w2:textbox>
+                    <w2:textbox id="" label="새로운 채용공고를 작성하고 게시하세요" class="action-desc"></w2:textbox>
+                    <xf:trigger id="btn_create_posting" type="button" class="btn-secondary" ev:onclick="scwin.btn_newJob_onclick">
+                        <xf:label><![CDATA[공고 작성하기]]></xf:label>
+                    </xf:trigger>
+                </xf:group>
+                
+                <!-- 채용 통계 카드 -->
+                <xf:group class="action-card" id="grp_quickAnalytics" ev:onclick="scwin.grp_quickAnalytics_onclick">
+                    <xf:group class="action-icon" id="">
+                        <w2:span label="📊"></w2:span>
+                    </xf:group>
+                    <w2:textbox id="" label="채용 통계" class="action-title"></w2:textbox>
+                    <w2:textbox id="" label="채용 현황과 성과를 분석해보세요" class="action-desc"></w2:textbox>
+                    <xf:trigger id="btn_recruitment_statistics" type="button" class="btn-secondary" ev:onclick="scwin.grp_quickAnalytics_onclick">
+                        <xf:label><![CDATA[통계 보기]]></xf:label>
+                    </xf:trigger>
+                </xf:group>
+                
+                <!-- 인재 스카우트 카드 -->
+                <xf:group class="action-card" id="grp_quickScout" ev:onclick="scwin.grp_quickScout_onclick">
+                    <xf:group class="action-icon" id="">
+                        <w2:span label="🔍"></w2:span>
+                    </xf:group>
+                    <w2:textbox id="" label="인재 스카우트" class="action-title"></w2:textbox>
+                    <w2:textbox id="" label="우수한 인재를 발굴하고 스카우트하세요" class="action-desc"></w2:textbox>
+                    <xf:trigger id="" type="button" class="btn-secondary">
+                        <xf:label><![CDATA[스카우트 하기]]></xf:label>
+                    </xf:trigger>
+                </xf:group>
+            </xf:group>
+        </xf:group>
+    </body>
+</html>

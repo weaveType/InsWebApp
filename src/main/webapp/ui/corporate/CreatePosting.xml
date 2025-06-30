@@ -1,0 +1,566 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ev="http://www.w3.org/2001/xml-events"
+    xmlns:w2="http://www.inswave.com/websquare" 
+    xmlns:xf="http://www.w3.org/2002/xforms">
+    
+    <head meta_screenName="회사 메인페이지">
+        <w2:type>COMPONENT</w2:type>
+        <w2:buildDate/>
+        <w2:MSA/>
+        <xf:model>
+            <w2:dataCollection baseNode="map"/>
+            <w2:workflowCollection/>
+        </xf:model>
+        <w2:layoutInfo/>
+        <w2:publicInfo method=""/>
+        
+        <style type="text/css"><![CDATA[
+            /* 전체 컨테이너 스타일 */
+            .main-container {
+                background-color: #ffffff;
+                min-height: 100vh;
+                padding: 40px 20px;
+                max-width: 500px;
+                margin: 0 auto;
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            }
+            
+            /* 페이지 제목 스타일 */
+            .page-title {
+                text-align: center;
+                margin-bottom: 60px;
+            }
+            
+            .main-title {
+                font-size: 28px;
+                font-weight: 700;
+                color: #333;
+                margin: 0;
+                letter-spacing: -0.5px;
+            }
+            
+            .page-subtitle {
+                font-size: 16px;
+                color: #666;
+                margin: 8px 0 0 0;
+                letter-spacing: -0.2px;
+            }
+            
+            /* 섹션 스타일 */
+            .form-section {
+                background-color: #ffffff;
+                border-radius: 16px;
+                padding: 30px 24px;
+                margin-bottom: 32px;
+                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+                border: 1px solid #f1f3f4;
+            }
+            
+            .section-title {
+                font-size: 20px;
+                font-weight: 700;
+                color: #333;
+                margin-bottom: 32px;
+                letter-spacing: -0.4px;
+            }
+            
+            /* 폼 그룹 스타일 */
+            .form-group {
+                margin-bottom: 32px;
+                position: relative;
+            }
+            
+            .form-group.half {
+                flex: 0 0 calc(50% - 10px);
+            }
+            
+            .form-row {
+                display: flex;
+                gap: 20px;
+                margin-bottom: 20px;
+                align-items: flex-start;
+            }
+            
+            .form-label {
+                display: block;
+                font-size: 16px;
+                font-weight: 600;
+                color: #333;
+                margin-bottom: 12px;
+                letter-spacing: -0.3px;
+            }
+            
+            /* 입력 필드 스타일 */
+            .form-input {
+                width: 100%;
+                height: 56px;
+                padding: 0 16px;
+                border: 2px solid #e5e7eb;
+                border-radius: 12px;
+                font-size: 16px;
+                color: #333;
+                background-color: #ffffff;
+                transition: all 0.2s ease;
+                box-sizing: border-box;
+            }
+            
+            .form-input:focus {
+                outline: none;
+                border-color: #3b82f6;
+                box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+            }
+            
+            .form-input::placeholder {
+                color: #9ca3af;
+                font-weight: 400;
+            }
+            
+            /* 선택 박스 스타일 */
+            .form-select {
+                width: 100% !important;
+                height: 56px !important;
+                padding: 0 16px !important;
+                border: 2px solid #e5e7eb !important;
+                border-radius: 12px !important;
+                font-size: 16px !important;
+                color: #333 !important;
+                background-color: #ffffff !important;
+                background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e") !important;
+                background-position: right 16px center !important;
+                background-repeat: no-repeat !important;
+                background-size: 16px !important;
+                appearance: none !important;
+                cursor: pointer !important;
+                transition: all 0.2s ease !important;
+                box-sizing: border-box !important;
+            }
+            
+            .form-select:focus {
+                outline: none !important;
+                border-color: #3b82f6 !important;
+                box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+            }
+            
+            /* AutoComplete 스타일 */
+            .w2-autocomplete-container {
+                width: 100% !important;
+            }
+            
+            .w2-autocomplete-container input {
+                width: 100% !important;
+                height: 56px !important;
+                padding: 0 16px !important;
+                border: 2px solid #e5e7eb !important;
+                border-radius: 12px !important;
+                font-size: 16px !important;
+                color: #333 !important;
+                background-color: #ffffff !important;
+                transition: all 0.2s ease !important;
+                box-sizing: border-box !important;
+            }
+            
+            .w2-autocomplete-container input:focus {
+                outline: none !important;
+                border-color: #3b82f6 !important;
+                box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+            }
+            
+            /* 체크 콤보박스 스타일 */
+            .w2-checkcombobox-container {
+                width: 100% !important;
+            }
+            
+            .w2-checkcombobox-container .w2-checkcombobox-input {
+                width: 100% !important;
+                height: 56px !important;
+                padding: 0 16px !important;
+                border: 2px solid #e5e7eb !important;
+                border-radius: 12px !important;
+                font-size: 16px !important;
+                color: #333 !important;
+                background-color: #ffffff !important;
+                transition: all 0.2s ease !important;
+                box-sizing: border-box !important;
+            }
+            
+            /* 텍스트 영역 스타일 */
+            .form-textarea {
+                width: 100%;
+                min-height: 120px;
+                padding: 16px;
+                border: 2px solid #e5e7eb;
+                border-radius: 12px;
+                font-size: 16px;
+                color: #333;
+                background-color: #ffffff;
+                font-family: inherit;
+                resize: vertical;
+                transition: all 0.2s ease;
+                box-sizing: border-box;
+            }
+            
+            .form-textarea:focus {
+                outline: none;
+                border-color: #3b82f6;
+                box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+            }
+            
+            .form-textarea::placeholder {
+                color: #9ca3af;
+                font-weight: 400;
+            }
+            
+            /* 버튼 그리드 스타일 */
+            .button-grid {
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+                gap: 12px;
+                margin: 20px 0;
+            }
+            
+            .personality-btn {
+                padding: 16px 12px;
+                border: 2px solid #e5e7eb;
+                background: #ffffff;
+                border-radius: 12px;
+                cursor: pointer;
+                text-align: center;
+                font-size: 14px;
+                font-weight: 600;
+                color: #4b5563;
+                transition: all 0.2s ease;
+                position: relative;
+                width: 100%;
+                min-width: 80px;  
+                min-height: 48px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            
+            .personality-btn:hover {
+                border-color: #3b82f6;
+                background-color: #f8fafc;
+            }
+            
+            .personality-btn.selected {
+                background-color: #3b82f6;
+                color: white;
+                border-color: #3b82f6;
+            }
+            
+            /* 도움말 텍스트 */
+            .help-text {
+                font-size: 14px;
+                color: #6b7280;
+                margin-top: 8px;
+                line-height: 1.5;
+            }
+            
+            /* 버튼 스타일 */
+            .button-container {
+                display: flex;
+                gap: 12px;
+                margin-top: 60px;
+                padding: 0 4px;
+            }
+            
+            .btn-cancel {
+                flex: 1;
+                height: 56px;
+                border: 2px solid #e5e7eb;
+                border-radius: 12px;
+                background-color: #ffffff;
+                color: #6b7280;
+                font-size: 16px;
+                font-weight: 600;
+                cursor: pointer;
+                transition: all 0.2s ease;
+            }
+            
+            .btn-cancel:hover {
+                border-color: #d1d5db;
+                color: #374151;
+            }
+            
+            .btn-primary {
+                flex: 1;
+                height: 56px;
+                border: none;
+                border-radius: 12px;
+                background-color: #3b82f6;
+                color: #ffffff;
+                font-size: 16px;
+                font-weight: 600;
+                cursor: pointer;
+                transition: all 0.2s ease;
+            }
+            
+            .btn-primary:hover {
+                background-color: #2563eb;
+            }
+            
+            .btn-primary:disabled {
+                background-color: #e5e7eb;
+                color: #9ca3af;
+                cursor: not-allowed;
+            }
+            
+            /* 반응형 디자인 */
+            @media (max-width: 480px) {
+                .main-container {
+                    padding: 20px 16px;
+                }
+                
+                .main-title {
+                    font-size: 24px;
+                }
+                
+                .form-section {
+                    padding: 24px 20px;
+                    margin-bottom: 24px;
+                }
+                
+                .button-grid {
+                    grid-template-columns: 1fr;
+                }
+            }
+        ]]></style>
+        
+        <script lazy="false" type="text/javascript"><![CDATA[
+scwin.onpageload = function () {
+
+};
+
+scwin.personality_btn_onclick = function (e) {
+    // 성향 버튼 선택 토글
+    var btn = e.target;
+    if (btn.classList.contains('selected')) {
+        btn.classList.remove('selected');
+    } else {
+        btn.classList.add('selected');
+    }
+};
+
+scwin.btn_create_posting_onclick = function (e) {
+
+    $p.url("RecruitmentDashboard.xml");
+};
+
+scwin.main_logo_onclick = function (e) {
+    // 로고 클릭 이벤트
+};
+
+scwin.btn_cancel_posting_onclick = function (e) {
+    if (window.history.length > 1) {
+        window.history.back();          
+    } else {
+        $p.url("RecruitmentDashboard.xml");
+    }
+};
+]]></script>
+    </head>
+    <body ev:onpageload="scwin.onpageload">
+        <xf:group class="main-container">
+            <!-- 페이지 제목 -->
+            <xf:group class="page-title">
+                <w2:textbox class="main-title" label="공고 등록"></w2:textbox>
+                <w2:textbox class="page-subtitle" label="우리 회사의 문화와 원하는 인재상을 입력해주세요"></w2:textbox>
+            </xf:group>
+
+            <!-- 개발 환경 및 기술 스택 섹션 -->
+            <section class="form-section">
+                <w2:textbox class="section-title" label="개발 환경 및 기술 스택"></w2:textbox>
+
+                <xf:group class="form-group">
+                    <w2:textbox class="form-label" label="주요 기술 스택"></w2:textbox>
+                    <w2:autoComplete editType="select" style="width:100%;height:56px;" submenuSize="auto" search="start"
+                        allOption="" chooseOption="" ref="">
+                        <w2:choices>
+                            <w2:item>
+                                <w2:label><![CDATA[Java]]></w2:label>
+                                <w2:value><![CDATA[java]]></w2:value>
+                            </w2:item>
+                            <w2:item>
+                                <w2:label><![CDATA[JavaScript]]></w2:label>
+                                <w2:value><![CDATA[javascript]]></w2:value>
+                            </w2:item>
+                            <w2:item>
+                                <w2:label><![CDATA[Python]]></w2:label>
+                                <w2:value><![CDATA[python]]></w2:value>
+                            </w2:item>
+                            <w2:item>
+                                <w2:label><![CDATA[React]]></w2:label>
+                                <w2:value><![CDATA[react]]></w2:value>
+                            </w2:item>
+                            <w2:item>
+                                <w2:label><![CDATA[Node.js]]></w2:label>
+                                <w2:value><![CDATA[nodejs]]></w2:value>
+                            </w2:item>
+                        </w2:choices>
+                    </w2:autoComplete>
+                </xf:group>
+
+                <xf:group class="form-group">
+                    <w2:textbox class="form-label" label="개발 도구"></w2:textbox>
+                    <w2:autoComplete allOption="" chooseOption="" editType="select" ref="" search="start"
+                        style="width:100%;height:56px;" submenuSize="auto">
+                        <w2:choices>
+                            <w2:item>
+                                <w2:label><![CDATA[IntelliJ IDEA]]></w2:label>
+                                <w2:value><![CDATA[intellij]]></w2:value>
+                            </w2:item>
+                            <w2:item>
+                                <w2:label><![CDATA[Visual Studio Code]]></w2:label>
+                                <w2:value><![CDATA[vscode]]></w2:value>
+                            </w2:item>
+                            <w2:item>
+                                <w2:label><![CDATA[Eclipse]]></w2:label>
+                                <w2:value><![CDATA[eclipse]]></w2:value>
+                            </w2:item>
+                        </w2:choices>
+                    </w2:autoComplete>
+                </xf:group>
+            </section>
+
+            <!-- 원하는 인재상 섹션 -->
+            <section class="form-section">
+                <w2:textbox class="section-title" label="원하는 인재상"></w2:textbox>
+
+                <xf:group class="form-group">
+                    <w2:textbox class="form-label" label="선호하는 성향 유형 (최대 4개 선택 가능)"></w2:textbox>
+
+                    <xf:group class="button-grid">
+                        <!-- BR** -->
+                        <xf:trigger class="personality-btn" type="button" ev:onclick="scwin.personality_btn_onclick">
+                            <xf:label><![CDATA[BRSD]]></xf:label>
+                        </xf:trigger>
+                        <xf:trigger class="personality-btn" type="button" ev:onclick="scwin.personality_btn_onclick">
+                            <xf:label><![CDATA[BRSF]]></xf:label>
+                        </xf:trigger>
+                        <xf:trigger class="personality-btn" type="button" ev:onclick="scwin.personality_btn_onclick">
+                            <xf:label><![CDATA[BRTD]]></xf:label>
+                        </xf:trigger>
+                        <xf:trigger class="personality-btn" type="button" ev:onclick="scwin.personality_btn_onclick">
+                            <xf:label><![CDATA[BRTF]]></xf:label>
+                        </xf:trigger>
+
+                        <!-- BI** -->
+                        <xf:trigger class="personality-btn" type="button" ev:onclick="scwin.personality_btn_onclick">
+                            <xf:label><![CDATA[BISD]]></xf:label>
+                        </xf:trigger>
+                        <xf:trigger class="personality-btn" type="button" ev:onclick="scwin.personality_btn_onclick">
+                            <xf:label><![CDATA[BISF]]></xf:label>
+                        </xf:trigger>
+                        <xf:trigger class="personality-btn" type="button" ev:onclick="scwin.personality_btn_onclick">
+                            <xf:label><![CDATA[BITD]]></xf:label>
+                        </xf:trigger>
+                        <xf:trigger class="personality-btn" type="button" ev:onclick="scwin.personality_btn_onclick">
+                            <xf:label><![CDATA[BITF]]></xf:label>
+                        </xf:trigger>
+
+                        <!-- AR** -->
+                        <xf:trigger class="personality-btn" type="button" ev:onclick="scwin.personality_btn_onclick">
+                            <xf:label><![CDATA[ARSD]]></xf:label>
+                        </xf:trigger>
+                        <xf:trigger class="personality-btn" type="button" ev:onclick="scwin.personality_btn_onclick">
+                            <xf:label><![CDATA[ARSF]]></xf:label>
+                        </xf:trigger>
+                        <xf:trigger class="personality-btn" type="button" ev:onclick="scwin.personality_btn_onclick">
+                            <xf:label><![CDATA[ARTD]]></xf:label>
+                        </xf:trigger>
+                        <xf:trigger class="personality-btn" type="button" ev:onclick="scwin.personality_btn_onclick">
+                            <xf:label><![CDATA[ARTF]]></xf:label>
+                        </xf:trigger>
+
+                        <!-- AI** -->
+                        <xf:trigger class="personality-btn" type="button" ev:onclick="scwin.personality_btn_onclick">
+                            <xf:label><![CDATA[AISD]]></xf:label>
+                        </xf:trigger>
+                        <xf:trigger class="personality-btn" type="button" ev:onclick="scwin.personality_btn_onclick">
+                            <xf:label><![CDATA[AISF]]></xf:label>
+                        </xf:trigger>
+                        <xf:trigger class="personality-btn" type="button" ev:onclick="scwin.personality_btn_onclick">
+                            <xf:label><![CDATA[AITD]]></xf:label>
+                        </xf:trigger>
+                        <xf:trigger class="personality-btn" type="button" ev:onclick="scwin.personality_btn_onclick">
+                            <xf:label><![CDATA[AITF]]></xf:label>
+                        </xf:trigger>
+                    </xf:group>
+
+                    <w2:textbox class="help-text" label="우리 팀과 잘 맞을 것 같은 성향 유형을 선택해주세요."></w2:textbox>
+                </xf:group>
+
+                <xf:group class="form-row">
+                    <xf:group class="form-group half">
+                        <w2:textbox class="form-label" label="선호 경력"></w2:textbox>
+                        <xf:select1 class="form-select" chooseOption="경력 선택" appearance="minimal">
+                            <xf:choices>
+                                <xf:item>
+                                    <xf:label><![CDATA[상관없음]]></xf:label>
+                                    <xf:value><![CDATA[any]]></xf:value>
+                                </xf:item>
+                                <xf:item>
+                                    <xf:label><![CDATA[신입 (0년)]]></xf:label>
+                                    <xf:value><![CDATA[new]]></xf:value>
+                                </xf:item>
+                                <xf:item>
+                                    <xf:label><![CDATA[1-2년]]></xf:label>
+                                    <xf:value><![CDATA[junior]]></xf:value>
+                                </xf:item>
+                                <xf:item>
+                                    <xf:label><![CDATA[3-5년]]></xf:label>
+                                    <xf:value><![CDATA[mid]]></xf:value>
+                                </xf:item>
+                                <xf:item>
+                                    <xf:label><![CDATA[5년 이상]]></xf:label>
+                                    <xf:value><![CDATA[senior]]></xf:value>
+                                </xf:item>
+                            </xf:choices>
+                        </xf:select1>
+                    </xf:group>
+
+                    <xf:group class="form-group half">
+                        <w2:textbox class="form-label" label="예상 연봉범위"></w2:textbox>
+                        <xf:select1 class="form-select" chooseOption="연봉 선택" appearance="minimal">
+                            <xf:choices>
+                                <xf:item>
+                                    <xf:label><![CDATA[2,500만원 미만]]></xf:label>
+                                    <xf:value><![CDATA[under25]]></xf:value>
+                                </xf:item>
+                                <xf:item>
+                                    <xf:label><![CDATA[2,500-3,500만원]]></xf:label>
+                                    <xf:value><![CDATA[25to35]]></xf:value>
+                                </xf:item>
+                                <xf:item>
+                                    <xf:label><![CDATA[3,500-5,000만원]]></xf:label>
+                                    <xf:value><![CDATA[35to50]]></xf:value>
+                                </xf:item>
+                                <xf:item>
+                                    <xf:label><![CDATA[5,000만원 이상]]></xf:label>
+                                    <xf:value><![CDATA[over50]]></xf:value>
+                                </xf:item>
+                            </xf:choices>
+                        </xf:select1>
+                    </xf:group>
+                </xf:group>
+
+                <xf:group class="form-group">
+                    <w2:textbox class="form-label" label="원하는 인재상 상세 설명"></w2:textbox>
+                    <xf:textarea class="form-textarea" placeholder="우리 회사에서 함께 일하고 싶은 개발자의 특징이나 역량을 구체적으로 설명해주세요."></xf:textarea>
+                </xf:group>
+
+                <!-- 버튼 그룹 -->
+                <xf:group class="button-container">
+                    <xf:trigger class="btn-cancel" type="button" id="btn_cancel_posting" ev:onclick="scwin.btn_cancel_posting_onclick">
+                        <xf:label><![CDATA[취소]]></xf:label>
+                    </xf:trigger>
+                    <xf:trigger class="btn-primary" type="button" id="btn_create_posting" ev:onclick="scwin.btn_create_posting_onclick">
+                        <xf:label><![CDATA[공고 등록하기]]></xf:label>
+                    </xf:trigger>
+                </xf:group>
+            </section>
+        </xf:group>
+    </body>
+</html>
