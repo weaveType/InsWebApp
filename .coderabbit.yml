@@ -1,0 +1,32 @@
+# .coderabbit.yaml ─ 한국어 리뷰 + assertive 프로필
+language: ko-KR
+
+tone_instructions: |
+  모든 리뷰 코멘트는 공손하고 간결한 한국어로 작성해주세요.
+  - 핵심 문제를 먼저 지적하고, 개선 방법을 구체적으로 제안합니다.
+  - 불필요한 직역을 피하고 자연스러운 개발자 한국어 용어를 사용합니다.
+
+early_access: false
+enable_free_tier: true
+
+reviews:
+  profile: assertive           # 리뷰 어조
+  high_level_summary: true     # PR 요약 활성화
+  request_changes_workflow: false
+
+  # ─── 자동 리뷰 설정 ───
+  auto_review:
+    enabled: true              # PR 생성·커밋마다 자동 리뷰
+    drafts: false              # Draft PR까지 리뷰하려면 true
+    base_branches:             # 자동 리뷰를 적용할 타깃 브랜치
+      - "main"                 # 기본 브랜치
+      - "dev"                  # dev 브랜치
+      # 필요 시 브랜치를 더 추가하거나 "*"로 전체 허용
+      # - "release/*"
+
+chat:
+  auto_reply: true             # 리뷰 댓글에 자동 응답
+
+# 원격 공통 설정 사용 시 주석 해제
+# remote_config:
+#   url: "https://your-config-location/.coderabbit.yaml"
