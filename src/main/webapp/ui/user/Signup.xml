@@ -1,0 +1,429 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ev="http://www.w3.org/2001/xml-events"
+    xmlns:w2="http://www.inswave.com/websquare" 
+    xmlns:xf="http://www.w3.org/2002/xforms">
+    
+    <head meta_screenName="weaveType 회원가입">
+        <w2:type>COMPONENT</w2:type>
+        <w2:buildDate/>
+        <w2:MSA/>
+        <xf:model>
+            <w2:dataCollection baseNode="map">
+                <w2:dataMap baseNode="map" id="dma_signup">
+                    <w2:keyInfo>
+                        <w2:key id="이름" name="이름" dataType="text"></w2:key>
+                        <w2:key id="생일" name="생일" dataType="text"></w2:key>
+                        <w2:key id="성별" name="성별" dataType="text"></w2:key>
+                        <w2:key id="휴대폰번호" name="휴대폰번호" dataType="text"></w2:key>
+                        <w2:key id="이메일" name="이메일" dataType="text"></w2:key>
+                        <w2:key id="비밀번호" name="비밀번호" dataType="text"></w2:key>
+                        <w2:key id="이메일수신동의" name="이메일수신동의" dataType="text"></w2:key>
+                        <w2:key id="이메일인증여부" name="이메일인증여부" dataType="text" value="true"></w2:key>
+                    </w2:keyInfo>
+                </w2:dataMap>
+            </w2:dataCollection>
+        </xf:model>
+        <w2:layoutInfo/>
+        <w2:publicInfo method=""/>
+        
+        <script type="text/javascript"><![CDATA[
+            scwin.onpageload = function() {
+                console.log("회원가입 페이지 로드됨");
+            };
+            
+            // 이메일 인증 버튼 클릭
+            scwin.btn_email_verify_onclick = function() {
+                var email = dma_signup.get("이메일");
+                if (!email || email.trim() === "") {
+                    alert("이메일을 입력해주세요.");
+                    return;
+                }
+                
+                if (!scwin.validateEmail(email)) {
+                    alert("올바른 이메일 형식을 입력해주세요.");
+                    return;
+                }
+                
+                // 플로우 확인을 위해 간단히 인증 완료 처리
+                alert("인증번호가 발송되었습니다. 이메일을 확인해주세요.");
+                dma_signup.set("이메일인증여부", "true");
+                document.getElementById("verify_success").style.display = "block";
+            };
+            
+            // 가입완료 버튼 클릭 - $p.url 방식 사용
+            scwin.btn_signup_onclick = function() {
+                // 플로우 확인을 위해 간단한 검증만 수행 (이메일 인증 확인 제거)
+                var name = dma_signup.get("이름");
+                var email = dma_signup.get("이메일");
+                
+                if (!name || name.trim() === "") {
+                    alert("이름을 입력해주세요.");
+                    return;
+                }
+                
+                if (!email || email.trim() === "") {
+                    alert("이메일을 입력해주세요.");
+                    return;
+                }
+                
+                // 이메일 인증 여부 확인 로직 제거 - view 테스트를 위해
+                console.log("회원가입 정보:", {
+                    이름: dma_signup.get("이름"),
+                    이메일: dma_signup.get("이메일"),
+                    성별: dma_signup.get("성별")
+                });
+                
+                alert("회원가입이 완료되었습니다!");
+                $p.url("SignupComplete.xml");
+            };
+            
+            // 이메일 유효성 검사
+            scwin.validateEmail = function(email) {
+                var re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return re.test(email);
+            };
+            
+            // 성별 선택
+            scwin.selectGender = function(gender) {
+                console.log("성별 선택:", gender);
+                dma_signup.set("성별", gender);
+                
+                setTimeout(function() {
+                    var genderOptions = document.querySelectorAll('.gender-option');
+                    if (genderOptions && genderOptions.length > 0) {
+                        genderOptions.forEach(function(el) {
+                            if (el && el.classList) {
+                                el.classList.remove('selected');
+                            }
+                        });
+                    }
+                    
+                    var selectedBtn = document.getElementById('gender_' + gender);
+                    if (selectedBtn && selectedBtn.classList) {
+                        selectedBtn.classList.add('selected');
+                    }
+                }, 50);
+            };
+        ]]></script>
+        
+        <style type="text/css"><![CDATA[
+            .main-container {
+                background-color: #ffffff;
+                min-height: 100vh;
+                font-family: "Malgun Gothic", "맑은 고딕", sans-serif;
+                display: flex;
+                flex-direction: column;
+            }
+            
+            .header {
+                width: 100%;
+                height: 70px;
+                background-color: #ffffff;
+                border-bottom: 1px solid #e0e0e0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                position: relative;
+            }
+            
+            .header-logo {
+                font-size: 24px;
+                font-weight: bold;
+                color: #333;
+                letter-spacing: 2px;
+            }
+            
+            .content-area {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: flex-start;
+                padding: 40px 20px;
+                text-align: center;
+                max-width: 600px;
+                margin: 0 auto;
+            }
+            
+            .main-title {
+                font-size: 32px;
+                font-weight: bold;
+                color: #333;
+                margin-bottom: 8px;
+            }
+            
+            .sub-title {
+                font-size: 16px;
+                color: #666;
+                margin-bottom: 40px;
+            }
+            
+            .signup-form {
+                width: 100%;
+                max-width: 500px;
+            }
+            
+            .form-group {
+                margin-bottom: 20px;
+                text-align: left;
+            }
+            
+            .form-label {
+                display: block;
+                font-size: 14px;
+                font-weight: 600;
+                color: #333;
+                margin-bottom: 8px;
+            }
+            
+            .form-input {
+                width: 100%;
+                padding: 16px;
+                border: 2px solid #e0e0e0;
+                border-radius: 8px;
+                font-size: 16px;
+                transition: border-color 0.3s ease;
+                box-sizing: border-box;
+            }
+            
+            .form-input:focus {
+                outline: none;
+                border-color: #007bff;
+            }
+            
+            .phone-input-group {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+            
+            .phone-prefix {
+                background-color: #f0f0f0;
+                padding: 16px 12px;
+                border: 2px solid #e0e0e0;
+                border-radius: 8px;
+                font-size: 16px;
+                color: #666;
+                min-width: 80px;
+                text-align: center;
+            }
+            
+            .gender-options {
+                display: flex;
+                gap: 12px;
+            }
+            
+            .gender-option {
+                flex: 1;
+                padding: 16px;
+                border: 2px solid #e0e0e0;
+                border-radius: 8px;
+                background-color: #ffffff;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                text-align: center;
+                font-size: 16px;
+                font-weight: 500;
+            }
+            
+            .gender-option:hover {
+                border-color: #007bff;
+                background-color: #f0f8ff;
+            }
+            
+            .gender-option.selected {
+                border-color: #007bff;
+                background-color: #007bff;
+                color: white;
+            }
+            
+            .email-input-group {
+                display: flex;
+                gap: 8px;
+            }
+            
+            .email-input-group .form-input {
+                flex: 1;
+            }
+            
+            .btn-verify {
+                background-color: #007bff;
+                color: white;
+                border: none;
+                padding: 16px 20px;
+                border-radius: 8px;
+                font-size: 14px;
+                font-weight: 600;
+                cursor: pointer;
+                transition: background-color 0.3s ease;
+                white-space: nowrap;
+            }
+            
+            .btn-verify:hover {
+                background-color: #0056b3;
+            }
+            
+            .verify-success {
+                display: none;
+                margin-top: 12px;
+                padding: 12px;
+                background-color: #e3f2fd;
+                border: 1px solid #007bff;
+                border-radius: 8px;
+                color: #0056b3;
+                font-size: 14px;
+                font-weight: 600;
+            }
+            
+            .agreement-section {
+                margin: 30px 0;
+                padding: 20px;
+                background-color: #f8f9fa;
+                border-radius: 12px;
+                text-align: left;
+            }
+            
+            .agreement-item {
+                display: flex;
+                align-items: flex-start;
+                gap: 12px;
+                margin-bottom: 16px;
+            }
+            
+            .agreement-item:last-child {
+                margin-bottom: 0;
+            }
+            
+            .agreement-checkbox {
+                width: 20px;
+                height: 20px;
+                margin-top: 2px;
+            }
+            
+            .agreement-text {
+                font-size: 14px;
+                color: #333;
+                line-height: 1.5;
+            }
+            
+            .btn-signup {
+                width: 100%;
+                background-color: #007bff;
+                color: white;
+                border: none;
+                padding: 18px;
+                border-radius: 8px;
+                font-size: 18px;
+                font-weight: 600;
+                cursor: pointer;
+                transition: background-color 0.3s ease;
+                margin-top: 20px;
+            }
+            
+            .btn-signup:hover {
+                background-color: #0056b3;
+            }
+            
+            .info-text {
+                font-size: 12px;
+                color: #666;
+                margin-top: 8px;
+                line-height: 1.4;
+            }
+        ]]></style>
+    </head>
+    
+    <body ev:onpageload="scwin.onpageload">
+        <xf:group class="main-container">
+            <xf:group class="header">
+                <xf:image src="/InsWebApp/images/ws5/weaveTypeLogo.png" class="header-logo" style="height: 40px; width: auto;"></xf:image>
+            </xf:group>
+            
+            <xf:group class="content-area">
+                <w2:textbox class="main-title" label="환영합니다!" tagname="h1"></w2:textbox>
+                <w2:textbox class="sub-title" label="당신의 취업을 진심으로 응원해요" tagname="p"></w2:textbox>
+                
+                <xf:group class="signup-form">
+                    <xf:group class="form-group">
+                        <w2:textbox class="form-label" label="이름" tagname="label"></w2:textbox>
+                        <xf:input class="form-input" ref="data:dma_signup.이름" placeholder="이름을 입력하세요"></xf:input>
+                    </xf:group>
+                    
+                    <xf:group class="form-group">
+                        <w2:textbox class="form-label" label="생년월일 (예시: 20010508)" tagname="label"></w2:textbox>
+                        <xf:input class="form-input" ref="data:dma_signup.생일" placeholder="생년월일 8자리 (예: 20010508)"></xf:input>
+                    </xf:group>
+                    
+                    <xf:group class="form-group">
+                        <w2:textbox class="form-label" label="성별" tagname="label"></w2:textbox>
+                        <xf:group class="gender-options">
+                            <xf:trigger class="gender-option" id="gender_남자" ev:onclick="scwin.selectGender('남자')">
+                                <xf:label>남자</xf:label>
+                            </xf:trigger>
+                            <xf:trigger class="gender-option" id="gender_여자" ev:onclick="scwin.selectGender('여자')">
+                                <xf:label>여자</xf:label>
+                            </xf:trigger>
+                        </xf:group>
+                    </xf:group>
+                    
+                    <xf:group class="form-group">
+                        <w2:textbox class="form-label" label="휴대폰번호" tagname="label"></w2:textbox>
+                        <xf:group class="phone-input-group">
+                            <w2:textbox class="phone-prefix" label="+82" tagname="div"></w2:textbox>
+                            <xf:input class="form-input" ref="data:dma_signup.휴대폰번호" placeholder="휴대폰 번호 입력"></xf:input>
+                        </xf:group>
+                        <w2:textbox class="info-text" label="* 입사지원, 채용담당자 등과 연락을 위해 사용됩니다." tagname="div"></w2:textbox>
+                    </xf:group>
+                    
+                    <xf:group class="form-group">
+                        <w2:textbox class="form-label" label="이메일" tagname="label"></w2:textbox>
+                        <xf:group class="email-input-group">
+                            <xf:input class="form-input" ref="data:dma_signup.이메일" placeholder="이메일 입력"></xf:input>
+                            <xf:trigger class="btn-verify" ev:onclick="scwin.btn_email_verify_onclick">
+                                <xf:label>중복확인</xf:label>
+                            </xf:trigger>
+                        </xf:group>
+                        
+                        <xf:group class="verify-success" id="verify_success">
+                            <w2:textbox label="✓ 이메일 인증이 완료되었습니다." tagname="div"></w2:textbox>
+                        </xf:group>
+                    </xf:group>
+                    
+                    <xf:group class="form-group">
+                        <w2:textbox class="form-label" label="비밀번호" tagname="label"></w2:textbox>
+                        <xf:secret class="form-input" ref="data:dma_signup.비밀번호" placeholder="비밀번호 입력"></xf:secret>
+                        <w2:textbox class="info-text" label="8-16자, 영문 대/소문자, 숫자, 특수문자 중 3개 이상 사용" tagname="div"></w2:textbox>
+                    </xf:group>
+                    
+                    <xf:group class="agreement-section">
+                        <xf:group class="agreement-item">
+                            <xf:input type="checkbox" class="agreement-checkbox" style="width: auto;"></xf:input>
+                            <xf:group style="flex: 1;">
+                                <w2:textbox class="agreement-text" label="서비스 이용약관 동의 (필수)" tagname="div"></w2:textbox>
+                            </xf:group>
+                        </xf:group>
+                        
+                        <xf:group class="agreement-item">
+                            <xf:input type="checkbox" class="agreement-checkbox" style="width: auto;"></xf:input>
+                            <xf:group style="flex: 1;">
+                                <w2:textbox class="agreement-text" label="개인정보 수집 및 이용 동의 (필수)" tagname="div"></w2:textbox>
+                            </xf:group>
+                        </xf:group>
+                        
+                        <xf:group class="agreement-item">
+                            <xf:input type="checkbox" class="agreement-checkbox" style="width: auto;"></xf:input>
+                            <xf:group style="flex: 1;">
+                                <w2:textbox class="agreement-text" label="마케팅 정보 수신 동의 (선택)" tagname="div"></w2:textbox>
+                            </xf:group>
+                        </xf:group>
+                    </xf:group>
+                    
+                    <xf:trigger class="btn-signup" ev:onclick="scwin.btn_signup_onclick">
+                        <xf:label>가입 완료</xf:label>
+                    </xf:trigger>
+                </xf:group>
+            </xf:group>
+        </xf:group>
+    </body>
+</html> 
