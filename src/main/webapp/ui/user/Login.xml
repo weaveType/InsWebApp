@@ -1,0 +1,352 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+    xmlns:ev="http://www.w3.org/2001/xml-events" 
+    xmlns:w2="http://www.inswave.com/websquare" 
+    xmlns:xf="http://www.w3.org/2002/xforms">
+    <head>
+        <w2:type>COMPONENT</w2:type>
+        <w2:buildDate/>
+        <w2:MSA/>
+        <xf:model>
+            <w2:dataCollection baseNode="map">
+                <w2:dataMap baseNode="map" id="dmp_loginInfo">
+                    <w2:keyInfo>
+                        <w2:key dataType="text" name="user_id" id="userId"></w2:key>
+                        <w2:key dataType="text" name="user_pw" id="userPw"></w2:key>
+                        <w2:key dataType="text" name="remember_me" id="rememberMe"></w2:key>
+                    </w2:keyInfo>
+                </w2:dataMap>
+            </w2:dataCollection>
+            <w2:workflowCollection/>
+        </xf:model>
+        <w2:layoutInfo/>
+        <w2:publicInfo method=""/>
+        
+        <style type="text/css"><![CDATA[
+            /* 팝업용 로그인 스타일 */
+            .login_container {
+                width: 400px;
+                padding: 30px;
+                background: white;
+                border-radius: 8px;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            }
+            
+            .login_header {
+                text-align: center;
+                margin-bottom: 30px;
+            }
+            
+            .login_header .welcome {
+                font-size: 28px;
+                font-weight: bold;
+                color: #333;
+                margin-bottom: 8px;
+            }
+            
+            .login_info {
+                font-size: 14px;
+                color: #666;
+            }
+            
+            .login_contents ul {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+            }
+            
+            .login_contents li {
+                margin-bottom: 20px;
+            }
+            
+            .tit {
+                display: block;
+                font-size: 14px;
+                font-weight: 500;
+                color: #333;
+                margin-bottom: 8px;
+            }
+            
+            .login_contents input {
+                width: 100%;
+                height: 45px;
+                padding: 0 15px;
+                border: 1px solid #ddd;
+                border-radius: 6px;
+                font-size: 14px;
+                box-sizing: border-box;
+            }
+            
+            .login_contents input:focus {
+                outline: none;
+                border-color: #007bff;
+                box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+            }
+            
+            .login_form {
+                position: relative;
+            }
+            
+            .btn_login_password {
+                position: absolute;
+                right: 15px;
+                top: 50%;
+                transform: translateY(-50%);
+                color: #666;
+                text-decoration: none;
+                font-size: 12px;
+                cursor: pointer;
+            }
+            
+            .grp_password {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-top: 10px;
+            }
+            
+            .grp_password select {
+                font-size: 12px;
+            }
+            
+            .link_password {
+                color: #007bff;
+                text-decoration: none;
+                font-size: 12px;
+            }
+            
+            .link_password:hover {
+                text-decoration: underline;
+            }
+            
+            .login_btn {
+                margin: 30px 0 20px 0;
+            }
+            
+            .btn_login {
+                width: 100%;
+                height: 45px;
+                background-color: #007bff;
+                color: white;
+                border: none;
+                border-radius: 6px;
+                font-size: 16px;
+                font-weight: 500;
+                cursor: pointer;
+                transition: background-color 0.2s;
+            }
+            
+            .btn_login:hover {
+                background-color: #0056b3;
+            }
+            
+            .login_account {
+                text-align: center;
+                font-size: 14px;
+                color: #666;
+                margin-bottom: 15px;
+            }
+            
+            .btn_signup {
+                width: 100%;
+                height: 45px;
+                background-color: white;
+                color: #007bff;
+                border: 2px solid #007bff;
+                border-radius: 6px;
+                font-size: 16px;
+                font-weight: 500;
+                cursor: pointer;
+                transition: all 0.2s;
+            }
+            
+            .btn_signup:hover {
+                background-color: #007bff;
+                color: white;
+            }
+            
+            .link_account {
+                color: #007bff;
+                text-decoration: none;
+                font-weight: 500;
+                margin-left: 5px;
+            }
+            
+            .link_account:hover {
+                text-decoration: underline;
+            }
+        ]]></style>
+        
+        <script lazy="false" type="text/javascript"><![CDATA[
+scwin.onpageload = function() {
+    // 페이지 로드 시 초기화
+    scwin.initializeLogin();
+};
+
+scwin.initializeLogin = function() {
+    // Remember me 체크박스 초기화
+    var rememberMe = localStorage.getItem("rememberMe");
+    if (rememberMe === "true") {
+        chk_remember.setValue("Y");
+        var savedId = localStorage.getItem("savedUserId");
+        if (savedId) {
+            inp_userId.setValue(savedId);
+        }
+    }
+};
+
+scwin.btn_login_onclick = function(e) {
+    var userId = inp_userId.getValue();
+    var userPw = inp_userPw.getValue();
+    
+    // 유효성 검사
+    if (!userId || userId.trim() === "") {
+        alert("아이디를 입력해주세요.");
+        inp_userId.focus();
+        return;
+    }
+    
+    if (!userPw || userPw.trim() === "") {
+        alert("비밀번호를 입력해주세요.");
+        inp_userPw.focus();
+        return;
+    }
+    
+    // Remember me 처리
+    var rememberMe = chk_remember.getValue();
+    if (rememberMe === "Y") {
+        localStorage.setItem("rememberMe", "true");
+        localStorage.setItem("savedUserId", userId);
+    } else {
+        localStorage.removeItem("rememberMe");
+        localStorage.removeItem("savedUserId");
+    }
+    
+    // 로그인 처리 (실제 환경에서는 서버 통신)
+    scwin.processLogin(userId, userPw);
+};
+
+scwin.processLogin = function(userId, userPw) {
+    // 실제 환경에서는 서버로 로그인 요청
+    // 여기서는 간단한 검증 예시
+    if (userId === "admin" && userPw === "1234") {
+        alert("로그인 성공!");
+        // 팝업 닫기 또는 메인 페이지로 이동
+        if (window.opener) {
+            window.opener.location.reload();
+            window.close();
+        }
+    } else {
+        alert("아이디 또는 비밀번호가 올바르지 않습니다.");
+    }
+};
+
+scwin.btn_password_show_onclick = function(e) {
+    var passwordField = inp_userPw;
+    var currentType = passwordField.getElement().type;
+    
+    if (currentType === "password") {
+        passwordField.getElement().type = "text";
+        btn_password_show.setLabel("비밀번호 숨김");
+    } else {
+        passwordField.getElement().type = "password";
+        btn_password_show.setLabel("비밀번호 보기");
+    }
+};
+
+scwin.link_forgot_onclick = function(e) {
+    alert("비밀번호 재설정 기능은 준비 중입니다.");
+};
+
+scwin.link_signup_onclick = function(e) {
+    // 회원가입 페이지 팝업 열기
+    var options = {
+        id: 'signup_popup',
+        type: 'browser',
+        width: '600px',
+        height: '700px',
+        modal: true,
+        center: true
+    };
+    
+    // 실제 환경에서는 회원가입 페이지 열기
+    $p.openPopup('signup.xml', options);
+    
+    // 또는 현재 팝업 닫고 회원가입으로 이동
+    // window.close();
+};
+
+// Enter 키 이벤트 처리
+scwin.inp_userPw_onkeypress = function(e) {
+    if (e.keyCode === 13) { // Enter key
+        scwin.btn_login_onclick();
+    }
+};
+]]></script>
+    </head>
+    
+    <body ev:onpageload="scwin.onpageload">
+        <xf:group class="login_container" id="grp_loginContainer">
+            <xf:group class="login_header" id="grp_loginHeader">
+                <w2:textbox class="welcome" id="txt_welcome" label="WELCOME" />
+                <w2:textbox class="login_info" id="txt_loginInfo" label="SIGN IN TO INSWAVE" />
+            </xf:group>
+            
+            <xf:group class="login_contents" id="grp_loginContents">
+                <xf:group tagname="ul" id="grp_loginForm">
+                    <xf:group tagname="li" id="grp_userId">
+                        <w2:textbox class="tit" for="inp_userId" id="lbl_userId" label="ID" tagname="label" />
+                        <xf:input id="inp_userId" placeholder="아이디를 입력해주세요." 
+                            ref="data:dmp_loginInfo.userId" adjustMaxLength="false" />
+                    </xf:group>
+                    
+                    <xf:group tagname="li" id="grp_userPw">
+                        <w2:textbox class="tit" for="inp_userPw" id="lbl_userPw" label="Password" tagname="label" />
+                        <xf:group class="login_form" id="grp_passwordForm">
+                            <xf:input id="inp_userPw" type="password" placeholder="비밀번호를 입력해주세요." 
+                                ref="data:dmp_loginInfo.userPw" adjustMaxLength="false" 
+                                ev:onkeypress="scwin.inp_userPw_onkeypress" />
+                            <w2:anchor class="btn_login_password" id="btn_password_show" outerDiv="false" 
+                                ev:onclick="scwin.btn_password_show_onclick">
+                                <xf:label>비밀번호 보기</xf:label>
+                            </w2:anchor>
+                        </xf:group>
+                        
+                        <xf:group class="grp_password" id="grp_passwordOptions">
+                            <xf:select appearance="full" id="chk_remember" ref="data:dmp_loginInfo.rememberMe" 
+                                selectedindex="-1">
+                                <xf:choices>
+                                    <xf:item>
+                                        <xf:label>Remember me</xf:label>
+                                        <xf:value>Y</xf:value>
+                                    </xf:item>
+                                </xf:choices>
+                            </xf:select>
+                            <w2:anchor class="link_password" id="link_forgot" outerDiv="false" 
+                                ev:onclick="scwin.link_forgot_onclick">
+                                <xf:label>비밀번호를 잊어버렸나요?</xf:label>
+                            </w2:anchor>
+                        </xf:group>
+                    </xf:group>
+                </xf:group>
+                
+                <xf:group class="login_btn" id="grp_loginBtn">
+                    <xf:trigger class="btn_login" id="btn_login" type="button" 
+                        ev:onclick="scwin.btn_login_onclick">
+                        <xf:label>로그인</xf:label>
+                    </xf:trigger>
+                </xf:group>
+                
+                <xf:group class="login_account" id="grp_loginAccount">
+                </xf:group>
+                
+                <xf:group class="signup_btn" id="grp_signupBtn">
+                    <xf:trigger class="btn_signup" id="btn_signup" type="button" 
+                        ev:onclick="scwin.link_signup_onclick">
+                        <xf:label>회원가입</xf:label>
+                    </xf:trigger>
+                </xf:group>
+            </xf:group>
+        </xf:group>
+    </body>
+</html>
