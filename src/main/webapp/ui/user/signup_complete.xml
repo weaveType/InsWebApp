@@ -4,7 +4,7 @@
     xmlns:w2="http://www.inswave.com/websquare" 
     xmlns:xf="http://www.w3.org/2002/xforms">
     
-    <head meta_screenName="JOBDA 회원가입 완료">
+    <head meta_screenName="weaveType 회원가입 완료">
         <w2:type>COMPONENT</w2:type>
         <w2:buildDate/>
         <w2:MSA/>
@@ -212,7 +212,7 @@
                     <w2:textbox class="success-checkmark" label="🎉" tagname="div"></w2:textbox>
                 </xf:group>
                 
-                <w2:textbox class="celebration-text" label="JOBDA 회원가입을 축하합니다!" tagname="div"></w2:textbox>
+                <w2:textbox class="celebration-text" label="weaveType 회원가입을 축하합니다!" tagname="div"></w2:textbox>
                 
                 <xf:group style="margin-bottom: 20px;">
                     <w2:textbox class="main-title" label="쉽고 빠르게 선호정보를 입력하고" tagname="div"></w2:textbox>
