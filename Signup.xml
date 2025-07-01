@@ -19,7 +19,7 @@
                         <w2:key id="이메일" name="이메일" dataType="text"></w2:key>
                         <w2:key id="비밀번호" name="비밀번호" dataType="text"></w2:key>
                         <w2:key id="이메일수신동의" name="이메일수신동의" dataType="text"></w2:key>
-                        <w2:key id="이메일인증여부" name="이메일인증여부" dataType="text" value="false"></w2:key>
+                        <w2:key id="이메일인증여부" name="이메일인증여부" dataType="text" value="true"></w2:key>
                     </w2:keyInfo>
                 </w2:dataMap>
             </w2:dataCollection>
@@ -45,82 +45,37 @@
                     return;
                 }
                 
+                // 플로우 확인을 위해 간단히 인증 완료 처리
                 alert("인증번호가 발송되었습니다. 이메일을 확인해주세요.");
-                document.getElementById("email_verify_section").style.display = "block";
+                dma_signup.set("이메일인증여부", "true");
+                document.getElementById("verify_success").style.display = "block";
             };
             
-            // 인증번호 확인
-            scwin.btn_verify_confirm_onclick = function() {
-                var verifyCode = document.getElementById("verify_code").value;
-                if (!verifyCode || verifyCode.trim() === "") {
-                    alert("인증번호를 입력해주세요.");
-                    return;
-                }
-                
-                if (verifyCode === "123456") {
-                    alert("이메일 인증이 완료되었습니다.");
-                    dma_signup.set("이메일인증여부", "true");
-                    document.getElementById("email_verify_section").style.display = "none";
-                    document.getElementById("verify_success").style.display = "block";
-                } else {
-                    alert("인증번호가 일치하지 않습니다.");
-                }
-            };
-            
-            // 가입완료 버튼 클릭
+            // 가입완료 버튼 클릭 - $p.url 방식 사용
             scwin.btn_signup_onclick = function() {
-                if (!scwin.validateForm()) {
-                    return;
-                }
-                
-                if (dma_signup.get("이메일인증여부") !== "true") {
-                    alert("이메일 인증을 먼저 완료해주세요.");
-                    return;
-                }
-                
-                alert("회원가입이 완료되었습니다!");
-                location.href = '/websquare/websquare.html?w2xPath=/ui/user/signup_complete.xml';
-            };
-            
-            // 폼 검증
-            scwin.validateForm = function() {
+                // 플로우 확인을 위해 간단한 검증만 수행 (이메일 인증 확인 제거)
                 var name = dma_signup.get("이름");
-                var birth = dma_signup.get("생일");
-                var phone = dma_signup.get("휴대폰번호");
                 var email = dma_signup.get("이메일");
-                var password = dma_signup.get("비밀번호");
                 
                 if (!name || name.trim() === "") {
                     alert("이름을 입력해주세요.");
-                    return false;
-                }
-                
-                if (!birth || birth.trim() === "") {
-                    alert("생년월일을 입력해주세요.");
-                    return false;
-                }
-                
-                if (!phone || phone.trim() === "") {
-                    alert("휴대폰번호를 입력해주세요.");
-                    return false;
+                    return;
                 }
                 
                 if (!email || email.trim() === "") {
                     alert("이메일을 입력해주세요.");
-                    return false;
+                    return;
                 }
                 
-                if (!password || password.trim() === "") {
-                    alert("비밀번호를 입력해주세요.");
-                    return false;
-                }
+                // 이메일 인증 여부 확인 로직 제거 - view 테스트를 위해
+                console.log("회원가입 정보:", {
+                    이름: dma_signup.get("이름"),
+                    이메일: dma_signup.get("이메일"),
+                    성별: dma_signup.get("성별")
+                });
                 
-                if (password.length < 8) {
-                    alert("비밀번호는 8자리 이상 입력해주세요.");
-                    return false;
-                }
-                
-                return true;
+                alert("회원가입이 완료되었습니다!");
+                $p.url("SignupComplete.xml");
             };
             
             // 이메일 유효성 검사
@@ -134,7 +89,6 @@
                 console.log("성별 선택:", gender);
                 dma_signup.set("성별", gender);
                 
-                // 안전한 DOM 조작
                 setTimeout(function() {
                     var genderOptions = document.querySelectorAll('.gender-option');
                     if (genderOptions && genderOptions.length > 0) {
@@ -148,9 +102,6 @@
                     var selectedBtn = document.getElementById('gender_' + gender);
                     if (selectedBtn && selectedBtn.classList) {
                         selectedBtn.classList.add('selected');
-                        console.log("성별 선택 완료:", gender);
-                    } else {
-                        console.log("성별 버튼을 찾을 수 없음:", 'gender_' + gender);
                     }
                 }, 50);
             };
@@ -238,7 +189,7 @@
             
             .form-input:focus {
                 outline: none;
-                border-color: #2196F3;
+                border-color: #007bff;
             }
             
             .phone-input-group {
@@ -277,13 +228,13 @@
             }
             
             .gender-option:hover {
-                border-color: #2196F3;
-                background-color: #f3f9ff;
+                border-color: #007bff;
+                background-color: #f0f8ff;
             }
             
             .gender-option.selected {
-                border-color: #2196F3;
-                background-color: #2196F3;
+                border-color: #007bff;
+                background-color: #007bff;
                 color: white;
             }
             
@@ -297,7 +248,7 @@
             }
             
             .btn-verify {
-                background-color: #2196F3;
+                background-color: #007bff;
                 color: white;
                 border: none;
                 padding: 16px 20px;
@@ -310,32 +261,17 @@
             }
             
             .btn-verify:hover {
-                background-color: #1976D2;
-            }
-            
-            .email-verify-section {
-                display: none;
-                margin-top: 12px;
-                padding: 16px;
-                background-color: #f3f9ff;
-                border: 1px solid #e0f0ff;
-                border-radius: 8px;
-            }
-            
-            .verify-input-group {
-                display: flex;
-                gap: 8px;
-                margin-top: 8px;
+                background-color: #0056b3;
             }
             
             .verify-success {
                 display: none;
                 margin-top: 12px;
                 padding: 12px;
-                background-color: #e8f4fd;
-                border: 1px solid #2196F3;
+                background-color: #e3f2fd;
+                border: 1px solid #007bff;
                 border-radius: 8px;
-                color: #1976D2;
+                color: #0056b3;
                 font-size: 14px;
                 font-weight: 600;
             }
@@ -371,19 +307,13 @@
                 line-height: 1.5;
             }
             
-            .agreement-detail {
-                color: #666;
-                margin-top: 4px;
-                font-size: 13px;
-            }
-            
             .btn-signup {
                 width: 100%;
-                background-color: #2196F3;
+                background-color: #007bff;
                 color: white;
                 border: none;
                 padding: 18px;
-                border-radius: 12px;
+                border-radius: 8px;
                 font-size: 18px;
                 font-weight: 600;
                 cursor: pointer;
@@ -392,7 +322,7 @@
             }
             
             .btn-signup:hover {
-                background-color: #1976D2;
+                background-color: #0056b3;
             }
             
             .info-text {
@@ -407,7 +337,7 @@
     <body ev:onpageload="scwin.onpageload">
         <xf:group class="main-container">
             <xf:group class="header">
-                <xf:image src="/InsWebApp/images/ws5/weaveTypeLogo.png" style="width: 120px; height: 32px; object-fit: contain;" id="weaveTypeLogo" class="header-logo"></xf:image>
+                <xf:image src="/InsWebApp/images/ws5/weaveTypeLogo.png" class="header-logo" style="height: 40px; width: auto;"></xf:image>
             </xf:group>
             
             <xf:group class="content-area">
@@ -455,16 +385,6 @@
                             </xf:trigger>
                         </xf:group>
                         
-                        <xf:group class="email-verify-section" id="email_verify_section">
-                            <w2:textbox label="인증번호가 발송되었습니다." tagname="div" style="font-size: 14px; color: #00c851; font-weight: 600;"></w2:textbox>
-                            <xf:group class="verify-input-group">
-                                <xf:input class="form-input" id="verify_code" placeholder="인증번호 입력"></xf:input>
-                                <xf:trigger class="btn-verify" ev:onclick="scwin.btn_verify_confirm_onclick">
-                                    <xf:label>확인</xf:label>
-                                </xf:trigger>
-                            </xf:group>
-                        </xf:group>
-                        
                         <xf:group class="verify-success" id="verify_success">
                             <w2:textbox label="✓ 이메일 인증이 완료되었습니다." tagname="div"></w2:textbox>
                         </xf:group>
@@ -477,13 +397,6 @@
                     </xf:group>
                     
                     <xf:group class="agreement-section">
-                        <xf:group class="agreement-item">
-                            <xf:input type="checkbox" class="agreement-checkbox" style="width: auto;"></xf:input>
-                            <xf:group style="flex: 1;">
-                                <w2:textbox class="agreement-text" label="모든 약관에 동의합니다." tagname="div"></w2:textbox>
-                            </xf:group>
-                        </xf:group>
-                        
                         <xf:group class="agreement-item">
                             <xf:input type="checkbox" class="agreement-checkbox" style="width: auto;"></xf:input>
                             <xf:group style="flex: 1;">
@@ -502,8 +415,6 @@
                             <xf:input type="checkbox" class="agreement-checkbox" style="width: auto;"></xf:input>
                             <xf:group style="flex: 1;">
                                 <w2:textbox class="agreement-text" label="마케팅 정보 수신 동의 (선택)" tagname="div"></w2:textbox>
-                                <w2:textbox class="agreement-detail" label="SMS 수신 동의" tagname="div"></w2:textbox>
-                                <w2:textbox class="agreement-detail" label="이메일 수신 동의" tagname="div"></w2:textbox>
                             </xf:group>
                         </xf:group>
                     </xf:group>

@@ -4,7 +4,7 @@
     xmlns:w2="http://www.inswave.com/websquare" 
     xmlns:xf="http://www.w3.org/2002/xforms">
     
-    <head meta_screenName="희망하는 연봉을 알려주세요">
+    <head meta_screenName="희망 연봉을 알려주세요">
         <w2:type>COMPONENT</w2:type>
         <w2:buildDate/>
         <w2:MSA/>
@@ -22,51 +22,33 @@
         
         <script type="text/javascript"><![CDATA[
             scwin.onpageload = function() {
-                console.log("연봉 선택 페이지 로드됨");
-                
-                // 페이지 로드 후 조금 기다린 후 초기화
-                setTimeout(function() {
-                    scwin.initializePage();
-                }, 100);
+                console.log("희망 연봉 선택 페이지 로드됨");
             };
             
-            scwin.initializePage = function() {
-                // 초기 상태 설정
-                var nextBtn = document.getElementById('btn_next');
-                if (nextBtn) {
-                    nextBtn.classList.remove('enabled');
-                }
-            };
-            
-            // 연봉 선택
             scwin.selectSalary = function(salaryRange) {
                 console.log("선택된 연봉:", salaryRange);
                 dma_salary.set("selectedSalary", salaryRange);
                 
-                // 모든 연봉 옵션 버튼 찾기 (더 안전한 방식)
-                var salaryButtons = document.querySelectorAll('[id^="salary_"]');
-                salaryButtons.forEach(function(btn) {
-                    if (btn.classList) {
-                        btn.classList.remove('selected');
+                // 모든 연봉 옵션에서 selected 클래스 제거
+                var salaryOptions = document.querySelectorAll('.salary-option');
+                if (salaryOptions && salaryOptions.length > 0) {
+                    salaryOptions.forEach(function(el) {
+                        if (el && el.classList) {
+                            el.classList.remove('selected');
+                        }
+                    });
+                }
+                
+                // 선택된 연봉 옵션에 selected 클래스 추가
+                var targetElement = null;
+                salaryOptions.forEach(function(el) {
+                    if (el && el.textContent && el.textContent.includes(salaryRange)) {
+                        targetElement = el;
                     }
                 });
                 
-                // 선택된 버튼 찾기 (ID 매핑 사용)
-                var buttonIdMap = {
-                    '1,500만원 이하': 'salary_1500만원이하',
-                    '2,000만원 이하': 'salary_2000만원이하',
-                    '2,500만원 이하': 'salary_2500만원이하',
-                    '3,000만원 이하': 'salary_3000만원이하',
-                    '3,500만원 이하': 'salary_3500만원이하',
-                    '4,000만원 이하': 'salary_4000만원이하'
-                };
-                
-                var selectedBtnId = buttonIdMap[salaryRange];
-                if (selectedBtnId) {
-                    var selectedBtn = document.getElementById(selectedBtnId);
-                    if (selectedBtn && selectedBtn.classList) {
-                        selectedBtn.classList.add('selected');
-                    }
+                if (targetElement && targetElement.classList) {
+                    targetElement.classList.add('selected');
                 }
                 
                 // 다음 버튼 활성화
@@ -78,22 +60,18 @@
                 console.log("연봉 선택 완료, 다음 버튼 활성화됨");
             };
             
-            // 이전 버튼
+            // 이전 버튼 - $p.url 방식
             scwin.btn_back_onclick = function() {
-                location.href = '/websquare/websquare.html?w2xPath=/ui/user/location_select.xml';
+                console.log("근무지역 선택 페이지로 이동");
+                $p.url("LocationSelect.xml");
             };
             
-            // 다음 버튼
+            // 다음 버튼 - $p.url 방식
             scwin.btn_next_onclick = function() {
+                // 플로우 확인을 위해 검증 완화
                 var selectedSalary = dma_salary.get("selectedSalary");
-                
-                if (!selectedSalary || selectedSalary.trim() === "") {
-                    alert("희망 연봉을 선택해주세요.");
-                    return;
-                }
-                
                 console.log("선택된 연봉:", selectedSalary);
-                location.href = '/websquare/websquare.html?w2xPath=/ui/user/career_input.xml';
+                $p.url("CareerInput.xml");
             };
         ]]></script>
         
@@ -129,7 +107,7 @@
                 bottom: 0;
                 left: 0;
                 height: 4px;
-                background: linear-gradient(90deg, #2196F3 0%, #2196F3 50%, #e0e0e0 50%, #e0e0e0 100%);
+                background: linear-gradient(90deg, #007bff 0%, #007bff 50%, #e0e0e0 50%, #e0e0e0 100%);
                 width: 100%;
             }
             
@@ -148,13 +126,13 @@
             .icon-container {
                 width: 80px;
                 height: 80px;
-                background: linear-gradient(135deg, #2196F3, #64B5F6);
+                background: linear-gradient(135deg, #007bff, #0d6efd);
                 border-radius: 50%;
                 display: flex;
                 align-items: center;
                 justify-content: center;
                 margin-bottom: 30px;
-                box-shadow: 0 4px 20px rgba(0, 200, 81, 0.3);
+                box-shadow: 0 4px 20px rgba(0, 123, 255, 0.3);
             }
             
             .icon {
@@ -193,17 +171,17 @@
             }
             
             .salary-option:hover {
-                border-color: #2196F3;
-                background-color: #f3f9ff;
+                border-color: #007bff;
+                background-color: #f0f8ff;
                 transform: translateY(-2px);
-                box-shadow: 0 4px 12px rgba(33, 150, 243, 0.15);
+                box-shadow: 0 4px 12px rgba(0, 123, 255, 0.15);
             }
             
             .salary-option.selected {
-                border-color: #2196F3;
-                background-color: #2196F3;
+                border-color: #007bff;
+                background-color: #007bff;
                 color: white;
-                box-shadow: 0 4px 20px rgba(33, 150, 243, 0.3);
+                box-shadow: 0 4px 20px rgba(0, 123, 255, 0.3);
             }
             
             .salary-option.selected::after {
@@ -222,10 +200,10 @@
                 justify-content: center;
                 gap: 8px;
                 font-size: 14px;
-                color: #2196F3;
+                color: #007bff;
                 margin-bottom: 40px;
                 padding: 12px 20px;
-                background-color: #e3f2fd;
+                background-color: #f0f8ff;
                 border-radius: 8px;
                 max-width: 500px;
             }
@@ -268,20 +246,22 @@
                 border-radius: 12px;
                 font-size: 16px;
                 font-weight: 600;
-                cursor: not-allowed;
+                cursor: pointer;
                 transition: all 0.3s ease;
+                opacity: 0.6;
             }
             
             .btn-next.enabled {
-                background-color: #2196F3;
+                background-color: #007bff;
                 color: white;
+                opacity: 1;
                 cursor: pointer;
             }
             
             .btn-next.enabled:hover {
-                background-color: #1976D2;
+                background-color: #0056b3;
                 transform: translateY(-2px);
-                box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
+                box-shadow: 0 4px 12px rgba(0, 123, 255, 0.25);
             }
         ]]></style>
     </head>
@@ -289,7 +269,7 @@
     <body ev:onpageload="scwin.onpageload">
         <xf:group class="main-container">
             <xf:group class="header">
-                <xf:image src="/InsWebApp/images/ws5/weaveTypeLogo.png" style="width: 120px; height: 32px; object-fit: contain;" id="weaveTypeLogo" class="header-logo"></xf:image>
+                <xf:image src="/InsWebApp/images/ws5/weaveTypeLogo.png" class="header-logo" style="height: 40px; width: auto;"></xf:image>
                 <xf:group class="header-progress"></xf:group>
             </xf:group>
             
@@ -298,44 +278,39 @@
                     <w2:textbox class="icon" label="💰" tagname="div"></w2:textbox>
                 </xf:group>
                 
-                <w2:textbox class="main-title" label="희망하는 연봉을 알려주세요." tagname="h1"></w2:textbox>
-                
-                <xf:group class="salary-options">
-                    <xf:trigger class="salary-option" id="salary_1500만원이하" ev:onclick="scwin.selectSalary('1,500만원 이하')">
-                        <xf:label>1,500만원 이하</xf:label>
-                    </xf:trigger>
-                    
-                    <xf:trigger class="salary-option" id="salary_2000만원이하" ev:onclick="scwin.selectSalary('2,000만원 이하')">
-                        <xf:label>2,000만원 이하</xf:label>
-                    </xf:trigger>
-                    
-                    <xf:trigger class="salary-option" id="salary_2500만원이하" ev:onclick="scwin.selectSalary('2,500만원 이하')">
-                        <xf:label>2,500만원 이하</xf:label>
-                    </xf:trigger>
-                    
-                    <xf:trigger class="salary-option" id="salary_3000만원이하" ev:onclick="scwin.selectSalary('3,000만원 이하')">
-                        <xf:label>3,000만원 이하</xf:label>
-                    </xf:trigger>
-                    
-                    <xf:trigger class="salary-option" id="salary_3500만원이하" ev:onclick="scwin.selectSalary('3,500만원 이하')">
-                        <xf:label>3,500만원 이하</xf:label>
-                    </xf:trigger>
-                    
-                    <xf:trigger class="salary-option" id="salary_4000만원이하" ev:onclick="scwin.selectSalary('4,000만원 이하')">
-                        <xf:label>4,000만원 이하</xf:label>
-                    </xf:trigger>
-                </xf:group>
+                <w2:textbox class="main-title" label="희망 연봉을 알려주세요" tagname="h1"></w2:textbox>
                 
                 <xf:group class="info-message">
-                    <w2:textbox class="info-icon" label="🔊" tagname="span"></w2:textbox>
-                    <w2:textbox label="정확한 연봉정보와 경력정보를 받아볼 수 있어요." tagname="span"></w2:textbox>
+                    <w2:textbox class="info-icon" label="ℹ️" tagname="span"></w2:textbox>
+                    <w2:textbox label="정확한 매칭을 위해 솔직하게 알려주세요" tagname="span"></w2:textbox>
+                </xf:group>
+                
+                <xf:group class="salary-options">
+                    <xf:trigger class="salary-option" ev:onclick="scwin.selectSalary('2000-2500')">
+                        <xf:label>2,000만원 ~ 2,500만원</xf:label>
+                    </xf:trigger>
+                    
+                    <xf:trigger class="salary-option" ev:onclick="scwin.selectSalary('2500-3000')">
+                        <xf:label>2,500만원 ~ 3,000만원</xf:label>
+                    </xf:trigger>
+                    
+                    <xf:trigger class="salary-option" ev:onclick="scwin.selectSalary('3000-4000')">
+                        <xf:label>3,000만원 ~ 4,000만원</xf:label>
+                    </xf:trigger>
+                    
+                    <xf:trigger class="salary-option" ev:onclick="scwin.selectSalary('4000-5000')">
+                        <xf:label>4,000만원 ~ 5,000만원</xf:label>
+                    </xf:trigger>
+                    
+                    <xf:trigger class="salary-option" ev:onclick="scwin.selectSalary('5000+')">
+                        <xf:label>5,000만원 이상</xf:label>
+                    </xf:trigger>
                 </xf:group>
                 
                 <xf:group class="button-area">
                     <xf:trigger class="btn-back" ev:onclick="scwin.btn_back_onclick">
                         <xf:label>이전</xf:label>
                     </xf:trigger>
-                    
                     <xf:trigger class="btn-next" id="btn_next" ev:onclick="scwin.btn_next_onclick">
                         <xf:label>다음</xf:label>
                     </xf:trigger>
@@ -343,4 +318,4 @@
             </xf:group>
         </xf:group>
     </body>
-</html>
+</html> 
