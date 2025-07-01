@@ -1,0 +1,1088 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ev="http://www.w3.org/2001/xml-events"
+    xmlns:w2="http://www.inswave.com/websquare" 
+    xmlns:xf="http://www.w3.org/2002/xforms">
+    
+    <head meta_screenName="채용공고 상세">
+        <w2:type>COMPONENT</w2:type>
+        <w2:buildDate/>
+        <w2:MSA/>
+        <xf:model>
+            <w2:dataCollection baseNode="map">
+                <w2:dataMap baseNode="map" id="dma_jobDetail">
+                    <w2:keyInfo>
+                        <w2:key id="companyName" name="회사명" dataType="text"></w2:key>
+                        <w2:key id="jobTitle" name="직무명" dataType="text"></w2:key>
+                        <w2:key id="jobDescription" name="직무내용" dataType="text"></w2:key>
+                        <w2:key id="requirements" name="자격요건" dataType="text"></w2:key>
+                        <w2:key id="preferences" name="우대사항" dataType="text"></w2:key>
+                        <w2:key id="benefits" name="혜택" dataType="text"></w2:key>
+                    </w2:keyInfo>
+                </w2:dataMap>
+            </w2:dataCollection>
+        </xf:model>
+        <w2:layoutInfo/>
+        <w2:publicInfo method=""/>
+        
+        <style type="text/css"><![CDATA[
+            /* 기본 설정 */
+            * {
+                box-sizing: border-box;
+            }
+
+            /* 메인페이지와 동일한 기본 스타일 */
+            .main-wrap {
+                width: 100%;
+                background-color: #ffffff;
+                font-family: "Malgun Gothic", "맑은 고딕", sans-serif;
+            }
+
+            /* 헤더 - 완전 반응형 */
+            .header {
+                width: 100%;
+                height: 70px;
+                background-color: #ffffff;
+                border-bottom: 1px solid #e0e0e0;
+                position: relative;
+                padding: 0 min(30px, 4vw);
+            }
+
+            .header-left {
+                float: left;
+                padding-top: 18px;
+                display: flex;
+                align-items: center;
+                gap: 15px;
+            }
+
+            /* 햄버거 메뉴 */
+            .hamburger-menu {
+                width: 24px;
+                height: 24px;
+                cursor: pointer;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                padding: 4px;
+                border-radius: 4px;
+                transition: background-color 0.2s ease;
+            }
+
+            .hamburger-menu:hover {
+                background-color: #f5f5f5;
+            }
+
+            .hamburger-line {
+                width: 16px;
+                height: 2px;
+                background-color: #333;
+                margin: 1px 0;
+                transition: 0.3s;
+                border-radius: 1px;
+            }
+
+            /* 사이드 메뉴 */
+            .side-menu {
+                position: fixed;
+                top: 70px;
+                left: -300px;
+                width: 280px;
+                height: calc(100vh - 70px);
+                background-color: white;
+                box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+                transition: left 0.3s ease;
+                z-index: 1000;
+                overflow-y: auto;
+                padding: 20px;
+            }
+
+            .side-menu.open {
+                left: 0;
+            }
+
+            .side-menu-overlay {
+                position: fixed;
+                top: 70px;
+                left: 0;
+                width: 100%;
+                height: calc(100vh - 70px);
+                background-color: rgba(0,0,0,0.5);
+                display: none;
+                z-index: 999;
+            }
+
+            .side-menu-overlay.open {
+                display: block;
+            }
+
+            .side-menu-title {
+                font-size: 18px;
+                font-weight: bold;
+                color: #333;
+                margin-bottom: 20px;
+                padding-bottom: 15px;
+                border-bottom: 1px solid #e0e0e0;
+            }
+
+            .side-menu-section {
+                margin-bottom: 25px;
+            }
+
+            .side-menu-section-title {
+                font-size: 14px;
+                font-weight: 600;
+                color: #666;
+                margin-bottom: 10px;
+            }
+
+            .side-menu-item {
+                display: block;
+                padding: 12px 16px;
+                margin-bottom: 2px;
+                color: #333;
+                text-decoration: none;
+                border-radius: 6px;
+                transition: background-color 0.2s ease;
+                font-size: 14px;
+            }
+
+            .side-menu-item:hover {
+                background-color: #f8f9fa;
+                color: #007bff;
+            }
+
+            .nav-menu {
+                display: inline-block;
+                vertical-align: middle;
+            }
+
+            .nav-menu xf:image {
+                vertical-align: middle;
+                max-height: 34px;
+            }
+
+            .nav-link {
+                font-size: 14px;
+                color: #333;
+                text-decoration: none;
+                cursor: pointer;
+                margin-right: 20px;
+                vertical-align: middle;
+            }
+
+            .header-right {
+                float: right;
+                padding-top: 18px;
+            }
+
+            .search-container {
+                display: inline-block;
+                background-color: #f5f5f5;
+                border-radius: 20px;
+                padding: 6px 15px;
+                margin-right: 10px;
+                vertical-align: middle;
+            }
+
+            .search-input {
+                border: none;
+                background: transparent;
+                width: 150px;
+                outline: none;
+                font-size: 13px;
+                height: 24px;
+                vertical-align: middle;
+            }
+
+            .search-input::placeholder {
+                color: #999;
+                font-size: 13px;
+            }
+
+            .search-btn {
+                border: none;
+                background: none;
+                cursor: pointer;
+                margin-left: 8px;
+                font-size: 14px;
+                vertical-align: middle;
+            }
+
+            .btn-login {
+                background-color: #fff;
+                border: 1px solid #ddd;
+                padding: 6px 12px;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 12px;
+                margin-right: 8px;
+                height: 32px;
+                vertical-align: middle;
+            }
+
+            .btn-enterprise {
+                background-color: #333;
+                color: #fff;
+                border: none;
+                padding: 6px 12px;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 12px;
+                height: 32px;
+                vertical-align: middle;
+            }
+
+            .clearfix::after {
+                content: "";
+                display: table;
+                clear: both;
+            }
+
+            /* 공고 상세 페이지 - 완전 반응형 컨테이너 */
+            .container {
+                max-width: 1060px;
+                width: 100%;
+                margin: 0 auto;
+                background-color: white;
+                min-height: 100vh;
+                padding: 0 min(30px, 4vw);
+            }
+
+            .main-content {
+                padding: 0;
+                width: 100%;
+            }
+
+            /* 회사 이미지 섹션 - 반응형 그리드 */
+            .company-images {
+                margin: min(40px, 5vw) 0;
+            }
+
+            .image-gallery {
+                display: grid;
+                grid-template-columns: 2fr 1fr 1fr;
+                gap: 8px;
+                height: clamp(250px, 40vw, 300px);
+                width: 100%;
+            }
+
+            .main-image {
+                background: linear-gradient(135deg, #2d3748, #4a5568);
+                border-radius: 6px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: white;
+                font-size: clamp(18px, 3vw, 24px);
+                font-weight: bold;
+            }
+
+            .sub-image {
+                border-radius: 6px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: white;
+                font-weight: bold;
+                font-size: clamp(14px, 2.5vw, 16px);
+                text-align: center;
+                padding: 10px;
+            }
+
+            .sub-image:nth-child(2) {
+                background: linear-gradient(135deg, #6b46c1, #9333ea);
+            }
+
+            .sub-image:nth-child(3) {
+                background: linear-gradient(135deg, #f97316, #ea580c);
+            }
+
+            /* 공고 정보 섹션 */
+            .job-header {
+                padding: min(40px, 5vw) 0;
+                border-bottom: 1px solid #e1e5e9;
+            }
+
+            .job-meta {
+                font-size: clamp(12px, 2vw, 14px);
+                color: #767676;
+                margin-bottom: 8px;
+                line-height: 1.4;
+            }
+
+            .job-title {
+                font-size: clamp(18px, 3.5vw, 22px);
+                font-weight: 600;
+                color: #333;
+                margin-bottom: 20px;
+                line-height: 1.3;
+            }
+
+            .job-actions {
+                display: flex;
+                gap: 12px;
+                align-items: center;
+                flex-wrap: wrap;
+            }
+
+            .btn-apply {
+                background-color: #36f;
+                color: white;
+                border: none;
+                padding: 12px 20px;
+                border-radius: 25px;
+                font-size: clamp(14px, 2vw, 16px);
+                font-weight: 600;
+                cursor: pointer;
+                min-width: 80px;
+                white-space: nowrap;
+            }
+
+            .btn-bookmark {
+                background-color: white;
+                color: #767676;
+                border: 1px solid #e1e5e9;
+                padding: 12px 16px;
+                border-radius: 25px;
+                font-size: clamp(12px, 1.8vw, 14px);
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                white-space: nowrap;
+            }
+
+            /* 공고 내용 섹션 */
+            .job-content {
+                padding: min(40px, 5vw) 0;
+            }
+
+            .content-section {
+                margin-bottom: min(40px, 5vw);
+            }
+
+            .section-title {
+                font-size: clamp(18px, 3vw, 20px);
+                font-weight: 600;
+                color: #333;
+                margin-bottom: 16px;
+            }
+
+            .section-content {
+                color: #333;
+                line-height: 1.7;
+                white-space: pre-wrap;
+                font-size: clamp(14px, 2vw, 16px);
+                word-break: keep-all;
+            }
+
+            /* 태그 - 반응형 */
+            .tags {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 8px;
+                margin: 16px 0;
+            }
+
+            .tag {
+                background-color: #f2f4f6;
+                color: #333;
+                padding: 6px 12px;
+                border-radius: 13px;
+                font-size: clamp(11px, 1.8vw, 13px);
+                font-weight: 500;
+                white-space: nowrap;
+            }
+
+            /* 관련 포지션 섹션 - 완전 반응형 */
+            .related-positions {
+                background-color: #f8f9fa;
+                margin: min(40px, 5vw) calc(-1 * min(30px, 4vw)) 0;
+                padding: min(40px, 5vw) min(30px, 4vw);
+                width: calc(100% + 2 * min(30px, 4vw));
+            }
+
+            .related-title {
+                font-size: clamp(18px, 3vw, 20px);
+                font-weight: 600;
+                color: #333;
+                margin-bottom: 24px;
+                text-align: center;
+            }
+
+            .position-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                gap: 16px;
+                max-width: 1000px;
+                margin: 0 auto;
+            }
+
+            .position-card {
+                background-color: white;
+                border-radius: 8px;
+                padding: 20px;
+                cursor: pointer;
+                transition: transform 0.2s ease, box-shadow 0.2s ease;
+                border: 1px solid #e1e5e9;
+            }
+
+            .position-card:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            }
+
+            .position-header {
+                width: 100%;
+                height: 80px;
+                border-radius: 6px;
+                margin-bottom: 16px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: white;
+                font-weight: 600;
+                font-size: clamp(14px, 2vw, 16px);
+                text-align: center;
+                padding: 10px;
+            }
+
+            .position-company {
+                font-size: clamp(11px, 1.8vw, 13px);
+                color: #767676;
+                margin-bottom: 4px;
+                line-height: 1.4;
+            }
+
+            .position-title {
+                font-size: clamp(14px, 2.2vw, 16px);
+                font-weight: 600;
+                color: #333;
+                margin-bottom: 8px;
+                line-height: 1.3;
+                word-break: keep-all;
+            }
+
+            .position-location {
+                font-size: clamp(11px, 1.8vw, 13px);
+                color: #767676;
+                line-height: 1.4;
+            }
+
+            /* 태블릿 반응형 */
+            @media (max-width: 1024px) {
+                .header {
+                    padding: 0 20px;
+                }
+                
+                .nav-link {
+                    margin-right: 15px;
+                    font-size: 13px;
+                }
+                
+                .search-input {
+                    width: 120px;
+                }
+
+                .container {
+                    padding: 0 20px;
+                }
+
+                .image-gallery {
+                    grid-template-columns: 1fr 1fr;
+                    height: auto;
+                    gap: 12px;
+                }
+
+                .main-image {
+                    grid-column: 1 / -1;
+                    height: 200px;
+                }
+
+                .sub-image {
+                    height: 150px;
+                }
+
+                .position-grid {
+                    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                }
+
+                .related-positions {
+                    margin: 40px -20px 0;
+                    padding: 40px 20px;
+                    width: calc(100% + 40px);
+                }
+            }
+
+            /* 모바일 반응형 */
+            @media (max-width: 768px) {
+                .header {
+                    height: 60px;
+                    padding: 0 15px;
+                }
+                
+                .header-left, .header-right {
+                    padding-top: 13px;
+                }
+                
+                .nav-menu xf:image {
+                    width: 100px !important;
+                    height: 28px !important;
+                }
+                
+                .nav-link {
+                    display: none;
+                }
+                
+                .search-input {
+                    width: 100px;
+                    font-size: 12px;
+                    height: 20px;
+                }
+                
+                .btn-login, .btn-enterprise {
+                    padding: 5px 8px;
+                    font-size: 11px;
+                    height: 28px;
+                }
+
+                .container {
+                    padding: 0 15px;
+                }
+
+                .image-gallery {
+                    grid-template-columns: 1fr;
+                    height: auto;
+                    gap: 10px;
+                }
+
+                .main-image, .sub-image {
+                    height: clamp(150px, 25vw, 180px);
+                }
+
+                .job-actions {
+                    flex-direction: column;
+                    align-items: stretch;
+                    gap: 10px;
+                }
+
+                .btn-apply, .btn-bookmark {
+                    width: 100%;
+                    justify-content: center;
+                    padding: 15px;
+                }
+
+                .position-grid {
+                    grid-template-columns: 1fr;
+                    gap: 12px;
+                }
+
+                .related-positions {
+                    margin: 30px -15px 0;
+                    padding: 30px 15px;
+                    width: calc(100% + 30px);
+                }
+
+                .tags {
+                    gap: 6px;
+                }
+
+                .tag {
+                    padding: 4px 8px;
+                }
+            }
+
+            /* 작은 모바일 */
+            @media (max-width: 480px) {
+                .container {
+                    padding: 0 10px;
+                }
+
+                .image-gallery {
+                    gap: 8px;
+                }
+
+                .main-image, .sub-image {
+                    height: 140px;
+                }
+
+                .position-card {
+                    padding: 15px;
+                }
+
+                .related-positions {
+                    margin: 20px -10px 0;
+                    padding: 20px 10px;
+                    width: calc(100% + 20px);
+                }
+
+                .job-content {
+                    padding: 30px 0;
+                }
+
+                .content-section {
+                    margin-bottom: 30px;
+                }
+            }
+        ]]></style>
+        
+        <script lazy="false" type="text/javascript"><![CDATA[
+scwin.onpageload = function() {
+    // 페이지 로드 시 샘플 데이터 설정
+    scwin.initializeJobData();
+};
+
+scwin.onpageload = function() {
+    // 페이지 로드 시 샘플 데이터 설정
+    scwin.initializeJobData();
+    
+    // 검색 이벤트 바인딩
+    setTimeout(function() {
+        var searchInput = document.getElementById('searchInput');
+        var searchBtn = document.getElementById('btnSearch');
+        
+        if (searchInput) {
+            searchInput.addEventListener('keydown', function(e) {
+                if (e.keyCode === 13) {
+                    scwin.performSearch();
+                }
+            });
+        }
+        
+        if (searchBtn) {
+            searchBtn.addEventListener('click', function() {
+                scwin.performSearch();
+            });
+        }
+    }, 100);
+};
+
+// 로고 클릭 이벤트
+scwin.weaveTypeLogo_onclick = function() {
+    // 메인페이지로 이동
+    $p.url("../common/weaveTypeMain.xml");
+};
+
+scwin.menu1_onclick = function() {
+    alert("매칭 페이지로 이동합니다.");
+};
+
+scwin.menu2_onclick = function() {
+    alert("MBTI 검사 페이지로 이동합니다.");
+};
+
+scwin.menu3_onclick = function() {
+    // PostList.xml(기업 둘러보기)로 이동
+    $p.url("PostList.xml");
+};
+
+// 로그인 관련 이벤트
+scwin.btnLogin_onclick = function() {
+    // 로그인 페이지로 이동
+    alert("로그인 페이지로 이동합니다.");
+};
+
+scwin.btnEnterprise_onclick = function() {
+    // 채용관리 대시보드로 이동
+    alert("기업 서비스 페이지로 이동합니다.");
+};
+
+// 검색 실행
+scwin.performSearch = function() {
+    var searchInput = document.getElementById('searchInput');
+    if (!searchInput) {
+        alert("검색창을 찾을 수 없습니다.");
+        return;
+    }
+    
+    var searchText = searchInput.value;
+    if (searchText && searchText.trim() !== "") {
+        alert("'" + searchText + "'를 검색합니다. (아직 검색 기능은 구현되지 않았습니다)");
+        console.log("검색어:", searchText);
+    } else {
+        alert("검색어를 입력해주세요.");
+    }
+};
+
+// 기존 함수들과의 호환성을 위해 유지
+scwin.searchInput_onkeypress = function(e) {
+    if (e.keyCode === 13) {
+        scwin.performSearch();
+    }
+};
+
+scwin.btnSearch_onclick = function() {
+    scwin.performSearch();
+};
+
+// 햄버거 메뉴 토글
+scwin.toggleSideMenu = function() {
+    var sideMenu = document.getElementById('sideMenu');
+    var overlay = document.getElementById('sideMenuOverlay');
+    
+    if (sideMenu.classList.contains('open')) {
+        scwin.closeSideMenu();
+    } else {
+        sideMenu.classList.add('open');
+        overlay.classList.add('open');
+    }
+};
+
+// 사이드 메뉴 닫기
+scwin.closeSideMenu = function() {
+    var sideMenu = document.getElementById('sideMenu');
+    var overlay = document.getElementById('sideMenuOverlay');
+    
+    sideMenu.classList.remove('open');
+    overlay.classList.remove('open');
+};
+
+// 내 정보 페이지로 이동
+scwin.goToUserDetail = function() {
+    $p.url("../user/UserDetail.xml");
+    scwin.closeSideMenu();
+};
+
+// 기업 등록 페이지로 이동
+scwin.goToCompanyRegister = function() {
+    alert("기업 등록 페이지로 이동합니다.");
+    scwin.closeSideMenu();
+};
+
+// 채용공고 샘플 데이터 초기화
+scwin.initializeJobData = function() {
+    dma_jobDetail.set("companyName", "DRM 제품 개발팀원 (Global SaaS Product)");
+    dma_jobDetail.set("jobTitle", "풀스택 개발자");
+    dma_jobDetail.set("jobDescription", 
+        "• DRM 솔루션의 프론트엔드 및 백엔드 개발\n" +
+        "• React.js 기반 사용자 인터페이스 구현\n" +
+        "• Node.js/Express를 활용한 서버 사이드 개발\n" +
+        "• RESTful API 설계 및 구현\n" +
+        "• 데이터베이스 설계 및 최적화\n" +
+        "• 코드 리뷰 및 기술 문서화"
+    );
+    dma_jobDetail.set("requirements",
+        "• 컴퓨터공학 또는 관련 분야 학사 이상\n" +
+        "• React.js, Vue.js 등 프론트엔드 프레임워크 경험 2년 이상\n" +
+        "• Node.js, Express 백엔드 개발 경험\n" +
+        "• MySQL, MongoDB 등 데이터베이스 활용 경험\n" +
+        "• Git을 활용한 협업 경험\n" +
+        "• 원활한 의사소통 능력"
+    );
+    dma_jobDetail.set("preferences",
+        "• AWS, GCP 등 클라우드 서비스 경험\n" +
+        "• Docker, Kubernetes 컨테이너 기술 경험\n" +
+        "• TypeScript 개발 경험\n" +
+        "• 테스트 코드 작성 경험\n" +
+        "• 애자일 개발 방법론 경험\n" +
+        "• 오픈소스 프로젝트 기여 경험"
+    );
+    dma_jobDetail.set("benefits",
+        "• 4대보험 + 퇴직연금\n" +
+        "• 연차 15일 + 리프레시 휴가\n" +
+        "• 교육비 지원 (연 200만원)\n" +
+        "• 건강검진 비용 지원\n" +
+        "• 자유로운 출퇴근 시간\n" +
+        "• 재택근무 지원\n" +
+        "• 최신 개발 장비 지원"
+    );
+};
+
+// 지원하기 버튼 클릭
+scwin.btnApply_onclick = function(e) {
+    alert("지원서 작성 페이지로 이동합니다.");
+};
+
+// 북마크 버튼 클릭
+scwin.btnBookmark_onclick = function(e) {
+    alert("북마크에 추가되었습니다.");
+};
+
+// 관련 포지션 카드 클릭
+scwin.relatedPosition_onclick = function(e) {
+    alert("다른 포지션 상세 페이지로 이동합니다.");
+};
+
+// 뒤로가기
+scwin.btnBack_onclick = function(e) {
+    history.back();
+};
+
+// 공유하기
+scwin.btnShare_onclick = function(e) {
+    if (navigator.share) {
+        navigator.share({
+            title: '채용공고',
+            text: dma_jobDetail.get("companyName"),
+            url: window.location.href
+        });
+    } else {
+        // 공유 API 미지원 시 클립보드 복사
+        navigator.clipboard.writeText(window.location.href).then(function() {
+            alert("링크가 클립보드에 복사되었습니다.");
+        });
+    }
+};
+
+// 햄버거 메뉴 토글
+scwin.toggleSideMenu = function() {
+    var sideMenu = document.getElementById('sideMenu');
+    var overlay = document.getElementById('sideMenuOverlay');
+    
+    if (sideMenu.classList.contains('open')) {
+        scwin.closeSideMenu();
+    } else {
+        sideMenu.classList.add('open');
+        overlay.classList.add('open');
+    }
+};
+
+// 사이드 메뉴 닫기
+scwin.closeSideMenu = function() {
+    var sideMenu = document.getElementById('sideMenu');
+    var overlay = document.getElementById('sideMenuOverlay');
+    
+    sideMenu.classList.remove('open');
+    overlay.classList.remove('open');
+};
+
+// 내 정보 페이지로 이동
+scwin.goToUserDetail = function() {
+    $p.url("../user/UserDetail.xml");
+    scwin.closeSideMenu();
+};
+
+// 기업 등록 페이지로 이동
+scwin.goToCompanyRegister = function() {
+    alert("기업 등록 페이지로 이동합니다.");
+    scwin.closeSideMenu();
+};
+]]></script>
+    </head>
+    
+    <body ev:onpageload="scwin.onpageload">
+        <xf:group class="main-wrap">
+            <!-- 헤더 영역 (메인페이지와 동일) -->
+            <xf:group class="header clearfix" tagname="header" style="">
+                <xf:group class="header-left">
+                    <!-- 햄버거 메뉴 -->
+                    <div class="hamburger-menu" ev:onclick="scwin.toggleSideMenu()">
+                        <div class="hamburger-line"></div>
+                        <div class="hamburger-line"></div>
+                        <div class="hamburger-line"></div>
+                    </div>
+                    
+                    <xf:group class="nav-menu">
+                        <xf:image src="/images/ws5/weaveTypeLogo.png" style="width: 120px; height: 32px; object-fit: contain;" id="weaveTypeLogo" class="logo" ev:onclick="scwin.weaveTypeLogo_onclick"></xf:image>
+                        <w2:anchor class="nav-link" id="anchor1" ev:onclick="scwin.menu1_onclick" outerDiv="false">
+                            <xf:label><![CDATA[매칭]]></xf:label>
+                        </w2:anchor>
+                        <w2:anchor class="nav-link" id="anchor2" ev:onclick="scwin.menu2_onclick" outerDiv="false">
+                            <xf:label><![CDATA[mbti검사]]></xf:label>
+                        </w2:anchor>
+                        <w2:anchor class="nav-link" id="anchor3" ev:onclick="scwin.menu3_onclick" outerDiv="false">
+                            <xf:label><![CDATA[기업 둘러보기]]></xf:label>
+                        </w2:anchor>
+                    </xf:group>
+                </xf:group>
+                <xf:group class="header-right">
+                    <xf:group class="search-container">
+                        <input id="searchInput" class="search-input" type="text" placeholder="검색어를 입력하세요" />
+                        <button class="search-btn" id="btnSearch" type="button">🔍</button>
+                    </xf:group>
+                    <xf:trigger class="btn-login" id="btnLogin" ev:onclick="scwin.btnLogin_onclick" type="button">
+                        <xf:label><![CDATA[로그인/회원가입]]></xf:label>
+                    </xf:trigger>
+                    <xf:trigger class="btn-enterprise" id="btnEnterprise" ev:onclick="scwin.btnEnterprise_onclick" type="button">
+                        <xf:label><![CDATA[기업 서비스]]></xf:label>
+                    </xf:trigger>
+                </xf:group>
+            </xf:group>
+
+            <!-- 사이드 메뉴 오버레이 -->
+            <div class="side-menu-overlay" id="sideMenuOverlay" ev:onclick="scwin.closeSideMenu()"></div>
+            
+            <!-- 사이드 메뉴 -->
+            <nav class="side-menu" id="sideMenu">
+                <w2:textbox class="side-menu-title" label="메뉴"></w2:textbox>
+                
+                <div class="side-menu-section">
+                    <w2:textbox class="side-menu-section-title" label="매칭 서비스"></w2:textbox>
+                    <w2:anchor class="side-menu-item" ev:onclick="scwin.menu1_onclick">
+                        <xf:label><![CDATA[💼 매칭]]></xf:label>
+                    </w2:anchor>
+                    <w2:anchor class="side-menu-item" ev:onclick="scwin.menu2_onclick">
+                        <xf:label><![CDATA[🧠 MBTI 검사]]></xf:label>
+                    </w2:anchor>
+                    <w2:anchor class="side-menu-item" ev:onclick="scwin.menu3_onclick">
+                        <xf:label><![CDATA[🏢 기업 둘러보기]]></xf:label>
+                    </w2:anchor>
+                </div>
+                
+                <div class="side-menu-section">
+                    <w2:textbox class="side-menu-section-title" label="개인 서비스"></w2:textbox>
+                    <w2:anchor class="side-menu-item" ev:onclick="scwin.goToUserDetail()">
+                        <xf:label><![CDATA[👤 내 정보]]></xf:label>
+                    </w2:anchor>
+                    <w2:anchor class="side-menu-item">
+                        <xf:label><![CDATA[📝 지원현황]]></xf:label>
+                    </w2:anchor>
+                    <w2:anchor class="side-menu-item">
+                        <xf:label><![CDATA[❤️ 관심기업]]></xf:label>
+                    </w2:anchor>
+                    <w2:anchor class="side-menu-item">
+                        <xf:label><![CDATA[🔖 북마크]]></xf:label>
+                    </w2:anchor>
+                </div>
+                
+                <div class="side-menu-section">
+                    <w2:textbox class="side-menu-section-title" label="기업 서비스"></w2:textbox>
+                    <w2:anchor class="side-menu-item" ev:onclick="scwin.btnEnterprise_onclick">
+                        <xf:label><![CDATA[📊 채용관리 대시보드]]></xf:label>
+                    </w2:anchor>
+                    <w2:anchor class="side-menu-item" ev:onclick="scwin.goToCompanyRegister()">
+                        <xf:label><![CDATA[📋 기업 등록]]></xf:label>
+                    </w2:anchor>
+                </div>
+            </nav>
+
+            <!-- 메인 컨텐츠 -->
+            <main class="container">
+                <xf:group class="main-content">
+                    <!-- 회사 이미지 갤러리 -->
+                    <section class="company-images">
+                        <xf:group class="image-gallery">
+                            <xf:group class="main-image">
+                                <w2:textbox label="INKA"></w2:textbox>
+                            </xf:group>
+                            <xf:group class="sub-image">
+                                <w2:textbox label="appsealing"></w2:textbox>
+                            </xf:group>
+                            <xf:group class="sub-image">
+                                <w2:textbox label="PALLYCON"></w2:textbox>
+                            </xf:group>
+                        </xf:group>
+                    </section>
+
+                    <!-- 공고 헤더 -->
+                    <section class="job-header">
+                        <w2:textbox class="job-meta" label="잉카엔터웍스 • 5년차 • 한국 등 근무"></w2:textbox>
+                        <w2:textbox class="job-title" ref="data:dma_jobDetail.companyName"></w2:textbox>
+                        
+                        <xf:group class="job-actions">
+                            <xf:trigger class="btn-apply" type="button" ev:onclick="scwin.btnApply_onclick">
+                                <xf:label>지원하기</xf:label>
+                            </xf:trigger>
+                            <xf:trigger class="btn-bookmark" type="button" ev:onclick="scwin.btnBookmark_onclick">
+                                <xf:label>🤍 북마크</xf:label>
+                            </xf:trigger>
+                        </xf:group>
+                    </section>
+
+                    <!-- 공고 내용 -->
+                    <section class="job-content">
+                        <!-- 주요업무 -->
+                        <xf:group class="content-section">
+                            <w2:textbox class="section-title" label="주요업무"></w2:textbox>
+                            <w2:textbox class="section-content" ref="data:dma_jobDetail.jobDescription"></w2:textbox>
+                        </xf:group>
+
+                        <!-- 자격요건 -->
+                        <xf:group class="content-section">
+                            <w2:textbox class="section-title" label="자격요건"></w2:textbox>
+                            <w2:textbox class="section-content" ref="data:dma_jobDetail.requirements"></w2:textbox>
+                        </xf:group>
+
+                        <!-- 우대사항 -->
+                        <xf:group class="content-section">
+                            <w2:textbox class="section-title" label="우대사항"></w2:textbox>
+                            <w2:textbox class="section-content" ref="data:dma_jobDetail.preferences"></w2:textbox>
+                        </xf:group>
+
+                        <!-- 혜택 및 복리후생 -->
+                        <xf:group class="content-section">
+                            <w2:textbox class="section-title" label="혜택 및 복리후생"></w2:textbox>
+                            <w2:textbox class="section-content" ref="data:dma_jobDetail.benefits"></w2:textbox>
+                        </xf:group>
+
+                        <!-- 기술 스택 -->
+                        <xf:group class="content-section">
+                            <w2:textbox class="section-title" label="기술스택 · 툴"></w2:textbox>
+                            <xf:group class="tags">
+                                <w2:span class="tag" label="JavaScript"></w2:span>
+                                <w2:span class="tag" label="React"></w2:span>
+                                <w2:span class="tag" label="Node.js"></w2:span>
+                                <w2:span class="tag" label="TypeScript"></w2:span>
+                                <w2:span class="tag" label="Express"></w2:span>
+                                <w2:span class="tag" label="MySQL"></w2:span>
+                                <w2:span class="tag" label="MongoDB"></w2:span>
+                                <w2:span class="tag" label="AWS"></w2:span>
+                                <w2:span class="tag" label="Docker"></w2:span>
+                                <w2:span class="tag" label="Git"></w2:span>
+                            </xf:group>
+                        </xf:group>
+                    </section>
+                </xf:group>
+
+                <!-- 관련 포지션 -->
+                <section class="related-positions">
+                    <w2:textbox class="related-title" label="🏢 관련된 회사의 채용 공고"></w2:textbox>
+                    
+                    <xf:group class="position-grid">
+                        <!-- 관련 포지션 카드 1 -->
+                        <xf:group class="position-card" ev:onclick="scwin.relatedPosition_onclick">
+                            <xf:group class="position-header" style="background: linear-gradient(135deg, #667eea, #764ba2);">
+                                <w2:textbox label="Backend Developer"></w2:textbox>
+                            </xf:group>
+                            <w2:textbox class="position-company" label="잉카엔터웍스"></w2:textbox>
+                            <w2:textbox class="position-title" label="백엔드 개발자 (Java/Spring)"></w2:textbox>
+                            <w2:textbox class="position-location" label="서울 · 3년 이상"></w2:textbox>
+                        </xf:group>
+
+                        <!-- 관련 포지션 카드 2 -->
+                        <xf:group class="position-card" ev:onclick="scwin.relatedPosition_onclick">
+                            <xf:group class="position-header" style="background: linear-gradient(135deg, #f093fb, #f5576c);">
+                                <w2:textbox label="Frontend Developer"></w2:textbox>
+                            </xf:group>
+                            <w2:textbox class="position-company" label="잉카엔터웍스"></w2:textbox>
+                            <w2:textbox class="position-title" label="프론트엔드 개발자 (React/Vue)"></w2:textbox>
+                            <w2:textbox class="position-location" label="서울 · 2년 이상"></w2:textbox>
+                        </xf:group>
+
+                        <!-- 관련 포지션 카드 3 -->
+                        <xf:group class="position-card" ev:onclick="scwin.relatedPosition_onclick">
+                            <xf:group class="position-header" style="background: linear-gradient(135deg, #4facfe, #00f2fe);">
+                                <w2:textbox label="DevOps Engineer"></w2:textbox>
+                            </xf:group>
+                            <w2:textbox class="position-company" label="잉카엔터웍스"></w2:textbox>
+                            <w2:textbox class="position-title" label="DevOps 엔지니어 (AWS/Docker)"></w2:textbox>
+                            <w2:textbox class="position-location" label="서울 · 4년 이상"></w2:textbox>
+                        </xf:group>
+
+                        <!-- 관련 포지션 카드 4 -->
+                        <xf:group class="position-card" ev:onclick="scwin.relatedPosition_onclick">
+                            <xf:group class="position-header" style="background: linear-gradient(135deg, #fa709a, #fee140);">
+                                <w2:textbox label="Mobile Developer"></w2:textbox>
+                            </xf:group>
+                            <w2:textbox class="position-company" label="잉카엔터웍스"></w2:textbox>
+                            <w2:textbox class="position-title" label="모바일 앱 개발자 (Flutter/React Native)"></w2:textbox>
+                            <w2:textbox class="position-location" label="서울 · 3년 이상"></w2:textbox>
+                        </xf:group>
+
+                        <!-- 관련 포지션 카드 5 -->
+                        <xf:group class="position-card" ev:onclick="scwin.relatedPosition_onclick">
+                            <xf:group class="position-header" style="background: linear-gradient(135deg, #a8edea, #fed6e3);">
+                                <w2:textbox label="Data Analyst" style="color: #333;"></w2:textbox>
+                            </xf:group>
+                            <w2:textbox class="position-company" label="잉카엔터웍스"></w2:textbox>
+                            <w2:textbox class="position-title" label="데이터 분석가 (Python/R)"></w2:textbox>
+                            <w2:textbox class="position-location" label="서울 · 2년 이상"></w2:textbox>
+                        </xf:group>
+                    </xf:group>
+                </section>
+            </main>
+        </xf:group>
+    </body>
+</html>

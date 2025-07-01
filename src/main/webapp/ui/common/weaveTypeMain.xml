@@ -23,6 +23,26 @@
             scwin.onpageload = function() {
                 console.log("WeaveType 메인 페이지가 로드되었습니다.");
                 dma_main.set("totalUsers", "120,739");
+                
+                // 검색 이벤트 바인딩
+                setTimeout(function() {
+                    var searchInput = document.getElementById('searchInput');
+                    var searchBtn = document.getElementById('btnSearch');
+                    
+                    if (searchInput) {
+                        searchInput.addEventListener('keydown', function(e) {
+                            if (e.keyCode === 13) {
+                                scwin.performSearch();
+                            }
+                        });
+                    }
+                    
+                    if (searchBtn) {
+                        searchBtn.addEventListener('click', function() {
+                            scwin.performSearch();
+                        });
+                    }
+                }, 100);
             };
 
             // 로고 클릭 이벤트
@@ -39,22 +59,23 @@
             };
 
             scwin.menu3_onclick = function() {
-                // postList.xml(기업 둘러보기)로 이동
-                location.href = '/websquare/websquare.html?w2xPath=/ui/posting/postList.xml';
+                // PostList.xml(기업 둘러보기)로 이동
+                $p.url("../posting/PostList.xml");
             };
 
             // 로그인 관련 이벤트
             scwin.btnLogin_onclick = function() {
-                alert("로그인/회원가입 페이지로 이동합니다.");
+                // 로그인 페이지로 이동
+                alert("로그인 페이지로 이동합니다.");
             };
 
             scwin.btnMainLogin_onclick = function() {
-                alert("로그인 화면으로 이동합니다.");
+                // 로그인 페이지로 이동
+                alert("로그인 페이지로 이동합니다.");
             };
 
             scwin.btnEnterprise_onclick = function() {
-                // 채용관리 대시보드로 이동
-                location.href = '/websquare/websquare.html?w2xPath=/ui/recruitment_dashboard.xml';
+
             };
 
             // 카드 클릭 이벤트
@@ -86,21 +107,32 @@
                 location.href = '/websquare/websquare.html?w2xPath=/ui/review_page.xml';
             };
 
-            // 검색 기능
+            // 검색 실행
+            scwin.performSearch = function() {
+                var searchInput = document.getElementById('searchInput');
+                if (!searchInput) {
+                    alert("검색창을 찾을 수 없습니다.");
+                    return;
+                }
+                
+                var searchText = searchInput.value;
+                if (searchText && searchText.trim() !== "") {
+                    alert("'" + searchText + "'를 검색합니다. (아직 검색 기능은 구현되지 않았습니다)");
+                    console.log("검색어:", searchText);
+                } else {
+                    alert("검색어를 입력해주세요.");
+                }
+            };
+
+            // 기존 함수들과의 호환성을 위해 유지
             scwin.searchInput_onkeypress = function(e) {
                 if (e.keyCode === 13) {
-                    var searchText = searchInput.getValue();
-                    if (searchText && searchText.trim() !== "") {
-                        alert("'" + searchText + "'를 검색합니다.");
-                    }
+                    scwin.performSearch();
                 }
             };
 
             scwin.btnSearch_onclick = function() {
-                var searchText = searchInput.getValue();
-                if (searchText && searchText.trim() !== "") {
-                    alert("'" + searchText + "'를 검색합니다.");
-                }
+                scwin.performSearch();
             };
 
             // 프로필 채우기 링크
@@ -136,7 +168,7 @@
 
             // 내 정보 페이지로 이동
             scwin.goToUserDetail = function() {
-                location.href = '/websquare/websquare.html?w2xPath=/ui/user/userDetail.xml';
+                $p.url("../user/UserDetail.xml");
                 scwin.closeSideMenu();
             };
 
@@ -314,6 +346,11 @@
                 font-size: 13px;
                 height: 24px;
                 vertical-align: middle;
+            }
+
+            .search-input::placeholder {
+                color: #999;
+                font-size: 13px;
             }
 
             .search-btn {
@@ -895,12 +932,8 @@
                 </xf:group>
                 <xf:group class="header-right">
                     <xf:group class="search-container">
-                        <w2:inputText id="searchInput" class="search-input"
-                                      placeholder="검색어를 입력하세요" ev:onkeypress="scwin.searchInput_onkeypress">
-                        </w2:inputText>
-                        <xf:trigger class="search-btn" id="btnSearch" ev:onclick="scwin.btnSearch_onclick" type="button">
-                            <xf:label><![CDATA[🔍]]></xf:label>
-                        </xf:trigger>
+                        <input id="searchInput" class="search-input" type="text" placeholder="검색어를 입력하세요" />
+                        <button class="search-btn" id="btnSearch" type="button">🔍</button>
                     </xf:group>
                     <xf:trigger class="btn-login" id="btnLogin" ev:onclick="scwin.btnLogin_onclick" type="button">
                         <xf:label><![CDATA[로그인/회원가입]]></xf:label>

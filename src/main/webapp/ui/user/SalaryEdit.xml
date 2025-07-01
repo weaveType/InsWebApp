@@ -304,7 +304,7 @@ scwin.updateNextButton = function() {
 // 이전 버튼 클릭
 scwin.goBack = function() {
     if (confirm("이전 단계로 돌아가시겠습니까?")) {
-        location.href = '/websquare/websquare.html?w2xPath=/ui/user/userDetail.xml';
+        $p.url("UserDetail.xml");
     }
 };
 
@@ -322,7 +322,7 @@ scwin.goNext = function() {
     alert("연봉 정보가 업데이트되었습니다!");
     
     // 마이페이지로 돌아가기
-    location.href = '/websquare/websquare.html?w2xPath=/ui/user/userDetail.xml';
+    $p.url("UserDetail.xml");
 };
 ]]></script>
     </head>
