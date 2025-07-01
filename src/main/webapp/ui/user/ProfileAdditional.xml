@@ -4,7 +4,7 @@
     xmlns:w2="http://www.inswave.com/websquare" 
     xmlns:xf="http://www.w3.org/2002/xforms">
     
-    <head meta_screenName="프로필을 완성해보세요">
+    <head meta_screenName="프로필을 완성해주세요">
         <w2:type>COMPONENT</w2:type>
         <w2:buildDate/>
         <w2:MSA/>
@@ -13,7 +13,7 @@
                 <w2:dataMap baseNode="map" id="dma_profile">
                     <w2:keyInfo>
                         <w2:key id="profileImage" name="프로필이미지" dataType="text"></w2:key>
-                        <w2:key id="additionalIntro" name="추가소개" dataType="text"></w2:key>
+                        <w2:key id="additionalIntro" name="추가자기소개" dataType="text"></w2:key>
                     </w2:keyInfo>
                 </w2:dataMap>
             </w2:dataCollection>
@@ -23,119 +23,89 @@
         
         <script type="text/javascript"><![CDATA[
             scwin.onpageload = function() {
-                console.log("프로필 추가정보 페이지 로드됨");
+                console.log("프로필 추가 정보 페이지 로드됨");
                 
-                // 페이지 로드 후 초기화
+                // 텍스트 영역 이벤트 바인딩
                 setTimeout(function() {
-                    scwin.initializeTextarea();
-                }, 200);
+                    var textarea = document.querySelector('.additional-intro-textarea');
+                    if (textarea) {
+                        textarea.addEventListener('input', scwin.updateCharCount);
+                        textarea.addEventListener('keyup', scwin.updateCharCount);
+                    }
+                }, 100);
             };
             
-            scwin.initializeTextarea = function() {
-                // 텍스트 영역 이벤트 리스너 설정
-                var textarea = document.querySelector('.additional-intro-textarea');
-                if (textarea) {
-                    // 다양한 이벤트에 글자 수 업데이트 함수 바인딩
-                    textarea.addEventListener('input', scwin.updateCharCount);
-                    textarea.addEventListener('keyup', scwin.updateCharCount);
-                    textarea.addEventListener('change', scwin.updateCharCount);
-                    textarea.addEventListener('paste', function() {
-                        setTimeout(scwin.updateCharCount, 10);
-                    });
-                    
-                    console.log("추가 소개 텍스트 영역 이벤트 리스너 설정 완료");
+            scwin.handleFileUpload = function(event) {
+                var file = event.target.files[0];
+                if (!file) return;
+                
+                // 파일 유형 검사
+                if (!file.type.startsWith('image/')) {
+                    alert('이미지 파일만 업로드 가능합니다.');
+                    return;
                 }
                 
-                // 초기 글자 수 표시
-                scwin.updateCharCount();
-            };
-            
-            // 프로필 이미지 업로드 시뮬레이션
-            scwin.uploadProfileImage = function() {
-                // 실제 구현시에는 파일 업로드 로직 구현
-                var input = document.createElement('input');
-                input.type = 'file';
-                input.accept = 'image/*';
-                input.onchange = function(e) {
-                    var file = e.target.files[0];
-                    if (file) {
-                        // 파일 미리보기
-                        var reader = new FileReader();
-                        reader.onload = function(event) {
-                            var imageContainer = document.getElementById('profileImageContainer');
-                            var uploadArea = document.getElementById('uploadArea');
-                            var previewArea = document.getElementById('previewArea');
-                            var previewImage = document.getElementById('previewImage');
-                            
-                            if (previewImage) {
-                                previewImage.src = event.target.result;
-                            }
-                            if (uploadArea) {
-                                uploadArea.style.display = 'none';
-                            }
-                            if (previewArea) {
-                                previewArea.style.display = 'block';
-                            }
-                            
-                            dma_profile.set("profileImage", file.name);
-                        };
-                        reader.readAsDataURL(file);
+                // 파일 크기 검사 (5MB)
+                if (file.size > 5 * 1024 * 1024) {
+                    alert('파일 크기는 5MB 이하여야 합니다.');
+                    return;
+                }
+                
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    // 프리뷰 이미지 표시
+                    var uploadArea = document.querySelector('.upload-area');
+                    var previewArea = document.querySelector('.preview-area');
+                    var previewImage = document.querySelector('.preview-image');
+                    
+                    if (uploadArea && previewArea && previewImage) {
+                        uploadArea.style.display = 'none';
+                        previewArea.style.display = 'block';
+                        previewImage.src = e.target.result;
+                        
+                        // 데이터 모델에 저장
+                        dma_profile.set("profileImage", e.target.result);
+                        console.log("프로필 이미지 업로드 완료");
                     }
                 };
-                input.click();
+                reader.readAsDataURL(file);
             };
             
-            // 이미지 제거
-            scwin.removeProfileImage = function() {
-                var uploadArea = document.getElementById('uploadArea');
-                var previewArea = document.getElementById('previewArea');
+            scwin.removeImage = function() {
+                var uploadArea = document.querySelector('.upload-area');
+                var previewArea = document.querySelector('.preview-area');
+                var fileInput = document.getElementById('profileImageInput');
                 
-                if (uploadArea) {
+                if (uploadArea && previewArea && fileInput) {
                     uploadArea.style.display = 'flex';
-                }
-                if (previewArea) {
                     previewArea.style.display = 'none';
+                    fileInput.value = '';
+                    
+                    // 데이터 모델에서 제거
+                    dma_profile.set("profileImage", "");
+                    console.log("프로필 이미지 제거됨");
                 }
-                
-                dma_profile.set("profileImage", "");
             };
             
-            // 추가 소개글 입력 변경 (웹스퀘어 데이터 바인딩 이벤트)
-            scwin.additionalIntro_onchange = function() {
-                setTimeout(function() {
-                    scwin.updateCharCount();
-                }, 10);
-            };
-            
-            // 문자수 카운트 업데이트
-            scwin.updateCharCount = function() {
-                // 텍스트 영역에서 직접 값 가져오기
-                var textarea = document.querySelector('.additional-intro-textarea');
-                var intro = textarea ? textarea.value : "";
-                var charCount = intro.length;
+            scwin.updateCharCount = function(event) {
+                var textarea = event ? event.target : document.querySelector('.additional-intro-textarea');
+                var currentLength = textarea ? textarea.value.length : 0;
+                var maxLength = 300;
                 
-                // 데이터 모델에도 업데이트
-                if (textarea && textarea.value) {
-                    dma_profile.set("additionalIntro", textarea.value);
-                }
-                
-                // 글자 수 표시 업데이트 (여러 방법 시도)
+                // 글자 수 표시 업데이트
                 var charCountElement = document.querySelector('.char-count');
+                var charCountById = document.getElementById('additionalIntroCharCount');
+                
                 if (charCountElement) {
-                    charCountElement.textContent = charCount + '/300';
+                    charCountElement.textContent = currentLength + '/' + maxLength;
                 }
-                
-                // ID로도 시도
-                var charCountById = document.getElementById('charCount');
                 if (charCountById) {
-                    charCountById.textContent = charCount + '/300';
+                    charCountById.textContent = currentLength + '/' + maxLength;
                 }
                 
-                console.log("추가 소개 글자 수 업데이트:", charCount + "/300");
-                
-                // 글자 수 제한 처리
-                if (charCount > 300) {
-                    var limitedText = intro.substring(0, 300);
+                // 최대 길이 제한
+                if (currentLength > maxLength) {
+                    var limitedText = textarea.value.substring(0, maxLength);
                     if (textarea) {
                         textarea.value = limitedText;
                     }
@@ -207,7 +177,7 @@
                 bottom: 0;
                 left: 0;
                 height: 4px;
-                background: linear-gradient(90deg, #2196F3 0%, #2196F3 100%);
+                background: linear-gradient(90deg, #007bff 0%, #007bff 100%);
                 width: 100%;
             }
             
@@ -295,8 +265,8 @@
             }
             
             .upload-area:hover {
-                border-color: #2196F3;
-                background-color: #f3f9ff;
+                border-color: #007bff;
+                background-color: #f0f8ff;
             }
             
             .upload-icon {
@@ -340,82 +310,68 @@
                 align-items: center;
                 justify-content: center;
                 font-size: 16px;
-                transition: all 0.3s ease;
+                font-weight: bold;
+                transition: background-color 0.3s ease;
             }
             
             .image-remove-btn:hover {
                 background-color: #cc0000;
-                transform: scale(1.1);
             }
             
-            .image-note {
-                font-size: 13px;
-                color: #666;
-                margin-top: 10px;
+            .hidden-file-input {
+                display: none;
             }
             
-            .intro-section {
-                text-align: left;
+            .additional-intro-section {
+                margin-bottom: 40px;
             }
             
-            .intro-textarea {
+            .textarea-container {
+                position: relative;
+                margin-top: 16px;
+            }
+            
+            .additional-intro-textarea {
                 width: 100%;
                 min-height: 120px;
-                padding: 16px;
+                padding: 20px;
                 border: 2px solid #e0e0e0;
                 border-radius: 12px;
                 font-size: 16px;
                 font-family: "Malgun Gothic", "맑은 고딕", sans-serif;
+                line-height: 1.6;
                 resize: vertical;
                 transition: border-color 0.3s ease;
                 box-sizing: border-box;
             }
             
-            .intro-textarea:focus {
+            .additional-intro-textarea:focus {
                 outline: none;
-                border-color: #2196F3;
-                background-color: #f3f9ff;
+                border-color: #007bff;
             }
             
-            .intro-info {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                margin-top: 12px;
-                font-size: 14px;
-            }
-            
-            .intro-guide {
-                color: #666;
+            .additional-intro-textarea::placeholder {
+                color: #999;
+                line-height: 1.6;
             }
             
             .char-count {
+                position: absolute;
+                bottom: 12px;
+                right: 16px;
+                font-size: 12px;
                 color: #999;
+                background-color: rgba(255, 255, 255, 0.9);
+                padding: 4px 8px;
+                border-radius: 4px;
             }
             
-            .info-message {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                gap: 8px;
-                font-size: 14px;
-                color: #2196F3;
-                margin-bottom: 40px;
-                padding: 12px 20px;
-                background-color: #e3f2fd;
-                border-radius: 8px;
-                max-width: 600px;
-            }
-            
-            .info-icon {
-                font-size: 16px;
-            }
-            
-            .button-area {
+            .buttons-section {
                 display: flex;
                 gap: 16px;
                 width: 100%;
                 max-width: 600px;
+                margin-top: 20px;
             }
             
             .btn-back {
@@ -438,7 +394,7 @@
             
             .btn-next {
                 flex: 2;
-                background-color: #2196F3;
+                background-color: #007bff;
                 color: white;
                 border: none;
                 padding: 16px 32px;
@@ -450,9 +406,9 @@
             }
             
             .btn-next:hover {
-                background-color: #1976D2;
+                background-color: #0056b3;
                 transform: translateY(-2px);
-                box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
+                box-shadow: 0 4px 12px rgba(0, 123, 255, 0.25);
             }
         ]]></style>
     </head>
@@ -460,7 +416,7 @@
     <body ev:onpageload="scwin.onpageload">
         <xf:group class="main-container">
             <xf:group class="header">
-                <xf:image src="/InsWebApp/images/ws5/weaveTypeLogo.png" style="width: 120px; height: 32px; object-fit: contain;" id="weaveTypeLogo" class="header-logo"></xf:image>
+                <xf:image src="/InsWebApp/images/ws5/weaveTypeLogo.png" class="header-logo" style="height: 40px; width: auto;"></xf:image>
                 <xf:group class="header-progress"></xf:group>
             </xf:group>
             
@@ -469,59 +425,47 @@
                     <w2:textbox class="icon" label="👤" tagname="div"></w2:textbox>
                 </xf:group>
                 
-                <w2:textbox class="main-title" label="프로필을 완성해보세요!" tagname="h1"></w2:textbox>
-                <w2:textbox class="sub-title" label="프로필 사진과 추가 소개로 나만의 개성을 보여주세요." tagname="p"></w2:textbox>
+                <w2:textbox class="main-title" label="프로필을 완성해주세요" tagname="h1"></w2:textbox>
+                <w2:textbox class="sub-title" label="개성 있는 프로필로 기업의 관심을 끌어보세요" tagname="p"></w2:textbox>
                 
-                <xf:group class="form-section">
-                    <xf:group class="profile-image-section">
-                        <w2:textbox class="section-title" label="프로필 사진 (선택사항)" tagname="h3"></w2:textbox>
-                        
-                        <xf:group class="image-upload-container" id="profileImageContainer">
-                            <xf:group class="upload-area" id="uploadArea" ev:onclick="scwin.uploadProfileImage">
-                                <w2:textbox class="upload-icon" label="📷" tagname="div"></w2:textbox>
-                                <w2:textbox class="upload-text" label="사진 업로드" tagname="div"></w2:textbox>
-                            </xf:group>
-                            
-                            <xf:group class="preview-area" id="previewArea">
-                                <w2:image class="preview-image" id="previewImage" src=""></w2:image>
-                                <xf:trigger class="image-remove-btn" ev:onclick="scwin.removeProfileImage">
-                                    <xf:label>×</xf:label>
-                                </xf:trigger>
-                            </xf:group>
+                <xf:group class="form-section profile-image-section">
+                    <w2:textbox class="section-title" label="프로필 사진 (선택)" tagname="div"></w2:textbox>
+                    <xf:group class="image-upload-container">
+                        <xf:group class="upload-area" onclick="document.getElementById('profileImageInput').click()">
+                            <w2:textbox class="upload-icon" label="📷" tagname="div"></w2:textbox>
+                            <w2:textbox class="upload-text" label="사진 업로드" tagname="div"></w2:textbox>
                         </xf:group>
                         
-                        <w2:textbox class="image-note" label="JPG, PNG 파일을 업로드할 수 있어요 (최대 5MB)" tagname="div"></w2:textbox>
-                    </xf:group>
-                    
-                    <xf:group class="intro-section">
-                        <w2:textbox class="section-title" label="추가 소개 (선택사항)" tagname="h3"></w2:textbox>
-                        
-                        <w2:textarea class="intro-textarea" id="additionalIntro" 
-                                    ev:onchange="scwin.additionalIntro_onchange"
-                                    placeholder="본인만의 개성이나 특별한 경험, 관심사 등을 자유롭게 작성해보세요.&#10;&#10;예시:&#10;- 새로운 기술을 배우는 것을 좋아합니다&#10;- 팀워크를 중시하며 소통을 잘합니다&#10;- 오픈소스 프로젝트에 기여한 경험이 있습니다"></w2:textarea>
-                        
-                        <xf:group class="intro-info">
-                            <w2:textbox class="intro-guide" label="나만의 개성을 어필해보세요!" tagname="span"></w2:textbox>
-                            <w2:textbox class="char-count" id="charCount" label="0/300" tagname="span"></w2:textbox>
+                        <xf:group class="preview-area">
+                            <img class="preview-image" src="" alt="프로필 미리보기" />
+                            <button class="image-remove-btn" onclick="scwin.removeImage()" type="button">×</button>
                         </xf:group>
+                        
+                        <input type="file" class="hidden-file-input" id="profileImageInput" 
+                               accept="image/*" onchange="scwin.handleFileUpload(event)" />
                     </xf:group>
                 </xf:group>
                 
-                <xf:group class="info-message">
-                    <w2:textbox class="info-icon" label="✨" tagname="span"></w2:textbox>
-                    <w2:textbox label="프로필이 완성되면 더 많은 기업의 관심을 받을 수 있어요!" tagname="span"></w2:textbox>
+                <xf:group class="form-section additional-intro-section">
+                    <w2:textbox class="section-title" label="추가 자기소개 (선택)" tagname="div"></w2:textbox>
+                    <xf:group class="textarea-container">
+                        <textarea class="additional-intro-textarea" 
+                            placeholder="본인의 개발 철학이나 특별한 경험, 관심 분야 등을 자유롭게 작성해주세요."
+                            oninput="scwin.updateCharCount(event)"
+                            onkeyup="scwin.updateCharCount(event)"></textarea>
+                        <w2:textbox class="char-count" id="additionalIntroCharCount" label="0/300" tagname="div"></w2:textbox>
+                    </xf:group>
                 </xf:group>
                 
-                <xf:group class="button-area">
+                <xf:group class="buttons-section">
                     <xf:trigger class="btn-back" ev:onclick="scwin.btn_back_onclick">
                         <xf:label>이전</xf:label>
                     </xf:trigger>
-                    
                     <xf:trigger class="btn-next" ev:onclick="scwin.btn_next_onclick">
-                        <xf:label>완성하기</xf:label>
+                        <xf:label>완료</xf:label>
                     </xf:trigger>
                 </xf:group>
             </xf:group>
         </xf:group>
     </body>
-</html>
+</html> 
