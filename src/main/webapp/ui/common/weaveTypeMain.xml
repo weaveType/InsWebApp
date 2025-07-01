@@ -1,0 +1,1126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ev="http://www.w3.org/2001/xml-events"
+      xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
+    <head>
+        <w2:type>COMPONENT</w2:type>
+        <w2:buildDate/>
+        <w2:MSA/>
+        <xf:model>
+            <w2:dataCollection baseNode="map">
+                <w2:dataMap id="dma_main" baseNode="map">
+                    <w2:keyInfo>
+                        <w2:key id="searchText" name="searchText" dataType="text"/>
+                        <w2:key id="totalUsers" name="totalUsers" dataType="text"/>
+                    </w2:keyInfo>
+                </w2:dataMap>
+            </w2:dataCollection>
+            <w2:workflowCollection/>
+        </xf:model>
+        <w2:layoutInfo/>
+        <w2:publicInfo method=""/>
+        <script type="text/javascript"><![CDATA[
+            scwin.onpageload = function() {
+                console.log("WeaveType 메인 페이지가 로드되었습니다.");
+                dma_main.set("totalUsers", "120,739");
+            };
+
+            // 로고 클릭 이벤트
+            scwin.weaveTypeLogo_onclick = function() {
+                window.location.reload();
+            };
+
+            scwin.menu1_onclick = function() {
+                alert("매칭 페이지로 이동합니다.");
+            };
+
+            scwin.menu2_onclick = function() {
+                alert("MBTI 검사 페이지로 이동합니다.");
+            };
+
+            scwin.menu3_onclick = function() {
+                // postList.xml(기업 둘러보기)로 이동
+                location.href = '/websquare/websquare.html?w2xPath=/ui/posting/postList.xml';
+            };
+
+            // 로그인 관련 이벤트
+            scwin.btnLogin_onclick = function() {
+                alert("로그인/회원가입 페이지로 이동합니다.");
+            };
+
+            scwin.btnMainLogin_onclick = function() {
+                alert("로그인 화면으로 이동합니다.");
+            };
+
+            scwin.btnEnterprise_onclick = function() {
+                // 채용관리 대시보드로 이동
+                location.href = '/websquare/websquare.html?w2xPath=/ui/recruitment_dashboard.xml';
+            };
+
+            // 카드 클릭 이벤트
+            scwin.card1_onclick = function() {
+                alert("튜토리얼 페이지로 이동합니다.");
+            };
+
+            scwin.card2_onclick = function() {
+                alert("자소서 업체검토 페이지로 이동합니다.");
+            };
+
+            scwin.card3_onclick = function() {
+                alert("MBTI 검사 페이지로 이동합니다.");
+            };
+
+            // 포지션 카드 클릭 이벤트
+            scwin.position1_onclick = function() {
+                // 지원자 관리 페이지로 이동
+                location.href = '/websquare/websquare.html?w2xPath=/ui/applicant_management.xml';
+            };
+
+            scwin.position2_onclick = function() {
+                // 채용 공고 작성 페이지로 이동
+                location.href = '/websquare/websquare.html?w2xPath=/ui/create_posting.xml';
+            };
+
+            scwin.position3_onclick = function() {
+                // 채용 리뷰 페이지로 이동
+                location.href = '/websquare/websquare.html?w2xPath=/ui/review_page.xml';
+            };
+
+            // 검색 기능
+            scwin.searchInput_onkeypress = function(e) {
+                if (e.keyCode === 13) {
+                    var searchText = searchInput.getValue();
+                    if (searchText && searchText.trim() !== "") {
+                        alert("'" + searchText + "'를 검색합니다.");
+                    }
+                }
+            };
+
+            scwin.btnSearch_onclick = function() {
+                var searchText = searchInput.getValue();
+                if (searchText && searchText.trim() !== "") {
+                    alert("'" + searchText + "'를 검색합니다.");
+                }
+            };
+
+            // 프로필 채우기 링크
+            scwin.btnProfile_onclick = function() {
+                alert("매칭 프로필 채우기 페이지로 이동합니다.");
+            };
+
+            scwin.ad_onclick = function (e) {
+                alert("회원가입 페이지로 이동합니다!");
+            };
+
+            // 햄버거 메뉴 토글
+            scwin.toggleSideMenu = function() {
+                var sideMenu = document.getElementById('sideMenu');
+                var overlay = document.getElementById('sideMenuOverlay');
+                
+                if (sideMenu.classList.contains('open')) {
+                    scwin.closeSideMenu();
+                } else {
+                    sideMenu.classList.add('open');
+                    overlay.classList.add('open');
+                }
+            };
+
+            // 사이드 메뉴 닫기
+            scwin.closeSideMenu = function() {
+                var sideMenu = document.getElementById('sideMenu');
+                var overlay = document.getElementById('sideMenuOverlay');
+                
+                sideMenu.classList.remove('open');
+                overlay.classList.remove('open');
+            };
+
+            // 내 정보 페이지로 이동
+            scwin.goToUserDetail = function() {
+                location.href = '/websquare/websquare.html?w2xPath=/ui/user/userDetail.xml';
+                scwin.closeSideMenu();
+            };
+
+            // 기업 등록 페이지로 이동
+            scwin.goToCompanyRegister = function() {
+                location.href = '/websquare/websquare.html?w2xPath=/ui/create_company.xml';
+                scwin.closeSideMenu();
+            };
+        ]]></script>
+        <style type="text/css"><![CDATA[
+            /* 기본 설정 */
+            * {
+                box-sizing: border-box;
+            }
+
+            .main-wrap {
+                width: 100%;
+                background-color: #ffffff;
+                font-family: "Malgun Gothic", "맑은 고딕", sans-serif;
+            }
+
+            /* 헤더 */
+            .header {
+                width: 100%;
+                height: 70px;
+                background-color: #ffffff;
+                border-bottom: 1px solid #e0e0e0;
+                position: relative;
+                padding: 0 min(30px, 4vw);
+            }
+
+            .header-left {
+                float: left;
+                padding-top: 18px;
+                display: flex;
+                align-items: center;
+                gap: 15px;
+            }
+
+            /* 햄버거 메뉴 */
+            .hamburger-menu {
+                width: 24px;
+                height: 24px;
+                cursor: pointer;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                padding: 4px;
+                border-radius: 4px;
+                transition: background-color 0.2s ease;
+            }
+
+            .hamburger-menu:hover {
+                background-color: #f5f5f5;
+            }
+
+            .hamburger-line {
+                width: 16px;
+                height: 2px;
+                background-color: #333;
+                margin: 1px 0;
+                transition: 0.3s;
+                border-radius: 1px;
+            }
+
+            /* 사이드 메뉴 */
+            .side-menu {
+                position: fixed;
+                top: 70px;
+                left: -300px;
+                width: 280px;
+                height: calc(100vh - 70px);
+                background-color: white;
+                box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+                transition: left 0.3s ease;
+                z-index: 1000;
+                overflow-y: auto;
+                padding: 20px;
+            }
+
+            .side-menu.open {
+                left: 0;
+            }
+
+            .side-menu-overlay {
+                position: fixed;
+                top: 70px;
+                left: 0;
+                width: 100%;
+                height: calc(100vh - 70px);
+                background-color: rgba(0,0,0,0.5);
+                display: none;
+                z-index: 999;
+            }
+
+            .side-menu-overlay.open {
+                display: block;
+            }
+
+            .side-menu-title {
+                font-size: 18px;
+                font-weight: bold;
+                color: #333;
+                margin-bottom: 20px;
+                padding-bottom: 15px;
+                border-bottom: 1px solid #e0e0e0;
+            }
+
+            .side-menu-section {
+                margin-bottom: 25px;
+            }
+
+            .side-menu-section-title {
+                font-size: 14px;
+                font-weight: 600;
+                color: #666;
+                margin-bottom: 10px;
+            }
+
+            .side-menu-item {
+                display: block;
+                padding: 12px 16px;
+                margin-bottom: 2px;
+                color: #333;
+                text-decoration: none;
+                border-radius: 6px;
+                transition: background-color 0.2s ease;
+                font-size: 14px;
+            }
+
+            .side-menu-item:hover {
+                background-color: #f8f9fa;
+                color: #007bff;
+            }
+
+            .nav-menu {
+                display: inline-block;
+                vertical-align: middle;
+            }
+
+            .nav-menu xf:image {
+                vertical-align: middle;
+                max-height: 34px;
+            }
+
+            .nav-link {
+                font-size: 14px;
+                color: #333;
+                text-decoration: none;
+                cursor: pointer;
+                margin-right: 20px;
+                vertical-align: middle;
+            }
+
+            .header-right {
+                float: right;
+                padding-top: 18px;
+            }
+
+            .search-container {
+                display: inline-block;
+                background-color: #f5f5f5;
+                border-radius: 20px;
+                padding: 6px 15px;
+                margin-right: 10px;
+                vertical-align: middle;
+            }
+
+            .search-input {
+                border: none;
+                background: transparent;
+                width: 150px;
+                outline: none;
+                font-size: 13px;
+                height: 24px;
+                vertical-align: middle;
+            }
+
+            .search-btn {
+                border: none;
+                background: none;
+                cursor: pointer;
+                margin-left: 8px;
+                font-size: 14px;
+                vertical-align: middle;
+            }
+
+            .btn-login {
+                background-color: #fff;
+                border: 1px solid #ddd;
+                padding: 6px 12px;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 12px;
+                margin-right: 8px;
+                height: 32px;
+                vertical-align: middle;
+            }
+
+            .btn-enterprise {
+                background-color: #333;
+                color: #fff;
+                border: none;
+                padding: 6px 12px;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 12px;
+                height: 32px;
+                vertical-align: middle;
+            }
+
+            .clearfix::after {
+                content: "";
+                display: table;
+                clear: both;
+            }
+
+            /* 메인 히어로 섹션 - 완전 반응형 */
+            .hero-section {
+                background-color: #f8f8f8;
+                padding: min(60px, 8vw) min(30px, 4vw);
+            }
+
+            .hero-container {
+                max-width: 1100px;
+                width: 100%;
+                margin: 0 auto;
+                display: flex;
+                gap: 30px;
+                align-items: flex-start;
+            }
+
+            .hero-left {
+                flex: 1;
+                min-width: 0;
+            }
+
+            .hero-right {
+                flex: 0 0 400px;
+                min-width: 280px;
+            }
+
+            .ad-area {
+                width: 100%;
+                min-height: 350px;
+                background-color: #667eea;
+                border-radius: 10px;
+                cursor: pointer;
+                text-align: center;
+                padding: min(80px, 10vw) 20px 40px;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+            }
+
+            .ad-title {
+                font-size: clamp(24px, 4vw, 32px);
+                color: #fff;
+                font-weight: bold;
+                margin-bottom: 10px;
+                display: block;
+                line-height: 1.2;
+            }
+
+            .ad-subtitle {
+                font-size: clamp(14px, 2.5vw, 18px);
+                color: #fff;
+                margin-bottom: 30px;
+                display: block;
+                line-height: 1.4;
+            }
+
+            .ad-button {
+                background-color: #fff;
+                color: #667eea;
+                border: none;
+                padding: 15px 40px;
+                border-radius: 30px;
+                font-size: clamp(14px, 2vw, 16px);
+                font-weight: bold;
+                cursor: pointer;
+                margin: 0 auto;
+                width: fit-content;
+            }
+
+            .login-area {
+                width: 100%;
+                background-color: #fff;
+                padding: min(40px, 5vw);
+                border-radius: 10px;
+                border: 1px solid #e0e0e0;
+            }
+
+            .login-title {
+                font-size: clamp(14px, 2vw, 16px);
+                text-align: center;
+                margin-bottom: 20px;
+                color: #333;
+                line-height: 1.4;
+            }
+
+            .btn-main-login {
+                width: 100%;
+                padding: 15px;
+                background-color: #00c73c;
+                color: #fff;
+                border: none;
+                border-radius: 5px;
+                font-size: clamp(14px, 2vw, 16px);
+                margin-bottom: 20px;
+                cursor: pointer;
+            }
+
+            .gift-area {
+                background-color: #f0fff5;
+                padding: 20px;
+                border-radius: 5px;
+                text-align: center;
+            }
+
+            .gift-text {
+                font-size: clamp(12px, 1.8vw, 14px);
+                color: #00a832;
+                margin-bottom: 5px;
+                display: block;
+                line-height: 1.4;
+            }
+
+            .gift-text-bold {
+                font-size: clamp(12px, 1.8vw, 14px);
+                color: #00a832;
+                font-weight: bold;
+                margin-bottom: 5px;
+                display: block;
+                line-height: 1.4;
+            }
+
+            .gift-icon {
+                font-size: clamp(24px, 4vw, 32px);
+                margin-top: 10px;
+                display: block;
+            }
+
+            /* 섹션 공통 - 반응형 패딩 */
+            .section {
+                padding: min(60px, 8vw) min(50px, 4vw);
+            }
+
+            .section-white {
+                background-color: #fff;
+            }
+
+            .section-gray {
+                background-color: #f8f8f8;
+            }
+
+            .section-title {
+                font-size: clamp(20px, 3vw, 24px);
+                font-weight: bold;
+                color: #333;
+                margin-bottom: 30px;
+                text-align: center;
+            }
+
+            .section-subtitle {
+                font-size: clamp(14px, 2vw, 16px);
+                color: #666;
+                text-align: center;
+                margin-top: -20px;
+                margin-bottom: 30px;
+            }
+
+            /* 카드 - 완전 반응형 그리드 */
+            .cards-container {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                gap: 20px;
+                margin-top: 30px;
+                max-width: 1000px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .card {
+                background-color: #e8f5e9;
+                border-radius: 10px;
+                padding: 30px;
+                text-align: center;
+                cursor: pointer;
+                transition: transform 0.2s ease;
+                min-height: 250px;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+            }
+
+            .card:hover {
+                transform: translateY(-5px);
+            }
+
+            .card-green {
+                background-color: #e8f5e9;
+            }
+
+            .card-orange {
+                background-color: #fff3e0;
+            }
+
+            .card-blue {
+                background-color: #e3f2fd;
+            }
+
+            .card-icon {
+                width: 80px;
+                height: 80px;
+                border-radius: 10px;
+                margin: 0 auto 20px;
+            }
+
+            .card-icon-green {
+                background-color: #c8e6c9;
+            }
+
+            .card-icon-orange {
+                background-color: #ffe0b2;
+            }
+
+            .card-icon-blue {
+                background-color: #bbdefb;
+            }
+
+            .card-title {
+                font-size: clamp(16px, 2.5vw, 18px);
+                font-weight: bold;
+                color: #333;
+                margin-bottom: 10px;
+                display: block;
+            }
+
+            .card-text {
+                font-size: clamp(14px, 2vw, 16px);
+                color: #333;
+                margin-bottom: 5px;
+                display: block;
+                line-height: 1.4;
+            }
+
+            .card-small-text {
+                font-size: clamp(11px, 1.5vw, 13px);
+                color: #666;
+                margin-bottom: 10px;
+                display: block;
+                line-height: 1.4;
+            }
+
+            .card-link {
+                color: #00c73c;
+                font-size: clamp(11px, 1.5vw, 13px);
+                cursor: pointer;
+                text-decoration: none;
+            }
+
+            /* 포지션 카드 - 반응형 그리드 */
+            .positions-container {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                gap: 20px;
+                margin-top: 30px;
+                max-width: 1000px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .position-card {
+                background-color: #fff;
+                border-radius: 10px;
+                padding: 20px;
+                cursor: pointer;
+                border: 1px solid #e0e0e0;
+                transition: transform 0.2s ease, box-shadow 0.2s ease;
+            }
+
+            .position-card:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            }
+
+            .position-header {
+                width: 100%;
+                height: 100px;
+                border-radius: 5px;
+                margin-bottom: 15px;
+                position: relative;
+            }
+
+            .position-header-dark {
+                background-color: #333;
+            }
+
+            .position-header-blue {
+                background-color: #e3f2fd;
+            }
+
+            .position-status {
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                font-size: 11px;
+                padding: 2px 6px;
+                border-radius: 3px;
+                background-color: #e8f5e9;
+                color: #00a832;
+            }
+
+            .position-company {
+                font-size: clamp(12px, 1.8vw, 14px);
+                color: #666;
+                margin-bottom: 5px;
+                text-align: left;
+                display: block;
+            }
+
+            .position-title {
+                font-size: clamp(14px, 2vw, 16px);
+                font-weight: bold;
+                color: #333;
+                margin-bottom: 5px;
+                text-align: left;
+                display: block;
+                line-height: 1.3;
+            }
+
+            .position-status-text {
+                font-size: clamp(10px, 1.5vw, 12px);
+                color: #666;
+                text-align: left;
+                display: block;
+            }
+
+            /* 회사 목록 - 반응형 그리드 */
+            .companies-container {
+                margin-top: 30px;
+            }
+
+            .company-row {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 20px;
+                margin-bottom: 20px;
+                max-width: 1000px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .company-item {
+                height: 80px;
+                background-color: #f9f9f9;
+                border-radius: 10px;
+                border: 1px solid #e0e0e0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                text-align: center;
+                transition: transform 0.2s ease;
+            }
+
+            .company-item:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            }
+
+            .company-name {
+                font-size: clamp(12px, 1.8vw, 14px);
+                color: #333;
+                padding: 0 10px;
+                word-break: keep-all;
+            }
+
+            /* 푸터 */
+            .footer {
+                background-color: #f8f8f8;
+                border-top: 1px solid #e0e0e0;
+                padding: min(40px, 5vw) min(50px, 4vw);
+            }
+
+            .footer-title {
+                font-size: clamp(18px, 3vw, 20px);
+                font-weight: bold;
+                color: #333;
+                margin-bottom: 20px;
+                display: block;
+            }
+
+            .footer-text {
+                font-size: clamp(10px, 1.5vw, 12px);
+                color: #666;
+                line-height: 1.8;
+                display: block;
+                margin-bottom: 5px;
+            }
+
+            /* 태블릿 반응형 */
+            @media (max-width: 1024px) {
+                .header {
+                    padding: 0 20px;
+                }
+                
+                .nav-link {
+                    margin-right: 15px;
+                    font-size: 13px;
+                }
+                
+                .search-input {
+                    width: 120px;
+                }
+
+                .hero-container {
+                    flex-direction: column;
+                    gap: 20px;
+                }
+
+                .hero-right {
+                    flex: none;
+                    width: 100%;
+                    max-width: 400px;
+                    margin: 0 auto;
+                }
+
+                .cards-container {
+                    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                }
+
+                .positions-container {
+                    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                }
+            }
+
+            /* 모바일 반응형 */
+            @media (max-width: 768px) {
+                .header {
+                    height: 60px;
+                    padding: 0 15px;
+                }
+                
+                .header-left, .header-right {
+                    padding-top: 13px;
+                }
+                
+                .nav-menu xf:image {
+                    width: 100px !important;
+                    height: 28px !important;
+                }
+                
+                .nav-link {
+                    display: none;
+                }
+                
+                .search-input {
+                    width: 100px;
+                    font-size: 12px;
+                    height: 20px;
+                }
+                
+                .btn-login, .btn-enterprise {
+                    padding: 5px 8px;
+                    font-size: 11px;
+                    height: 28px;
+                }
+
+                .hero-section {
+                    padding: 40px 15px;
+                }
+
+                .ad-area {
+                    min-height: 280px;
+                    padding: 40px 15px;
+                }
+
+                .cards-container {
+                    grid-template-columns: 1fr;
+                    gap: 15px;
+                }
+
+                .positions-container {
+                    grid-template-columns: 1fr;
+                    gap: 15px;
+                }
+
+                .company-row {
+                    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+                    gap: 15px;
+                }
+
+                .section {
+                    padding: 40px 15px;
+                }
+
+                .section-title {
+                    margin-bottom: 20px;
+                }
+
+                .section-subtitle {
+                    margin-top: -10px;
+                    margin-bottom: 20px;
+                }
+            }
+
+            /* 작은 모바일 */
+            @media (max-width: 480px) {
+                .company-row {
+                    grid-template-columns: 1fr;
+                }
+
+                .ad-area {
+                    min-height: 250px;
+                    padding: 30px 10px;
+                }
+
+                .card {
+                    padding: 20px;
+                    min-height: 220px;
+                }
+
+                .position-card {
+                    padding: 15px;
+                }
+            }
+        ]]></style>
+    </head>
+    <body ev:onpageload="scwin.onpageload">
+        <xf:group class="main-wrap">
+
+            <!-- 헤더 영역 -->
+            <xf:group class="header clearfix" tagname="header">
+                <xf:group class="header-left">
+                    <!-- 햄버거 메뉴 -->
+                    <div class="hamburger-menu" ev:onclick="scwin.toggleSideMenu()">
+                        <div class="hamburger-line"></div>
+                        <div class="hamburger-line"></div>
+                        <div class="hamburger-line"></div>
+                    </div>
+                    
+                    <xf:group class="nav-menu">
+                    	<xf:image src="/images/ws5/weaveTypeLogo.png" style="width: 120px; height: 32px; object-fit: contain;" id="weaveTypeLogo" class="logo" ev:onclick="scwin.weaveTypeLogo_onclick"></xf:image>
+                    	<w2:anchor class="nav-link" id="anchor1" ev:onclick="scwin.menu1_onclick" outerDiv="false">
+                    		<xf:label><![CDATA[매칭]]></xf:label>
+                    	</w2:anchor>
+                    	<w2:anchor class="nav-link" id="anchor2" ev:onclick="scwin.menu2_onclick" outerDiv="false">
+                    		<xf:label><![CDATA[mbti검사]]></xf:label>
+                    	</w2:anchor>
+                    	<w2:anchor class="nav-link" id="anchor3" ev:onclick="scwin.menu3_onclick" outerDiv="false">
+                    		<xf:label><![CDATA[기업 둘러보기]]></xf:label>
+                    	</w2:anchor>
+                    </xf:group>
+                </xf:group>
+                <xf:group class="header-right">
+                    <xf:group class="search-container">
+                        <w2:inputText id="searchInput" class="search-input"
+                                      placeholder="검색어를 입력하세요" ev:onkeypress="scwin.searchInput_onkeypress">
+                        </w2:inputText>
+                        <xf:trigger class="search-btn" id="btnSearch" ev:onclick="scwin.btnSearch_onclick" type="button">
+                            <xf:label><![CDATA[🔍]]></xf:label>
+                        </xf:trigger>
+                    </xf:group>
+                    <xf:trigger class="btn-login" id="btnLogin" ev:onclick="scwin.btnLogin_onclick" type="button">
+                        <xf:label><![CDATA[로그인/회원가입]]></xf:label>
+                    </xf:trigger>
+                    <xf:trigger class="btn-enterprise" id="btnEnterprise" ev:onclick="scwin.btnEnterprise_onclick" type="button">
+                        <xf:label><![CDATA[기업 서비스]]></xf:label>
+                    </xf:trigger>
+                </xf:group>
+            </xf:group>
+
+            <!-- 사이드 메뉴 오버레이 -->
+            <div class="side-menu-overlay" id="sideMenuOverlay" ev:onclick="scwin.closeSideMenu()"></div>
+            
+            <!-- 사이드 메뉴 -->
+            <nav class="side-menu" id="sideMenu">
+                <w2:textbox class="side-menu-title" label="메뉴"></w2:textbox>
+                
+                <div class="side-menu-section">
+                    <w2:textbox class="side-menu-section-title" label="매칭 서비스"></w2:textbox>
+                    <w2:anchor class="side-menu-item" ev:onclick="scwin.menu1_onclick">
+                        <xf:label><![CDATA[💼 매칭]]></xf:label>
+                    </w2:anchor>
+                    <w2:anchor class="side-menu-item" ev:onclick="scwin.menu2_onclick">
+                        <xf:label><![CDATA[🧠 MBTI 검사]]></xf:label>
+                    </w2:anchor>
+                    <w2:anchor class="side-menu-item" ev:onclick="scwin.menu3_onclick">
+                        <xf:label><![CDATA[🏢 기업 둘러보기]]></xf:label>
+                    </w2:anchor>
+                </div>
+                
+                <div class="side-menu-section">
+                    <w2:textbox class="side-menu-section-title" label="개인 서비스"></w2:textbox>
+                    <w2:anchor class="side-menu-item" ev:onclick="scwin.goToUserDetail()">
+                        <xf:label><![CDATA[👤 내 정보]]></xf:label>
+                    </w2:anchor>
+                    <w2:anchor class="side-menu-item">
+                        <xf:label><![CDATA[📝 지원현황]]></xf:label>
+                    </w2:anchor>
+                    <w2:anchor class="side-menu-item">
+                        <xf:label><![CDATA[❤️ 관심기업]]></xf:label>
+                    </w2:anchor>
+                    <w2:anchor class="side-menu-item">
+                        <xf:label><![CDATA[🔖 북마크]]></xf:label>
+                    </w2:anchor>
+                </div>
+                
+                <div class="side-menu-section">
+                    <w2:textbox class="side-menu-section-title" label="기업 서비스"></w2:textbox>
+                    <w2:anchor class="side-menu-item" ev:onclick="scwin.btnEnterprise_onclick">
+                        <xf:label><![CDATA[📊 채용관리 대시보드]]></xf:label>
+                    </w2:anchor>
+                    <w2:anchor class="side-menu-item" ev:onclick="scwin.goToCompanyRegister()">
+                        <xf:label><![CDATA[📋 기업 등록]]></xf:label>
+                    </w2:anchor>
+                </div>
+            </nav>
+
+            <!-- 메인 히어로 섹션 -->
+            <xf:group class="hero-section" tagname="section">
+                <xf:group class="hero-container clearfix">
+                    <!-- 광고 영역 -->
+                    <xf:group class="hero-left">
+                        <xf:group class="ad-area" id="ad_area" ev:onclick="scwin.ad_onclick">
+                            <w2:textbox class="ad-title" label="당신의 꿈의 직장을"></w2:textbox>
+                            <w2:textbox class="ad-title" label="찾아드립니다"></w2:textbox>
+                            <w2:textbox class="ad-subtitle" label="AI 기반 매칭으로 최적의 기업과 만남"></w2:textbox>
+                            <xf:trigger class="ad-button" type="button">
+                                <xf:label><![CDATA[무료로 시작하기 →]]></xf:label>
+                            </xf:trigger>
+                        </xf:group>
+                    </xf:group>
+
+                    <!-- 로그인 박스 -->
+                    <xf:group class="hero-right">
+                        <xf:group class="login-area">
+                            <w2:textbox class="login-title" label="로그인하고 기업 매칭에 참여해 보세요."></w2:textbox>
+                            <xf:trigger class="btn-main-login" id="btnMainLogin" ev:onclick="scwin.btnMainLogin_onclick" type="button">
+                                <xf:label><![CDATA[로그인]]></xf:label>
+                            </xf:trigger>
+                            <xf:group class="gift-area">
+                                <w2:textbox class="gift-text" label="매칭 퀘스트 완료하고"></w2:textbox>
+                                <w2:textbox class="gift-text-bold" label="합격자 이력서 받아가세요!"></w2:textbox>
+                                <w2:textbox class="gift-icon" label="🎁"></w2:textbox>
+                            </xf:group>
+                        </xf:group>
+                    </xf:group>
+                </xf:group>
+            </xf:group>
+
+            <!-- 점수매칭 섹션 -->
+            <xf:group class="section section-white" tagname="section">
+                <w2:textbox class="section-title" label="점수매칭"></w2:textbox>
+                <w2:textbox class="section-subtitle" label="접수 구직자: 120,739명"></w2:textbox>
+
+                <xf:group class="cards-container">
+                    <!-- 카드 1: 튜토리얼 -->
+                    <xf:group class="card card-green" id="card1" ev:onclick="scwin.card1_onclick">
+                        <xf:group class="card-icon card-icon-green"></xf:group>
+                        <w2:textbox class="card-title" label="튜토리얼"></w2:textbox>
+                    </xf:group>
+
+                    <!-- 카드 2: 자소서 업체검토 -->
+                    <xf:group class="card card-orange" id="card2" ev:onclick="scwin.card2_onclick">
+                    	<xf:group class="card-icon card-icon-orange"></xf:group>
+                    	<w2:textbox class="card-text" label="자소서와 입사지원은"></w2:textbox>
+                    	<w2:textbox class="card-text" label="이제 그만!"></w2:textbox>
+                    	<w2:textbox style="" label="매칭 프로필 등록하면" class="card-text"></w2:textbox>
+                    	<w2:textbox style="position" label="기업의 제안이 도착해요." class="card-text"></w2:textbox>
+                    	<w2:textbox class="card-small-text" label="매칭 프로필 등록하면 기업의 제안이 도착해요."></w2:textbox>
+                    	<w2:anchor class="card-link" ev:onclick="scwin.btnProfile_onclick" outerDiv="false">
+                    		<xf:label><![CDATA[매칭 프로필 채우기 >]]></xf:label>
+                    	</w2:anchor>
+                    </xf:group>
+
+                    <!-- 카드 3: MBTI 검사 -->
+                    <xf:group class="card card-blue" id="card3" ev:onclick="scwin.card3_onclick">
+                        <xf:group class="card-icon card-icon-blue"></xf:group>
+                        <w2:textbox class="card-title" label="mbti검사"></w2:textbox>
+                    </xf:group>
+                </xf:group>
+            </xf:group>
+
+            <!-- 포지션 추천 섹션 -->
+            <xf:group class="section section-gray" tagname="section">
+                <w2:textbox class="section-title" label="로그인하고 내 조건에 맞는 포지션 추천받기"></w2:textbox>
+
+                <xf:group class="positions-container">
+                    <!-- 포지션 카드 1 -->
+                    <xf:group class="position-card" id="position1" ev:onclick="scwin.position1_onclick">
+                        <xf:group class="position-header position-header-dark">
+                            <w2:textbox class="position-status" label="인기"></w2:textbox>
+                        </xf:group>
+                        <w2:textbox class="position-company" label="(주)이디야"></w2:textbox>
+                        <w2:textbox class="position-title" label="경력 · 경영관리 · HR · 서울(본사)"></w2:textbox>
+                        <w2:textbox class="position-status-text" label="지원자관리"></w2:textbox>
+                    </xf:group>
+
+                    <!-- 포지션 카드 2 -->
+                    <xf:group class="position-card" id="position2" ev:onclick="scwin.position2_onclick">
+                        <xf:group class="position-header position-header-dark">
+                            <w2:textbox class="position-status" label="인기"></w2:textbox>
+                        </xf:group>
+                        <w2:textbox class="position-company" label="(주)이디야"></w2:textbox>
+                        <w2:textbox class="position-title" label="경력 · 디자인 · 웹디자인 · 서울(본사)"></w2:textbox>
+                        <w2:textbox class="position-status-text" label="공고작성"></w2:textbox>
+                    </xf:group>
+
+                    <!-- 포지션 카드 3 -->
+                    <xf:group class="position-card" id="position3" ev:onclick="scwin.position3_onclick">
+                        <xf:group class="position-header position-header-blue">
+                            <w2:textbox class="position-status" label="인기"></w2:textbox>
+                        </xf:group>
+                        <w2:textbox class="position-company" label="동아사이그룹"></w2:textbox>
+                        <w2:textbox class="position-title" label="신입/경력 · 총무 · 총무/관리 · 수도권(전국)"></w2:textbox>
+                        <w2:textbox class="position-status-text" label="채용리뷰"></w2:textbox>
+                    </xf:group>
+                </xf:group>
+            </xf:group>
+
+            <!-- 매칭 참여 기업 섹션 -->
+            <xf:group class="section section-white" tagname="section">
+                <w2:textbox class="section-title" label="매칭 참여 기업"></w2:textbox>
+                <w2:textbox class="section-subtitle" label="참여 기업: 253개"></w2:textbox>
+
+                <xf:group class="companies-container">
+                    <xf:group class="company-row">
+                        <xf:group class="company-item">
+                            <w2:textbox class="company-name" label="🏛️ kakaobank"></w2:textbox>
+                        </xf:group>
+                        <xf:group class="company-item">
+                            <w2:textbox class="company-name" label="(주)카카오페이"></w2:textbox>
+                        </xf:group>
+                        <xf:group class="company-item">
+                            <w2:textbox class="company-name" label="(주)파라다이스"></w2:textbox>
+                        </xf:group>
+                        <xf:group class="company-item">
+                            <w2:textbox class="company-name" label="💎 SHINSEGAE"></w2:textbox>
+                        </xf:group>
+                    </xf:group>
+
+                    <xf:group class="company-row">
+                        <xf:group class="company-item">
+                            <w2:textbox class="company-name" label="현대로템(주)"></w2:textbox>
+                        </xf:group>
+                        <xf:group class="company-item">
+                            <w2:textbox class="company-name" label="🌐 DAS"></w2:textbox>
+                        </xf:group>
+                        <xf:group class="company-item">
+                            <w2:textbox class="company-name" label="📱 com2uS"></w2:textbox>
+                        </xf:group>
+                        <xf:group class="company-item">
+                            <w2:textbox class="company-name" label="(주)원티드랩"></w2:textbox>
+                        </xf:group>
+                    </xf:group>
+
+                    <xf:group class="company-row">
+                        <xf:group class="company-item">
+                            <w2:textbox class="company-name" label="⛽ S-OIL(주)"></w2:textbox>
+                        </xf:group>
+                        <xf:group class="company-item">
+                            <w2:textbox class="company-name" label="한국전력공사"></w2:textbox>
+                        </xf:group>
+                        <xf:group class="company-item">
+                            <w2:textbox class="company-name" label="🧪 그린케미칼"></w2:textbox>
+                        </xf:group>
+                        <xf:group class="company-item">
+                            <w2:textbox class="company-name" label="케이티(KT)"></w2:textbox>
+                        </xf:group>
+                    </xf:group>
+                </xf:group>
+            </xf:group>
+
+            <!-- 푸터 -->
+            <xf:group class="footer" tagname="footer">
+                <w2:textbox class="footer-title" label="WeaveType"></w2:textbox>
+                <w2:textbox class="footer-text" label="(주)위브타입 | 대표이사 홍길동 | 대표고객문의 support@weavetype.com"></w2:textbox>
+                <w2:textbox class="footer-text" label="서울특별시 강남구 테헤란로 123 위브타워 15층 | 전화번호: 02-123-4567"></w2:textbox>
+                <w2:textbox class="footer-text" label="© 2023 WeaveType Inc. All Rights Reserved."></w2:textbox>
+            </xf:group>
+
+        </xf:group>
+    </body>
+</html>

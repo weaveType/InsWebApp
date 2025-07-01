@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ev="http://www.w3.org/2001/xml-events"
+    xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
+    <head>
+        <w2:type>COMPONENT</w2:type>
+        <w2:buildDate/>
+        <w2:MSA/>
+        <xf:model>
+            <w2:dataCollection baseNode="map"/>
+            <w2:workflowCollection/>
+        </xf:model>
+        <w2:layoutInfo/>
+        <w2:publicInfo method=""/>
+        <script lazy="false" type="text/javascript"><![CDATA[
+scwin.onpageload = function() {
+	
+};
+]]></script>
+    </head>
+    <body ev:onpageload="scwin.onpageload">
+    	<xf:group class="sub_contents" id="" meta_snippetCategory="00_화면시작" meta_snippetKeyComponent="true" meta_snippetName="0_01 페이지시작"
+    		style="">
+    		<section style="height:469px;background:linear-gradient(135deg, #667eea 0%, #764ba2 100%);" id="">
+
+
+
+    			<w2:textbox id="" label="코드로 검증된&lt;br&gt;개발자를 만나보세요"
+    				style="width:938px;height:61px;padding-top:30px;margin:0px auto;font-size:50px;color:white;font-weight:bold;text-align:center;"
+    				escape="false">
+    			</w2:textbox>
+
+    			<w2:textbox id="" label="mbti와 코드분석을 통한 스마트 매칭으로 우리 회사에 딱 맞는 개발자를 찾아보세요"
+    				style="width:789px;height:37px;margin:0 auto;font-size:20px;color: white;padding-top: 80px;">
+    			</w2:textbox>
+    			<xf:trigger class="btn_cm" id="" meta_snippetCategory="08_버튼" meta_snippetKeyComponent="true" meta_snippetName="8_01 기본버튼"
+    				style="margin: 50px 50%;" type="button">
+    				<xf:label><![CDATA[인라인버튼]]></xf:label>
+    			</xf:trigger>
+    		</section>
+    		<section style="height:545px;" id="">
+    			<w2:textbox id="" label="왜 WeaveType을 선택해야 할까요?"
+    				style="height:83px;padding-top:60px;margin:0px auto;font-size:50px;font-weight:bold;text-align:center;">
+    			</w2:textbox>
+    			<w2:textbox id="" label="기존 채용 플랫폼과 차별화된 스마트한 개발자 매칭 서비스"
+    				style="padding-top:15px;padding-bottom: 30px;margin:0px auto;font-size:20px;font-weight:bold;text-align:center;">
+    			</w2:textbox>
+
+    			<xf:group class="lybox" id="" meta_snippetCategory="01_화면분할" meta_snippetKeyComponent="true"
+    				meta_snippetName="1_03 가변 3단 분할_width값 고정 33per" style="">
+    				<xf:group class="" id=""
+    					style="height: 200px;margin: 30px 30px;flex:1;background:#fff;border-radius:12px;padding:30px 30px;box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3);cursor:pointer;transition:all 0.3s;">
+    					<div class="feature-icon" style="font-size:40px; text-align:center;">🧬</div>
+    					<h3>MBTI 기반 매칭</h3>
+    					<p>개발자의 성향과 우리 팀의 문화가 맞는지 미리 확인하고, 더 나은 팀워크를 만들어보세요</p>
+    				</xf:group>
+    				<xf:group class="" id=""
+    					style="height: 200px;margin: 30px 30px;flex:1;background:#fff;border-radius:12px;padding:30px 30px;box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3);cursor:pointer;transition:all 0.3s;">
+    					<div class="feature-icon" style="font-size:40px; text-align:center;">💻</div>
+    					<h3>실제 코드 분석</h3>
+    					<p>이력서로는 알 수 없는 실제 개발 실력을 코드 분석을 통해 객관적으로 평가할 수 있습니다</p>
+    				</xf:group>
+    				<xf:group class="" id=""
+    					style="height: 200px;margin: 30px 30px;flex:1;background:#fff;border-radius:12px;padding:30px 30px;box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3);cursor:pointer;transition:all 0.3s;">
+    					<div class="feature-icon" style="font-size:40px; text-align:center;">🎯</div>
+    					<h3>스마트 추천</h3>
+    					<p>AI가 우리 회사의 조건과 문화에 가장 적합한 개발자를 자동으로 추천해드립니다</p>
+    				</xf:group>
+    			</xf:group>
+
+    			<xf:group class="lybox" id="" meta_snippetCategory="01_화면분할" meta_snippetKeyComponent="true"
+    				meta_snippetName="1_02 가변 3단 분할" style="">
+    				<xf:group class=" col_3" id=""
+    					style="height: 200px;margin: 30px 30px;flex:1;background:#fff;border-radius:12px;padding:30px;box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3);cursor:pointer;transition:all 0.3s;">
+    					<div class="feature-icon" style="font-size:40px; text-align:center;">⚡</div>
+    					<h3>빠른 채용 프로세스</h3>
+    					<p>효율적인 지원자 관리와 자동화된 매칭으로 채용 시간을 50% 단축할 수 있습니다</p>
+    				</xf:group>
+    				<xf:group class=" col_4" id=""
+    					style="height: 200px;margin: 30px 30px;flex:1;background:#fff;border-radius:12px;padding:30px;box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3);cursor:pointer;transition:all 0.3s;">
+    					<div class="feature-icon" style="font-size:40px; text-align:center;">📊</div>
+    					<h3>데이터 기반 채용</h3>
+    					<p>채용 현황과 성과를 한눈에 파악하고, 데이터 기반의 채용 전략을 수립하세요</p>
+    				</xf:group>
+    				<xf:group class=" col_3" id=""
+    					style="height: 200px;margin: 30px 30px;flex:1;background:#fff;border-radius:12px;padding:30px;box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3);cursor:pointer;transition:all 0.3s;">
+    					<div class="feature-icon" style="font-size:40px; text-align:center;">🤝</div>
+    					<h3>양방향 소통</h3>
+    					<p>지원자와 실시간으로 소통하고, 스카우트 제안을 통해 적극적으로 인재를 영입하세요</p>
+    				</xf:group>
+    			</xf:group>
+
+    		</section>
+    	</xf:group>
+    	
+    </body>
+</html>

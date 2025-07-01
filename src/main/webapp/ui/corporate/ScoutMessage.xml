@@ -1,0 +1,451 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ev="http://www.w3.org/2001/xml-events"
+    xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
+    <head>
+        <w2:type>COMPONENT</w2:type>
+        <w2:buildDate/>
+        <w2:MSA/>
+        <xf:model>
+            <w2:dataCollection baseNode="map">
+                <w2:dataMap baseNode="map" id="dmp_scoutMessage">
+                    <w2:keyInfo>
+                        <w2:key dataType="text" name="company_name" id="companyName"></w2:key>
+                        <w2:key dataType="text" name="position_title" id="positionTitle"></w2:key>
+                        <w2:key dataType="text" name="salary_range" id="salaryRange"></w2:key>
+                        <w2:key dataType="text" name="message_content" id="messageContent"></w2:key>
+                        <w2:key dataType="text" name="contact_email" id="contactEmail"></w2:key>
+                        <w2:key dataType="text" name="contact_phone" id="contactPhone"></w2:key>
+                    </w2:keyInfo>
+                </w2:dataMap>
+            </w2:dataCollection>
+            <w2:workflowCollection/>
+        </xf:model>
+        <w2:layoutInfo/>
+        <w2:publicInfo method=""/>
+        <style type="text/css"><![CDATA[
+            .scout-container {
+                padding: 20px;
+                background-color: #ffffff;
+                border-radius: 8px;
+                max-width: 500px;
+                margin: 0 auto;
+            }
+            
+            .scout-header {
+                text-align: center;
+                margin-bottom: 25px;
+                padding-bottom: 15px;
+                border-bottom: 2px solid #007bff;
+            }
+            
+            .scout-title {
+                font-size: 24px;
+                font-weight: bold;
+                color: #007bff;
+                margin: 0;
+            }
+            
+            .scout-subtitle {
+                font-size: 14px;
+                color: #6c757d;
+                margin-top: 5px;
+            }
+            
+            .form-group {
+                margin-bottom: 20px;
+            }
+            
+            .form-label {
+                display: block;
+                font-weight: 500;
+                color: #333;
+                margin-bottom: 8px;
+                font-size: 14px;
+            }
+            
+            .form-input {
+                width: 100%;
+                height: 40px;
+                padding: 0 12px;
+                border: 1px solid #ddd;
+                border-radius: 4px;
+                font-size: 14px;
+                box-sizing: border-box;
+            }
+            
+            .form-input:focus {
+                border-color: #007bff;
+                outline: none;
+                box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+            }
+            
+            .form-textarea {
+                width: 100%;
+                padding: 12px;
+                border: 1px solid #ddd;
+                border-radius: 4px;
+                font-size: 14px;
+                resize: vertical;
+                min-height: 120px;
+                box-sizing: border-box;
+            }
+            
+            .form-textarea:focus {
+                border-color: #007bff;
+                outline: none;
+                box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+            }
+            
+            .form-select {
+                width: 100%;
+                height: 40px;
+                padding: 0 12px;
+                border: 1px solid #ddd;
+                border-radius: 4px;
+                font-size: 14px;
+                box-sizing: border-box;
+            }
+            
+            .button-group {
+                display: flex;
+                justify-content: center;
+                gap: 15px;
+                margin-top: 30px;
+                padding-top: 20px;
+                border-top: 1px solid #e9ecef;
+            }
+            
+            .btn-send {
+                background-color: #007bff;
+                color: white;
+                border: none;
+                padding: 12px 30px;
+                border-radius: 4px;
+                cursor: pointer;
+                font-weight: 500;
+                font-size: 16px;
+                min-width: 120px;
+            }
+            
+            .btn-send:hover {
+                background-color: #0056b3;
+            }
+            
+            .btn-cancel {
+                background-color: #6c757d;
+                color: white;
+                border: none;
+                padding: 12px 30px;
+                border-radius: 4px;
+                cursor: pointer;
+                font-weight: 500;
+                font-size: 16px;
+                min-width: 120px;
+            }
+            
+            .btn-cancel:hover {
+                background-color: #545b62;
+            }
+            
+            .template-section {
+                background-color: #f8f9fa;
+                padding: 15px;
+                border-radius: 4px;
+                margin-bottom: 20px;
+            }
+            
+            .template-title {
+                font-weight: 500;
+                color: #333;
+                margin-bottom: 10px;
+            }
+            
+            .template-btn {
+                background-color: #e9ecef;
+                color: #495057;
+                border: 1px solid #ced4da;
+                padding: 6px 12px;
+                border-radius: 4px;
+                cursor: pointer;
+                margin-right: 8px;
+                margin-bottom: 8px;
+                font-size: 12px;
+            }
+            
+            .template-btn:hover {
+                background-color: #dee2e6;
+            }
+            
+            .char-count {
+                font-size: 12px;
+                color: #6c757d;
+                text-align: right;
+                margin-top: 5px;
+            }
+        ]]></style>
+        <script lazy="false" type="text/javascript"><![CDATA[
+scwin.onpageload = function() {
+    scwin.setDefaultValues();
+    scwin.setDefaultTemplate();
+};
+
+// 기본값 설정
+scwin.setDefaultValues = function() {
+    dmp_scoutMessage.set("companyName", "인스웨이브");
+    dmp_scoutMessage.set("contactEmail", "hr@company.com");
+    dmp_scoutMessage.set("contactPhone", "02-1234-5678");
+};
+
+// 기본 템플릿 설정
+scwin.setDefaultTemplate = function() {
+    var defaultTemplate = "안녕하세요!\n\n" +
+                         "저희 {{회사명}}에서 {{포지션}} 포지션으로 함께 일하실 개발자를 찾고 있습니다.\n\n" +
+                         "귀하의 기술 스택과 경험이 저희가 찾는 인재상과 매우 잘 맞는다고 생각되어 연락드렸습니다.\n\n" +
+                         "• 제안 포지션: {{포지션}}\n" +
+                         "• 예상 연봉: {{연봉대}}\n" +
+                         "• 근무 형태: 유연근무제, 재택근무 가능\n" +
+                         "• 복리후생: 건강검진, 교육비 지원, 식비 지원 등\n\n" +
+                         "관심이 있으시다면 언제든지 연락 주시기 바랍니다.\n" +
+                         "더 자세한 내용은 면담을 통해 말씀드리겠습니다.\n\n" +
+                         "감사합니다.\n\n" +
+                         "연락처: {{연락처}}\n" +
+                         "이메일: {{이메일}}";
+    
+    dmp_scoutMessage.set("messageContent", defaultTemplate);
+    scwin.updateCharCount();
+};
+
+// 템플릿 적용
+scwin.applyTemplate = function(templateType) {
+    var template = "";
+    
+    switch(templateType) {
+        case "startup":
+            template = "안녕하세요!\n\n" +
+                      "빠르게 성장하는 스타트업 {{회사명}}에서 {{포지션}} 개발자를 모시고 있습니다.\n\n" +
+                      "• 적극적인 의사결정 참여 기회\n" +
+                      "• 다양한 기술 스택 경험 가능\n" +
+                      "• 스톡옵션 제공\n" +
+                      "• 자유로운 근무 환경\n\n" +
+                      "함께 성장할 개발자를 기다립니다!";
+            break;
+        case "enterprise":
+            template = "안녕하세요.\n\n" +
+                      "{{회사명}}에서 {{포지션}} 포지션에 적합한 인재를 찾고 있습니다.\n\n" +
+                      "• 안정적인 근무 환경\n" +
+                      "• 체계적인 교육 프로그램\n" +
+                      "• 다양한 복리후생\n" +
+                      "• 경력 개발 지원\n\n" +
+                      "자세한 내용은 면담을 통해 안내드리겠습니다.";
+            break;
+        case "remote":
+            template = "안녕하세요!\n\n" +
+                      "완전 원격근무 환경의 {{회사명}}에서 {{포지션}} 개발자를 모집합니다.\n\n" +
+                      "• 100% 원격근무\n" +
+                      "• 유연한 근무시간\n" +
+                      "• 재택근무 환경 지원\n" +
+                      "• 글로벌 팀과의 협업\n\n" +
+                      "장소에 구애받지 않고 일하실 수 있습니다!";
+            break;
+    }
+    
+    dmp_scoutMessage.set("messageContent", template);
+    scwin.updateCharCount();
+};
+
+// 글자 수 업데이트
+scwin.updateCharCount = function() {
+    var content = dmp_scoutMessage.get("messageContent") || "";
+    var charCount = content.length;
+    charCountDisplay.setValue(charCount + " / 1000자");
+    
+    if (charCount > 1000) {
+        charCountDisplay.getElement().style.color = "#dc3545";
+    } else {
+        charCountDisplay.getElement().style.color = "#6c757d";
+    }
+};
+
+// 메시지 내용 변경 시
+scwin.messageContent_onchange = function() {
+    scwin.updateCharCount();
+};
+
+// 스카웃 메시지 발송
+scwin.sendScoutMessage = function() {
+    // 유효성 검사
+    var companyName = dmp_scoutMessage.get("companyName");
+    var positionTitle = dmp_scoutMessage.get("positionTitle");
+    var messageContent = dmp_scoutMessage.get("messageContent");
+    var contactEmail = dmp_scoutMessage.get("contactEmail");
+    
+    if (!companyName || companyName.trim() === "") {
+        alert("회사명을 입력해주세요.");
+        return;
+    }
+    
+    if (!positionTitle || positionTitle.trim() === "") {
+        alert("포지션을 입력해주세요.");
+        return;
+    }
+    
+    if (!messageContent || messageContent.trim() === "") {
+        alert("스카웃 메시지를 입력해주세요.");
+        return;
+    }
+    
+    if (!contactEmail || contactEmail.trim() === "") {
+        alert("연락처 이메일을 입력해주세요.");
+        return;
+    }
+    
+    if (messageContent.length > 1000) {
+        alert("메시지는 1000자 이내로 작성해주세요.");
+        return;
+    }
+    
+    // 실제 구현에서는 서버로 스카웃 메시지 전송
+    if (confirm("스카웃 메시지를 발송하시겠습니까?")) {
+        // 서버 통신 로직
+        /*
+        var scoutData = {
+            companyName: companyName,
+            positionTitle: positionTitle,
+            salaryRange: dmp_scoutMessage.get("salaryRange"),
+            messageContent: messageContent,
+            contactEmail: contactEmail,
+            contactPhone: dmp_scoutMessage.get("contactPhone")
+        };
+        
+        // 서버로 전송
+        */
+        
+        alert("스카웃 메시지가 성공적으로 발송되었습니다!");
+        scwin.closePopup();
+    }
+};
+
+// 팝업 닫기
+scwin.closePopup = function() {
+    window.close();
+};
+
+// 템플릿 버튼 클릭 이벤트들
+scwin.startupTemplate_onclick = function() {
+    scwin.applyTemplate("startup");
+};
+
+scwin.enterpriseTemplate_onclick = function() {
+    scwin.applyTemplate("enterprise");
+};
+
+scwin.remoteTemplate_onclick = function() {
+    scwin.applyTemplate("remote");
+};
+]]></script>
+    </head>
+    <body ev:onpageload="scwin.onpageload">
+        <xf:group class="scout-container">
+            <!-- 헤더 -->
+            <xf:group class="scout-header">
+                <w2:textbox class="scout-title" label="🎯 스카웃 제안" style="border:none; background:transparent;"></w2:textbox>
+                <w2:textbox class="scout-subtitle" label="개발자에게 매력적인 제안을 보내보세요" style="border:none; background:transparent;"></w2:textbox>
+            </xf:group>
+            
+            <!-- 기본 정보 입력 -->
+            <xf:group class="form-group">
+                <w2:textbox class="form-label" label="회사명 *" style="border:none; background:transparent;"></w2:textbox>
+                <xf:input class="form-input" placeholder="우리 회사" ref="data:dmp_scoutMessage.companyName" style="width:100%;height:40px;"></xf:input>
+            </xf:group>
+            
+            <xf:group style="display:flex; gap:15px;">
+                <xf:group class="form-group" style="flex:1;">
+                    <w2:textbox class="form-label" label="포지션 *" style="border:none; background:transparent;"></w2:textbox>
+                    <xf:input class="form-input" placeholder="예: 백엔드 개발자" ref="data:dmp_scoutMessage.positionTitle" style="width:100%;height:40px;"></xf:input>
+                </xf:group>
+                
+                <xf:group class="form-group" style="flex:1;">
+                    <w2:textbox class="form-label" label="연봉대" style="border:none; background:transparent;"></w2:textbox>
+                    <xf:select1 class="form-select" chooseOption="연봉대 선택" ref="data:dmp_scoutMessage.salaryRange" appearance="minimal" style="width:100%;height:40px;">
+                        <xf:choices>
+                            <xf:item>
+                                <xf:label><![CDATA[3,000만원 이하]]></xf:label>
+                                <xf:value><![CDATA[3000만원 이하]]></xf:value>
+                            </xf:item>
+                            <xf:item>
+                                <xf:label><![CDATA[3,000-4,000만원]]></xf:label>
+                                <xf:value><![CDATA[3000-4000만원]]></xf:value>
+                            </xf:item>
+                            <xf:item>
+                                <xf:label><![CDATA[4,000-5,000만원]]></xf:label>
+                                <xf:value><![CDATA[4000-5000만원]]></xf:value>
+                            </xf:item>
+                            <xf:item>
+                                <xf:label><![CDATA[5,000-6,000만원]]></xf:label>
+                                <xf:value><![CDATA[5000-6000만원]]></xf:value>
+                            </xf:item>
+                            <xf:item>
+                                <xf:label><![CDATA[6,000만원 이상]]></xf:label>
+                                <xf:value><![CDATA[6000만원 이상]]></xf:value>
+                            </xf:item>
+                            <xf:item>
+                                <xf:label><![CDATA[협의]]></xf:label>
+                                <xf:value><![CDATA[협의]]></xf:value>
+                            </xf:item>
+                        </xf:choices>
+                    </xf:select1>
+                </xf:group>
+            </xf:group>
+            
+            <!-- 템플릿 선택 -->
+            <xf:group class="template-section">
+                <w2:textbox class="template-title" label="메시지 템플릿" style="border:none; background:transparent;"></w2:textbox>
+                <xf:trigger class="template-btn" type="button" ev:onclick="scwin.startupTemplate_onclick">
+                    <xf:label><![CDATA[스타트업]]></xf:label>
+                </xf:trigger>
+                <xf:trigger class="template-btn" type="button" ev:onclick="scwin.enterpriseTemplate_onclick">
+                    <xf:label><![CDATA[대기업]]></xf:label>
+                </xf:trigger>
+                <xf:trigger class="template-btn" type="button" ev:onclick="scwin.remoteTemplate_onclick">
+                    <xf:label><![CDATA[원격근무]]></xf:label>
+                </xf:trigger>
+            </xf:group>
+            
+            <!-- 스카웃 메시지 -->
+            <xf:group class="form-group">
+                <w2:textbox class="form-label" label="스카웃 메시지 *" style="border:none; background:transparent;"></w2:textbox>
+                <xf:textarea class="form-textarea" 
+                    placeholder="개발자에게 보낼 스카웃 메시지를 작성해주세요. 회사 소개, 포지션 설명, 근무 조건 등을 포함하시면 좋습니다."
+                    ref="data:dmp_scoutMessage.messageContent"
+                    ev:onchange="scwin.messageContent_onchange"
+                    style="width:100%; min-height:120px; resize:vertical;">
+                </xf:textarea>
+                <w2:textbox id="charCountDisplay" class="char-count" label="0 / 1000자" style="border:none; background:transparent; text-align:right;"></w2:textbox>
+            </xf:group>
+            
+            <!-- 연락처 정보 -->
+            <xf:group style="display:flex; gap:15px;">
+                <xf:group class="form-group" style="flex:1;">
+                    <w2:textbox class="form-label" label="연락처 이메일 *" style="border:none; background:transparent;"></w2:textbox>
+                    <xf:input class="form-input" placeholder="hr@company.com" ref="data:dmp_scoutMessage.contactEmail" style="width:100%;height:40px;"></xf:input>
+                </xf:group>
+                
+                <xf:group class="form-group" style="flex:1;">
+                    <w2:textbox class="form-label" label="연락처 전화번호" style="border:none; background:transparent;"></w2:textbox>
+                    <xf:input class="form-input" placeholder="02-1234-5678" ref="data:dmp_scoutMessage.contactPhone" style="width:100%;height:40px;"></xf:input>
+                </xf:group>
+            </xf:group>
+            
+            <!-- 버튼 그룹 -->
+            <xf:group class="button-group">
+                <xf:trigger class="btn-send" type="button" ev:onclick="scwin.sendScoutMessage">
+                    <xf:label><![CDATA[🎯 스카웃 제안 보내기]]></xf:label>
+                </xf:trigger>
+                <xf:trigger class="btn-cancel" type="button" ev:onclick="scwin.closePopup">
+                    <xf:label><![CDATA[취소]]></xf:label>
+                </xf:trigger>
+            </xf:group>
+        </xf:group>
+    </body>
+</html>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ev="http://www.w3.org/2001/xml-events"
+    xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
+    <head>
+        <w2:type>COMPONENT</w2:type>
+        <w2:buildDate/>
+        <w2:MSA/>
+        <xf:model>
+            <w2:dataCollection baseNode="map"/>
+            <w2:workflowCollection/>
+        </xf:model>
+        <w2:layoutInfo/>
+        <w2:publicInfo method=""/>
+        <script lazy="false" type="text/javascript"><![CDATA[
+scwin.onpageload = function() {
+	
+};
+]]></script>
+    </head>
+    <body ev:onpageload="scwin.onpageload">
+    	<xf:group class="sub_contents" id="" meta_snippetCategory="00_화면시작" meta_snippetKeyComponent="true" meta_snippetName="0_01 페이지시작"
+    		style="">
+
+    		<w2:fusionchart drawType="javascript" runflashAt="IE6,IE7,IE8" seriesType="simple" chartType="Column2D"
+    			style="width: 500px;height: 300px;" id="" ref="12" labelNode="asd" valueNode="asd" seriesNode="asd">
+    		</w2:fusionchart>
+    		<w2:fwBulletChart chartType="vbullet" style="width: 500px;height: 300px;" id=""></w2:fwBulletChart>
+    		<w2:fwFunnelChart seriesType="simple" style="width: 500px;height: 300px;" id=""></w2:fwFunnelChart>
+    		<w2:fwGanttChart quarterNames="1분기,2분기,3분기,4분기" style="width: 500px;height: 300px;" id="" timeBase="date"
+    			monthNames="1월,2월,3월,4월,5월,6월,7월,8월,9월,10월,11월,12월" dateformat="yyyyMMdd">
+    		</w2:fwGanttChart>
+    		<w2:fwPyramidChart seriesType="simple" style="width: 500px;height: 300px;" id=""></w2:fwPyramidChart>
+    		<w2:fwRealtimeChart timeformat="HH:mm:ss" chartType="realtimearea" style="width: 500px;height: 300px;" id=""></w2:fwRealtimeChart>
+    		<w2:fwSparkChart seriesType="simple" chartType="sparkline" style="width: 500px;height: 300px;" id=""></w2:fwSparkChart>
+    	</xf:group>
+    </body>
+</html>

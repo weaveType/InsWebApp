@@ -1,0 +1,643 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ev="http://www.w3.org/2001/xml-events"
+    xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
+    <head meta_screenName="개발자 스카웃">
+        <w2:type>COMPONENT</w2:type>
+        <w2:buildDate/>
+        <w2:MSA/>
+        <w2:layoutInfo/>
+        <w2:publicInfo method=""/>
+        <style>
+            .header-container {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 20px;
+                background-color: #f8f9fa;
+                border-bottom: 1px solid #e9ecef;
+            }
+            .header-left {
+                display: flex;
+                align-items: center;
+                font-size: 24px;
+                font-weight: bold;
+                color: #2c3e50;
+            }
+            .header-icon {
+                width: 30px;
+                height: 30px;
+                background-color: #3498db;
+                border-radius: 6px;
+                margin-right: 12px;
+                display: inline-block;
+                text-align: center;
+                line-height: 30px;
+                color: white;
+                font-weight: bold;
+            }
+            .stats-info {
+                color: #6c757d;
+                font-size: 14px;
+            }
+            .filter-container {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 15px 20px;
+                background-color: #ffffff;
+                border-bottom: 1px solid #e9ecef;
+                gap: 15px;
+            }
+            .filter-group {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+            .filter-label {
+                font-weight: 500;
+                color: #333;
+                min-width: 60px;
+            }
+            .control-bar {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 15px 20px;
+                background-color: #ffffff;
+                border-bottom: 1px solid #e9ecef;
+            }
+            .selected-count {
+                color: #6c757d;
+                font-size: 14px;
+            }
+            .button-group {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+            .btn-scout {
+                background-color: #007bff;
+                color: white;
+                border: none;
+                padding: 8px 16px;
+                border-radius: 4px;
+                cursor: pointer;
+            }
+            .btn-scout-all {
+                background-color: #28a745;
+                color: white;
+                border: none;
+                padding: 8px 16px;
+                border-radius: 4px;
+                cursor: pointer;
+            }
+            .btn-reset {
+                background-color: #6c757d;
+                color: white;
+                border: none;
+                padding: 8px 16px;
+                border-radius: 4px;
+                cursor: pointer;
+            }
+            .skill-tag {
+                display: inline-block;
+                background-color: #e3f2fd;
+                color: #1976d2;
+                padding: 2px 8px;
+                margin: 2px;
+                border-radius: 12px;
+                font-size: 12px;
+                border: 1px solid #bbdefb;
+            }
+            .mbti-badge {
+                background-color: #9c27b0;
+                color: white;
+                padding: 4px 8px;
+                border-radius: 4px;
+                font-size: 12px;
+                font-weight: bold;
+            }
+            .interest-level {
+                color: #ff9800;
+                font-weight: bold;
+            }
+            .status-available {
+                background-color: #28a745;
+                color: white;
+                padding: 4px 8px;
+                border-radius: 4px;
+                font-size: 12px;
+                font-weight: bold;
+            }
+            .status-interested {
+                background-color: #17a2b8;
+                color: white;
+                padding: 4px 8px;
+                border-radius: 4px;
+                font-size: 12px;
+                font-weight: bold;
+            }
+            .status-contacted {
+                background-color: #ffc107;
+                color: #212529;
+                padding: 4px 8px;
+                border-radius: 4px;
+                font-size: 12px;
+                font-weight: bold;
+            }
+
+            /* 스카웃 메시지 모달 스타일 */
+            .scout-modal {
+                display: none;
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background-color: white;
+                border-radius: 8px;
+                padding: 30px;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+                width: 500px;
+                z-index: 1000;
+            }
+            .scout-modal-overlay {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 999;
+            }
+            .scout-modal h3 {
+                margin-top: 0;
+                color: #333;
+                border-bottom: 2px solid #007bff;
+                padding-bottom: 10px;
+            }
+            .scout-modal input, .scout-modal textarea {
+                width: 100%;
+                margin: 8px 0;
+                padding: 12px;
+                border-radius: 4px;
+                border: 1px solid #ddd;
+                box-sizing: border-box;
+            }
+            .scout-modal textarea {
+                height: 150px;
+                resize: vertical;
+            }
+            .scout-modal button {
+                padding: 10px 20px;
+                margin: 5px;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                font-weight: 500;
+            }
+            .scout-modal .btn-send {
+                background-color: #007bff;
+                color: white;
+            }
+            .scout-modal .btn-cancel {
+                background-color: #6c757d;
+                color: white;
+            }
+        </style>
+        <xf:model>
+            <w2:dataCollection baseNode="map">
+                <w2:dataList baseNode="list" repeatNode="map" id="developer_list" saveRemovedData="true">
+                    <w2:columnInfo>
+                        <w2:column dataType="text" name="체크박스" id="chk"></w2:column>
+                        <w2:column dataType="text" name="이름" id="username"></w2:column>
+                        <w2:column dataType="text" name="경력" id="total_experience"></w2:column>
+                        <w2:column dataType="text" name="포지션" id="position"></w2:column>
+                        <w2:column dataType="text" name="기술스택" id="tech_stack"></w2:column>
+                        <w2:column dataType="text" name="mbti" id="mbti"></w2:column>
+                        <w2:column dataType="text" name="관심도" id="interest_level"></w2:column>
+                        <w2:column dataType="text" name="상태" id="status"></w2:column>
+                        <w2:column dataType="text" name="이메일" id="email"></w2:column>
+                        <w2:column dataType="text" name="연락처" id="phone"></w2:column>
+                        <w2:column dataType="text" name="포트폴리오" id="portfolio"></w2:column>
+                    </w2:columnInfo>
+                    <w2:data use="true">
+                        <w2:row>
+                            <username><![CDATA[김개발]]></username>
+                            <total_experience><![CDATA[3년]]></total_experience>
+                            <position><![CDATA[backend]]></position>
+                            <tech_stack><![CDATA[java, springboot, mysql, redis]]></tech_stack>
+                            <mbti><![CDATA[ENTJ]]></mbti>
+                            <interest_level><![CDATA[높음]]></interest_level>
+                            <status><![CDATA[구직중]]></status>
+                            <email><![CDATA[kim.dev@email.com]]></email>
+                            <phone><![CDATA[010-1234-5678]]></phone>
+                            <portfolio><![CDATA[https://github.com/kimdev]]></portfolio>
+                        </w2:row>
+                        <w2:row>
+                            <username><![CDATA[박프론트]]></username>
+                            <total_experience><![CDATA[2년]]></total_experience>
+                            <position><![CDATA[frontend]]></position>
+                            <tech_stack><![CDATA[react, typescript, next.js, tailwind]]></tech_stack>
+                            <mbti><![CDATA[INFP]]></mbti>
+                            <interest_level><![CDATA[중간]]></interest_level>
+                            <status><![CDATA[관심있음]]></status>
+                            <email><![CDATA[park.front@email.com]]></email>
+                            <phone><![CDATA[010-2345-6789]]></phone>
+                            <portfolio><![CDATA[https://portfolio.parkfront.dev]]></portfolio>
+                        </w2:row>
+                        <w2:row>
+                            <username><![CDATA[이풀스택]]></username>
+                            <total_experience><![CDATA[5년]]></total_experience>
+                            <position><![CDATA[fullstack]]></position>
+                            <tech_stack><![CDATA[node.js, react, postgresql, docker]]></tech_stack>
+                            <mbti><![CDATA[ENFP]]></mbti>
+                            <interest_level><![CDATA[높음]]></interest_level>
+                            <status><![CDATA[구직중]]></status>
+                            <email><![CDATA[lee.fullstack@email.com]]></email>
+                            <phone><![CDATA[010-3456-7890]]></phone>
+                            <portfolio><![CDATA[https://leefull.dev]]></portfolio>
+                        </w2:row>
+                        <w2:row>
+                            <username><![CDATA[정모바일]]></username>
+                            <total_experience><![CDATA[4년]]></total_experience>
+                            <position><![CDATA[mobile]]></position>
+                            <tech_stack><![CDATA[flutter, dart, firebase, kotlin]]></tech_stack>
+                            <mbti><![CDATA[ISFJ]]></mbti>
+                            <interest_level><![CDATA[중간]]></interest_level>
+                            <status><![CDATA[연락받음]]></status>
+                            <email><![CDATA[jung.mobile@email.com]]></email>
+                            <phone><![CDATA[010-4567-8901]]></phone>
+                            <portfolio><![CDATA[https://play.google.com/jungapps]]></portfolio>
+                        </w2:row>
+                        <w2:row>
+                            <username><![CDATA[최데이터]]></username>
+                            <total_experience><![CDATA[6년]]></total_experience>
+                            <position><![CDATA[data]]></position>
+                            <tech_stack><![CDATA[python, pandas, tensorflow, aws]]></tech_stack>
+                            <mbti><![CDATA[INTJ]]></mbti>
+                            <interest_level><![CDATA[높음]]></interest_level>
+                            <status><![CDATA[구직중]]></status>
+                            <email><![CDATA[choi.data@email.com]]></email>
+                            <phone><![CDATA[010-5678-9012]]></phone>
+                            <portfolio><![CDATA[https://kaggle.com/choidata]]></portfolio>
+                        </w2:row>
+                        <w2:row>
+                            <username><![CDATA[강데브옵스]]></username>
+                            <total_experience><![CDATA[7년]]></total_experience>
+                            <position><![CDATA[devops]]></position>
+                            <tech_stack><![CDATA[kubernetes, docker, jenkins, terraform]]></tech_stack>
+                            <mbti><![CDATA[ESTP]]></mbti>
+                            <interest_level><![CDATA[중간]]></interest_level>
+                            <status><![CDATA[관심있음]]></status>
+                            <email><![CDATA[kang.devops@email.com]]></email>
+                            <phone><![CDATA[010-6789-0123]]></phone>
+                            <portfolio><![CDATA[https://github.com/kangdevops]]></portfolio>
+                        </w2:row>
+                        <w2:row>
+                            <username><![CDATA[조보안]]></username>
+                            <total_experience><![CDATA[8년]]></total_experience>
+                            <position><![CDATA[security]]></position>
+                            <tech_stack><![CDATA[kali linux, wireshark, metasploit, python]]></tech_stack>
+                            <mbti><![CDATA[ISFP]]></mbti>
+                            <interest_level><![CDATA[낮음]]></interest_level>
+                            <status><![CDATA[연락받음]]></status>
+                            <email><![CDATA[jo.security@email.com]]></email>
+                            <phone><![CDATA[010-7890-1234]]></phone>
+                            <portfolio><![CDATA[https://security.jodev.net]]></portfolio>
+                        </w2:row>
+                        <w2:row>
+                            <username><![CDATA[윤인공지능]]></username>
+                            <total_experience><![CDATA[3년]]></total_experience>
+                            <position><![CDATA[ai]]></position>
+                            <tech_stack><![CDATA[pytorch, opencv, bert, gpt]]></tech_stack>
+                            <mbti><![CDATA[ESFJ]]></mbti>
+                            <interest_level><![CDATA[높음]]></interest_level>
+                            <status><![CDATA[구직중]]></status>
+                            <email><![CDATA[yoon.ai@email.com]]></email>
+                            <phone><![CDATA[010-8901-2345]]></phone>
+                            <portfolio><![CDATA[https://ai.yoondev.com]]></portfolio>
+                        </w2:row>
+                    </w2:data>
+                </w2:dataList>
+            </w2:dataCollection>
+            <xf:submission id="sbm_developer_list" action="" method="post" mediatype="application/json" ref="data:json,developer_list"
+                target="" encoding="UTF-8" instance="" replace="" errorHandler="" customHandler="" mode="asynchronous" processMsg="" ev:submit=""
+                ev:submitdone="" ev:submiterror="" abortTrigger="">
+            </xf:submission>
+        </xf:model>
+        <script lazy="false" type="text/javascript"><![CDATA[
+scwin.onpageload = function() {
+    scwin.updateTotalCount();
+};
+
+// 총 개발자 수 업데이트
+scwin.updateTotalCount = function() {
+    var totalCount = developer_list.getTotalRow();
+    totalCount_txt.setValue("총 " + totalCount + "명의 개발자");
+};
+
+// 선택된 개발자 수 업데이트 (안전한 방법)
+scwin.updateSelectedCount = function() {
+    try {
+        var checkedCount = 0;
+        var totalRows = developer_list.getTotalRow();
+        
+        // 각 행을 순회하면서 체크 상태 확인
+        for (var i = 0; i < totalRows; i++) {
+            var isChecked = developer_list.getCellData(i, "chk");
+            if (isChecked === "Y" || isChecked === true || isChecked === "true") {
+                checkedCount++;
+            }
+        }
+        
+        selectedCount.setValue(checkedCount + "명 선택됨");
+    } catch (e) {
+        console.error("선택 개수 업데이트 오류:", e);
+        selectedCount.setValue("0명 선택됨");
+    }
+};
+
+// 일괄 스카웃 제안 (안전한 방법)
+scwin.scoutSelected = function() {
+    try {
+        // var selectedDevelopers = [];
+        // var totalRows = developer_list.getTotalRow();
+        
+        // // 각 행을 순회하면서 체크된 행 찾기
+        // for (var i = 0; i < totalRows; i++) {
+        //     var isChecked = developer_list.getCellData(i, "chk");
+        //     if (isChecked === "Y" || isChecked === true || isChecked === "true") {
+        //         var rowData = developer_list.getRowJSON(i);
+        //         selectedDevelopers.push(rowData);
+        //     }
+        // }
+        
+        // if (selectedDevelopers.length === 0) {
+        //     alert("스카웃할 개발자를 선택해주세요.");
+        //     return;
+        // }
+        
+        // var names = [];
+        // for (var j = 0; j < selectedDevelopers.length; j++) {
+        //     names.push(selectedDevelopers[j].username);
+        // }
+        
+        // var nameList = names.join(", ");
+        // scwin.openScoutModal(nameList, "multiple");
+        scwin.openScoutModal();
+        
+    } catch (e) {
+        console.error("스카웃 선택 오류:", e);
+        alert("선택된 개발자 정보를 가져오는 중 오류가 발생했습니다.");
+    }
+};
+
+// 스카웃 모달 열기
+scwin.openScoutModal = function(targetName, targetEmail) {
+    var options = {
+        id: 'scout_popup',
+        type: 'browser',
+        width: '600px',
+        height: '500px',
+        modal: true,
+        resizable: true,
+        center: true
+    };
+    
+    // 스카웃 메시지 팝업 열기
+    $p.openPopup('ScoutMessage.xml', options);
+};
+
+// 그리드 체크박스 변경 이벤트
+scwin.gridView_oncheck = function(info) {
+    scwin.updateSelectedCount();
+};
+
+// 그리드 전체 체크박스 변경 이벤트  
+scwin.gridView_oncheckall = function(info) {
+    scwin.updateSelectedCount();
+};
+
+// 기술스택 필터 변경
+scwin.techStackFilter_onchange = function() {
+    scwin.applyFilters();
+};
+
+// 경력 필터 변경
+scwin.experienceFilter_onchange = function() {
+    scwin.applyFilters();
+};
+
+// 포지션 필터 변경
+scwin.positionFilter_onchange = function() {
+    scwin.applyFilters();
+};
+
+// 검색 실행
+scwin.searchBox_onenter = function() {
+    scwin.applyFilters();
+};
+]]></script>
+    </head>
+    <body ev:onpageload="scwin.onpageload">
+        <xf:group class="sub_contents" style="background-color:#f8f9fa;">
+
+            <!-- 헤더 영역 -->
+            <xf:group class="header-container"
+                style="display:flex; justify-content:space-between; align-items:center; padding:20px; background-color:#f8f9fa; border-bottom:1px solid #e9ecef;">
+                <xf:group class="header-left" style="display:flex; align-items:center;">
+                    <w2:span
+                        style="width:30px; height:30px; background-color:#007bff; border-radius:6px; margin-right:12px; display:inline-block; text-align:center; line-height:30px; color:white; font-weight:bold;">
+                        🎯
+                    </w2:span>
+                    <w2:textbox id="" label="개발자 스카웃"
+                        style="font-size:24px; font-weight:bold; color:#2c3e50; border:none; background:transparent;" />
+                </xf:group>
+                <w2:textbox id="totalCount_txt" label="총 8명의 개발자" style="color:#6c757d; font-size:14px; border:none; background:transparent;" />
+            </xf:group>
+
+            <!-- 필터링 영역 -->
+            <xf:group class="filter-container">
+                <xf:group class="filter-group">
+                    <w2:textbox class="filter-label" label="기술스택:" style="border:none; background:transparent;"></w2:textbox>
+                    <xf:checkcombobox id="techStackFilter" chooseOption="전체" displayMode="label" 
+                        style="width:200px;height:32px;" submenuSize="auto" allOption="전체" 
+                        ev:onchange="scwin.techStackFilter_onchange">
+                        <xf:choices>
+                            <xf:item>
+                                <xf:label><![CDATA[Java]]></xf:label>
+                                <xf:value><![CDATA[java]]></xf:value>
+                            </xf:item>
+                            <xf:item>
+                                <xf:label><![CDATA[Spring Boot]]></xf:label>
+                                <xf:value><![CDATA[springboot]]></xf:value>
+                            </xf:item>
+                            <xf:item>
+                                <xf:label><![CDATA[React]]></xf:label>
+                                <xf:value><![CDATA[react]]></xf:value>
+                            </xf:item>
+                            <xf:item>
+                                <xf:label><![CDATA[Node.js]]></xf:label>
+                                <xf:value><![CDATA[nodejs]]></xf:value>
+                            </xf:item>
+                            <xf:item>
+                                <xf:label><![CDATA[Python]]></xf:label>
+                                <xf:value><![CDATA[python]]></xf:value>
+                            </xf:item>
+                            <xf:item>
+                                <xf:label><![CDATA[Docker]]></xf:label>
+                                <xf:value><![CDATA[docker]]></xf:value>
+                            </xf:item>
+                        </xf:choices>
+                    </xf:checkcombobox>
+                </xf:group>
+
+                <xf:group class="filter-group">
+                    <w2:textbox class="filter-label" label="경력:" style="border:none; background:transparent;"></w2:textbox>
+                    <xf:select1 id="experienceFilter" chooseOption="전체" appearance="minimal" 
+                        style="width:120px;height:32px;" ev:onchange="scwin.experienceFilter_onchange">
+                        <xf:choices>
+                            <xf:item>
+                                <xf:label><![CDATA[신입]]></xf:label>
+                                <xf:value><![CDATA[신입]]></xf:value>
+                            </xf:item>
+                            <xf:item>
+                                <xf:label><![CDATA[1-3년]]></xf:label>
+                                <xf:value><![CDATA[1-3년]]></xf:value>
+                            </xf:item>
+                            <xf:item>
+                                <xf:label><![CDATA[4-6년]]></xf:label>
+                                <xf:value><![CDATA[4-6년]]></xf:value>
+                            </xf:item>
+                            <xf:item>
+                                <xf:label><![CDATA[7년이상]]></xf:label>
+                                <xf:value><![CDATA[7년이상]]></xf:value>
+                            </xf:item>
+                        </xf:choices>
+                    </xf:select1>
+                </xf:group>
+
+                <xf:group class="filter-group">
+                    <w2:textbox class="filter-label" label="포지션:" style="border:none; background:transparent;"></w2:textbox>
+                    <xf:select1 id="positionFilter" chooseOption="전체" appearance="minimal" 
+                        style="width:120px;height:32px;" ev:onchange="scwin.positionFilter_onchange">
+                        <xf:choices>
+                            <xf:item>
+                                <xf:label><![CDATA[Backend]]></xf:label>
+                                <xf:value><![CDATA[backend]]></xf:value>
+                            </xf:item>
+                            <xf:item>
+                                <xf:label><![CDATA[Frontend]]></xf:label>
+                                <xf:value><![CDATA[frontend]]></xf:value>
+                            </xf:item>
+                            <xf:item>
+                                <xf:label><![CDATA[Fullstack]]></xf:label>
+                                <xf:value><![CDATA[fullstack]]></xf:value>
+                            </xf:item>
+                            <xf:item>
+                                <xf:label><![CDATA[Mobile]]></xf:label>
+                                <xf:value><![CDATA[mobile]]></xf:value>
+                            </xf:item>
+                            <xf:item>
+                                <xf:label><![CDATA[Data]]></xf:label>
+                                <xf:value><![CDATA[data]]></xf:value>
+                            </xf:item>
+                            <xf:item>
+                                <xf:label><![CDATA[DevOps]]></xf:label>
+                                <xf:value><![CDATA[devops]]></xf:value>
+                            </xf:item>
+                            <xf:item>
+                                <xf:label><![CDATA[Security]]></xf:label>
+                                <xf:value><![CDATA[security]]></xf:value>
+                            </xf:item>
+                            <xf:item>
+                                <xf:label><![CDATA[AI]]></xf:label>
+                                <xf:value><![CDATA[ai]]></xf:value>
+                            </xf:item>
+                        </xf:choices>
+                    </xf:select1>
+                </xf:group>
+
+                <xf:group class="filter-group">
+                    <w2:textbox class="filter-label" label="검색:" style="border:none; background:transparent;"></w2:textbox>
+                    <w2:searchBox id="searchBox" placeholder="개발자 이름 검색" 
+                        style="width:200px;height:32px;" ev:onenter="scwin.searchBox_onenter">
+                    </w2:searchBox>
+                </xf:group>
+
+                <xf:group class="filter-group">
+                    <xf:trigger class="btn-reset" type="button" ev:onclick="scwin.resetFilters"
+                        style="background-color:#6c757d; color:white; border:none; padding:8px 16px; border-radius:4px;">
+                        <xf:label><![CDATA[필터 초기화]]></xf:label>
+                    </xf:trigger>
+                </xf:group>
+            </xf:group>
+
+            <!-- 컨트롤 바 -->
+            <xf:group class="control-bar"
+                style="display:flex; justify-content:space-between; align-items:center; padding:15px 20px; background-color:#ffffff; border-bottom:1px solid #e9ecef;">
+                <w2:textbox id="selectedCount" label="0명 선택됨" style="color:#6c757d; font-size:14px; border:none; background:transparent;" />
+                <xf:group class="button-group" style="display:flex; align-items:center; gap:10px;">
+                    <xf:trigger class="btn-scout-all"
+                        style="background-color:#28a745; color:white; border:none; padding:8px 16px; border-radius:4px; margin-right:10px;"
+                        type="button" id="scout_all_btn" ev:onclick="scwin.scoutSelected">
+                        <xf:label><![CDATA[🎯 일괄 스카웃 제안]]></xf:label>
+                    </xf:trigger>
+                    <xf:trigger class="btn-scout"
+                        style="background-color:#007bff; color:white; border:none; padding:8px 16px; border-radius:4px;" 
+                        type="button" id="export_btn">
+                        <xf:label><![CDATA[📊 목록 내보내기]]></xf:label>
+                    </xf:trigger>
+                </xf:group>
+            </xf:group>
+
+            <!-- 그리드 영역 -->
+            <xf:group style="">
+                <w2:gridView checkAllType="false" defaultCellHeight="20" id="gridView" style="height:633px;" dataList="data:developer_list"
+                	readOnly="true" ev:oncheck="scwin.gridView_oncheck" ev:oncheckall="scwin.gridView_oncheckall">
+                	<w2:caption style="" id="caption1" value="개발자 목록"></w2:caption>
+                	<w2:header style="" id="header1">
+                		<w2:row style="" id="row1">
+                			<w2:column width="70" inputType="checkbox" style="height: 50px" id="chk_header" value="" displayMode="label"
+                				readOnly="false">
+                			</w2:column>
+                			<w2:column width="120" inputType="text" style="height:50px;" id="column1" value="이름" displayMode="label"></w2:column>
+                			<w2:column width="100" inputType="text" style="height:50px;" id="column2" value="경력" displayMode="label"></w2:column>
+                			<w2:column width="120" inputType="text" style="height:50px;" id="column3" value="포지션" displayMode="label"></w2:column>
+                			<w2:column width="300" inputType="text" style="height:50px;" id="column4" value="기술스택" displayMode="label"></w2:column>
+                			<w2:column width="80" inputType="text" style="height:50px;" id="column5" value="MBTI" displayMode="label"></w2:column>
+                			<w2:column width="100" inputType="text" style="height:50px;" id="column6" value="관심도" displayMode="label"></w2:column>
+                			<w2:column width="120" inputType="text" style="height:50px;" id="column7" value="상태" displayMode="label"></w2:column>
+                			<w2:column width="308" inputType="text" style="height:50px;" id="column8" value="포트폴리오" displayMode="label"></w2:column>
+                			<w2:column width="226" inputType="text" style="height:50px;" id="column9" value="졸업증명서" displayMode="label"></w2:column>
+                		</w2:row>
+                	</w2:header>
+                	<w2:gBody style="" id="gBody1">
+                		<w2:row style="" id="row2">
+                			<w2:column width="70" inputType="checkbox" style="height:50px;" id="chk" value="" displayMode="label"
+                				readOnly="false">
+                			</w2:column>
+                			<w2:column width="120" inputType="text" style="" id="username" value="" displayMode="label"></w2:column>
+                			<w2:column width="100" inputType="text" style="" id="total_experience" value="" displayMode="label"></w2:column>
+                			<w2:column width="120" inputType="text" style="" id="position" value="" displayMode="label"></w2:column>
+                			<w2:column width="300" inputType="text" style="" id="tech_stack" value="" displayMode="label"></w2:column>
+                			<w2:column width="80" inputType="text" style="" id="mbti" value="" displayMode="label"></w2:column>
+                			<w2:column width="100" inputType="text" style="" id="interest_level" value="" displayMode="label"></w2:column>
+                			<w2:column width="120" inputType="text" style="" id="status" value="" displayMode="label"></w2:column>
+                			<w2:column width="308" inputType="text" style="" id="portfolio" value="" displayMode="label"></w2:column>
+                			<w2:column width="226" inputType="text" style="" id="column10" value="" displayMode="label"></w2:column>
+                		</w2:row>
+                	</w2:gBody>
+                </w2:gridView>
+                <xf:group class="pglbox" id="" meta_snippetCategory="06_그리드" meta_snippetKeyComponent="true"
+                    meta_snippetName="6_03 페이지리스트">
+                    <w2:pageList class="pgl" displayButtonType="display" displayFormat="#" id="pageList1" pageSize="10" pagingType="0"
+                        style="">
+                    </w2:pageList>
+                </xf:group>
+            </xf:group>
+        </xf:group>
+    </body>
+</html>
