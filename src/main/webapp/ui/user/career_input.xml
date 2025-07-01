@@ -1,0 +1,581 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ev="http://www.w3.org/2001/xml-events"
+    xmlns:w2="http://www.inswave.com/websquare" 
+    xmlns:xf="http://www.w3.org/2002/xforms">
+    
+    <head meta_screenName="경력을 입력해주세요">
+        <w2:type>COMPONENT</w2:type>
+        <w2:buildDate/>
+        <w2:MSA/>
+        <xf:model>
+            <w2:dataCollection baseNode="map">
+                <w2:dataMap baseNode="map" id="dma_career">
+                    <w2:keyInfo>
+                        <w2:key id="careerType" name="경력유형" dataType="text"></w2:key>
+                        <w2:key id="careerPeriod" name="경력기간" dataType="text"></w2:key>
+                        <w2:key id="introduction" name="자기소개" dataType="text"></w2:key>
+                    </w2:keyInfo>
+                </w2:dataMap>
+            </w2:dataCollection>
+        </xf:model>
+        <w2:layoutInfo/>
+        <w2:publicInfo method=""/>
+        
+        <script type="text/javascript"><![CDATA[
+            scwin.onpageload = function() {
+                console.log("경력 입력 페이지 로드됨");
+                
+                // 페이지 로드 후 초기화
+                setTimeout(function() {
+                    scwin.selectCareerType('신입');
+                    scwin.initializeTextarea();
+                }, 200);
+            };
+            
+            scwin.initializeTextarea = function() {
+                // 텍스트 영역 이벤트 리스너 설정
+                var textarea = document.querySelector('.introduction-textarea');
+                if (textarea) {
+                    // 다양한 이벤트에 글자 수 업데이트 함수 바인딩
+                    textarea.addEventListener('input', scwin.updateCharCount);
+                    textarea.addEventListener('keyup', scwin.updateCharCount);
+                    textarea.addEventListener('change', scwin.updateCharCount);
+                    textarea.addEventListener('paste', function() {
+                        setTimeout(scwin.updateCharCount, 10);
+                    });
+                    
+                    console.log("텍스트 영역 이벤트 리스너 설정 완료");
+                }
+                
+                // 초기 글자 수 표시
+                scwin.updateCharCount();
+            };
+            
+            scwin.updateCharCount = function() {
+                var textarea = document.querySelector('.introduction-textarea');
+                var charCount = 0;
+                
+                if (textarea && textarea.value) {
+                    charCount = textarea.value.length;
+                    // 데이터 모델에도 업데이트
+                    dma_career.set("introduction", textarea.value);
+                }
+                
+                // 글자 수 표시 업데이트 (여러 방법 시도)
+                var charCountElement = document.getElementById('charCount');
+                if (charCountElement) {
+                    charCountElement.textContent = charCount + '/500';
+                }
+                
+                // 클래스명으로도 시도
+                var charCountByClass = document.querySelector('.char-count');
+                if (charCountByClass) {
+                    charCountByClass.textContent = charCount + '/500';
+                }
+                
+                console.log("글자 수 업데이트:", charCount + "/500");
+                
+                // 폼 유효성 검사
+                scwin.validateForm();
+            };
+            
+            scwin.selectCareerType = function(careerType) {
+                dma_career.set("careerType", careerType);
+                
+                var careerButtons = document.querySelectorAll('.career-type-option');
+                careerButtons.forEach(function(btn) {
+                    if (btn.classList) {
+                        btn.classList.remove('selected');
+                    }
+                });
+                
+                var selectedBtn = document.getElementById('career_' + careerType);
+                if (selectedBtn && selectedBtn.classList) {
+                    selectedBtn.classList.add('selected');
+                }
+                
+                var experienceSection = document.getElementById('experienceSection');
+                if (experienceSection) {
+                    if (careerType === '신입') {
+                        experienceSection.style.display = 'none';
+                        dma_career.set("careerPeriod", "0년");
+                    } else {
+                        experienceSection.style.display = 'block';
+                    }
+                }
+                
+                scwin.validateForm();
+            };
+            
+            scwin.selectCareerPeriod = function(period) {
+                dma_career.set("careerPeriod", period);
+                
+                var periodButtons = document.querySelectorAll('.period-option');
+                periodButtons.forEach(function(btn) {
+                    if (btn.classList) {
+                        btn.classList.remove('selected');
+                    }
+                });
+                
+                var selectedBtn = document.getElementById('period_' + period.replace(/[^0-9]/g, ''));
+                if (selectedBtn && selectedBtn.classList) {
+                    selectedBtn.classList.add('selected');
+                }
+                
+                scwin.validateForm();
+            };
+            
+            scwin.introduction_onchange = function() {
+                // 이 함수는 웹스퀘어 데이터 바인딩 이벤트용
+                setTimeout(function() {
+                    scwin.updateCharCount();
+                }, 10);
+            };
+            
+            scwin.validateForm = function() {
+                var careerType = dma_career.get("careerType");
+                var careerPeriod = dma_career.get("careerPeriod");
+                
+                // 텍스트 영역에서 직접 값 가져오기
+                var textarea = document.querySelector('.introduction-textarea');
+                var introduction = textarea ? textarea.value : "";
+                
+                var isValid = false;
+                
+                if (careerType === '신입') {
+                    isValid = introduction && introduction.trim().length >= 50;
+                } else {
+                    isValid = careerPeriod && introduction && introduction.trim().length >= 50;
+                }
+                
+                var nextBtn = document.getElementById('btn_next');
+                if (nextBtn) {
+                    if (isValid) {
+                        nextBtn.classList.add('enabled');
+                    } else {
+                        nextBtn.classList.remove('enabled');
+                    }
+                }
+                
+                console.log("폼 유효성 검사:", {
+                    careerType: careerType,
+                    careerPeriod: careerPeriod,
+                    textLength: introduction ? introduction.length : 0,
+                    isValid: isValid
+                });
+            };
+            
+            scwin.btn_back_onclick = function() {
+                location.href = '/websquare/websquare.html?w2xPath=/ui/user/salary_select.xml';
+            };
+            
+            scwin.btn_next_onclick = function() {
+                var careerType = dma_career.get("careerType");
+                var textarea = document.querySelector('.introduction-textarea');
+                var introduction = textarea ? textarea.value : "";
+                
+                if (!careerType) {
+                    alert("경력 유형을 선택해주세요.");
+                    return;
+                }
+                
+                if (!introduction || introduction.trim().length < 50) {
+                    alert("자기소개를 50자 이상 작성해주세요.");
+                    return;
+                }
+                
+                // 데이터 모델에 최종 저장
+                dma_career.set("introduction", introduction);
+                
+                console.log("입력된 경력 정보:", {
+                    careerType: careerType,
+                    careerPeriod: dma_career.get("careerPeriod"),
+                    introduction: introduction
+                });
+                
+                location.href = '/websquare/websquare.html?w2xPath=/ui/user/profile_additional.xml';
+            };
+        ]]></script>
+        
+        <style type="text/css"><![CDATA[
+            .main-container {
+                background-color: #ffffff;
+                min-height: 100vh;
+                font-family: "Malgun Gothic", "맑은 고딕", sans-serif;
+                display: flex;
+                flex-direction: column;
+            }
+            
+            .header {
+                width: 100%;
+                height: 70px;
+                background-color: #ffffff;
+                border-bottom: 1px solid #e0e0e0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                position: relative;
+            }
+            
+            .header-logo {
+                font-size: 24px;
+                font-weight: bold;
+                color: #333;
+                letter-spacing: 2px;
+            }
+            
+            .header-progress {
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                height: 4px;
+                background: linear-gradient(90deg, #2196F3 0%, #2196F3 75%, #e0e0e0 75%, #e0e0e0 100%);
+                width: 100%;
+            }
+            
+            .content-area {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: flex-start;
+                padding: 40px 20px;
+                text-align: center;
+                max-width: 700px;
+                margin: 0 auto;
+            }
+            
+            .icon-container {
+                width: 80px;
+                height: 80px;
+                background: linear-gradient(135deg, #2196F3, #1976D2);
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-bottom: 30px;
+                box-shadow: 0 4px 20px rgba(33, 150, 243, 0.3);
+            }
+            
+            .icon {
+                font-size: 40px;
+                color: white;
+            }
+            
+            .main-title {
+                font-size: 28px;
+                font-weight: bold;
+                color: #333;
+                margin-bottom: 15px;
+                line-height: 1.4;
+            }
+            
+            .sub-title {
+                font-size: 16px;
+                color: #666;
+                margin-bottom: 40px;
+                line-height: 1.5;
+            }
+            
+            .form-section {
+                width: 100%;
+                max-width: 600px;
+                margin-bottom: 30px;
+            }
+            
+            .section-title {
+                font-size: 18px;
+                font-weight: 600;
+                color: #333;
+                margin-bottom: 20px;
+                text-align: left;
+            }
+            
+            .career-type-options {
+                display: flex;
+                gap: 12px;
+                margin-bottom: 30px;
+            }
+            
+            .career-type-option {
+                flex: 1;
+                background-color: #ffffff;
+                border: 2px solid #e0e0e0;
+                border-radius: 12px;
+                padding: 20px 16px;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                text-align: center;
+                font-size: 16px;
+                font-weight: 500;
+                color: #333;
+                position: relative;
+            }
+            
+            .career-type-option:hover {
+                border-color: #2196F3;
+                background-color: #f3f9ff;
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(33, 150, 243, 0.15);
+            }
+            
+            .career-type-option.selected {
+                border-color: #2196F3;
+                background-color: #2196F3;
+                color: white;
+                box-shadow: 0 4px 20px rgba(33, 150, 243, 0.3);
+            }
+            
+            .career-type-option.selected::after {
+                content: "✓";
+                position: absolute;
+                right: 12px;
+                top: 12px;
+                font-size: 18px;
+                font-weight: bold;
+            }
+            
+            .experience-section {
+                display: none;
+                margin-bottom: 30px;
+            }
+            
+            .period-options {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 12px;
+                margin-bottom: 20px;
+            }
+            
+            .period-option {
+                background-color: #ffffff;
+                border: 2px solid #e0e0e0;
+                border-radius: 8px;
+                padding: 12px;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                text-align: center;
+                font-size: 14px;
+                font-weight: 500;
+                color: #333;
+            }
+            
+            .period-option:hover {
+                border-color: #2196F3;
+                background-color: #f3f9ff;
+            }
+            
+            .period-option.selected {
+                border-color: #2196F3;
+                background-color: #2196F3;
+                color: white;
+            }
+            
+            .introduction-section {
+                margin-bottom: 30px;
+            }
+            
+            .textarea-container {
+                position: relative;
+                margin-bottom: 12px;
+            }
+            
+            .introduction-textarea {
+                width: 100%;
+                min-height: 150px;
+                padding: 16px;
+                border: 2px solid #e0e0e0;
+                border-radius: 12px;
+                font-size: 14px;
+                font-family: "Malgun Gothic", "맑은 고딕", sans-serif;
+                line-height: 1.6;
+                resize: vertical;
+                transition: border-color 0.3s ease;
+                box-sizing: border-box;
+            }
+            
+            .introduction-textarea:focus {
+                outline: none;
+                border-color: #2196F3;
+            }
+            
+            .char-count-container {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                font-size: 12px;
+                color: #666;
+            }
+            
+            .char-count {
+                color: #2196F3;
+                font-weight: 600;
+            }
+            
+            .intro-tips {
+                text-align: left;
+                padding: 16px;
+                background-color: #f3f9ff;
+                border: 1px solid #e0f2e0;
+                border-radius: 8px;
+                margin-bottom: 20px;
+            }
+            
+            .intro-tips-title {
+                font-size: 14px;
+                font-weight: 600;
+                color: #2196F3;
+                margin-bottom: 8px;
+            }
+            
+            .intro-tips-list {
+                font-size: 13px;
+                color: #666;
+                line-height: 1.5;
+            }
+            
+            .button-area {
+                display: flex;
+                gap: 16px;
+                width: 100%;
+                max-width: 500px;
+            }
+            
+            .btn-back {
+                flex: 1;
+                background-color: #ffffff;
+                color: #666;
+                border: 2px solid #e0e0e0;
+                padding: 16px 32px;
+                border-radius: 12px;
+                font-size: 16px;
+                font-weight: 600;
+                cursor: pointer;
+                transition: all 0.3s ease;
+            }
+            
+            .btn-back:hover {
+                border-color: #bbb;
+                background-color: #f5f5f5;
+            }
+            
+            .btn-next {
+                flex: 2;
+                background-color: #e0e0e0;
+                color: #999;
+                border: none;
+                padding: 16px 32px;
+                border-radius: 12px;
+                font-size: 16px;
+                font-weight: 600;
+                cursor: not-allowed;
+                transition: all 0.3s ease;
+            }
+            
+            .btn-next.enabled {
+                background-color: #2196F3;
+                color: white;
+                cursor: pointer;
+            }
+            
+            .btn-next.enabled:hover {
+                background-color: #1976D2;
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
+            }
+        ]]></style>
+    </head>
+    
+    <body ev:onpageload="scwin.onpageload">
+        <xf:group class="main-container">
+            <xf:group class="header">
+                <xf:image src="/InsWebApp/images/ws5/weaveTypeLogo.png" style="width: 120px; height: 32px; object-fit: contain;" id="weaveTypeLogo" class="header-logo"></xf:image>
+                <xf:group class="header-progress"></xf:group>
+            </xf:group>
+            
+            <xf:group class="content-area">
+                <xf:group class="icon-container">
+                    <w2:textbox class="icon" label="📋" tagname="div"></w2:textbox>
+                </xf:group>
+                
+                <w2:textbox class="main-title" label="경력을 입력해주세요" tagname="h1"></w2:textbox>
+                <w2:textbox class="sub-title" label="1분만에 모든 경력을 불러올 수 있어요." tagname="p"></w2:textbox>
+                
+                <xf:group class="form-section">
+                    <w2:textbox class="section-title" label="아직 신입이에요! 취업을 통해 취업준비가 첫 시작이에요." tagname="div"></w2:textbox>
+                    
+                    <xf:group class="career-type-options">
+                        <xf:trigger class="career-type-option" id="career_신입" ev:onclick="scwin.selectCareerType('신입')">
+                            <xf:label>신입</xf:label>
+                        </xf:trigger>
+                        
+                        <xf:trigger class="career-type-option" id="career_경력" ev:onclick="scwin.selectCareerType('경력')">
+                            <xf:label>경력</xf:label>
+                        </xf:trigger>
+                    </xf:group>
+                    
+                    <xf:group class="experience-section" id="experienceSection">
+                        <w2:textbox class="section-title" label="경력 기간을 선택해주세요" tagname="div"></w2:textbox>
+                        
+                        <xf:group class="period-options">
+                            <xf:trigger class="period-option" id="period_1" ev:onclick="scwin.selectCareerPeriod('1년')">
+                                <xf:label>1년</xf:label>
+                            </xf:trigger>
+                            
+                            <xf:trigger class="period-option" id="period_2" ev:onclick="scwin.selectCareerPeriod('2년')">
+                                <xf:label>2년</xf:label>
+                            </xf:trigger>
+                            
+                            <xf:trigger class="period-option" id="period_3" ev:onclick="scwin.selectCareerPeriod('3년')">
+                                <xf:label>3년</xf:label>
+                            </xf:trigger>
+                            
+                            <xf:trigger class="period-option" id="period_4" ev:onclick="scwin.selectCareerPeriod('4년')">
+                                <xf:label>4년</xf:label>
+                            </xf:trigger>
+                            
+                            <xf:trigger class="period-option" id="period_5" ev:onclick="scwin.selectCareerPeriod('5년')">
+                                <xf:label>5년</xf:label>
+                            </xf:trigger>
+                            
+                            <xf:trigger class="period-option" id="period_6" ev:onclick="scwin.selectCareerPeriod('6년 이상')">
+                                <xf:label>6년 이상</xf:label>
+                            </xf:trigger>
+                        </xf:group>
+                    </xf:group>
+                    
+                    <xf:group class="introduction-section">
+                        <w2:textbox class="section-title" label="희망하는 근무 조건을 자유롭게 입력해 주세요." tagname="div"></w2:textbox>
+                        
+                        <xf:group class="intro-tips">
+                            <w2:textbox class="intro-tips-title" label="어떻게 작성하나요?" tagname="div"></w2:textbox>
+                            <w2:textbox class="intro-tips-list" label="- 근무, IT 툴 사용을 원하는 업무환경을 작성해주세요.&#10;- 스타트업, 공기업 등 원하는 기업 형태를 작성해주세요.&#10;- 커리어 성장, 사내 복리기능 등 원하는 조건을 작성해주세요.&#10;- 기타 원하는 근무조건을 작성해주세요." tagname="div"></w2:textbox>
+                        </xf:group>
+                        
+                        <xf:group class="textarea-container">
+                            <xf:textarea class="introduction-textarea" ref="data:dma_career.introduction" 
+                                        placeholder="예시)&#10;&#10;'스타트업에서 일하고 싶어요.'&#10;'신기술을 학습하고 아키텍처 설계를 공유하는 것'&#10;'세상에 연봉보다 중요한게 동료라는 것'&#10;'이런 분들이 저의 일의 가치에 많은 공감해 좀 더 개발하고 싶어요.'&#10;'이런 분들이 되고 싶은 개발자 송이라고 생각해요.'"
+                                        ev:onchange="scwin.introduction_onchange"></xf:textarea>
+                        </xf:group>
+                        
+                        <xf:group class="char-count-container">
+                            <w2:textbox label="최소 글자 수 : 50 자 이상" tagname="span"></w2:textbox>
+                            <w2:textbox class="char-count" id="charCount" label="0/500" tagname="span"></w2:textbox>
+                        </xf:group>
+                    </xf:group>
+                </xf:group>
+                
+                <xf:group class="button-area">
+                    <xf:trigger class="btn-back" ev:onclick="scwin.btn_back_onclick">
+                        <xf:label>이전</xf:label>
+                    </xf:trigger>
+                    
+                    <xf:trigger class="btn-next" id="btn_next" ev:onclick="scwin.btn_next_onclick">
+                        <xf:label>다음</xf:label>
+                    </xf:trigger>
+                </xf:group>
+            </xf:group>
+        </xf:group>
+    </body>
+</html> 
