@@ -1,340 +1,560 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<html xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:ev="http://www.w3.org/2001/xml-events"
-    xmlns:w2="http://www.inswave.com/websquare" 
-    xmlns:xf="http://www.w3.org/2002/xforms">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare"
+	xmlns:xf="http://www.w3.org/2002/xforms">
+
+	<head meta_screenName="회사 메인페이지">
+		<w2:type>COMPONENT</w2:type>
+		<w2:buildDate />
+		<w2:MSA />
+		<xf:model>
+			<w2:dataCollection baseNode="map">
+				<w2:dataMap baseNode="map" id="dmp_corporateVoDetail">
+					<w2:keyInfo>
+						<w2:key dataType="text" name="email" id="email"></w2:key>
+						<w2:key dataType="text" name="password" id="password"></w2:key>
+						<w2:key dataType="text" name="business_number" id="businessNumber"></w2:key>
+						<w2:key dataType="text" name="industry" id="industry"></w2:key>
+						<w2:key dataType="text" name="emp_count" id="empCount"></w2:key>
+						<w2:key dataType="text" name="description" id="description"></w2:key>
+						<w2:key dataType="text" name="company_name" id="companyName"></w2:key>
+						<w2:key dataType="text" name="logo" id="logo"></w2:key>
+						<w2:key dataType="text" name="name6" id="key6"></w2:key>
+						<w2:key dataType="text" name="name7" id="key7"></w2:key>
+					</w2:keyInfo>
+				</w2:dataMap>
+			</w2:dataCollection>
+			<w2:workflowCollection />
+			<xf:submission id="sbm_insertCorporateVo" action="/InsWebApp/CP0001Ins.pwkjson" method="post" mediatype="application/json"
+				ref='data:json,["dmp_corporateVoDetail",{"id":"dmp_corporateVoDetail","key":"corporateVo"}]' target="" encoding="UTF-8" instance=""
+				replace="" errorHandler="" customHandler="" mode="asynchronous" processMsg="" ev:submit=""
+				ev:submitdone="scwin.sbm_insertCorporateVo_submitdone" ev:submiterror="" abortTrigger="">
+			</xf:submission>
+		</xf:model>
+		<w2:layoutInfo />
+		<w2:publicInfo method="" />
+
+		<style type="text/css"><![CDATA[
+/* 전체 컨테이너 스타일 */
+.main-container {
+    background-color: #ffffff;
+    min-height: 100vh;
+    padding: 40px 20px;
+    max-width: 500px;
+    margin: 0 auto;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* 페이지 제목 스타일 */
+.page-title {
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.main-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: #333;
+    margin: 0;
+    letter-spacing: -0.5px;
+}
+
+/* 폼 컨테이너 */
+.form-container {
+    width: 100%;
+}
+
+/* 폼 그룹 스타일 */
+.form-group {
+    margin-bottom: 32px;
+    position: relative;
+}
+
+.form-label {
+    display: block;
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 12px;
+    letter-spacing: -0.3px;
+}
+
+/* 필수 항목 표시 스타일 */
+.form-label.required::after {
+    content: " *";
+    color: #dc2626;
+    font-weight: bold;
+}
+
+.required-mark {
+    color: #dc2626 !important;
+    font-weight: bold !important;
+    margin-left: 2px !important;
+    border: none !important;
+    background: transparent !important;
+}
+
+/* 입력 필드 스타일 */
+.form-input {
+    width: 100%;
+    height: 56px;
+    padding: 0 16px;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    font-size: 16px;
+    color: #333;
+    background-color: #ffffff;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.form-input::placeholder {
+    color: #9ca3af;
+    font-weight: 400;
+}
+
+.form-select {
+    width: 100% !important;
+    height: 56px !important;
+    padding: 0 16px !important;
+    border: 2px solid #e5e7eb !important;
+    border-radius: 12px !important;
+    font-size: 16px !important;
+    color: #333 !important;
+    background-color: #ffffff !important;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e") !important;
+    background-position: right 16px center !important;
+    background-repeat: no-repeat !important;
+    background-size: 16px !important;
+    appearance: none !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+    box-sizing: border-box !important;
+} 
+
+.form-select:focus {
+    outline: none !important;
+    border-color: #3b82f6 !important;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+}
+
+select[id="industry"]:focus {
+    outline: none !important;
+    border-color: #3b82f6 !important;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+}
+
+/* 텍스트 영역 스타일 */
+.form-textarea {
+    width: 100%;
+    min-height: 120px;
+    padding: 16px;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    font-size: 16px;
+    color: #333;
+    background-color: #ffffff;
+    font-family: inherit;
+    resize: vertical;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+}
+
+.form-textarea:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.form-textarea::placeholder {
+    color: #9ca3af;
+    font-weight: 400;
+}
+
+/* 사업자등록번호 필드 그룹 */
+.business-number-group {
+    position: relative;
+}
+
+.overseas-link {
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: 14px;
+    color: #6b7280;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.overseas-link:hover {
+    color: #3b82f6;
+}
+
+.info-icon {
+    width: 16px;
+    height: 16px;
+    border: 1px solid #d1d5db;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    color: #6b7280;
+    background-color: #ffffff;
+}
+
+/* 입력필드와 버튼이 함께 있는 그룹 */
+.input-with-button {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.form-input-with-btn {
+    flex: 1;
+    height: 56px;
+    padding: 0 16px;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    font-size: 16px;
+    color: #333;
+    background-color: #ffffff;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+}
+
+.form-input-with-btn:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.form-input-with-btn::placeholder {
+    color: #9ca3af;
+    font-weight: 400;
+}
+
+.check-btn {
+    height: 56px;
+    padding: 0 20px;
+    border: 2px solid #3b82f6;
+    border-radius: 12px;
+    background-color: #3b82f6;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.check-btn:hover {
+    background-color: #2563eb;
+    border-color: #2563eb;
+}
+
+/* 기업 로고 섹션 스타일 */
+.logo-upload-section {
+    width: 100%;
+}
+
+.logo-upload-container {
+    border: 2px dashed #d1d5db;
+    border-radius: 12px;
+    padding: 24px;
+    background-color: #f9fafb;
+    text-align: center;
+}
+
+.logo-guide-text {
+    font-size: 16px !important;
+    color: #374151 !important;
+    font-weight: 500 !important;
+    margin-bottom: 20px !important;
+    display: block !important;
+    border: none !important;
+    background: transparent !important;
+}
+
+.logo-icon-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.logo-main-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #ecfdf5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 8px;
+}
+
+.icon-camera {
+    color: #10b981 !important;
+    font-size: 24px !important;
+    font-weight: bold !important;
+    border: none !important;
+    background: transparent !important;
+}
+
+.logo-preview-container {
+    margin: 16px 0;
+    display: none; /* 초기에는 숨김 */
+}
+
+.logo-preview-image {
+    max-width: 200px;
+    max-height: 100px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.logo-file-info {
+    margin-top: 8px;
+    font-size: 14px;
+    color: #6b7280;
+}
+
+.logo-help-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin-bottom: 20px;
+}
+
+.logo-help-text {
+    font-size: 14px;
+    color: #6b7280;
+    text-align: center;
+    margin-bottom: 16px;
+}
+
+.business-cert-section {
+    width: 100%;
+}
+
+.cert-upload-container {
+    border: 2px dashed #d1d5db;
+    border-radius: 12px;
+    padding: 24px;
+    background-color: #eff6ff;
+    text-align: center;
+}
+
+.cert-guide-text {
+    font-size: 16px !important;
+    color: #374151 !important;
+    font-weight: 500 !important;
+    margin-bottom: 20px !important;
+    display: block !important;
+    border: none !important;
+    background: transparent !important;
+}
+
+/* 인증 아이콘 - cert-card 제거 후 단순화 */
+.cert-icon-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.cert-main-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #dbeafe;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 8px;
+}
+
+.icon-check {
+    color: #3b82f6 !important;
+    font-size: 24px !important;
+    font-weight: bold !important;
+    border: none !important;
+    background: transparent !important;
+}
+
+/* 도움말 영역 */
+.cert-help-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin-bottom: 20px;
+}
+
+.help-icon {
+    width: 16px !important;
+    height: 16px !important;
+    border: 1px solid #d1d5db !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 12px !important;
+    color: #6b7280 !important;
+    background-color: #ffffff !important;
+    cursor: pointer !important;
+}
+
+.cert-help-link {
+    font-size: 14px;
+    color: #6b7280;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.cert-help-link:hover {
+    color: #3b82f6;
+    text-decoration: underline;
+}
+
+/* 파일 선택 버튼 */
+.file-select-btn {
+    width: 100%;
+    height: 48px;
+    background-color: #3b82f6;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-bottom: 16px;
+}
+
+.file-select-btn:hover {
+    background-color: #2563eb;
+}
+
+/* 다음에 인증 체크박스 */
+.cert-later-container {
+    display: flex;
+    justify-content: center;
+}
+
+.cert-later-container input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    margin-right: 8px;
+    accent-color: #3b82f6;
+}
+
+.cert-later-container label {
+    font-size: 14px;
+    color: #6b7280;
+    cursor: pointer;
+}
+
+/* 체크박스 스타일 */
+.checkbox-group {
+    margin: 40px 0;
+}
+
+.checkbox-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 16px;
+    font-size: 14px;
+    color: #333;
+}
+
+.checkbox-item input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    margin-right: 12px;
+    accent-color: #3b82f6;
+}
+
+/* 버튼 스타일 */
+.button-container {
+    display: flex;
+    gap: 12px;
+    margin-top: 60px;
+}
+
+.btn-cancel {
+    flex: 1;
+    height: 56px;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    background-color: #ffffff;
+    color: #6b7280;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-cancel:hover {
+    border-color: #d1d5db;
+    color: #374151;
+}
+
+.btn-primary {
+    flex: 1;
+    height: 56px;
+    border: none;
+    border-radius: 12px;
+    background-color: #3b82f6;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-primary:hover {
+    background-color: #2563eb;
+}
+
+.btn-primary:disabled {
+    background-color: #e5e7eb;
+    color: #9ca3af;
+    cursor: not-allowed;
+}
+
+.help-text {
+    font-size: 12px;
+    color: #888;
+    margin-top: 5px;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 480px) {
+    .main-container {
+        padding: 20px 16px;
+    }
     
-    <head meta_screenName="회사 메인페이지">
-        <w2:type>COMPONENT</w2:type>
-        <w2:buildDate/>
-        <w2:MSA/>
-        <xf:model>
-        	<w2:dataCollection baseNode="map">
-        		<w2:dataMap baseNode="map" id="dmp_corporateVoDetail">
-        			<w2:keyInfo>
-        				<w2:key dataType="text" name="business_number" id="businessNumber"></w2:key>
-        				<w2:key dataType="text" name="industry" id="industry"></w2:key>
-        				<w2:key dataType="text" name="emp_count" id="empCount"></w2:key>
-        				<w2:key dataType="text" name="description" id="description"></w2:key>
-        				<w2:key dataType="text" name="company_name" id="companyName"></w2:key>
-        			</w2:keyInfo>
-        		</w2:dataMap>
-        	</w2:dataCollection>
-        	<w2:workflowCollection />
-        	<xf:submission id="sbm_insertCorporateVo" action="//CP0001Ins.pwkjson" method="post" mediatype="application/json"
-        		ref="data:json,dmp_corporateVoDetail" target="" encoding="UTF-8" instance="" replace="" errorHandler="" customHandler=""
-        		mode="asynchronous" processMsg="" ev:submit="" ev:submitdone="" ev:submiterror="" abortTrigger="">
-        	</xf:submission>
-        </xf:model>
-        <w2:layoutInfo/>
-        <w2:publicInfo method=""/>
-        
-        <style type="text/css"><![CDATA[
-            /* 전체 컨테이너 스타일 */
-            .main-container {
-                background-color: #ffffff;
-                min-height: 100vh;
-                padding: 40px 20px;
-                max-width: 500px;
-                margin: 0 auto;
-                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            }
-            
-            /* 페이지 제목 스타일 */
-            .page-title {
-                text-align: center;
-                margin-bottom: 60px;
-            }
-            
-            .main-title {
-                font-size: 28px;
-                font-weight: 700;
-                color: #333;
-                margin: 0;
-                letter-spacing: -0.5px;
-            }
-            
-            /* 폼 컨테이너 */
-            .form-container {
-                width: 100%;
-            }
-            
-            /* 폼 그룹 스타일 */
-            .form-group {
-                margin-bottom: 32px;
-                position: relative;
-            }
-            
-            .form-label {
-                display: block;
-                font-size: 16px;
-                font-weight: 600;
-                color: #333;
-                margin-bottom: 12px;
-                letter-spacing: -0.3px;
-            }
-            
-            /* 입력 필드 스타일 */
-            .form-input {
-                width: 100%;
-                height: 56px;
-                padding: 0 16px;
-                border: 2px solid #e5e7eb;
-                border-radius: 12px;
-                font-size: 16px;
-                color: #333;
-                background-color: #ffffff;
-                transition: all 0.2s ease;
-                box-sizing: border-box;
-            }
-            
-            .form-input:focus {
-                outline: none;
-                border-color: #3b82f6;
-                box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-            }
-            
-            .form-input::placeholder {
-                color: #9ca3af;
-                font-weight: 400;
-            }
-            
-            .form-select {
-                width: 500px !important;
-                height: 56px !important;
-                padding: 0 16px !important;
-                border: 2px solid #e5e7eb !important;
-                border-radius: 12px !important;
-                font-size: 16px !important;
-                color: #333 !important;
-                background-color: #ffffff !important;
-                background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e") !important;
-                background-position: right 16px center !important;
-                background-repeat: no-repeat !important;
-                background-size: 16px !important;
-                appearance: none !important;
-                cursor: pointer !important;
-                transition: all 0.2s ease !important;
-                box-sizing: border-box !important;
-            } 
-            
-            .form-select:focus {
-                outline: none !important;
-                border-color: #3b82f6 !important;
-                box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
-            }
-            
-            select[id="industry"]:focus {
-                outline: none !important;
-                border-color: #3b82f6 !important;
-                box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
-            }
-            
-            /* 텍스트 영역 스타일 */
-            .form-textarea {
-                width: 100%;
-                min-height: 120px;
-                padding: 16px;
-                border: 2px solid #e5e7eb;
-                border-radius: 12px;
-                font-size: 16px;
-                color: #333;
-                background-color: #ffffff;
-                font-family: inherit;
-                resize: vertical;
-                transition: all 0.2s ease;
-                box-sizing: border-box;
-            }
-            
-            .form-textarea:focus {
-                outline: none;
-                border-color: #3b82f6;
-                box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-            }
-            
-            .form-textarea::placeholder {
-                color: #9ca3af;
-                font-weight: 400;
-            }
-            
-            /* 사업자등록번호 필드 그룹 */
-            .business-number-group {
-                position: relative;
-            }
-            
-            .overseas-link {
-                position: absolute;
-                top: 0;
-                right: 0;
-                font-size: 14px;
-                color: #6b7280;
-                text-decoration: none;
-                display: flex;
-                align-items: center;
-                gap: 4px;
-            }
-            
-            .overseas-link:hover {
-                color: #3b82f6;
-            }
-            
-            .info-icon {
-                width: 16px;
-                height: 16px;
-                border: 1px solid #d1d5db;
-                border-radius: 50%;
-                display: inline-flex;
-                align-items: center;
-                justify-content: center;
-                font-size: 12px;
-                color: #6b7280;
-                background-color: #ffffff;
-            }
-            
-            /* 입력필드와 버튼이 함께 있는 그룹 */
-            .input-with-button {
-                display: flex;
-                gap: 8px;
-                align-items: center;
-            }
-            
-            .form-input-with-btn {
-                flex: 1;
-                height: 56px;
-                padding: 0 16px;
-                border: 2px solid #e5e7eb;
-                border-radius: 12px;
-                font-size: 16px;
-                color: #333;
-                background-color: #ffffff;
-                transition: all 0.2s ease;
-                box-sizing: border-box;
-            }
-            
-            .form-input-with-btn:focus {
-                outline: none;
-                border-color: #3b82f6;
-                box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-            }
-            
-            .form-input-with-btn::placeholder {
-                color: #9ca3af;
-                font-weight: 400;
-            }
-            
-            .check-btn {
-                height: 56px;
-                padding: 0 20px;
-                border: 2px solid #3b82f6;
-                border-radius: 12px;
-                background-color: #3b82f6;
-                color: #ffffff;
-                font-size: 14px;
-                font-weight: 600;
-                cursor: pointer;
-                transition: all 0.2s ease;
-                white-space: nowrap;
-                flex-shrink: 0;
-            }
-            
-            .check-btn:hover {
-                background-color: #2563eb;
-                border-color: #2563eb;
-            }
-            
-            /* 체크박스 스타일 */
-            .checkbox-group {
-                margin: 40px 0;
-            }
-            
-            .checkbox-item {
-                display: flex;
-                align-items: center;
-                margin-bottom: 16px;
-                font-size: 14px;
-                color: #333;
-            }
-            
-            .checkbox-item input[type="checkbox"] {
-                width: 20px;
-                height: 20px;
-                margin-right: 12px;
-                accent-color: #3b82f6;
-            }
-            
-            /* 버튼 스타일 */
-            .button-container {
-                display: flex;
-                gap: 12px;
-                margin-top: 60px;
-            }
-            
-            .btn-cancel {
-                flex: 1;
-                height: 56px;
-                border: 2px solid #e5e7eb;
-                border-radius: 12px;
-                background-color: #ffffff;
-                color: #6b7280;
-                font-size: 16px;
-                font-weight: 600;
-                cursor: pointer;
-                transition: all 0.2s ease;
-            }
-            
-            .btn-cancel:hover {
-                border-color: #d1d5db;
-                color: #374151;
-            }
-            
-            .btn-primary {
-                flex: 1;
-                height: 56px;
-                border: none;
-                border-radius: 12px;
-                background-color: #3b82f6;
-                color: #ffffff;
-                font-size: 16px;
-                font-weight: 600;
-                cursor: pointer;
-                transition: all 0.2s ease;
-            }
-            
-            .btn-primary:hover {
-                background-color: #2563eb;
-            }
-            
-            .btn-primary:disabled {
-                background-color: #e5e7eb;
-                color: #9ca3af;
-                cursor: not-allowed;
-            }
-            
-            .help-text {
-                font-size: 12px;
-                color: #888;
-                margin-top: 5px;
-            }
-            
-            /* 반응형 디자인 */
-            @media (max-width: 480px) {
-                .main-container {
-                    padding: 20px 16px;
-                }
-                
-                .main-title {
-                    font-size: 24px;
-                }
-                
-                .form-group {
-                    margin-bottom: 28px;
-                }
-            }
-        ]]></style>
-        
-        <script lazy="false" type="text/javascript"><![CDATA[
-// 페이지 로드 시 라이브러리 상태 확인
-scwin.onpageload = function () {
+    .main-title {
+        font-size: 24px;
+    }
+    
+    .form-group {
+        margin-bottom: 28px;
+    }
+}
+]]></style>
+		<script lazy="false" type="text/javascript"><![CDATA[scwin.onpageload = function () {
     // 웹스퀘어 라이브러리 상태 확인
     setTimeout(function () {
         scwin.checkWebSquareLibrary();
@@ -376,7 +596,7 @@ scwin.biz_reg_number_chk_btn_onclick = function (e) {
                 alert("유효한 사업자등록번호입니다.");
 
             } else {
-                aAlert("조회 결과가 없습니다. 번호를 확인해 주세요.");
+                alert("조회 결과가 없습니다. 번호를 확인해 주세요.");
             }
         },
         error: function (xhr) {
@@ -386,152 +606,301 @@ scwin.biz_reg_number_chk_btn_onclick = function (e) {
     });
 };
 
-
 scwin.btn_create_corporate_onclick = function (e) {
-    try {
-        // 필수 입력값 검증
-        var valInfo = [
-            { id: "companyName",     mandatory: true, desc: "기업명" },
-            { id: "empCount",        mandatory: true, desc: "직원 수" },
-            { id: "biz_reg_number",  mandatory: true, desc: "사업자등록번호" },
-            { id: "industry",        mandatory: true, desc: "산업분류" },
-            { id: "description",     mandatory: true, desc: "회사소개" }
-        ];
-
-        // WebSquare 객체 체크
-        if (typeof $c === 'undefined' || typeof $c.data === 'undefined') {
-            alert("시스템 오류가 발생했습니다. 페이지를 새로고침해주세요.");
-            return;
-        }
-
-
-        if ($c.data.validateGroup(grp_corporateInfo, valInfo) === true) {
-            $c.win.confirm("저장하시겠습니까?")
-                .then(function (ok) {
-                    if (ok) {
-                        /* ❶ execute 가 Promise 를 반환하는 경우 */
-                        $c.sbm.execute(sbm_insertCorporateVo)
-                              .then(function () {           // 성공 시
-        $p.url("/ui/corporate/RecruitmentDashboard.xml");
-                              })
-                              .catch(function (e) {         // 실패 시
-                                  console.error("저장 오류:", e);
-                                  alert("저장 중 오류가 발생했습니다.");
-                              });
-                    }
-                });
-        }
-    } catch (error) {
-        console.error("오류 발생:", error);
-        scwin.validateFormManually();
+    // 유효성 체크
+    var valInfo = [
+        { id: "email", mandatory: true, desc: "이메일" },
+        { id: "password", mandatory: true, desc: "패스워드" },
+        { id: "companyName", mandatory: true, desc: "기업명" },
+        { id: "businessNumber", mandatory: true, desc: "사업자등록번호" },
+        { id: "industry", mandatory: true, desc: "산업분류" },
+        { id: "empCount", mandatory: true, desc: "직원수" },
+        { id: "description", mandatory: true, desc: "회사소개" }
+    ];
+    if ($c.data.validateGroup(grp_corporateInfo, valInfo) === true) {
+        var promise = $c.win.confirm("저장하시겠습니까?");
+        promise.then(function (result) {
+            if (result) {
+                $c.sbm.execute(sbm_insertCorporateVo);
+                $c.win.confirm("정상적으로 등록되었습니다.");
+                $p.url("RecruitmentDashboard.xml");
+            }
+        })
     }
 };
 
 scwin.agreement_onchange = function (e) {
     // 체크박스 변경 이벤트
 };
-]]></script>
-    </head>
+
+scwin.sbm_insertCorporateVo_submitdone = function (e) {
+
+};
+
+// 도움말 링크 클릭
+scwin.cert_help_onclick = function(e) {
+    if (e && e.preventDefault) {
+        e.preventDefault();
+    }
+    alert("사업자등록증명원은 국세청에서 발급하는 공식 증명서로,\n사업자의 등록 정보를 확인할 수 있는 문서입니다.\n\n온라인으로 국세청 홈텍스에서 발급받으실 수 있습니다.");
+};
+
+// 파일 선택 버튼 클릭
+scwin.btn_file_select_onclick = function(e) {
+    business_cert_upload.click();
+};
+
+scwin.business_cert_upload_onchange = function(e) {
+    // 파일 업로드 처리
+    alert("파일이 선택되었습니다.");
+};
+
+// 로고 파일 선택 버튼 클릭
+scwin.btn_logo_select_onclick = function(e) {
+    logo_upload.click();
+};
+
+// 로고 파일 변경 이벤트
+scwin.logo_upload_onchange = function(e) {
+    var upload = logo_upload;
+    var files = upload.getFileList();
     
-    <body ev:onpageload="scwin.onpageload">
-        <xf:group class="main-container">
-            <!-- 페이지 제목 -->
-            <xf:group class="page-title">
-                <w2:textbox class="main-title" label="기업 회원가입"></w2:textbox>
-            </xf:group>
+    if (files && files.length > 0) {
+        var file = files[0];
+        var fileName = file.name;
+        var fileSize = (file.size / 1024).toFixed(1); // KB 단위
+        
+        // 파일 정보 표시
+        document.querySelector('.logo-file-info').textContent = fileName + ' (' + fileSize + 'KB)';
+        
+        // 미리보기 컨테이너 표시
+        document.querySelector('.logo-preview-container').style.display = 'block';
+        
+        // 파일이 이미지인 경우 미리보기 표시
+        if (file.type && file.type.startsWith('image/')) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                var previewImg = document.querySelector('.logo-preview-image');
+                if (previewImg) {
+                    previewImg.src = e.target.result;
+                } else {
+                    // 이미지 엘리먼트가 없으면 생성
+                    var img = document.createElement('img');
+                    img.className = 'logo-preview-image';
+                    img.src = e.target.result;
+                    document.querySelector('.logo-preview-container').appendChild(img);
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+        
+        alert("로고 파일이 선택되었습니다: " + fileName);
+    }
+};
 
-            <!-- 폼 컨테이너 -->
-            <xf:group class="form-container">
-                <!-- 기업명 -->
-                <xf:group class="form-group">
-                    <w2:textbox class="form-label" label="기업명"></w2:textbox>
-                    <xf:input class="form-input" placeholder="ex) 인스웨이브" ref="data:dmp_corporateVoDetail.companyName"></xf:input>
-                </xf:group>
+// 웹스퀘어 라이브러리 상태 확인
+scwin.checkWebSquareLibrary = function() {
+    console.log("웹스퀘어 라이브러리 상태 확인");
+    if (typeof $c === 'undefined') {
+        console.warn("웹스퀘어 라이브러리가 로드되지 않았습니다.");
+        return false;
+    }
+    return true;
+};
+]]></script>
+	</head>
 
-                <!-- 사업자등록번호 -->
-                <xf:group class="form-group">
-                    <xf:group class="business-number-group">
-                        <w2:textbox class="form-label" label="사업자등록번호"></w2:textbox>
-                        <xf:anchor class="overseas-link" href="#">
-                            <w2:span class="info-icon" label="i"></w2:span>
-                            <w2:span label="해외 기업인가요?"></w2:span>
-                        </xf:anchor>
-                    </xf:group>
-                    <xf:group class="input-with-button">
-                        <xf:input class="form-input-with-btn" placeholder="10자리 숫자" id="biz_reg_number" ref="data:dmp_corporateVoDetail.businessNumber"></xf:input>
-                        <xf:trigger class="check-btn" type="button" ev:onclick="scwin.biz_reg_number_chk_btn_onclick">
-                            <xf:label><![CDATA[검사]]></xf:label>
-                        </xf:trigger>
-                    </xf:group>
-                    <w2:textbox label="사업자 등록번호 10자리를 입력해주세요" class="help-text"></w2:textbox>
-                </xf:group>
+	<body ev:onpageload="scwin.onpageload">
+		<xf:group class="main-container">
+			<!-- 페이지 제목 -->
+			<xf:group class="page-title">
+				<w2:textbox class="main-title" label="기업 등록"></w2:textbox>
+			</xf:group>
 
-                <!-- 산업 선택 -->
-                <xf:group class="form-group">
-                	<w2:textbox class="form-label" label="산업 선택"></w2:textbox>
-                	<xf:select1 appearance="minimal" chooseOption="선택하기" class="form-select" ref="data:dmp_corporateVoDetail.industry"
-                		id="industry">
-                		<xf:choices>
-                			<xf:item>
-                				<xf:label><![CDATA[IT/소프트웨어]]></xf:label>
-                				<xf:value><![CDATA[1]]></xf:value>
-                			</xf:item>
-                			<xf:item>
-                				<xf:label><![CDATA[제조업]]></xf:label>
-                				<xf:value><![CDATA[2]]></xf:value>
-                			</xf:item>
-                			<xf:item>
-                				<xf:label><![CDATA[서비스업]]></xf:label>
-                				<xf:value><![CDATA[3]]></xf:value>
-                			</xf:item>
-                			<xf:item>
-                				<xf:label><![CDATA[기타]]></xf:label>
-                				<xf:value><![CDATA[4]]></xf:value>
-                			</xf:item>
-                		</xf:choices>
-                	</xf:select1>
-                </xf:group>
+			<!-- 폼 컨테이너 -->
+			<xf:group class="form-container" id="grp_corporateInfo">
+				
+				<!-- 이메일 -->
+				<xf:group class="form-group">
+					<w2:textbox class="form-label required" label="이메일"></w2:textbox>
+					<xf:input class="form-input" placeholder="예) company@example.com" ref="data:dmp_corporateVoDetail.email" type="email"></xf:input>
+				</xf:group>
 
-                <!-- 기업의 직원 수 -->
-                <xf:group class="form-group">
-                	<w2:textbox class="form-label" label="기업의 직원 수"></w2:textbox>
-                	<xf:input class="form-input" placeholder="예 : 50" ref="data:dmp_corporateVoDetail.empCount"></xf:input>
-                	
-                </xf:group>
+				<!-- 패스워드 -->
+				<xf:group class="form-group">
+					<w2:textbox class="form-label required" label="패스워드"></w2:textbox>
+					<xf:input class="form-input" placeholder="8자 이상 입력해주세요" ref="data:dmp_corporateVoDetail.password" type="password"></xf:input>
+				</xf:group>
 
-                <!-- 회사 소개 -->
-                <xf:group class="form-group">
-                    <w2:textbox class="form-label" label="회사 소개"></w2:textbox>
-                    <xf:textarea class="form-textarea" placeholder="개발자들이 우리 회사를 이해할 수 있도록 자세히 작성해주세요." ref="data:dmp_corporateVoDetail.description" id="description"></xf:textarea>
-                    <w2:textbox class="help-text" label="개발자들이 우리 회사를 이해할 수 있도록 자세히 작성해주세요."></w2:textbox>
-                </xf:group>
+				<!-- 기업명 -->
+				<xf:group class="form-group">
+					<w2:textbox class="form-label required" label="기업명"></w2:textbox>
+					<xf:input class="form-input" placeholder="ex) 인스웨이브" ref="data:dmp_corporateVoDetail.companyName"></xf:input>
+				</xf:group>
 
-                <!-- 동의 체크박스 -->
-                <xf:group class="checkbox-group">
-                    <xf:select appearance="full" ev:onchange="scwin.agreement_onchange" id="checkbox2" selection="multiple" style="width: 100%;">
-                        <xf:choices>
-                            <xf:item>
-                                <xf:label><![CDATA[[필수] 개인정보 및 수집동의]]></xf:label>
-                                <xf:value><![CDATA[agree_required]]></xf:value>
-                            </xf:item>
-                            <xf:item>
-                                <xf:label><![CDATA[[선택] 마케팅 수신동의]]></xf:label>
-                                <xf:value><![CDATA[agree_marketing]]></xf:value>
-                            </xf:item>
-                        </xf:choices>
-                    </xf:select>
-                </xf:group>
+				<!-- 사업자등록번호 -->
+				<xf:group class="form-group">
+					<xf:group class="business-number-group">
+						<w2:textbox class="form-label required" label="사업자등록번호"></w2:textbox>
+						<xf:anchor class="overseas-link" href="#">
+							<w2:span class="info-icon" label="i"></w2:span>
+							<w2:span label="해외 기업인가요?"></w2:span>
+						</xf:anchor>
+					</xf:group>
+					<xf:group class="input-with-button">
+						<xf:input class="form-input-with-btn" placeholder="10자리 숫자" id="biz_reg_number"
+							ref="data:dmp_corporateVoDetail.businessNumber"></xf:input>
+						<xf:trigger class="check-btn" type="button" ev:onclick="scwin.biz_reg_number_chk_btn_onclick">
+							<xf:label><![CDATA[검사]]></xf:label>
+						</xf:trigger>
+					</xf:group>
+					<w2:textbox label="사업자 등록번호 10자리를 입력해주세요" class="help-text"></w2:textbox>
+				</xf:group>
 
-                <!-- 버튼 그룹 -->
-                <xf:group class="button-container">
-                    <xf:trigger class="btn-cancel" type="button">
-                        <xf:label><![CDATA[취소]]></xf:label>
-                    </xf:trigger>
-                    <xf:trigger class="btn-primary" type="button" id="btn_create_corporate" ev:onclick="scwin.btn_create_corporate_onclick">
-                        <xf:label><![CDATA[저장하기]]></xf:label>
-                    </xf:trigger>
-                </xf:group>
-            </xf:group>
-        </xf:group>
-    </body>
+				<!-- 기업인증 섹션 (수정됨) -->
+				<xf:group class="form-group">
+					<xf:group class="business-cert-section">
+						<w2:textbox class="form-label required" label="기업인증"></w2:textbox>
+						<xf:group class="cert-upload-container">
+							<w2:textbox class="cert-guide-text" label="사업자등록증명원을 첨부해주세요"
+								style="border:none !important; background:transparent !important;"></w2:textbox>
+
+							<!-- 간단한 아이콘 영역 -->
+							<xf:group class="cert-icon-container">
+								<xf:group class="cert-main-icon">
+									<w2:span class="icon-check" label="📄" style="border:none !important; background:transparent !important;"></w2:span>
+								</xf:group>
+							</xf:group>
+
+							<!-- 도움말 링크 -->
+							<xf:group class="cert-help-container">
+								<w2:span class="help-icon" label="?" style="border:1px solid #d1d5db !important; background:#ffffff !important;"
+									ev:onclick="scwin.cert_help_onclick"></w2:span>
+								<xf:anchor class="cert-help-link" href="#" ev:onclick="scwin.cert_help_onclick">
+									<w2:span label="사업자등록증명원이 뭐예요?"></w2:span>
+								</xf:anchor>
+							</xf:group>
+
+							<!-- 파일 업로드 영역 (숨김) -->
+							<w2:upload id="business_cert_upload" style="display: none;" ev:onchange="scwin.business_cert_upload_onchange"
+								accept=".pdf,.jpg,.jpeg,.png,.gif">
+							</w2:upload>
+
+							<!-- 파일 선택 버튼 -->
+							<xf:trigger class="file-select-btn" type="button" id="btn_file_select" ev:onclick="scwin.btn_file_select_onclick">
+								<xf:label><![CDATA[파일 선택]]></xf:label>
+							</xf:trigger>
+
+							<!-- 다음에 인증 체크박스 -->
+							<xf:group class="cert-later-container">
+							</xf:group>
+						</xf:group>
+					</xf:group>
+				</xf:group>
+
+				<!-- 산업 선택 -->
+				<xf:group class="form-group">
+					<w2:textbox class="form-label required" label="산업 선택"></w2:textbox>
+					<xf:select1 appearance="minimal" chooseOption="선택하기" class="form-select" ref="data:dmp_corporateVoDetail.industry"
+						id="industry">
+						<xf:choices>
+							<xf:item>
+								<xf:label><![CDATA[IT/소프트웨어]]></xf:label>
+								<xf:value><![CDATA[1]]></xf:value>
+							</xf:item>
+							<xf:item>
+								<xf:label><![CDATA[제조업]]></xf:label>
+								<xf:value><![CDATA[2]]></xf:value>
+							</xf:item>
+							<xf:item>
+								<xf:label><![CDATA[서비스업]]></xf:label>
+								<xf:value><![CDATA[3]]></xf:value>
+							</xf:item>
+							<xf:item>
+								<xf:label><![CDATA[기타]]></xf:label>
+								<xf:value><![CDATA[4]]></xf:value>
+							</xf:item>
+						</xf:choices>
+					</xf:select1>
+				</xf:group>
+
+				<!-- 기업의 직원 수 -->
+				<xf:group class="form-group">
+					<w2:textbox class="form-label" label="기업의 직원 수"></w2:textbox>
+					<xf:input class="form-input" placeholder="예 : 50" ref="data:dmp_corporateVoDetail.empCount"></xf:input>
+				</xf:group>
+
+				<!-- 회사 소개 -->
+				<xf:group class="form-group">
+					<w2:textbox class="form-label" label="회사 소개"></w2:textbox>
+					<xf:textarea class="form-textarea" placeholder="개발자들이 우리 회사를 이해할 수 있도록 자세히 작성해주세요."
+						ref="data:dmp_corporateVoDetail.description" id="description"></xf:textarea>
+					<w2:textbox class="help-text" label="개발자들이 우리 회사를 이해할 수 있도록 자세히 작성해주세요."></w2:textbox>
+				</xf:group>
+
+				<!-- 기업 로고 등록 섹션 -->
+				<xf:group class="form-group">
+					<xf:group class="logo-upload-section">
+						<w2:textbox class="form-label" label="기업 로고"></w2:textbox>
+						<xf:group class="logo-upload-container">
+							<w2:textbox class="logo-guide-text" label="기업 로고 이미지를 등록해주세요"
+								style="border:none !important; background:transparent !important;"></w2:textbox>
+
+							<!-- 로고 아이콘 영역 -->
+							<xf:group class="logo-icon-container">
+								<xf:group class="logo-main-icon">
+									<w2:span class="icon-camera" label="📷" style="border:none !important; background:transparent !important;"></w2:span>
+								</xf:group>
+							</xf:group>
+
+							<!-- 도움말 텍스트 -->
+							<w2:textbox class="logo-help-text" label="PNG, JPG, SVG 파일을 업로드하세요 (최대 5MB)"
+								style="border:none !important; background:transparent !important;"></w2:textbox>
+
+							<!-- 로고 미리보기 영역 -->
+							<xf:group class="logo-preview-container">
+								<w2:textbox class="logo-file-info" label="" style="border:none !important; background:transparent !important;"></w2:textbox>
+							</xf:group>
+
+							<!-- 로고 파일 업로드 영역 (숨김) -->
+							<w2:upload id="logo_upload" style="display: none;" ev:onchange="scwin.logo_upload_onchange"
+								accept=".png,.jpg,.jpeg,.svg,.gif" ref="data:dmp_corporateVoDetail.logo">
+							</w2:upload>
+
+							<!-- 로고 파일 선택 버튼 -->
+							<xf:trigger class="file-select-btn" type="button" id="btn_logo_select" ev:onclick="scwin.btn_logo_select_onclick">
+								<xf:label><![CDATA[로고 이미지 선택]]></xf:label>
+							</xf:trigger>
+						</xf:group>
+					</xf:group>
+				</xf:group>
+
+				<!-- 동의 체크박스 -->
+				<xf:group class="checkbox-group">
+					<xf:select appearance="full" ev:onchange="scwin.agreement_onchange" id="checkbox2" selection="multiple" style="width: 100%;">
+						<xf:choices>
+							<xf:item>
+								<xf:label><![CDATA[[필수] 개인정보 및 수집동의]]></xf:label>
+								<xf:value><![CDATA[agree_required]]></xf:value>
+							</xf:item>
+							<xf:item>
+								<xf:label><![CDATA[[선택] 마케팅 수신동의]]></xf:label>
+								<xf:value><![CDATA[agree_marketing]]></xf:value>
+							</xf:item>
+						</xf:choices>
+					</xf:select>
+				</xf:group>
+
+				<!-- 버튼 그룹 -->
+				<xf:group class="button-container">
+					<xf:trigger class="btn-cancel" type="button">
+						<xf:label><![CDATA[취소]]></xf:label>
+					</xf:trigger>
+					<xf:trigger class="btn-primary" type="button" id="btn_create_corporate" ev:onclick="scwin.btn_create_corporate_onclick">
+						<xf:label><![CDATA[저장하기]]></xf:label>
+					</xf:trigger>
+				</xf:group>
+			</xf:group>
+		</xf:group>
+	</body>
 </html>
