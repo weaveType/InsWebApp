@@ -20,164 +20,184 @@
         <w2:layoutInfo/>
         <w2:publicInfo method=""/>
         <script type="text/javascript"><![CDATA[
-            scwin.onpageload = function() {
-                console.log("WeaveType 메인 페이지가 로드되었습니다.");
-                dma_main.set("totalUsers", "120,739");
-                
-                // 검색 이벤트 바인딩
-                setTimeout(function() {
-                    var searchInput = document.getElementById('searchInput');
-                    var searchBtn = document.getElementById('btnSearch');
-                    
-                    if (searchInput) {
-                        searchInput.addEventListener('keydown', function(e) {
-                            if (e.keyCode === 13) {
-                                scwin.performSearch();
-                            }
-                        });
-                    }
-                    
-                    if (searchBtn) {
-                        searchBtn.addEventListener('click', function() {
-                            scwin.performSearch();
-                        });
-                    }
-                }, 100);
-            };
+scwin.onpageload = function () {
+    console.log("WeaveType 메인 페이지가 로드되었습니다.");
+    dma_main.set("totalUsers", "120,739");
 
-            // 로고 클릭 이벤트
-            scwin.weaveTypeLogo_onclick = function() {
-                window.location.reload();
-            };
+    // 검색 이벤트 바인딩
+    setTimeout(function () {
+        var searchInput = document.getElementById('searchInput');
+        var searchBtn = document.getElementById('btnSearch');
 
-            scwin.menu1_onclick = function() {
-                alert("매칭 페이지로 이동합니다.");
-            };
-
-            scwin.menu2_onclick = function() {
-                alert("MBTI 검사 페이지로 이동합니다.");
-            };
-
-            scwin.menu3_onclick = function() {
-                // PostList.xml(기업 둘러보기)로 이동
-                $p.url("../posting/PostList.xml");
-            };
-
-            // 로그인 관련 이벤트
-            scwin.btnLogin_onclick = function() {
-                // 로그인 페이지로 이동
-                alert("로그인 페이지로 이동합니다.");
-            };
-
-            scwin.btnMainLogin_onclick = function() {
-                // 로그인 페이지로 이동
-                alert("로그인 페이지로 이동합니다.");
-            };
-
-            scwin.btnEnterprise_onclick = function() {
-
-            };
-
-            // 카드 클릭 이벤트
-            scwin.card1_onclick = function() {
-                alert("튜토리얼 페이지로 이동합니다.");
-            };
-
-            scwin.card2_onclick = function() {
-                alert("자소서 업체검토 페이지로 이동합니다.");
-            };
-
-            scwin.card3_onclick = function() {
-                alert("MBTI 검사 페이지로 이동합니다.");
-            };
-
-            // 포지션 카드 클릭 이벤트
-            scwin.position1_onclick = function() {
-                // 지원자 관리 페이지로 이동
-                location.href = '/websquare/websquare.html?w2xPath=/ui/applicant_management.xml';
-            };
-
-            scwin.position2_onclick = function() {
-                // 채용 공고 작성 페이지로 이동
-                location.href = '/websquare/websquare.html?w2xPath=/ui/create_posting.xml';
-            };
-
-            scwin.position3_onclick = function() {
-                // 채용 리뷰 페이지로 이동
-                location.href = '/websquare/websquare.html?w2xPath=/ui/review_page.xml';
-            };
-
-            // 검색 실행
-            scwin.performSearch = function() {
-                var searchInput = document.getElementById('searchInput');
-                if (!searchInput) {
-                    alert("검색창을 찾을 수 없습니다.");
-                    return;
-                }
-                
-                var searchText = searchInput.value;
-                if (searchText && searchText.trim() !== "") {
-                    alert("'" + searchText + "'를 검색합니다. (아직 검색 기능은 구현되지 않았습니다)");
-                    console.log("검색어:", searchText);
-                } else {
-                    alert("검색어를 입력해주세요.");
-                }
-            };
-
-            // 기존 함수들과의 호환성을 위해 유지
-            scwin.searchInput_onkeypress = function(e) {
+        if (searchInput) {
+            searchInput.addEventListener('keydown', function (e) {
                 if (e.keyCode === 13) {
                     scwin.performSearch();
                 }
-            };
+            });
+        }
 
-            scwin.btnSearch_onclick = function() {
+        if (searchBtn) {
+            searchBtn.addEventListener('click', function () {
                 scwin.performSearch();
-            };
+            });
+        }
+    }, 100);
+};
 
-            // 프로필 채우기 링크
-            scwin.btnProfile_onclick = function() {
-                alert("매칭 프로필 채우기 페이지로 이동합니다.");
-            };
+// 로고 클릭 이벤트
+scwin.weaveTypeLogo_onclick = function () {
+    window.location.reload();
+};
 
-            scwin.ad_onclick = function (e) {
-                alert("회원가입 페이지로 이동합니다!");
-            };
+scwin.menu1_onclick = function () {
+    alert("매칭 페이지로 이동합니다.");
+};
 
-            // 햄버거 메뉴 토글
-            scwin.toggleSideMenu = function() {
-                var sideMenu = document.getElementById('sideMenu');
-                var overlay = document.getElementById('sideMenuOverlay');
-                
-                if (sideMenu.classList.contains('open')) {
-                    scwin.closeSideMenu();
-                } else {
-                    sideMenu.classList.add('open');
-                    overlay.classList.add('open');
-                }
-            };
+scwin.menu2_onclick = function () {
+    alert("MBTI 검사 페이지로 이동합니다.");
+};
 
-            // 사이드 메뉴 닫기
-            scwin.closeSideMenu = function() {
-                var sideMenu = document.getElementById('sideMenu');
-                var overlay = document.getElementById('sideMenuOverlay');
-                
-                sideMenu.classList.remove('open');
-                overlay.classList.remove('open');
-            };
+scwin.menu3_onclick = function () {
+    // PostList.xml(기업 둘러보기)로 이동
+    $p.url("../posting/PostList.xml");
+};
 
-            // 내 정보 페이지로 이동
-            scwin.goToUserDetail = function() {
-                $p.url("../user/UserDetail.xml");
-                scwin.closeSideMenu();
-            };
+// 로그인 관련 이벤트
+scwin.btnLogin_onclick = function () {
+    var options = {
+        id: 'email_popup',
+        type: 'browser',
+        modal: true,
+        resizable: true,
+        center: true,
+        width: 460,
+        height: 475
+    };
 
-            // 기업 등록 페이지로 이동
-            scwin.goToCompanyRegister = function() {
-                location.href = '/websquare/websquare.html?w2xPath=/ui/create_company.xml';
-                scwin.closeSideMenu();
-            };
-        ]]></script>
+    $p.openPopup('../user/Login.xml', options);
+};
+
+
+scwin.btnMainLogin_onclick = function () {
+    var options = {
+        id: 'email_popup',
+        type: 'browser',
+        modal: true,
+        resizable: true,
+        center: true,
+        width: 460,
+        height: 475 
+    };
+
+    $p.openPopup('../user/Login.xml', options);
+};
+
+scwin.btnEnterprise_onclick = function () {
+    $p.url("CompanyMain.xml");
+
+};
+
+// 카드 클릭 이벤트
+scwin.card1_onclick = function () {
+    alert("튜토리얼 페이지로 이동합니다.");
+};
+
+scwin.card2_onclick = function () {
+    alert("자소서 업체검토 페이지로 이동합니다.");
+};
+
+scwin.card3_onclick = function () {
+    alert("MBTI 검사 페이지로 이동합니다.");
+};
+
+// 포지션 카드 클릭 이벤트
+scwin.position1_onclick = function () {
+    // 지원자 관리 페이지로 이동
+    location.href = '/websquare/websquare.html?w2xPath=/ui/applicant_management.xml';
+};
+
+scwin.position2_onclick = function () {
+    // 채용 공고 작성 페이지로 이동
+    location.href = '/websquare/websquare.html?w2xPath=/ui/create_posting.xml';
+};
+
+scwin.position3_onclick = function () {
+    // 채용 리뷰 페이지로 이동
+    location.href = '/websquare/websquare.html?w2xPath=/ui/review_page.xml';
+};
+
+// 검색 실행
+scwin.performSearch = function () {
+    var searchInput = document.getElementById('searchInput');
+    if (!searchInput) {
+        alert("검색창을 찾을 수 없습니다.");
+        return;
+    }
+
+    var searchText = searchInput.value;
+    if (searchText && searchText.trim() !== "") {
+        alert("'" + searchText + "'를 검색합니다. (아직 검색 기능은 구현되지 않았습니다)");
+        console.log("검색어:", searchText);
+    } else {
+        alert("검색어를 입력해주세요.");
+    }
+};
+
+// 기존 함수들과의 호환성을 위해 유지
+scwin.searchInput_onkeypress = function (e) {
+    if (e.keyCode === 13) {
+        scwin.performSearch();
+    }
+};
+
+scwin.btnSearch_onclick = function () {
+    scwin.performSearch();
+};
+
+// 프로필 채우기 링크
+scwin.btnProfile_onclick = function () {
+    alert("매칭 프로필 채우기 페이지로 이동합니다.");
+};
+
+scwin.ad_onclick = function (e) {
+    $p.url('../user/Login.xml');
+};
+
+// 햄버거 메뉴 토글
+scwin.toggleSideMenu = function () {
+    var sideMenu = document.getElementById('sideMenu');
+    var overlay = document.getElementById('sideMenuOverlay');
+
+    if (sideMenu.classList.contains('open')) {
+        scwin.closeSideMenu();
+    } else {
+        sideMenu.classList.add('open');
+        overlay.classList.add('open');
+    }
+};
+
+// 사이드 메뉴 닫기
+scwin.closeSideMenu = function () {
+    var sideMenu = document.getElementById('sideMenu');
+    var overlay = document.getElementById('sideMenuOverlay');
+
+    sideMenu.classList.remove('open');
+    overlay.classList.remove('open');
+};
+
+// 내 정보 페이지로 이동
+scwin.goToUserDetail = function () {
+    $p.url("../user/UserDetail.xml");
+    scwin.closeSideMenu();
+};
+
+// 기업 등록 페이지로 이동
+scwin.goToCompanyRegister = function () {
+    location.href = '/websquare/websquare.html?w2xPath=/ui/create_company.xml';
+    scwin.closeSideMenu();
+};
+]]></script>
         <style type="text/css"><![CDATA[
             /* 기본 설정 */
             * {

@@ -270,7 +270,7 @@ scwin.link_signup_onclick = function(e) {
     };
     
     // 실제 환경에서는 회원가입 페이지 열기
-    $p.openPopup('signup.xml', options);
+    $p.openPopup('../user/Signup.xml', options);
     
     // 또는 현재 팝업 닫고 회원가입으로 이동
     // window.close();

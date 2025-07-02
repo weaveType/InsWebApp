@@ -63,7 +63,7 @@ public class CorporateDAO extends com.demo.proworks.cmmn.dao.ProworksDefaultAbst
      * @return 번호
      * @throws ElException
      */
-    public int insertCorporate(CorporateVo vo) throws ElException {    	
+    public int insertCorporate(CorporateVo vo) throws ElException {
         return insert("com.demo.proworks.domain.corporate.insertCorporate", vo);
     }
 

@@ -255,7 +255,8 @@ scwin.loadStatistics = function() {
 
 // 새 공고 작성 버튼 클릭
 scwin.btn_newJob_onclick = function(e) {
-    $p.url("create_posting.xml");
+    // $p.url("CreatePosting.xml");
+    $p.url("test07.xml");
 };
 
 // 채용 통계 클릭
@@ -268,7 +269,7 @@ scwin.grp_quickAnalytics_onclick = function(e) {
 // 인재 스카우트 클릭
 scwin.grp_quickScout_onclick = function(e) {
     // scout.xml로 이동
-     $p.url("scout.xml");
+     $p.url("Scout.xml");
 };
 
 
