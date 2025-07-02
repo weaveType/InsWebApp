@@ -1,0 +1,1092 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ev="http://www.w3.org/2001/xml-events"
+    xmlns:w2="http://www.inswave.com/websquare" 
+    xmlns:xf="http://www.w3.org/2002/xforms">
+    
+    <head meta_screenName="기업 리스트">
+        <w2:type>COMPONENT</w2:type>
+        <w2:buildDate/>
+        <w2:MSA/>
+        <xf:model>
+            <w2:dataCollection baseNode="map">
+                <w2:dataList baseNode="list" repeatNode="map" id="company_list" saveRemovedData="true">
+                    <w2:columnInfo>
+                        <w2:column dataType="text" name="기업ID" id="company_id"></w2:column>
+                        <w2:column dataType="text" name="기업명" id="company_name"></w2:column>
+                        <w2:column dataType="text" name="업종" id="industry"></w2:column>
+                        <w2:column dataType="text" name="위치" id="location"></w2:column>
+                        <w2:column dataType="text" name="기업규모" id="company_size"></w2:column>
+                        <w2:column dataType="text" name="로고URL" id="logo_url"></w2:column>
+                        <w2:column dataType="text" name="기업소개" id="description"></w2:column>
+                        <w2:column dataType="text" name="채용중인공고수" id="active_jobs"></w2:column>
+                        <w2:column dataType="text" name="평점" id="rating"></w2:column>
+                        <w2:column dataType="text" name="복리후생" id="benefits"></w2:column>
+                    </w2:columnInfo>
+                </w2:dataList>
+            </w2:dataCollection>
+            <w2:workflowCollection/>
+        </xf:model>
+        <w2:layoutInfo/>
+        <w2:publicInfo method=""/>
+        
+        <style type="text/css"><![CDATA[
+            /* 기본 설정 */
+            * {
+                box-sizing: border-box;
+            }
+
+            body {
+                margin: 0;
+                padding: 0;
+                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+                background-color: #ffffff;
+                line-height: 1.6;
+            }
+
+            .main-wrap {
+                width: 100%;
+                background-color: #ffffff;
+            }
+
+            /* 헤더 - 기존 WeaveType 스타일 */
+            .header {
+                width: 100%;
+                height: 70px;
+                background-color: #ffffff;
+                border-bottom: 1px solid #e0e0e0;
+                position: relative;
+                padding: 0 min(30px, 4vw);
+            }
+
+            .header-left {
+                float: left;
+                padding-top: 18px;
+                display: flex;
+                align-items: center;
+                gap: 15px;
+            }
+
+            /* 햄버거 메뉴 */
+            .hamburger-menu {
+                width: 24px;
+                height: 24px;
+                cursor: pointer;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                padding: 4px;
+                border-radius: 4px;
+                transition: background-color 0.2s ease;
+            }
+
+            .hamburger-menu:hover {
+                background-color: #f5f5f5;
+            }
+
+            .hamburger-line {
+                width: 16px;
+                height: 2px;
+                background-color: #333;
+                margin: 1px 0;
+                transition: 0.3s;
+                border-radius: 1px;
+            }
+
+            .nav-menu {
+                display: inline-block;
+                vertical-align: middle;
+            }
+
+            .nav-menu xf:image {
+                vertical-align: middle;
+                max-height: 34px;
+            }
+
+            .nav-link {
+                font-size: 14px;
+                color: #333;
+                text-decoration: none;
+                cursor: pointer;
+                margin-right: 20px;
+                vertical-align: middle;
+            }
+
+            .header-right {
+                float: right;
+                padding-top: 18px;
+            }
+
+            .search-container {
+                display: inline-block;
+                background-color: #f5f5f5;
+                border-radius: 20px;
+                padding: 6px 15px;
+                margin-right: 10px;
+                vertical-align: middle;
+            }
+
+            .search-input {
+                border: none;
+                background: transparent;
+                width: 150px;
+                outline: none;
+                font-size: 13px;
+                height: 24px;
+                vertical-align: middle;
+            }
+
+            .search-btn {
+                border: none;
+                background: none;
+                cursor: pointer;
+                margin-left: 8px;
+                font-size: 14px;
+                vertical-align: middle;
+            }
+
+            .btn-login {
+                background-color: #fff;
+                border: 1px solid #ddd;
+                padding: 6px 12px;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 12px;
+                margin-right: 8px;
+                height: 32px;
+                vertical-align: middle;
+            }
+
+            .btn-enterprise {
+                background-color: #333;
+                color: #fff;
+                border: none;
+                padding: 6px 12px;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 12px;
+                height: 32px;
+                vertical-align: middle;
+            }
+
+            .clearfix::after {
+                content: "";
+                display: table;
+                clear: both;
+            }
+
+            /* 필터 섹션 */
+            .filter-section {
+                background-color: #ffffff;
+                border-bottom: 1px solid #e8e8e8;
+                padding: 16px 20px;
+            }
+
+            .main-filters {
+                display: flex;
+                align-items: center;
+                gap: 16px;
+                margin-bottom: 16px;
+            }
+
+            .filter-dropdown {
+                position: relative;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                padding: 12px 16px;
+                border: 1px solid #e1e2e3;
+                border-radius: 25px;
+                background: white;
+                cursor: pointer;
+                font-size: 14px;
+                font-weight: 600;
+                transition: all 0.2s;
+            }
+
+            .filter-dropdown:hover {
+                border-color: #36f;
+            }
+
+            .filter-dropdown.active {
+                border-color: #36f;
+                color: #36f;
+            }
+
+            .dropdown-arrow {
+                width: 12px;
+                height: 12px;
+                transition: transform 0.2s;
+            }
+
+            .filter-tags {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                flex-wrap: wrap;
+            }
+
+            .filter-tag {
+                display: flex;
+                align-items: center;
+                gap: 4px;
+                padding: 8px 12px;
+                background-color: #f8f9fa;
+                border: 1px solid #e1e2e3;
+                border-radius: 18px;
+                font-size: 13px;
+                color: #333;
+                cursor: pointer;
+                transition: all 0.2s;
+                white-space: nowrap;
+            }
+
+            .filter-tag:hover {
+                border-color: #36f;
+                color: #36f;
+            }
+
+            .filter-tag.active {
+                background-color: #36f;
+                border-color: #36f;
+                color: white;
+            }
+
+            .filter-tag.highlight {
+                background-color: #fff4e6;
+                border-color: #ffa940;
+                color: #d48806;
+            }
+
+            /* 사이드 메뉴 */
+            .side-menu {
+                position: fixed;
+                top: 70px;
+                left: -300px;
+                width: 280px;
+                height: calc(100vh - 70px);
+                background-color: white;
+                box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+                transition: left 0.3s ease;
+                z-index: 1000;
+                overflow-y: auto;
+                padding: 20px;
+            }
+
+            .side-menu.open {
+                left: 0;
+            }
+
+            .side-menu-overlay {
+                position: fixed;
+                top: 70px;
+                left: 0;
+                width: 100%;
+                height: calc(100vh - 70px);
+                background-color: rgba(0,0,0,0.5);
+                display: none;
+                z-index: 999;
+            }
+
+            .side-menu-overlay.open {
+                display: block;
+            }
+
+            .side-menu-title {
+                font-size: 18px;
+                font-weight: bold;
+                color: #333;
+                margin-bottom: 20px;
+                padding-bottom: 15px;
+                border-bottom: 1px solid #e0e0e0;
+            }
+
+            .side-menu-section {
+                margin-bottom: 25px;
+            }
+
+            .side-menu-section-title {
+                font-size: 14px;
+                font-weight: 600;
+                color: #666;
+                margin-bottom: 10px;
+            }
+
+            .side-menu-item {
+                display: block;
+                padding: 12px 16px;
+                margin-bottom: 2px;
+                color: #333;
+                text-decoration: none;
+                border-radius: 6px;
+                transition: background-color 0.2s ease;
+                font-size: 14px;
+                cursor: pointer;
+            }
+
+            .side-menu-item:hover {
+                background-color: #f8f9fa;
+                color: #007bff;
+            }
+
+            /* 메인 컨텐츠 */
+            .main-content {
+                max-width: 1060px;
+                margin: 0 auto;
+                padding: 24px 20px;
+            }
+
+            /* 적극 채용 중인 회사 섹션 */
+            .active-hiring-section {
+                margin-bottom: 40px;
+            }
+
+            .section-header {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                margin-bottom: 20px;
+            }
+
+            .fire-icon {
+                color: #ff6b35;
+                font-size: 18px;
+            }
+
+            .section-title {
+                font-size: 18px;
+                font-weight: 600;
+                color: #333;
+            }
+
+            .help-icon {
+                color: #999;
+                font-size: 16px;
+                cursor: pointer;
+            }
+
+            .company-cards {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                gap: 16px;
+                margin-bottom: 40px;
+            }
+
+            .company-card {
+                background: white;
+                border-radius: 8px;
+                overflow: hidden;
+                cursor: pointer;
+                transition: all 0.2s ease;
+                border: 1px solid #e8e8e8;
+            }
+
+            .company-card:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            }
+
+            .company-image {
+                height: 120px;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: white;
+                font-size: 16px;
+                font-weight: 600;
+                position: relative;
+            }
+
+            .company-card:nth-child(1) .company-image {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            }
+
+            .company-card:nth-child(2) .company-image {
+                background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            }
+
+            .company-card:nth-child(3) .company-image {
+                background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            }
+
+            .company-card:nth-child(4) .company-image {
+                background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            }
+
+            .company-card:nth-child(5) .company-image {
+                background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            }
+
+            .company-info {
+                padding: 16px;
+            }
+
+            .company-name {
+                font-size: 16px;
+                font-weight: 600;
+                color: #333;
+                margin-bottom: 4px;
+            }
+
+            .company-positions {
+                font-size: 14px;
+                color: #666;
+            }
+
+            /* 채용공고 섹션 */
+            .job-section {
+                margin-bottom: 40px;
+            }
+
+            .job-cards {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+                gap: 20px;
+            }
+
+            .job-card {
+                background: white;
+                border-radius: 8px;
+                overflow: hidden;
+                cursor: pointer;
+                transition: all 0.2s ease;
+                border: 1px solid #e8e8e8;
+                position: relative;
+            }
+
+            .job-card:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            }
+
+            .job-image {
+                height: 160px;
+                background: #f8f9fa;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                position: relative;
+                overflow: hidden;
+            }
+
+            .bookmark-btn {
+                position: absolute;
+                top: 12px;
+                right: 12px;
+                width: 32px;
+                height: 32px;
+                background: rgba(0,0,0,0.5);
+                border: none;
+                border-radius: 4px;
+                color: white;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: all 0.2s;
+            }
+
+            .bookmark-btn:hover {
+                background: rgba(0,0,0,0.7);
+            }
+
+            .job-badge {
+                position: absolute;
+                top: 12px;
+                left: 12px;
+                background: #333;
+                color: white;
+                padding: 4px 8px;
+                border-radius: 4px;
+                font-size: 11px;
+                font-weight: 500;
+            }
+
+            .job-content {
+                padding: 16px;
+            }
+
+            .job-title {
+                font-size: 16px;
+                font-weight: 600;
+                color: #333;
+                margin-bottom: 8px;
+                line-height: 1.4;
+            }
+
+            .job-company {
+                font-size: 14px;
+                color: #666;
+                margin-bottom: 4px;
+            }
+
+            .job-location {
+                font-size: 13px;
+                color: #999;
+                margin-bottom: 8px;
+            }
+
+            .job-reward {
+                font-size: 12px;
+                color: #00a8cc;
+                font-weight: 500;
+            }
+
+            /* 반응형 디자인 */
+            @media (max-width: 1024px) {
+                .header {
+                    padding: 0 20px;
+                }
+                
+                .nav-link {
+                    margin-right: 15px;
+                    font-size: 13px;
+                }
+                
+                .search-input {
+                    width: 120px;
+                }
+
+                .filter-tags {
+                    flex-wrap: wrap;
+                }
+
+                .company-cards {
+                    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                }
+
+                .job-cards {
+                    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+                }
+            }
+
+            @media (max-width: 768px) {
+                .header {
+                    height: 60px;
+                    padding: 0 15px;
+                }
+                
+                .header-left, .header-right {
+                    padding-top: 13px;
+                }
+                
+                .nav-menu xf:image {
+                    width: 100px !important;
+                    height: 28px !important;
+                }
+                
+                .nav-link {
+                    display: none;
+                }
+                
+                .search-input {
+                    width: 100px;
+                    font-size: 12px;
+                    height: 20px;
+                }
+                
+                .btn-login, .btn-enterprise {
+                    padding: 5px 8px;
+                    font-size: 11px;
+                    height: 28px;
+                }
+
+                .side-menu {
+                    top: 60px;
+                    height: calc(100vh - 60px);
+                }
+
+                .side-menu-overlay {
+                    top: 60px;
+                    height: calc(100vh - 60px);
+                }
+
+                .main-content {
+                    padding: 16px;
+                }
+
+                .filter-tags {
+                    overflow-x: auto;
+                    flex-wrap: nowrap;
+                    padding-bottom: 8px;
+                }
+
+                .company-cards {
+                    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                    gap: 12px;
+                }
+
+                .job-cards {
+                    grid-template-columns: 1fr;
+                    gap: 16px;
+                }
+            }
+
+            @media (max-width: 480px) {
+                .filter-section {
+                    padding: 12px 16px;
+                }
+
+                .main-filters {
+                    flex-direction: column;
+                    align-items: stretch;
+                    gap: 12px;
+                }
+
+                .company-cards {
+                    grid-template-columns: 1fr;
+                }
+            }
+        ]]></style>
+        
+        <script lazy="false" type="text/javascript"><![CDATA[
+scwin.onpageload = function () {
+    // 페이지 로드 시 초기화
+    console.log("원티드 스타일 기업 리스트 페이지 로드");
+    
+    // 검색 이벤트 바인딩
+    setTimeout(function() {
+        var searchInput = document.getElementById('searchInput');
+        var searchBtn = document.getElementById('btnSearch');
+        
+        if (searchInput) {
+            searchInput.addEventListener('keydown', function(e) {
+                if (e.keyCode === 13) {
+                    scwin.performSearch();
+                }
+            });
+        }
+        
+        if (searchBtn) {
+            searchBtn.addEventListener('click', function() {
+                scwin.performSearch();
+            });
+        }
+    }, 100);
+};
+
+// 헤더 이벤트들
+scwin.weaveTypeLogo_onclick = function() {
+    $p.url("../common/weaveTypeMain.xml");
+};
+
+scwin.menu1_onclick = function() {
+    alert("매칭 페이지로 이동합니다.");
+};
+
+scwin.menu2_onclick = function() {
+    alert("MBTI 검사 페이지로 이동합니다.");
+};
+
+scwin.menu3_onclick = function() {
+    // 현재 페이지
+};
+
+scwin.btnLogin_onclick = function() {
+    alert("로그인/회원가입 페이지로 이동합니다.");
+};
+
+scwin.btnEnterprise_onclick = function() {
+    alert("기업 서비스 페이지로 이동합니다.");
+};
+
+// 검색 실행
+scwin.performSearch = function() {
+    var searchInput = document.getElementById('searchInput');
+    if (!searchInput) {
+        alert("검색창을 찾을 수 없습니다.");
+        return;
+    }
+    
+    var searchText = searchInput.value;
+    if (searchText && searchText.trim() !== "") {
+        alert("'" + searchText + "'를 검색합니다. (기업/직무 검색 기능)");
+        console.log("검색어:", searchText);
+    } else {
+        alert("검색어를 입력해주세요.");
+    }
+};
+
+// 기존 함수들과의 호환성을 위해 유지
+scwin.searchInput_onkeypress = function(e) {
+    if (e.keyCode === 13) {
+        scwin.performSearch();
+    }
+};
+
+scwin.btnSearch_onclick = function() {
+    scwin.performSearch();
+};
+
+// 필터 이벤트들
+scwin.filter_dropdown_onclick = function(filterType) {
+    console.log('필터 드롭다운 클릭:', filterType);
+    // 실제로는 드롭다운 메뉴 표시
+};
+
+scwin.filter_tag_onclick = function(tagName) {
+    console.log('필터 태그 클릭:', tagName);
+    // 태그 활성화/비활성화 토글
+    var tag = event.target;
+    tag.classList.toggle('active');
+};
+
+// 기업 카드 클릭
+scwin.company_card_onclick = function(companyId) {
+    console.log('기업 카드 클릭:', companyId);
+    $p.url("PostDetail.xml");
+};
+
+// 채용공고 카드 클릭
+scwin.job_card_onclick = function(jobId) {
+    console.log('채용공고 카드 클릭:', jobId);
+    $p.url("PostDetail.xml");
+};
+
+// 북마크 버튼 클릭
+scwin.bookmark_onclick = function(e, jobId) {
+    e.stopPropagation(); // 카드 클릭 이벤트 방지
+    console.log('북마크 클릭:', jobId);
+    
+    var btn = event.target;
+    if (btn.innerHTML === '������') {
+        btn.innerHTML = '❤️';
+    } else {
+        btn.innerHTML = '������';
+    }
+};
+
+// 햄버거 메뉴 토글
+scwin.toggleSideMenu = function() {
+    var sideMenu = document.getElementById('sideMenu');
+    var overlay = document.getElementById('sideMenuOverlay');
+    
+    if (sideMenu.classList.contains('open')) {
+        scwin.closeSideMenu();
+    } else {
+        sideMenu.classList.add('open');
+        overlay.classList.add('open');
+    }
+};
+
+scwin.closeSideMenu = function() {
+    var sideMenu = document.getElementById('sideMenu');
+    var overlay = document.getElementById('sideMenuOverlay');
+    
+    sideMenu.classList.remove('open');
+    overlay.classList.remove('open');
+};
+
+// 내 정보 페이지로 이동
+scwin.goToUserDetail = function() {
+    $p.url("../user/UserDetail.xml");
+    scwin.closeSideMenu();
+};
+
+// 기업 등록 페이지로 이동
+scwin.goToCompanyRegister = function() {
+    alert("기업 등록 페이지로 이동합니다.");
+    scwin.closeSideMenu();
+};
+]]></script>
+    </head>
+    
+    <body ev:onpageload="scwin.onpageload">
+        <xf:group class="main-wrap">
+            <!-- 헤더 영역 - 기존 WeaveType 스타일 -->
+            <xf:group class="header clearfix" tagname="header">
+                <xf:group class="header-left">
+                    <!-- 햄버거 메뉴 -->
+                    <div class="hamburger-menu" ev:onclick="scwin.toggleSideMenu()">
+                        <div class="hamburger-line"></div>
+                        <div class="hamburger-line"></div>
+                        <div class="hamburger-line"></div>
+                    </div>
+                    
+                    <xf:group class="nav-menu">
+                        <xf:image src="/images/ws5/weaveTypeLogo.png" style="width: 120px; height: 32px; object-fit: contain;" id="weaveTypeLogo" class="logo" ev:onclick="scwin.weaveTypeLogo_onclick"></xf:image>
+                        <w2:anchor class="nav-link" id="anchor1" ev:onclick="scwin.menu1_onclick" outerDiv="false">
+                            <xf:label><![CDATA[매칭]]></xf:label>
+                        </w2:anchor>
+                        <w2:anchor class="nav-link" id="anchor2" ev:onclick="scwin.menu2_onclick" outerDiv="false">
+                            <xf:label><![CDATA[mbti검사]]></xf:label>
+                        </w2:anchor>
+                        <w2:anchor class="nav-link" id="anchor3" ev:onclick="scwin.menu3_onclick" outerDiv="false" style="color:#007bff;font-weight:600;">
+                            <xf:label><![CDATA[기업 둘러보기]]></xf:label>
+                        </w2:anchor>
+                    </xf:group>
+                </xf:group>
+                <xf:group class="header-right">
+                    <xf:group class="search-container">
+                        <input id="searchInput" class="search-input" type="text" placeholder="기업명, 직무로 검색" />
+                        <button class="search-btn" id="btnSearch" type="button">🔍</button>
+                    </xf:group>
+                    <xf:trigger class="btn-login" id="btnLogin" ev:onclick="scwin.btnLogin_onclick" type="button">
+                        <xf:label><![CDATA[로그인/회원가입]]></xf:label>
+                    </xf:trigger>
+                    <xf:trigger class="btn-enterprise" id="btnEnterprise" ev:onclick="scwin.btnEnterprise_onclick" type="button">
+                        <xf:label><![CDATA[기업 서비스]]></xf:label>
+                    </xf:trigger>
+                </xf:group>
+            </xf:group>
+
+            <!-- 사이드 메뉴 오버레이 -->
+            <div class="side-menu-overlay" id="sideMenuOverlay" ev:onclick="scwin.closeSideMenu()"></div>
+            
+            <!-- 사이드 메뉴 -->
+            <nav class="side-menu" id="sideMenu">
+                <w2:textbox class="side-menu-title" label="메뉴"></w2:textbox>
+                
+                <div class="side-menu-section">
+                    <w2:textbox class="side-menu-section-title" label="매칭 서비스"></w2:textbox>
+                    <w2:anchor class="side-menu-item" ev:onclick="scwin.menu1_onclick">
+                        <xf:label><![CDATA[💼 매칭]]></xf:label>
+                    </w2:anchor>
+                    <w2:anchor class="side-menu-item" ev:onclick="scwin.menu2_onclick">
+                        <xf:label><![CDATA[🧠 MBTI 검사]]></xf:label>
+                    </w2:anchor>
+                    <w2:anchor class="side-menu-item" style="background-color:#e3f2fd;color:#1976d2;font-weight:600;">
+                        <xf:label><![CDATA[🏢 기업 둘러보기 (현재 페이지)]]></xf:label>
+                    </w2:anchor>
+                </div>
+                
+                <div class="side-menu-section">
+                    <w2:textbox class="side-menu-section-title" label="개인 서비스"></w2:textbox>
+                    <w2:anchor class="side-menu-item" ev:onclick="scwin.goToUserDetail()">
+                        <xf:label><![CDATA[👤 내 정보]]></xf:label>
+                    </w2:anchor>
+                    <w2:anchor class="side-menu-item">
+                        <xf:label><![CDATA[📝 지원현황]]></xf:label>
+                    </w2:anchor>
+                    <w2:anchor class="side-menu-item">
+                        <xf:label><![CDATA[❤️ 관심기업]]></xf:label>
+                    </w2:anchor>
+                    <w2:anchor class="side-menu-item">
+                        <xf:label><![CDATA[🔖 북마크]]></xf:label>
+                    </w2:anchor>
+                </div>
+                
+                <div class="side-menu-section">
+                    <w2:textbox class="side-menu-section-title" label="기업 서비스"></w2:textbox>
+                    <w2:anchor class="side-menu-item" ev:onclick="scwin.btnEnterprise_onclick">
+                        <xf:label><![CDATA[📊 채용관리 대시보드]]></xf:label>
+                    </w2:anchor>
+                    <w2:anchor class="side-menu-item" ev:onclick="scwin.goToCompanyRegister()">
+                        <xf:label><![CDATA[📋 기업 등록]]></xf:label>
+                    </w2:anchor>
+                </div>
+            </nav>
+
+            <!-- 필터 섹션 -->
+            <section class="filter-section">
+                <!-- 메인 필터 드롭다운 -->
+                <xf:group class="main-filters">
+                    <xf:group class="filter-dropdown" ev:onclick="scwin.filter_dropdown_onclick('job_type')">
+                        <w2:textbox label="개발 · 개발 전체"></w2:textbox>
+                        <w2:span class="dropdown-arrow" label="▼"></w2:span>
+                    </xf:group>
+                    
+                    <xf:group class="filter-dropdown" ev:onclick="scwin.filter_dropdown_onclick('experience')">
+                        <w2:textbox label="경력 전체"></w2:textbox>
+                        <w2:span class="dropdown-arrow" label="▼"></w2:span>
+                    </xf:group>
+                    
+                    <xf:group style="margin-left: auto; display: flex; gap: 12px;">
+                        <w2:textbox label="최신순" style="font-size: 13px; color: #666;"></w2:textbox>
+                        <w2:textbox label="추천순" style="font-size: 13px; color: #666;"></w2:textbox>
+                        <w2:textbox label="인기순" style="font-size: 13px; color: #666;"></w2:textbox>
+                    </xf:group>
+                </xf:group>
+
+                <!-- 필터 태그들 -->
+                <xf:group class="filter-tags">
+                    <w2:span class="filter-tag" label="≥ 태그 전체" ev:onclick="scwin.filter_tag_onclick('tag_all')"></w2:span>
+                    <w2:span class="filter-tag" label="한국" ev:onclick="scwin.filter_tag_onclick('korea')"></w2:span>
+                    <w2:span class="filter-tag" label="채용유형" ev:onclick="scwin.filter_tag_onclick('job_type')"></w2:span>
+                    <w2:span class="filter-tag" label="기술스택" ev:onclick="scwin.filter_tag_onclick('tech_stack')"></w2:span>
+                    <w2:span class="filter-tag highlight" label="아기 유니콘" ev:onclick="scwin.filter_tag_onclick('unicorn')"></w2:span>
+                    <w2:span class="filter-tag highlight" label="적극 채용 중" ev:onclick="scwin.filter_tag_onclick('active_hiring')"></w2:span>
+                    <w2:span class="filter-tag highlight" label="대규모 채용 중" ev:onclick="scwin.filter_tag_onclick('mass_hiring')"></w2:span>
+                    <w2:span class="filter-tag" label="1,001-10,000명" ev:onclick="scwin.filter_tag_onclick('company_size')"></w2:span>
+                    <w2:span class="filter-tag" label="누적투자100억이상" ev:onclick="scwin.filter_tag_onclick('investment')"></w2:span>
+                    <w2:span class="filter-tag" label="퇴사율5%이하" ev:onclick="scwin.filter_tag_onclick('low_turnover')"></w2:span>
+                    <w2:span class="filter-tag" label="보너스" ev:onclick="scwin.filter_tag_onclick('bonus')"></w2:span>
+                    <w2:span class="filter-tag" label="인원 급성장" ev:onclick="scwin.filter_tag_onclick('rapid_growth')"></w2:span>
+                    <w2:span class="filter-tag" label="유연" ev:onclick="scwin.filter_tag_onclick('flexible')"></w2:span>
+                </xf:group>
+            </section>
+
+            <!-- 메인 컨텐츠 -->
+            <main class="main-content">
+                <!-- 적극 채용 중인 회사 섹션 -->
+                <section class="active-hiring-section">
+                    <xf:group class="section-header">
+                        <w2:span class="fire-icon" label="🔥"></w2:span>
+                        <w2:textbox class="section-title" label="적극 채용 중인 회사"></w2:textbox>
+                        <w2:span class="help-icon" label="ⓘ"></w2:span>
+                        <w2:textbox label="사용안내" style="font-size: 12px; color: #999; margin-left: auto;"></w2:textbox>
+                    </xf:group>
+
+                    <xf:group class="company-cards">
+                        <!-- 하이트코브 -->
+                        <xf:group class="company-card" ev:onclick="scwin.company_card_onclick('1')">
+                            <xf:group class="company-image">
+                                <w2:textbox label="ChallengePark"></w2:textbox>
+                            </xf:group>
+                            <xf:group class="company-info">
+                                <w2:textbox class="company-name" label="하이트코브"></w2:textbox>
+                                <w2:textbox class="company-positions" label="3개 포지션"></w2:textbox>
+                            </xf:group>
+                        </xf:group>
+
+                        <!-- 한국티티넘 -->
+                        <xf:group class="company-card" ev:onclick="scwin.company_card_onclick('2')">
+                            <xf:group class="company-image">
+                                <w2:textbox label="⬆️ AI 기술로
+데이터 분석하기"></w2:textbox>
+                            </xf:group>
+                            <xf:group class="company-info">
+                                <w2:textbox class="company-name" label="한국티티넘"></w2:textbox>
+                                <w2:textbox class="company-positions" label="10개 포지션"></w2:textbox>
+                            </xf:group>
+                        </xf:group>
+
+                        <!-- 가제트코리아 -->
+                        <xf:group class="company-card" ev:onclick="scwin.company_card_onclick('3')">
+                            <xf:group class="company-image">
+                                <w2:textbox label="U
+gadget korea"></w2:textbox>
+                            </xf:group>
+                            <xf:group class="company-info">
+                                <w2:textbox class="company-name" label="가제트코리아"></w2:textbox>
+                                <w2:textbox class="company-positions" label="8개 포지션"></w2:textbox>
+                            </xf:group>
+                        </xf:group>
+
+                        <!-- 클래스101 -->
+                        <xf:group class="company-card" ev:onclick="scwin.company_card_onclick('4')">
+                            <xf:group class="company-image">
+                                <w2:textbox label="CLASS101
+We make it"></w2:textbox>
+                            </xf:group>
+                            <xf:group class="company-info">
+                                <w2:textbox class="company-name" label="클래스101(Class101)"></w2:textbox>
+                                <w2:textbox class="company-positions" label="22개 포지션"></w2:textbox>
+                            </xf:group>
+                        </xf:group>
+
+                        <!-- 버즈빌 -->
+                        <xf:group class="company-card" ev:onclick="scwin.company_card_onclick('5')">
+                            <xf:group class="company-image">
+                                <w2:textbox label="리워드로 만드는 초개인화 마케팅 플랫폼
+
+buzzvil"></w2:textbox>
+                            </xf:group>
+                            <xf:group class="company-info">
+                                <w2:textbox class="company-name" label="버즈빌(buzzvil)"></w2:textbox>
+                                <w2:textbox class="company-positions" label="8개 포지션"></w2:textbox>
+                            </xf:group>
+                        </xf:group>
+                    </xf:group>
+                </section>
+
+                <!-- 채용공고 섹션 -->
+                <section class="job-section">
+                    <xf:group class="job-cards">
+                        <!-- 채용공고 1: DRM 제품 개발팀원 -->
+                        <xf:group class="job-card" ev:onclick="scwin.job_card_onclick('job1')">
+                            <xf:group class="job-image" style="background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);">
+                                <w2:textbox class="job-badge" label="합격보상금 100만원"></w2:textbox>
+                                <xf:trigger class="bookmark-btn" type="button" ev:onclick="scwin.bookmark_onclick(event, 'job1')">
+                                    <xf:label><![CDATA[🤍]]></xf:label>
+                                </xf:trigger>
+                                <w2:textbox label="INKA
+PALLYCON
+appsealing" style="color: white; text-align: center; font-weight: 600; font-size: 14px;"></w2:textbox>
+                            </xf:group>
+                            <xf:group class="job-content">
+                                <w2:textbox class="job-title" label="DRM 제품 개발팀원 (Global SaaS Product)"></w2:textbox>
+                                <w2:textbox class="job-company" label="노브러스"></w2:textbox>
+                                <w2:textbox class="job-location" label="서울 · 경력 10년 이상"></w2:textbox>
+                                <w2:textbox class="job-reward" label="채용 시 300만원"></w2:textbox>
+                            </xf:group>
+                        </xf:group>
+
+                        <!-- 채용공고 2: AI 엔지니어 -->
+                        <xf:group class="job-card" ev:onclick="scwin.job_card_onclick('job2')">
+                            <xf:group class="job-image" style="background: linear-gradient(135deg, #4c51bf 0%, #667eea 100%);">
+                                <w2:textbox class="job-badge" label="합격보상금 100만원"></w2:textbox>
+                                <xf:trigger class="bookmark-btn" type="button" ev:onclick="scwin.bookmark_onclick(event, 'job2')">
+                                    <xf:label><![CDATA[🤍]]></xf:label>
+                                </xf:trigger>
+                                <w2:textbox label="Vertical Bar
+Intelligence Technology Solutions Platform" style="color: white; text-align: center; font-weight: 600; font-size: 12px;"></w2:textbox>
+                            </xf:group>
+                            <xf:group class="job-content">
+                                <w2:textbox class="job-title" label="AI 엔지니어 (5년 이상)"></w2:textbox>
+                                <w2:textbox class="job-company" label="버티컬바"></w2:textbox>
+                                <w2:textbox class="job-location" label="서울 강남구 · 경력 5-10년"></w2:textbox>
+                                <w2:textbox class="job-reward" label="채용 시 200만원"></w2:textbox>
+                            </xf:group>
+                        </xf:group>
+
+                        <!-- 채용공고 3: SI 솔루션 -->
+                        <xf:group class="job-card" ev:onclick="scwin.job_card_onclick('job3')">
+                            <xf:group class="job-image" style="background: linear-gradient(135deg, #1a365d 0%, #2a4365 100%);">
+                                <w2:textbox class="job-badge" label="합격보상금 100만원"></w2:textbox>
+                                <xf:trigger class="bookmark-btn" type="button" ev:onclick="scwin.bookmark_onclick(event, 'job3')">
+                                    <xf:label><![CDATA[🤍]]></xf:label>
+                                </xf:trigger>
+                                <w2:textbox label="SKYWARE" style="color: white; text-align: center; font-weight: 600; font-size: 18px;"></w2:textbox>
+                            </xf:group>
+                            <xf:group class="job-content">
+                                <w2:textbox class="job-title" label="SI 솔루션 / B2C e-커머스 개발자"></w2:textbox>
+                                <w2:textbox class="job-company" label="스카이웨어"></w2:textbox>
+                                <w2:textbox class="job-location" label="서울 마포구 · 경력 6년 이상"></w2:textbox>
+                                <w2:textbox class="job-reward" label="채용 시 150만원"></w2:textbox>
+                            </xf:group>
+                        </xf:group>
+
+                        <!-- 채용공고 4: IT Project Manager -->
+                        <xf:group class="job-card" ev:onclick="scwin.job_card_onclick('job4')">
+                            <xf:group class="job-image" style="background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);">
+                                <w2:textbox class="job-badge" label="합격보상금 100만원"></w2:textbox>
+                                <xf:trigger class="bookmark-btn" type="button" ev:onclick="scwin.bookmark_onclick(event, 'job4')">
+                                    <xf:label><![CDATA[🤍]]></xf:label>
+                                </xf:trigger>
+                                <w2:textbox label="Digital Innovation Network" style="color: white; text-align: center; font-weight: 600; font-size: 12px; line-height: 1.4;"></w2:textbox>
+                            </xf:group>
+                            <xf:group class="job-content">
+                                <w2:textbox class="job-title" label="[EnT] IT Project Manager - 자동화 설비 및 SI 프로젝트 관리"></w2:textbox>
+                                <w2:textbox class="job-company" label="현대모비스"></w2:textbox>
+                                <w2:textbox class="job-location" label="서울 · 경력 5년 이상"></w2:textbox>
+                                <w2:textbox class="job-reward" label="채용 시 250만원"></w2:textbox>
+                            </xf:group>
+                        </xf:group>
+
+                        <!-- 채용공고 5: 전기차 충전관리시스템 -->
+                        <xf:group class="job-card" ev:onclick="scwin.job_card_onclick('job5')">
+                            <xf:group class="job-image" style="background: linear-gradient(135deg, #1a1a1a 0%, #333333 100%);">
+                                <w2:textbox class="job-badge" label="합격보상금 100만원"></w2:textbox>
+                                <xf:trigger class="bookmark-btn" type="button" ev:onclick="scwin.bookmark_onclick(event, 'job5')">
+                                    <xf:label><![CDATA[🤍]]></xf:label>
+                                </xf:trigger>
+                                <w2:textbox label="Rectilink
+On Your Way,
+Always" style="color: white; text-align: center; font-weight: 600; font-size: 14px; line-height: 1.3;"></w2:textbox>
+                            </xf:group>
+                            <xf:group class="job-content">
+                                <w2:textbox class="job-title" label="전기차 충전관리시스템(CSMS) 개발자 (5년 이상)"></w2:textbox>
+                                <w2:textbox class="job-company" label="에스케이엔카랩(SK엔카랩)"></w2:textbox>
+                                <w2:textbox class="job-location" label="서울 송파구 · 경력 5년 이상"></w2:textbox>
+                                <w2:textbox class="job-reward" label="채용 시 180만원"></w2:textbox>
+                            </xf:group>
+                        </xf:group>
+                    </xf:group>
+                </section>
+            </main>
+        </xf:group>
+    </body>
+</html>

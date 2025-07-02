@@ -741,7 +741,7 @@ scwin.onpageload = function() {
 
 // 헤더 이벤트들
 scwin.weaveTypeLogo_onclick = function() {
-    location.href = '/websquare/websquare.html?w2xPath=/ui/weaveTypeMain.xml';
+    $p.url("../common/weaveTypeMain.xml");
 };
 
 scwin.menu1_onclick = function() {
@@ -753,7 +753,7 @@ scwin.menu2_onclick = function() {
 };
 
 scwin.menu3_onclick = function() {
-    location.href = '/websquare/websquare.html?w2xPath=/ui/posting/postList.xml';
+    $p.url("../posting/PostList.xml");
 };
 
 scwin.btnLogin_onclick = function() {
@@ -761,7 +761,7 @@ scwin.btnLogin_onclick = function() {
 };
 
 scwin.btnEnterprise_onclick = function() {
-    location.href = '/websquare/websquare.html?w2xPath=/ui/recruitment_dashboard.xml';
+    alert("기업 서비스 페이지로 이동합니다.");
 };
 
 scwin.searchInput_onkeypress = function(e) {
@@ -790,14 +790,14 @@ scwin.sidebarMenu_onclick = function(menuId) {
             alert("매칭 현황 페이지로 이동합니다.");
             break;
         case 'matching_profile':
-            // userDetail.xml로 이동
-            location.href = '/websquare/websquare.html?w2xPath=/ui/user/userDetail.xml';
+            // UserDetail.xml로 이동
+            $p.url("UserDetail.xml");
             break;
         case 'matching_settings':
             alert("매칭 설정 페이지로 이동합니다.");
             break;
         case 'profile':
-            alert("프로필 페이지로 이동합니다.");
+            $p.url("ProfileEditStep1.xml");
             break;
         case 'login_connection':
             alert("로그인 연결 페이지로 이동합니다.");

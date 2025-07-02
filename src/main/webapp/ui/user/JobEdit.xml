@@ -425,7 +425,7 @@ scwin.updateUI = function() {
 // 뒤로가기
 scwin.goBack = function() {
     if (confirm("변경사항이 저장되지 않을 수 있습니다. 계속하시겠습니까?")) {
-        location.href = '/websquare/websquare.html?w2xPath=/ui/user/userDetail.xml';
+        $p.url("UserDetail.xml");
     }
 };
 
@@ -449,7 +449,7 @@ scwin.saveJobInfo = function() {
     alert("직무/분야 정보가 저장되었습니다.");
     
     // 사용자 상세 페이지로 돌아가기
-    location.href = '/websquare/websquare.html?w2xPath=/ui/user/userDetail.xml';
+    $p.url("UserDetail.xml");
 };
 
 // 직무 분야 선택
