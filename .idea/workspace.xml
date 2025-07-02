@@ -4,12 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="eda647e9-ade0-46d0-a222-af2cb6947326" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.classpath" beforeDir="false" afterPath="$PROJECT_DIR$/.classpath" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.factorypath" beforeDir="false" afterPath="$PROJECT_DIR$/.factorypath" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/ui/common/weaveTypeMain.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/ui/common/weaveTypeMain.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/websquare/config.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/websquare/config.js" afterDir="false" />
-    </list>
+    <list default="true" id="eda647e9-ade0-46d0-a222-af2cb6947326" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -36,7 +31,7 @@
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "BSH",
     "ignore.virus.scanning.warn.message": "true",
     "last_opened_file_path": "C:/InswaveToolSP1/workspace/InsWebApp",
     "node.js.detected.package.eslint": "true",
