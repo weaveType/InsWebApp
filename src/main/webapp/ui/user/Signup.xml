@@ -28,84 +28,84 @@
         <w2:publicInfo method=""/>
         
         <script type="text/javascript"><![CDATA[
-            scwin.onpageload = function() {
-                console.log("회원가입 페이지 로드됨");
-            };
-            
-            // 이메일 인증 버튼 클릭
-            scwin.btn_email_verify_onclick = function() {
-                var email = dma_signup.get("이메일");
-                if (!email || email.trim() === "") {
-                    alert("이메일을 입력해주세요.");
-                    return;
+scwin.onpageload = function () {
+    console.log("회원가입 페이지 로드됨");
+};
+
+// 이메일 인증 버튼 클릭
+scwin.btn_email_verify_onclick = function () {
+    var email = dma_signup.get("이메일");
+    if (!email || email.trim() === "") {
+        alert("이메일을 입력해주세요.");
+        return;
+    }
+
+    if (!scwin.validateEmail(email)) {
+        alert("올바른 이메일 형식을 입력해주세요.");
+        return;
+    }
+
+    // 플로우 확인을 위해 간단히 인증 완료 처리
+    alert("인증번호가 발송되었습니다. 이메일을 확인해주세요.");
+    dma_signup.set("이메일인증여부", "true");
+    document.getElementById("verify_success").style.display = "block";
+};
+
+// 가입완료 버튼 클릭 - $p.url 방식 사용
+scwin.btn_signup_onclick = function () {
+    // 플로우 확인을 위해 간단한 검증만 수행 (이메일 인증 확인 제거)
+    var name = dma_signup.get("이름");
+    var email = dma_signup.get("이메일");
+
+    if (!name || name.trim() === "") {
+        alert("이름을 입력해주세요.");
+        return;
+    }
+
+    if (!email || email.trim() === "") {
+        alert("이메일을 입력해주세요.");
+        return;
+    }
+
+    // 이메일 인증 여부 확인 로직 제거 - view 테스트를 위해
+    console.log("회원가입 정보:", {
+        이름: dma_signup.get("이름"),
+        이메일: dma_signup.get("이메일"),
+        성별: dma_signup.get("성별")
+    });
+
+    alert("회원가입이 완료되었습니다!");
+    $p.url("SignupComplete.xml");
+};
+
+// 이메일 유효성 검사
+scwin.validateEmail = function (email) {
+    var re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(email);
+};
+
+// 성별 선택
+scwin.selectGender = function (gender) {
+    console.log("성별 선택:", gender);
+    dma_signup.set("성별", gender);
+
+    setTimeout(function () {
+        var genderOptions = document.querySelectorAll('.gender-option');
+        if (genderOptions && genderOptions.length > 0) {
+            genderOptions.forEach(function (el) {
+                if (el && el.classList) {
+                    el.classList.remove('selected');
                 }
-                
-                if (!scwin.validateEmail(email)) {
-                    alert("올바른 이메일 형식을 입력해주세요.");
-                    return;
-                }
-                
-                // 플로우 확인을 위해 간단히 인증 완료 처리
-                alert("인증번호가 발송되었습니다. 이메일을 확인해주세요.");
-                dma_signup.set("이메일인증여부", "true");
-                document.getElementById("verify_success").style.display = "block";
-            };
-            
-            // 가입완료 버튼 클릭 - $p.url 방식 사용
-            scwin.btn_signup_onclick = function() {
-                // 플로우 확인을 위해 간단한 검증만 수행 (이메일 인증 확인 제거)
-                var name = dma_signup.get("이름");
-                var email = dma_signup.get("이메일");
-                
-                if (!name || name.trim() === "") {
-                    alert("이름을 입력해주세요.");
-                    return;
-                }
-                
-                if (!email || email.trim() === "") {
-                    alert("이메일을 입력해주세요.");
-                    return;
-                }
-                
-                // 이메일 인증 여부 확인 로직 제거 - view 테스트를 위해
-                console.log("회원가입 정보:", {
-                    이름: dma_signup.get("이름"),
-                    이메일: dma_signup.get("이메일"),
-                    성별: dma_signup.get("성별")
-                });
-                
-                alert("회원가입이 완료되었습니다!");
-                $p.url("SignupComplete.xml");
-            };
-            
-            // 이메일 유효성 검사
-            scwin.validateEmail = function(email) {
-                var re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                return re.test(email);
-            };
-            
-            // 성별 선택
-            scwin.selectGender = function(gender) {
-                console.log("성별 선택:", gender);
-                dma_signup.set("성별", gender);
-                
-                setTimeout(function() {
-                    var genderOptions = document.querySelectorAll('.gender-option');
-                    if (genderOptions && genderOptions.length > 0) {
-                        genderOptions.forEach(function(el) {
-                            if (el && el.classList) {
-                                el.classList.remove('selected');
-                            }
-                        });
-                    }
-                    
-                    var selectedBtn = document.getElementById('gender_' + gender);
-                    if (selectedBtn && selectedBtn.classList) {
-                        selectedBtn.classList.add('selected');
-                    }
-                }, 50);
-            };
-        ]]></script>
+            });
+        }
+
+        var selectedBtn = document.getElementById('gender_' + gender);
+        if (selectedBtn && selectedBtn.classList) {
+            selectedBtn.classList.add('selected');
+        }
+    }, 50);
+};
+]]></script>
         
         <style type="text/css"><![CDATA[
             .main-container {

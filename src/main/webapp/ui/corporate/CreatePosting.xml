@@ -9,7 +9,13 @@
         <w2:buildDate/>
         <w2:MSA/>
         <xf:model>
-            <w2:dataCollection baseNode="map"/>
+            <w2:dataCollection baseNode="map">
+            	<w2:dataList baseNode="list" repeatNode="map" id="dlt_techstack" saveRemovedData="true">
+            		<w2:columnInfo>
+            			<w2:column dataType="text" name="techstack" id="techstack"></w2:column>
+            		</w2:columnInfo>
+            	</w2:dataList>
+            </w2:dataCollection>
             <w2:workflowCollection/>
         </xf:model>
         <w2:layoutInfo/>
@@ -118,7 +124,7 @@
             
             /* 선택 박스 스타일 */
             .form-select {
-                width: 100% !important;
+                width: 200px !important;
                 height: 56px !important;
                 padding: 0 16px !important;
                 border: 2px solid #e5e7eb !important;
@@ -126,7 +132,6 @@
                 font-size: 16px !important;
                 color: #333 !important;
                 background-color: #ffffff !important;
-                background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e") !important;
                 background-position: right 16px center !important;
                 background-repeat: no-repeat !important;
                 background-size: 16px !important;
@@ -306,6 +311,65 @@
                 color: #9ca3af;
                 cursor: not-allowed;
             }
+
+            /* Generator 컨테이너 스타일 */
+            .selected-techstack-container {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 8px;
+                min-height: 20px;
+                margin-top: 12px;
+            }
+
+            /* 기술스택 태그 스타일 */
+            .techstack-tag {
+                display: inline-flex;
+                align-items: center;
+                background-color: #e0f2fe;
+                border: 1px solid #b3e5fc;
+                border-radius: 20px;
+                padding: 6px 12px;
+                font-size: 14px;
+                color: #0277bd;
+                gap: 8px;
+                margin: 2px;
+            }
+
+            .techstack-text {
+                font-weight: 500;
+                line-height: 1;
+                border: none !important;
+                background: transparent !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                height: auto !important;
+                width: auto !important;
+                color: #0277bd !important;
+            }
+
+            /* 제거 버튼 스타일 */
+            .techstack-remove-btn {
+                background: none !important;
+                border: none !important;
+                color: #0277bd !important;
+                cursor: pointer !important;
+                font-size: 18px !important;
+                font-weight: bold !important;
+                line-height: 1 !important;
+                padding: 0 !important;
+                width: 18px !important;
+                height: 18px !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                border-radius: 50% !important;
+                transition: all 0.2s ease !important;
+            }
+
+            .techstack-remove-btn:hover {
+                background-color: #b3e5fc !important;
+                color: #01579b !important;
+            }
             
             /* 반응형 디자인 */
             @media (max-width: 480px) {
@@ -328,239 +392,296 @@
             }
         ]]></style>
         
-        <script lazy="false" type="text/javascript"><![CDATA[
-scwin.onpageload = function () {
+        <script lazy="false" type="text/javascript"><![CDATA[scwin.onpageload = function () {
 
+};
+
+scwin.main_logo_onclick = function (e) {
+};
+
+// 기술스택 추가이벤트
+scwin.select_techstack_onchange = function () {
+    var selectedValue = select_techstack.getValue();
+    
+    console.log("선택된 값:", selectedValue);
+    
+    // 선택된 값이 없으면 리턴
+    if (!selectedValue || selectedValue === "") {
+        return;
+    }
+
+    // 해당 기술스택이 이미 있는지 확인
+    var matchedData = dlt_techstack.getMatchedJSON("techstack", selectedValue);
+
+    if(matchedData.length == 0){
+        // 데이터리스트에 새 항목 추가
+        var newRowIndex = dlt_techstack.insertRow();
+        dlt_techstack.setCellData(newRowIndex, "techstack", selectedValue);
+        gen_techstack.insertChild(0);
+        // Generator 새로고침 강제 실행
+        gen_techstack.inser
+        gen_techstack.refresh();
+
+    } else {
+        console.log("이미 존재하는 기술스택:", selectedValue);
+    }
+    
+    console.log("현재 기술스택 개수:", dlt_techstack.getRowCount());
+    console.log("업데이트된 전체 데이터:", dlt_techstack.getAllJSON());
+    
+    // AutoComplete 초기화
+    select_techstack.setValue("");
+};
+
+// 개별 기술스택 제거 함수 (Generator 내부에서 호출)
+scwin.removeTechStack = function(rowIndex) {
+    try {
+        
+        // 데이터리스트에서 해당 행 삭제
+        dlt_techstack.removeRow(rowIndex);
+        
+        gen_techstack.refresh();
+        
+        console.log("기술스택 제거 완료, 인덱스:", rowIndex);
+    } catch (error) {
+        console.error("기술스택 제거 중 오류:", error);
+    }
 };
 
 scwin.personality_btn_onclick = function (e) {
     // 성향 버튼 선택 토글
     var btn = e.target;
-    if (btn.classList.contains('selected')) {
-        btn.classList.remove('selected');
-    } else {
-        btn.classList.add('selected');
-    }
-};
-
-scwin.btn_create_posting_onclick = function (e) {
-
-    $p.url("RecruitmentDashboard.xml");
-};
-
-scwin.main_logo_onclick = function (e) {
-    // 로고 클릭 이벤트
+    btn.classList.contains('selected') 
+        ? btn.classList.remove('selected') 
+        : btn.classList.add('selected');
 };
 
 scwin.btn_cancel_posting_onclick = function (e) {
     if (window.history.length > 1) {
         window.history.back();          
-    } else {
+    } 
+    else {
         $p.url("RecruitmentDashboard.xml");
     }
 };
-]]></script>
+
+scwin.btn_create_posting_onclick = function (e) {
+    $p.url("RecruitmentDashboard.xml");
+};]]></script>
     </head>
     <body ev:onpageload="scwin.onpageload">
         <xf:group class="main-container">
-            <!-- 페이지 제목 -->
-            <xf:group class="page-title">
-                <w2:textbox class="main-title" label="공고 등록"></w2:textbox>
-                <w2:textbox class="page-subtitle" label="우리 회사의 문화와 원하는 인재상을 입력해주세요"></w2:textbox>
-            </xf:group>
+        	<!-- 페이지 제목 -->
+        	<xf:group class="page-title">
+        		<w2:textbox class="main-title" label="공고 등록"></w2:textbox>
+        		<w2:textbox class="page-subtitle" label="우리 회사의 문화와 원하는 인재상을 입력해주세요"></w2:textbox>
+        	</xf:group>
 
-            <!-- 개발 환경 및 기술 스택 섹션 -->
-            <section class="form-section">
-                <w2:textbox class="section-title" label="개발 환경 및 기술 스택"></w2:textbox>
+        	<!-- 개발 환경 및 기술 스택 섹션 -->
+        	<section class="form-section">
+        		<w2:textbox class="section-title" label="개발 환경 및 기술 스택"></w2:textbox>
 
-                <xf:group class="form-group">
-                    <w2:textbox class="form-label" label="주요 기술 스택"></w2:textbox>
-                    <w2:autoComplete editType="select" style="width:100%;height:56px;" submenuSize="auto" search="start"
-                        allOption="" chooseOption="" ref="">
-                        <w2:choices>
-                            <w2:item>
-                                <w2:label><![CDATA[Java]]></w2:label>
-                                <w2:value><![CDATA[java]]></w2:value>
-                            </w2:item>
-                            <w2:item>
-                                <w2:label><![CDATA[JavaScript]]></w2:label>
-                                <w2:value><![CDATA[javascript]]></w2:value>
-                            </w2:item>
-                            <w2:item>
-                                <w2:label><![CDATA[Python]]></w2:label>
-                                <w2:value><![CDATA[python]]></w2:value>
-                            </w2:item>
-                            <w2:item>
-                                <w2:label><![CDATA[React]]></w2:label>
-                                <w2:value><![CDATA[react]]></w2:value>
-                            </w2:item>
-                            <w2:item>
-                                <w2:label><![CDATA[Node.js]]></w2:label>
-                                <w2:value><![CDATA[nodejs]]></w2:value>
-                            </w2:item>
-                        </w2:choices>
-                    </w2:autoComplete>
-                </xf:group>
+        		<xf:group class="form-group">
+        			<w2:textbox class="form-label" label="주요 기술 스택"></w2:textbox>
+        			<w2:autoComplete editType="select" id="select_techstack" style="width:100%;height:56px;" submenuSize="auto"
+        				search="start" allOption="" chooseOption="true" ref="" chooseOptionLabel="기술스택을 선택하세요"
+        				ev:onchange="scwin.select_techstack_onchange">
+        				<w2:choices>
+        					<w2:item>
+        						<w2:label><![CDATA[Java]]></w2:label>
+        						<w2:value><![CDATA[Java]]></w2:value>
+        					</w2:item>
+        					<w2:item>
+        						<w2:label><![CDATA[JavaScript]]></w2:label>
+        						<w2:value><![CDATA[JavaScript]]></w2:value>
+        					</w2:item>
+        					<w2:item>
+        						<w2:label><![CDATA[Python]]></w2:label>
+        						<w2:value><![CDATA[Python]]></w2:value>
+        					</w2:item>
+        					<w2:item>
+        						<w2:label><![CDATA[React]]></w2:label>
+        						<w2:value><![CDATA[React]]></w2:value>
+        					</w2:item>
+        					<w2:item>
+        						<w2:label><![CDATA[Spring Boot]]></w2:label>
+        						<w2:value><![CDATA[Spring Boot]]></w2:value>
+        					</w2:item>
+        					<w2:item>
+        						<w2:label><![CDATA[Node.js]]></w2:label>
+        						<w2:value><![CDATA[Node.js]]></w2:value>
+        					</w2:item>
+        					<w2:item>
+        						<w2:label><![CDATA[MySQL]]></w2:label>
+        						<w2:value><![CDATA[MySQL]]></w2:value>
+        					</w2:item>
+        					<w2:item>
+        						<w2:label><![CDATA[MongoDB]]></w2:label>
+        						<w2:value><![CDATA[MongoDB]]></w2:value>
+        					</w2:item>
+        					<w2:item>
+        						<w2:label><![CDATA[Docker]]></w2:label>
+        						<w2:value><![CDATA[Docker]]></w2:value>
+        					</w2:item>
+        					<w2:item>
+        						<w2:label><![CDATA[Kubernetes]]></w2:label>
+        						<w2:value><![CDATA[Kubernetes]]></w2:value>
+        					</w2:item>
+        				</w2:choices>
+        			</w2:autoComplete>
 
-                <xf:group class="form-group">
-                    <w2:textbox class="form-label" label="개발 도구"></w2:textbox>
-                    <w2:autoComplete allOption="" chooseOption="" editType="select" ref="" search="start"
-                        style="width:100%;height:56px;" submenuSize="auto">
-                        <w2:choices>
-                            <w2:item>
-                                <w2:label><![CDATA[IntelliJ IDEA]]></w2:label>
-                                <w2:value><![CDATA[intellij]]></w2:value>
-                            </w2:item>
-                            <w2:item>
-                                <w2:label><![CDATA[Visual Studio Code]]></w2:label>
-                                <w2:value><![CDATA[vscode]]></w2:value>
-                            </w2:item>
-                            <w2:item>
-                                <w2:label><![CDATA[Eclipse]]></w2:label>
-                                <w2:value><![CDATA[eclipse]]></w2:value>
-                            </w2:item>
-                        </w2:choices>
-                    </w2:autoComplete>
-                </xf:group>
-            </section>
+        			<!-- 선택된 기술스택 표시 영역 (Generator 사용) -->
+        			<xf:group class="selected-techstack-container">
+        				<w2:generator id="gen_techstack" dataList="data:dlt_techstack" style="display: contents;">
+        					<xf:group class="techstack-tag" text="">
+        						<w2:textbox class="techstack-text" id="" label="" ref="data:dlt_techstack.techstack"></w2:textbox>
+        						<xf:trigger class="techstack-remove-btn" type="button"
+        							ev:onclick="scwin.removeTechStack.bind(this, $index);">
+        							<xf:label><![CDATA[×]]></xf:label>
+        						</xf:trigger>
+        					</xf:group>
+        				</w2:generator>
+        			</xf:group>
+        		</xf:group>
+        	</section>
 
-            <!-- 원하는 인재상 섹션 -->
-            <section class="form-section">
-                <w2:textbox class="section-title" label="원하는 인재상"></w2:textbox>
+        	<!-- 원하는 인재상 섹션 -->
+        	<section class="form-section">
+        		<w2:textbox class="section-title" label="원하는 인재상"></w2:textbox>
 
-                <xf:group class="form-group">
-                    <w2:textbox class="form-label" label="선호하는 성향 유형 (최대 4개 선택 가능)"></w2:textbox>
+        		<xf:group class="form-group">
+        			<w2:textbox class="form-label" label="선호하는 성향 유형 (최대 4개 선택 가능)"></w2:textbox>
 
-                    <xf:group class="button-grid">
-                        <!-- BR** -->
-                        <xf:trigger class="personality-btn" type="button" ev:onclick="scwin.personality_btn_onclick">
-                            <xf:label><![CDATA[BRSD]]></xf:label>
-                        </xf:trigger>
-                        <xf:trigger class="personality-btn" type="button" ev:onclick="scwin.personality_btn_onclick">
-                            <xf:label><![CDATA[BRSF]]></xf:label>
-                        </xf:trigger>
-                        <xf:trigger class="personality-btn" type="button" ev:onclick="scwin.personality_btn_onclick">
-                            <xf:label><![CDATA[BRTD]]></xf:label>
-                        </xf:trigger>
-                        <xf:trigger class="personality-btn" type="button" ev:onclick="scwin.personality_btn_onclick">
-                            <xf:label><![CDATA[BRTF]]></xf:label>
-                        </xf:trigger>
+        			<xf:group class="button-grid">
+        				<!-- BR** -->
+        				<xf:trigger class="personality-btn" type="button" ev:onclick="scwin.personality_btn_onclick">
+        					<xf:label><![CDATA[BRSD]]></xf:label>
+        				</xf:trigger>
+        				<xf:trigger class="personality-btn" type="button" ev:onclick="scwin.personality_btn_onclick">
+        					<xf:label><![CDATA[BRSF]]></xf:label>
+        				</xf:trigger>
+        				<xf:trigger class="personality-btn" type="button" ev:onclick="scwin.personality_btn_onclick">
+        					<xf:label><![CDATA[BRTD]]></xf:label>
+        				</xf:trigger>
+        				<xf:trigger class="personality-btn" type="button" ev:onclick="scwin.personality_btn_onclick">
+        					<xf:label><![CDATA[BRTF]]></xf:label>
+        				</xf:trigger>
 
-                        <!-- BI** -->
-                        <xf:trigger class="personality-btn" type="button" ev:onclick="scwin.personality_btn_onclick">
-                            <xf:label><![CDATA[BISD]]></xf:label>
-                        </xf:trigger>
-                        <xf:trigger class="personality-btn" type="button" ev:onclick="scwin.personality_btn_onclick">
-                            <xf:label><![CDATA[BISF]]></xf:label>
-                        </xf:trigger>
-                        <xf:trigger class="personality-btn" type="button" ev:onclick="scwin.personality_btn_onclick">
-                            <xf:label><![CDATA[BITD]]></xf:label>
-                        </xf:trigger>
-                        <xf:trigger class="personality-btn" type="button" ev:onclick="scwin.personality_btn_onclick">
-                            <xf:label><![CDATA[BITF]]></xf:label>
-                        </xf:trigger>
+        				<!-- BI** -->
+        				<xf:trigger class="personality-btn" type="button" ev:onclick="scwin.personality_btn_onclick">
+        					<xf:label><![CDATA[BISD]]></xf:label>
+        				</xf:trigger>
+        				<xf:trigger class="personality-btn" type="button" ev:onclick="scwin.personality_btn_onclick">
+        					<xf:label><![CDATA[BISF]]></xf:label>
+        				</xf:trigger>
+        				<xf:trigger class="personality-btn" type="button" ev:onclick="scwin.personality_btn_onclick">
+        					<xf:label><![CDATA[BITD]]></xf:label>
+        				</xf:trigger>
+        				<xf:trigger class="personality-btn" type="button" ev:onclick="scwin.personality_btn_onclick">
+        					<xf:label><![CDATA[BITF]]></xf:label>
+        				</xf:trigger>
 
-                        <!-- AR** -->
-                        <xf:trigger class="personality-btn" type="button" ev:onclick="scwin.personality_btn_onclick">
-                            <xf:label><![CDATA[ARSD]]></xf:label>
-                        </xf:trigger>
-                        <xf:trigger class="personality-btn" type="button" ev:onclick="scwin.personality_btn_onclick">
-                            <xf:label><![CDATA[ARSF]]></xf:label>
-                        </xf:trigger>
-                        <xf:trigger class="personality-btn" type="button" ev:onclick="scwin.personality_btn_onclick">
-                            <xf:label><![CDATA[ARTD]]></xf:label>
-                        </xf:trigger>
-                        <xf:trigger class="personality-btn" type="button" ev:onclick="scwin.personality_btn_onclick">
-                            <xf:label><![CDATA[ARTF]]></xf:label>
-                        </xf:trigger>
+        				<!-- AR** -->
+        				<xf:trigger class="personality-btn" type="button" ev:onclick="scwin.personality_btn_onclick">
+        					<xf:label><![CDATA[ARSD]]></xf:label>
+        				</xf:trigger>
+        				<xf:trigger class="personality-btn" type="button" ev:onclick="scwin.personality_btn_onclick">
+        					<xf:label><![CDATA[ARSF]]></xf:label>
+        				</xf:trigger>
+        				<xf:trigger class="personality-btn" type="button" ev:onclick="scwin.personality_btn_onclick">
+        					<xf:label><![CDATA[ARTD]]></xf:label>
+        				</xf:trigger>
+        				<xf:trigger class="personality-btn" type="button" ev:onclick="scwin.personality_btn_onclick">
+        					<xf:label><![CDATA[ARTF]]></xf:label>
+        				</xf:trigger>
 
-                        <!-- AI** -->
-                        <xf:trigger class="personality-btn" type="button" ev:onclick="scwin.personality_btn_onclick">
-                            <xf:label><![CDATA[AISD]]></xf:label>
-                        </xf:trigger>
-                        <xf:trigger class="personality-btn" type="button" ev:onclick="scwin.personality_btn_onclick">
-                            <xf:label><![CDATA[AISF]]></xf:label>
-                        </xf:trigger>
-                        <xf:trigger class="personality-btn" type="button" ev:onclick="scwin.personality_btn_onclick">
-                            <xf:label><![CDATA[AITD]]></xf:label>
-                        </xf:trigger>
-                        <xf:trigger class="personality-btn" type="button" ev:onclick="scwin.personality_btn_onclick">
-                            <xf:label><![CDATA[AITF]]></xf:label>
-                        </xf:trigger>
-                    </xf:group>
+        				<!-- AI** -->
+        				<xf:trigger class="personality-btn" type="button" ev:onclick="scwin.personality_btn_onclick">
+        					<xf:label><![CDATA[AISD]]></xf:label>
+        				</xf:trigger>
+        				<xf:trigger class="personality-btn" type="button" ev:onclick="scwin.personality_btn_onclick">
+        					<xf:label><![CDATA[AISF]]></xf:label>
+        				</xf:trigger>
+        				<xf:trigger class="personality-btn" type="button" ev:onclick="scwin.personality_btn_onclick">
+        					<xf:label><![CDATA[AITD]]></xf:label>
+        				</xf:trigger>
+        				<xf:trigger class="personality-btn" type="button" ev:onclick="scwin.personality_btn_onclick">
+        					<xf:label><![CDATA[AITF]]></xf:label>
+        				</xf:trigger>
+        			</xf:group>
 
-                    <w2:textbox class="help-text" label="우리 팀과 잘 맞을 것 같은 성향 유형을 선택해주세요."></w2:textbox>
-                </xf:group>
+        			<w2:textbox class="help-text" label="우리 팀과 잘 맞을 것 같은 성향 유형을 선택해주세요."></w2:textbox>
+        		</xf:group>
 
-                <xf:group class="form-row">
-                    <xf:group class="form-group half">
-                        <w2:textbox class="form-label" label="선호 경력"></w2:textbox>
-                        <xf:select1 class="form-select" chooseOption="경력 선택" appearance="minimal">
-                            <xf:choices>
-                                <xf:item>
-                                    <xf:label><![CDATA[상관없음]]></xf:label>
-                                    <xf:value><![CDATA[any]]></xf:value>
-                                </xf:item>
-                                <xf:item>
-                                    <xf:label><![CDATA[신입 (0년)]]></xf:label>
-                                    <xf:value><![CDATA[new]]></xf:value>
-                                </xf:item>
-                                <xf:item>
-                                    <xf:label><![CDATA[1-2년]]></xf:label>
-                                    <xf:value><![CDATA[junior]]></xf:value>
-                                </xf:item>
-                                <xf:item>
-                                    <xf:label><![CDATA[3-5년]]></xf:label>
-                                    <xf:value><![CDATA[mid]]></xf:value>
-                                </xf:item>
-                                <xf:item>
-                                    <xf:label><![CDATA[5년 이상]]></xf:label>
-                                    <xf:value><![CDATA[senior]]></xf:value>
-                                </xf:item>
-                            </xf:choices>
-                        </xf:select1>
-                    </xf:group>
+        		<xf:group class="form-row">
+        			<xf:group class="form-group half">
+        				<w2:textbox class="form-label" label="선호 경력"></w2:textbox>
+        				<xf:select1 class="form-select" chooseOption="경력 선택" appearance="minimal">
+        					<xf:choices>
+        						<xf:item>
+        							<xf:label><![CDATA[상관없음]]></xf:label>
+        							<xf:value><![CDATA[any]]></xf:value>
+        						</xf:item>
+        						<xf:item>
+        							<xf:label><![CDATA[신입 (0년)]]></xf:label>
+        							<xf:value><![CDATA[new]]></xf:value>
+        						</xf:item>
+        						<xf:item>
+        							<xf:label><![CDATA[1-2년]]></xf:label>
+        							<xf:value><![CDATA[junior]]></xf:value>
+        						</xf:item>
+        						<xf:item>
+        							<xf:label><![CDATA[3-5년]]></xf:label>
+        							<xf:value><![CDATA[mid]]></xf:value>
+        						</xf:item>
+        						<xf:item>
+        							<xf:label><![CDATA[5년 이상]]></xf:label>
+        							<xf:value><![CDATA[senior]]></xf:value>
+        						</xf:item>
+        					</xf:choices>
+        				</xf:select1>
+        			</xf:group>
 
-                    <xf:group class="form-group half">
-                        <w2:textbox class="form-label" label="예상 연봉범위"></w2:textbox>
-                        <xf:select1 class="form-select" chooseOption="연봉 선택" appearance="minimal">
-                            <xf:choices>
-                                <xf:item>
-                                    <xf:label><![CDATA[2,500만원 미만]]></xf:label>
-                                    <xf:value><![CDATA[under25]]></xf:value>
-                                </xf:item>
-                                <xf:item>
-                                    <xf:label><![CDATA[2,500-3,500만원]]></xf:label>
-                                    <xf:value><![CDATA[25to35]]></xf:value>
-                                </xf:item>
-                                <xf:item>
-                                    <xf:label><![CDATA[3,500-5,000만원]]></xf:label>
-                                    <xf:value><![CDATA[35to50]]></xf:value>
-                                </xf:item>
-                                <xf:item>
-                                    <xf:label><![CDATA[5,000만원 이상]]></xf:label>
-                                    <xf:value><![CDATA[over50]]></xf:value>
-                                </xf:item>
-                            </xf:choices>
-                        </xf:select1>
-                    </xf:group>
-                </xf:group>
+        			<xf:group class="form-group half">
+        				<w2:textbox class="form-label" label="예상 연봉범위"></w2:textbox>
+        				<xf:select1 class="form-select" chooseOption="연봉 선택" appearance="minimal">
+        					<xf:choices>
+        						<xf:item>
+        							<xf:label><![CDATA[2,500만원 미만]]></xf:label>
+        							<xf:value><![CDATA[under25]]></xf:value>
+        						</xf:item>
+        						<xf:item>
+        							<xf:label><![CDATA[2,500-3,500만원]]></xf:label>
+        							<xf:value><![CDATA[25to35]]></xf:value>
+        						</xf:item>
+        						<xf:item>
+        							<xf:label><![CDATA[3,500-5,000만원]]></xf:label>
+        							<xf:value><![CDATA[35to50]]></xf:value>
+        						</xf:item>
+        						<xf:item>
+        							<xf:label><![CDATA[5,000만원 이상]]></xf:label>
+        							<xf:value><![CDATA[over50]]></xf:value>
+        						</xf:item>
+        					</xf:choices>
+        				</xf:select1>
+        			</xf:group>
+        		</xf:group>
 
-                <xf:group class="form-group">
-                    <w2:textbox class="form-label" label="원하는 인재상 상세 설명"></w2:textbox>
-                    <xf:textarea class="form-textarea" placeholder="우리 회사에서 함께 일하고 싶은 개발자의 특징이나 역량을 구체적으로 설명해주세요."></xf:textarea>
-                </xf:group>
+        		<xf:group class="form-group">
+        			<w2:textbox class="form-label" label="원하는 인재상 상세 설명"></w2:textbox>
+        			<xf:textarea class="form-textarea" placeholder="우리 회사에서 함께 일하고 싶은 개발자의 특징이나 역량을 구체적으로 설명해주세요."></xf:textarea>
+        		</xf:group>
 
-                <!-- 버튼 그룹 -->
-                <xf:group class="button-container">
-                    <xf:trigger class="btn-cancel" type="button" id="btn_cancel_posting" ev:onclick="scwin.btn_cancel_posting_onclick">
-                        <xf:label><![CDATA[취소]]></xf:label>
-                    </xf:trigger>
-                    <xf:trigger class="btn-primary" type="button" id="btn_create_posting" ev:onclick="scwin.btn_create_posting_onclick">
-                        <xf:label><![CDATA[공고 등록하기]]></xf:label>
-                    </xf:trigger>
-                </xf:group>
-            </section>
+        		<!-- 버튼 그룹 -->
+        		<xf:group class="button-container">
+        			<xf:trigger class="btn-cancel" type="button" id="btn_cancel_posting" ev:onclick="scwin.btn_cancel_posting_onclick">
+        				<xf:label><![CDATA[취소]]></xf:label>
+        			</xf:trigger>
+        			<xf:trigger class="btn-primary" type="button" id="btn_create_posting" ev:onclick="scwin.btn_create_posting_onclick">
+        				<xf:label><![CDATA[공고 등록하기]]></xf:label>
+        			</xf:trigger>
+        		</xf:group>
+        	</section>
         </xf:group>
     </body>
 </html>

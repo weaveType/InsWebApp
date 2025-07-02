@@ -16,6 +16,10 @@
 scwin.onpageload = function() {
 	
 };
+
+scwin.btn_create_company_onclick = function (e) {
+    $p.url("../corporate/CreateCompany.xml");
+};
 ]]></script>
     </head>
     <body ev:onpageload="scwin.onpageload">
@@ -33,8 +37,8 @@ scwin.onpageload = function() {
     			<w2:textbox id="" label="mbti와 코드분석을 통한 스마트 매칭으로 우리 회사에 딱 맞는 개발자를 찾아보세요"
     				style="width:789px;height:37px;margin:0 auto;font-size:20px;color: white;padding-top: 80px;">
     			</w2:textbox>
-    			<xf:trigger class="btn_cm" id="" meta_snippetCategory="08_버튼" meta_snippetKeyComponent="true" meta_snippetName="8_01 기본버튼"
-    				style="margin: 50px 50%;" type="button">
+    			<xf:trigger class="btn_cm" id="btn_create_company" meta_snippetCategory="08_버튼" meta_snippetKeyComponent="true" meta_snippetName="8_01 기본버튼"
+    				style="margin: 50px 50%;" type="button" ev:onclick="scwin.btn_create_company_onclick">
     				<xf:label><![CDATA[인라인버튼]]></xf:label>
     			</xf:trigger>
     		</section>

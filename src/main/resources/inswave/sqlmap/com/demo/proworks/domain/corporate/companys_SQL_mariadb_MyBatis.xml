@@ -16,31 +16,40 @@
  -->
 <mapper namespace="com.demo.proworks.domain.corporate">
     <insert id="insertCorporate" parameterType="com.demo.proworks.domain.corporate.vo.CorporateVo">
-    	<!-- 회사정보를 등록한다. -->	
-    		
-        INSERT INTO COMPANYS   /* QueryID : com.demo.proworks.domain.corporate.insertCorporate */
-        ( 
-            ID
-            <if test="businessNumber!= null"> , BUSINESS_NUMBER </if>
-            <if test="industry       != null"> , INDUSTRY        </if>
-            <if test="empCount      != null"> , EMP_COUNT       </if>
-            <if test="description    != null"> , DESCRIPTION     </if>
-            <if test="companyName   != null"> , COMPANY_NAME    </if>
-            <if test="companyLogo   != null"> , COMPANY_LOGO    </if>
-            <if test="companyImage  != null"> , COMPANY_IMAGE   </if>
-        )
-        VALUES  
-        ( 
-            #{id}
-            <if test="businessNumber!= null"> , #{businessNumber} </if>
-            <if test="industry       != null"> , #{industry}        </if>
-            <if test="empCount      != null"> , #{empCount}       </if>
-            <if test="description    != null"> , #{description}     </if>
-            <if test="companyName   != null"> , #{companyName}    </if>
-            <if test="companyLogo   != null"> , #{companyLogo}    </if>
-            <if test="companyImage  != null"> , #{companyImage}   </if> 
-        )          
-    </insert>	
+<!-- 회사정보를 등록한다. -->	
+
+INSERT INTO COMPANYS   /* QueryID : com.demo.proworks.domain.corporate.insertCorporate */
+( 
+    ID
+    <if test="businessNumber        != null"> , BUSINESS_NUMBER        </if>
+    <if test="industry              != null"> , INDUSTRY               </if>
+    <if test="empCount             != null"> , EMP_COUNT              </if>
+    <if test="description           != null"> , DESCRIPTION            </if>
+    <if test="companyName          != null"> , COMPANY_NAME           </if>
+    <if test="companyLogo          != null"> , COMPANY_LOGO           </if>
+    <if test="companyImage         != null"> , COMPANY_IMAGE          </if>
+    <if test="email                != null"> , EMAIL                  </if>
+    <if test="password             != null"> , PASSWORD               </if>
+    <if test="businessCertificate  != null"> , BUSINESS_CERTIFICATE   </if>
+    <if test="logoFileName         != null"> , LOGO_FILE_NAME         </if>
+)
+VALUES  
+( 
+    #{id}
+    <if test="businessNumber        != null"> , #{businessNumber}        </if>
+    <if test="industry              != null"> , #{industry}              </if>
+    <if test="empCount             != null"> , #{empCount}               </if>
+    <if test="description           != null"> , #{description}           </if>
+    <if test="companyName          != null"> , #{companyName}           </if>
+    <if test="companyLogo          != null"> , #{companyLogo}           </if>
+    <if test="companyImage         != null"> , #{companyImage}          </if>
+    <if test="email                != null"> , #{email}                 </if>
+    <if test="password             != null"> , #{password}              </if>
+    <if test="businessCertificate  != null"> , #{businessCertificate}   </if>
+    <if test="logoFileName         != null"> , #{logoFileName}          </if>
+)
+
+</insert>	
 	
     <update id="updateCorporate" parameterType="com.demo.proworks.domain.corporate.vo.CorporateVo">
     	<!-- 회사정보를 갱신한다. -->

@@ -1,0 +1,9 @@
+{
+   "charset": "UTF-8",
+   "reqMethod": "POST",
+   "serviceURL": "http://localhost:9093/InsWebApp/CP0001Ins.pwkjson",
+   "contentType": "application/json",
+   "requestContent": "{\n   \"corporateVo\": {\n      \"password\": \"SampleValue_1\",\n      \"businessCertificate\": \"SampleValue_7\",\n      \"empCount\": \"SampleValue_4\",\n      \"logoFileName\": \"SampleValue_8\",\n      \"companyName\": \"SampleValue_6\",\n      \"description\": \"SampleValue_5\",\n      \"businessNumber\": \"SampleValue_2\",\n      \"industry\": \"SampleValue_3\",\n      \"email\": \"SampleValue_0\"\n   },\n   \"dmp_corporateVoDetail\": {\n      \"password\": \"SampleValue_1\",\n      \"businessCertificate\": \"SampleValue_7\",\n      \"empCount\": \"SampleValue_4\",\n      \"logoFileName\": \"SampleValue_8\",\n      \"companyName\": \"SampleValue_6\",\n      \"description\": \"SampleValue_5\",\n      \"businessNumber\": \"SampleValue_2\",\n      \"industry\": \"SampleValue_3\",\n      \"email\": \"SampleValue_0\"\n   }\n}",
+   "responseContent": "{\"elHeader\":{\"reqUrl\":\"/InsWebApp/CP0001Ins.pwkjson\",\"traceId\":\"2025070216344631500026228\",\"serviceKey\":\"CP0001Ins\",\"bArgResolveParsing\":false,\"resSuc\":false,\"resMsg\":\"데이터를 처리하는 중에 오류가 발생하였습니다.\",\"resCode\":\"ERROR.SYS.003\",\"validateSuc\":false,\"saveTokenKey\":false,\"removeTokenKey\":false,\"locale\":\"ko\",\"language\":\"ko\",\"startTime\":0,\"svcTimeOut\":0,\"inOutDataEnc\":true,\"dbDataEnc\":false,\"gTraceId\":\"2025070216344631500026228\",\"fieldApplyAttr\":true,\"simurate\":false,\"deferredSvc\":false,\"centerCutSvc\":false}}",
+   "sendTime": "2025-07-02 16:34:46"
+}
