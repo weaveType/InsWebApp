@@ -6,37 +6,41 @@ import com.inswave.elfw.annotation.ElVoField;
 import com.fasterxml.jackson.annotation.JsonFilter;
 
 @JsonFilter("elExcludeFilter")
-@ElDto(FldYn = "", logicalName = "일반회원")
+@ElDto(FldYn = "", delimeterYn = "", logicalName = "일반회원")
 public class UserVo extends com.demo.proworks.cmmn.ProworksCommVO {
     private static final long serialVersionUID = 1L;
 
-    @ElDtoField(logicalName = "user_id", physicalName = "userId", type = "String", typeKind = "", fldYn = "", length = 0, dotLen = 0, baseValue = "", desc = "")
+    public UserVo(){
+    }
+
+    @ElDtoField(logicalName = "user_id", physicalName = "userId", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
     private String userId;
 
-    @ElDtoField(logicalName = "email", physicalName = "email", type = "String", typeKind = "", fldYn = "", length = 0, dotLen = 0, baseValue = "", desc = "")
+    @ElDtoField(logicalName = "email", physicalName = "email", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
     private String email;
 
-    @ElDtoField(logicalName = "password", physicalName = "password", type = "String", typeKind = "", fldYn = "", length = 0, dotLen = 0, baseValue = "", desc = "")
+    @ElDtoField(logicalName = "password", physicalName = "password", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
     private String password;
 
-    @ElDtoField(logicalName = "role_id", physicalName = "roleId", type = "String", typeKind = "", fldYn = "", length = 0, dotLen = 0, baseValue = "", desc = "")
+    @ElDtoField(logicalName = "role_id", physicalName = "roleId", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
     private String roleId;
 
-    @ElDtoField(logicalName = "name", physicalName = "name", type = "String", typeKind = "", fldYn = "", length = 0, dotLen = 0, baseValue = "", desc = "")
+    @ElDtoField(logicalName = "name", physicalName = "name", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
     private String name;
 
-    @ElDtoField(logicalName = "email_consent", physicalName = "emailConsent", type = "String", typeKind = "", fldYn = "", length = 0, dotLen = 0, baseValue = "", desc = "")
+    @ElDtoField(logicalName = "email_consent", physicalName = "emailConsent", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
     private String emailConsent;
 
-    @ElDtoField(logicalName = "created_at", physicalName = "createdAt", type = "String", typeKind = "", fldYn = "", length = 0, dotLen = 0, baseValue = "", desc = "")
+    @ElDtoField(logicalName = "created_at", physicalName = "createdAt", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
     private String createdAt;
 
-    @ElDtoField(logicalName = "updated_at", physicalName = "updatedAt", type = "String", typeKind = "", fldYn = "", length = 0, dotLen = 0, baseValue = "", desc = "")
+    @ElDtoField(logicalName = "updated_at", physicalName = "updatedAt", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
     private String updatedAt;
 
     @ElVoField(physicalName = "userId")
     public String getUserId(){
-        return userId;
+        String ret = this.userId;
+        return ret;
     }
 
     @ElVoField(physicalName = "userId")
@@ -46,7 +50,8 @@ public class UserVo extends com.demo.proworks.cmmn.ProworksCommVO {
 
     @ElVoField(physicalName = "email")
     public String getEmail(){
-        return email;
+        String ret = this.email;
+        return ret;
     }
 
     @ElVoField(physicalName = "email")
@@ -56,7 +61,8 @@ public class UserVo extends com.demo.proworks.cmmn.ProworksCommVO {
 
     @ElVoField(physicalName = "password")
     public String getPassword(){
-        return password;
+        String ret = this.password;
+        return ret;
     }
 
     @ElVoField(physicalName = "password")
@@ -66,7 +72,8 @@ public class UserVo extends com.demo.proworks.cmmn.ProworksCommVO {
 
     @ElVoField(physicalName = "roleId")
     public String getRoleId(){
-        return roleId;
+        String ret = this.roleId;
+        return ret;
     }
 
     @ElVoField(physicalName = "roleId")
@@ -76,7 +83,8 @@ public class UserVo extends com.demo.proworks.cmmn.ProworksCommVO {
 
     @ElVoField(physicalName = "name")
     public String getName(){
-        return name;
+        String ret = this.name;
+        return ret;
     }
 
     @ElVoField(physicalName = "name")
@@ -86,7 +94,8 @@ public class UserVo extends com.demo.proworks.cmmn.ProworksCommVO {
 
     @ElVoField(physicalName = "emailConsent")
     public String getEmailConsent(){
-        return emailConsent;
+        String ret = this.emailConsent;
+        return ret;
     }
 
     @ElVoField(physicalName = "emailConsent")
@@ -96,7 +105,8 @@ public class UserVo extends com.demo.proworks.cmmn.ProworksCommVO {
 
     @ElVoField(physicalName = "createdAt")
     public String getCreatedAt(){
-        return createdAt;
+        String ret = this.createdAt;
+        return ret;
     }
 
     @ElVoField(physicalName = "createdAt")
@@ -106,7 +116,8 @@ public class UserVo extends com.demo.proworks.cmmn.ProworksCommVO {
 
     @ElVoField(physicalName = "updatedAt")
     public String getUpdatedAt(){
-        return updatedAt;
+        String ret = this.updatedAt;
+        return ret;
     }
 
     @ElVoField(physicalName = "updatedAt")
@@ -116,11 +127,33 @@ public class UserVo extends com.demo.proworks.cmmn.ProworksCommVO {
 
     @Override
     public String toString() {
-        return "UserVo [userId=" + userId + ",email=" + email + ",password=" + password + ",roleId=" + roleId + ",name=" + name + ",emailConsent=" + emailConsent + ",createdAt=" + createdAt + ",updatedAt=" + updatedAt + "]";
+        StringBuilder sb = new StringBuilder();
+        sb.append("UserVo [");
+        sb.append("userId").append("=").append(userId).append(",");
+        sb.append("email").append("=").append(email).append(",");
+        sb.append("password").append("=").append(password).append(",");
+        sb.append("roleId").append("=").append(roleId).append(",");
+        sb.append("name").append("=").append(name).append(",");
+        sb.append("emailConsent").append("=").append(emailConsent).append(",");
+        sb.append("createdAt").append("=").append(createdAt).append(",");
+        sb.append("updatedAt").append("=").append(updatedAt);
+        sb.append("]");
+        return sb.toString();
+
     }
 
     public boolean isFixedLengthVo() {
         return false;
     }
+
+    @Override
+    public void _xStreamEnc() {
+    }
+
+
+    @Override
+    public void _xStreamDec() {
+    }
+
 
 }

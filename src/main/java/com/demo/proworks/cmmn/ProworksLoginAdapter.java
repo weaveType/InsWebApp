@@ -4,6 +4,10 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.mindrot.jbcrypt.BCrypt;
+
+import com.demo.proworks.domain.user.service.UserService;
+import com.demo.proworks.domain.user.vo.UserVo;
 import com.inswave.elfw.exception.ElException;
 import com.inswave.elfw.log.AppLog;
 import com.inswave.elfw.login.LoginAdapter;
@@ -48,21 +52,21 @@ public class ProworksLoginAdapter extends LoginAdapter {
 		// 로그인 체크를 수행  (샘플 예제)
 		try{
 			String pw = (String)params[0];
-//			CorporateService corporateService = (CorporateService)ElBeanUtils.getBean("corporateServiceImpl");
-//			CorporateVo corporateVo = new CorporateVo();
-//
-//			corporateVo.setEmail(email);
-//			CorporateVo resCorporateVo = corporateService.selectCorporateByEmail(corporateVo);
-//
-//			if( resCorporateVo == null ) {
-//				throw new LoginException("EL.ERROR.LOGIN.0001");
-//			}
-//			
-//			// 비밀번호 확인
-//			String resPw = String.valueOf(resCorporateVo.getPassword());
-//			if(pw == null || !pw.equals(resPw)){
-//				throw new LoginException("EL.ERROR.LOGIN.0002");
-//			}
+			UserService userService = (UserService)ElBeanUtils.getBean("userServiceImpl");
+			UserVo userVo = new UserVo();
+
+			userVo.setEmail(email);
+			UserVo resUserVo = userService.selectUserByEmail(userVo);
+
+			if( resUserVo == null ) {
+				throw new LoginException("EL.ERROR.LOGIN.0001");
+			}
+			
+			// 비밀번호 확인
+			String resPw = String.valueOf(resUserVo.getPassword());
+			if(pw == null || !BCrypt.checkpw(pw, resPw)){
+				throw new LoginException("EL.ERROR.LOGIN.0002");
+			}
 
 		}catch(NumberFormatException e){
 			AppLog.error("login Error1",e);

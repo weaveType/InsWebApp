@@ -8,16 +8,19 @@
         <w2:buildDate/>
         <w2:MSA/>
         <xf:model>
-            <w2:dataCollection baseNode="map">
-                <w2:dataMap baseNode="map" id="dmp_loginInfo">
-                    <w2:keyInfo>
-                        <w2:key dataType="text" name="user_id" id="userId"></w2:key>
-                        <w2:key dataType="text" name="user_pw" id="userPw"></w2:key>
-                        <w2:key dataType="text" name="remember_me" id="rememberMe"></w2:key>
-                    </w2:keyInfo>
-                </w2:dataMap>
-            </w2:dataCollection>
-            <w2:workflowCollection/>
+        	<w2:dataCollection baseNode="map">
+        		<w2:dataMap baseNode="map" id="dmp_loginVo">
+        			<w2:keyInfo>
+        				<w2:key dataType="text" name="이메일" id="email"></w2:key>
+        				<w2:key dataType="text" name="비밀번호" id="password"></w2:key>
+        			</w2:keyInfo>
+        		</w2:dataMap>
+        	</w2:dataCollection>
+        	<w2:workflowCollection />
+        	<xf:submission id="sbm_login" action="/InsWebApp/USLogin.pwkjson" method="post" mediatype="application/json" ref='data:json,["dmp_loginVo",{"id":"dmp_loginVo","key":"loginVo"}]' target="" encoding="UTF-8" instance=""
+        		replace="" errorHandler="" customHandler="" mode="asynchronous" processMsg="" ev:submit="" ev:submitdone="" ev:submiterror=""
+        		abortTrigger="">
+        	</xf:submission>
         </xf:model>
         <w2:layoutInfo/>
         <w2:publicInfo method=""/>
@@ -223,7 +226,7 @@ scwin.btn_login_onclick = function(e) {
     }
     
     // 로그인 처리 (실제 환경에서는 서버 통신)
-    scwin.processLogin(userId, userPw);
+    $c.sbm.execute(sbm_login);
 };
 
 scwin.processLogin = function(userId, userPw) {
@@ -297,14 +300,14 @@ scwin.inp_userPw_onkeypress = function(e) {
                     <xf:group tagname="li" id="grp_userId">
                         <w2:textbox class="tit" for="inp_userId" id="lbl_userId" label="ID" tagname="label" />
                         <xf:input id="inp_userId" placeholder="아이디를 입력해주세요." 
-                            ref="data:dmp_loginInfo.userId" adjustMaxLength="false" />
+                            ref="data:dmp_loginVo.email" adjustMaxLength="false" />
                     </xf:group>
                     
                     <xf:group tagname="li" id="grp_userPw">
                         <w2:textbox class="tit" for="inp_userPw" id="lbl_userPw" label="Password" tagname="label" />
                         <xf:group class="login_form" id="grp_passwordForm">
                             <xf:input id="inp_userPw" type="password" placeholder="비밀번호를 입력해주세요." 
-                                ref="data:dmp_loginInfo.userPw" adjustMaxLength="false" 
+                                ref="data:dmp_loginVo.password" adjustMaxLength="false" 
                                 ev:onkeypress="scwin.inp_userPw_onkeypress" />
                             <w2:anchor class="btn_login_password" id="btn_password_show" outerDiv="false" 
                                 ev:onclick="scwin.btn_password_show_onclick">

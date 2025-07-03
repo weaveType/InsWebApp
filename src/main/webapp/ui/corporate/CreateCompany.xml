@@ -12,13 +12,14 @@
 					<w2:keyInfo>
 						<w2:key dataType="text" name="이메일" id="email"></w2:key>
 						<w2:key dataType="text" name="비밀번호" id="password"></w2:key>
-						<w2:key dataType="text" name="회사명" id="companyName"></w2:key>
+						<w2:key dataType="text" name="회사명" id="name"></w2:key>
 						<w2:key dataType="text" name="사업자 등록번호" id="businessNumber"></w2:key>
 						<w2:key dataType="text" name="사업자등록증명원" id="businessCertificate"></w2:key>
 						<w2:key dataType="text" name="산업군" id="industry"></w2:key>
-						<w2:key dataType="text" name="직원 수" id="empCount"></w2:key>
+						<w2:key dataType="number" name="직원 수" id="empCount"></w2:key>
 						<w2:key dataType="text" name="회사 설명" id="description"></w2:key>
 						<w2:key dataType="text" name="로고파일명" id="logoFileName"></w2:key>
+						<w2:key dataType="number" name="유저 권한" id="roleId"></w2:key>
 					</w2:keyInfo>
 				</w2:dataMap>
 			</w2:dataCollection>
@@ -460,12 +461,14 @@ scwin.uploadFiles = function () {
         logo_upload.submit();
         dmp_corporateVoDetail.set("logoFileName", logo_upload.getValue());
     }
+
+    // 권한 부여
+    dmp_corporateVoDetail.set("roleId", 2);
 };
 
 scwin.btn_create_corporate_onclick = function (e) {
     
     var errors = [];
-    debugger;
     // 필수 필드 검증
     if (!dmp_corporateVoDetail.get("email") || dmp_corporateVoDetail.get("email").trim() === "") {
         errors.push("이메일을 입력해주세요.");
@@ -475,7 +478,7 @@ scwin.btn_create_corporate_onclick = function (e) {
         errors.push("패스워드를 입력해주세요.");
     }
 
-    if (!dmp_corporateVoDetail.get("companyName") || dmp_corporateVoDetail.get("companyName").trim() === "") {
+    if (!dmp_corporateVoDetail.get("name") || dmp_corporateVoDetail.get("name").trim() === "") {
         errors.push("기업명을 입력해주세요.");
     }
 
@@ -569,7 +572,7 @@ scwin.resetForm = function () {
 				<!-- 기업명 -->
 				<xf:group class="form-group">
 					<w2:textbox class="form-label required" label="기업명"></w2:textbox>
-					<xf:input class="form-input" placeholder="ex) 인스웨이브" ref="data:dmp_corporateVoDetail.companyName"></xf:input>
+					<xf:input class="form-input" placeholder="ex) 인스웨이브" ref="data:dmp_corporateVoDetail.name"></xf:input>
 				</xf:group>
 
 				<!-- 사업자등록번호 -->
