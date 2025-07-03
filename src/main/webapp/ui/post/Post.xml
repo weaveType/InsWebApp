@@ -7,7 +7,7 @@
 		<w2:MSA />
 		<xf:model>
 			<w2:dataCollection baseNode="map">
-				<w2:dataMap baseNode="map" id="dmp_userVo" style="">
+				<w2:dataMap baseNode="map" id="dmp_postVo" style="">
 					<w2:keyInfo>
 						
 						<w2:key dataType="text" id="pageIndex" name="페이지번호" defaultValue="1"></w2:key>
@@ -16,68 +16,72 @@
 					</w2:keyInfo>
 					<w2:data use="false"></w2:data>
 				</w2:dataMap>
-				<w2:dataList baseNode="list" id="dlt_userVoList" repeatNode="map" saveRemovedData="true" style="">
+				<w2:dataList baseNode="list" id="dlt_postVoList" repeatNode="map" saveRemovedData="true" style="">
 					<w2:columnInfo>
-						<w2:column dataType="text" id="userId" name="user_id"></w2:column>
-                        <w2:column dataType="text" id="username" name="username"></w2:column>
-                        <w2:column dataType="text" id="birthdate" name="birthdate"></w2:column>
-                        <w2:column dataType="text" id="phoneNumber" name="phone_number"></w2:column>
-                        <w2:column dataType="text" id="email" name="email"></w2:column>
-                        <w2:column dataType="text" id="password" name="password"></w2:column>
-                        <w2:column dataType="text" id="roleId" name="role_id"></w2:column>
-                        <w2:column dataType="text" id="emailConsent" name="email_consent"></w2:column>
-                        <w2:column dataType="text" id="updatedAt" name="updated_at"></w2:column>
-                        <w2:column dataType="text" id="createdAt" name="created_at"></w2:column>
-                        <w2:column dataType="text" id="deletedAt" name="deleted_at"></w2:column>
+						<w2:column dataType="text" id="jobPostingId" name="job_posting_id"></w2:column>
+                        <w2:column dataType="text" id="companyId" name="company_id"></w2:column>
+                        <w2:column dataType="text" id="title" name="title"></w2:column>
+                        <w2:column dataType="text" id="description" name="description"></w2:column>
+                        <w2:column dataType="text" id="requiredSkills" name="required_skills"></w2:column>
+                        <w2:column dataType="text" id="experienceLevel" name="experience_level"></w2:column>
+                        <w2:column dataType="text" id="salaryRange" name="salary_range"></w2:column>
+                        <w2:column dataType="text" id="location" name="location"></w2:column>
+                        <w2:column dataType="text" id="workType" name="work_type"></w2:column>
+                        <w2:column dataType="text" id="preferredDeveloperTypes" name="preferred_developer_types"></w2:column>
+                        <w2:column dataType="text" id="expiresAt" name="expires_at"></w2:column>
+                        <w2:column dataType="text" id="postedAt" name="posted_at"></w2:column>
+                        <w2:column dataType="text" id="status" name="status"></w2:column>
                        
 					</w2:columnInfo>
 				</w2:dataList>
-				<w2:dataMap baseNode="map" id="dmp_userVoDetail" style="">
+				<w2:dataMap baseNode="map" id="dmp_postVoDetail" style="">
 					<w2:keyInfo>
-						<w2:key dataType="text" id="userId" name="user_id"></w2:key>
-                        <w2:key dataType="text" id="username" name="username"></w2:key>
-                        <w2:key dataType="text" id="birthdate" name="birthdate"></w2:key>
-                        <w2:key dataType="text" id="phoneNumber" name="phone_number"></w2:key>
-                        <w2:key dataType="text" id="email" name="email"></w2:key>
-                        <w2:key dataType="text" id="password" name="password"></w2:key>
-                        <w2:key dataType="text" id="roleId" name="role_id"></w2:key>
-                        <w2:key dataType="text" id="emailConsent" name="email_consent"></w2:key>
-                        <w2:key dataType="text" id="updatedAt" name="updated_at"></w2:key>
-                        <w2:key dataType="text" id="createdAt" name="created_at"></w2:key>
-                        <w2:key dataType="text" id="deletedAt" name="deleted_at"></w2:key>
+						<w2:key dataType="text" id="jobPostingId" name="job_posting_id"></w2:key>
+                        <w2:key dataType="text" id="companyId" name="company_id"></w2:key>
+                        <w2:key dataType="text" id="title" name="title"></w2:key>
+                        <w2:key dataType="text" id="description" name="description"></w2:key>
+                        <w2:key dataType="text" id="requiredSkills" name="required_skills"></w2:key>
+                        <w2:key dataType="text" id="experienceLevel" name="experience_level"></w2:key>
+                        <w2:key dataType="text" id="salaryRange" name="salary_range"></w2:key>
+                        <w2:key dataType="text" id="location" name="location"></w2:key>
+                        <w2:key dataType="text" id="workType" name="work_type"></w2:key>
+                        <w2:key dataType="text" id="preferredDeveloperTypes" name="preferred_developer_types"></w2:key>
+                        <w2:key dataType="text" id="expiresAt" name="expires_at"></w2:key>
+                        <w2:key dataType="text" id="postedAt" name="posted_at"></w2:key>
+                        <w2:key dataType="text" id="status" name="status"></w2:key>
                        
 					</w2:keyInfo>
 				</w2:dataMap>
 			</w2:dataCollection>
 			<w2:workflowCollection></w2:workflowCollection>
 
-			<xf:submission id="sbm_selectUserVoList" ref='data:json,{"id":"dmp_userVo","key":"userVo"}'
-				target='data:json,{"id":"dlt_userVoList","key":"elData.userVoList"}' action="/InsWebApp/US0001List.pwkjson" method="post"
+			<xf:submission id="sbm_selectPostVoList" ref='data:json,{"id":"dmp_postVo","key":"postVo"}'
+				target='data:json,{"id":"dlt_postVoList","key":"elData.postVoList"}' action="/InsWebApp/POS0001List.pwkjson" method="post"
 				mediatype="application/json" encoding="UTF-8" instance="" replace="" errorHandler="" customHandler="" mode="asynchronous"
-				processMsg="일반유저 리스트를 조회 중입니다." ev:submit="" ev:submitdone="scwin.sbm_userList_submitdone" ev:submiterror="" abortTrigger="">
+				processMsg="공고정보 리스트를 조회 중입니다." ev:submit="" ev:submitdone="scwin.sbm_postList_submitdone" ev:submiterror="" abortTrigger="">
 			</xf:submission>
-			<xf:submission id="sbm_deleteUserVo" ref='data:json,{"id":"dmp_userVoDetail","key":"userVo"}' target="" action="/InsWebApp/US0001Del.pwkjson" method="post"
+			<xf:submission id="sbm_deletePostVo" ref='data:json,{"id":"dmp_postVoDetail","key":"postVo"}' target="" action="/InsWebApp/POS0001Del.pwkjson" method="post"
 				mediatype="application/json" encoding="UTF-8" instance="" replace="" errorHandler="" customHandler="" mode="asynchronous" processMsg=""
-				ev:submit="" ev:submitdone="scwin.sbm_deleteUserVo_submitdone" ev:submiterror="" abortTrigger="">
+				ev:submit="" ev:submitdone="scwin.sbm_deletePostVo_submitdone" ev:submiterror="" abortTrigger="">
 			</xf:submission>
-			<xf:submission id="sbm_updateUserVo" ref='data:json,["dmp_userVoDetail",{"id":"dmp_userVoDetail","key":"userVo"}]' target="" action="/InsWebApp/US0001Upd.pwkjson" method="post"
+			<xf:submission id="sbm_updatePostVo" ref='data:json,["dmp_postVoDetail",{"id":"dmp_postVoDetail","key":"postVo"}]' target="" action="/InsWebApp/POS0001Upd.pwkjson" method="post"
 				mediatype="application/json" encoding="UTF-8" instance="" replace="" errorHandler="" customHandler="" mode="asynchronous" processMsg=""
-				ev:submit="" ev:submitdone="scwin.sbm_updateUserVo_submitdone" ev:submiterror="" abortTrigger="">
+				ev:submit="" ev:submitdone="scwin.sbm_updatePostVo_submitdone" ev:submiterror="" abortTrigger="">
 			</xf:submission>
-			<xf:submission id="sbm_insertUserVo" ref='data:json,["dmp_userVoDetail",{"id":"dmp_userVoDetail","key":"userVo"}]' target="" action="/InsWebApp/US0001Ins.pwkjson" method="post"
+			<xf:submission id="sbm_insertPostVo" ref='data:json,["dmp_postVoDetail",{"id":"dmp_postVoDetail","key":"postVo"}]' target="" action="/InsWebApp/POS0001Ins.pwkjson" method="post"
 				mediatype="application/json" encoding="UTF-8" instance="" replace="" errorHandler="" customHandler="" mode="asynchronous" processMsg=""
-				ev:submit="" ev:submitdone="scwin.sbm_insertUserVo_submitdone" ev:submiterror="" abortTrigger="">
+				ev:submit="" ev:submitdone="scwin.sbm_insertPostVo_submitdone" ev:submiterror="" abortTrigger="">
 			</xf:submission>
-			<xf:submission id="sbm_selectUserVo" ref="" target="" action="/InsWebApp/US0001UpdView.pwkjson" method="post"
+			<xf:submission id="sbm_selectPostVo" ref="" target="" action="/InsWebApp/POS0001UpdView.pwkjson" method="post"
 				mediatype="application/json" encoding="UTF-8" instance="" replace="" errorHandler="" customHandler="" mode="asynchronous"
-				processMsg="일반유저를 조회 중입니다." ev:submit="" ev:submitdone="scwin.sbm_selectUserVo_submitdone" ev:submiterror="" abortTrigger="">
+				processMsg="공고정보를 조회 중입니다." ev:submit="" ev:submitdone="scwin.sbm_selectPostVo_submitdone" ev:submiterror="" abortTrigger="">
 			</xf:submission>
 		</xf:model>
 		<w2:layoutInfo></w2:layoutInfo>
 		<w2:publicInfo method="" />
 		<script lazy="false" type="text/javascript"><![CDATA[
 	scwin.onpageload = function() {
-		// 일반유저 readOnly false
+		// 공고정보 readOnly false
 		
 		// 버튼 숨김
 		btn_save.show("");   // 저장 버튼 
@@ -95,7 +99,7 @@
 			search_box.hide();
         }
 		
-		// 일반유저 조회
+		// 공고정보 조회
 		scwin.btn_search_onclick();
 	};
 
@@ -113,14 +117,14 @@
 	scwin.btn_search_onclick = function(e) {
 	
 		// PGAE번호 초기화
-		dmp_userVo.set("pageIndex","1");
-		pgl_userList.setSelectedIndex(1);
+		dmp_postVo.set("pageIndex","1");
+		pgl_postList.setSelectedIndex(1);
 
-		// 서버통신 - 일반유저 조회
-		$c.sbm.execute($p, sbm_selectUserVoList);
+		// 서버통신 - 공고정보 조회
+		$c.sbm.execute($p, sbm_selectPostVoList);
 	};
 	
-	scwin.sbm_userList_submitdone = function(e) {
+	scwin.sbm_postList_submitdone = function(e) {
 
 		// error 수신시
 		var elData = e.responseJSON.elData;
@@ -130,11 +134,11 @@
 			return false;
 		}
 
-		// 일반유저 dataMap 초기화
-		dmp_userVoDetail.setEmptyValue();
+		// 공고정보 dataMap 초기화
+		dmp_postVoDetail.setEmptyValue();
 		
-		// 일반유저 readOnly false
-		grp_userInfo.setReadOnly(false);
+		// 공고정보 readOnly false
+		grp_postInfo.setReadOnly(false);
 		
 		// 버튼 숨김
 		btn_save.show("");   // 저장 버튼
@@ -145,18 +149,18 @@
         spn_listCnt.setLabel(elData.totalCount);
         
         // 데이터를 그리드에 셋팅
-        dlt_userVoList.setJSON(elData.userVoList);
+        dlt_postVoList.setJSON(elData.postVoList);
         
         // 페이지 네비게이터 업데이트
-        var totalPageCount = Math.ceil(elData.totalCount / dmp_userVo.get("pageSize"));
-        pgl_userList.setCount(totalPageCount);
+        var totalPageCount = Math.ceil(elData.totalCount / dmp_postVo.get("pageSize"));
+        pgl_postList.setCount(totalPageCount);
         
         spn_registerFlag.setValue("등록");
 
 		// 페이징 정보 업데이트
         spn_totalPageCount.setValue(totalPageCount);
-        spn_pageIndex.setValue(dmp_userVo.get("pageIndex"));
-        pgl_userList.setSelectedIndex(dmp_userVo.get("pageIndex"));
+        spn_pageIndex.setValue(dmp_postVo.get("pageIndex"));
+        pgl_postList.setSelectedIndex(dmp_postVo.get("pageIndex"));
 	};	
 
 	/**
@@ -168,27 +172,27 @@
 	 * @author 
 	 * @example
 	 */
-	scwin.pgl_userList_onclick = function(idx) {
+	scwin.pgl_postList_onclick = function(idx) {
 	
 		// 페이지 번호 세팅
-		dmp_userVo.set("pageIndex", idx);
+		dmp_postVo.set("pageIndex", idx);
 		
 		/////////////////////////////////////////////
 		// 페이지 크기 설정 영역 / 웹관리자 화면 page 생성 시 주석 해제
 		/////////////////////////////////////////////
-		//dmp_userVo.set("pageSize", sel_pageSize.getValue());
+		//dmp_postVo.set("pageSize", sel_pageSize.getValue());
 		 
-		// 서버통신 - 일반유저 조회
-		$c.sbm.execute($p, sbm_selectUserVoList);
+		// 서버통신 - 공고정보 조회
+		$c.sbm.execute($p, sbm_selectPostVoList);
 	};
 
-	// 일반유저 clear
+	// 공고정보 clear
 	scwin.btn_reset_onclick = function(e) {
 	
-		// 일반유저 dataMap 초기화
-		dmp_userVoDetail.setEmptyValue();
-		// 일반유저 readOnly false
-		grp_userInfo.setReadOnly(false);
+		// 공고정보 dataMap 초기화
+		dmp_postVoDetail.setEmptyValue();
+		// 공고정보 readOnly false
+		grp_postInfo.setReadOnly(false);
 
 		btn_save.show("");   // 저장 버튼 생성
 		btn_edit.hide();     // 수정 버튼 제거
@@ -208,7 +212,7 @@
 	 */
 	scwin.grd_list_oncellclick = function(row,col,colId) {
 
-		dmp_userVoDetail.setJSON(dlt_userVoList.getRowJSON(row));
+		dmp_postVoDetail.setJSON(dlt_postVoList.getRowJSON(row));
 
 		btn_save.hide(); 		// 저장 버튼 제거
 		btn_edit.show("");      // 수정 버튼 생성
@@ -230,15 +234,15 @@
 		
 		// 유효성 체크
 		var valInfo = [
-			{ id: "userId", mandatory: true }
+			{ id: "jobPostingId", mandatory: true }
            
 		];
 		
-		if ($c.data.validateGroup(grp_userInfo, valInfo) === true) {
+		if ($c.data.validateGroup(grp_postInfo, valInfo) === true) {
 			var promise = $c.win.confirm("저장하시겠습니까?");
 			promise.then(function(result) {  
 				if (result){
-					$c.sbm.execute(sbm_insertUserVo);
+					$c.sbm.execute(sbm_insertPostVo);
 				}
 			})
 		} 	
@@ -253,7 +257,7 @@
 	 * @author 
 	 * @example
 	 */
-	scwin.sbm_insertUserVo_submitdone = function(e) {
+	scwin.sbm_insertPostVo_submitdone = function(e) {
 		
 		// error 수신시
 		var elHeader  = e.responseJSON.elHeader;
@@ -282,15 +286,15 @@
 		
 		// 유효성 체크
 		var valInfo = [
-			{ id: "userId", mandatory: true }
+			{ id: "jobPostingId", mandatory: true }
            
 		];
 		
-		if ($c.data.validateGroup(grp_userInfo, valInfo) === true) {
+		if ($c.data.validateGroup(grp_postInfo, valInfo) === true) {
 			var promise = $c.win.confirm("수정하시겠습니까?");
 			promise.then(function(result) {  
 				if (result){
-					$c.sbm.execute(sbm_updateUserVo);
+					$c.sbm.execute(sbm_updatePostVo);
 				}
 			})
 		} 
@@ -305,7 +309,7 @@
 	 * @author 
 	 * @example
 	 */
-	scwin.sbm_updateUserVo_submitdone = function(e) {
+	scwin.sbm_updatePostVo_submitdone = function(e) {
 
 		// error 수신시
 		var elHeader  = e.responseJSON.elHeader;
@@ -333,15 +337,15 @@
 		
 		// 유효성 체크
 		var valInfo = [
-			{ id: "userId", mandatory: true }
+			{ id: "jobPostingId", mandatory: true }
            
 		];
 		
-		if ($c.data.validateGroup(grp_userInfo, valInfo) === true) {
+		if ($c.data.validateGroup(grp_postInfo, valInfo) === true) {
 			var promise = $c.win.confirm("삭제하시겠습니까?");
 			promise.then(function(result) {  
 				if (result){
-					$c.sbm.execute(sbm_deleteUserVo);
+					$c.sbm.execute(sbm_deletePostVo);
 				}
 			})
 		}	
@@ -356,7 +360,7 @@
 	 * @author 
 	 * @example
 	 */
-	scwin.sbm_deleteUserVo_submitdone = function(e) {
+	scwin.sbm_deletePostVo_submitdone = function(e) {
 	
 		// error 수신시
 		var elHeader  = e.responseJSON.elHeader;
@@ -376,7 +380,7 @@
 	<body ev:onpageload="scwin.onpageload">
 		<xf:group class="sub_contents " id="" style="">
 			<xf:group class="pgtbox" id="" style="">
-				<w2:textbox class="pgt_tit" id="" label="일반유저" style="" tagname="" />
+				<w2:textbox class="pgt_tit" id="" label="공고정보" style="" tagname="" />
 			</xf:group>
 			<xf:group class="schbox" id="search_box" style="">
 				<xf:group class="schbox_inner" id="" style="">
@@ -397,7 +401,7 @@
 							</xf:group>
 							<xf:group class="w2tb_td" style="" tagname="td">
     							<xf:select1 allOption="" appearance="minimal" chooseOption="" direction="auto" disabled="false"
-    								disabledClass="w2selectbox_disabled" id="sel_pageSize" ref="data:dmp_userVo.pageSize" renderType="native"
+    								disabledClass="w2selectbox_disabled" id="sel_pageSize" ref="data:dmp_postVo.pageSize" renderType="native"
     								style="width: 80px;" submenuSize="auto" useItemLocale="false">
     								<xf:choices>
     									<xf:item>
@@ -444,58 +448,62 @@
     			</xf:group>
 			</xf:group>
 			<xf:group adaptiveThreshold="" class="gvwbox" id="" style="">
-				<w2:gridView autoFit="allColumn" checkReadOnlyOnPasteEnable="" class="gvw" dataList="data:dlt_userVoList"
+				<w2:gridView autoFit="allColumn" checkReadOnlyOnPasteEnable="" class="gvw" dataList="data:dlt_postVoList"
 					defaultCellHeight="26" focusMode="row" id="grd_list" scrollByColumn="false" scrollByColumnAdaptive="false" style="height: 150px;"
 					visibleRowNum="10" ev:oncellclick="scwin.grd_list_oncellclick" readOnly="true">
 					<w2:caption style="" id="caption2" value="this is a grid caption."></w2:caption>
 					<w2:header style="" id="header2">
 						<w2:row style="" id="row3">
-							<w2:column width="70" inputType="text" style="" id="column1" value="user_id" displayMode="label" localeRef="User_COLNAME_00001"></w2:column>
-                            <w2:column width="70" inputType="text" style="" id="column2" value="username" displayMode="label" localeRef="User_COLNAME_00002"></w2:column>
-                            <w2:column width="70" inputType="text" style="" id="column3" value="birthdate" displayMode="label" localeRef="User_COLNAME_00003"></w2:column>
-                            <w2:column width="70" inputType="text" style="" id="column4" value="phone_number" displayMode="label" localeRef="User_COLNAME_00004"></w2:column>
-                            <w2:column width="70" inputType="text" style="" id="column5" value="email" displayMode="label" localeRef="User_COLNAME_00005"></w2:column>
-                            <w2:column width="70" inputType="text" style="" id="column6" value="password" displayMode="label" localeRef="User_COLNAME_00006"></w2:column>
-                            <w2:column width="70" inputType="text" style="" id="column7" value="role_id" displayMode="label" localeRef="User_COLNAME_00007"></w2:column>
-                            <w2:column width="70" inputType="text" style="" id="column8" value="email_consent" displayMode="label" localeRef="User_COLNAME_00008"></w2:column>
-                            <w2:column width="70" inputType="text" style="" id="column9" value="updated_at" displayMode="label" localeRef="User_COLNAME_00009"></w2:column>
-                            <w2:column width="70" inputType="text" style="" id="column10" value="created_at" displayMode="label" localeRef="User_COLNAME_00010"></w2:column>
-                            <w2:column width="70" inputType="text" style="" id="column11" value="deleted_at" displayMode="label" localeRef="User_COLNAME_00011"></w2:column>
+							<w2:column width="70" inputType="text" style="" id="column1" value="job_posting_id" displayMode="label" localeRef="Post_COLNAME_00001"></w2:column>
+                            <w2:column width="70" inputType="text" style="" id="column2" value="company_id" displayMode="label" localeRef="Post_COLNAME_00002"></w2:column>
+                            <w2:column width="70" inputType="text" style="" id="column3" value="title" displayMode="label" localeRef="Post_COLNAME_00003"></w2:column>
+                            <w2:column width="70" inputType="text" style="" id="column4" value="description" displayMode="label" localeRef="Post_COLNAME_00004"></w2:column>
+                            <w2:column width="70" inputType="text" style="" id="column5" value="required_skills" displayMode="label" localeRef="Post_COLNAME_00005"></w2:column>
+                            <w2:column width="70" inputType="text" style="" id="column6" value="experience_level" displayMode="label" localeRef="Post_COLNAME_00006"></w2:column>
+                            <w2:column width="70" inputType="text" style="" id="column7" value="salary_range" displayMode="label" localeRef="Post_COLNAME_00007"></w2:column>
+                            <w2:column width="70" inputType="text" style="" id="column8" value="location" displayMode="label" localeRef="Post_COLNAME_00008"></w2:column>
+                            <w2:column width="70" inputType="text" style="" id="column9" value="work_type" displayMode="label" localeRef="Post_COLNAME_00009"></w2:column>
+                            <w2:column width="70" inputType="text" style="" id="column10" value="preferred_developer_types" displayMode="label" localeRef="Post_COLNAME_00010"></w2:column>
+                            <w2:column width="70" inputType="text" style="" id="column11" value="expires_at" displayMode="label" localeRef="Post_COLNAME_00011"></w2:column>
+                            <w2:column width="70" inputType="text" style="" id="column12" value="posted_at" displayMode="label" localeRef="Post_COLNAME_00012"></w2:column>
+                            <w2:column width="70" inputType="text" style="" id="column13" value="status" displayMode="label" localeRef="Post_COLNAME_00013"></w2:column>
                            
 						</w2:row>
 					</w2:header>
 					<w2:gBody style="" id="gBody2">
 						<w2:row style="" id="row4">
-							<w2:column width="70" inputType="text" style="" id="userId" value="" displayMode="label"></w2:column>
-                            <w2:column width="70" inputType="text" style="" id="username" value="" displayMode="label"></w2:column>
-                            <w2:column width="70" inputType="text" style="" id="birthdate" value="" displayMode="label"></w2:column>
-                            <w2:column width="70" inputType="text" style="" id="phoneNumber" value="" displayMode="label"></w2:column>
-                            <w2:column width="70" inputType="text" style="" id="email" value="" displayMode="label"></w2:column>
-                            <w2:column width="70" inputType="text" style="" id="password" value="" displayMode="label"></w2:column>
-                            <w2:column width="70" inputType="text" style="" id="roleId" value="" displayMode="label"></w2:column>
-                            <w2:column width="70" inputType="text" style="" id="emailConsent" value="" displayMode="label"></w2:column>
-                            <w2:column width="70" inputType="text" style="" id="updatedAt" value="" displayMode="label"></w2:column>
-                            <w2:column width="70" inputType="text" style="" id="createdAt" value="" displayMode="label"></w2:column>
-                            <w2:column width="70" inputType="text" style="" id="deletedAt" value="" displayMode="label"></w2:column>
+							<w2:column width="70" inputType="text" style="" id="jobPostingId" value="" displayMode="label"></w2:column>
+                            <w2:column width="70" inputType="text" style="" id="companyId" value="" displayMode="label"></w2:column>
+                            <w2:column width="70" inputType="text" style="" id="title" value="" displayMode="label"></w2:column>
+                            <w2:column width="70" inputType="text" style="" id="description" value="" displayMode="label"></w2:column>
+                            <w2:column width="70" inputType="text" style="" id="requiredSkills" value="" displayMode="label"></w2:column>
+                            <w2:column width="70" inputType="text" style="" id="experienceLevel" value="" displayMode="label"></w2:column>
+                            <w2:column width="70" inputType="text" style="" id="salaryRange" value="" displayMode="label"></w2:column>
+                            <w2:column width="70" inputType="text" style="" id="location" value="" displayMode="label"></w2:column>
+                            <w2:column width="70" inputType="text" style="" id="workType" value="" displayMode="label"></w2:column>
+                            <w2:column width="70" inputType="text" style="" id="preferredDeveloperTypes" value="" displayMode="label"></w2:column>
+                            <w2:column width="70" inputType="text" style="" id="expiresAt" value="" displayMode="label"></w2:column>
+                            <w2:column width="70" inputType="text" style="" id="postedAt" value="" displayMode="label"></w2:column>
+                            <w2:column width="70" inputType="text" style="" id="status" value="" displayMode="label"></w2:column>
                            
 						</w2:row>
 					</w2:gBody>
 				</w2:gridView>
 			</xf:group>
 			<xf:group class="pglbox" id="" style="">
-				<w2:pageList class="pgl" displayButtonType="display" displayFormat="#" id="pgl_userList" pageSize="5" pagingType="0"
-					style="" ev:onclick="scwin.pgl_userList_onclick">
+				<w2:pageList class="pgl" displayButtonType="display" displayFormat="#" id="pgl_postList" pageSize="5" pagingType="0"
+					style="" ev:onclick="scwin.pgl_postList_onclick">
 				</w2:pageList>	
 				<xf:group class="pgl_count" id="" style="display: none;">
-    				<w2:span class="num" id="spn_pageIndex" label="0" ref="data:dma_userVo.pageIndex" style=""></w2:span>
+    				<w2:span class="num" id="spn_pageIndex" label="0" ref="data:dma_postVo.pageIndex" style=""></w2:span>
     				<w2:span id="span1" label="/" style=""></w2:span>
-    				<w2:span id="spn_totalPageCount" label="0" ref="data:dma_userVo.totalPageCount" style=""></w2:span>
+    				<w2:span id="spn_totalPageCount" label="0" ref="data:dma_postVo.totalPageCount" style=""></w2:span>
     				<w2:span id="span2" label="페이지" localeRef="COMMON_LABEL_00005" style=""></w2:span>
     			</xf:group>		
 			</xf:group>
 			<xf:group class="titbox" id="" style="">
                 <xf:group id="" tagname="h3" style="">
-    				<w2:textbox class="" id="" label="일반유저" localeRef="" style=""></w2:textbox>
+    				<w2:textbox class="" id="" label="공고정보" localeRef="" style=""></w2:textbox>
     				<w2:textbox class="" id="" label="(" style=""></w2:textbox>
     				<w2:textbox class="" id="spn_registerFlag" label="등록" localeRef="COMMON_LABEL_00006" style=""></w2:textbox>
     				<w2:textbox class="" id="" label=")" style=""></w2:textbox>
@@ -518,7 +526,7 @@
 					</xf:trigger>
 				</xf:group>
 			</xf:group>
-			<xf:group class="tblbox" id="grp_userInfo" style="">
+			<xf:group class="tblbox" id="grp_postInfo" style="">
 				<xf:group adaptive="layout" adaptiveThreshold="600" class="w2tb tbl" id="" style="" tagname="table">
 					<w2:attributes>
 						<w2:summary />
@@ -531,80 +539,94 @@
 					</xf:group>
 					<xf:group style="" tagname="tr">
 						<xf:group class="w2tb_th" style="" tagname="th">
-                            <w2:textbox class="" id="" label="user_id" ref="" style="" userData2="" localeRef="User_COLNAME_00001"/>
+                            <w2:textbox class="" id="" label="job_posting_id" ref="" style="" userData2="" localeRef="Post_COLNAME_00001"/>
                         </xf:group>
                         <xf:group class="w2tb_td" style="" tagname="td">
-                            <xf:input class="" id="" placeholder="" style="width:100%;" ref="data:dmp_userVoDetail.userId"/>
+                            <xf:input class="" id="" placeholder="" style="width:100%;" ref="data:dmp_postVoDetail.jobPostingId"/>
                         </xf:group>
                         <xf:group class="w2tb_th" style="" tagname="th">
-                            <w2:textbox class="" id="" label="username" ref="" style="" userData2="" localeRef="User_COLNAME_00002"/>
+                            <w2:textbox class="" id="" label="company_id" ref="" style="" userData2="" localeRef="Post_COLNAME_00002"/>
                         </xf:group>
                         <xf:group class="w2tb_td" style="" tagname="td">
-                            <xf:input class="" id="" placeholder="" style="width:100%;" ref="data:dmp_userVoDetail.username"/>
+                            <xf:input class="" id="" placeholder="" style="width:100%;" ref="data:dmp_postVoDetail.companyId"/>
                         </xf:group>
                     </xf:group>
                     <xf:group style="" tagname="tr">
                         <xf:group class="w2tb_th" style="" tagname="th">
-                            <w2:textbox class="" id="" label="birthdate" ref="" style="" userData2="" localeRef="User_COLNAME_00003"/>
+                            <w2:textbox class="" id="" label="title" ref="" style="" userData2="" localeRef="Post_COLNAME_00003"/>
                         </xf:group>
                         <xf:group class="w2tb_td" style="" tagname="td">
-                            <xf:input class="" id="" placeholder="" style="width:100%;" ref="data:dmp_userVoDetail.birthdate"/>
+                            <xf:input class="" id="" placeholder="" style="width:100%;" ref="data:dmp_postVoDetail.title"/>
                         </xf:group>
                         <xf:group class="w2tb_th" style="" tagname="th">
-                            <w2:textbox class="" id="" label="phone_number" ref="" style="" userData2="" localeRef="User_COLNAME_00004"/>
+                            <w2:textbox class="" id="" label="description" ref="" style="" userData2="" localeRef="Post_COLNAME_00004"/>
                         </xf:group>
                         <xf:group class="w2tb_td" style="" tagname="td">
-                            <xf:input class="" id="" placeholder="" style="width:100%;" ref="data:dmp_userVoDetail.phoneNumber"/>
+                            <xf:input class="" id="" placeholder="" style="width:100%;" ref="data:dmp_postVoDetail.description"/>
                         </xf:group>
                     </xf:group>
                     <xf:group style="" tagname="tr">
                         <xf:group class="w2tb_th" style="" tagname="th">
-                            <w2:textbox class="" id="" label="email" ref="" style="" userData2="" localeRef="User_COLNAME_00005"/>
+                            <w2:textbox class="" id="" label="required_skills" ref="" style="" userData2="" localeRef="Post_COLNAME_00005"/>
                         </xf:group>
                         <xf:group class="w2tb_td" style="" tagname="td">
-                            <xf:input class="" id="" placeholder="" style="width:100%;" ref="data:dmp_userVoDetail.email"/>
+                            <xf:input class="" id="" placeholder="" style="width:100%;" ref="data:dmp_postVoDetail.requiredSkills"/>
                         </xf:group>
                         <xf:group class="w2tb_th" style="" tagname="th">
-                            <w2:textbox class="" id="" label="password" ref="" style="" userData2="" localeRef="User_COLNAME_00006"/>
+                            <w2:textbox class="" id="" label="experience_level" ref="" style="" userData2="" localeRef="Post_COLNAME_00006"/>
                         </xf:group>
                         <xf:group class="w2tb_td" style="" tagname="td">
-                            <xf:input class="" id="" placeholder="" style="width:100%;" ref="data:dmp_userVoDetail.password"/>
+                            <xf:input class="" id="" placeholder="" style="width:100%;" ref="data:dmp_postVoDetail.experienceLevel"/>
                         </xf:group>
                     </xf:group>
                     <xf:group style="" tagname="tr">
                         <xf:group class="w2tb_th" style="" tagname="th">
-                            <w2:textbox class="" id="" label="role_id" ref="" style="" userData2="" localeRef="User_COLNAME_00007"/>
+                            <w2:textbox class="" id="" label="salary_range" ref="" style="" userData2="" localeRef="Post_COLNAME_00007"/>
                         </xf:group>
                         <xf:group class="w2tb_td" style="" tagname="td">
-                            <xf:input class="" id="" placeholder="" style="width:100%;" ref="data:dmp_userVoDetail.roleId"/>
+                            <xf:input class="" id="" placeholder="" style="width:100%;" ref="data:dmp_postVoDetail.salaryRange"/>
                         </xf:group>
                         <xf:group class="w2tb_th" style="" tagname="th">
-                            <w2:textbox class="" id="" label="email_consent" ref="" style="" userData2="" localeRef="User_COLNAME_00008"/>
+                            <w2:textbox class="" id="" label="location" ref="" style="" userData2="" localeRef="Post_COLNAME_00008"/>
                         </xf:group>
                         <xf:group class="w2tb_td" style="" tagname="td">
-                            <xf:input class="" id="" placeholder="" style="width:100%;" ref="data:dmp_userVoDetail.emailConsent"/>
+                            <xf:input class="" id="" placeholder="" style="width:100%;" ref="data:dmp_postVoDetail.location"/>
                         </xf:group>
                     </xf:group>
                     <xf:group style="" tagname="tr">
                         <xf:group class="w2tb_th" style="" tagname="th">
-                            <w2:textbox class="" id="" label="updated_at" ref="" style="" userData2="" localeRef="User_COLNAME_00009"/>
+                            <w2:textbox class="" id="" label="work_type" ref="" style="" userData2="" localeRef="Post_COLNAME_00009"/>
                         </xf:group>
                         <xf:group class="w2tb_td" style="" tagname="td">
-                            <xf:input class="" id="" placeholder="" style="width:100%;" ref="data:dmp_userVoDetail.updatedAt"/>
+                            <xf:input class="" id="" placeholder="" style="width:100%;" ref="data:dmp_postVoDetail.workType"/>
                         </xf:group>
                         <xf:group class="w2tb_th" style="" tagname="th">
-                            <w2:textbox class="" id="" label="created_at" ref="" style="" userData2="" localeRef="User_COLNAME_00010"/>
+                            <w2:textbox class="" id="" label="preferred_developer_types" ref="" style="" userData2="" localeRef="Post_COLNAME_00010"/>
                         </xf:group>
                         <xf:group class="w2tb_td" style="" tagname="td">
-                            <xf:input class="" id="" placeholder="" style="width:100%;" ref="data:dmp_userVoDetail.createdAt"/>
+                            <xf:input class="" id="" placeholder="" style="width:100%;" ref="data:dmp_postVoDetail.preferredDeveloperTypes"/>
                         </xf:group>
                     </xf:group>
                     <xf:group style="" tagname="tr">
                         <xf:group class="w2tb_th" style="" tagname="th">
-                            <w2:textbox class="" id="" label="deleted_at" ref="" style="" userData2="" localeRef="User_COLNAME_00011"/>
+                            <w2:textbox class="" id="" label="expires_at" ref="" style="" userData2="" localeRef="Post_COLNAME_00011"/>
                         </xf:group>
                         <xf:group class="w2tb_td" style="" tagname="td">
-                            <xf:input class="" id="" placeholder="" style="width:100%;" ref="data:dmp_userVoDetail.deletedAt"/>
+                            <xf:input class="" id="" placeholder="" style="width:100%;" ref="data:dmp_postVoDetail.expiresAt"/>
+                        </xf:group>
+                        <xf:group class="w2tb_th" style="" tagname="th">
+                            <w2:textbox class="" id="" label="posted_at" ref="" style="" userData2="" localeRef="Post_COLNAME_00012"/>
+                        </xf:group>
+                        <xf:group class="w2tb_td" style="" tagname="td">
+                            <xf:input class="" id="" placeholder="" style="width:100%;" ref="data:dmp_postVoDetail.postedAt"/>
+                        </xf:group>
+                    </xf:group>
+                    <xf:group style="" tagname="tr">
+                        <xf:group class="w2tb_th" style="" tagname="th">
+                            <w2:textbox class="" id="" label="status" ref="" style="" userData2="" localeRef="Post_COLNAME_00013"/>
+                        </xf:group>
+                        <xf:group class="w2tb_td" style="" tagname="td">
+                            <xf:input class="" id="" placeholder="" style="width:100%;" ref="data:dmp_postVoDetail.status"/>
                         </xf:group>
                         <xf:group class="w2tb_th" style="" tagname="th">
                             <w2:textbox class="" id="" label="" ref="" style="" userData2="" />
