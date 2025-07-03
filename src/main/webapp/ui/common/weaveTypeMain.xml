@@ -65,6 +65,7 @@ scwin.menu3_onclick = function () {
 
 // 로그인 관련 이벤트
 scwin.btnLogin_onclick = function () {
+    // 출력 가운데로 수정예정
     var options = {
         id: 'email_popup',
         type: 'browser',

@@ -52,27 +52,26 @@ public class ProworksSessionDataAdapter extends SessionDataAdapter {
 	 * @throws AdapterException
 	 */
 	@Override
-	public ProworksUserHeader setSessionData(HttpServletRequest request, String id, Object... obj) throws AdapterException{
+	public ProworksUserHeader setSessionData(HttpServletRequest request, String email, Object... obj) throws AdapterException{
 		
-		// 로그인 후에 id 기반으로 세션 정보를 세팅하여 반환한다.		
+		// 로그인 후에 id 기반으로 세션 정보를 세팅하여 반환한다.
 		ProworksUserHeader userHeader = new ProworksUserHeader();
-		userHeader.setUserId( id );
-
-		// 사용자 세션을 UserHeader 에 설정 (샘플 예제)
+		userHeader.setEmail(email);
 		try{
-			EmpService empService = (EmpService)ElBeanUtils.getBean("empServiceImpl");
-			EmpVo empVo = new EmpVo();
-
-			empVo.setEmpno(Integer.parseInt(id));
-			EmpVo resEmpVo = empService.selectEmp(empVo);
-
-			if( resEmpVo == null ) {
-				throw new AdapterException("EL.ERROR.LOGIN.0004", new String[]{id});
-			}
+		
+//			EmpService empService = (EmpService)ElBeanUtils.getBean("empServiceImpl");
+//			EmpVo empVo = new EmpVo();
+//
+//			empVo.setEmpno(Integer.parseInt(id));
+//			EmpVo resEmpVo = empService.selectEmp(empVo);
+//
+//			if( resEmpVo == null ) {
+//				throw new AdapterException("EL.ERROR.LOGIN.0004", new String[]{id});
+//			}
 			
 			// 사용자 세션 설정
-			userHeader.setTestDeptNo(resEmpVo.getDeptno());
-			userHeader.setTestDeptName(resEmpVo.getDname());
+//			userHeader.setTestDeptNo(resEmpVo.getDeptno());
+//			userHeader.setTestDeptName(resEmpVo.getDname());
 		}catch(ElException e){
 			AppLog.error("setSessionData Error1",e);
 			throw e;

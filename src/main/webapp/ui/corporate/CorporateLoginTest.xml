@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:ev="http://www.w3.org/2001/xml-events" 
+      xmlns:w2="http://www.inswave.com/websquare" 
+      xmlns:xf="http://www.w3.org/2002/xforms">
+        
+    <head>
+        <w2:type>COMPONENT</w2:type>
+        <w2:buildDate/>
+        <w2:MSA/>
+        
+        <xf:model>
+            <w2:dataCollection baseNode="map">
+                <!-- 로그인 정보를 담을 데이터맵 -->
+                <w2:dataMap baseNode="map" id="dmp_loginVo">
+                    <w2:keyInfo>
+                        <w2:key dataType="text" name="이메일" id="email"></w2:key>
+                        <w2:key dataType="text" name="비밀번호" id="password"></w2:key>
+                    </w2:keyInfo>
+                </w2:dataMap>
+            </w2:dataCollection>
+            
+            <w2:workflowCollection/>
+            
+            <!-- 로그인 처리 submission -->
+            <xf:submission id="sbm_loginCorporate" 
+                          action="/InsWebApp/CPLogin.pwkjson" 
+                          method="post" 
+                          mediatype="application/json"
+                          ref='data:json,["dmp_loginVo",{"id":"dmp_loginVo","key":"loginVo"}]' 
+                          target="" 
+                          encoding="UTF-8" 
+                          instance="" 
+                          replace="" 
+                          errorHandler="" 
+                          customHandler="" 
+                          mode="asynchronous" 
+                          processMsg="로그인 중입니다..." 
+                          ev:submit=""
+                          ev:submitdone="scwin.sbm_loginCorporate_submitdone" 
+                          ev:submiterror="scwin.sbm_loginCorporate_submiterror" 
+                          abortTrigger="">
+            </xf:submission>
+        </xf:model>
+        
+        <w2:layoutInfo/>
+        <w2:publicInfo method=""/>
+        
+        <script lazy="false" type="text/javascript"><![CDATA[
+// 페이지 로드 이벤트
+scwin.onpageload = function() {
+    // 저장된 이메일이 있으면 로드
+    scwin.loadRememberedEmail();
+};
+
+// 회원가입 페이지로 이동
+scwin.lnk_create_corporate_onclick = function() {
+    $p.url("../corporate/CreateCompany.xml");
+};
+
+// 로그인 버튼 클릭 이벤트
+scwin.btn_login_onclick = function() {
+    try {
+        // 입력값 검증
+        // if (!scwin.validateLoginForm()) {
+        //     return false;
+        // }
+        
+        // 로그인 처리 서버 요청
+        $c.sbm.execute(sbm_loginCorporate);
+        
+    } catch (error) {
+        console.error("로그인 처리 중 오류:", error);
+        scwin.showErrorMessage("로그인 처리 중 오류가 발생했습니다.");
+    }
+};
+
+// 폼 검증 함수
+scwin.validateLoginForm = function() {
+    return true;
+};
+
+// 로그인 성공 처리
+scwin.sbm_loginCorporate_submitdone = function(e) {
+    try {
+        var resultData = e.responseJSON;
+        
+        if (resultData && resultData.success) {
+            // 자동로그인 체크 시 이메일 저장
+            if (dmp_loginVo.get("rememberMe") === "Y") {
+                scwin.saveRememberedEmail(dmp_loginVo.get("email"));
+            } else {
+                scwin.clearRememberedEmail();
+            }
+            
+            scwin.showSuccessMessage("로그인 성공!");
+            
+            // 로그인 성공 후 메인 페이지로 이동
+            setTimeout(function() {
+                $p.url("../dashboard/recruitment_dashboard.xml");
+            }, 1000);
+            
+        } else {
+            // 로그인 실패 처리
+            var errorMsg = resultData && resultData.message ? 
+                          resultData.message : "로그인에 실패했습니다.";
+            scwin.showErrorMessage(errorMsg);
+        }
+        
+    } catch (error) {
+        console.error("로그인 응답 처리 중 오류:", error);
+        scwin.showErrorMessage("로그인 처리 중 오류가 발생했습니다.");
+    }
+};
+
+// 로그인 실패 처리
+scwin.sbm_loginCorporate_submiterror = function(e) {
+    console.error("로그인 요청 실패:", e);
+    
+    var errorMsg = "서버 연결에 실패했습니다. 네트워크 상태를 확인해주세요.";
+    if (e.status === 401) {
+        errorMsg = "이메일 또는 비밀번호가 잘못되었습니다.";
+    } else if (e.status === 500) {
+        errorMsg = "서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.";
+    }
+    
+    scwin.showErrorMessage(errorMsg);
+};
+
+// 에러 메시지 표시
+scwin.showErrorMessage = function(message) {
+    txt_errorMessage.setValue(message);
+    grp_errorMessage.style.display = "block";
+};
+
+// 에러 메시지 숨기기
+scwin.hideErrorMessage = function() {
+    grp_errorMessage.style.display = "none";
+};
+
+// 성공 메시지 표시
+scwin.showSuccessMessage = function(message) {
+    txt_successMessage.setValue(message);
+    grp_successMessage.style.display = "block";
+    
+    // 3초 후 자동으로 숨기기
+    setTimeout(function() {
+        grp_successMessage.style.display = "none";
+    }, 3000);
+};
+
+// 이메일 저장 (자동로그인)
+scwin.saveRememberedEmail = function(email) {
+    try {
+        if (typeof(Storage) !== "undefined") {
+            localStorage.setItem("rememberedEmail", email);
+        }
+    } catch (error) {
+        console.warn("이메일 저장 실패:", error);
+    }
+};
+
+// 저장된 이메일 로드
+scwin.loadRememberedEmail = function() {
+    try {
+        if (typeof(Storage) !== "undefined") {
+            var savedEmail = localStorage.getItem("rememberedEmail");
+            if (savedEmail) {
+                dmp_loginVo.set("email", savedEmail);
+                dmp_loginVo.set("rememberMe", "Y");
+            }
+        }
+    } catch (error) {
+        console.warn("저장된 이메일 로드 실패:", error);
+    }
+};
+
+// 저장된 이메일 삭제
+scwin.clearRememberedEmail = function() {
+    try {
+        if (typeof(Storage) !== "undefined") {
+            localStorage.removeItem("rememberedEmail");
+        }
+    } catch (error) {
+        console.warn("저장된 이메일 삭제 실패:", error);
+    }
+};
+
+// 비밀번호 표시/숨기기 토글
+scwin.btn_toggle_password_onclick = function() {
+    var passwordInput = inp_password;
+    if (passwordInput.getAttribute("type") === "password") {
+        passwordInput.setAttribute("type", "text");
+        lnk_toggle_password.setValue("비밀번호 숨기기");
+    } else {
+        passwordInput.setAttribute("type", "password");
+        lnk_toggle_password.setValue("비밀번호 보기");
+    }
+};
+
+// Enter 키 이벤트 처리
+scwin.inp_email_onkeypress = function(e) {
+    if (e.keyCode === 13) { // Enter 키
+        inp_password.focus();
+    }
+};
+
+scwin.inp_password_onkeypress = function(e) {
+    if (e.keyCode === 13) { // Enter 키
+        scwin.btn_login_onclick();
+    }
+};
+]]></script>
+            
+    </head>
+        
+    <body class="" ev:onpageload="scwin.onpageload">
+        
+        <xf:group class="login_wrap" id="" style="">
+            
+            <xf:group class="login_logo" id="" tagname="h1">
+                <w2:anchor id="" outerDiv="false" style="" title="Inswave">
+                    <xf:label/>
+                </w2:anchor>
+            </xf:group>
+            
+            <xf:group class="login_container" id="">
+                
+                <xf:group class="login_header" id="">
+                    <w2:textbox id="" label="WELCOME" style=""/>
+                    <w2:textbox class="login_info" id="" label="SIGN IN TO INSWAVE" style=""/>
+                </xf:group>
+                
+                <!-- 에러 메시지 영역 -->
+                <xf:group id="grp_errorMessage" style="display:none; background-color:#ffebee; border:1px solid #f44336; padding:10px; margin:10px 0; border-radius:4px;">
+                    <w2:textbox id="txt_errorMessage" style="color:#c62828; font-size:14px;"/>
+                </xf:group>
+                
+                <!-- 성공 메시지 영역 -->
+                <xf:group id="grp_successMessage" style="display:none; background-color:#e8f5e8; border:1px solid:#4caf50; padding:10px; margin:10px 0; border-radius:4px;">
+                    <w2:textbox id="txt_successMessage" style="color:#2e7d32; font-size:14px;"/>
+                </xf:group>
+                
+                <xf:group class="login_contents" id="" style="">
+                    
+                    <xf:group id="" tagname="ul">
+                        
+                        <xf:group id="" tagname="li">
+                            <w2:textbox class="tit" for="inp_email" id="" label="Email" style="" tagname="label"/>
+                            <xf:input adjustMaxLength="false" 
+                                     id="inp_email" 
+                                     placeholder="이메일을 입력해주세요." 
+                                     style=""
+                                     ref="data:dmp_loginVo.email"
+                                     ev:onkeypress="scwin.inp_email_onkeypress"/>
+                        </xf:group>
+                        
+                        <xf:group id="" tagname="li">
+                            <w2:textbox class="tit" for="inp_password" id="" label="Password" style="" tagname="label"/>
+                            
+                            <xf:group class="login_form" id="">
+                                <xf:input adjustMaxLength="false" 
+                                         id="inp_password" 
+                                         placeholder="비밀번호를 입력해주세요." 
+                                         style="" 
+                                         type="password"
+                                         ref="data:dmp_loginVo.password"
+                                         ev:onkeypress="scwin.inp_password_onkeypress"/>
+                                
+                                <w2:anchor class="btn_login_password" 
+                                          id="lnk_toggle_password" 
+                                          outerDiv="false" 
+                                          style=""
+                                          ev:onclick="scwin.btn_toggle_password_onclick">
+                                    <xf:label><![CDATA[비밀번호 보기]]></xf:label>
+                                </w2:anchor>
+                            </xf:group>
+                            
+                            <xf:group class="grp_password" id="">
+                                <xf:select appearance="full" 
+                                          cols="" 
+                                          id="chk_rememberMe" 
+                                          ref="data:dmp_loginVo.rememberMe" 
+                                          rows="" 
+                                          selectedindex="-1" 
+                                          style="">
+                                    <xf:choices>
+                                        <xf:item>
+                                            <xf:label><![CDATA[Remember me]]></xf:label>
+                                            <xf:value><![CDATA[Y]]></xf:value>
+                                        </xf:item>
+                                    </xf:choices>
+                                </xf:select>
+                                
+                                <w2:anchor class="link_password" id="" outerDiv="false" style="">
+                                    <xf:label><![CDATA[Forgot password?]]></xf:label>
+                                </w2:anchor>
+                            </xf:group>
+                        </xf:group>
+                    </xf:group>
+                    
+                    <xf:group class="login_btn" id="" style="">
+                        <xf:trigger class="btn_login" 
+                                   id="btn_login" 
+                                   style="" 
+                                   type="button"
+                                   ev:onclick="scwin.btn_login_onclick">
+                            <xf:label><![CDATA[Login]]></xf:label>
+                        </xf:trigger>
+                    </xf:group>
+                    
+                    <xf:group class="login_account" id="" style="">
+                        <w2:textbox class="" id="" label="New user?" style=""/>
+                        <w2:anchor class="link_account" 
+                                  id="lnk_create_corporate" 
+                                  outerDiv="false" 
+                                  style="" 
+                                  ev:onclick="scwin.lnk_create_corporate_onclick">
+                            <xf:label><![CDATA[Create an account]]></xf:label>
+                        </w2:anchor>
+                    </xf:group>
+                    
+                </xf:group>
+            </xf:group>
+        </xf:group>
+    </body>
+</html>
