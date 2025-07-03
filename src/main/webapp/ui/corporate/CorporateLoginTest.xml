@@ -23,8 +23,8 @@
             <w2:workflowCollection/>
             
             <!-- 로그인 처리 submission -->
-            <xf:submission id="sbm_loginCorporate" 
-                          action="/InsWebApp/CPLogin.pwkjson" 
+            <xf:submission id="sbm_login" 
+                          action="/InsWebApp/USLogin.pwkjson" 
                           method="post" 
                           mediatype="application/json"
                           ref='data:json,["dmp_loginVo",{"id":"dmp_loginVo","key":"loginVo"}]' 
@@ -37,8 +37,8 @@
                           mode="asynchronous" 
                           processMsg="로그인 중입니다..." 
                           ev:submit=""
-                          ev:submitdone="scwin.sbm_loginCorporate_submitdone" 
-                          ev:submiterror="scwin.sbm_loginCorporate_submiterror" 
+                          ev:submitdone="scwin.sbm_login_submitdone" 
+                          ev:submiterror="scwin.sbm_login_submiterror" 
                           abortTrigger="">
             </xf:submission>
         </xf:model>
@@ -67,7 +67,7 @@ scwin.btn_login_onclick = function() {
         // }
         
         // 로그인 처리 서버 요청
-        $c.sbm.execute(sbm_loginCorporate);
+        $c.sbm.execute(sbm_login);
         
     } catch (error) {
         console.error("로그인 처리 중 오류:", error);
@@ -81,7 +81,7 @@ scwin.validateLoginForm = function() {
 };
 
 // 로그인 성공 처리
-scwin.sbm_loginCorporate_submitdone = function(e) {
+scwin.sbm_login_submitdone = function(e) {
     try {
         var resultData = e.responseJSON;
         
@@ -114,7 +114,7 @@ scwin.sbm_loginCorporate_submitdone = function(e) {
 };
 
 // 로그인 실패 처리
-scwin.sbm_loginCorporate_submiterror = function(e) {
+scwin.sbm_login_submiterror = function(e) {
     console.error("로그인 요청 실패:", e);
     
     var errorMsg = "서버 연결에 실패했습니다. 네트워크 상태를 확인해주세요.";

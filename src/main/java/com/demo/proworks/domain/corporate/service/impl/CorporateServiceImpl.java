@@ -4,13 +4,13 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
 import com.demo.proworks.domain.corporate.service.CorporateService;
 import com.demo.proworks.domain.corporate.vo.CorporateVo;
 import com.demo.proworks.domain.user.dao.UserDAO;
-import com.demo.proworks.domain.user.service.UserService;
 import com.demo.proworks.domain.user.vo.UserVo;
 import com.demo.proworks.domain.corporate.dao.CorporateDAO;
 
@@ -33,7 +33,7 @@ public class CorporateServiceImpl implements CorporateService {
     private CorporateDAO corporateDAO;
 	
 	@Resource(name="userDAO")
-    private UserDAO userDAO;
+	private UserDAO userDAO;
 	
 	@Resource(name = "messageSource")
 	private MessageSource messageSource;
@@ -97,18 +97,16 @@ public class CorporateServiceImpl implements CorporateService {
      * @throws Exception
      */
 	public int insertCorporate(CorporateVo corporateVo) throws Exception {
-		
+    
 		 // 기업 유저의 회원가입
 		  UserVo userVo = new UserVo();
                 userVo.setEmail(corporateVo.getEmail());
                 userVo.setPassword(corporateVo.getPassword());
                 userVo.setRoleId(corporateVo.getRoleId());
                 userVo.setName(corporateVo.getName());
-                
-                userDAO.insertUser(userVo);
-         // 기업 등록
-         
-		return corporateDAO.insertCorporate(corporateVo);	
+
+          userDAO.insertUser(userVo);
+          return corporateDAO.insertCorporate(corporateVo);	
 	}
 	
     /**

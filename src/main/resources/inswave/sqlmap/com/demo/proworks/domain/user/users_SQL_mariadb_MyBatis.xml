@@ -103,4 +103,12 @@
 
     </select>
 
+<select id="selectUserByEmail" parameterType="com.demo.proworks.domain.user.vo.UserVo" resultType="com.demo.proworks.domain.user.vo.UserVo">
+<!-- 이메일로 일반회원을 상세 조회한다. -->	
+        SELECT     /* QueryID : com.demo.proworks.domain.user.selectUser */
+            USER_ID as userId, EMAIL as email, PASSWORD as password, ROLE_ID as roleId, NAME as name, EMAIL_CONSENT as emailConsent, CREATED_AT as createdAt, UPDATED_AT as updatedAt
+        FROM USERS 
+        WHERE 
+                EMAIL       = #{email}
+</select>
 </mapper>

@@ -84,7 +84,7 @@ public class CorporateController {
     @ElService(key="CP0001Ins")    
     @RequestMapping(value="CP0001Ins")
     @ElDescription(sub="회사정보 등록처리",desc="회사정보를 등록 처리 한다.")
-    public void insertCorporate(CorporateVo corporateVo) throws Exception {    	 
+    public void insertCorporate(CorporateVo corporateVo) throws Exception {
     	corporateService.insertCorporate(corporateVo);   
     }
        
