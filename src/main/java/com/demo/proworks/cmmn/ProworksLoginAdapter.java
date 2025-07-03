@@ -11,9 +11,6 @@ import com.inswave.elfw.login.LoginException;
 import com.inswave.elfw.login.LoginInfo;
 import com.inswave.elfw.util.ElBeanUtils;
 
-import com.demo.proworks.emp.service.EmpService;
-import com.demo.proworks.emp.vo.EmpVo;
-
 /**
  * @subject		: ProworksLoginAdapter.java 
  * @description : 프로젝트 로그인 어댑터
@@ -47,25 +44,26 @@ public class ProworksLoginAdapter extends LoginAdapter {
 	 * @throws LoginException
 	 */
 	@Override
-	public LoginInfo login(HttpServletRequest request, String id, Object... params) throws LoginException {
-
+	public LoginInfo login(HttpServletRequest request, String email, Object... params) throws LoginException {
 		// 로그인 체크를 수행  (샘플 예제)
 		try{
 			String pw = (String)params[0];
-			EmpService empService = (EmpService)ElBeanUtils.getBean("empServiceImpl");
-			EmpVo empVo = new EmpVo();
+//			CorporateService corporateService = (CorporateService)ElBeanUtils.getBean("corporateServiceImpl");
+//			CorporateVo corporateVo = new CorporateVo();
+//
+//			corporateVo.setEmail(email);
+//			CorporateVo resCorporateVo = corporateService.selectCorporateByEmail(corporateVo);
+//
+//			if( resCorporateVo == null ) {
+//				throw new LoginException("EL.ERROR.LOGIN.0001");
+//			}
+//			
+//			// 비밀번호 확인
+//			String resPw = String.valueOf(resCorporateVo.getPassword());
+//			if(pw == null || !pw.equals(resPw)){
+//				throw new LoginException("EL.ERROR.LOGIN.0002");
+//			}
 
-			empVo.setEmpno(Integer.parseInt(id) );
-			EmpVo resEmpVo = empService.selectEmp(empVo);
-
-			if( resEmpVo == null ) {
-				throw new LoginException("EL.ERROR.LOGIN.0001");
-			}
-			
-			String resPw = String.valueOf(resEmpVo.getMgr());
-			if(pw == null || !pw.equals(resPw)){
-				throw new LoginException("EL.ERROR.LOGIN.0002");
-			}
 		}catch(NumberFormatException e){
 			AppLog.error("login Error1",e);
 			throw new LoginException("EL.ERROR.LOGIN.0001");

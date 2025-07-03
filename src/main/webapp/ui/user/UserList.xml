@@ -18,16 +18,13 @@
 				<w2:dataList baseNode="list" id="dlt_userVoList" repeatNode="map" saveRemovedData="true" style="">
 					<w2:columnInfo>
 						<w2:column dataType="text" id="userId" name="user_id"></w2:column>
-                        <w2:column dataType="text" id="username" name="username"></w2:column>
-                        <w2:column dataType="text" id="birthdate" name="birthdate"></w2:column>
-                        <w2:column dataType="text" id="phoneNumber" name="phone_number"></w2:column>
                         <w2:column dataType="text" id="email" name="email"></w2:column>
                         <w2:column dataType="text" id="password" name="password"></w2:column>
                         <w2:column dataType="text" id="roleId" name="role_id"></w2:column>
+                        <w2:column dataType="text" id="name" name="name"></w2:column>
                         <w2:column dataType="text" id="emailConsent" name="email_consent"></w2:column>
-                        <w2:column dataType="text" id="updatedAt" name="updated_at"></w2:column>
                         <w2:column dataType="text" id="createdAt" name="created_at"></w2:column>
-                        <w2:column dataType="text" id="deletedAt" name="deleted_at"></w2:column>
+                        <w2:column dataType="text" id="updatedAt" name="updated_at"></w2:column>
                        
 					</w2:columnInfo>
 				</w2:dataList>
@@ -42,7 +39,7 @@
 			<xf:submission id="sbm_selectUserVoList" ref='data:json,{"id":"dmp_userVo","key":"userVo"}'
 				target='data:json,{"id":"dlt_userVoList","key":"elData.userVoList"}' action="/InsWebApp/US0001List.pwkjson" method="post"
 				mediatype="application/json" encoding="UTF-8" instance="" replace="" errorHandler="" customHandler="" mode="asynchronous"
-				processMsg="일반유저 리스트를 조회 중입니다." ev:submit="" ev:submitdone="scwin.sbm_userList_submitdone" ev:submiterror="" abortTrigger="">
+				processMsg="일반회원 리스트를 조회 중입니다." ev:submit="" ev:submitdone="scwin.sbm_userList_submitdone" ev:submiterror="" abortTrigger="">
 			</xf:submission>
 		</xf:model>
 		<w2:layoutInfo></w2:layoutInfo>
@@ -55,7 +52,7 @@
 			search_box.hide();
         }
 		
-		// 일반유저 조회
+		// 일반회원 조회
 		scwin.btn_search_onclick();
 	};
 
@@ -76,7 +73,7 @@
 		dmp_userVo.set("pageIndex","1");
 		pgl_userList.setSelectedIndex(1);
 
-		// 서버통신 - 일반유저 조회
+		// 서버통신 - 일반회원 조회
 		$c.sbm.execute($p, sbm_selectUserVoList);
 	};
 	
@@ -90,7 +87,7 @@
 			return false;
 		}
 
-		// 일반유저 dataMap 초기화
+		// 일반회원 dataMap 초기화
 		dmp_userVoDetail.setEmptyValue();
 
 		// 총 레코드 수 업데이트
@@ -131,7 +128,7 @@
 	<body ev:onpageload="scwin.onpageload">
 		<xf:group class="sub_contents " id="" style="">
 			<xf:group class="pgtbox" id="" style="">
-				<w2:textbox class="pgt_tit" id="" label="일반유저" style="" tagname="" />
+				<w2:textbox class="pgt_tit" id="" label="일반회원" style="" tagname="" />
 			</xf:group>
 			<xf:group class="schbox" id="search_box" style="">
 				<xf:group class="schbox_inner" id="" style="">
@@ -170,32 +167,26 @@
 					<w2:header style="" id="header2">
 						<w2:row style="" id="row3">
 							<w2:column width="70" inputType="text" style="" id="column1" value="user_id" displayMode="label" localeRef="User_COLNAME_00001"></w2:column>
-                            <w2:column width="70" inputType="text" style="" id="column2" value="username" displayMode="label" localeRef="User_COLNAME_00002"></w2:column>
-                            <w2:column width="70" inputType="text" style="" id="column3" value="birthdate" displayMode="label" localeRef="User_COLNAME_00003"></w2:column>
-                            <w2:column width="70" inputType="text" style="" id="column4" value="phone_number" displayMode="label" localeRef="User_COLNAME_00004"></w2:column>
-                            <w2:column width="70" inputType="text" style="" id="column5" value="email" displayMode="label" localeRef="User_COLNAME_00005"></w2:column>
-                            <w2:column width="70" inputType="text" style="" id="column6" value="password" displayMode="label" localeRef="User_COLNAME_00006"></w2:column>
-                            <w2:column width="70" inputType="text" style="" id="column7" value="role_id" displayMode="label" localeRef="User_COLNAME_00007"></w2:column>
-                            <w2:column width="70" inputType="text" style="" id="column8" value="email_consent" displayMode="label" localeRef="User_COLNAME_00008"></w2:column>
-                            <w2:column width="70" inputType="text" style="" id="column9" value="updated_at" displayMode="label" localeRef="User_COLNAME_00009"></w2:column>
-                            <w2:column width="70" inputType="text" style="" id="column10" value="created_at" displayMode="label" localeRef="User_COLNAME_00010"></w2:column>
-                            <w2:column width="70" inputType="text" style="" id="column11" value="deleted_at" displayMode="label" localeRef="User_COLNAME_00011"></w2:column>
+                            <w2:column width="70" inputType="text" style="" id="column2" value="email" displayMode="label" localeRef="User_COLNAME_00002"></w2:column>
+                            <w2:column width="70" inputType="text" style="" id="column3" value="password" displayMode="label" localeRef="User_COLNAME_00003"></w2:column>
+                            <w2:column width="70" inputType="text" style="" id="column4" value="role_id" displayMode="label" localeRef="User_COLNAME_00004"></w2:column>
+                            <w2:column width="70" inputType="text" style="" id="column5" value="name" displayMode="label" localeRef="User_COLNAME_00005"></w2:column>
+                            <w2:column width="70" inputType="text" style="" id="column6" value="email_consent" displayMode="label" localeRef="User_COLNAME_00006"></w2:column>
+                            <w2:column width="70" inputType="text" style="" id="column7" value="created_at" displayMode="label" localeRef="User_COLNAME_00007"></w2:column>
+                            <w2:column width="70" inputType="text" style="" id="column8" value="updated_at" displayMode="label" localeRef="User_COLNAME_00008"></w2:column>
                            
 						</w2:row>
 					</w2:header>
 					<w2:gBody style="" id="gBody2">
 						<w2:row style="" id="row4">
 							<w2:column width="70" inputType="text" style="" id="userId" value="" displayMode="label"></w2:column>
-                            <w2:column width="70" inputType="text" style="" id="username" value="" displayMode="label"></w2:column>
-                            <w2:column width="70" inputType="text" style="" id="birthdate" value="" displayMode="label"></w2:column>
-                            <w2:column width="70" inputType="text" style="" id="phoneNumber" value="" displayMode="label"></w2:column>
                             <w2:column width="70" inputType="text" style="" id="email" value="" displayMode="label"></w2:column>
                             <w2:column width="70" inputType="text" style="" id="password" value="" displayMode="label"></w2:column>
                             <w2:column width="70" inputType="text" style="" id="roleId" value="" displayMode="label"></w2:column>
+                            <w2:column width="70" inputType="text" style="" id="name" value="" displayMode="label"></w2:column>
                             <w2:column width="70" inputType="text" style="" id="emailConsent" value="" displayMode="label"></w2:column>
-                            <w2:column width="70" inputType="text" style="" id="updatedAt" value="" displayMode="label"></w2:column>
                             <w2:column width="70" inputType="text" style="" id="createdAt" value="" displayMode="label"></w2:column>
-                            <w2:column width="70" inputType="text" style="" id="deletedAt" value="" displayMode="label"></w2:column>
+                            <w2:column width="70" inputType="text" style="" id="updatedAt" value="" displayMode="label"></w2:column>
                            
 						</w2:row>
 					</w2:gBody>

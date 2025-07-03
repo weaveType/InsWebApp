@@ -6,21 +6,12 @@ import com.inswave.elfw.annotation.ElVoField;
 import com.fasterxml.jackson.annotation.JsonFilter;
 
 @JsonFilter("elExcludeFilter")
-@ElDto(FldYn = "", logicalName = "일반유저")
+@ElDto(FldYn = "", logicalName = "일반회원")
 public class UserVo extends com.demo.proworks.cmmn.ProworksCommVO {
     private static final long serialVersionUID = 1L;
 
     @ElDtoField(logicalName = "user_id", physicalName = "userId", type = "String", typeKind = "", fldYn = "", length = 0, dotLen = 0, baseValue = "", desc = "")
     private String userId;
-
-    @ElDtoField(logicalName = "username", physicalName = "username", type = "String", typeKind = "", fldYn = "", length = 0, dotLen = 0, baseValue = "", desc = "")
-    private String username;
-
-    @ElDtoField(logicalName = "birthdate", physicalName = "birthdate", type = "String", typeKind = "", fldYn = "", length = 0, dotLen = 0, baseValue = "", desc = "")
-    private String birthdate;
-
-    @ElDtoField(logicalName = "phone_number", physicalName = "phoneNumber", type = "String", typeKind = "", fldYn = "", length = 0, dotLen = 0, baseValue = "", desc = "")
-    private String phoneNumber;
 
     @ElDtoField(logicalName = "email", physicalName = "email", type = "String", typeKind = "", fldYn = "", length = 0, dotLen = 0, baseValue = "", desc = "")
     private String email;
@@ -31,17 +22,17 @@ public class UserVo extends com.demo.proworks.cmmn.ProworksCommVO {
     @ElDtoField(logicalName = "role_id", physicalName = "roleId", type = "String", typeKind = "", fldYn = "", length = 0, dotLen = 0, baseValue = "", desc = "")
     private String roleId;
 
+    @ElDtoField(logicalName = "name", physicalName = "name", type = "String", typeKind = "", fldYn = "", length = 0, dotLen = 0, baseValue = "", desc = "")
+    private String name;
+
     @ElDtoField(logicalName = "email_consent", physicalName = "emailConsent", type = "String", typeKind = "", fldYn = "", length = 0, dotLen = 0, baseValue = "", desc = "")
     private String emailConsent;
-
-    @ElDtoField(logicalName = "updated_at", physicalName = "updatedAt", type = "String", typeKind = "", fldYn = "", length = 0, dotLen = 0, baseValue = "", desc = "")
-    private String updatedAt;
 
     @ElDtoField(logicalName = "created_at", physicalName = "createdAt", type = "String", typeKind = "", fldYn = "", length = 0, dotLen = 0, baseValue = "", desc = "")
     private String createdAt;
 
-    @ElDtoField(logicalName = "deleted_at", physicalName = "deletedAt", type = "String", typeKind = "", fldYn = "", length = 0, dotLen = 0, baseValue = "", desc = "")
-    private String deletedAt;
+    @ElDtoField(logicalName = "updated_at", physicalName = "updatedAt", type = "String", typeKind = "", fldYn = "", length = 0, dotLen = 0, baseValue = "", desc = "")
+    private String updatedAt;
 
     @ElVoField(physicalName = "userId")
     public String getUserId(){
@@ -51,36 +42,6 @@ public class UserVo extends com.demo.proworks.cmmn.ProworksCommVO {
     @ElVoField(physicalName = "userId")
     public void setUserId(String userId){
         this.userId = userId;
-    }
-
-    @ElVoField(physicalName = "username")
-    public String getUsername(){
-        return username;
-    }
-
-    @ElVoField(physicalName = "username")
-    public void setUsername(String username){
-        this.username = username;
-    }
-
-    @ElVoField(physicalName = "birthdate")
-    public String getBirthdate(){
-        return birthdate;
-    }
-
-    @ElVoField(physicalName = "birthdate")
-    public void setBirthdate(String birthdate){
-        this.birthdate = birthdate;
-    }
-
-    @ElVoField(physicalName = "phoneNumber")
-    public String getPhoneNumber(){
-        return phoneNumber;
-    }
-
-    @ElVoField(physicalName = "phoneNumber")
-    public void setPhoneNumber(String phoneNumber){
-        this.phoneNumber = phoneNumber;
     }
 
     @ElVoField(physicalName = "email")
@@ -113,6 +74,16 @@ public class UserVo extends com.demo.proworks.cmmn.ProworksCommVO {
         this.roleId = roleId;
     }
 
+    @ElVoField(physicalName = "name")
+    public String getName(){
+        return name;
+    }
+
+    @ElVoField(physicalName = "name")
+    public void setName(String name){
+        this.name = name;
+    }
+
     @ElVoField(physicalName = "emailConsent")
     public String getEmailConsent(){
         return emailConsent;
@@ -121,16 +92,6 @@ public class UserVo extends com.demo.proworks.cmmn.ProworksCommVO {
     @ElVoField(physicalName = "emailConsent")
     public void setEmailConsent(String emailConsent){
         this.emailConsent = emailConsent;
-    }
-
-    @ElVoField(physicalName = "updatedAt")
-    public String getUpdatedAt(){
-        return updatedAt;
-    }
-
-    @ElVoField(physicalName = "updatedAt")
-    public void setUpdatedAt(String updatedAt){
-        this.updatedAt = updatedAt;
     }
 
     @ElVoField(physicalName = "createdAt")
@@ -143,19 +104,19 @@ public class UserVo extends com.demo.proworks.cmmn.ProworksCommVO {
         this.createdAt = createdAt;
     }
 
-    @ElVoField(physicalName = "deletedAt")
-    public String getDeletedAt(){
-        return deletedAt;
+    @ElVoField(physicalName = "updatedAt")
+    public String getUpdatedAt(){
+        return updatedAt;
     }
 
-    @ElVoField(physicalName = "deletedAt")
-    public void setDeletedAt(String deletedAt){
-        this.deletedAt = deletedAt;
+    @ElVoField(physicalName = "updatedAt")
+    public void setUpdatedAt(String updatedAt){
+        this.updatedAt = updatedAt;
     }
 
     @Override
     public String toString() {
-        return "UserVo [userId=" + userId + ",username=" + username + ",birthdate=" + birthdate + ",phoneNumber=" + phoneNumber + ",email=" + email + ",password=" + password + ",roleId=" + roleId + ",emailConsent=" + emailConsent + ",updatedAt=" + updatedAt + ",createdAt=" + createdAt + ",deletedAt=" + deletedAt + "]";
+        return "UserVo [userId=" + userId + ",email=" + email + ",password=" + password + ",roleId=" + roleId + ",name=" + name + ",emailConsent=" + emailConsent + ",createdAt=" + createdAt + ",updatedAt=" + updatedAt + "]";
     }
 
     public boolean isFixedLengthVo() {
