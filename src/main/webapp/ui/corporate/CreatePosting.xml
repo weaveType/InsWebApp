@@ -15,8 +15,30 @@
             			<w2:column dataType="text" name="techstack" id="techstack"></w2:column>
             		</w2:columnInfo>
             	</w2:dataList>
+            	<w2:dataMap baseNode="map" id="dmp_postVo" style="">
+            		<w2:keyInfo>
+            			<w2:key dataType="text" id="jobPostingId" name="job_posting_id"></w2:key>
+            			<w2:key dataType="text" id="companyId" name="company_id"></w2:key>
+            			<w2:key dataType="text" id="title" name="title"></w2:key>
+            			<w2:key dataType="text" id="description" name="description"></w2:key>
+            			<w2:key dataType="text" id="requiredSkills" name="required_skills"></w2:key>
+            			<w2:key dataType="text" id="experienceLevel" name="experience_level"></w2:key>
+            			<w2:key dataType="text" id="salaryRange" name="salary_range"></w2:key>
+            			<w2:key dataType="text" id="location" name="location"></w2:key>
+            			<w2:key dataType="text" id="workType" name="work_type"></w2:key>
+            			<w2:key dataType="text" id="preferredDeveloperTypes" name="preferred_developer_types"></w2:key>
+            			<w2:key dataType="text" id="expiresAt" name="expires_at"></w2:key>
+            			<w2:key dataType="text" id="postedAt" name="posted_at"></w2:key>
+            			<w2:key dataType="text" id="status" name="status"></w2:key>
+            		</w2:keyInfo>
+            	</w2:dataMap>
             </w2:dataCollection>
             <w2:workflowCollection/>
+            
+            <xf:submission id="sbm_insertPost" ref='data:json,{"id":"dmp_postVo","key":"postVo"}' target="" action="/InsWebApp/POS0001Ins.pwkjson" method="post"
+            	mediatype="application/json" encoding="UTF-8" instance="" replace="" errorHandler="" customHandler="" mode="asynchronous" processMsg="공고를 등록 중입니다."
+            	ev:submit="" ev:submitdone="scwin.sbm_insertPost_submitdone" ev:submiterror="" abortTrigger="">
+            </xf:submission>
         </xf:model>
         <w2:layoutInfo/>
         <w2:publicInfo method=""/>
@@ -466,7 +488,43 @@ scwin.btn_cancel_posting_onclick = function (e) {
 };
 
 scwin.btn_create_posting_onclick = function (e) {
-    $p.url("RecruitmentDashboard.xml");
+    // 선택된 기술스택들을 문자열로 변환하여 requiredSkills에 저장
+    var techStackArray = [];
+    for(var i = 0; i < dlt_techstack.getRowCount(); i++) {
+        techStackArray.push(dlt_techstack.getCellData(i, "techstack"));
+    }
+    dmp_postVo.set("requiredSkills", techStackArray.join(", "));
+    
+    // 선택된 성향 버튼들을 찾아서 preferredDeveloperTypes에 저장
+    var selectedPersonalities = [];
+    var personalityBtns = document.querySelectorAll('.personality-btn.selected');
+    personalityBtns.forEach(function(btn) {
+        selectedPersonalities.push(btn.textContent.trim());
+    });
+    dmp_postVo.set("preferredDeveloperTypes", selectedPersonalities.join(", "));
+    
+    // 등록하시겠습니까? 확인
+    var promise = $c.win.confirm("공고를 등록하시겠습니까?");
+    promise.then(function(result) {  
+        if (result){
+            // Post 등록 submission 실행
+            $c.sbm.execute(sbm_insertPost);
+        }
+    });
+};
+
+scwin.sbm_insertPost_submitdone = function(e) {
+    // error 수신시
+    var elHeader  = e.responseJSON.elHeader;
+    if(elHeader == null || elHeader == "" || elHeader == "undefiend" || elHeader.resSuc == false) {
+        $c.win.alert(`에러코드 : ${elHeader.resCode}\n에러메시지 : ${elHeader.resMsg}`);
+        return false;
+    }else{
+        // 등록되었습니다. msg 출력
+        $c.win.alert("공고가 등록되었습니다.");
+        // 등록 후 대시보드로 이동
+        $p.url("RecruitmentDashboard.xml");
+    }
 };]]></script>
     </head>
     <body ev:onpageload="scwin.onpageload">
@@ -616,7 +674,7 @@ scwin.btn_create_posting_onclick = function (e) {
         		<xf:group class="form-row">
         			<xf:group class="form-group half">
         				<w2:textbox class="form-label" label="선호 경력"></w2:textbox>
-        				<xf:select1 class="form-select" chooseOption="경력 선택" appearance="minimal">
+        				<xf:select1 class="form-select" chooseOption="경력 선택" appearance="minimal" ref="data:dmp_postVo.experienceLevel">
         					<xf:choices>
         						<xf:item>
         							<xf:label><![CDATA[상관없음]]></xf:label>
@@ -644,7 +702,7 @@ scwin.btn_create_posting_onclick = function (e) {
 
         			<xf:group class="form-group half">
         				<w2:textbox class="form-label" label="예상 연봉범위"></w2:textbox>
-        				<xf:select1 class="form-select" chooseOption="연봉 선택" appearance="minimal">
+        				<xf:select1 class="form-select" chooseOption="연봉 선택" appearance="minimal" ref="data:dmp_postVo.salaryRange">
         					<xf:choices>
         						<xf:item>
         							<xf:label><![CDATA[2,500만원 미만]]></xf:label>
@@ -669,7 +727,7 @@ scwin.btn_create_posting_onclick = function (e) {
 
         		<xf:group class="form-group">
         			<w2:textbox class="form-label" label="원하는 인재상 상세 설명"></w2:textbox>
-        			<xf:textarea class="form-textarea" placeholder="우리 회사에서 함께 일하고 싶은 개발자의 특징이나 역량을 구체적으로 설명해주세요."></xf:textarea>
+        			<xf:textarea class="form-textarea" placeholder="우리 회사에서 함께 일하고 싶은 개발자의 특징이나 역량을 구체적으로 설명해주세요." ref="data:dmp_postVo.description"></xf:textarea>
         		</xf:group>
 
         		<!-- 버튼 그룹 -->

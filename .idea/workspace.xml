@@ -5,6 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="eda647e9-ade0-46d0-a222-af2cb6947326" name="Changes" comment="">
+<<<<<<< HEAD
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.settings/meta/screenNames.dat" beforeDir="false" afterPath="$PROJECT_DIR$/.settings/meta/screenNames.dat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/websquare/config.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/websquare/config.js" afterDir="false" />
+=======
       <change beforePath="$PROJECT_DIR$/.classpath" beforeDir="false" afterPath="$PROJECT_DIR$/.classpath" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.settings/meta/screenNames.dat" beforeDir="false" afterPath="$PROJECT_DIR$/.settings/meta/screenNames.dat" afterDir="false" />
@@ -35,6 +40,7 @@
       <change beforePath="$PROJECT_DIR$/src/main/webapp/ui/corporate/RecruitmentDashboard.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/ui/corporate/RecruitmentDashboard.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/webapp/ui/user/User.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/ui/user/User.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/webapp/ui/user/UserList.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/ui/user/UserList.xml" afterDir="false" />
+>>>>>>> 0e0164eb28172538ba048815b365b2055dd52f07
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
