@@ -12,15 +12,15 @@ import com.demo.proworks.domain.user.vo.UserVo;
 import com.demo.proworks.domain.user.dao.UserDAO;
 
 /**  
- * @subject     : 일반유저 관련 처리를 담당하는 ServiceImpl
- * @description	: 일반유저 관련 처리를 담당하는 ServiceImpl
+ * @subject     : 일반회원 관련 처리를 담당하는 ServiceImpl
+ * @description	: 일반회원 관련 처리를 담당하는 ServiceImpl
  * @author      : Inswave
- * @since       : 2025/07/02
+ * @since       : 2025/07/03
  * @modification
  * ===========================================================
  * DATE				AUTHOR				DESC
  * ===========================================================
- * 2025/07/02			 Inswave	 		최초 생성
+ * 2025/07/03			 Inswave	 		최초 생성
  * 
  */
 @Service("userServiceImpl")
@@ -33,14 +33,14 @@ public class UserServiceImpl implements UserService {
 	private MessageSource messageSource;
 
     /**
-     * 일반유저 목록을 조회합니다.
+     * 일반회원 목록을 조회합니다.
      *
      * @process
-     * 1. 일반유저 페이징 처리하여 목록을 조회한다.
+     * 1. 일반회원 페이징 처리하여 목록을 조회한다.
      * 2. 결과 List<UserVo>을(를) 리턴한다.
      * 
-     * @param  userVo 일반유저 UserVo
-     * @return 일반유저 목록 List<UserVo>
+     * @param  userVo 일반회원 UserVo
+     * @return 일반회원 목록 List<UserVo>
      * @throws Exception
      */
 	public List<UserVo> selectListUser(UserVo userVo) throws Exception {
@@ -50,13 +50,13 @@ public class UserServiceImpl implements UserService {
 	}
 
     /**
-     * 조회한 일반유저 전체 카운트
+     * 조회한 일반회원 전체 카운트
      *
      * @process
-     * 1. 일반유저 조회하여 전체 카운트를 리턴한다.
+     * 1. 일반회원 조회하여 전체 카운트를 리턴한다.
      * 
-     * @param  userVo 일반유저 UserVo
-     * @return 일반유저 목록 전체 카운트
+     * @param  userVo 일반회원 UserVo
+     * @return 일반회원 목록 전체 카운트
      * @throws Exception
      */
 	public long selectListCountUser(UserVo userVo) throws Exception {
@@ -64,13 +64,13 @@ public class UserServiceImpl implements UserService {
 	}
 
     /**
-     * 일반유저를 상세 조회한다.
+     * 일반회원를 상세 조회한다.
      *
      * @process
-     * 1. 일반유저를 상세 조회한다.
+     * 1. 일반회원를 상세 조회한다.
      * 2. 결과 UserVo을(를) 리턴한다.
      * 
-     * @param  userVo 일반유저 UserVo
+     * @param  userVo 일반회원 UserVo
      * @return 단건 조회 결과
      * @throws Exception
      */
@@ -81,12 +81,12 @@ public class UserServiceImpl implements UserService {
 	}
 
     /**
-     * 일반유저를 등록 처리 한다.
+     * 일반회원를 등록 처리 한다.
      *
      * @process
-     * 1. 일반유저를 등록 처리 한다.
+     * 1. 일반회원를 등록 처리 한다.
      * 
-     * @param  userVo 일반유저 UserVo
+     * @param  userVo 일반회원 UserVo
      * @return 번호
      * @throws Exception
      */
@@ -95,12 +95,12 @@ public class UserServiceImpl implements UserService {
 	}
 	
     /**
-     * 일반유저를 갱신 처리 한다.
+     * 일반회원를 갱신 처리 한다.
      *
      * @process
-     * 1. 일반유저를 갱신 처리 한다.
+     * 1. 일반회원를 갱신 처리 한다.
      * 
-     * @param  userVo 일반유저 UserVo
+     * @param  userVo 일반회원 UserVo
      * @return 번호
      * @throws Exception
      */
@@ -109,12 +109,12 @@ public class UserServiceImpl implements UserService {
 	}
 
     /**
-     * 일반유저를 삭제 처리 한다.
+     * 일반회원를 삭제 처리 한다.
      *
      * @process
-     * 1. 일반유저를 삭제 처리 한다.
+     * 1. 일반회원를 삭제 처리 한다.
      * 
-     * @param  userVo 일반유저 UserVo
+     * @param  userVo 일반회원 UserVo
      * @return 번호
      * @throws Exception
      */

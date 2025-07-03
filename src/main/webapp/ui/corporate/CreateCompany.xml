@@ -12,12 +12,12 @@
 					<w2:keyInfo>
 						<w2:key dataType="text" name="이메일" id="email"></w2:key>
 						<w2:key dataType="text" name="비밀번호" id="password"></w2:key>
+						<w2:key dataType="text" name="회사명" id="companyName"></w2:key>
 						<w2:key dataType="text" name="사업자 등록번호" id="businessNumber"></w2:key>
+						<w2:key dataType="text" name="사업자등록증명원" id="businessCertificate"></w2:key>
 						<w2:key dataType="text" name="산업군" id="industry"></w2:key>
 						<w2:key dataType="text" name="직원 수" id="empCount"></w2:key>
 						<w2:key dataType="text" name="회사 설명" id="description"></w2:key>
-						<w2:key dataType="text" name="회사명" id="companyName"></w2:key>
-						<w2:key dataType="text" name="사업자등록증명원" id="businessCertificate"></w2:key>
 						<w2:key dataType="text" name="로고파일명" id="logoFileName"></w2:key>
 					</w2:keyInfo>
 				</w2:dataMap>
@@ -510,10 +510,8 @@ scwin.btn_create_corporate_onclick = function (e) {
 // 데이터 저장 함수
 scwin.saveData = function () {
     try {
-        // submission 실행
         $c.sbm.execute(sbm_insertCorporateVo);
     } catch (error) {
-        console.error("저장 오류:", error);
         alert("저장 중 오류가 발생했습니다.");
     }
 
@@ -563,10 +561,10 @@ scwin.resetForm = function () {
 				</xf:group>
 
 				<!-- 패스워드 -->
-				<xf:group class="form-group">
-					<w2:textbox class="form-label required" label="패스워드"></w2:textbox>
-					<xf:input class="form-input" placeholder="8자 이상 입력해주세요" ref="data:dmp_corporateVoDetail.password" type="password"></xf:input>
-				</xf:group>
+                <xf:group class="form-group">
+                    <w2:textbox class="form-label required" label="패스워드"></w2:textbox>
+                    <w2:secret class="form-input" placeholder="8자 이상 입력해주세요" ref="data:dmp_corporateVoDetail.password"></w2:secret>
+                </xf:group>
 
 				<!-- 기업명 -->
 				<xf:group class="form-group">

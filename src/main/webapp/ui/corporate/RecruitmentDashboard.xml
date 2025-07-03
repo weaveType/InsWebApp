@@ -287,10 +287,22 @@ scwin.btn_recruitment_statistics_onclick = function (e) {
         <xf:group class="sub_contents" id="">
             <!-- 헤더 섹션 -->
             <xf:group class="dashboard-header" id="">
-                <w2:textbox id="" label="채용관리 대시보드" class="main-title"></w2:textbox>
-                <w2:textbox id="" label="우리 회사의 채용현황을 한눈에 확인하세요" class="sub-title"></w2:textbox>
+            	<xf:group class="titbox" id="" meta_snippetCategory="02_타이틀" meta_snippetKeyComponent="true"
+            		meta_snippetName="2_02 서브타이틀(h3)" style="">
+            		<w2:textbox class="" id="" label="서브타이틀" style="" tagname="h3"></w2:textbox>
+            		<xf:group class="rt" id="" style="">
+            			<xf:trigger class="btn_cm " id="" style="" type="button">
+            				<xf:label><![CDATA[기업 수정]]></xf:label>
+            			</xf:trigger>
+            			<xf:trigger class="btn_cm " id="" style="" type="button">
+            				<xf:label><![CDATA[탈퇴]]></xf:label>
+            			</xf:trigger>
+            		</xf:group>
+            	</xf:group>
+            	<w2:textbox id="" label="채용관리 대시보드" class="main-title"></w2:textbox>
+            	<w2:textbox id="" label="우리 회사의 채용현황을 한눈에 확인하세요" class="sub-title"></w2:textbox>
             </xf:group>
-            
+
             <!-- 통계 카드 섹션 -->
             <xf:group class="stats-container" id="">
                 <!-- 총 지원자 -->

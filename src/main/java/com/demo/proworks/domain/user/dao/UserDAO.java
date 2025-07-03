@@ -9,25 +9,25 @@ import com.demo.proworks.domain.user.vo.UserVo;
 import com.demo.proworks.domain.user.dao.UserDAO;
 
 /**  
- * @subject     : 일반유저 관련 처리를 담당하는 DAO
- * @description : 일반유저 관련 처리를 담당하는 DAO
+ * @subject     : 일반회원 관련 처리를 담당하는 DAO
+ * @description : 일반회원 관련 처리를 담당하는 DAO
  * @author      : Inswave
- * @since       : 2025/07/02
+ * @since       : 2025/07/03
  * @modification
  * ===========================================================
  * DATE				AUTHOR				DESC
  * ===========================================================
- * 2025/07/02			 Inswave	 		최초 생성
+ * 2025/07/03			 Inswave	 		최초 생성
  * 
  */
 @Repository("userDAO")
 public class UserDAO extends com.demo.proworks.cmmn.dao.ProworksDefaultAbstractDAO {
 
     /**
-     * 일반유저 상세 조회한다.
+     * 일반회원 상세 조회한다.
      *  
-     * @param  UserVo 일반유저
-     * @return UserVo 일반유저
+     * @param  UserVo 일반회원
+     * @return UserVo 일반회원
      * @throws ElException
      */
     public UserVo selectUser(UserVo vo) throws ElException {
@@ -35,10 +35,10 @@ public class UserDAO extends com.demo.proworks.cmmn.dao.ProworksDefaultAbstractD
     }
 
     /**
-     * 페이징을 처리하여 일반유저 목록조회를 한다.
+     * 페이징을 처리하여 일반회원 목록조회를 한다.
      *  
-     * @param  UserVo 일반유저
-     * @return List<UserVo> 일반유저
+     * @param  UserVo 일반회원
+     * @return List<UserVo> 일반회원
      * @throws ElException
      */
     public List<UserVo> selectListUser(UserVo vo) throws ElException {      	
@@ -46,10 +46,10 @@ public class UserDAO extends com.demo.proworks.cmmn.dao.ProworksDefaultAbstractD
     }
 
     /**
-     * 일반유저 목록 조회의 전체 카운트를 조회한다.
+     * 일반회원 목록 조회의 전체 카운트를 조회한다.
      *  
-     * @param  UserVo 일반유저
-     * @return 일반유저 조회의 전체 카운트
+     * @param  UserVo 일반회원
+     * @return 일반회원 조회의 전체 카운트
      * @throws ElException
      */
     public long selectListCountUser(UserVo vo)  throws ElException{               
@@ -57,9 +57,9 @@ public class UserDAO extends com.demo.proworks.cmmn.dao.ProworksDefaultAbstractD
     }
         
     /**
-     * 일반유저를 등록한다.
+     * 일반회원를 등록한다.
      *  
-     * @param  UserVo 일반유저
+     * @param  UserVo 일반회원
      * @return 번호
      * @throws ElException
      */
@@ -68,9 +68,9 @@ public class UserDAO extends com.demo.proworks.cmmn.dao.ProworksDefaultAbstractD
     }
 
     /**
-     * 일반유저를 갱신한다.
+     * 일반회원를 갱신한다.
      *  
-     * @param  UserVo 일반유저
+     * @param  UserVo 일반회원
      * @return 번호
      * @throws ElException
      */
@@ -79,9 +79,9 @@ public class UserDAO extends com.demo.proworks.cmmn.dao.ProworksDefaultAbstractD
     }
 
     /**
-     * 일반유저를 삭제한다.
+     * 일반회원를 삭제한다.
      *  
-     * @param  UserVo 일반유저
+     * @param  UserVo 일반회원
      * @return 번호
      * @throws ElException
      */
