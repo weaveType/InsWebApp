@@ -19,10 +19,21 @@
         </xf:model>
         <w2:layoutInfo/>
         <w2:publicInfo method=""/>
-        <script type="text/javascript"><![CDATA[
+        <script type="text/javascript"><![CDATA[// 페이지 로드 시 팝업 닫기 액션 함수들 정의
 scwin.onpageload = function () {
     console.log("WeaveType 메인 페이지가 로드되었습니다.");
     dma_main.set("totalUsers", "120,739");
+
+    // 팝업 닫기 액션 함수들 정의
+    scwin.login_popup_closeAction = function (argRuntimeID, argJsnInfo) {
+        console.log("로그인 팝업이 닫혔습니다.", argRuntimeID, argJsnInfo);
+        return true; // 팝업 닫기 허용
+    };
+
+    scwin.email_popup_closeAction = function (argRuntimeID, argJsnInfo) {
+        console.log("이메일 팝업이 닫혔습니다.", argRuntimeID, argJsnInfo);
+        return true; // 팝업 닫기 허용
+    };
 
     // 검색 이벤트 바인딩
     setTimeout(function () {
@@ -45,7 +56,67 @@ scwin.onpageload = function () {
     }, 100);
 };
 
-// 로고 클릭 이벤트
+// 로그인 관련 팝업 호출 함수들
+scwin.btnLogin_onclick = function () {
+    
+    // 로그인 팝업에 전달할 데이터
+    var loginPopupData = {
+        "type": "json",
+        "name": "login_param",
+        "data": {
+            "loginType": "main",
+            "returnUrl": window.location.href
+        }
+    };
+    // 팝업 생성 옵션 지정
+    var options = {
+        id: "login_popup",
+        type: "wframePopup",
+        width: "430px",
+        height: "530px",
+        modal: true,
+        resizable: true,
+        center: true,
+        popupName: "로그인/회원가입",
+        closeAction: "scwin.login_popup_closeAction",
+        dataObject: loginPopupData
+    };
+
+    // 팝업 생성
+    $p.openPopup("../user/Login.xml", options);
+};
+
+scwin.ad_onclick = function (e) {
+    // 광고 클릭 로그인 팝업에 전달할 데이터
+    var adLoginPopupData = {
+        "type": "json",
+        "name": "login_param",
+        "data": {
+            "loginType": "ad_click",
+            "returnUrl": window.location.href,
+            "source": "hero_ad_banner"
+        }
+    };
+
+    // 팝업 생성 옵션 지정
+    var options = {
+        id: "ad_login_popup",
+        type: "wframePopup",
+        width: "460px",
+        height: "475px",
+        modal: true,
+        resizable: true,
+        center: true,
+        popupName: "로그인",
+        closeAction: "scwin.login_popup_closeAction",
+        dataObject: adLoginPopupData
+    };
+
+    // 팝업 생성
+    $p.openPopup("../user/Login.xml", options);
+};
+
+// 기타 함수들은 그대로 유지
 scwin.weaveTypeLogo_onclick = function () {
     window.location.reload();
 };
@@ -63,40 +134,8 @@ scwin.menu3_onclick = function () {
     $p.url("../posting/PostList.xml");
 };
 
-// 로그인 관련 이벤트
-scwin.btnLogin_onclick = function () {
-    // 출력 가운데로 수정예정
-    var options = {
-        id: 'email_popup',
-        type: 'browser',
-        modal: true,
-        resizable: true,
-        center: true,
-        width: 460,
-        height: 475
-    };
-
-    $p.openPopup('../user/Login.xml', options);
-};
-
-
-scwin.btnMainLogin_onclick = function () {
-    var options = {
-        id: 'email_popup',
-        type: 'browser',
-        modal: true,
-        resizable: true,
-        center: true,
-        width: 460,
-        height: 475 
-    };
-
-    $p.openPopup('../user/Login.xml', options);
-};
-
 scwin.btnEnterprise_onclick = function () {
     $p.url("CompanyMain.xml");
-
 };
 
 // 카드 클릭 이벤트
@@ -161,10 +200,6 @@ scwin.btnProfile_onclick = function () {
     alert("매칭 프로필 채우기 페이지로 이동합니다.");
 };
 
-scwin.ad_onclick = function (e) {
-    $p.url('../user/Login.xml');
-};
-
 // 햄버거 메뉴 토글
 scwin.toggleSideMenu = function () {
     var sideMenu = document.getElementById('sideMenu');
@@ -198,7 +233,46 @@ scwin.goToCompanyRegister = function () {
     location.href = '/websquare/websquare.html?w2xPath=/ui/create_company.xml';
     scwin.closeSideMenu();
 };
-]]></script>
+
+
+/**
+* 반응형 가운데 정렬 위치 및 크기 계산 메서드
+* @param {Object} options - 설정 옵션
+* @param {number} options.maxWidth - 최대 너비 (기본값: 800)
+* @param {number} options.minWidth - 최소 너비 (기본값: 400)
+* @param {number} options.maxHeight - 최대 높이 (기본값: 600)
+* @param {number} options.minHeight - 최소 높이 (기본값: 300)
+* @param {number} options.widthRatio - 화면 대비 너비 비율 (기본값: 0.8)
+* @param {number} options.heightRatio - 화면 대비 높이 비율 (기본값: 0.8)
+* @returns {Object} {width, height, left, top} 값을 포함한 객체
+*/
+scwin.getResponsiveCenterPosition = function(options) {
+   options = options || {};
+   
+   var browserWidth = window.innerWidth || document.documentElement.clientWidth;
+   var browserHeight = window.innerHeight || document.documentElement.clientHeight;
+   
+   // 화면 크기의 비율로 팝업 크기 설정 (최대/최소 크기 제한)
+   var popupWidth = Math.min(
+       options.maxWidth || 800, 
+       Math.max(options.minWidth || 400, browserWidth * (options.widthRatio || 0.8))
+   );
+   var popupHeight = Math.min(
+       options.maxHeight || 600, 
+       Math.max(options.minHeight || 300, browserHeight * (options.heightRatio || 0.8))
+   );
+   
+   // 가운데 위치 계산
+   var leftPos = (browserWidth - popupWidth) / 2;
+   var topPos = (browserHeight - popupHeight) / 2;
+   
+   return {
+       width: popupWidth,
+       height: popupHeight,
+       left: leftPos,
+       top: topPos
+   };
+};]]></script>
         <style type="text/css"><![CDATA[
             /* 기본 설정 */
             * {
@@ -954,7 +1028,7 @@ scwin.goToCompanyRegister = function () {
                 <xf:group class="header-right">
                     <xf:group class="search-container">
                         <input id="searchInput" class="search-input" type="text" placeholder="검색어를 입력하세요" />
-                        <button class="search-btn" id="btnSearch" type="button">🔍</button>
+                        <button class="search-btn" id="btnSearch" type="button">������</button>
                     </xf:group>
                     <xf:trigger class="btn-login" id="btnLogin" ev:onclick="scwin.btnLogin_onclick" type="button">
                         <xf:label><![CDATA[로그인/회원가입]]></xf:label>
@@ -975,39 +1049,39 @@ scwin.goToCompanyRegister = function () {
                 <div class="side-menu-section">
                     <w2:textbox class="side-menu-section-title" label="매칭 서비스"></w2:textbox>
                     <w2:anchor class="side-menu-item" ev:onclick="scwin.menu1_onclick">
-                        <xf:label><![CDATA[💼 매칭]]></xf:label>
+                        <xf:label><![CDATA[������ 매칭]]></xf:label>
                     </w2:anchor>
                     <w2:anchor class="side-menu-item" ev:onclick="scwin.menu2_onclick">
-                        <xf:label><![CDATA[🧠 MBTI 검사]]></xf:label>
+                        <xf:label><![CDATA[������ MBTI 검사]]></xf:label>
                     </w2:anchor>
                     <w2:anchor class="side-menu-item" ev:onclick="scwin.menu3_onclick">
-                        <xf:label><![CDATA[🏢 기업 둘러보기]]></xf:label>
+                        <xf:label><![CDATA[������ 기업 둘러보기]]></xf:label>
                     </w2:anchor>
                 </div>
                 
                 <div class="side-menu-section">
                     <w2:textbox class="side-menu-section-title" label="개인 서비스"></w2:textbox>
                     <w2:anchor class="side-menu-item" ev:onclick="scwin.goToUserDetail()">
-                        <xf:label><![CDATA[👤 내 정보]]></xf:label>
+                        <xf:label><![CDATA[������ 내 정보]]></xf:label>
                     </w2:anchor>
                     <w2:anchor class="side-menu-item">
-                        <xf:label><![CDATA[📝 지원현황]]></xf:label>
+                        <xf:label><![CDATA[������ 지원현황]]></xf:label>
                     </w2:anchor>
                     <w2:anchor class="side-menu-item">
                         <xf:label><![CDATA[❤️ 관심기업]]></xf:label>
                     </w2:anchor>
                     <w2:anchor class="side-menu-item">
-                        <xf:label><![CDATA[🔖 북마크]]></xf:label>
+                        <xf:label><![CDATA[������ 북마크]]></xf:label>
                     </w2:anchor>
                 </div>
                 
                 <div class="side-menu-section">
                     <w2:textbox class="side-menu-section-title" label="기업 서비스"></w2:textbox>
                     <w2:anchor class="side-menu-item" ev:onclick="scwin.btnEnterprise_onclick">
-                        <xf:label><![CDATA[📊 채용관리 대시보드]]></xf:label>
+                        <xf:label><![CDATA[������ 채용관리 대시보드]]></xf:label>
                     </w2:anchor>
                     <w2:anchor class="side-menu-item" ev:onclick="scwin.goToCompanyRegister()">
-                        <xf:label><![CDATA[📋 기업 등록]]></xf:label>
+                        <xf:label><![CDATA[������ 기업 등록]]></xf:label>
                     </w2:anchor>
                 </div>
             </nav>
@@ -1031,13 +1105,13 @@ scwin.goToCompanyRegister = function () {
                     <xf:group class="hero-right">
                         <xf:group class="login-area">
                             <w2:textbox class="login-title" label="로그인하고 기업 매칭에 참여해 보세요."></w2:textbox>
-                            <xf:trigger class="btn-main-login" id="btnMainLogin" ev:onclick="scwin.btnMainLogin_onclick" type="button">
+                            <xf:trigger class="btn-main-login" id="btnMainLogin" ev:onclick="scwin.btnLogin_onclick" type="button">
                                 <xf:label><![CDATA[로그인]]></xf:label>
                             </xf:trigger>
                             <xf:group class="gift-area">
                                 <w2:textbox class="gift-text" label="매칭 퀘스트 완료하고"></w2:textbox>
                                 <w2:textbox class="gift-text-bold" label="합격자 이력서 받아가세요!"></w2:textbox>
-                                <w2:textbox class="gift-icon" label="🎁"></w2:textbox>
+                                <w2:textbox class="gift-icon" label="������"></w2:textbox>
                             </xf:group>
                         </xf:group>
                     </xf:group>
@@ -1122,7 +1196,7 @@ scwin.goToCompanyRegister = function () {
                 <xf:group class="companies-container">
                     <xf:group class="company-row">
                         <xf:group class="company-item">
-                            <w2:textbox class="company-name" label="🏛️ kakaobank"></w2:textbox>
+                            <w2:textbox class="company-name" label="������️ kakaobank"></w2:textbox>
                         </xf:group>
                         <xf:group class="company-item">
                             <w2:textbox class="company-name" label="(주)카카오페이"></w2:textbox>
@@ -1131,7 +1205,7 @@ scwin.goToCompanyRegister = function () {
                             <w2:textbox class="company-name" label="(주)파라다이스"></w2:textbox>
                         </xf:group>
                         <xf:group class="company-item">
-                            <w2:textbox class="company-name" label="💎 SHINSEGAE"></w2:textbox>
+                            <w2:textbox class="company-name" label="������ SHINSEGAE"></w2:textbox>
                         </xf:group>
                     </xf:group>
 
@@ -1140,10 +1214,10 @@ scwin.goToCompanyRegister = function () {
                             <w2:textbox class="company-name" label="현대로템(주)"></w2:textbox>
                         </xf:group>
                         <xf:group class="company-item">
-                            <w2:textbox class="company-name" label="🌐 DAS"></w2:textbox>
+                            <w2:textbox class="company-name" label="������ DAS"></w2:textbox>
                         </xf:group>
                         <xf:group class="company-item">
-                            <w2:textbox class="company-name" label="📱 com2uS"></w2:textbox>
+                            <w2:textbox class="company-name" label="������ com2uS"></w2:textbox>
                         </xf:group>
                         <xf:group class="company-item">
                             <w2:textbox class="company-name" label="(주)원티드랩"></w2:textbox>
@@ -1158,7 +1232,7 @@ scwin.goToCompanyRegister = function () {
                             <w2:textbox class="company-name" label="한국전력공사"></w2:textbox>
                         </xf:group>
                         <xf:group class="company-item">
-                            <w2:textbox class="company-name" label="🧪 그린케미칼"></w2:textbox>
+                            <w2:textbox class="company-name" label="������ 그린케미칼"></w2:textbox>
                         </xf:group>
                         <xf:group class="company-item">
                             <w2:textbox class="company-name" label="케이티(KT)"></w2:textbox>
