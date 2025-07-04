@@ -15,13 +15,12 @@
 	2025/07/03              Inswave             최초 생성
  -->
 <mapper namespace="com.demo.proworks.domain.post">
-    <insert id="insertPost" parameterType="com.demo.proworks.domain.post.vo.PostVo">
+    <insert id="insertPost" parameterType="com.demo.proworks.domain.post.vo.PostVo" useGeneratedKeys="true" keyProperty="jobPostingId">
     	<!-- 공고정보를 등록한다. -->	
     		
         INSERT INTO POSTS   /* QueryID : com.demo.proworks.domain.post.insertPost */
         ( 
-            JOB_POSTING_ID
-            <if test="companyId               != null"> , COMPANY_ID                </if>
+            COMPANY_ID
             <if test="title                    != null"> , TITLE                     </if>
             <if test="description              != null"> , DESCRIPTION               </if>
             <if test="requiredSkills          != null"> , REQUIRED_SKILLS           </if>
@@ -36,8 +35,7 @@
         )
         VALUES  
         ( 
-            #{jobPostingId}
-            <if test="companyId               != null"> , #{companyId}                </if>
+            #{companyId}
             <if test="title                    != null"> , #{title}                     </if>
             <if test="description              != null"> , #{description}               </if>
             <if test="requiredSkills          != null"> , #{requiredSkills}           </if>
@@ -48,7 +46,8 @@
             <if test="preferredDeveloperTypes!= null"> , #{preferredDeveloperTypes} </if>
             <if test="expiresAt               != null"> , #{expiresAt}                </if>
             <if test="postedAt                != null"> , #{postedAt}                 </if>
-            <if test="status                   != null"> , #{status}                    </if> 
+            <if test="status                   != null"> , #{status}                    </if>
+ 
         )          
     </insert>	
 	
@@ -57,7 +56,8 @@
     	
         UPDATE POSTS    /* QueryID : com.demo.proworks.domain.post.updatePost */      
       	  SET  
-                JOB_POSTING_ID            = #{jobPostingId}                   	                       
+                JOB_POSTING_ID            = #{jobPostingId}           
+        	                       
             <if test="companyId               != null"> , COMPANY_ID                = #{companyId}                </if>
             <if test="title                    != null"> , TITLE                     = #{title}                     </if>
             <if test="description              != null"> , DESCRIPTION               = #{description}               </if>
@@ -69,7 +69,8 @@
             <if test="preferredDeveloperTypes!= null"> , PREFERRED_DEVELOPER_TYPES = #{preferredDeveloperTypes} </if>
             <if test="expiresAt               != null"> , EXPIRES_AT                = #{expiresAt}                </if>
             <if test="postedAt                != null"> , POSTED_AT                 = #{postedAt}                 </if>
-            <if test="status                   != null"> , STATUS                    = #{status}                    </if>                 
+            <if test="status                   != null"> , STATUS                    = #{status}                    </if>
+                 
         WHERE   
                 JOB_POSTING_ID            = #{jobPostingId}           
     </update>
@@ -79,7 +80,8 @@
     	
         DELETE FROM POSTS   /* QueryID : com.demo.proworks.domain.post.deletePost */ 
         WHERE   
-                JOB_POSTING_ID            = #{jobPostingId}                   
+                JOB_POSTING_ID            = #{jobPostingId}           
+        
     </delete>
 	
     <select id="selectPost" parameterType="com.demo.proworks.domain.post.vo.PostVo" resultType="com.demo.proworks.domain.post.vo.PostVo">
@@ -88,7 +90,8 @@
             JOB_POSTING_ID as jobPostingId, COMPANY_ID as companyId, TITLE as title, DESCRIPTION as description, REQUIRED_SKILLS as requiredSkills, EXPERIENCE_LEVEL as experienceLevel, SALARY_RANGE as salaryRange, LOCATION as location, WORK_TYPE as workType, PREFERRED_DEVELOPER_TYPES as preferredDeveloperTypes, EXPIRES_AT as expiresAt, POSTED_AT as postedAt, STATUS as status
         FROM POSTS 
         WHERE 
-                JOB_POSTING_ID            = #{jobPostingId}           			
+                JOB_POSTING_ID            = #{jobPostingId}           
+			
     </select>
 	
     <select id="selectListPost" parameterType="com.demo.proworks.domain.post.vo.PostVo" resultType="com.demo.proworks.domain.post.vo.PostVo">
