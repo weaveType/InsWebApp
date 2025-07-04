@@ -16,29 +16,31 @@
  -->
 <mapper namespace="com.demo.proworks.domain.corporate">
     <insert id="insertCorporate" parameterType="com.demo.proworks.domain.corporate.vo.CorporateVo">
-    	<!-- 회사정보를 등록한다. -->	
+<!-- 회사정보를 등록한다. -->	
     		
-        INSERT INTO COMPANYS   /* QueryID : com.demo.proworks.domain.corporate.insertCorporate */
-        ( 
-            COMPANY_ID
-            <if test="businessNumber     != null"> , BUSINESS_NUMBER      </if>
-            <if test="businessCertificate!= null"> , BUSINESS_CERTIFICATE </if>
-            <if test="industry            != null"> , INDUSTRY             </if>
-            <if test="empCount           != null"> , EMP_COUNT            </if>
-            <if test="description         != null"> , DESCRIPTION          </if>
-            <if test="logoFileName      != null"> , LOGO_FILE_NAME       </if>
-        )
-        VALUES  
-        ( 
-            #{companyId}
-            <if test="businessNumber     != null"> , #{businessNumber}      </if>
-            <if test="businessCertificate!= null"> , #{businessCertificate} </if>
-            <if test="industry            != null"> , #{industry}             </if>
-            <if test="empCount           != null"> , #{empCount}            </if>
-            <if test="description         != null"> , #{description}          </if>
-            <if test="logoFileName      != null"> , #{logoFileName}       </if> 
-        )          
-    </insert>	
+INSERT INTO COMPANYS   /* QueryID : com.demo.proworks.domain.corporate.insertCorporate */
+( 
+    COMPANY_ID
+    <if test="businessNumber     != null"> , BUSINESS_NUMBER      </if>
+    <if test="businessCertificate!= null"> , BUSINESS_CERTIFICATE </if>
+    <if test="industry            != null"> , INDUSTRY             </if>
+    <if test="empCount           != null"> , EMP_COUNT            </if>
+    <if test="description         != null"> , DESCRIPTION          </if>
+    <if test="logoFileName      != null"> , LOGO_FILE_NAME       </if>
+    <if test="userId             != null"> , USER_ID              </if>
+)
+VALUES  
+( 
+    #{companyId}
+    <if test="businessNumber     != null"> , #{businessNumber}      </if>
+    <if test="businessCertificate!= null"> , #{businessCertificate} </if>
+    <if test="industry            != null"> , #{industry}             </if>
+    <if test="empCount           != null"> , #{empCount}            </if>
+    <if test="description         != null"> , #{description}          </if>
+    <if test="logoFileName      != null"> , #{logoFileName}       </if>
+    <if test="userId             != null"> , #{userId}              </if>
+)
+</insert>	
 	
     <update id="updateCorporate" parameterType="com.demo.proworks.domain.corporate.vo.CorporateVo">
     	<!-- 회사정보를 갱신한다. -->
@@ -101,4 +103,20 @@
     </select>
 
 
+<select id="selectCorporateByEmail" parameterType="com.demo.proworks.domain.corporate.vo.CorporateVo" resultType="com.demo.proworks.domain.corporate.vo.CorporateVo">
+<!-- 회사정보를 상세 조회한다. -->	
+SELECT /* QueryID : com.demo.proworks.domain.corporate.selectCorporate */
+    c.COMPANY_ID as companyId, 
+    c.BUSINESS_NUMBER as businessNumber, 
+    c.BUSINESS_CERTIFICATE as businessCertificate, 
+    c.INDUSTRY as industry, 
+    c.EMP_COUNT as empCount, 
+    c.DESCRIPTION as description, 
+    c.LOGO_FILE_NAME as logoFileName,
+    u.email as email,
+    u.password as password
+FROM COMPANYS c
+INNER JOIN USERS u ON c.USER_ID = u.USER_ID
+WHERE u.email = #{email}
+</select>
 </mapper>

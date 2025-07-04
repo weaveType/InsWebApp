@@ -103,13 +103,8 @@
 	 * @example
 	 */		   
 	scwin.btn_search_onclick = function(e) {
-	
-		// PGAE번호 초기화
-		dmp_corporateVo.set("pageIndex","1");
-		pgl_corporateList.setSelectedIndex(1);
-
 		// 서버통신 - 회사정보 조회
-		$c.sbm.execute($p, sbm_selectCorporateVoList);
+		$c.sbm.execute($p, sbm_selectCorporateVo);
 	};
 	
 	scwin.sbm_corporateList_submitdone = function(e) {
