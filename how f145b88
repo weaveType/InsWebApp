@@ -1,0 +1,573 @@
+[33mcommit f145b88b6fe5965af56234383f066c0b099d7a6b[m
+Author: unknown <qotkdgus0430@naver.com>
+Date:   Fri Jul 4 14:14:49 2025 +0900
+
+    CreatePosting (C)
+
+[1mdiff --git a/.classpath b/.classpath[m
+[1mindex 7cc750f..85432e5 100644[m
+[1m--- a/.classpath[m
+[1m+++ b/.classpath[m
+[36m@@ -77,17 +77,11 @@[m
+ 	<classpathentry kind="src" path="target/generated-sources/annotations">[m
+ 		<attributes>[m
+ 			<attribute name="optional" value="true"/>[m
+[31m-			<attribute name="maven.pomderived" value="true"/>[m
+[31m-			<attribute name="ignore_optional_problems" value="true"/>[m
+[31m-			<attribute name="m2e-apt" value="true"/>[m
+ 		</attributes>[m
+ 	</classpathentry>[m
+ 	<classpathentry kind="src" output="target/test-classes" path="target/generated-test-sources/test-annotations">[m
+ 		<attributes>[m
+ 			<attribute name="optional" value="true"/>[m
+[31m-			<attribute name="maven.pomderived" value="true"/>[m
+[31m-			<attribute name="ignore_optional_problems" value="true"/>[m
+[31m-			<attribute name="m2e-apt" value="true"/>[m
+ 			<attribute name="test" value="true"/>[m
+ 		</attributes>[m
+ 	</classpathentry>[m
+[1mdiff --git a/.settings/org.eclipse.wst.common.component b/.settings/org.eclipse.wst.common.component[m
+[1mindex 1b3dc6d..f1534fa 100644[m
+[1m--- a/.settings/org.eclipse.wst.common.component[m
+[1m+++ b/.settings/org.eclipse.wst.common.component[m
+[36m@@ -1,29 +1,47 @@[m
+ <?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">[m
+[31m-            [m
+[32m+[m[41m                    [m
+[32m+[m[41m    [m
+[32m+[m[41m    [m
+     [m
+     <wb-module deploy-name="InsWebApp">[m
+[31m-                        [m
+[32m+[m[41m                                        [m
+[32m+[m[41m        [m
+[32m+[m[41m        [m
+         [m
+         <wb-resource deploy-path="/" source-path="/target/m2e-wtp/web-resources"/>[m
+[31m-                        [m
+[32m+[m[41m                                        [m
+[32m+[m[41m        [m
+[32m+[m[41m        [m
+         [m
+         <wb-resource deploy-path="/" source-path="/src/main/webapp" tag="defaultRootSource"/>[m
+[31m-                        [m
+[32m+[m[41m                                        [m
+[32m+[m[41m        [m
+[32m+[m[41m        [m
+         [m
+         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>[m
+[31m-                        [m
+[32m+[m[41m                                        [m
+[32m+[m[41m        [m
+[32m+[m[41m        [m
+         [m
+         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>[m
+         <wb-resource deploy-path="/WEB-INF/classes" source-path="/target/generated-sources/annotations"/>[m
+[31m-                        [m
+[32m+[m[41m                                        [m
+[32m+[m[41m        [m
+[32m+[m[41m        [m
+         [m
+         <property name="java-output-path" value="/InsWebApp/target/classes"/>[m
+[31m-                        [m
+[32m+[m[41m                                        [m
+[32m+[m[41m        [m
+[32m+[m[41m        [m
+         [m
+         <property name="context-root" value="InsWebApp"/>[m
+[31m-                    [m
+[32m+[m[41m                                    [m
+[32m+[m[41m    [m
+[32m+[m[41m    [m
+     [m
+     </wb-module>[m
+[31m-        [m
+[32m+[m[41m                [m
+[32m+[m
+[32m+[m
+ [m
+ </project-modules>[m
+[1mdiff --git a/src/main/resources/inswave/sqlmap/com/demo/proworks/domain/post/posts_SQL_mariadb_MyBatis.xml b/src/main/resources/inswave/sqlmap/com/demo/proworks/domain/post/posts_SQL_mariadb_MyBatis.xml[m
+[1mindex 86e3233..4032e09 100644[m
+[1m--- a/src/main/resources/inswave/sqlmap/com/demo/proworks/domain/post/posts_SQL_mariadb_MyBatis.xml[m
+[1m+++ b/src/main/resources/inswave/sqlmap/com/demo/proworks/domain/post/posts_SQL_mariadb_MyBatis.xml[m
+[36m@@ -15,40 +15,39 @@[m
+ 	2025/07/03              Inswave             최초 생성[m
+  -->[m
+ <mapper namespace="com.demo.proworks.domain.post">[m
+[31m-    <insert id="insertPost" parameterType="com.demo.proworks.domain.post.vo.PostVo">[m
+[32m+[m[32m    <insert id="insertPost" parameterType="com.demo.proworks.domain.post.vo.PostVo" useGeneratedKeys="true" keyProperty="jobPostingId">[m
+     	<!-- 공고정보를 등록한다. -->	[m
+     		[m
+         INSERT INTO POSTS   /* QueryID : com.demo.proworks.domain.post.insertPost */[m
+         ( [m
+[31m-            JOB_POSTING_ID[m
+[31m-            <if test="companyId               != null"> , COMPANY_ID                </if>[m
+[31m-            <if test="title                    != null"> , TITLE                     </if>[m
+[31m-            <if test="description              != null"> , DESCRIPTION               </if>[m
+[31m-            <if test="requiredSkills          != null"> , REQUIRED_SKILLS           </if>[m
+[31m-            <if test="experienceLevel         != null"> , EXPERIENCE_LEVEL          </if>[m
+[31m-            <if test="salaryRange             != null"> , SALARY_RANGE              </if>[m
+[31m-            <if test="location                 != null"> , LOCATION                  </if>[m
+[31m-            <if test="workType                != null"> , WORK_TYPE                 </if>[m
+[31m-            <if test="preferredDeveloperTypes!= null"> , PREFERRED_DEVELOPER_TYPES </if>[m
+[31m-            <if test="expiresAt               != null"> , EXPIRES_AT                </if>[m
+[31m-            <if test="postedAt                != null"> , POSTED_AT                 </if>[m
+[31m-            <if test="status                   != null"> , STATUS                    </if>[m
+[32m+[m[32m            COMPANY_ID[m
+[32m+[m[32m            <if test="title                    != null"> , TITLE                     </if>[m
+[32m+[m[32m            <if test="description              != null"> , DESCRIPTION               </if>[m
+[32m+[m[32m            <if test="requiredSkills          != null"> , REQUIRED_SKILLS           </if>[m
+[32m+[m[32m            <if test="experienceLevel         != null"> , EXPERIENCE_LEVEL          </if>[m
+[32m+[m[32m            <if test="salaryRange             != null"> , SALARY_RANGE              </if>[m
+[32m+[m[32m            <if test="location                 != null"> , LOCATION                  </if>[m
+[32m+[m[32m            <if test="workType                != null"> , WORK_TYPE                 </if>[m
+[32m+[m[32m            <if test="preferredDeveloperTypes!= null"> , PREFERRED_DEVELOPER_TYPES </if>[m
+[32m+[m[32m            <if test="expiresAt               != null"> , EXPIRES_AT                </if>[m
+[32m+[m[32m            <if test="postedAt                != null"> , POSTED_AT                 </if>[m
+[32m+[m[32m            <if test="status                   != null"> , STATUS                    </if>[m
+         )[m
+         VALUES  [m
+         ( [m
+[31m-            #{jobPostingId}[m
+[31m-            <if test="companyId               != null"> , #{companyId}                </if>[m
+[31m-            <if test="title                    != null"> , #{title}                     </if>[m
+[31m-            <if test="description              != null"> , #{description}               </if>[m
+[31m-            <if test="requiredSkills          != null"> , #{requiredSkills}           </if>[m
+[31m-            <if test="experienceLevel         != null"> , #{experienceLevel}          </if>[m
+[31m-            <if test="salaryRange             != null"> , #{salaryRange}              </if>[m
+[31m-            <if test="location                 != null"> , #{location}                  </if>[m
+[31m-            <if test="workType                != null"> , #{workType}                 </if>[m
+[31m-            <if test="preferredDeveloperTypes!= null"> , #{preferredDeveloperTypes} </if>[m
+[31m-            <if test="expiresAt               != null"> , #{expiresAt}                </if>[m
+[31m-            <if test="postedAt                != null"> , #{postedAt}                 </if>[m
+[31m-            <if test="status                   != null"> , #{status}                    </if> [m
+[32m+[m[32m            #{companyId}[m
+[32m+[m[32m            <if test="title                    != null"> , #{title}                     </if>[m
+[32m+[m[32m            <if test="description              != null"> , #{description}               </if>[m
+[32m+[m[32m            <if test="requiredSkills          != null"> , #{requiredSkills}           </if>[m
+[32m+[m[32m            <if test="experienceLevel         != null"> , #{experienceLevel}          </if>[m
+[32m+[m[32m            <if test="salaryRange             != null"> , #{salaryRange}              </if>[m
+[32m+[m[32m            <if test="location                 != null"> , #{location}                  </if>[m
+[32m+[m[32m            <if test="workType                != null"> , #{workType}                 </if>[m
+[32m+[m[32m            <if test="preferredDeveloperTypes!= null"> , #{preferredDeveloperTypes} </if>[m
+[32m+[m[32m            <if test="expiresAt               != null"> , #{expiresAt}                </if>[m
+[32m+[m[32m            <if test="postedAt                != null"> , #{postedAt}                 </if>[m
+[32m+[m[32m            <if test="status                   != null"> , #{status}                    </if>[m
+[32m+[m[41m [m
+         )          [m
+     </insert>	[m
+ 	[m
+[36m@@ -57,21 +56,23 @@[m
+     	[m
+         UPDATE POSTS    /* QueryID : com.demo.proworks.domain.post.updatePost */      [m
+       	  SET  [m
+[31m-                JOB_POSTING_ID            = #{jobPostingId}                   	                       [m
+[31m-            <if test="companyId               != null"> , COMPANY_ID                = #{companyId}                </if>[m
+[31m-            <if test="title                    != null"> , TITLE                     = #{title}                     </if>[m
+[31m-            <if test="description              != null"> , DESCRIPTION               = #{description}               </if>[m
+[31m-            <if test="requiredSkills          != null"> , REQUIRED_SKILLS           = #{requiredSkills}           </if>[m
+[31m-            <if test="experienceLevel         != null"> , EXPERIENCE_LEVEL          = #{experienceLevel}          </if>[m
+[31m-            <if test="salaryRange             != null"> , SALARY_RANGE              = #{salaryRange}              </if>[m
+[31m-            <if test="location                 != null"> , LOCATION                  = #{location}                  </if>[m
+[31m-            <if test="workType                != null"> , WORK_TYPE                 = #{workType}                 </if>[m
+[31m-            <if test="preferredDeveloperTypes!= null"> , PREFERRED_DEVELOPER_TYPES = #{preferredDeveloperTypes} </if>[m
+[31m-            <if test="expiresAt               != null"> , EXPIRES_AT                = #{expiresAt}                </if>[m
+[31m-            <if test="postedAt                != null"> , POSTED_AT                 = #{postedAt}                 </if>[m
+[31m-            <if test="status                   != null"> , STATUS                    = #{status}                    </if>                 [m
+[32m+[m[32m                JOB_POSTING_ID            = #{jobPostingId}[m[41m           [m
+[32m+[m[41m        	                       [m
+[32m+[m[32m            <if test="companyId               != null"> , COMPANY_ID                = #{companyId}                </if>[m
+[32m+[m[32m            <if test="title                    != null"> , TITLE                     = #{title}                     </if>[m
+[32m+[m[32m            <if test="description              != null"> , DESCRIPTION               = #{description}               </if>[m
+[32m+[m[32m            <if test="requiredSkills          != null"> , REQUIRED_SKILLS           = #{requiredSkills}           </if>[m
+[32m+[m[32m            <if test="experienceLevel         != null"> , EXPERIENCE_LEVEL          = #{experienceLevel}          </if>[m
+[32m+[m[32m            <if test="salaryRange             != null"> , SALARY_RANGE              = #{salaryRange}              </if>[m
+[32m+[m[32m            <if test="location                 != null"> , LOCATION                  = #{location}                  </if>[m
+[32m+[m[32m            <if test="workType                != null"> , WORK_TYPE                 = #{workType}                 </if>[m
+[32m+[m[32m            <if test="preferredDeveloperTypes!= null"> , PREFERRED_DEVELOPER_TYPES = #{preferredDeveloperTypes} </if>[m
+[32m+[m[32m            <if test="expiresAt               != null"> , EXPIRES_AT                = #{expiresAt}                </if>[m
+[32m+[m[32m            <if test="postedAt                != null"> , POSTED_AT                 = #{postedAt}                 </if>[m
+[32m+[m[32m            <if test="status                   != null"> , STATUS                    = #{status}                    </if>[m
+[32m+[m[41m                 [m
+         WHERE   [m
+[31m-                JOB_POSTING_ID            = #{jobPostingId}           [m
+[32m+[m[32m                JOB_POSTING_ID            = #{jobPostingId}[m[41m           [m
+     </update>[m
+ 	[m
+     <delete id="deletePost" parameterType="com.demo.proworks.domain.post.vo.PostVo">[m
+[36m@@ -79,7 +80,8 @@[m
+     	[m
+         DELETE FROM POSTS   /* QueryID : com.demo.proworks.domain.post.deletePost */ [m
+         WHERE   [m
+[31m-                JOB_POSTING_ID            = #{jobPostingId}                   [m
+[32m+[m[32m                JOB_POSTING_ID            = #{jobPostingId}[m[41m           [m
+[32m+[m[41m        [m
+     </delete>[m
+ 	[m
+     <select id="selectPost" parameterType="com.demo.proworks.domain.post.vo.PostVo" resultType="com.demo.proworks.domain.post.vo.PostVo">[m
+[36m@@ -88,7 +90,8 @@[m
+             JOB_POSTING_ID as jobPostingId, COMPANY_ID as companyId, TITLE as title, DESCRIPTION as description, REQUIRED_SKILLS as requiredSkills, EXPERIENCE_LEVEL as experienceLevel, SALARY_RANGE as salaryRange, LOCATION as location, WORK_TYPE as workType, PREFERRED_DEVELOPER_TYPES as preferredDeveloperTypes, EXPIRES_AT as expiresAt, POSTED_AT as postedAt, STATUS as status[m
+         FROM POSTS [m
+         WHERE [m
+[31m-                JOB_POSTING_ID            = #{jobPostingId}           			[m
+[32m+[m[32m                JOB_POSTING_ID            = #{jobPostingId}[m[41m           [m
+[32m+[m[41m			[m
+     </select>[m
+ 	[m
+     <select id="selectListPost" parameterType="com.demo.proworks.domain.post.vo.PostVo" resultType="com.demo.proworks.domain.post.vo.PostVo">[m
+[1mdiff --git a/src/main/webapp/ui/corporate/CreatePosting.xml b/src/main/webapp/ui/post/CreatePosting.xml[m
+[1msimilarity index 67%[m
+[1mrename from src/main/webapp/ui/corporate/CreatePosting.xml[m
+[1mrename to src/main/webapp/ui/post/CreatePosting.xml[m
+[1mindex 051967e..ad7ac44 100644[m
+[1m--- a/src/main/webapp/ui/corporate/CreatePosting.xml[m
+[1m+++ b/src/main/webapp/ui/post/CreatePosting.xml[m
+[36m@@ -428,7 +428,7 @@[m [mscwin.select_techstack_onchange = function () {[m
+     console.log("선택된 값:", selectedValue);[m
+     [m
+     // 선택된 값이 없으면 리턴[m
+[31m-    if (!selectedValue || selectedValue === "") {[m
+[32m+[m[32m    if (!selectedValue || selectedValue === "" || selectedValue === "기술스택을 선택하세요") {[m
+         return;[m
+     }[m
+ [m
+[36m@@ -439,20 +439,19 @@[m [mscwin.select_techstack_onchange = function () {[m
+         // 데이터리스트에 새 항목 추가[m
+         var newRowIndex = dlt_techstack.insertRow();[m
+         dlt_techstack.setCellData(newRowIndex, "techstack", selectedValue);[m
+[31m-        gen_techstack.insertChild(0);[m
+[31m-        // Generator 새로고침 강제 실행[m
+[31m-        gen_techstack.inser[m
+         gen_techstack.refresh();[m
+[31m-[m
+[32m+[m[41m        [m
+[32m+[m[32m        console.log("기술스택 추가됨:", selectedValue);[m
+     } else {[m
+         console.log("이미 존재하는 기술스택:", selectedValue);[m
+     }[m
+     [m
+     console.log("현재 기술스택 개수:", dlt_techstack.getRowCount());[m
+[31m-    console.log("업데이트된 전체 데이터:", dlt_techstack.getAllJSON());[m
+     [m
+[31m-    // AutoComplete 초기화[m
+[31m-    select_techstack.setValue("");[m
+[32m+[m[32m    // AutoComplete 초기화 (이벤트 루프 방지)[m
+[32m+[m[32m    setTimeout(function() {[m
+[32m+[m[32m        select_techstack.setValue("");[m
+[32m+[m[32m    }, 100);[m
+ };[m
+ [m
+ // 개별 기술스택 제거 함수 (Generator 내부에서 호출)[m
+[36m@@ -488,42 +487,208 @@[m [mscwin.btn_cancel_posting_onclick = function (e) {[m
+ };[m
+ [m
+ scwin.btn_create_posting_onclick = function (e) {[m
+[31m-    // 선택된 기술스택들을 문자열로 변환하여 requiredSkills에 저장[m
+[31m-    var techStackArray = [];[m
+[31m-    for(var i = 0; i < dlt_techstack.getRowCount(); i++) {[m
+[31m-        techStackArray.push(dlt_techstack.getCellData(i, "techstack"));[m
+[32m+[m[32m    console.log("=== 등록 버튼 클릭됨 ===");[m
+[32m+[m[41m    [m
+[32m+[m[32m    // 필수 값들 검증[m
+[32m+[m[32m    if (!dmp_postVo.get("title") || dmp_postVo.get("title").trim() === "") {[m
+[32m+[m[32m        alert("공고 제목을 입력해주세요.");[m
+[32m+[m[32m        return;[m
+[32m+[m[32m    }[m
+[32m+[m[41m    [m
+[32m+[m[32m    if (!dmp_postVo.get("location") || dmp_postVo.get("location").trim() === "") {[m
+[32m+[m[32m        alert("근무 지역을 선택해주세요.");[m
+[32m+[m[32m        return;[m
+[32m+[m[32m    }[m
+[32m+[m[41m    [m
+[32m+[m[32m    if (!dmp_postVo.get("workType") || dmp_postVo.get("workType").trim() === "") {[m
+[32m+[m[32m        alert("근무 형태를 선택해주세요.");[m
+[32m+[m[32m        return;[m
+     }[m
+[31m-    dmp_postVo.set("requiredSkills", techStackArray.join(", "));[m
+     [m
+[31m-    // 선택된 성향 버튼들을 찾아서 preferredDeveloperTypes에 저장[m
+[31m-    var selectedPersonalities = [];[m
+[31m-    var personalityBtns = document.querySelectorAll('.personality-btn.selected');[m
+[31m-    personalityBtns.forEach(function(btn) {[m
+[31m-        selectedPersonalities.push(btn.textContent.trim());[m
+[31m-    });[m
+[31m-    dmp_postVo.set("preferredDeveloperTypes", selectedPersonalities.join(", "));[m
+[32m+[m[32m    if (!dmp_postVo.get("description") || dmp_postVo.get("description").trim() === "") {[m
+[32m+[m[32m        alert("인재상 상세 설명을 입력해주세요.");[m
+[32m+[m[32m        return;[m
+[32m+[m[32m    }[m
+[32m+[m[41m    [m
+[32m+[m[32m    console.log("=== 모든 필수 필드 검증 통과 ===");[m
+     [m
+[31m-    // 등록하시겠습니까? 확인[m
+[31m-    var promise = $c.win.confirm("공고를 등록하시겠습니까?");[m
+[31m-    promise.then(function(result) {  [m
+[31m-        if (result){[m
+[31m-            // Post 등록 submission 실행[m
+[31m-            $c.sbm.execute(sbm_insertPost);[m
+[32m+[m[32m    // 기본 confirm으로 확인[m
+[32m+[m[32m    if (confirm("공고를 등록하시겠습니까?")) {[m
+[32m+[m[32m        console.log("=== 사용자가 확인 버튼 클릭 ===");[m
+[32m+[m[41m        [m
+[32m+[m[32m        // 기본 값들 설정[m
+[32m+[m[32m        var currentDate = new Date();[m
+[32m+[m[32m        var dateString = currentDate.getFullYear() + '-' +[m[41m [m
+[32m+[m[32m                         String(currentDate.getMonth() + 1).padStart(2, '0') + '-' +[m[41m [m
+[32m+[m[32m                         String(currentDate.getDate()).padStart(2, '0') + ' ' +[m
+[32m+[m[32m                         String(currentDate.getHours()).padStart(2, '0') + ':' +[m
+[32m+[m[32m                         String(currentDate.getMinutes()).padStart(2, '0') + ':' +[m
+[32m+[m[32m                         String(currentDate.getSeconds()).padStart(2, '0');[m
+[32m+[m[41m        [m
+[32m+[m[32m        // 만료일 설정 (30일 후)[m
+[32m+[m[32m        var expiryDate = new Date(currentDate);[m
+[32m+[m[32m        expiryDate.setDate(expiryDate.getDate() + 30);[m
+[32m+[m[32m        var expiryString = expiryDate.getFullYear() + '-' +[m[41m [m
+[32m+[m[32m                          String(expiryDate.getMonth() + 1).padStart(2, '0') + '-' +[m[41m [m
+[32m+[m[32m                          String(expiryDate.getDate()).padStart(2, '0') + ' ' +[m
+[32m+[m[32m                          String(expiryDate.getHours()).padStart(2, '0') + ':' +[m
+[32m+[m[32m                          String(expiryDate.getMinutes()).padStart(2, '0') + ':' +[m
+[32m+[m[32m                          String(expiryDate.getSeconds()).padStart(2, '0');[m
+[32m+[m[41m        [m
+[32m+[m[32m        console.log("=== 날짜 설정 완료 ===");[m
+[32m+[m[32m        console.log("현재시간:", dateString);[m
+[32m+[m[32m        console.log("만료시간:", expiryString);[m
+[32m+[m[41m        [m
+[32m+[m[32m        // 데이터 설정 (job_posting_id는 AUTO_INCREMENT이므로 제외)[m
+[32m+[m[32m        dmp_postVo.set("companyId", 1); // 숫자로 설정 (실제로는 로그인 사용자의 회사 ID)[m
+[32m+[m[32m        dmp_postVo.set("postedAt", dateString);[m
+[32m+[m[32m        dmp_postVo.set("expiresAt", expiryString);[m
+[32m+[m[32m        dmp_postVo.set("status", "active"); // ENUM 값에 맞게 소문자[m
+[32m+[m[41m        [m
+[32m+[m[32m        // 선택된 기술스택들을 JSON 배열로 변환하여 requiredSkills에 저장[m
+[32m+[m[32m        var techStackArray = [];[m
+[32m+[m[32m        for(var i = 0; i < dlt_techstack.getRowCount(); i++) {[m
+[32m+[m[32m            techStackArray.push(dlt_techstack.getCellData(i, "techstack"));[m
+         }[m
+[31m-    });[m
+[32m+[m[32m        dmp_postVo.set("requiredSkills", JSON.stringify(techStackArray)); // JSON 문자열로 저장[m
+[32m+[m[41m        [m
+[32m+[m[32m        // 선택된 성향 버튼들을 JSON 배열로 변환하여 preferredDeveloperTypes에 저장[m
+[32m+[m[32m        var selectedPersonalities = [];[m
+[32m+[m[32m        var personalityBtns = document.querySelectorAll('.personality-btn.selected');[m
+[32m+[m[32m        personalityBtns.forEach(function(btn) {[m
+[32m+[m[32m            var personality = btn.textContent.trim();[m
+[32m+[m[32m            if (personality && personality !== "") {[m
+[32m+[m[32m                selectedPersonalities.push(personality);[m
+[32m+[m[32m            }[m
+[32m+[m[32m        });[m
+[32m+[m[32m        dmp_postVo.set("preferredDeveloperTypes", JSON.stringify(selectedPersonalities)); // JSON 문자열로 저장[m
+[32m+[m[41m        [m
+[32m+[m[32m        console.log("등록할 데이터 - 제목:", dmp_postVo.get("title"));[m
+[32m+[m[32m        console.log("등록할 데이터 - 지역:", dmp_postVo.get("location"));[m
+[32m+[m[32m        console.log("등록할 데이터 - 기술스택:", dmp_postVo.get("requiredSkills"));[m
+[32m+[m[32m        console.log("등록할 데이터 - 성향:", dmp_postVo.get("preferredDeveloperTypes"));[m
+[32m+[m[32m        console.log("등록할 데이터 - 상태:", dmp_postVo.get("status"));[m
+[32m+[m[41m        [m
+[32m+[m[32m        console.log("=== 서버 통신 시작 ===");[m
+[32m+[m[41m        [m
+[32m+[m[32m        // 웹스퀘어 submission 올바른 실행 방법들 시도[m
+[32m+[m[32m        try {[m
+[32m+[m[32m            console.log("=== 웹스퀘어 submission 실행 시작 ===");[m
+[32m+[m[41m            [m
+[32m+[m[32m            var submission = $p.getComponentById("sbm_insertPost");[m
+[32m+[m[32m            console.log("submission 객체 확인:", submission);[m
+[32m+[m[41m            [m
+[32m+[m[32m            if (submission) {[m
+[32m+[m[32m                // 웹스퀘어 submission 실행 방법들 순차 시도[m
+[32m+[m[32m                var success = false;[m
+[32m+[m[41m                [m
+[32m+[m[32m                // 방법 1: 웹스퀘어 표준 - triggering event[m
+[32m+[m[32m                try {[m
+[32m+[m[32m                    console.log("방법1: XForm event trigger 시도...");[m
+[32m+[m[32m                    // XForm submission의 submit 이벤트 트리거[m
+[32m+[m[32m                    var submitEvent = document.createEvent('Event');[m
+[32m+[m[32m                    submitEvent.initEvent('submit', true, true);[m
+[32m+[m[32m                    submission.xmlNode.dispatchEvent(submitEvent);[m
+[32m+[m[32m                    console.log("방법1 성공: XForm event trigger");[m
+[32m+[m[32m                    success = true;[m
+[32m+[m[32m                } catch (error1) {[m
+[32m+[m[32m                    console.log("방법1 실패:", error1.message);[m
+[32m+[m[41m                    [m
+[32m+[m[32m                    // 방법 2: 웹스퀘어 API - $p.executeSubmission[m
+[32m+[m[32m                    try {[m
+[32m+[m[32m                        console.log("방법2: $p.executeSubmission 시도...");[m
+[32m+[m[32m                        $p.executeSubmission("sbm_insertPost");[m
+[32m+[m[32m                        console.log("방법2 성공: $p.executeSubmission");[m
+[32m+[m[32m                        success = true;[m
+[32m+[m[32m                    } catch (error2) {[m
+[32m+[m[32m                        console.log("방법2 실패:", error2.message);[m
+[32m+[m[41m                        [m
+[32m+[m[32m                        // 방법 3: submission 객체의 내부 메서드 직접 호출[m
+[32m+[m[32m                        try {[m
+[32m+[m[32m                            console.log("방법3: submission 내부 실행 시도...");[m
+[32m+[m[32m                            console.log("submission 사용 가능한 모든 속성:", Object.getOwnPropertyNames(submission));[m
+[32m+[m[32m                            console.log("submission 프로토타입:", Object.getOwnPropertyNames(Object.getPrototypeOf(submission)));[m
+[32m+[m[41m                            [m
+[32m+[m[32m                            // submission의 실제 submit 메서드 찾기[m
+[32m+[m[32m                            if (submission._submit) {[m
+[32m+[m[32m                                submission._submit();[m
+[32m+[m[32m                                console.log("방법3-1 성공: _submit");[m
+[32m+[m[32m                                success = true;[m
+[32m+[m[32m                            } else if (submission.doSubmit) {[m
+[32m+[m[32m                                submission.doSubmit();[m
+[32m+[m[32m                                console.log("방법3-2 성공: doSubmit");[m
+[32m+[m[32m                                success = true;[m
+[32m+[m[32m                            } else if (submission.requestSubmit) {[m
+[32m+[m[32m                                submission.requestSubmit();[m
+[32m+[m[32m                                console.log("방법3-3 성공: requestSubmit");[m
+[32m+[m[32m                                success = true;[m
+[32m+[m[32m                            } else if (submission.execute) {[m
+[32m+[m[32m                                submission.execute();[m
+[32m+[m[32m                                console.log("방법3-4 성공: execute");[m
+[32m+[m[32m                                success = true;[m
+[32m+[m[32m                            } else {[m
+[32m+[m[32m                                throw new Error("사용 가능한 실행 메서드 없음");[m
+[32m+[m[32m                            }[m
+[32m+[m[32m                        } catch (error3) {[m
+[32m+[m[32m                            console.log("방법3 실패:", error3.message);[m
+[32m+[m[41m                            [m
+[32m+[m[32m                            // 방법 4: DOM에서 submission 폼 직접 submit[m
+[32m+[m[32m                            try {[m
+[32m+[m[32m                                console.log("방법4: DOM submit 시도...");[m
+[32m+[m[32m                                // submission이 연결된 form 요소 찾기[m
+[32m+[m[32m                                var form = document.querySelector('form') || document.body;[m
+[32m+[m[32m                                var submitEvent = new Event('submit', { bubbles: true, cancelable: true });[m
+[32m+[m[32m                                form.dispatchEvent(submitEvent);[m
+[32m+[m[32m                                console.log("방법4 성공: DOM submit");[m
+[32m+[m[32m                                success = true;[m
+[32m+[m[32m                            } catch (error4) {[m
+[32m+[m[32m                                console.log("방법4 실패:", error4.message);[m
+[32m+[m[32m                                throw new Error("모든 submission 실행 방법 실패");[m
+[32m+[m[32m                            }[m
+[32m+[m[32m                        }[m
+[32m+[m[32m                    }[m
+[32m+[m[32m                }[m
+[32m+[m[41m                [m
+[32m+[m[32m                if (success) {[m
+[32m+[m[32m                    console.log("=== submission 실행 완료 - 서버 응답 대기 중 ===");[m
+[32m+[m[32m                }[m
+[32m+[m[41m                [m
+[32m+[m[32m            } else {[m
+[32m+[m[32m                throw new Error("submission 객체를 찾을 수 없습니다");[m
+[32m+[m[32m            }[m
+[32m+[m[41m            [m
+[32m+[m[32m        } catch (error) {[m
+[32m+[m[32m            console.error("submission 실행 최종 오류:", error);[m
+[32m+[m[32m            console.error("오류 스택:", error.stack);[m
+[32m+[m[32m            alert("서버 통신 중 오류가 발생했습니다: " + error.message);[m
+[32m+[m[32m        }[m
+[32m+[m[32m    } else {[m
+[32m+[m[32m        console.log("=== 사용자가 취소 버튼 클릭 ===");[m
+[32m+[m[32m    }[m
+ };[m
+ [m
+ scwin.sbm_insertPost_submitdone = function(e) {[m
+[32m+[m[32m    console.log("=== 서버 응답 수신 ===");[m
+[32m+[m[32m    console.log("응답 전체:", e);[m
+[32m+[m[32m    console.log("응답 JSON:", e.responseJSON);[m
+[32m+[m[41m    [m
+     // error 수신시[m
+[31m-    var elHeader  = e.responseJSON.elHeader;[m
+[31m-    if(elHeader == null || elHeader == "" || elHeader == "undefiend" || elHeader.resSuc == false) {[m
+[31m-        $c.win.alert(`에러코드 : ${elHeader.resCode}\n에러메시지 : ${elHeader.resMsg}`);[m
+[32m+[m[32m    var elHeader = e.responseJSON ? e.responseJSON.elHeader : null;[m
+[32m+[m[32m    console.log("elHeader:", elHeader);[m
+[32m+[m[41m    [m
+[32m+[m[32m    if(elHeader == null || elHeader == "" || elHeader == "undefined" || elHeader.resSuc == false) {[m
+[32m+[m[32m        var errorCode = elHeader ? elHeader.resCode : "Unknown";[m
+[32m+[m[32m        var errorMsg = elHeader ? elHeader.resMsg : "서버 응답 없음";[m
+[32m+[m[41m        [m
+[32m+[m[32m        console.error("서버 에러 - 코드:", errorCode, "메시지:", errorMsg);[m
+[32m+[m[32m        $c.win.alert(`에러코드 : ${errorCode}\n에러메시지 : ${errorMsg}`);[m
+         return false;[m
+[31m-    }else{[m
+[32m+[m[32m    } else {[m
+[32m+[m[32m        console.log("=== 등록 성공 ===");[m
+         // 등록되었습니다. msg 출력[m
+         $c.win.alert("공고가 등록되었습니다.");[m
+         // 등록 후 대시보드로 이동[m
+[31m-        $p.url("RecruitmentDashboard.xml");[m
+[32m+[m[32m        $p.url("../corporate/RecruitmentDashboard.xml");[m
+     }[m
+ };]]></script>[m
+     </head>[m
+[36m@@ -535,6 +700,78 @@[m [mscwin.sbm_insertPost_submitdone = function(e) {[m
+         		<w2:textbox class="page-subtitle" label="우리 회사의 문화와 원하는 인재상을 입력해주세요"></w2:textbox>[m
+         	</xf:group>[m
+ [m
+[32m+[m[41m        [m	[32m<!-- 기본 정보 섹션 -->[m
+[32m+[m[41m        [m	[32m<section class="form-section">[m
+[32m+[m[41m        [m		[32m<w2:textbox class="section-title" label="기본 정보"></w2:textbox>[m
+[32m+[m[41m        		[m
+[32m+[m[41m        [m		[32m<xf:group class="form-group">[m
+[32m+[m[41m        [m			[32m<w2:textbox class="form-label" label="공고 제목"></w2:textbox>[m
+[32m+[m[41m        [m			[32m<xf:input class="form-input" placeholder="매력적인 공고 제목을 입력해주세요" ref="data:dmp_postVo.title"></xf:input>[m
+[32m+[m[41m        [m		[32m</xf:group>[m
+[32m+[m[41m        		[m
+[32m+[m[41m        [m		[32m<xf:group class="form-row">[m
+[32m+[m[41m        [m			[32m<xf:group class="form-group half">[m
+[32m+[m[41m        [m				[32m<w2:textbox class="form-label" label="근무 지역"></w2:textbox>[m
+[32m+[m[41m        [m				[32m<xf:select1 class="form-select" chooseOption="지역 선택" appearance="minimal" ref="data:dmp_postVo.location">[m
+[32m+[m[41m        [m					[32m<xf:choices>[m
+[32m+[m[41m        [m						[32m<xf:item>[m
+[32m+[m[41m        [m							[32m<xf:label><![CDATA[서울]]></xf:label>[m
+[32m+[m[41m        [m							[32m<xf:value><![CDATA[서울]]></xf:value>[m
+[32m+[m[41m        [m						[32m</xf:item>[m
+[32m+[m[41m        [m						[32m<xf:item>[m
+[32m+[m[41m        [m							[32m<xf:label><![CDATA[경기]]></xf:label>[m
+[32m+[m[41m        [m							[32m<xf:value><![CDATA[경기]]></xf:value>[m
+[32m+[m[41m        [m						[32m</xf:item>[m
+[32m+[m[41m        [m						[32m<xf:item>[m
+[32m+[m[41m        [m							[32m<xf:label><![CDATA[인천]]></xf:label>[m
+[32m+[m[41m        [m							[32m<xf:value><![CDATA[인천]]></xf:value>[m
+[32m+[m[41m        [m						[32m</xf:item>[m
+[32m+[m[41m        [m						[32m<xf:item>[m
+[32m+[m[41m        [m							[32m<xf:label><![CDATA[부산]]></xf:label>[m
+[32m+[m[41m        [m							[32m<xf:value><![CDATA[부산]]></xf:value>[m
+[32m+[m[41m        [m						[32m</xf:item>[m
+[32m+[m[41m        [m						[32m<xf:item>[m
+[32m+[m[41m        [m							[32m<xf:label><![CDATA[대구]]></xf:label>[m
+[32m+[m[41m        [m							[32m<xf:value><![CDATA[대구]]></xf:value>[m
+[32m+[m[41m        [m						[32m</xf:item>[m
+[32m+[m[41m        [m						[32m<xf:item>[m
+[32m+[m[41m        [m							[32m<xf:label><![CDATA[대전]]></xf:label>[m
+[32m+[m[41m        [m							[32m<xf:value><![CDATA[대전]]></xf:value>[m
+[32m+[m[41m        [m						[32m</xf:item>[m
+[32m+[m[41m        [m						[32m<xf:item>[m
+[32m+[m[41m        [m							[32m<xf:label><![CDATA[광주]]></xf:label>[m
+[32m+[m[41m        [m							[32m<xf:value><![CDATA[광주]]></xf:value>[m
+[32m+[m[41m        [m						[32m</xf:item>[m
+[32m+[m[41m        [m						[32m<xf:item>[m
+[32m+[m[41m        [m							[32m<xf:label><![CDATA[원격근무]]></xf:label>[m
+[32m+[m[41m        [m							[32m<xf:value><![CDATA[원격근무]]></xf:value>[m
+[32m+[m[41m        [m						[32m</xf:item>[m
+[32m+[m[41m        [m					[32m</xf:choices>[m
+[32m+[m[41m        [m				[32m</xf:select1>[m
+[32m+[m[41m        [m			[32m</xf:group>[m
+[32m+[m[41m        			[m
+[32m+[m[41m        [m			[32m<xf:group class="form-group half">[m
+[32m+[m[41m        [m				[32m<w2:textbox class="form-label" label="근무 형태"></w2:textbox>[m
+[32m+[m[41m        [m				[32m<xf:select1 class="form-select" chooseOption="형태 선택" appearance="minimal" ref="data:dmp_postVo.workType">[m
+[32m+[m[41m        [m					[32m<xf:choices>[m
+[32m+[m[41m        [m						[32m<xf:item>[m
+[32m+[m[41m        [m							[32m<xf:label><![CDATA[원격 근무]]></xf:label>[m
+[32m+[m[41m        [m							[32m<xf:value><![CDATA[remote]]></xf:value>[m
+[32m+[m[41m        [m						[32m</xf:item>[m
+[32m+[m[41m        [m						[32m<xf:item>[m
+[32m+[m[41m        [m							[32m<xf:label><![CDATA[출근 근무]]></xf:label>[m
+[32m+[m[41m        [m							[32m<xf:value><![CDATA[onsite]]></xf:value>[m
+[32m+[m[41m        [m						[32m</xf:item>[m
+[32m+[m[41m        [m						[32m<xf:item>[m
+[32m+[m[41m        [m							[32m<xf:label><![CDATA[하이브리드]]></xf:label>[m
+[32m+[m[41m        [m							[32m<xf:value><![CDATA[hybrid]]></xf:value>[m
+[32m+[m[41m        [m						[32m</xf:item>[m
+[32m+[m[41m        [m					[32m</xf:choices>[m
+[32m+[m[41m        [m				[32m</xf:select1>[m
+[32m+[m[41m        [m			[32m</xf:group>[m
+[32m+[m[41m        [m		[32m</xf:group>[m
+[32m+[m[41m        [m	[32m</section>[m
+[32m+[m
+         	<!-- 개발 환경 및 기술 스택 섹션 -->[m
+         	<section class="form-section">[m
+         		<w2:textbox class="section-title" label="개발 환경 및 기술 스택"></w2:textbox>[m

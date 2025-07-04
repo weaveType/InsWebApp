@@ -15,6 +15,11 @@
             			<w2:column dataType="text" name="techstack" id="techstack"></w2:column>
             		</w2:columnInfo>
             	</w2:dataList>
+            	<w2:dataList baseNode="list" repeatNode="map" id="dlt_personalities" saveRemovedData="true">
+            		<w2:columnInfo>
+            			<w2:column dataType="text" name="personality" id="personality"></w2:column>
+            		</w2:columnInfo>
+            	</w2:dataList>
             	<w2:dataMap baseNode="map" id="dmp_postVo" style="">
             		<w2:keyInfo>
             			<w2:key dataType="text" id="jobPostingId" name="job_posting_id"></w2:key>
@@ -277,12 +282,33 @@
                 border-color: #3b82f6;
             }
             
+            .personality-btn.disabled {
+                opacity: 0.5;
+                cursor: not-allowed;
+                background: #f7fafc;
+                color: #a0aec0;
+                pointer-events: none;
+            }
+            
             /* 도움말 텍스트 */
             .help-text {
                 font-size: 14px;
                 color: #6b7280;
                 margin-top: 8px;
                 line-height: 1.5;
+            }
+            
+            /* 카운터 표시 */
+            .personality-counter {
+                position: absolute;
+                top: 0;
+                right: 0;
+                background: #3b82f6;
+                color: white;
+                padding: 4px 8px;
+                border-radius: 8px;
+                font-size: 12px;
+                font-weight: 600;
             }
             
             /* 버튼 스타일 */
@@ -414,44 +440,61 @@
             }
         ]]></style>
         
-        <script lazy="false" type="text/javascript"><![CDATA[scwin.onpageload = function () {
-
+        <script lazy="false" type="text/javascript"><![CDATA[
+scwin.onpageload = function () {
+    // 성향 선택 관련 변수 초기화
+    scwin.maxPersonalities = 4;
+    scwin.selectedPersonalities = [];
+    scwin.updatePersonalityCounter();
 };
 
 scwin.main_logo_onclick = function (e) {
 };
 
-// 기술스택 추가이벤트
+// 기술스택 추가 이벤트 (스크롤 자동 선택 문제 해결)
 scwin.select_techstack_onchange = function () {
     var selectedValue = select_techstack.getValue();
     
-    console.log("선택된 값:", selectedValue);
+    console.log("AutoComplete 변경 이벤트:", selectedValue);
     
-    // 선택된 값이 없으면 리턴
+    // 선택된 값이 없거나 기본값이면 리턴 (스크롤 방지)
     if (!selectedValue || selectedValue === "" || selectedValue === "기술스택을 선택하세요") {
+        console.log("빈 값이거나 기본값이므로 무시");
         return;
     }
-
-    // 해당 기술스택이 이미 있는지 확인
-    var matchedData = dlt_techstack.getMatchedJSON("techstack", selectedValue);
-
-    if(matchedData.length == 0){
-        // 데이터리스트에 새 항목 추가
-        var newRowIndex = dlt_techstack.insertRow();
-        dlt_techstack.setCellData(newRowIndex, "techstack", selectedValue);
-        gen_techstack.refresh();
-        
-        console.log("기술스택 추가됨:", selectedValue);
-    } else {
-        console.log("이미 존재하는 기술스택:", selectedValue);
-    }
     
-    console.log("현재 기술스택 개수:", dlt_techstack.getRowCount());
-    
-    // AutoComplete 초기화 (이벤트 루프 방지)
+    // 실제 선택인지 확인 (스크롤이 아닌 실제 클릭/선택인지)
     setTimeout(function() {
+        var currentValue = select_techstack.getValue();
+        if (currentValue !== selectedValue) {
+            console.log("값이 변경됨, 스크롤로 인한 임시 선택으로 판단");
+            return;
+        }
+        
+        console.log("실제 기술스택 선택:", selectedValue);
+        
+        // 해당 기술스택이 이미 있는지 확인
+        var matchedData = dlt_techstack.getMatchedJSON("techstack", selectedValue);
+
+        if(matchedData.length == 0){
+            // 데이터리스트에 새 항목 추가
+            var newRowIndex = dlt_techstack.insertRow();
+            dlt_techstack.setCellData(newRowIndex, "techstack", selectedValue);
+            
+            // Generator 새로고침으로 UI 업데이트
+            gen_techstack.refresh();
+            
+            console.log("✅ 기술스택 추가됨:", selectedValue);
+        } else {
+            console.log("⚠️ 이미 존재하는 기술스택:", selectedValue);
+        }
+        
+        console.log("현재 기술스택 개수:", dlt_techstack.getRowCount());
+        
+        // AutoComplete 초기화
         select_techstack.setValue("");
-    }, 100);
+        
+    }, 200); // 200ms 지연으로 실제 선택인지 확인
 };
 
 // 개별 기술스택 제거 함수 (Generator 내부에서 호출)
@@ -469,12 +512,162 @@ scwin.removeTechStack = function(rowIndex) {
     }
 };
 
+// 성향 버튼 클릭 이벤트 (웹스퀘어 환경에 최적화된 방법)
 scwin.personality_btn_onclick = function (e) {
-    // 성향 버튼 선택 토글
-    var btn = e.target;
-    btn.classList.contains('selected') 
-        ? btn.classList.remove('selected') 
-        : btn.classList.add('selected');
+    // 웹스퀘어에서 이벤트 소스의 ID나 라벨을 직접 확인
+    var btn = e.target || e.srcElement;
+    var personality = "";
+    
+    // 방법 1: 웹스퀘어 컴포넌트 ID에서 추출
+    if (btn.id && btn.id.indexOf('personality_') === 0) {
+        personality = btn.id.replace('personality_', '');
+    }
+    // 방법 2: 라벨 텍스트에서 직접 추출
+    else {
+        // 웹스퀘어 라벨 찾기
+        var labels = btn.querySelectorAll('label, .w2-trigger-label, xf\\:label');
+        if (labels.length > 0) {
+            personality = labels[0].textContent || labels[0].innerText || "";
+        } else {
+            // 버튼 자체에서 텍스트 추출
+            var btnText = btn.textContent || btn.innerText || btn.value || "";
+            personality = btnText.trim();
+        }
+    }
+    
+    console.log("성향 버튼 클릭:", personality);
+    console.log("버튼 ID:", btn.id);
+    console.log("현재 선택된 개수:", scwin.selectedPersonalities.length);
+    
+    // 성향이 빈 문자열이면 중단
+    if (!personality || personality === "") {
+        console.log("❌ 성향 텍스트를 가져올 수 없습니다");
+        alert("성향을 인식할 수 없습니다. 다시 시도해주세요.");
+        return;
+    }
+    
+    // disabled 상태면 클릭 무시
+    if (btn.classList.contains('disabled')) {
+        alert("최대 " + scwin.maxPersonalities + "개까지만 선택 가능합니다.");
+        return;
+    }
+    
+    if (btn.classList.contains('selected')) {
+        // 선택 해제
+        btn.classList.remove('selected');
+        scwin.removePersonalityFromData(personality);
+        console.log("✅ 성향 선택 해제:", personality);
+    } else {
+        // 선택 추가 - 4개 제한 확인
+        if (scwin.selectedPersonalities.length >= scwin.maxPersonalities) {
+            alert("최대 " + scwin.maxPersonalities + "개까지만 선택 가능합니다.");
+            return;
+        }
+        
+        btn.classList.add('selected');
+        scwin.addPersonalityToData(personality);
+        console.log("✅ 성향 선택:", personality);
+    }
+    
+    scwin.updatePersonalityCounter();
+    scwin.updatePersonalityButtons();
+    
+    console.log("현재 선택된 성향들:", scwin.selectedPersonalities);
+    console.log("데이터리스트 개수:", dlt_personalities.getRowCount());
+};
+
+// 성향을 데이터리스트에 추가
+scwin.addPersonalityToData = function(personality) {
+    if (!personality || personality.trim() === "") return;
+    
+    // 배열에 추가
+    if (scwin.selectedPersonalities.indexOf(personality) === -1) {
+        scwin.selectedPersonalities.push(personality);
+    }
+    
+    // 데이터리스트에 추가
+    var matchedData = dlt_personalities.getMatchedJSON("personality", personality);
+    if (matchedData.length == 0) {
+        var newRowIndex = dlt_personalities.insertRow();
+        dlt_personalities.setCellData(newRowIndex, "personality", personality);
+        console.log("성향 데이터 추가:", personality);
+    }
+};
+
+// 성향을 데이터리스트에서 제거
+scwin.removePersonalityFromData = function(personality) {
+    // 배열에서 제거
+    var index = scwin.selectedPersonalities.indexOf(personality);
+    if (index > -1) {
+        scwin.selectedPersonalities.splice(index, 1);
+    }
+    
+    // 데이터리스트에서 제거
+    var matchedData = dlt_personalities.getMatchedJSON("personality", personality);
+    if (matchedData.length > 0) {
+        for (var i = 0; i < matchedData.length; i++) {
+            var rowIndex = dlt_personalities.getRowIndex(matchedData[i]);
+            dlt_personalities.removeRow(rowIndex);
+        }
+        console.log("성향 데이터 제거:", personality);
+    }
+};
+
+// 성향 카운터 업데이트
+scwin.updatePersonalityCounter = function() {
+    var counter = document.querySelector('.personality-counter');
+    if (!counter) {
+        // 카운터 엘리먼트가 없으면 생성
+        var section = document.querySelector('.form-group');
+        if (section) {
+            counter = document.createElement('div');
+            counter.className = 'personality-counter';
+            section.style.position = 'relative';
+            section.appendChild(counter);
+        }
+    }
+    
+    if (counter) {
+        var selectedCount = scwin.selectedPersonalities.length;
+        counter.textContent = selectedCount + '/' + scwin.maxPersonalities;
+        
+        // 카운터 색상 변경
+        if (selectedCount >= scwin.maxPersonalities) {
+            counter.style.backgroundColor = '#ef4444';
+        } else {
+            counter.style.backgroundColor = '#3b82f6';
+        }
+    }
+};
+
+// 성향 버튼 상태 업데이트 (ID 기반으로 수정)
+scwin.updatePersonalityButtons = function() {
+    var selectedCount = scwin.selectedPersonalities.length;
+    var buttons = document.querySelectorAll('.personality-btn');
+    
+    console.log("버튼 상태 업데이트 - 선택된 개수:", selectedCount);
+    
+    buttons.forEach(function(btn) {
+        var personality = "";
+        
+        // ID에서 성향 추출
+        if (btn.id && btn.id.indexOf('personality_') === 0) {
+            personality = btn.id.replace('personality_', '');
+        }
+        
+        var isSelected = btn.classList.contains('selected');
+        
+        console.log("버튼 확인:", personality, "선택됨:", isSelected);
+        
+        if (!isSelected && selectedCount >= scwin.maxPersonalities) {
+            // 선택되지 않은 버튼이고 최대 개수에 도달한 경우 비활성화
+            btn.classList.add('disabled');
+            console.log("버튼 비활성화:", personality);
+        } else {
+            // 그 외의 경우 활성화
+            btn.classList.remove('disabled');
+        }
+    });
 };
 
 scwin.btn_cancel_posting_onclick = function (e) {
@@ -502,6 +695,12 @@ scwin.btn_create_posting_onclick = function (e) {
     
     if (!dmp_postVo.get("workType") || dmp_postVo.get("workType").trim() === "") {
         alert("근무 형태를 선택해주세요.");
+        return;
+    }
+    
+    // 기술스택 필수 선택 검증 추가
+    if (dlt_techstack.getRowCount() === 0) {
+        alert("최소 1개 이상의 기술스택을 선택해주세요.");
         return;
     }
     
@@ -548,20 +747,22 @@ scwin.btn_create_posting_onclick = function (e) {
         // 선택된 기술스택들을 JSON 배열로 변환하여 requiredSkills에 저장
         var techStackArray = [];
         for(var i = 0; i < dlt_techstack.getRowCount(); i++) {
-            techStackArray.push(dlt_techstack.getCellData(i, "techstack"));
+            var techstack = dlt_techstack.getCellData(i, "techstack");
+            if (techstack && techstack.trim() !== "") {
+                techStackArray.push(techstack);
+            }
         }
         dmp_postVo.set("requiredSkills", JSON.stringify(techStackArray)); // JSON 문자열로 저장
         
-        // 선택된 성향 버튼들을 JSON 배열로 변환하여 preferredDeveloperTypes에 저장
-        var selectedPersonalities = [];
-        var personalityBtns = document.querySelectorAll('.personality-btn.selected');
-        personalityBtns.forEach(function(btn) {
-            var personality = btn.textContent.trim();
-            if (personality && personality !== "") {
-                selectedPersonalities.push(personality);
+        // 선택된 성향들을 JSON 배열로 변환하여 preferredDeveloperTypes에 저장 (수정된 부분)
+        var personalityArray = [];
+        for(var i = 0; i < dlt_personalities.getRowCount(); i++) {
+            var personality = dlt_personalities.getCellData(i, "personality");
+            if (personality && personality.trim() !== "") {
+                personalityArray.push(personality);
             }
-        });
-        dmp_postVo.set("preferredDeveloperTypes", JSON.stringify(selectedPersonalities)); // JSON 문자열로 저장
+        }
+        dmp_postVo.set("preferredDeveloperTypes", JSON.stringify(personalityArray)); // JSON 문자열로 저장
         
         console.log("등록할 데이터 - 제목:", dmp_postVo.get("title"));
         console.log("등록할 데이터 - 지역:", dmp_postVo.get("location"));
@@ -571,81 +772,31 @@ scwin.btn_create_posting_onclick = function (e) {
         
         console.log("=== 서버 통신 시작 ===");
         
-        // 웹스퀘어 submission 올바른 실행 방법들 시도
+        // 웹스퀘어 submission 실행
         try {
-            console.log("=== 웹스퀘어 submission 실행 시작 ===");
-            
             var submission = $p.getComponentById("sbm_insertPost");
-            console.log("submission 객체 확인:", submission);
-            
             if (submission) {
-                // 웹스퀘어 submission 실행 방법들 순차 시도
+                // 여러 방법 시도
                 var success = false;
                 
-                // 방법 1: 웹스퀘어 표준 - triggering event
+                // 방법 1: 표준 웹스퀘어 API
                 try {
-                    console.log("방법1: XForm event trigger 시도...");
-                    // XForm submission의 submit 이벤트 트리거
-                    var submitEvent = document.createEvent('Event');
-                    submitEvent.initEvent('submit', true, true);
-                    submission.xmlNode.dispatchEvent(submitEvent);
-                    console.log("방법1 성공: XForm event trigger");
+                    $p.executeSubmission("sbm_insertPost");
                     success = true;
+                    console.log("✅ submission 실행 성공");
                 } catch (error1) {
                     console.log("방법1 실패:", error1.message);
                     
-                    // 방법 2: 웹스퀘어 API - $p.executeSubmission
+                    // 방법 2: DOM 이벤트 트리거
                     try {
-                        console.log("방법2: $p.executeSubmission 시도...");
-                        $p.executeSubmission("sbm_insertPost");
-                        console.log("방법2 성공: $p.executeSubmission");
+                        var submitEvent = document.createEvent('Event');
+                        submitEvent.initEvent('submit', true, true);
+                        submission.xmlNode.dispatchEvent(submitEvent);
                         success = true;
+                        console.log("✅ DOM 이벤트 트리거 성공");
                     } catch (error2) {
                         console.log("방법2 실패:", error2.message);
-                        
-                        // 방법 3: submission 객체의 내부 메서드 직접 호출
-                        try {
-                            console.log("방법3: submission 내부 실행 시도...");
-                            console.log("submission 사용 가능한 모든 속성:", Object.getOwnPropertyNames(submission));
-                            console.log("submission 프로토타입:", Object.getOwnPropertyNames(Object.getPrototypeOf(submission)));
-                            
-                            // submission의 실제 submit 메서드 찾기
-                            if (submission._submit) {
-                                submission._submit();
-                                console.log("방법3-1 성공: _submit");
-                                success = true;
-                            } else if (submission.doSubmit) {
-                                submission.doSubmit();
-                                console.log("방법3-2 성공: doSubmit");
-                                success = true;
-                            } else if (submission.requestSubmit) {
-                                submission.requestSubmit();
-                                console.log("방법3-3 성공: requestSubmit");
-                                success = true;
-                            } else if (submission.execute) {
-                                submission.execute();
-                                console.log("방법3-4 성공: execute");
-                                success = true;
-                            } else {
-                                throw new Error("사용 가능한 실행 메서드 없음");
-                            }
-                        } catch (error3) {
-                            console.log("방법3 실패:", error3.message);
-                            
-                            // 방법 4: DOM에서 submission 폼 직접 submit
-                            try {
-                                console.log("방법4: DOM submit 시도...");
-                                // submission이 연결된 form 요소 찾기
-                                var form = document.querySelector('form') || document.body;
-                                var submitEvent = new Event('submit', { bubbles: true, cancelable: true });
-                                form.dispatchEvent(submitEvent);
-                                console.log("방법4 성공: DOM submit");
-                                success = true;
-                            } catch (error4) {
-                                console.log("방법4 실패:", error4.message);
-                                throw new Error("모든 submission 실행 방법 실패");
-                            }
-                        }
+                        throw new Error("모든 submission 실행 방법 실패");
                     }
                 }
                 
@@ -659,7 +810,6 @@ scwin.btn_create_posting_onclick = function (e) {
             
         } catch (error) {
             console.error("submission 실행 최종 오류:", error);
-            console.error("오류 스택:", error.stack);
             alert("서버 통신 중 오류가 발생했습니다: " + error.message);
         }
     } else {
@@ -681,16 +831,17 @@ scwin.sbm_insertPost_submitdone = function(e) {
         var errorMsg = elHeader ? elHeader.resMsg : "서버 응답 없음";
         
         console.error("서버 에러 - 코드:", errorCode, "메시지:", errorMsg);
-        $c.win.alert(`에러코드 : ${errorCode}\n에러메시지 : ${errorMsg}`);
+        alert(`에러코드 : ${errorCode}\n에러메시지 : ${errorMsg}`);
         return false;
     } else {
         console.log("=== 등록 성공 ===");
         // 등록되었습니다. msg 출력
-        $c.win.alert("공고가 등록되었습니다.");
+        alert("공고가 등록되었습니다.");
         // 등록 후 대시보드로 이동
         $p.url("../corporate/RecruitmentDashboard.xml");
     }
-};]]></script>
+};
+]]></script>
     </head>
     <body ev:onpageload="scwin.onpageload">
         <xf:group class="main-container">
@@ -777,7 +928,7 @@ scwin.sbm_insertPost_submitdone = function(e) {
         		<w2:textbox class="section-title" label="개발 환경 및 기술 스택"></w2:textbox>
 
         		<xf:group class="form-group">
-        			<w2:textbox class="form-label" label="주요 기술 스택"></w2:textbox>
+        			<w2:textbox class="form-label" label="주요 기술 스택 *"></w2:textbox>
         			<w2:autoComplete editType="select" id="select_techstack" style="width:100%;height:56px;" submenuSize="auto"
         				search="start" allOption="" chooseOption="true" ref="" chooseOptionLabel="기술스택을 선택하세요"
         				ev:onchange="scwin.select_techstack_onchange">
@@ -844,63 +995,64 @@ scwin.sbm_insertPost_submitdone = function(e) {
         	<section class="form-section">
         		<w2:textbox class="section-title" label="원하는 인재상"></w2:textbox>
 
-        		<xf:group class="form-group">
+        		<xf:group class="form-group" style="position: relative;">
         			<w2:textbox class="form-label" label="선호하는 성향 유형 (최대 4개 선택 가능)"></w2:textbox>
+        			<div class="personality-counter">0/4</div>
 
         			<xf:group class="button-grid">
         				<!-- BR** -->
-        				<xf:trigger class="personality-btn" type="button" ev:onclick="scwin.personality_btn_onclick">
+        				<xf:trigger class="personality-btn" type="button" id="personality_BRSD" ev:onclick="scwin.personality_btn_onclick">
         					<xf:label><![CDATA[BRSD]]></xf:label>
         				</xf:trigger>
-        				<xf:trigger class="personality-btn" type="button" ev:onclick="scwin.personality_btn_onclick">
+        				<xf:trigger class="personality-btn" type="button" id="personality_BRSF" ev:onclick="scwin.personality_btn_onclick">
         					<xf:label><![CDATA[BRSF]]></xf:label>
         				</xf:trigger>
-        				<xf:trigger class="personality-btn" type="button" ev:onclick="scwin.personality_btn_onclick">
+        				<xf:trigger class="personality-btn" type="button" id="personality_BRTD" ev:onclick="scwin.personality_btn_onclick">
         					<xf:label><![CDATA[BRTD]]></xf:label>
         				</xf:trigger>
-        				<xf:trigger class="personality-btn" type="button" ev:onclick="scwin.personality_btn_onclick">
+        				<xf:trigger class="personality-btn" type="button" id="personality_BRTF" ev:onclick="scwin.personality_btn_onclick">
         					<xf:label><![CDATA[BRTF]]></xf:label>
         				</xf:trigger>
 
         				<!-- BI** -->
-        				<xf:trigger class="personality-btn" type="button" ev:onclick="scwin.personality_btn_onclick">
+        				<xf:trigger class="personality-btn" type="button" id="personality_BISD" ev:onclick="scwin.personality_btn_onclick">
         					<xf:label><![CDATA[BISD]]></xf:label>
         				</xf:trigger>
-        				<xf:trigger class="personality-btn" type="button" ev:onclick="scwin.personality_btn_onclick">
+        				<xf:trigger class="personality-btn" type="button" id="personality_BISF" ev:onclick="scwin.personality_btn_onclick">
         					<xf:label><![CDATA[BISF]]></xf:label>
         				</xf:trigger>
-        				<xf:trigger class="personality-btn" type="button" ev:onclick="scwin.personality_btn_onclick">
+        				<xf:trigger class="personality-btn" type="button" id="personality_BITD" ev:onclick="scwin.personality_btn_onclick">
         					<xf:label><![CDATA[BITD]]></xf:label>
         				</xf:trigger>
-        				<xf:trigger class="personality-btn" type="button" ev:onclick="scwin.personality_btn_onclick">
+        				<xf:trigger class="personality-btn" type="button" id="personality_BITF" ev:onclick="scwin.personality_btn_onclick">
         					<xf:label><![CDATA[BITF]]></xf:label>
         				</xf:trigger>
 
         				<!-- AR** -->
-        				<xf:trigger class="personality-btn" type="button" ev:onclick="scwin.personality_btn_onclick">
+        				<xf:trigger class="personality-btn" type="button" id="personality_ARSD" ev:onclick="scwin.personality_btn_onclick">
         					<xf:label><![CDATA[ARSD]]></xf:label>
         				</xf:trigger>
-        				<xf:trigger class="personality-btn" type="button" ev:onclick="scwin.personality_btn_onclick">
+        				<xf:trigger class="personality-btn" type="button" id="personality_ARSF" ev:onclick="scwin.personality_btn_onclick">
         					<xf:label><![CDATA[ARSF]]></xf:label>
         				</xf:trigger>
-        				<xf:trigger class="personality-btn" type="button" ev:onclick="scwin.personality_btn_onclick">
+        				<xf:trigger class="personality-btn" type="button" id="personality_ARTD" ev:onclick="scwin.personality_btn_onclick">
         					<xf:label><![CDATA[ARTD]]></xf:label>
         				</xf:trigger>
-        				<xf:trigger class="personality-btn" type="button" ev:onclick="scwin.personality_btn_onclick">
+        				<xf:trigger class="personality-btn" type="button" id="personality_ARTF" ev:onclick="scwin.personality_btn_onclick">
         					<xf:label><![CDATA[ARTF]]></xf:label>
         				</xf:trigger>
 
         				<!-- AI** -->
-        				<xf:trigger class="personality-btn" type="button" ev:onclick="scwin.personality_btn_onclick">
+        				<xf:trigger class="personality-btn" type="button" id="personality_AISD" ev:onclick="scwin.personality_btn_onclick">
         					<xf:label><![CDATA[AISD]]></xf:label>
         				</xf:trigger>
-        				<xf:trigger class="personality-btn" type="button" ev:onclick="scwin.personality_btn_onclick">
+        				<xf:trigger class="personality-btn" type="button" id="personality_AISF" ev:onclick="scwin.personality_btn_onclick">
         					<xf:label><![CDATA[AISF]]></xf:label>
         				</xf:trigger>
-        				<xf:trigger class="personality-btn" type="button" ev:onclick="scwin.personality_btn_onclick">
+        				<xf:trigger class="personality-btn" type="button" id="personality_AITD" ev:onclick="scwin.personality_btn_onclick">
         					<xf:label><![CDATA[AITD]]></xf:label>
         				</xf:trigger>
-        				<xf:trigger class="personality-btn" type="button" ev:onclick="scwin.personality_btn_onclick">
+        				<xf:trigger class="personality-btn" type="button" id="personality_AITF" ev:onclick="scwin.personality_btn_onclick">
         					<xf:label><![CDATA[AITF]]></xf:label>
         				</xf:trigger>
         			</xf:group>
