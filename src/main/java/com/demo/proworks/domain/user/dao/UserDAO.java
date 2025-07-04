@@ -68,6 +68,13 @@ public class UserDAO extends com.demo.proworks.cmmn.dao.ProworksDefaultAbstractD
 		// 암호화 처리
 		String hashedPassword = BCrypt.hashpw(vo.getPassword(), BCrypt.gensalt(12));
 		vo.setPassword(hashedPassword);
+		if(vo.getRole().equals("USER")){
+			vo.setRoleId(1);
+		} else if(vo.getRole().equals("COMPANY")) {
+			vo.setRoleId(2);
+		} else if(vo.getRole().equals("ADMIN")){
+			vo.setRoleId(3);
+		}
 
 		return insert("com.demo.proworks.domain.user.insertUser", vo);
 	}
