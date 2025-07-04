@@ -137,16 +137,6 @@ scwin.filterApplicantsByStatus = function() {
 // 서버에서 지원자 데이터 조회 (동적 데이터 로드용)
 scwin.searchApplicants = function() {
     // 실제 환경에서는 submission을 통해 서버와 통신
-    /*
-    com.win.executeSubmission({
-        action: "/recruitment/getApplicants",
-        target: "data:json,dlt_applicants",
-        submitDoneHandler: function(e) {
-            // 데이터 로드 성공 시 상태별 필터링
-            scwin.filterApplicantsByStatus();
-        }
-    });
-    */
 };
 
 // 지원자 상세 정보 보기
