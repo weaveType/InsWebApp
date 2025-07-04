@@ -102,7 +102,7 @@ public class CorporateServiceImpl implements CorporateService {
 		  UserVo userVo = new UserVo();
                 userVo.setEmail(corporateVo.getEmail());
                 userVo.setPassword(corporateVo.getPassword());
-                userVo.setRoleId(corporateVo.getRoleId());
+                userVo.setRole(corporateVo.getRole());
                 userVo.setName(corporateVo.getName());
 
           userDAO.insertUser(userVo);
