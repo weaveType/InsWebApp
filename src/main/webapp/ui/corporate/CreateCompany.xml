@@ -559,7 +559,6 @@ scwin.resetForm = function () {
 
 			<!-- 폼 컨테이너 -->
 			<xf:group class="form-container" id="grp_corporateInfo">
-				a
 				<!-- 이메일 -->
 				<xf:group class="form-group">
 					<w2:textbox class="form-label required" label="이메일"></w2:textbox>

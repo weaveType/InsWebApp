@@ -283,7 +283,7 @@ scwin.btn_recruitment_statistics_onclick = function (e) {
 };
 
 scwin.btn_update_company_onclick = function (e) {
-    $p.url("CorporateList.xml");
+    $p.url("CorporateUpdateTest.xml");
 };
 
 scwin.btn_delete_company_onclick = function (e) {

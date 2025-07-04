@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import com.inswave.elfw.exception.ElException;
 import com.demo.proworks.domain.corporate.vo.CorporateVo;
+import com.demo.proworks.common.vo.EmailVo;
 import com.demo.proworks.domain.corporate.dao.CorporateDAO;
 
 /**  
@@ -32,6 +33,17 @@ public class CorporateDAO extends com.demo.proworks.cmmn.dao.ProworksDefaultAbst
      */
     public CorporateVo selectCorporate(CorporateVo vo) throws ElException {
         return (CorporateVo) selectByPk("com.demo.proworks.domain.corporate.selectCorporate", vo);
+    }
+
+    /**
+     * 이메일로 회사정보를 상세 조회한다.
+     *  
+     * @param  CorporateVo 회사정보
+     * @return CorporateVo 회사정보
+     * @throws ElException
+     */
+    public CorporateVo selectCorporateByEmail(EmailVo vo) throws ElException {
+        return (CorporateVo) selectByPk("com.demo.proworks.domain.corporate.selectCorporateByEmail", vo);
     }
 
     /**

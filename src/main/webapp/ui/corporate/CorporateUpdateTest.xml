@@ -1,0 +1,978 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare"
+	xmlns:xf="http://www.w3.org/2002/xforms">
+
+	<head meta_screenName="회사 메인페이지">
+		<w2:type>COMPONENT</w2:type>
+		<w2:buildDate />
+		<w2:MSA />
+		<xf:model>
+			<w2:dataCollection baseNode="map">
+				<!-- 기존 기업 정보 데이터맵 -->
+				<w2:dataMap baseNode="map" id="dmp_corporateVoDetail">
+					<w2:keyInfo>
+						<w2:key dataType="text" name="이메일" id="email"></w2:key>
+						<w2:key dataType="text" name="비밀번호" id="password"></w2:key>
+						<w2:key dataType="text" name="회사명" id="name"></w2:key>
+						<w2:key dataType="text" name="사업자 등록번호" id="businessNumber"></w2:key>
+						<w2:key dataType="text" name="사업자등록증명원" id="businessCertificate"></w2:key>
+						<w2:key dataType="text" name="산업군" id="industry"></w2:key>
+						<w2:key dataType="number" name="직원 수" id="empCount"></w2:key>
+						<w2:key dataType="text" name="회사 설명" id="description"></w2:key>
+						<w2:key dataType="text" name="로고파일명" id="logoFileName"></w2:key>
+						<w2:key dataType="text" name="유저 권한" id="role"></w2:key>
+					</w2:keyInfo>
+				</w2:dataMap>
+
+				<!-- 이메일 조회용 파라미터 데이터맵 -->
+				<w2:dataMap baseNode="map" id="dmp_searchParam">
+					<w2:keyInfo>
+						<w2:key dataType="text" name="이메일" id="email"></w2:key>
+					</w2:keyInfo>
+				</w2:dataMap>
+			</w2:dataCollection>
+			<w2:workflowCollection />
+
+			<!-- 기업 정보 등록/수정용 submission -->
+			<xf:submission id="sbm_insertCorporateVo" action="/InsWebApp/CP0001Ins.pwkjson" method="post" mediatype="application/json"
+				ref='data:json,["dmp_corporateVoDetail",{"id":"dmp_corporateVoDetail","key":"corporateVo"}]' target="" encoding="UTF-8" instance=""
+				replace="" errorHandler="" customHandler="" mode="asynchronous" processMsg="" ev:submit=""
+				ev:submitdone="scwin.sbm_insertCorporateVo_submitdone" ev:submiterror="" abortTrigger="">
+			</xf:submission>
+
+			<!-- 이메일로 기업 정보 조회용 submission - 단순화된 버전 -->
+			<xf:submission id="sbm_selectCorporateVo" action="/InsWebApp/CP0002UpdView.pwkjson" method="post"
+				mediatype="application/json" ref='data:json,{"id":"dmp_searchParam","key":"emailVo"}' target="" encoding="UTF-8" instance="" replace=""
+				errorHandler="" customHandler="" mode="asynchronous" processMsg="회사정보를 조회 중입니다." ev:submit=""
+				ev:submitdone="scwin.sbm_selectCorporateVo_submitdone" ev:submiterror="scwin.sbm_selectCorporateVo_submiterror" abortTrigger="">
+			</xf:submission>
+		</xf:model>
+		<w2:layoutInfo />
+		<w2:publicInfo method="" />
+
+		<style type="text/css"><![CDATA[
+/* 기존 스타일은 동일하게 유지 */
+.main-container {
+    background-color: #ffffff;
+    min-height: 100vh;
+    padding: 40px 20px;
+    max-width: 500px;
+    margin: 0 auto;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.page-title {
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.main-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: #333;
+    margin: 0;
+    letter-spacing: -0.5px;
+}
+
+.form-container {
+    width: 100%;
+}
+
+.form-group {
+    margin-bottom: 32px;
+    position: relative;
+}
+
+.form-label {
+    display: block;
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 12px;
+    letter-spacing: -0.3px;
+}
+
+.form-label.required::after {
+    content: " *";
+    color: #dc2626;
+    font-weight: bold;
+}
+
+.form-input {
+    width: 100%;
+    height: 56px;
+    padding: 0 16px;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    font-size: 16px;
+    color: #333;
+    background-color: #ffffff;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.form-input::placeholder {
+    color: #9ca3af;
+    font-weight: 400;
+}
+
+.form-select:focus {
+    outline: none !important;
+    border-color: #3b82f6 !important;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+}
+
+.form-textarea {
+    width: 100%;
+    min-height: 120px;
+    padding: 16px;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    font-size: 16px;
+    color: #333;
+    background-color: #ffffff;
+    font-family: inherit;
+    resize: vertical;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+}
+
+.form-textarea:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.form-textarea::placeholder {
+    color: #9ca3af;
+    font-weight: 400;
+}
+
+.business-number-group {
+    position: relative;
+}
+
+.overseas-link {
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: 14px;
+    color: #6b7280;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.overseas-link:hover {
+    color: #3b82f6;
+}
+
+.info-icon {
+    width: 16px;
+    height: 16px;
+    border: 1px solid #d1d5db;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    color: #6b7280;
+    background-color: #ffffff;
+}
+
+.input-with-button {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.form-input-with-btn {
+    flex: 1;
+    height: 56px;
+    padding: 0 16px;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    font-size: 16px;
+    color: #333;
+    background-color: #ffffff;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+}
+
+.form-input-with-btn:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.form-input-with-btn::placeholder {
+    color: #9ca3af;
+    font-weight: 400;
+}
+
+.check-btn {
+    height: 56px;
+    padding: 0 20px;
+    border: 2px solid #D3D3D3;
+    border-radius: 12px;
+    background-color: #D3D3D3;
+    color: #A9A9A9;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: not-allowed;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.check-btn:hover {
+    background-color: #2563eb;
+    border-color: #2563eb;
+}
+
+.upload-container {
+    border: 2px dashed #d1d5db;
+    border-radius: 12px;
+    padding: 20px;
+    background-color: #f9fafb;
+    text-align: center;
+    transition: all 0.2s ease;
+}
+
+.upload-container.file-selected {
+    border-color: #3b82f6;
+    background-color: #eff6ff;
+}
+
+.upload-label {
+    display: block;
+    font-size: 14px;
+    color: #6b7280;
+    margin-bottom: 12px;
+}
+
+.file-info {
+    margin-top: 8px;
+    padding: 8px 12px;
+    background-color: #f0f9ff;
+    border: 1px solid #0ea5e9;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #0369a1;
+    display: none;
+}
+
+.file-info.show {
+    display: block;
+}
+
+.file-name {
+    font-weight: 600;
+}
+
+.upload-progress {
+    margin-top: 8px;
+    height: 4px;
+    background-color: #e5e7eb;
+    border-radius: 2px;
+    overflow: hidden;
+    display: none;
+}
+
+.progress-bar {
+    height: 100%;
+    background-color: #3b82f6;
+    width: 0%;
+    transition: width 0.3s ease;
+}
+
+.checkbox-group {
+    margin: 40px 0;
+}
+
+.checkbox-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 16px;
+    font-size: 14px;
+    color: #333;
+}
+
+.checkbox-item input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    margin-right: 12px;
+    accent-color: #3b82f6;
+}
+
+.button-container {
+    display: flex;
+    gap: 12px;
+    margin-top: 60px;
+}
+
+.btn-cancel {
+    flex: 1;
+    height: 56px;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    background-color: #ffffff;
+    color: #6b7280;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-cancel:hover {
+    border-color: #d1d5db;
+    color: #374151;
+}
+
+.btn-primary {
+    flex: 1;
+    height: 56px;
+    border: none;
+    border-radius: 12px;
+    background-color: #3b82f6;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-primary:hover {
+    background-color: #2563eb;
+}
+
+.btn-primary:disabled {
+    background-color: #e5e7eb;
+    color: #9ca3af;
+    cursor: not-allowed;
+}
+
+.help-text {
+    font-size: 12px;
+    color: #888;
+    margin-top: 5px;
+}
+
+@media (max-width: 480px) {
+    .main-container {
+        padding: 20px 16px;
+    }
+    
+    .main-title {
+        font-size: 24px;
+    }
+    
+    .form-group {
+        margin-bottom: 28px;
+    }
+}
+]]></style>
+
+		<script lazy="false" type="text/javascript"><![CDATA[
+// 페이지 로드 시 초기화
+scwin.onpageload = function () {
+    try {
+        console.log("페이지 로드 시작");
+
+        // 데이터맵 초기화
+        if (dmp_corporateVoDetail) {
+            dmp_corporateVoDetail.setEmptyValue();
+        }
+
+        if (dmp_searchParam) {
+            dmp_searchParam.setEmptyValue();
+        }
+
+        // 지연 실행으로 초기화 문제 방지
+        setTimeout(function () {
+            scwin.initializePage();
+        }, 100);
+
+    } catch (error) {
+        console.error("onpageload 오류:", error);
+    }
+};
+
+// 페이지 초기화 함수
+scwin.initializePage = function () {
+    try {
+        // 현재 사용자 이메일 가져오기 (실제 구현에 맞게 수정)
+        var userEmail = scwin.getCurrentUserEmail();
+
+        if (userEmail && userEmail.trim() !== "") {
+            // 이메일이 있으면 조회 실행
+            scwin.searchCorporateByEmail(userEmail);
+        } else {
+            // 이메일이 없으면 신규 등록 모드
+            scwin.setNewCorporateMode();
+        }
+    } catch (error) {
+        console.error("초기화 오류:", error);
+        scwin.setNewCorporateMode();
+    }
+};
+
+// 현재 사용자 이메일 획득 (실제 환경에 맞게 수정 필요)
+scwin.getCurrentUserEmail = function () {
+    try {
+        // 방법 1: URL 파라미터에서 가져오기
+        var urlParams = new URLSearchParams(window.location.search);
+        var emailFromUrl = urlParams.get('email');
+        if (emailFromUrl) {
+            return emailFromUrl;
+        }
+
+        // 방법 2: 세션에서 가져오기 (WebSquare 방식)
+        // var sessionEmail = $c.win.getSessionItem('userEmail');
+        // if (sessionEmail) return sessionEmail;
+
+        // 방법 3: 쿠키에서 가져오기
+        // var cookieEmail = $c.util.getCookie('userEmail');
+        // if (cookieEmail) return cookieEmail;
+
+        // 임시로 테스트용 이메일 반환 (실제로는 주석 처리)
+        return "test@company.com";
+
+    } catch (error) {
+        console.error("이메일 획득 오류:", error);
+        return null;
+    }
+};
+
+// 이메일로 기업 정보 조회 함수
+scwin.searchCorporateByEmail = function (email) {
+    try {
+        if (!email || email.trim() === "") {
+            alert("조회할 이메일이 없습니다.");
+            return;
+        }
+
+        // 조회 파라미터 설정
+        dmp_searchParam.set("email", email);
+
+        // 서버 조회 실행
+        $c.sbm.execute(sbm_selectCorporateVo);
+
+    } catch (error) {
+        console.error("조회 실행 오류:", error);
+        alert("조회 중 오류가 발생했습니다.");
+    }
+};
+
+// 기업 정보 조회 완료 후 처리
+scwin.sbm_selectCorporateVo_submitdone = function (e) {
+    try {
+        console.log("조회 응답:", e);
+        // 서버 응답 구조 확인을 위한 로그
+        console.log("=== 서버 응답 구조 확인 ===");
+        console.log("전체 응답:", e);
+        console.log("responseJSON:", e.responseJSON);
+        console.log("responseText:", e.responseText);
+        // 응답 데이터 확인
+        var responseData = e.responseJSON;
+
+        if (responseData) {
+            // 서버 응답 구조에 따라 처리 (실제 구조에 맞게 수정)
+            var headerInfo = responseData.elHeader;
+            var dataInfo = responseData.elData;
+
+            if (headerInfo && headerInfo.resSuc === true && dataInfo) {
+                // 조회 성공
+                var corporateInfo = dataInfo.corporateVo || dataInfo;
+
+                if (corporateInfo && corporateInfo.email) {
+                    // 조회된 데이터를 폼에 설정
+                    dmp_corporateVoDetail.setJSON(corporateInfo);
+
+                    // 수정 모드로 설정
+                    scwin.setUpdateCorporateMode();
+
+                    alert("기업 정보를 조회했습니다.");
+                } else {
+                    // 데이터가 없는 경우
+                    alert("해당 이메일로 등록된 기업 정보가 없습니다.");
+                    scwin.setNewCorporateMode();
+                }
+            } else {
+                // 조회 실패
+                var errorMsg = headerInfo ? headerInfo.resMsg : "조회 중 오류가 발생했습니다.";
+                console.log("조회 실패:", errorMsg);
+                scwin.setNewCorporateMode();
+            }
+        } else {
+            console.log("응답 데이터가 없습니다.");
+            scwin.setNewCorporateMode();
+        }
+
+    } catch (error) {
+        console.error("응답 처리 중 오류:", error);
+        alert("데이터 처리 중 오류가 발생했습니다.");
+        scwin.setNewCorporateMode();
+    }
+};
+
+// 조회 오류 처리
+scwin.sbm_selectCorporateVo_submiterror = function (e) {
+    try {
+        console.error("조회 오류:", e);
+
+        // 404나 데이터 없음 오류인 경우 신규 등록 모드로
+        if (e.status === 404 || (e.responseJSON && e.responseJSON.elHeader && e.responseJSON.elHeader.resCode === "404")) {
+            console.log("데이터 없음 - 신규 등록 모드로 전환");
+            scwin.setNewCorporateMode();
+        } else {
+            alert("서버 통신 중 오류가 발생했습니다.");
+            scwin.setNewCorporateMode();
+        }
+
+    } catch (error) {
+        console.error("오류 처리 중 예외:", error);
+        scwin.setNewCorporateMode();
+    }
+};
+
+// 신규 기업 등록 모드로 설정
+scwin.setNewCorporateMode = function () {
+    try {
+        console.log("신규 등록 모드 설정");
+
+        // 폼 초기화
+        if (dmp_corporateVoDetail) {
+            dmp_corporateVoDetail.reset();
+        }
+
+        // 입력 필드 활성화
+        if (grp_corporateInfo) {
+            grp_corporateInfo.setReadOnly(false);
+        }
+
+        if (biz_reg_number) {
+            biz_reg_number.setReadOnly(false);
+        }
+
+        // 버튼 텍스트 변경
+        if (btn_update_corporate) {
+            var label = btn_update_corporate.getLabel();
+            if (label && typeof label.setValue === 'function') {
+                label.setValue("등록하기");
+            }
+        }
+
+    } catch (error) {
+        console.error("신규 모드 설정 오류:", error);
+    }
+};
+
+// 기업 정보 수정 모드로 설정
+scwin.setUpdateCorporateMode = function () {
+    try {
+        console.log("수정 모드 설정");
+
+        // 입력 필드 활성화 (사업자등록번호는 제외)
+        if (grp_corporateInfo) {
+            grp_corporateInfo.setReadOnly(false);
+        }
+
+        if (biz_reg_number) {
+            biz_reg_number.setReadOnly(true);
+        }
+
+        // 버튼 텍스트 변경
+        if (btn_update_corporate) {
+            var label = btn_update_corporate.getLabel();
+            if (label && typeof label.setValue === 'function') {
+                label.setValue("수정하기");
+            }
+        }
+
+    } catch (error) {
+        console.error("수정 모드 설정 오류:", error);
+    }
+};
+
+// 기존 함수들 유지...
+scwin.main_logo_onclick = function (e) {
+    // 로고 클릭 이벤트
+};
+
+scwin.biz_reg_number_chk_btn_onclick = function (e) {
+    try {
+        var bizNo = biz_reg_number.getValue().replace(/[^0-9]/g, "");
+        if (bizNo.length === 0) {
+            alert("사업자등록번호를 입력해 주세요.");
+            return;
+        }
+
+        var data = { b_no: [bizNo] };
+        console.log("Request Data:", JSON.stringify(data));
+
+        $.ajax({
+            url: "https://api.odcloud.kr/api/nts-businessman/v1/status"
+                + "?serviceKey=yinZtZoIZHJc8jq8NnIE8zNvIc69XfYrMflYSywUFhAQr9ShfzBmntj7d4jMkuLJ5kZomJ7i7bOFOUAykjWAOw%3D%3D",
+            type: "POST",
+            data: JSON.stringify(data),
+            dataType: "JSON",
+            contentType: "application/json",
+            success: function (result) {
+                console.log(result);
+
+                if (result && result.data && result.data.length > 0) {
+                    var info = result.data[0];
+
+                    if (info.tax_type &&
+                        info.tax_type.indexOf("국세청에 등록되지 않은 사업자등록번호") > -1) {
+                        alert("국세청에 등록되지 않은 사업자등록번호입니다.\n번호를 다시 확인해 주세요.");
+                        return;
+                    }
+                    alert("유효한 사업자등록번호입니다.");
+
+                } else {
+                    alert("조회 결과가 없습니다. 번호를 확인해 주세요.");
+                }
+            },
+            error: function (xhr) {
+                console.error("API 오류:", xhr.responseText);
+                alert("조회 중 오류가 발생했습니다.\n잠시 후 다시 시도해 주세요.");
+            }
+        });
+    } catch (error) {
+        console.error("사업자번호 검증 오류:", error);
+    }
+};
+
+// 사업자등록증명원 파일 선택 이벤트
+scwin.business_cert_upload_onInputValueChange = function (fileName) {
+    try {
+        if (fileName) {
+            var fileInfo = document.getElementById("cert_file_info");
+            var fileName_el = document.getElementById("cert_file_name");
+            if (fileInfo) fileInfo.style.display = "block";
+            if (fileName_el) fileName_el.textContent = fileName;
+        } else {
+            var fileInfo = document.getElementById("cert_file_info");
+            if (fileInfo) fileInfo.style.display = "none";
+        }
+    } catch (error) {
+        console.error("파일 선택 이벤트 오류:", error);
+    }
+};
+
+// 로고 파일 선택 이벤트
+scwin.logo_upload_onInputValueChange = function (fileName) {
+    try {
+        if (fileName) {
+            var fileInfo = document.getElementById("logo_file_info");
+            var fileName_el = document.getElementById("logo_file_name");
+            if (fileInfo) fileInfo.style.display = "block";
+            if (fileName_el) fileName_el.textContent = fileName;
+        } else {
+            var fileInfo = document.getElementById("logo_file_info");
+            if (fileInfo) fileInfo.style.display = "none";
+        }
+    } catch (error) {
+        console.error("로고 파일 선택 오류:", error);
+    }
+};
+
+// 파일 업로드 실행 함수
+scwin.uploadFiles = function () {
+    try {
+        var hasBusinessCert = business_cert_upload.getValue();
+        var hasLogo = logo_upload.getValue();
+
+        // 사업자등록증명원 업로드
+        if (hasBusinessCert) {
+            business_cert_upload.submit();
+            dmp_corporateVoDetail.set("businessCertificate", business_cert_upload.getValue());
+        }
+
+        // 로고 업로드
+        if (hasLogo) {
+            logo_upload.submit();
+            dmp_corporateVoDetail.set("logoFileName", logo_upload.getValue());
+        }
+
+        // 권한 부여
+        dmp_corporateVoDetail.set("role", "COMPANY");
+    } catch (error) {
+        console.error("파일 업로드 오류:", error);
+    }
+};
+
+scwin.btn_update_corporate_onclick = function (e) {
+    try {
+        var errors = [];
+
+        // 필수 필드 검증
+        if (!dmp_corporateVoDetail.get("email") || dmp_corporateVoDetail.get("email").trim() === "") {
+            errors.push("이메일을 입력해주세요.");
+        }
+
+        if (!dmp_corporateVoDetail.get("password") || dmp_corporateVoDetail.get("password").trim() === "") {
+            errors.push("패스워드를 입력해주세요.");
+        }
+
+        if (!dmp_corporateVoDetail.get("name") || dmp_corporateVoDetail.get("name").trim() === "") {
+            errors.push("기업명을 입력해주세요.");
+        }
+
+        if (!dmp_corporateVoDetail.get("businessNumber") || dmp_corporateVoDetail.get("businessNumber").trim() === "") {
+            errors.push("사업자등록번호를 입력해주세요.");
+        }
+
+        if (!dmp_corporateVoDetail.get("industry") || dmp_corporateVoDetail.get("industry").trim() === "") {
+            errors.push("산업분류를 선택해주세요.");
+        }
+
+        // 사업자등록증명원 필수 체크
+        if (!business_cert_upload.getValue()) {
+            errors.push("사업자등록증명원을 업로드해주세요.");
+        }
+
+        if (errors.length > 0) {
+            alert("다음 항목들을 확인해주세요:\n\n" + errors.join("\n"));
+            return;
+        }
+
+        // 파일 업로드 및 저장 처리
+        var confirm = window.confirm("저장하시겠습니까?");
+        if (confirm) {
+            scwin.uploadFiles();
+            scwin.saveData();
+        }
+    } catch (error) {
+        console.error("저장 버튼 클릭 오류:", error);
+        alert("저장 처리 중 오류가 발생했습니다.");
+    }
+};
+
+// 데이터 저장 함수
+scwin.saveData = function () {
+    try {
+        $c.sbm.execute(sbm_insertCorporateVo);
+    } catch (error) {
+        console.error("저장 실행 오류:", error);
+        alert("저장 중 오류가 발생했습니다.");
+    }
+};
+
+scwin.agreement_onchange = function (e) {
+    // 체크박스 변경 이벤트
+    console.log("동의 체크박스 변경:", e);
+};
+
+scwin.sbm_insertCorporateVo_submitdone = function (e) {
+    try {
+        alert("저장이 완료되었습니다.");
+        $p.url("RecruitmentDashboard.xml");
+    } catch (error) {
+        console.log("페이지 이동 오류:", error);
+        scwin.resetForm();
+    }
+};
+
+// 폼 초기화 함수
+scwin.resetForm = function () {
+    try {
+        if (dmp_corporateVoDetail) {
+            dmp_corporateVoDetail.reset();
+        }
+
+        if (business_cert_upload) {
+            business_cert_upload.reset();
+        }
+
+        if (logo_upload) {
+            logo_upload.reset();
+        }
+
+        // 파일 정보 숨기기
+        var certFileInfo = document.getElementById("cert_file_info");
+        var logoFileInfo = document.getElementById("logo_file_info");
+
+        if (certFileInfo) certFileInfo.style.display = "none";
+        if (logoFileInfo) logoFileInfo.style.display = "none";
+
+    } catch (error) {
+        console.error("폼 초기화 오류:", error);
+    }
+};
+]]></script>
+	</head>
+
+	<body ev:onpageload="scwin.onpageload">
+		<xf:group class="main-container">
+			<!-- 페이지 제목 -->
+			<xf:group class="page-title">
+				<w2:textbox class="main-title" label="기업 수정"></w2:textbox>
+			</xf:group>
+
+			<!-- 폼 컨테이너 -->
+			<xf:group class="form-container" id="grp_corporateInfo">
+				<!-- 이메일 -->
+				<xf:group class="form-group">
+					<w2:textbox class="form-label required" label="이메일"></w2:textbox>
+					<xf:input class="form-input" placeholder="예) company@example.com" ref="data:dmp_corporateVoDetail.email" type="email"
+						id="inp_email"></xf:input>
+				</xf:group>
+
+				<!-- 패스워드 -->
+				<xf:group class="form-group">
+					<w2:textbox class="form-label required" label="패스워드"></w2:textbox>
+					<w2:secret class="form-input" placeholder="8자 이상 입력해주세요" ref="data:dmp_corporateVoDetail.password"></w2:secret>
+				</xf:group>
+
+				<!-- 기업명 -->
+				<xf:group class="form-group">
+					<w2:textbox class="form-label required" label="기업명"></w2:textbox>
+					<xf:input class="form-input" placeholder="ex) 인스웨이브" ref="data:dmp_corporateVoDetail.name"></xf:input>
+				</xf:group>
+
+				<!-- 사업자등록번호 -->
+				<xf:group class="form-group">
+					<xf:group class="business-number-group">
+						<w2:textbox class="form-label required" label="사업자등록번호"></w2:textbox>
+						<xf:anchor class="overseas-link" href="#">
+							<w2:span class="info-icon" label="i"></w2:span>
+							<w2:span label="해외 기업인가요?"></w2:span>
+						</xf:anchor>
+					</xf:group>
+					<xf:group class="input-with-button">
+						<xf:input class="form-input-with-btn" placeholder="10자리 숫자" id="biz_reg_number"
+							ref="data:dmp_corporateVoDetail.businessNumber" readOnly="false"></xf:input>
+						<xf:trigger class="check-btn" type="button" ev:onclick="scwin.biz_reg_number_chk_btn_onclick" disabled="false">
+							<xf:label><![CDATA[검사]]></xf:label>
+						</xf:trigger>
+					</xf:group>
+					<w2:textbox label="사업자 등록번호 10자리를 입력해주세요" class="help-text"></w2:textbox>
+				</xf:group>
+
+				<!-- 기업인증 (사업자등록증명원) -->
+				<xf:group class="form-group">
+					<w2:textbox class="form-label required" label="사업자등록증명원"></w2:textbox>
+					<xf:group class="upload-container" id="cert_upload_container">
+						<w2:textbox class="upload-label" label="PDF, JPG, PNG 파일 업로드 (최대 10MB)"></w2:textbox>
+						<w2:upload imageStyle="position:absolute;vertical-align:middle;word-wrap:break-word"
+							inputStyle="vertical-align:middle;word-wrap:break-word" style="width: 250px;height: 23px;" id="business_cert_upload"
+							ev:ondone="scwin.business_cert_upload_ondone" ev:onInputValueChange="scwin.business_cert_upload_onInputValueChange">
+						</w2:upload>
+
+						<div id="cert_file_info" class="file-info">
+							<span class="file-name" id="cert_file_name"></span>
+							<div>✓ 파일이 선택되었습니다</div>
+						</div>
+					</xf:group>
+				</xf:group>
+
+				<!-- 산업 선택 -->
+				<xf:group class="form-group">
+					<w2:textbox class="form-label required" label="산업 선택"></w2:textbox>
+					<xf:select1 appearance="minimal" chooseOption="선택하기" class="form-select" ref="data:dmp_corporateVoDetail.industry"
+						id="industry"
+						style="width: 100% !important; height: 56px !important; padding: 0 16px !important; border: 2px solid #e5e7eb !important; border-radius: 12px !important; font-size: 16px !important; color: #333 !important; background-color: #ffffff !important; appearance: none !important; cursor: pointer !important; transition: all 0.2s ease !important; box-sizing: border-box !important;">
+						<xf:choices>
+							<xf:item>
+								<xf:label><![CDATA[IT/소프트웨어]]></xf:label>
+								<xf:value><![CDATA[1]]></xf:value>
+							</xf:item>
+							<xf:item>
+								<xf:label><![CDATA[제조업]]></xf:label>
+								<xf:value><![CDATA[2]]></xf:value>
+							</xf:item>
+							<xf:item>
+								<xf:label><![CDATA[서비스업]]></xf:label>
+								<xf:value><![CDATA[3]]></xf:value>
+							</xf:item>
+							<xf:item>
+								<xf:label><![CDATA[기타]]></xf:label>
+								<xf:value><![CDATA[4]]></xf:value>
+							</xf:item>
+						</xf:choices>
+					</xf:select1>
+				</xf:group>
+
+				<!-- 기업의 직원 수 -->
+				<xf:group class="form-group">
+					<w2:textbox class="form-label" label="기업의 직원 수"></w2:textbox>
+					<xf:input class="form-input" placeholder="예 : 50" ref="data:dmp_corporateVoDetail.empCount"></xf:input>
+				</xf:group>
+
+				<!-- 회사 소개 -->
+				<xf:group class="form-group">
+					<w2:textbox class="form-label" label="회사 소개"></w2:textbox>
+					<xf:textarea class="form-textarea" placeholder="개발자들이 우리 회사를 이해할 수 있도록 자세히 작성해주세요."
+						ref="data:dmp_corporateVoDetail.description" id="description"></xf:textarea>
+					<w2:textbox class="help-text" label="개발자들이 우리 회사를 이해할 수 있도록 자세히 작성해주세요."></w2:textbox>
+				</xf:group>
+
+				<!-- 기업 로고 -->
+				<xf:group class="form-group">
+					<w2:textbox class="form-label" label="기업 로고 (선택사항)"></w2:textbox>
+					<xf:group class="upload-container" id="logo_upload_container">
+						<w2:textbox class="upload-label" label="PNG, JPG, SVG 파일 업로드 (최대 5MB)"></w2:textbox>
+						<w2:upload imageStyle="position:absolute;vertical-align:middle;word-wrap:break-word"
+							inputStyle="vertical-align:middle;word-wrap:break-word" style="width: 250px;height: 23px;" id="logo_upload"
+							ev:ondone="scwin.logo_upload_ondone" ev:onInputValueChange="scwin.logo_upload_onInputValueChange">
+						</w2:upload>
+
+						<div id="logo_file_info" class="file-info">
+							<span class="file-name" id="logo_file_name"></span>
+							<div>✓ 파일이 선택되었습니다</div>
+						</div>
+					</xf:group>
+				</xf:group>
+
+				<!-- 동의 체크박스 -->
+				<xf:group class="checkbox-group">
+					<xf:select appearance="full" ev:onchange="scwin.agreement_onchange" id="checkbox2" selection="multiple" style="width: 100%;">
+						<xf:choices>
+							<xf:item>
+								<xf:label><![CDATA[[필수] 개인정보 및 수집동의]]></xf:label>
+								<xf:value><![CDATA[agree_required]]></xf:value>
+							</xf:item>
+							<xf:item>
+								<xf:label><![CDATA[[선택] 마케팅 수신동의]]></xf:label>
+								<xf:value><![CDATA[agree_marketing]]></xf:value>
+							</xf:item>
+						</xf:choices>
+					</xf:select>
+				</xf:group>
+
+				<!-- 버튼 그룹 -->
+				<xf:group class="button-container">
+					<xf:trigger class="btn-cancel" type="button" ev:onclick="scwin.btn_cancel_onclick">
+						<xf:label><![CDATA[취소]]></xf:label>
+					</xf:trigger>
+					<xf:trigger class="btn-primary" type="button" id="btn_update_corporate" ev:onclick="scwin.btn_update_corporate_onclick">
+						<xf:label><![CDATA[수정하기]]></xf:label>
+					</xf:trigger>
+				</xf:group>
+
+				<!-- 디버깅용 버튼 (개발 시에만 사용) -->
+				<xf:group style="margin-top: 20px; text-align: center; border-top: 1px solid #eee; padding-top: 20px;">
+					<xf:trigger type="button" style="margin-right: 10px;" ev:onclick="scwin.btn_search_onclick">
+						<xf:label><![CDATA[수동 조회]]></xf:label>
+					</xf:trigger>
+					<xf:trigger type="button" style="margin-right: 10px;" ev:onclick="scwin.btn_debug_newmode_onclick">
+						<xf:label><![CDATA[신규 모드]]></xf:label>
+					</xf:trigger>
+					<xf:trigger type="button" ev:onclick="scwin.btn_debug_data_onclick">
+						<xf:label><![CDATA[데이터 확인]]></xf:label>
+					</xf:trigger>
+				</xf:group>
+			</xf:group>
+		</xf:group>
+	</body>
+</html>
