@@ -389,6 +389,9 @@ scwin.biz_reg_number_chk_btn_onclick = function (e) {
         return;
     }
 
+    var data = { b_no: [bizNo] };
+    console.log("Request Data:", JSON.stringify(data));
+
     $.ajax({
         url: "https://api.odcloud.kr/api/nts-businessman/v1/status"
             + "?serviceKey=yinZtZoIZHJc8jq8NnIE8zNvIc69XfYrMflYSywUFhAQr9ShfzBmntj7d4jMkuLJ5kZomJ7i7bOFOUAykjWAOw%3D%3D",
@@ -467,7 +470,7 @@ scwin.uploadFiles = function () {
 };
 
 scwin.btn_create_corporate_onclick = function (e) {
-    
+
     var errors = [];
     // 필수 필드 검증
     if (!dmp_corporateVoDetail.get("email") || dmp_corporateVoDetail.get("email").trim() === "") {
