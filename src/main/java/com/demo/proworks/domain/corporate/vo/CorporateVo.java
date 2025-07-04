@@ -43,8 +43,8 @@ public class CorporateVo extends com.demo.proworks.cmmn.ProworksCommVO {
     @ElDtoField(logicalName = "로고 파일명", physicalName = "logoFileName", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
     private String logoFileName;
 
-    @ElDtoField(logicalName = "권한", physicalName = "roleId", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
-    private String roleId;
+    @ElDtoField(logicalName = "권한", physicalName = "role", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private String role;
 
     @ElVoField(physicalName = "companyId")
     public String getCompanyId(){
@@ -157,15 +157,15 @@ public class CorporateVo extends com.demo.proworks.cmmn.ProworksCommVO {
         this.logoFileName = logoFileName;
     }
 
-    @ElVoField(physicalName = "roleId")
-    public String getRoleId(){
-        String ret = this.roleId;
+    @ElVoField(physicalName = "role")
+    public String getRole(){
+        String ret = this.role;
         return ret;
     }
 
-    @ElVoField(physicalName = "roleId")
-    public void setRoleId(String roleId){
-        this.roleId = roleId;
+    @ElVoField(physicalName = "role")
+    public void setRole(String role){
+        this.role = role;
     }
 
     @Override
@@ -182,7 +182,7 @@ public class CorporateVo extends com.demo.proworks.cmmn.ProworksCommVO {
         sb.append("empCount").append("=").append(empCount).append(",");
         sb.append("description").append("=").append(description).append(",");
         sb.append("logoFileName").append("=").append(logoFileName).append(",");
-        sb.append("roleId").append("=").append(roleId);
+        sb.append("role").append("=").append(role);
         sb.append("]");
         return sb.toString();
 

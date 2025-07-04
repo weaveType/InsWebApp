@@ -22,8 +22,8 @@ public class UserVo extends com.demo.proworks.cmmn.ProworksCommVO {
     @ElDtoField(logicalName = "password", physicalName = "password", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
     private String password;
 
-    @ElDtoField(logicalName = "role_id", physicalName = "roleId", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
-    private String roleId;
+    @ElDtoField(logicalName = "role", physicalName = "role", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private String role;
 
     @ElDtoField(logicalName = "name", physicalName = "name", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
     private String name;
@@ -36,6 +36,9 @@ public class UserVo extends com.demo.proworks.cmmn.ProworksCommVO {
 
     @ElDtoField(logicalName = "updated_at", physicalName = "updatedAt", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
     private String updatedAt;
+
+    @ElDtoField(logicalName = "role_id", physicalName = "roleId", type = "int", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private int roleId;
 
     @ElVoField(physicalName = "userId")
     public String getUserId(){
@@ -70,15 +73,15 @@ public class UserVo extends com.demo.proworks.cmmn.ProworksCommVO {
         this.password = password;
     }
 
-    @ElVoField(physicalName = "roleId")
-    public String getRoleId(){
-        String ret = this.roleId;
+    @ElVoField(physicalName = "role")
+    public String getRole(){
+        String ret = this.role;
         return ret;
     }
 
-    @ElVoField(physicalName = "roleId")
-    public void setRoleId(String roleId){
-        this.roleId = roleId;
+    @ElVoField(physicalName = "role")
+    public void setRole(String role){
+        this.role = role;
     }
 
     @ElVoField(physicalName = "name")
@@ -125,6 +128,16 @@ public class UserVo extends com.demo.proworks.cmmn.ProworksCommVO {
         this.updatedAt = updatedAt;
     }
 
+    @ElVoField(physicalName = "roleId")
+    public int getRoleId(){
+        return roleId;
+    }
+
+    @ElVoField(physicalName = "roleId")
+    public void setRoleId(int roleId){
+        this.roleId = roleId;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -132,11 +145,12 @@ public class UserVo extends com.demo.proworks.cmmn.ProworksCommVO {
         sb.append("userId").append("=").append(userId).append(",");
         sb.append("email").append("=").append(email).append(",");
         sb.append("password").append("=").append(password).append(",");
-        sb.append("roleId").append("=").append(roleId).append(",");
+        sb.append("role").append("=").append(role).append(",");
         sb.append("name").append("=").append(name).append(",");
         sb.append("emailConsent").append("=").append(emailConsent).append(",");
         sb.append("createdAt").append("=").append(createdAt).append(",");
-        sb.append("updatedAt").append("=").append(updatedAt);
+        sb.append("updatedAt").append("=").append(updatedAt).append(",");
+        sb.append("roleId").append("=").append(roleId);
         sb.append("]");
         return sb.toString();
 

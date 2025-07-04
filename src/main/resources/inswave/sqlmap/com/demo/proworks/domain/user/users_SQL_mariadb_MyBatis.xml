@@ -68,30 +68,47 @@
     </delete>
 	
     <select id="selectUser" parameterType="com.demo.proworks.domain.user.vo.UserVo" resultType="com.demo.proworks.domain.user.vo.UserVo">
-    	<!-- 일반회원를 상세 조회한다. -->	
-        SELECT     /* QueryID : com.demo.proworks.domain.user.selectUser */
-            USER_ID as userId, EMAIL as email, PASSWORD as password, ROLE_ID as roleId, NAME as name, EMAIL_CONSENT as emailConsent, CREATED_AT as createdAt, UPDATED_AT as updatedAt
-        FROM USERS 
-        WHERE 
-                USER_ID       = #{userId}      			
-    </select>
+<!-- 일반회원를 상세 조회한다. -->	
+SELECT
+    u.USER_ID as userId,
+    u.EMAIL as email,
+    u.PASSWORD as password,
+    r.DESCRIPTION as description,
+    u.NAME as name,
+    u.EMAIL_CONSENT as emailConsent,
+    u.CREATED_AT as createdAt,
+    u.UPDATED_AT as updatedAt
+FROM USERS u
+JOIN ROLES r ON u.ROLE_ID = r.ROLE_ID
+WHERE u.USER_ID = #{userId}
+</select>
 	
     <select id="selectListUser" parameterType="com.demo.proworks.domain.user.vo.UserVo" resultType="com.demo.proworks.domain.user.vo.UserVo">
-    	<!-- 일반회원 목록을 조회한다. -->
-           SELECT    /* QueryID : com.demo.proworks.domain.user.selectListUser */
-               USER_ID as userId, EMAIL as email, PASSWORD as password, ROLE_ID as roleId, NAME as name, EMAIL_CONSENT as emailConsent, CREATED_AT as createdAt, UPDATED_AT as updatedAt		       
-           FROM (
-               SELECT  S.*, CEIL( (@ROWNUM:=@ROWNUM+1) / #{pageSize} ) AS PAGE
-               FROM (				
-                   SELECT 
-                       *  		                  
-                   FROM USERS
-                   WHERE  1=1    		
-	     																														
-               ) S, (SELECT @ROWNUM := 0) TMP
-           ) A
-            WHERE PAGE = #{pageIndex}
-    </select>
+<!-- 일반회원 목록을 조회한다. -->
+SELECT    /* QueryID : com.demo.proworks.domain.user.selectListUser */
+    u.USER_ID as userId,
+    u.EMAIL as email,
+    u.PASSWORD as password,
+    u.ROLE_ID as roleId,
+    r.DESCRIPTION as description,
+    u.NAME as name,
+    u.EMAIL_CONSENT as emailConsent,
+    u.CREATED_AT as createdAt,
+    u.UPDATED_AT as updatedAt
+FROM (
+    SELECT  S.*, CEIL((@ROWNUM:=@ROWNUM+1) / #{pageSize}) AS PAGE
+    FROM (
+        SELECT 
+            u.*,
+            r.DESCRIPTION
+        FROM USERS u
+        JOIN ROLES r ON u.ROLE_ID = r.ROLE_ID
+        WHERE 1=1
+            /* 여기에 추가 조건이 있으면 작성 */
+    ) S, (SELECT @ROWNUM := 0) TMP
+) A
+WHERE PAGE = #{pageIndex}
+</select>
 	
     <select id="selectListCountUser" parameterType="com.demo.proworks.domain.user.vo.UserVo" resultType="long">
     <!-- 일반회원 목록의 카운트를 조회한다. -->

@@ -73,8 +73,8 @@ public class ProworksUserHeader extends com.inswave.elfw.core.UserHeader {
     @ElDtoField(logicalName = "이메일", physicalName = "email", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
     private String email;
 
-    @ElDtoField(logicalName = "권한 ID", physicalName = "roleId", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
-    private String roleId;
+    @ElDtoField(logicalName = "권한", physicalName = "role", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private String role;
 
     @ElVoField(physicalName = "fldLen")
     public int getFldLen(){
@@ -249,15 +249,15 @@ public class ProworksUserHeader extends com.inswave.elfw.core.UserHeader {
         this.email = email;
     }
 
-    @ElVoField(physicalName = "roleId")
-    public String getRoleId(){
-        String ret = this.roleId;
+    @ElVoField(physicalName = "role")
+    public String getRole(){
+        String ret = this.role;
         return ret;
     }
 
-    @ElVoField(physicalName = "roleId")
-    public void setRoleId(String roleId){
-        this.roleId = roleId;
+    @ElVoField(physicalName = "role")
+    public void setRole(String role){
+        this.role = role;
     }
 
     @Override
@@ -280,7 +280,7 @@ public class ProworksUserHeader extends com.inswave.elfw.core.UserHeader {
         sb.append("testDeptName").append("=").append(testDeptName).append(",");
         sb.append("testDeptNo").append("=").append(testDeptNo).append(",");
         sb.append("email").append("=").append(email).append(",");
-        sb.append("roleId").append("=").append(roleId);
+        sb.append("role").append("=").append(role);
         sb.append("]");
         return sb.toString();
 

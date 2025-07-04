@@ -281,6 +281,14 @@ scwin.btn_create_posting_onclick = function (e) {
 scwin.btn_recruitment_statistics_onclick = function (e) {
     $p.url("RecruitmentStatistics.xml");
 };
+
+scwin.btn_update_company_onclick = function (e) {
+    $p.url("CorporateList.xml");
+};
+
+scwin.btn_delete_company_onclick = function (e) {
+    
+};
 ]]></script>
     </head>
     <body ev:onpageload="scwin.onpageload">
@@ -291,10 +299,10 @@ scwin.btn_recruitment_statistics_onclick = function (e) {
             		meta_snippetName="2_02 서브타이틀(h3)" style="">
             		<w2:textbox class="" id="" label="서브타이틀" style="" tagname="h3"></w2:textbox>
             		<xf:group class="rt" id="" style="">
-            			<xf:trigger class="btn_cm " id="" style="" type="button">
+            			<xf:trigger class="btn_cm " id="btn_update_company" style="" type="button" ev:onclick="scwin.btn_update_company_onclick">
             				<xf:label><![CDATA[기업 수정]]></xf:label>
             			</xf:trigger>
-            			<xf:trigger class="btn_cm " id="" style="" type="button">
+            			<xf:trigger class="btn_cm " id="btn_delete_company" style="" type="button" ev:onclick="scwin.btn_delete_company_onclick">
             				<xf:label><![CDATA[탈퇴]]></xf:label>
             			</xf:trigger>
             		</xf:group>
