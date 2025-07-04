@@ -9,7 +9,8 @@ import com.inswave.elfw.exception.ElException;
 import com.inswave.elfw.log.AppLog;
 import com.inswave.elfw.session.SessionDataAdapter;
 import com.inswave.elfw.util.ElBeanUtils;
-
+import com.demo.proworks.domain.user.service.UserService;
+import com.demo.proworks.domain.user.vo.UserVo;
 import com.demo.proworks.emp.service.EmpService;
 import com.demo.proworks.emp.vo.EmpVo;
 
@@ -58,20 +59,19 @@ public class ProworksSessionDataAdapter extends SessionDataAdapter {
 		ProworksUserHeader userHeader = new ProworksUserHeader();
 		userHeader.setEmail(email);
 		try{
-		
-//			EmpService empService = (EmpService)ElBeanUtils.getBean("empServiceImpl");
-//			EmpVo empVo = new EmpVo();
-//
-//			empVo.setEmpno(Integer.parseInt(id));
-//			EmpVo resEmpVo = empService.selectEmp(empVo);
-//
-//			if( resEmpVo == null ) {
-//				throw new AdapterException("EL.ERROR.LOGIN.0004", new String[]{id});
-//			}
+			UserService userService = (UserService)ElBeanUtils.getBean("userServiceImpl");
+			UserVo userVo = new UserVo();
 			
-			// 사용자 세션 설정
-//			userHeader.setTestDeptNo(resEmpVo.getDeptno());
-//			userHeader.setTestDeptName(resEmpVo.getDname());
+			userVo.setEmail(email);
+			UserVo resUserVo = userService.selectUserByEmail(userVo);
+			
+			if( resUserVo == null ) {
+				throw new AdapterException("EL.ERROR.LOGIN.0004", new String[]{email});
+			}
+			
+			// 필요정보 추가영역
+			userHeader.setRoleId(resUserVo.getRoleId());
+			
 		}catch(ElException e){
 			AppLog.error("setSessionData Error1",e);
 			throw e;

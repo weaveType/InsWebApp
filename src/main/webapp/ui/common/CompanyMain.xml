@@ -18,7 +18,7 @@ scwin.onpageload = function() {
 };
 
 scwin.btn_create_company_onclick = function (e) {
-    $p.url("../corporate/CorporateLoginTest");
+    $p.url("../corporate/CorporateLoginTest.xml");
 };
 ]]></script>
     </head>
