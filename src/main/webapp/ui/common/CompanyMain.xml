@@ -18,7 +18,6 @@
 
 scwin.btn_create_company_onclick = function (e) {
  try {
-        // 부모 페이지의 pf_main 컴포넌트에 직접 접근
         if ($p.parent().pf_main) {
             $p.parent().pf_main.setSrc("../corporate/CorporateLogin.xml");
         } else {

@@ -32,6 +32,10 @@ scwin.getUserInfo = function() {
     return globalUserInfo;
 };
 
+scwin.getuserEmail = function() {
+    return globalUserInfo.email;
+}
+
 // 페이지 로드 시 팝업 닫기 액션 함수들 정의
 scwin.onpageload = function () {
 };
