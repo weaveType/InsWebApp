@@ -7,8 +7,13 @@
         <w2:buildDate/>
         <w2:MSA/>
         <xf:model>
-            <w2:dataCollection baseNode="map"/>
-            <w2:workflowCollection/>
+        	<w2:dataCollection baseNode="map" />
+        	<w2:workflowCollection />
+        	<xf:submission id="sbm_deleteCorporateVo" action="/InsWebApp/CP0001Del.pwkjson" method="post" mediatype="application/json"
+        		ref='data:json,{"id":"dmp_corporateVoDetail","key":"corporateVo"}' target="" encoding="UTF-8" instance="" replace=""
+        		errorHandler="" customHandler="" mode="asynchronous" processMsg="" ev:submit=""
+        		ev:submitdone="scwin.sbm_deleteCorporateVo_submitdone" ev:submiterror="" abortTrigger="">
+        	</xf:submission>
         </xf:model>
         <w2:layoutInfo/>
         <w2:publicInfo method=""/>
@@ -232,20 +237,47 @@
                 }
             }
         ]]></style>
-        <script lazy="false" type="text/javascript"><![CDATA[
-scwin.onpageload = function() {
-    // 페이지 로드 시 초기화
-    scwin.initializeDashboard();
+        <script lazy="false" type="text/javascript"><![CDATA[scwin.onpageload = function () {
+    var userInfo = null;
+    
+    // 부모 페이지에서 사용자 정보 조회
+    try {
+        if ($p.parent().scwin && $p.parent().scwin.getUserInfo) {
+            userInfo = $p.parent().scwin.getUserInfo();
+        }
+    } catch (e) {
+        console.error("사용자 정보 조회 실패:", e);
+    }
+    
+    if (userInfo && userInfo.userId) {
+        console.log("사용자 정보:", userInfo);
+        
+        // UI에 사용자 정보 표시
+        if (userInfo.userName) {
+            // 환영 메시지가 있다면 설정
+            // spn_welcomeMessage.setValue(userInfo.userName + "님, 환영합니다!");
+        }
+        
+        // 회사 정보가 있다면 활용
+        if (userInfo.companyId) {
+            // 필요시 회사 관련 데이터 조회
+            console.log("회사 ID:", userInfo.companyId);
+        }
+    } else {
+        console.warn("로그인 정보가 없습니다.");
+        // alert("로그인이 필요합니다.");
+        // $p.url("../corporate/CorporateLogin.xml");
+    }
 };
 
 // 대시보드 초기화
-scwin.initializeDashboard = function() {
+scwin.initializeDashboard = function () {
     // 통계 데이터 로드 (실제 환경에서는 서버에서 가져옴)
     scwin.loadStatistics();
 };
 
 // 통계 데이터 로드
-scwin.loadStatistics = function() {
+scwin.loadStatistics = function () {
     // 샘플 데이터 설정
     tbx_totalApplicants.setValue("247");
     tbx_activeJobs.setValue("12");
@@ -254,22 +286,21 @@ scwin.loadStatistics = function() {
 };
 
 // 새 공고 작성 버튼 클릭
-scwin.btn_newJob_onclick = function(e) {
+scwin.btn_newJob_onclick = function (e) {
     // $p.url("CreatePosting.xml");
     $p.url("test07.xml");
 };
 
 // 채용 통계 클릭
-scwin.grp_quickAnalytics_onclick = function(e) {
+scwin.grp_quickAnalytics_onclick = function (e) {
     // 통계 페이지로 이동
-    alert("채용 통계 페이지로 이동합니다.");
     $p.url("RecruitmentStatistics.xml");
 };
 
 // 인재 스카우트 클릭
-scwin.grp_quickScout_onclick = function(e) {
+scwin.grp_quickScout_onclick = function (e) {
     // scout.xml로 이동
-     $p.url("Scout.xml");
+    $p.url("Scout.xml");
 };
 
 
@@ -282,12 +313,42 @@ scwin.btn_recruitment_statistics_onclick = function (e) {
     $p.url("RecruitmentStatistics.xml");
 };
 
+// 기업정보 수정페이지 
 scwin.btn_update_company_onclick = function (e) {
     $p.url("CorporateUpdateTest.xml");
 };
 
 scwin.btn_delete_company_onclick = function (e) {
-    
+    var valInfo = [
+        { id: "companyId", mandatory: true }
+
+    ];
+    console.log(valInfo.toString);
+
+    if ($c.data.validateGroup(grp_corporateInfo, valInfo) === true) {
+        var promise = $c.win.confirm("삭제하시겠습니까?");
+        promise.then(function (result) {
+            if (result) {
+                $c.sbm.execute(sbm_deleteCorporateVo);
+            }
+        })
+    }
+};
+
+scwin.sbm_deleteCorporateVo_submitdone = function (e) {
+
+    // error 수신시
+    var elHeader = e.responseJSON.elHeader;
+    if (elHeader == null || elHeader == "" || elHeader == "undefiend" || elHeader.resSuc == false) {
+        $c.win.alert(`에러코드 : ${elHeader.resCode}\n에러메시지 : ${elHeader.resMsg}`);
+        return false;
+    } else {
+        // 삭제되었습니다. msg 출력
+        $c.win.alert("삭제되었습니다.");
+    }
+
+    // 재조회
+    // scwin.btn_search_onclick();
 };
 ]]></script>
     </head>

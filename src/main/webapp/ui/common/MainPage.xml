@@ -19,38 +19,21 @@
         </xf:model>
         <w2:layoutInfo/>
         <w2:publicInfo method=""/>
-        <script type="text/javascript"><![CDATA[// 페이지 로드 시 팝업 닫기 액션 함수들 정의
+        <script type="text/javascript"><![CDATA[// 전역 사용자 정보 변수
+var globalUserInfo = null;
+
+// 사용자 정보 설정 함수
+scwin.setUserInfo = function(userInfo) {
+    globalUserInfo = userInfo;
+};
+
+// 사용자 정보 조회 함수
+scwin.getUserInfo = function() {
+    return globalUserInfo;
+};
+
+// 페이지 로드 시 팝업 닫기 액션 함수들 정의
 scwin.onpageload = function () {
-    dma_main.set("totalUsers", "120,739");
-
-    // 팝업 닫기 액션 함수들 정의
-    scwin.login_popup_closeAction = function (argRuntimeID, argJsnInfo) {
-        return true; // 팝업 닫기 허용
-    };
-
-    scwin.email_popup_closeAction = function (argRuntimeID, argJsnInfo) {
-        return true; // 팝업 닫기 허용
-    };
-
-    // 검색 이벤트 바인딩
-    setTimeout(function () {
-        var searchInput = document.getElementById('searchInput');
-        var searchBtn = document.getElementById('btnSearch');
-
-        if (searchInput) {
-            searchInput.addEventListener('keydown', function (e) {
-                if (e.keyCode === 13) {
-                    scwin.performSearch();
-                }
-            });
-        }
-
-        if (searchBtn) {
-            searchBtn.addEventListener('click', function () {
-                scwin.performSearch();
-            });
-        }
-    }, 100);
 };
 
 // 로그인 관련 팝업 호출 함수들
@@ -115,7 +98,7 @@ scwin.ad_onclick = function (e) {
 
 // 기타 함수들은 그대로 유지
 scwin.weaveTypeLogo_onclick = function () {
-    window.location.reload();
+    pf_main.setSrc("weaveRtpeMain.xml");
 };
 
 scwin.menu1_onclick = function () {
@@ -127,88 +110,13 @@ scwin.menu2_onclick = function () {
 };
 
 scwin.menu3_onclick = function () {
-    // PostList.xml(기업 둘러보기)로 이동
-    $p.url("../posting/PostList.xml");
+    pf_main.setSrc("../posting/PostList.xml");
 };
 
 scwin.btnEnterprise_onclick = function () {
-    $p.url("CompanyMain.xml");
+    pf_main.setSrc("CompanyMain.xml");
 };
 
-// 카드 클릭 이벤트
-scwin.card1_onclick = function () {
-    alert("튜토리얼 페이지로 이동합니다.");
-};
-
-scwin.card2_onclick = function () {
-    alert("자소서 업체검토 페이지로 이동합니다.");
-};
-
-scwin.card3_onclick = function () {
-    alert("MBTI 검사 페이지로 이동합니다.");
-};
-
-// 포지션 카드 클릭 이벤트
-scwin.position1_onclick = function () {
-    // 지원자 관리 페이지로 이동
-    location.href = '/websquare/websquare.html?w2xPath=/ui/applicant_management.xml';
-};
-
-scwin.position2_onclick = function () {
-    // 채용 공고 작성 페이지로 이동
-    location.href = '/websquare/websquare.html?w2xPath=/ui/create_posting.xml';
-};
-
-scwin.position3_onclick = function () {
-    // 채용 리뷰 페이지로 이동
-    location.href = '/websquare/websquare.html?w2xPath=/ui/review_page.xml';
-};
-
-// 검색 실행
-scwin.performSearch = function () {
-    var searchInput = document.getElementById('searchInput');
-    if (!searchInput) {
-        alert("검색창을 찾을 수 없습니다.");
-        return;
-    }
-
-    var searchText = searchInput.value;
-    if (searchText && searchText.trim() !== "") {
-        alert("'" + searchText + "'를 검색합니다. (아직 검색 기능은 구현되지 않았습니다)");
-        console.log("검색어:", searchText);
-    } else {
-        alert("검색어를 입력해주세요.");
-    }
-};
-
-// 기존 함수들과의 호환성을 위해 유지
-scwin.searchInput_onkeypress = function (e) {
-    if (e.keyCode === 13) {
-        scwin.performSearch();
-    }
-};
-
-scwin.btnSearch_onclick = function () {
-    scwin.performSearch();
-};
-
-// 프로필 채우기 링크
-scwin.btnProfile_onclick = function () {
-    alert("매칭 프로필 채우기 페이지로 이동합니다.");
-};
-
-// 햄버거 메뉴 토글
-scwin.toggleSideMenu = function () {
-    var sideMenu = document.getElementById('sideMenu');
-    var overlay = document.getElementById('sideMenuOverlay');
-
-    if (sideMenu.classList.contains('open')) {
-        scwin.closeSideMenu();
-    } else {
-        sideMenu.classList.add('open');
-        overlay.classList.add('open');
-    }
-};
 
 // 사이드 메뉴 닫기
 scwin.closeSideMenu = function () {
@@ -229,46 +137,6 @@ scwin.goToUserDetail = function () {
 scwin.goToCompanyRegister = function () {
     location.href = '/websquare/websquare.html?w2xPath=/ui/create_company.xml';
     scwin.closeSideMenu();
-};
-
-
-/**
-* 반응형 가운데 정렬 위치 및 크기 계산 메서드
-* @param {Object} options - 설정 옵션
-* @param {number} options.maxWidth - 최대 너비 (기본값: 800)
-* @param {number} options.minWidth - 최소 너비 (기본값: 400)
-* @param {number} options.maxHeight - 최대 높이 (기본값: 600)
-* @param {number} options.minHeight - 최소 높이 (기본값: 300)
-* @param {number} options.widthRatio - 화면 대비 너비 비율 (기본값: 0.8)
-* @param {number} options.heightRatio - 화면 대비 높이 비율 (기본값: 0.8)
-* @returns {Object} {width, height, left, top} 값을 포함한 객체
-*/
-scwin.getResponsiveCenterPosition = function(options) {
-   options = options || {};
-   
-   var browserWidth = window.innerWidth || document.documentElement.clientWidth;
-   var browserHeight = window.innerHeight || document.documentElement.clientHeight;
-   
-   // 화면 크기의 비율로 팝업 크기 설정 (최대/최소 크기 제한)
-   var popupWidth = Math.min(
-       options.maxWidth || 800, 
-       Math.max(options.minWidth || 400, browserWidth * (options.widthRatio || 0.8))
-   );
-   var popupHeight = Math.min(
-       options.maxHeight || 600, 
-       Math.max(options.minHeight || 300, browserHeight * (options.heightRatio || 0.8))
-   );
-   
-   // 가운데 위치 계산
-   var leftPos = (browserWidth - popupWidth) / 2;
-   var topPos = (browserHeight - popupHeight) / 2;
-   
-   return {
-       width: popupWidth,
-       height: popupHeight,
-       left: leftPos,
-       top: topPos
-   };
 };]]></script>
         <style type="text/css"><![CDATA[
             /* 기본 설정 */
@@ -997,217 +865,79 @@ scwin.getResponsiveCenterPosition = function(options) {
         ]]></style>
     </head>
     <body ev:onpageload="scwin.onpageload">
-        <xf:group class="main-wrap">
-            <!-- 사이드 메뉴 오버레이 -->
-            <div class="side-menu-overlay" id="sideMenuOverlay" ev:onclick="scwin.closeSideMenu()"></div>
-            
-            <!-- 사이드 메뉴 -->
-            <nav class="side-menu" id="sideMenu">
-                <w2:textbox class="side-menu-title" label="메뉴"></w2:textbox>
-                
-                <div class="side-menu-section">
-                    <w2:textbox class="side-menu-section-title" label="매칭 서비스"></w2:textbox>
-                    <w2:anchor class="side-menu-item" ev:onclick="scwin.menu1_onclick">
-                        <xf:label><![CDATA[������ 매칭]]></xf:label>
-                    </w2:anchor>
-                    <w2:anchor class="side-menu-item" ev:onclick="scwin.menu2_onclick">
-                        <xf:label><![CDATA[������ MBTI 검사]]></xf:label>
-                    </w2:anchor>
-                    <w2:anchor class="side-menu-item" ev:onclick="scwin.menu3_onclick">
-                        <xf:label><![CDATA[������ 기업 둘러보기]]></xf:label>
-                    </w2:anchor>
-                </div>
-                
-                <div class="side-menu-section">
-                    <w2:textbox class="side-menu-section-title" label="개인 서비스"></w2:textbox>
-                    <w2:anchor class="side-menu-item" ev:onclick="scwin.goToUserDetail()">
-                        <xf:label><![CDATA[������ 내 정보]]></xf:label>
-                    </w2:anchor>
-                    <w2:anchor class="side-menu-item">
-                        <xf:label><![CDATA[������ 지원현황]]></xf:label>
-                    </w2:anchor>
-                    <w2:anchor class="side-menu-item">
-                        <xf:label><![CDATA[❤️ 관심기업]]></xf:label>
-                    </w2:anchor>
-                    <w2:anchor class="side-menu-item">
-                        <xf:label><![CDATA[������ 북마크]]></xf:label>
-                    </w2:anchor>
-                </div>
-                
-                <div class="side-menu-section">
-                    <w2:textbox class="side-menu-section-title" label="기업 서비스"></w2:textbox>
-                    <w2:anchor class="side-menu-item" ev:onclick="scwin.btnEnterprise_onclick">
-                        <xf:label><![CDATA[������ 채용관리 대시보드]]></xf:label>
-                    </w2:anchor>
-                    <w2:anchor class="side-menu-item" ev:onclick="scwin.goToCompanyRegister()">
-                        <xf:label><![CDATA[������ 기업 등록]]></xf:label>
-                    </w2:anchor>
-                </div>
-            </nav>
+    	<xf:group class="main-wrap">
 
-            <!-- 메인 히어로 섹션 -->
-            <xf:group class="hero-section" tagname="section">
-                <xf:group class="hero-container clearfix">
-                    <!-- 광고 영역 -->
-                    <xf:group class="hero-left">
-                        <xf:group class="ad-area" id="ad_area" ev:onclick="scwin.ad_onclick">
-                            <w2:textbox class="ad-title" label="당신의 꿈의 직장을"></w2:textbox>
-                            <w2:textbox class="ad-title" label="찾아드립니다"></w2:textbox>
-                            <w2:textbox class="ad-subtitle" label="AI 기반 매칭으로 최적의 기업과 만남"></w2:textbox>
-                            <xf:trigger class="ad-button" type="button">
-                                <xf:label><![CDATA[무료로 시작하기 →]]></xf:label>
-                            </xf:trigger>
-                        </xf:group>
-                    </xf:group>
+    		<!-- 헤더 영역 -->
+    		<xf:group class="header clearfix" tagname="header">
+    			<xf:group class="header-left">
+    				<!-- 햄버거 메뉴 -->
+    				<div class="hamburger-menu" ev:onclick="scwin.toggleSideMenu()">
+    					<div class="hamburger-line"></div>
+    					<div class="hamburger-line"></div>
+    					<div class="hamburger-line"></div>
+    				</div>
 
-                    <!-- 로그인 박스 -->
-                    <xf:group class="hero-right">
-                        <xf:group class="login-area">
-                            <w2:textbox class="login-title" label="로그인하고 기업 매칭에 참여해 보세요."></w2:textbox>
-                            <xf:trigger class="btn-main-login" id="btnMainLogin" ev:onclick="scwin.btnLogin_onclick" type="button">
-                                <xf:label><![CDATA[로그인]]></xf:label>
-                            </xf:trigger>
-                            <xf:group class="gift-area">
-                                <w2:textbox class="gift-text" label="매칭 퀘스트 완료하고"></w2:textbox>
-                                <w2:textbox class="gift-text-bold" label="합격자 이력서 받아가세요!"></w2:textbox>
-                                <w2:textbox class="gift-icon" label="������"></w2:textbox>
-                            </xf:group>
-                        </xf:group>
-                    </xf:group>
-                </xf:group>
-            </xf:group>
+    				<xf:group class="nav-menu">
+    					<xf:image src="/InsWebApp/images/ws5/weaveTypeLogo.png" style="width:130px;height:32px;object-fit:contain;"
+    						id="weaveTypeLogo" class="logo" ev:onclick="scwin.weaveTypeLogo_onclick">
+    					</xf:image>
+    					<w2:anchor class="nav-link" id="anchor1" ev:onclick="scwin.menu1_onclick" outerDiv="false">
+    						<xf:label><![CDATA[매칭]]></xf:label>
+    					</w2:anchor>
+    					<w2:anchor class="nav-link" id="anchor2" ev:onclick="scwin.menu2_onclick" outerDiv="false">
+    						<xf:label><![CDATA[mbti검사]]></xf:label>
+    					</w2:anchor>
+    					<w2:anchor class="nav-link" id="anchor3" ev:onclick="scwin.menu3_onclick" outerDiv="false">
+    						<xf:label><![CDATA[기업 둘러보기]]></xf:label>
+    					</w2:anchor>
+    				</xf:group>
+    			</xf:group>
+    			<xf:group class="header-right">
+    				<xf:group class="search-container">
+    					<input id="searchInput" class="search-input" type="text" placeholder="검색어를 입력하세요" />
+    					<button class="search-btn" id="btnSearch" type="button">������</button>
+    				</xf:group>
+    				<xf:trigger class="btn-login" id="btnLogin" ev:onclick="scwin.btnLogin_onclick" type="button">
+    					<xf:label><![CDATA[로그인/회원가입]]></xf:label>
+    				</xf:trigger>
+    				<xf:trigger class="btn-enterprise" id="btnEnterprise" ev:onclick="scwin.btnEnterprise_onclick" type="button">
+    					<xf:label><![CDATA[기업 서비스]]></xf:label>
+    				</xf:trigger>
+    			</xf:group>
+    		</xf:group>
 
-            <!-- 점수매칭 섹션 -->
-            <xf:group class="section section-white" tagname="section">
-                <w2:textbox class="section-title" label="점수매칭"></w2:textbox>
-                <w2:textbox class="section-subtitle" label="접수 구직자: 120,739명"></w2:textbox>
+    		<!-- 사이드 메뉴 오버레이 -->
+    		<div class="side-menu-overlay" id="sideMenuOverlay" ev:onclick="scwin.closeSideMenu()"></div>
 
-                <xf:group class="cards-container">
-                    <!-- 카드 1: 튜토리얼 -->
-                    <xf:group class="card card-green" id="card1" ev:onclick="scwin.card1_onclick">
-                        <xf:group class="card-icon card-icon-green"></xf:group>
-                        <w2:textbox class="card-title" label="튜토리얼"></w2:textbox>
-                    </xf:group>
+    		<!-- 사이드 메뉴 -->
+    		<nav class="side-menu" id="sideMenu">
+    			<w2:textbox class="side-menu-title" label="메뉴"></w2:textbox>
 
-                    <!-- 카드 2: 자소서 업체검토 -->
-                    <xf:group class="card card-orange" id="card2" ev:onclick="scwin.card2_onclick">
-                    	<xf:group class="card-icon card-icon-orange"></xf:group>
-                    	<w2:textbox class="card-text" label="자소서와 입사지원은"></w2:textbox>
-                    	<w2:textbox class="card-text" label="이제 그만!"></w2:textbox>
-                    	<w2:textbox style="" label="매칭 프로필 등록하면" class="card-text"></w2:textbox>
-                    	<w2:textbox style="position" label="기업의 제안이 도착해요." class="card-text"></w2:textbox>
-                    	<w2:textbox class="card-small-text" label="매칭 프로필 등록하면 기업의 제안이 도착해요."></w2:textbox>
-                    	<w2:anchor class="card-link" ev:onclick="scwin.btnProfile_onclick" outerDiv="false">
-                    		<xf:label><![CDATA[매칭 프로필 채우기 >]]></xf:label>
-                    	</w2:anchor>
-                    </xf:group>
+    			<div class="side-menu-section">
+    				<w2:textbox class="side-menu-section-title" label="매칭 서비스"></w2:textbox>
+    				<w2:anchor class="side-menu-item" ev:onclick="scwin.menu1_onclick">
+    					<xf:label><![CDATA[매칭]]></xf:label>
+    				</w2:anchor>
+    				<w2:anchor class="side-menu-item" ev:onclick="scwin.menu2_onclick">
+    					<xf:label><![CDATA[MBTI 검사]]></xf:label>
+    				</w2:anchor>
+    				<w2:anchor class="side-menu-item" ev:onclick="scwin.menu3_onclick">
+    					<xf:label><![CDATA[기업 둘러보기]]></xf:label>
+    				</w2:anchor>
+    			</div>
 
-                    <!-- 카드 3: MBTI 검사 -->
-                    <xf:group class="card card-blue" id="card3" ev:onclick="scwin.card3_onclick">
-                        <xf:group class="card-icon card-icon-blue"></xf:group>
-                        <w2:textbox class="card-title" label="mbti검사"></w2:textbox>
-                    </xf:group>
-                </xf:group>
-            </xf:group>
+    		</nav>
 
-            <!-- 포지션 추천 섹션 -->
-            <xf:group class="section section-gray" tagname="section">
-                <w2:textbox class="section-title" label="로그인하고 내 조건에 맞는 포지션 추천받기"></w2:textbox>
 
-                <xf:group class="positions-container">
-                    <!-- 포지션 카드 1 -->
-                    <xf:group class="position-card" id="position1" ev:onclick="scwin.position1_onclick">
-                        <xf:group class="position-header position-header-dark">
-                            <w2:textbox class="position-status" label="인기"></w2:textbox>
-                        </xf:group>
-                        <w2:textbox class="position-company" label="(주)이디야"></w2:textbox>
-                        <w2:textbox class="position-title" label="경력 · 경영관리 · HR · 서울(본사)"></w2:textbox>
-                        <w2:textbox class="position-status-text" label="지원자관리"></w2:textbox>
-                    </xf:group>
+    		<!-- 푸터 -->
+    		<xf:group class="footer" tagname="footer">
+    			<w2:textbox class="footer-title" label="WeaveType"></w2:textbox>
+    			<w2:textbox class="footer-text" label="(주)위브타입 | 대표이사 홍길동 | 대표고객문의 support@weavetype.com"></w2:textbox>
+    			<w2:textbox class="footer-text" label="서울특별시 강남구 테헤란로 123 위브타워 15층 | 전화번호: 02-123-4567"></w2:textbox>
+    			<w2:textbox class="footer-text" label="© 2023 WeaveType Inc. All Rights Reserved."></w2:textbox>
+    		</xf:group>
 
-                    <!-- 포지션 카드 2 -->
-                    <xf:group class="position-card" id="position2" ev:onclick="scwin.position2_onclick">
-                        <xf:group class="position-header position-header-dark">
-                            <w2:textbox class="position-status" label="인기"></w2:textbox>
-                        </xf:group>
-                        <w2:textbox class="position-company" label="(주)이디야"></w2:textbox>
-                        <w2:textbox class="position-title" label="경력 · 디자인 · 웹디자인 · 서울(본사)"></w2:textbox>
-                        <w2:textbox class="position-status-text" label="공고작성"></w2:textbox>
-                    </xf:group>
-
-                    <!-- 포지션 카드 3 -->
-                    <xf:group class="position-card" id="position3" ev:onclick="scwin.position3_onclick">
-                        <xf:group class="position-header position-header-blue">
-                            <w2:textbox class="position-status" label="인기"></w2:textbox>
-                        </xf:group>
-                        <w2:textbox class="position-company" label="동아사이그룹"></w2:textbox>
-                        <w2:textbox class="position-title" label="신입/경력 · 총무 · 총무/관리 · 수도권(전국)"></w2:textbox>
-                        <w2:textbox class="position-status-text" label="채용리뷰"></w2:textbox>
-                    </xf:group>
-                </xf:group>
-            </xf:group>
-
-            <!-- 매칭 참여 기업 섹션 -->
-            <xf:group class="section section-white" tagname="section">
-                <w2:textbox class="section-title" label="매칭 참여 기업"></w2:textbox>
-                <w2:textbox class="section-subtitle" label="참여 기업: 253개"></w2:textbox>
-
-                <xf:group class="companies-container">
-                    <xf:group class="company-row">
-                        <xf:group class="company-item">
-                            <w2:textbox class="company-name" label="������️ kakaobank"></w2:textbox>
-                        </xf:group>
-                        <xf:group class="company-item">
-                            <w2:textbox class="company-name" label="(주)카카오페이"></w2:textbox>
-                        </xf:group>
-                        <xf:group class="company-item">
-                            <w2:textbox class="company-name" label="(주)파라다이스"></w2:textbox>
-                        </xf:group>
-                        <xf:group class="company-item">
-                            <w2:textbox class="company-name" label="������ SHINSEGAE"></w2:textbox>
-                        </xf:group>
-                    </xf:group>
-
-                    <xf:group class="company-row">
-                        <xf:group class="company-item">
-                            <w2:textbox class="company-name" label="현대로템(주)"></w2:textbox>
-                        </xf:group>
-                        <xf:group class="company-item">
-                            <w2:textbox class="company-name" label="������ DAS"></w2:textbox>
-                        </xf:group>
-                        <xf:group class="company-item">
-                            <w2:textbox class="company-name" label="������ com2uS"></w2:textbox>
-                        </xf:group>
-                        <xf:group class="company-item">
-                            <w2:textbox class="company-name" label="(주)원티드랩"></w2:textbox>
-                        </xf:group>
-                    </xf:group>
-
-                    <xf:group class="company-row">
-                        <xf:group class="company-item">
-                            <w2:textbox class="company-name" label="⛽ S-OIL(주)"></w2:textbox>
-                        </xf:group>
-                        <xf:group class="company-item">
-                            <w2:textbox class="company-name" label="한국전력공사"></w2:textbox>
-                        </xf:group>
-                        <xf:group class="company-item">
-                            <w2:textbox class="company-name" label="������ 그린케미칼"></w2:textbox>
-                        </xf:group>
-                        <xf:group class="company-item">
-                            <w2:textbox class="company-name" label="케이티(KT)"></w2:textbox>
-                        </xf:group>
-                    </xf:group>
-                </xf:group>
-            </xf:group>
-
-            <!-- 푸터 -->
-            <xf:group class="footer" tagname="footer">
-                <w2:textbox class="footer-title" label="WeaveType"></w2:textbox>
-                <w2:textbox class="footer-text" label="(주)위브타입 | 대표이사 홍길동 | 대표고객문의 support@weavetype.com"></w2:textbox>
-                <w2:textbox class="footer-text" label="서울특별시 강남구 테헤란로 123 위브타워 15층 | 전화번호: 02-123-4567"></w2:textbox>
-                <w2:textbox class="footer-text" label="© 2023 WeaveType Inc. All Rights Reserved."></w2:textbox>
-            </xf:group>
-
-        </xf:group>
+    	</xf:group>
+    	<w2:pageFrame style="height: 300px;" id="pf_main" src="/InsWebApp/ui/common/weaveTypeMain.xml"></w2:pageFrame>
     </body>
 </html>

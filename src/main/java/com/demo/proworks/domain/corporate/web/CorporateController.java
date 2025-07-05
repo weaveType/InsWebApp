@@ -86,9 +86,14 @@ public class CorporateController {
 	@RequestMapping(value = "CP0002UpdView")
 	@ElDescription(sub = "회사정보 갱신 폼을 위한 조회", desc = "회사정보 갱신 폼을 위한 조회를 한다.")
 	public CorporateVo selectCorporateByEmail(EmailVo emailVo) throws Exception {
-		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> controller : " + emailVo.getEmail());
+
+
 		CorporateVo selectCorporateVo = corporateService.selectCorporateByEmail(emailVo);
-		System.out.println(selectCorporateVo.toString());
+
+		if (selectCorporateVo == null) {
+			throw new IllegalArgumentException("입력하신 이메일에 해당하는 회사 정보가 없습니다.");
+		}
+
 		return selectCorporateVo;
 	}
 

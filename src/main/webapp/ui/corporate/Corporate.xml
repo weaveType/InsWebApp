@@ -60,7 +60,7 @@
 				mediatype="application/json" encoding="UTF-8" instance="" replace="" errorHandler="" customHandler="" mode="asynchronous" processMsg=""
 				ev:submit="" ev:submitdone="scwin.sbm_insertCorporateVo_submitdone" ev:submiterror="" abortTrigger="">
 			</xf:submission>
-			<xf:submission id="sbm_selectCorporateVo" ref="" target="" action="/InsWebApp/CP0001UpdView.pwkjson" method="post"
+			<xf:submission id="sbm_selectCorporateVo" ref="data:json,dmp_corporateVoDetail" target="" action="/InsWebApp/CP0001UpdView.pwkjson" method="post"
 				mediatype="application/json" encoding="UTF-8" instance="" replace="" errorHandler="" customHandler="" mode="asynchronous"
 				processMsg="회사정보를 조회 중입니다." ev:submit="" ev:submitdone="scwin.sbm_selectCorporateVo_submitdone" ev:submiterror="" abortTrigger="">
 			</xf:submission>
@@ -70,7 +70,7 @@
 		<script lazy="false" type="text/javascript"><![CDATA[
 	scwin.onpageload = function() {
 		// 회사정보 readOnly false
-		
+		debugger;
 		// 버튼 숨김
 		btn_save.show("");   // 저장 버튼 
 		btn_edit.hide();     // 수정 버튼 제거
@@ -104,6 +104,8 @@
 	 */		   
 	scwin.btn_search_onclick = function(e) {
 		// 서버통신 - 회사정보 조회
+        debugger;
+        console.log(sbm_selectCorporateVo);
 		$c.sbm.execute($p, sbm_selectCorporateVo);
 	};
 	

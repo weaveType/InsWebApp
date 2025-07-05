@@ -40,18 +40,17 @@
 				ev:submitdone="scwin.sbm_insertCorporateVo_submitdone" ev:submiterror="" abortTrigger="">
 			</xf:submission>
 
-			<!-- 이메일로 기업 정보 조회용 submission - 단순화된 버전 -->
 			<xf:submission id="sbm_selectCorporateVo" action="/InsWebApp/CP0002UpdView.pwkjson" method="post"
-				mediatype="application/json" ref='data:json,{"id":"dmp_searchParam","key":"emailVo"}' target="" encoding="UTF-8" instance="" replace=""
-				errorHandler="" customHandler="" mode="asynchronous" processMsg="회사정보를 조회 중입니다." ev:submit=""
-				ev:submitdone="scwin.sbm_selectCorporateVo_submitdone" ev:submiterror="scwin.sbm_selectCorporateVo_submiterror" abortTrigger="">
+				mediatype="application/json" ref='data:json,{"id":"dmp_searchParam","key":"emailVo"}'
+				target='data:json,{"id":"dmp_corporateVoDetail","key":"elData.corporateVo"}' encoding="UTF-8" instance="" replace="" errorHandler=""
+				customHandler="" mode="asynchronous" processMsg="회사정보를 조회 중입니다." ev:submit="" ev:submitdone="scwin.sbm_selectCorporateVo_submitdone"
+				ev:submiterror="scwin.sbm_selectCorporateVo_submiterror" abortTrigger="">
 			</xf:submission>
 		</xf:model>
 		<w2:layoutInfo />
 		<w2:publicInfo method="" />
 
 		<style type="text/css"><![CDATA[
-/* 기존 스타일은 동일하게 유지 */
 .main-container {
     background-color: #ffffff;
     min-height: 100vh;
@@ -380,205 +379,51 @@
 }
 ]]></style>
 
-		<script lazy="false" type="text/javascript"><![CDATA[
-// 페이지 로드 시 초기화
+		<script lazy="false" type="text/javascript"><![CDATA[// 페이지 로드 시 초기화
 scwin.onpageload = function () {
-    try {
-        console.log("페이지 로드 시작");
+    scwin.loadCorporateInfoFromSession();
+        // WebSquare 응답 구조에 맞게 수정
+    var elHeader = e.responseJSON.elHeader;
+    var userHeader = e.responseJSON.userHeader;
 
-        // 데이터맵 초기화
-        if (dmp_corporateVoDetail) {
-            dmp_corporateVoDetail.setEmptyValue();
-        }
-
-        if (dmp_searchParam) {
-            dmp_searchParam.setEmptyValue();
-        }
-
-        // 지연 실행으로 초기화 문제 방지
-        setTimeout(function () {
-            scwin.initializePage();
-        }, 100);
-
-    } catch (error) {
-        console.error("onpageload 오류:", error);
-    }
+    co
 };
 
-// 페이지 초기화 함수
-scwin.initializePage = function () {
-    try {
-        // 현재 사용자 이메일 가져오기 (실제 구현에 맞게 수정)
-        var userEmail = scwin.getCurrentUserEmail();
 
-        if (userEmail && userEmail.trim() !== "") {
-            // 이메일이 있으면 조회 실행
-            scwin.searchCorporateByEmail(userEmail);
+// 세션에서 이메일을 가져와서 기업 정보를 조회하는 함수
+scwin.loadCorporateInfoFromSession = function() {
+    try {
+        // 1. URL 파라미터에서 email 가져오기 (Login.xml에서 전달받은 경우)
+        var email = WebSquare.util.getData("userEmail");
+        console.log("WebSquare.util.getData : " + email );
+        var email = $c.data.getParameter("email");
+        
+        // 2. URL 파라미터가 없으면 전역 데이터에서 가져오기
+        if (!email) {
+            email = $c.data.getData("userEmail"); // 전역에 저장된 경우
+        }
+        
+        // 3. 여전히 없으면 세션 정보 조회를 위해 서버 호출
+        if (!email) {
+            // 서버에서 세션의 UserHeader에서 email을 가져오도록 빈 파라미터로 호출
+            dmp_searchParam.set("email", ""); // 빈 값으로 설정하면 서버에서 세션에서 가져옴
         } else {
-            // 이메일이 없으면 신규 등록 모드
-            scwin.setNewCorporateMode();
+            dmp_searchParam.set("email", email);
         }
-    } catch (error) {
-        console.error("초기화 오류:", error);
-        scwin.setNewCorporateMode();
-    }
-};
-
-// 현재 사용자 이메일 획득 (실제 환경에 맞게 수정 필요)
-scwin.getCurrentUserEmail = function () {
-    try {
-        // 방법 1: URL 파라미터에서 가져오기
-        var urlParams = new URLSearchParams(window.location.search);
-        var emailFromUrl = urlParams.get('email');
-        if (emailFromUrl) {
-            return emailFromUrl;
-        }
-
-        // 방법 2: 세션에서 가져오기 (WebSquare 방식)
-        // var sessionEmail = $c.win.getSessionItem('userEmail');
-        // if (sessionEmail) return sessionEmail;
-
-        // 방법 3: 쿠키에서 가져오기
-        // var cookieEmail = $c.util.getCookie('userEmail');
-        // if (cookieEmail) return cookieEmail;
-
-        // 임시로 테스트용 이메일 반환 (실제로는 주석 처리)
-        return "test@company.com";
-
-    } catch (error) {
-        console.error("이메일 획득 오류:", error);
-        return null;
-    }
-};
-
-// 이메일로 기업 정보 조회 함수
-scwin.searchCorporateByEmail = function (email) {
-    try {
-        if (!email || email.trim() === "") {
-            alert("조회할 이메일이 없습니다.");
-            return;
-        }
-
-        // 조회 파라미터 설정
-        dmp_searchParam.set("email", email);
-
-        // 서버 조회 실행
+        
+        // 기업 정보 조회 실행
         $c.sbm.execute(sbm_selectCorporateVo);
-
+        
     } catch (error) {
-        console.error("조회 실행 오류:", error);
-        alert("조회 중 오류가 발생했습니다.");
-    }
-};
-
-// 기업 정보 조회 완료 후 처리
-scwin.sbm_selectCorporateVo_submitdone = function (e) {
-    try {
-        console.log("조회 응답:", e);
-        // 서버 응답 구조 확인을 위한 로그
-        console.log("=== 서버 응답 구조 확인 ===");
-        console.log("전체 응답:", e);
-        console.log("responseJSON:", e.responseJSON);
-        console.log("responseText:", e.responseText);
-        // 응답 데이터 확인
-        var responseData = e.responseJSON;
-
-        if (responseData) {
-            // 서버 응답 구조에 따라 처리 (실제 구조에 맞게 수정)
-            var headerInfo = responseData.elHeader;
-            var dataInfo = responseData.elData;
-
-            if (headerInfo && headerInfo.resSuc === true && dataInfo) {
-                // 조회 성공
-                var corporateInfo = dataInfo.corporateVo || dataInfo;
-
-                if (corporateInfo && corporateInfo.email) {
-                    // 조회된 데이터를 폼에 설정
-                    dmp_corporateVoDetail.setJSON(corporateInfo);
-
-                    // 수정 모드로 설정
-                    scwin.setUpdateCorporateMode();
-
-                    alert("기업 정보를 조회했습니다.");
-                } else {
-                    // 데이터가 없는 경우
-                    alert("해당 이메일로 등록된 기업 정보가 없습니다.");
-                    scwin.setNewCorporateMode();
-                }
-            } else {
-                // 조회 실패
-                var errorMsg = headerInfo ? headerInfo.resMsg : "조회 중 오류가 발생했습니다.";
-                console.log("조회 실패:", errorMsg);
-                scwin.setNewCorporateMode();
-            }
-        } else {
-            console.log("응답 데이터가 없습니다.");
-            scwin.setNewCorporateMode();
-        }
-
-    } catch (error) {
-        console.error("응답 처리 중 오류:", error);
-        alert("데이터 처리 중 오류가 발생했습니다.");
-        scwin.setNewCorporateMode();
-    }
-};
-
-// 조회 오류 처리
-scwin.sbm_selectCorporateVo_submiterror = function (e) {
-    try {
-        console.error("조회 오류:", e);
-
-        // 404나 데이터 없음 오류인 경우 신규 등록 모드로
-        if (e.status === 404 || (e.responseJSON && e.responseJSON.elHeader && e.responseJSON.elHeader.resCode === "404")) {
-            console.log("데이터 없음 - 신규 등록 모드로 전환");
-            scwin.setNewCorporateMode();
-        } else {
-            alert("서버 통신 중 오류가 발생했습니다.");
-            scwin.setNewCorporateMode();
-        }
-
-    } catch (error) {
-        console.error("오류 처리 중 예외:", error);
-        scwin.setNewCorporateMode();
-    }
-};
-
-// 신규 기업 등록 모드로 설정
-scwin.setNewCorporateMode = function () {
-    try {
-        console.log("신규 등록 모드 설정");
-
-        // 폼 초기화
-        if (dmp_corporateVoDetail) {
-            dmp_corporateVoDetail.reset();
-        }
-
-        // 입력 필드 활성화
-        if (grp_corporateInfo) {
-            grp_corporateInfo.setReadOnly(false);
-        }
-
-        if (biz_reg_number) {
-            biz_reg_number.setReadOnly(false);
-        }
-
-        // 버튼 텍스트 변경
-        if (btn_update_corporate) {
-            var label = btn_update_corporate.getLabel();
-            if (label && typeof label.setValue === 'function') {
-                label.setValue("등록하기");
-            }
-        }
-
-    } catch (error) {
-        console.error("신규 모드 설정 오류:", error);
+        console.error("이메일 로딩 오류:", error);
+        // 에러 발생 시 신규 등록 모드로 설정
+        scwin.setNewRegistrationMode();
     }
 };
 
 // 기업 정보 수정 모드로 설정
 scwin.setUpdateCorporateMode = function () {
     try {
-        console.log("수정 모드 설정");
 
         // 입력 필드 활성화 (사업자등록번호는 제외)
         if (grp_corporateInfo) {
@@ -602,55 +447,10 @@ scwin.setUpdateCorporateMode = function () {
     }
 };
 
-// 기존 함수들 유지...
 scwin.main_logo_onclick = function (e) {
     // 로고 클릭 이벤트
 };
 
-scwin.biz_reg_number_chk_btn_onclick = function (e) {
-    try {
-        var bizNo = biz_reg_number.getValue().replace(/[^0-9]/g, "");
-        if (bizNo.length === 0) {
-            alert("사업자등록번호를 입력해 주세요.");
-            return;
-        }
-
-        var data = { b_no: [bizNo] };
-        console.log("Request Data:", JSON.stringify(data));
-
-        $.ajax({
-            url: "https://api.odcloud.kr/api/nts-businessman/v1/status"
-                + "?serviceKey=yinZtZoIZHJc8jq8NnIE8zNvIc69XfYrMflYSywUFhAQr9ShfzBmntj7d4jMkuLJ5kZomJ7i7bOFOUAykjWAOw%3D%3D",
-            type: "POST",
-            data: JSON.stringify(data),
-            dataType: "JSON",
-            contentType: "application/json",
-            success: function (result) {
-                console.log(result);
-
-                if (result && result.data && result.data.length > 0) {
-                    var info = result.data[0];
-
-                    if (info.tax_type &&
-                        info.tax_type.indexOf("국세청에 등록되지 않은 사업자등록번호") > -1) {
-                        alert("국세청에 등록되지 않은 사업자등록번호입니다.\n번호를 다시 확인해 주세요.");
-                        return;
-                    }
-                    alert("유효한 사업자등록번호입니다.");
-
-                } else {
-                    alert("조회 결과가 없습니다. 번호를 확인해 주세요.");
-                }
-            },
-            error: function (xhr) {
-                console.error("API 오류:", xhr.responseText);
-                alert("조회 중 오류가 발생했습니다.\n잠시 후 다시 시도해 주세요.");
-            }
-        });
-    } catch (error) {
-        console.error("사업자번호 검증 오류:", error);
-    }
-};
 
 // 사업자등록증명원 파일 선택 이벤트
 scwin.business_cert_upload_onInputValueChange = function (fileName) {
@@ -808,8 +608,7 @@ scwin.resetForm = function () {
     } catch (error) {
         console.error("폼 초기화 오류:", error);
     }
-};
-]]></script>
+};]]></script>
 	</head>
 
 	<body ev:onpageload="scwin.onpageload">

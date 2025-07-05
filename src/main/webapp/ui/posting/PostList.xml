@@ -49,23 +49,6 @@
                 background-color: #ffffff;
             }
 
-            /* 헤더 - 기존 WeaveType 스타일 */
-            .header {
-                width: 100%;
-                height: 70px;
-                background-color: #ffffff;
-                border-bottom: 1px solid #e0e0e0;
-                position: relative;
-                padding: 0 min(30px, 4vw);
-            }
-
-            .header-left {
-                float: left;
-                padding-top: 18px;
-                display: flex;
-                align-items: center;
-                gap: 15px;
-            }
 
             /* 햄버거 메뉴 */
             .hamburger-menu {
@@ -111,11 +94,6 @@
                 cursor: pointer;
                 margin-right: 20px;
                 vertical-align: middle;
-            }
-
-            .header-right {
-                float: right;
-                padding-top: 18px;
             }
 
             .search-container {
@@ -536,10 +514,6 @@
 
             /* 반응형 디자인 */
             @media (max-width: 1024px) {
-                .header {
-                    padding: 0 20px;
-                }
-                
                 .nav-link {
                     margin-right: 15px;
                     font-size: 13px;
@@ -563,14 +537,6 @@
             }
 
             @media (max-width: 768px) {
-                .header {
-                    height: 60px;
-                    padding: 0 15px;
-                }
-                
-                .header-left, .header-right {
-                    padding-top: 13px;
-                }
                 
                 .nav-menu xf:image {
                     width: 100px !important;
@@ -670,26 +636,6 @@ scwin.onpageload = function () {
 // 헤더 이벤트들
 scwin.weaveTypeLogo_onclick = function() {
     $p.url("../common/weaveTypeMain.xml");
-};
-
-scwin.menu1_onclick = function() {
-    alert("매칭 페이지로 이동합니다.");
-};
-
-scwin.menu2_onclick = function() {
-    alert("MBTI 검사 페이지로 이동합니다.");
-};
-
-scwin.menu3_onclick = function() {
-    // 현재 페이지
-};
-
-scwin.btnLogin_onclick = function() {
-    alert("로그인/회원가입 페이지로 이동합니다.");
-};
-
-scwin.btnEnterprise_onclick = function() {
-    alert("기업 서비스 페이지로 이동합니다.");
 };
 
 // 검색 실행
@@ -795,43 +741,7 @@ scwin.goToCompanyRegister = function() {
     
     <body ev:onpageload="scwin.onpageload">
         <xf:group class="main-wrap">
-            <!-- 헤더 영역 - 기존 WeaveType 스타일 -->
-            <xf:group class="header clearfix" tagname="header">
-                <xf:group class="header-left">
-                    <!-- 햄버거 메뉴 -->
-                    <div class="hamburger-menu" ev:onclick="scwin.toggleSideMenu()">
-                        <div class="hamburger-line"></div>
-                        <div class="hamburger-line"></div>
-                        <div class="hamburger-line"></div>
-                    </div>
-                    
-                    <xf:group class="nav-menu">
-                        <xf:image src="/images/ws5/weaveTypeLogo.png" style="width: 120px; height: 32px; object-fit: contain;" id="weaveTypeLogo" class="logo" ev:onclick="scwin.weaveTypeLogo_onclick"></xf:image>
-                        <w2:anchor class="nav-link" id="anchor1" ev:onclick="scwin.menu1_onclick" outerDiv="false">
-                            <xf:label><![CDATA[매칭]]></xf:label>
-                        </w2:anchor>
-                        <w2:anchor class="nav-link" id="anchor2" ev:onclick="scwin.menu2_onclick" outerDiv="false">
-                            <xf:label><![CDATA[mbti검사]]></xf:label>
-                        </w2:anchor>
-                        <w2:anchor class="nav-link" id="anchor3" ev:onclick="scwin.menu3_onclick" outerDiv="false" style="color:#007bff;font-weight:600;">
-                            <xf:label><![CDATA[기업 둘러보기]]></xf:label>
-                        </w2:anchor>
-                    </xf:group>
-                </xf:group>
-                <xf:group class="header-right">
-                    <xf:group class="search-container">
-                        <input id="searchInput" class="search-input" type="text" placeholder="기업명, 직무로 검색" />
-                        <button class="search-btn" id="btnSearch" type="button">🔍</button>
-                    </xf:group>
-                    <xf:trigger class="btn-login" id="btnLogin" ev:onclick="scwin.btnLogin_onclick" type="button">
-                        <xf:label><![CDATA[로그인/회원가입]]></xf:label>
-                    </xf:trigger>
-                    <xf:trigger class="btn-enterprise" id="btnEnterprise" ev:onclick="scwin.btnEnterprise_onclick" type="button">
-                        <xf:label><![CDATA[기업 서비스]]></xf:label>
-                    </xf:trigger>
-                </xf:group>
-            </xf:group>
-
+          
             <!-- 사이드 메뉴 오버레이 -->
             <div class="side-menu-overlay" id="sideMenuOverlay" ev:onclick="scwin.closeSideMenu()"></div>
             

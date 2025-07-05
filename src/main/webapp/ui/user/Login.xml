@@ -178,23 +178,12 @@
                 font-size: 14px;
             }
         ]]></style>
-        <script type="text/javascript"><![CDATA[
-scwin.onpageload = function () {
+        <script type="text/javascript"><![CDATA[ scwin.onpageload = function () {
     // 페이지 로드 시 초기화
     scwin.initializeLogin();
 };
 
 scwin.initializeLogin = function () {
-    // Remember me 체크박스 초기화
-    var rememberMe = localStorage.getItem("rememberMe");
-    if (rememberMe === "true") {
-        chk_remember.setValue("Y");
-        var savedId = localStorage.getItem("savedUserId");
-        if (savedId) {
-            inp_userId.setValue(savedId);
-            dmp_loginVo.set("email", savedId);
-        }
-    }
 };
 
 scwin.btn_login_onclick = function (e) {
@@ -214,21 +203,6 @@ scwin.btn_login_onclick = function (e) {
         return;
     }
 
-    // Remember me 처리
-    var rememberMe = chk_remember.getValue();
-    if (rememberMe === "Y") {
-        localStorage.setItem("rememberMe", "true");
-        localStorage.setItem("savedUserId", userId);
-    } else {
-        localStorage.removeItem("rememberMe");
-        localStorage.removeItem("savedUserId");
-    }
-
-    // 로그인 데이터 설정
-    dmp_loginVo.set("email", userId);
-    dmp_loginVo.set("password", userPw);
-    // dmp_loginVo.set("rememberMe", rememberMe);
-
     // 로그인 버튼 비활성화
     btn_login.setDisabled(true);
 
@@ -242,11 +216,11 @@ scwin.sbm_login_submitdone = function (e) {
     // WebSquare 응답 구조에 맞게 수정
     var elHeader = e.responseJSON.elHeader;
     var userHeader = e.responseJSON.userHeader;
-
+    WebSquare.util.setData("userHeader", userHeader);
     // 성공 여부 체크: elHeader.resSuc 사용
     if (elHeader && elHeader.resSuc === true) {
-        var role = userHeader.role;
 
+        var role = userHeader.role;
         // roleId에 따른 페이지 이동
         if (role === "USER") {
             // 일반 사용자 - 팝업 닫고 부모 페이지에서 weaveTypeMain.xml로 이동
@@ -350,31 +324,19 @@ scwin.inp_userPw_onkeypress = function (e) {
             <xf:group class="form-group">
                 <w2:textbox class="form-label" label="아이디"></w2:textbox>
                 <xf:input class="form-input" id="inp_userId" placeholder="아이디를 입력하세요" 
-                    ev:onkeypress="scwin.inp_userId_onkeypress"></xf:input>
+                    ev:onkeypress="scwin.inp_userId_onkeypress" ref="data:dmp_loginVo.email"></xf:input>
             </xf:group>
             
             <xf:group class="form-group">
                 <w2:textbox class="form-label" label="비밀번호"></w2:textbox>
                 <xf:group class="password-group">
                     <xf:secret class="form-input" id="inp_userPw" placeholder="비밀번호를 입력하세요" 
-                        ev:onkeypress="scwin.inp_userPw_onkeypress"></xf:secret>
+                        ev:onkeypress="scwin.inp_userPw_onkeypress" ref="data:dmp_loginVo.password"></xf:secret>
                     <xf:trigger class="password-toggle" id="btn_password_show" 
                         ev:onclick="scwin.btn_password_show_onclick" type="button">
                         <xf:label>보기</xf:label>
                     </xf:trigger>
                 </xf:group>
-            </xf:group>
-            
-            <!-- Remember me 체크박스 -->
-            <xf:group class="checkbox-group">
-                <xf:select id="chk_remember" appearance="full" style="display: inline-block;">
-                    <xf:choices>
-                        <xf:item>
-                            <xf:label class="checkbox-label">아이디 기억하기</xf:label>
-                            <xf:value>Y</xf:value>
-                        </xf:item>
-                    </xf:choices>
-                </xf:select>
             </xf:group>
             
             <!-- 로그인 버튼 -->
