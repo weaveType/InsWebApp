@@ -36,13 +36,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Controller
 public class UserController {
 
-    private static final int BCRYPT_ROUNDS = 12;
-
+	private static final int BCRYPT_ROUNDS = 12;
 
 	/** UserService */
 	@Resource(name = "userServiceImpl")
 	private UserService userService;
-
 
 	@Resource(name = "loginProcess")
 	protected LoginProcessor loginProcess;
@@ -119,6 +117,7 @@ public class UserController {
 		userService.insertUser(userVo);
 	}
 
+
 	/**
 	 * 일반회원를 갱신 처리 한다.
 	 *
@@ -146,5 +145,9 @@ public class UserController {
 	public void deleteUser(UserVo userVo) throws Exception {
 		userService.deleteUser(userVo);
 	}
+	
+	
+	
+	
 
 }
