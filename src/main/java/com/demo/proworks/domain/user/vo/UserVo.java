@@ -13,8 +13,8 @@ public class UserVo extends com.demo.proworks.cmmn.ProworksCommVO {
     public UserVo(){
     }
 
-    @ElDtoField(logicalName = "user_id", physicalName = "userId", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
-    private String userId;
+    @ElDtoField(logicalName = "user_id", physicalName = "userId", type = "int", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private int userId;
 
     @ElDtoField(logicalName = "email", physicalName = "email", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
     private String email;
@@ -41,13 +41,12 @@ public class UserVo extends com.demo.proworks.cmmn.ProworksCommVO {
     private int roleId;
 
     @ElVoField(physicalName = "userId")
-    public String getUserId(){
-        String ret = this.userId;
-        return ret;
+    public int getUserId(){
+        return userId;
     }
 
     @ElVoField(physicalName = "userId")
-    public void setUserId(String userId){
+    public void setUserId(int userId){
         this.userId = userId;
     }
 

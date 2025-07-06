@@ -75,7 +75,6 @@ scwin.btn_login_onclick = function () {
         $c.sbm.execute(sbm_login);
 
     } catch (error) {
-        console.error("로그인 처리 중 오류:", error);
         scwin.showErrorMessage("로그인 처리 중 오류가 발생했습니다.");
     }
 };
