@@ -67,8 +67,7 @@ public class ProworksSessionDataAdapter extends SessionDataAdapter {
 			}
 
 			// 필요정보 추가영역
-			System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> getUserId : " + resUserVo.getUserId());
-			userHeader.setUserId(resUserVo.getUserId());
+			userHeader.setUserId(userVo.getEmail());
 			
 			int roleId = resUserVo.getRoleId();
 

@@ -120,10 +120,9 @@ public class CorporateServiceImpl implements CorporateService {
 		userVo.setName(corporateVo.getName());
 
 		// 기업 - 유저간 userId로 mapping
-		int userId = userDAO.insertUser(userVo);
+		userDAO.insertUser(userVo);
 
-		System.out.println("User 삽입 후 - userId: " + userVo.getUserId());
-		corporateVo.setUserId(userId);
+		corporateVo.setUserId(userVo.getUserId());
 		return corporateDAO.insertCorporate(corporateVo);
 	}
 

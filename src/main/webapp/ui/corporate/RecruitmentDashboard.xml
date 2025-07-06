@@ -289,11 +289,9 @@ scwin.btn_update_company_onclick = function (e) {
         if ($p.parent().pf_main) {
             $p.parent().pf_main.setSrc("../corporate/CorporateUpdate.xml");
         } else {
-            console.warn("부모 페이지에 pf_main이 없습니다.");
             $p.url("../corporate/CorporateUpdate.xml");
         }
     } catch (e) {
-        console.error("페이지 이동 중 오류:", e);
         $p.url("../corporate/CorporateLogin.xml");
     }
 };
@@ -303,7 +301,6 @@ scwin.btn_delete_company_onclick = function (e) {
         { id: "companyId", mandatory: true }
 
     ];
-    console.log(valInfo.toString);
 
     if ($c.data.validateGroup(grp_corporateInfo, valInfo) === true) {
         var promise = $c.win.confirm("삭제하시겠습니까?");
