@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.demo.proworks.domain.codeanalysis.dao.CodeAnalysisDAO">
+
+    <!-- 코드 분석 결과 등록 -->
+    <insert id="insertCodeAnalysisResult" parameterType="com.demo.proworks.domain.codeanalysis.vo.CodeAnalysisResultVo" useGeneratedKeys="true" keyProperty="codeAnalysisId">
+        <![CDATA[
+        INSERT INTO code_analysis_result (
+            USER_ID,
+            PROGRAMMING_LANGUAGE,
+            ANALYSIS_RESULT,
+            TYPE_CODE,
+            ARCHITECT_SCORE,
+            BUILDER_SCORE,
+            INDIVIDUAL_SCORE,
+            TEAM_SCORE,
+            CONFIDENCE_SCORE
+        ) VALUES (
+            #{userId},
+            #{programmingLanguage},
+            #{analysisResult},
+            #{typeCode},
+            #{architectScore},
+            #{builderScore},
+            #{individualScore},
+            #{teamScore},
+            #{confidenceScore}
+        )
+        ]]>
+    </insert>
+
+    <!-- 사용자의 최신 코드 분석 결과 조회 -->
+    <select id="selectLatestCodeAnalysisResult" parameterType="string" resultType="com.demo.proworks.domain.codeanalysis.vo.CodeAnalysisResultVo">
+        <![CDATA[
+        SELECT
+            CODE_ANALYSIS_ID AS codeAnalysisId,
+            USER_ID AS userId,
+            PROGRAMMING_LANGUAGE AS programmingLanguage,
+            ANALYSIS_RESULT AS analysisResult,
+            TYPE_CODE AS typeCode,
+            ARCHITECT_SCORE AS architectScore,
+            BUILDER_SCORE AS builderScore,
+            INDIVIDUAL_SCORE AS individualScore,
+            TEAM_SCORE AS teamScore,
+            CONFIDENCE_SCORE AS confidenceScore,
+            CREATED_AT AS createdAt
+        FROM code_analysis_result
+        WHERE USER_ID = #{userId}
+        ORDER BY CREATED_AT DESC
+        LIMIT 1
+        ]]>
+    </select>
+
+    <!-- 코드 분석 결과 수정 -->
+    <update id="updateCodeAnalysisResult" parameterType="com.demo.proworks.domain.codeanalysis.vo.CodeAnalysisResultVo">
+        <![CDATA[
+        UPDATE code_analysis_result SET
+            PROGRAMMING_LANGUAGE = #{programmingLanguage},
+            ANALYSIS_RESULT = #{analysisResult},
+            TYPE_CODE = #{typeCode},
+            ARCHITECT_SCORE = #{architectScore},
+            BUILDER_SCORE = #{builderScore},
+            INDIVIDUAL_SCORE = #{individualScore},
+            TEAM_SCORE = #{teamScore},
+            CONFIDENCE_SCORE = #{confidenceScore}
+        WHERE CODE_ANALYSIS_ID = #{codeAnalysisId}
+        ]]>
+    </update>
+
+    <!-- 코드 분석 결과 삭제 -->
+    <delete id="deleteCodeAnalysisResult" parameterType="long">
+        <![CDATA[
+        DELETE FROM code_analysis_result
+        WHERE CODE_ANALYSIS_ID = #{codeAnalysisId}
+        ]]>
+    </delete>
+
+    <!-- 사용자별 코드 분석 결과 목록 조회 -->
+    <select id="selectCodeAnalysisResultList" parameterType="string" resultType="com.demo.proworks.domain.codeanalysis.vo.CodeAnalysisResultVo">
+        <![CDATA[
+        SELECT
+            CODE_ANALYSIS_ID AS codeAnalysisId,
+            USER_ID AS userId,
+            PROGRAMMING_LANGUAGE AS programmingLanguage,
+            ANALYSIS_RESULT AS analysisResult,
+            TYPE_CODE AS typeCode,
+            ARCHITECT_SCORE AS architectScore,
+            BUILDER_SCORE AS builderScore,
+            INDIVIDUAL_SCORE AS individualScore,
+            TEAM_SCORE AS teamScore,
+            CONFIDENCE_SCORE AS confidenceScore,
+            CREATED_AT AS createdAt
+        FROM code_analysis_result
+        WHERE USER_ID = #{userId}
+        ORDER BY CREATED_AT DESC
+        ]]>
+    </select>
+
+    <!-- 타입별 분석 결과 통계 조회 -->
+    <select id="selectTypeStatistics" resultType="java.util.HashMap">
+        <![CDATA[
+        SELECT
+            TYPE_CODE,
+            COUNT(*) as count,
+            AVG(ARCHITECT_SCORE) as avg_architect_score,
+            AVG(BUILDER_SCORE) as avg_builder_score,
+            AVG(INDIVIDUAL_SCORE) as avg_individual_score,
+            AVG(TEAM_SCORE) as avg_team_score,
+            AVG(CONFIDENCE_SCORE) as avg_confidence_score
+        FROM code_analysis_result
+        GROUP BY TYPE_CODE
+        ORDER BY count DESC
+        ]]>
+    </select>
+
+    <!-- 개발자 타입 정보 조회 -->
+    <select id="selectDeveloperTypeInfo" parameterType="string" resultType="java.util.HashMap">
+        <![CDATA[
+        SELECT
+            TYPE_CODE,
+            TYPE_NAME,
+            TYPE_DESCRIPTION,
+            TYPE_CHARACTERISTICS
+        FROM developer_type_info
+        WHERE TYPE_CODE = #{typeCode}
+        ]]>
+    </select>
+
+    <!-- 모든 개발자 타입 정보 조회 -->
+    <select id="selectAllDeveloperTypeInfo" resultType="java.util.HashMap">
+        <![CDATA[
+        SELECT
+            TYPE_CODE,
+            TYPE_NAME,
+            TYPE_DESCRIPTION,
+            TYPE_CHARACTERISTICS
+        FROM developer_type_info
+        ORDER BY TYPE_CODE
+        ]]>
+    </select>
+
+    <!-- 타입 호환성 조회 -->
+    <select id="selectTypeCompatibility" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        <![CDATA[
+        SELECT
+            TYPE_CODE_1,
+            TYPE_CODE_2,
+            COMPATIBILITY_SCORE,
+            COMPATIBILITY_DESCRIPTION
+        FROM type_compatibility
+        WHERE TYPE_CODE_1 = #{typeCode1}
+        AND TYPE_CODE_2 = #{typeCode2}
+        ]]>
+    </select>
+
+</mapper> 
