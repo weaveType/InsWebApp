@@ -52,44 +52,44 @@ public class ProworksAuthProcess {
 //	}
 
 	public void checkAuth(HttpServletRequest request, String svcId, String inputData) throws UserException {
-
-		UserHeader userHeader = ControllerContextUtil.getUserHeader();
-
-//    try {
-//        if (userHeader != null) {  // 세션이 존재함
-//            if (userHeader instanceof ProworksUserHeader) {
-//                ProworksUserHeader siteUserHeader = (ProworksUserHeader) userHeader;
-//                String email = siteUserHeader.getEmail();
-//                String role = siteUserHeader.getRole(); // 가정: ProworksUserHeader에 roleId가 존재한다고 가정
+//		UserHeader userHeader = ControllerContextUtil.getUserHeader();
 //
-//                String requestURI = request.getRequestURI();  // 요청 URL 추출
+//		try {
+//			if (userHeader != null) { // 세션이 존재함
+//				if (userHeader instanceof ProworksUserHeader) {
+//					ProworksUserHeader siteUserHeader = (ProworksUserHeader) userHeader;
+//					String email = siteUserHeader.getEmail();
+//					String role = siteUserHeader.getRole();
 //
-//                boolean bCheck = true;
+//					String requestURI = request.getRequestURI();
 //
-//                // URL별 권한 체크
-//                if ("/InsWebApp/CP0001List.pwkjson".equals(requestURI)) {
-////                    if (roleId != 2) {
-//                        bCheck = false;
-////                    }
-//                }
+//					UserService userService = (UserService) ElBeanUtils.getBean("userServiceImpl");
+//					boolean bCheck = false;
 //
-//                if (!bCheck) {
-//                    throw new UserException("ERR.USER.0003"); // 권한이 존재하지 않습니다.
-//                }
+//					// URL별 권한 체크
+//					if ("/InsWebApp/CP0001List.pwkjson".equals(requestURI)) {
+//						if (!role.equals("COMPANY")) {
+//							bCheck = true;
+//						}
+//					}
 //
-//            } else {
-//                throw new UserException("ERR.USER.0002"); // 세션이 존재하지 않습니다.
-//            }
-//        } else {
-//            throw new UserException("ERR.USER.0002"); // 세션이 존재하지 않습니다.
-//        }
-//    } catch (UserException ue) {
-//        AppLog.error("CommAuthProcess-UserException", ue);
-//        throw ue;
-//    } catch (Exception e) {
-//        AppLog.error("CommAuthProcess-Exception", e);
-//        throw new UserException("ERR.USER.0003"); // 기타 에러 메시지
-//    }
+//					if (!bCheck) {
+//						throw new UserException("ERR.USER.0003"); // 권한이 존재하지 않습니다.
+//					}
+//
+//				} else {
+//					throw new UserException("ERR.USER.0002"); // 세션이 존재하지 않습니다.
+//				}
+//			} else {
+//				throw new UserException("ERR.USER.0002"); // 세션이 존재하지 않습니다.
+//			}
+//		} catch (UserException ue) {
+//			AppLog.error("CommAuthProcess-UserException", ue);
+//			throw ue;
+//		} catch (Exception e) {
+//			AppLog.error("CommAuthProcess-Exception", e);
+//			throw new UserException("ERR.USER.0003"); // 기타 에러 메시지
+//		}
 	}
 
 }

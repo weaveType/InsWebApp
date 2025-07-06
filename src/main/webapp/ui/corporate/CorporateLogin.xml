@@ -57,7 +57,6 @@ scwin.onpageload = function () {
 scwin.lnk_create_corporate_onclick = function () {
     try {
         // 부모 페이지의 pf_main 컴포넌트에 직접 접근
-        console.log($p.parent().pf_main);
         if ($p.parent().pf_main) {
             $p.parent().pf_main.setSrc("../corporate/CreateCompany.xml");
         } else {

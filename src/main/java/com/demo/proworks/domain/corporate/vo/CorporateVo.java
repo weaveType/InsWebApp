@@ -49,6 +49,9 @@ public class CorporateVo extends com.demo.proworks.cmmn.ProworksCommVO {
     @ElDtoField(logicalName = "유저 ID", physicalName = "userId", type = "int", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
     private int userId;
 
+    @ElDtoField(logicalName = "수정시각", physicalName = "updatedAt", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private String updatedAt;
+
     @ElVoField(physicalName = "companyId")
     public String getCompanyId(){
         String ret = this.companyId;
@@ -181,6 +184,17 @@ public class CorporateVo extends com.demo.proworks.cmmn.ProworksCommVO {
         this.userId = userId;
     }
 
+    @ElVoField(physicalName = "updatedAt")
+    public String getUpdatedAt(){
+        String ret = this.updatedAt;
+        return ret;
+    }
+
+    @ElVoField(physicalName = "updatedAt")
+    public void setUpdatedAt(String updatedAt){
+        this.updatedAt = updatedAt;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -196,7 +210,8 @@ public class CorporateVo extends com.demo.proworks.cmmn.ProworksCommVO {
         sb.append("description").append("=").append(description).append(",");
         sb.append("logoFileName").append("=").append(logoFileName).append(",");
         sb.append("role").append("=").append(role).append(",");
-        sb.append("userId").append("=").append(userId);
+        sb.append("userId").append("=").append(userId).append(",");
+        sb.append("updatedAt").append("=").append(updatedAt);
         sb.append("]");
         return sb.toString();
 

@@ -145,5 +145,9 @@ public class UserController {
 	public void deleteUser(UserVo userVo) throws Exception {
 		userService.deleteUser(userVo);
 	}
+	
+	
+	
+	
 
 }
