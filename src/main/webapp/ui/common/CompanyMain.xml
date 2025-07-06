@@ -12,13 +12,22 @@
         </xf:model>
         <w2:layoutInfo/>
         <w2:publicInfo method=""/>
-        <script lazy="false" type="text/javascript"><![CDATA[
-scwin.onpageload = function() {
+        <script lazy="false" type="text/javascript"><![CDATA[scwin.onpageload = function() {
 	
 };
 
 scwin.btn_create_company_onclick = function (e) {
-    $p.url("../corporate/CorporateLoginTest.xml");
+ try {
+        if ($p.parent().pf_main) {
+            $p.parent().pf_main.setSrc("../corporate/CorporateLogin.xml");
+        } else {
+            console.warn("부모 페이지에 pf_main이 없습니다.");
+            $p.url("../corporate/CorporateLogin.xml");
+        }
+    } catch (e) {
+        console.error("페이지 이동 중 오류:", e);
+        $p.url("../corporate/CorporateLogin.xml");
+    }
 };
 ]]></script>
     </head>

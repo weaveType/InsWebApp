@@ -1,9 +1,11 @@
 package com.demo.proworks.domain.corporate.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.demo.proworks.common.vo.EmailVo;
 import com.demo.proworks.domain.corporate.vo.CorporateVo;
+import com.demo.proworks.domain.corporate.vo.IndusrtyVoList;
 
 /**
  * @subject : 회사정보 관련 처리를 담당하는 인터페이스
@@ -81,4 +83,21 @@ public interface CorporateService {
 	 */
 	public int deleteCorporate(CorporateVo corporateVo) throws Exception;
 
+	/**
+	 * 산업정보 목록을 조회 한다.
+	 *
+	 * @param corporateVo 회사정보 CorporateVo
+	 * @return 번호
+	 * @throws Exception
+	 */
+	public IndusrtyVoList industryList() throws Exception;
+
+	/**
+	 * 이메일로 회사정보를 갱신한다.
+	 * 
+	 * @param CorporateVo 회사정보
+	 * @return 번호
+	 * @throws ElException
+	 */
+	public int updateCorporateByEmail(CorporateVo vo) throws Exception;
 }

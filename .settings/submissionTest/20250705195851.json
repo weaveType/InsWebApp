@@ -1,0 +1,9 @@
+{
+   "charset": "UTF-8",
+   "reqMethod": "POST",
+   "serviceURL": "http://localhost:9093/InsWebApp/USLogin.pwkjson",
+   "contentType": "application/json",
+   "requestContent": "{\n   \"loginVo\": {\n      \"password\": \"SampleValue_1\",\n      \"email\": \"SampleValue_0\"\n   },\n   \"dmp_loginVo\": {\n      \"password\": \"SampleValue_1\",\n      \"email\": \"SampleValue_0\"\n   }\n}",
+   "responseContent": "{\"elHeader\":{\"reqUrl\":\"/InsWebApp/USLogin.pwkjson\",\"traceId\":\"2025070519585176600027063\",\"serviceKey\":\"USLogin\",\"bArgResolveParsing\":false,\"resSuc\":false,\"resMsg\":\"존재하지 않는 ID 입니다.\",\"resCode\":\"EL.ERROR.LOGIN.0001\",\"validateSuc\":false,\"saveTokenKey\":false,\"removeTokenKey\":false,\"locale\":\"ko\",\"language\":\"ko\",\"startTime\":0,\"svcTimeOut\":0,\"inOutDataEnc\":true,\"dbDataEnc\":false,\"gTraceId\":\"2025070519585176600027063\",\"fieldApplyAttr\":true,\"simurate\":false,\"deferredSvc\":false,\"centerCutSvc\":false}}",
+   "sendTime": "2025-07-05 19:58:51"
+}

@@ -22,16 +22,33 @@
 						<w2:key dataType="text" name="유저 권한" id="role"></w2:key>
 					</w2:keyInfo>
 				</w2:dataMap>
+				<w2:dataMap baseNode="map" id="dmp_searchCorporate">
+					<w2:keyInfo>
+						<w2:key dataType="text" name="email" id="email"></w2:key>
+					</w2:keyInfo>
+				</w2:dataMap>
+				<w2:dataList baseNode="list" id="dlt_industryList" repeatNode="map" saveRemovedData="false">
+					<w2:columnInfo>
+						<w2:column dataType="text" id="industryCode" name="산업코드"></w2:column>
+						<w2:column dataType="text" id="industryName" name="산업명"></w2:column>
+					</w2:columnInfo>
+				</w2:dataList>
 			</w2:dataCollection>
 			<w2:workflowCollection />
-			<xf:submission id="sbm_insertCorporateVo" action="/InsWebApp/CP0001Ins.pwkjson" method="post" mediatype="application/json"
+			<xf:submission id="sbm_updateCorporateVo" action="/InsWebApp/CP0002Upd.pwkjson" method="post" mediatype="application/json"
 				ref='data:json,["dmp_corporateVoDetail",{"id":"dmp_corporateVoDetail","key":"corporateVo"}]' target="" encoding="UTF-8" instance=""
 				replace="" errorHandler="" customHandler="" mode="asynchronous" processMsg="" ev:submit=""
 				ev:submitdone="scwin.sbm_insertCorporateVo_submitdone" ev:submiterror="" abortTrigger="">
 			</xf:submission>
-			<xf:submission id="sbm_selectCorporateVo" action="/InsWebApp/CP0001UpdView.pwkjson" method="post" mediatype="application/json"
-				ref="" target="" encoding="UTF-8" instance="" replace="" errorHandler="" customHandler="" mode="asynchronous"
-				processMsg="회사정보를 조회 중입니다." ev:submit="" ev:submitdone="scwin.sbm_selectCorporateVo_submitdone" ev:submiterror="" abortTrigger="">
+			<xf:submission id="sbm_selectCorporateVo" action="/InsWebApp/CP0002UpdView.pwkjson" method="post"
+				mediatype="application/json" ref='data:json,{"id":"dmp_searchCorporate","key":"emailVo"}'
+				target='data:json,{"id":"dmp_corporateVoDetail","key":"elData"}' encoding="UTF-8" instance="" replace="" errorHandler=""
+				customHandler="" mode="asynchronous" processMsg="회사정보를 조회 중입니다." ev:submit="" ev:submitdone="scwin.sbm_selectCorporateVo_submitdone"
+				ev:submiterror="" abortTrigger="">
+			</xf:submission>
+			<xf:submission id="sbm_selectIndustryList" action="/InsWebApp/CP0001INDList.pwkjson" method="post"
+				mediatype="application/json" ref="" target='data:json,{"id":"dlt_industryList","key":"indusrtyVoList.industryList"}' encoding="UTF-8"
+				mode="asynchronous" processMsg="산업 목록을 조회 중입니다." ev:submitdone="scwin.sbm_selectIndustryList_submitdone">
 			</xf:submission>
 		</xf:model>
 		<w2:layoutInfo />
@@ -227,10 +244,6 @@
     flex-shrink: 0;
 }
 
-.check-btn:hover {
-    background-color: #2563eb;
-    border-color: #2563eb;
-}
 
 /* 파일 업로드 스타일 */
 .upload-container {
@@ -379,52 +392,21 @@
     }
 }
 ]]></style>
-		<script lazy="false" type="text/javascript"><![CDATA[scwin.onpageload = function () {
-    scwin.btn_search_onclick();
+		<script lazy="false" type="text/javascript"><![CDATA[
+
+scwin.onpageload = function () {
+
+    // 기존 회사정보
+    var email = $p.parent().scwin.getUserInfo().email;
+    dmp_searchCorporate.set("email", email);
+    $c.sbm.execute($p, sbm_selectCorporateVo);
+
+    // 산업목록 조회
+    scwin.selectIndustryList();
+
 };
 
 scwin.main_logo_onclick = function (e) {
-};
-
-scwin.biz_reg_number_chk_btn_onclick = function (e) {
-    var bizNo = biz_reg_number.getValue().replace(/[^0-9]/g, "");
-    if (bizNo.length === 0) {
-        alert("사업자등록번호를 입력해 주세요.");
-        return;
-    }
-
-    var data = { b_no: [bizNo] };
-    console.log("Request Data:", JSON.stringify(data));
-
-    $.ajax({
-        url: "https://api.odcloud.kr/api/nts-businessman/v1/status"
-            + "?serviceKey=yinZtZoIZHJc8jq8NnIE8zNvIc69XfYrMflYSywUFhAQr9ShfzBmntj7d4jMkuLJ5kZomJ7i7bOFOUAykjWAOw%3D%3D",
-        type: "POST",
-        data: JSON.stringify(data),
-        dataType: "JSON",
-        contentType: "application/json",
-        success: function (result) {
-            console.log(result);
-
-            if (result && result.data && result.data.length > 0) {
-                var info = result.data[0];
-
-                if (info.tax_type &&
-                    info.tax_type.indexOf("국세청에 등록되지 않은 사업자등록번호") > -1) {
-                    alert("국세청에 등록되지 않은 사업자등록번호입니다.\n번호를 다시 확인해 주세요.");
-                    return;
-                }
-                alert("유효한 사업자등록번호입니다.");
-
-            } else {
-                alert("조회 결과가 없습니다. 번호를 확인해 주세요.");
-            }
-        },
-        error: function (xhr) {
-            console.error("API 오류:", xhr.responseText);
-            alert("조회 중 오류가 발생했습니다.\n잠시 후 다시 시도해 주세요.");
-        }
-    });
 };
 
 // 사업자등록증명원 파일 선택 이벤트
@@ -520,22 +502,17 @@ scwin.btn_create_update_onclick = function (e) {
 // 데이터 저장 함수
 scwin.saveData = function () {
     try {
-        $c.sbm.execute(sbm_insertCorporateVo);
+        $c.sbm.execute(sbm_updateCorporateVo);
     } catch (error) {
         alert("저장 중 오류가 발생했습니다.");
     }
 
 };
-scwin.agreement_onchange = function (e) {
-    // 체크박스 변경 이벤트
-    console.log("동의 체크박스 변경:", e);
-};
 
-scwin.sbm_insertCorporateVo_submitdone = function (e) {
+scwin.sbm_sbm_updateCorporateVo_submitdone = function (e) {
     try {
         $p.url("RecruitmentDashboard.xml");
     } catch (error) {
-        console.log("페이지 이동 오류:", error);
         // 페이지 이동이 실패한 경우 폼 초기화
         scwin.resetForm();
     }
@@ -552,38 +529,45 @@ scwin.resetForm = function () {
     document.getElementById("logo_file_info").style.display = "none";
 };
 
-scwin.btn_search_onclick = function (e) {
-    // 서버통신 - 회사정보 조회
-    $c.sbm.execute($p, sbm_selectCorporateVo);
+/**
+ * 산업 목록 조회
+ */
+scwin.selectIndustryList = function () {
+    $c.sbm.execute($p, sbm_selectIndustryList);
 };
 
-scwin.sbm_corporateList_submitdone = function (e) {
+/**
+ * 산업 목록 조회 완료 콜백
+ */
+scwin.sbm_selectIndustryList_submitdone = function (e) {
+    try {
 
-    // error 수신시
-    var elData = e.responseJSON.elData;
-    console.log(elData);
-    var elHeader = e.responseJSON.elHeader;
-    if (elHeader == null || elHeader == "" || elHeader == "undefiend" || elHeader.resSuc == false) {
-        $c.win.alert(`에러코드 : ${elHeader.resCode}\n에러메시지 : ${elHeader.resMsg}`);
-        return false;
+        // 기존 아이템 모두 제거
+        slt_industryBox.removeAll();
+
+        // DataList 데이터 확인
+        var rowCount = dlt_industryList.getRowCount();
+
+        if (rowCount > 0) {
+            // 각 행의 데이터를 SelectBox에 추가
+            for (var i = 0; i < rowCount; i++) {
+                var industryCode = dlt_industryList.getCellData(i, "industryCode");
+                var industryName = dlt_industryList.getCellData(i, "industryName");
+
+                slt_industryBox.addItem(industryCode, industryName);
+            }
+        }
+
+        // 기존 선택값이 있다면 복원
+        var currentValue = dmp_corporateVoDetail.get("industry");
+        if (currentValue) {
+            slt_industryBox.setValue(currentValue);
+        }
+
+    } catch (error) {
+        alert("산업 목록 로드에 실패했습니다.");
     }
-
-    // 회사정보 dataMap 초기화
-    dmp_corporateVoDetail.setEmptyValue();
-
-    // 회사정보 readOnly false
-    grp_corporateInfo.setReadOnly(false);
-
-    // 데이터를 각각의 input에 셋팅
-    // dlt_corporateVoList.setJSON(elData.corporateVoList);
-
-};
-
-
-scwin.sbm_selectCorporateVo_submitdone = function (e) {
-
-};
-]]></script>
+};]]></script>
 	</head>
 
 	<body ev:onpageload="scwin.onpageload">
@@ -598,14 +582,15 @@ scwin.sbm_selectCorporateVo_submitdone = function (e) {
 				<!-- 이메일 -->
 				<xf:group class="form-group">
 					<w2:textbox class="form-label required" label="이메일"></w2:textbox>
-					<xf:input class="form-input" placeholder="예) company@example.com" ref="data:dmp_corporateVoDetail.email" type="email" id="inp_email"></xf:input>
+					<xf:input class="form-input" placeholder="예) company@example.com" ref="data:dmp_corporateVoDetail.email" type="email"
+						id="inp_email"></xf:input>
 				</xf:group>
 
 				<!-- 패스워드 -->
-                <xf:group class="form-group">
-                    <w2:textbox class="form-label required" label="패스워드"></w2:textbox>
-                    <w2:secret class="form-input" plceholder="8자 이상 입력해주세요" ref="data:dmp_corporateVoDetail.password"></w2:secret>
-                </xf:group>
+				<xf:group class="form-group">
+					<w2:textbox class="form-label required" label="패스워드"></w2:textbox>
+					<w2:secret class="form-input" plceholder="8자 이상 입력해주세요" ref="data:dmp_corporateVoDetail.password"></w2:secret>
+				</xf:group>
 
 				<!-- 기업명 -->
 				<xf:group class="form-group">
@@ -625,7 +610,7 @@ scwin.sbm_selectCorporateVo_submitdone = function (e) {
 					<xf:group class="input-with-button">
 						<xf:input class="form-input-with-btn" placeholder="10자리 숫자" id="biz_reg_number"
 							ref="data:dmp_corporateVoDetail.businessNumber" readOnly="true"></xf:input>
-						<xf:trigger class="check-btn" type="button" ev:onclick="scwin.biz_reg_number_chk_btn_onclick" disabled="true">
+						<xf:trigger class="check-btn" type="button" disabled="true">
 							<xf:label><![CDATA[검사]]></xf:label>
 						</xf:trigger>
 					</xf:group>
@@ -633,44 +618,33 @@ scwin.sbm_selectCorporateVo_submitdone = function (e) {
 				</xf:group>
 
 				<!-- 기업인증 (사업자등록증명원) -->
-                <xf:group class="form-group">
-                    <w2:textbox class="form-label" label="사업자등록증명원"></w2:textbox>
-                    <xf:group class="upload-container" id="cert_upload_container">
-                    	<w2:textbox class="upload-label" label="PDF, JPG, PNG 파일 업로드 (최대 10MB)"></w2:textbox>
-                    	<w2:upload imageStyle="position:absolute;vertical-align:middle;word-wrap:break-word"
-                    		inputStyle="vertical-align:middle;word-wrap:break-word" style="width: 250px;height: 23px;" id="business_cert_upload" ev:ondone="scwin.business_cert_upload_ondone" ev:onInputValueChange="scwin.business_cert_upload_onInputValueChange">
-                    	</w2:upload>
-                    	
-                        <div id="cert_file_info" class="file-info">
-                    		<span class="file-name" id="cert_file_name"></span>
-                    		<div>✓ 파일이 선택되었습니다</div>
-                    	</div>
-                    </xf:group>
-                </xf:group>
+				<xf:group class="form-group">
+					<w2:textbox class="form-label" label="사업자등록증명원"></w2:textbox>
+					<xf:group class="upload-container" id="cert_upload_container">
+						<w2:textbox class="upload-label" label="PDF, JPG, PNG 파일 업로드 (최대 10MB)"></w2:textbox>
+						<w2:upload imageStyle="position:absolute;vertical-align:middle;word-wrap:break-word"
+							inputStyle="vertical-align:middle;word-wrap:break-word" style="width: 250px;height: 23px;" id="business_cert_upload"
+							ev:ondone="scwin.business_cert_upload_ondone" ev:onInputValueChange="scwin.business_cert_upload_onInputValueChange">
+						</w2:upload>
+
+						<div id="cert_file_info" class="file-info">
+							<span class="file-name" id="cert_file_name"></span>
+							<div>✓ 파일이 선택되었습니다</div>
+						</div>
+					</xf:group>
+				</xf:group>
 
 				<!-- 산업 선택 -->
 				<xf:group class="form-group">
 					<w2:textbox class="form-label required" label="산업 선택"></w2:textbox>
-					<xf:select1 appearance="minimal" chooseOption="선택하기" class="form-select" ref="data:dmp_corporateVoDetail.industry"
-						id="industry" style="width: 100% !important; height: 56px !important; padding: 0 16px !important; border: 2px solid #e5e7eb !important; border-radius: 12px !important; font-size: 16px !important; color: #333 !important; background-color: #ffffff !important; appearance: none !important; cursor: pointer !important; transition: all 0.2s ease !important; box-sizing: border-box !important;">
-						<xf:choices>
-							<xf:item>
-								<xf:label><![CDATA[IT/소프트웨어]]></xf:label>
-								<xf:value><![CDATA[1]]></xf:value>
-							</xf:item>
-							<xf:item>
-								<xf:label><![CDATA[제조업]]></xf:label>
-								<xf:value><![CDATA[2]]></xf:value>
-							</xf:item>
-							<xf:item>
-								<xf:label><![CDATA[서비스업]]></xf:label>
-								<xf:value><![CDATA[3]]></xf:value>
-							</xf:item>
-							<xf:item>
-								<xf:label><![CDATA[기타]]></xf:label>
-								<xf:value><![CDATA[4]]></xf:value>
-							</xf:item>
-						</xf:choices>
+					<xf:select1 appearance="minimal" chooseOption="" chooseOptionLabel="산업을 선택하세요" class="form-select"
+						ref="data:dmp_corporateVoDetail.industry" style="width: 100% !important; height: 56px !important;" id="slt_industryBox"
+						allOption="">
+						<w2:itemset nodeset="data:dlt_industryList">
+							<w2:label ref="industryName"></w2:label>
+							<w2:value ref="industryCode"></w2:value>
+						</w2:itemset>
+						<xf:choices></xf:choices>
 					</xf:select1>
 				</xf:group>
 
@@ -694,8 +668,9 @@ scwin.sbm_selectCorporateVo_submitdone = function (e) {
 					<xf:group class="upload-container" id="logo_upload_container">
 						<w2:textbox class="upload-label" label="PNG, JPG, SVG 파일 업로드 (최대 5MB)"></w2:textbox>
 						<w2:upload imageStyle="position:absolute;vertical-align:middle;word-wrap:break-word"
-							inputStyle="vertical-align:middle;word-wrap:break-word" style="width: 250px;height: 23px;" id="logo_upload" ev:ondone="scwin.logo_upload_ondone" ev:onInputValueChange="scwin.logo_upload_onInputValueChange">
-                        </w2:upload>
+							inputStyle="vertical-align:middle;word-wrap:break-word" style="width: 250px;height: 23px;" id="logo_upload"
+							ev:ondone="scwin.logo_upload_ondone" ev:onInputValueChange="scwin.logo_upload_onInputValueChange">
+						</w2:upload>
 
 						<div id="logo_file_info" class="file-info">
 							<span class="file-name" id="logo_file_name"></span>
@@ -725,7 +700,7 @@ scwin.sbm_selectCorporateVo_submitdone = function (e) {
 					<xf:trigger class="btn-cancel" type="button">
 						<xf:label><![CDATA[취소]]></xf:label>
 					</xf:trigger>
-					<xf:trigger class="btn-primary" type="button" id="btn_update_corporate" ev:onclick="scwin.btn_update_corporate_onclick">
+					<xf:trigger class="btn-primary" type="button" id="btn_update_corporate" ev:onclick="scwin.btn_create_update_onclick">
 						<xf:label><![CDATA[수정하기]]></xf:label>
 					</xf:trigger>
 				</xf:group>

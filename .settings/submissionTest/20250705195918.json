@@ -1,0 +1,9 @@
+{
+   "charset": "UTF-8",
+   "reqMethod": "POST",
+   "serviceURL": "http://localhost:9093/InsWebApp/USLogin.pwkjson",
+   "contentType": "application/json",
+   "requestContent": "{\n   \"loginVo\": {\n      \"password\": \"123\",\n      \"email\": \"kjh0901@inswave.com\"\n   },\n   \"dmp_loginVo\": {\n      \"password\": \"SampleValue_1\",\n      \"email\": \"SampleValue_0\"\n   }\n}",
+   "responseContent": "{\"elHeader\":{\"reqUrl\":\"/InsWebApp/USLogin.pwkjson\",\"traceId\":\"2025070519591830300027065\",\"clientIp\":\"127.0.0.1\",\"serviceKey\":\"USLogin\",\"restoreServiceKey\":\"\",\"scrnId\":\"/USLogin\",\"bArgResolveParsing\":true,\"resSuc\":true,\"validateSuc\":true,\"saveTokenKey\":false,\"removeTokenKey\":false,\"locale\":\"ko\",\"language\":\"ko\",\"startTime\":1751713158302,\"svcTimeOut\":0,\"inOutDataEnc\":true,\"dbDataEnc\":false,\"serverId\":\"InsWebApp\",\"gTraceId\":\"2025070519591830300027065\",\"fieldApplyAttr\":true,\"simurate\":false,\"deferredSvc\":false,\"centerCutSvc\":false},\"userHeader\":{\"userId\":\"kjh0901@inswave.com\",\"userGroupNo\":0,\"menuGroupNo\":0,\"fldLen\":0,\"email\":\"kjh0901@inswave.com\",\"role\":\"COMPANY\",\"offset\":0,\"fixedTotalLength\":241,\"fixedLengthVo\":true}}",
+   "sendTime": "2025-07-05 19:59:18"
+}

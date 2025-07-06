@@ -390,7 +390,6 @@ scwin.biz_reg_number_chk_btn_onclick = function (e) {
     }
 
     var data = { b_no: [bizNo] };
-    console.log("Request Data:", JSON.stringify(data));
 
     $.ajax({
         url: "https://api.odcloud.kr/api/nts-businessman/v1/status"
@@ -400,7 +399,6 @@ scwin.biz_reg_number_chk_btn_onclick = function (e) {
         dataType: "JSON",
         contentType: "application/json",
         success: function (result) {
-            console.log(result);
 
             if (result && result.data && result.data.length > 0) {
                 var info = result.data[0];
@@ -417,7 +415,6 @@ scwin.biz_reg_number_chk_btn_onclick = function (e) {
             }
         },
         error: function (xhr) {
-            console.error("API 오류:", xhr.responseText);
             alert("조회 중 오류가 발생했습니다.\n잠시 후 다시 시도해 주세요.");
         }
     });
@@ -522,16 +519,11 @@ scwin.saveData = function () {
     }
 
 };
-scwin.agreement_onchange = function (e) {
-    // 체크박스 변경 이벤트
-    console.log("동의 체크박스 변경:", e);
-};
 
 scwin.sbm_insertCorporateVo_submitdone = function (e) {
     try {
         $p.url("RecruitmentDashboard.xml");
     } catch (error) {
-        console.log("페이지 이동 오류:", error);
         // 페이지 이동이 실패한 경우 폼 초기화
         scwin.resetForm();
     }

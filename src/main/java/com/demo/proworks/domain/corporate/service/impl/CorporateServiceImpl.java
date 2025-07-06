@@ -1,6 +1,9 @@
 package com.demo.proworks.domain.corporate.service.impl;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -10,8 +13,10 @@ import org.springframework.stereotype.Service;
 
 import com.demo.proworks.domain.corporate.service.CorporateService;
 import com.demo.proworks.domain.corporate.vo.CorporateVo;
+import com.demo.proworks.domain.corporate.vo.IndusrtyVoList;
 import com.demo.proworks.domain.user.dao.UserDAO;
 import com.demo.proworks.domain.user.vo.UserVo;
+import com.demo.proworks.common.enumType.IndustryType;
 import com.demo.proworks.common.vo.EmailVo;
 import com.demo.proworks.domain.corporate.dao.CorporateDAO;
 
@@ -113,10 +118,12 @@ public class CorporateServiceImpl implements CorporateService {
 		userVo.setPassword(corporateVo.getPassword());
 		userVo.setRole(corporateVo.getRole());
 		userVo.setName(corporateVo.getName());
-		
+
 		// 기업 - 유저간 userId로 mapping
-	    userDAO.insertUser(userVo);
-		corporateVo.setUserId(userVo.getUserId());
+		int userId = userDAO.insertUser(userVo);
+
+		System.out.println("User 삽입 후 - userId: " + userVo.getUserId());
+		corporateVo.setUserId(userId);
 		return corporateDAO.insertCorporate(corporateVo);
 	}
 
@@ -144,6 +151,42 @@ public class CorporateServiceImpl implements CorporateService {
 	 */
 	public int deleteCorporate(CorporateVo corporateVo) throws Exception {
 		return corporateDAO.deleteCorporate(corporateVo);
+	}
+
+	/**
+	 * 산업정보 목록을 조회 한다.
+	 *
+	 * @process 산업정보 목록을 조회 한다.
+	 * 
+	 */
+	public IndusrtyVoList industryList() throws Exception {
+
+		List<Map<String, String>> industryList = new ArrayList<>();
+
+		for (IndustryType industry : IndustryType.values()) {
+			Map<String, String> item = new HashMap<>();
+			item.put("industryCode", industry.getCode());
+			item.put("industryName", industry.getDescription());
+			industryList.add(item);
+		}
+
+		IndusrtyVoList retIndustryList = new IndusrtyVoList();
+		retIndustryList.setIndustryList(industryList);
+
+		return retIndustryList;
+	}
+
+	/**
+	 * 이메일로 회사정보를 갱신한다.
+	 * 
+	 * @param CorporateVo 회사정보
+	 * @return 번호
+	 * @throws ElException
+	 */
+	public int updateCorporateByEmail(CorporateVo vo) throws Exception {
+		String hashedPassword = BCrypt.hashpw(vo.getPassword(), BCrypt.gensalt(12));
+		vo.setPassword(hashedPassword);
+		return corporateDAO.updateCorporateByEmail(vo);
 	}
 
 }

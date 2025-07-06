@@ -1,15 +1,19 @@
 package com.demo.proworks.domain.corporate.web;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.demo.proworks.common.enumType.IndustryType;
 import com.demo.proworks.common.vo.EmailVo;
 import com.demo.proworks.domain.corporate.service.CorporateService;
 import com.demo.proworks.domain.corporate.vo.CorporateVo;
+import com.demo.proworks.domain.corporate.vo.IndusrtyVoList;
 import com.demo.proworks.domain.corporate.vo.CorporateListVo;
 
 import com.inswave.elfw.annotation.ElDescription;
@@ -86,9 +90,13 @@ public class CorporateController {
 	@RequestMapping(value = "CP0002UpdView")
 	@ElDescription(sub = "회사정보 갱신 폼을 위한 조회", desc = "회사정보 갱신 폼을 위한 조회를 한다.")
 	public CorporateVo selectCorporateByEmail(EmailVo emailVo) throws Exception {
-		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> controller : " + emailVo.getEmail());
+
 		CorporateVo selectCorporateVo = corporateService.selectCorporateByEmail(emailVo);
-		System.out.println(selectCorporateVo.toString());
+
+		if (selectCorporateVo == null) {
+			throw new IllegalArgumentException("입력하신 이메일에 해당하는 회사 정보가 없습니다.");
+		}
+
 		return selectCorporateVo;
 	}
 
@@ -117,6 +125,7 @@ public class CorporateController {
 	@ElDescription(sub = "회사정보 갱신처리", desc = "회사정보를 갱신 처리 한다.")
 	public void updateCorporate(CorporateVo corporateVo) throws Exception {
 
+	System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 니가 와 일로오노?");
 		corporateService.updateCorporate(corporateVo);
 	}
 
@@ -131,6 +140,33 @@ public class CorporateController {
 	@ElDescription(sub = "회사정보 삭제처리", desc = "회사정보를 삭제 처리한다.")
 	public void deleteCorporate(CorporateVo corporateVo) throws Exception {
 		corporateService.deleteCorporate(corporateVo);
+	}
+
+	/**
+	 * 기업정보 목록을 조회합니다.
+	 *
+	 * @param corporateVo 회사정보
+	 * @return 목록조회 결과
+	 * @throws Exception
+	 */
+	@ElService(key = "CP0001INDList")
+	@RequestMapping(value = "CP0001INDList")
+	@ElDescription(sub = "기업정보 목록조회", desc = "모든 기업정보 목록 조회를 한다.")
+	public IndusrtyVoList IndusrtyList() throws Exception {
+		return corporateService.industryList();
+	}
+
+	/**
+	 * 회사정보를 갱신 처리 한다.
+	 *
+	 * @param corporateVo 회사정보
+	 * @throws Exception
+	 */
+	@ElService(key = "CP0002Upd")
+	@RequestMapping(value = "CP0002Upd")
+	@ElDescription(sub = "회사정보 갱신처리", desc = "이메일로 회사정보를 갱신 처리 한다.")
+	public void updateCorporateByEmail(CorporateVo corporateVo) throws Exception {
+		corporateService.updateCorporateByEmail(corporateVo);
 	}
 
 }
