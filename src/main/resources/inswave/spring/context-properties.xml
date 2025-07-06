@@ -21,6 +21,7 @@
         <property name="locations">
             <list>
                 <value>classpath:/inswave/properties/elfw.properties</value>  
+                <value>classpath:/inswave/properties/gemini.properties</value>
             </list>
         </property>
     </bean>
