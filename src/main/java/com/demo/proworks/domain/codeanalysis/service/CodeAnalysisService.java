@@ -29,11 +29,11 @@ public interface CodeAnalysisService {
     void saveAnalysisResult(CodeAnalysisResultVo resultVo) throws Exception;
     
     /**
-     * 사용자의 최신 코드 분석 결과를 조회합니다.
+     * 개발자 유형의 최신 코드 분석 결과를 조회합니다.
      * 
-     * @param userId 사용자 ID
+     * @param typeId 개발자 유형 ID
      * @return 코드 분석 결과
      * @throws Exception
      */
-    CodeAnalysisResultVo getAnalysisResult(String userId) throws Exception;
+    CodeAnalysisResultVo getAnalysisResult(Long typeId) throws Exception;
 } 

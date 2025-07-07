@@ -25,14 +25,14 @@ public class CodeAnalysisDAO extends com.demo.proworks.cmmn.dao.ProworksDefaultA
     }
     
     /**
-     * 사용자의 최신 코드 분석 결과를 조회합니다.
+     * 타입별 최신 코드 분석 결과를 조회합니다.
      * 
-     * @param userId 사용자 ID
+     * @param typeId 타입 ID
      * @return 분석 결과
      * @throws ElException
      */
-    public CodeAnalysisResultVo selectLatestCodeAnalysisResult(String userId) throws ElException {
-        return (CodeAnalysisResultVo) selectByPk("com.demo.proworks.domain.codeanalysis.dao.CodeAnalysisDAO.selectLatestCodeAnalysisResult", userId);
+    public CodeAnalysisResultVo selectLatestCodeAnalysisResult(Long typeId) throws ElException {
+        return (CodeAnalysisResultVo) selectByPk("com.demo.proworks.domain.codeanalysis.dao.CodeAnalysisDAO.selectLatestCodeAnalysisResult", typeId);
     }
     
     /**
