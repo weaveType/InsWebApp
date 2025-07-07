@@ -12,99 +12,318 @@
         </xf:model>
         <w2:layoutInfo/>
         <w2:publicInfo method=""/>
-        <script lazy="false" type="text/javascript"><![CDATA[scwin.onpageload = function() {
-	
+        <script lazy="false" type="text/javascript"><![CDATA[
+scwin.onpageload = function () {
+    // 페이지 로드 시 애니메이션 효과
+    setTimeout(function () {
+        var elements = document.querySelectorAll('.animate-fade-in');
+        elements.forEach(function (el, index) {
+            setTimeout(function () {
+                el.style.opacity = '1';
+                el.style.transform = 'translateY(0)';
+            }, index * 100);
+        });
+    }, 100);
+
+
+    var userHeader = $p.parent().scwin.getUserInfo();
+    console.log(userHeader);
+    console.log("COMPANY ? : ", userHeader.role === "COMPANY");
 };
 
 scwin.btn_create_company_onclick = function (e) {
- try {
-        if ($p.parent().pf_main) {
-            $p.parent().pf_main.setSrc("../corporate/CorporateLogin.xml");
-        } else {
-            console.warn("부모 페이지에 pf_main이 없습니다.");
-            $p.url("../corporate/CorporateLogin.xml");
+    debugger;
+    var userHeader = $p.parent().scwin.getUserInfo();
+    if (userHeader != null) {
+        // 권한이 COMPANY 일 경우에만 dashboard로 리다이렉트
+        if (userHeader.role === "COMPANY") {
+            $p.parent().pf_main.setSrc("../corporate/RecruitmentDashboard.xml");
+            return;
         }
-    } catch (e) {
-        console.error("페이지 이동 중 오류:", e);
-        $p.url("../corporate/CorporateLogin.xml");
     }
+    $p.parent().pf_main.setSrc("../corporate/CreateCompany.xml");
 };
 ]]></script>
+        <style type="text/css"><![CDATA[
+            /* 전체 스타일 초기화 */
+            * {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
+            
+            .sub_contents {
+                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+                color: #333;
+                line-height: 1.6;
+            }
+            
+            /* Hero 섹션 */
+            .hero-section {
+                background: #1e1e23;
+                color: white;
+                padding: 100px 0;
+                text-align: center;
+                position: relative;
+                overflow: hidden;
+            }
+            
+            .hero-section::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800"><defs><linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:rgba(255,255,255,0.03)" /><stop offset="100%" style="stop-color:rgba(255,255,255,0)" /></linearGradient></defs><rect width="1200" height="800" fill="url(%23grad)" /><circle cx="100" cy="100" r="80" fill="rgba(255,255,255,0.02)" /><circle cx="1100" cy="700" r="100" fill="rgba(255,255,255,0.02)" /></svg>') no-repeat center;
+                background-size: cover;
+                opacity: 0.5;
+            }
+            
+            .hero-content {
+                position: relative;
+                z-index: 1;
+                max-width: 1200px;
+                margin: 0 auto;
+                padding: 0 20px;
+            }
+            
+            .hero-title {
+                font-size: 48px;
+                font-weight: 700;
+                margin-bottom: 20px;
+                line-height: 1.2;
+                opacity: 0;
+                transform: translateY(20px);
+                transition: all 0.8s ease;
+            }
+            
+            .hero-subtitle {
+                font-size: 20px;
+                font-weight: 400;
+                margin-bottom: 40px;
+                color: rgba(255, 255, 255, 0.8);
+                opacity: 0;
+                transform: translateY(20px);
+                transition: all 0.8s ease 0.2s;
+            }
+            
+            /* CTA 버튼 */
+            .cta-button {
+                display: inline-block;
+                background: #36f;
+                color: white;
+                padding: 16px 32px;
+                border-radius: 50px;
+                font-size: 16px;
+                font-weight: 600;
+                text-decoration: none;
+                transition: all 0.3s ease;
+                border: none;
+                cursor: pointer;
+                opacity: 0;
+                transform: translateY(20px);
+                transition: all 0.8s ease 0.4s;
+            }
+            
+            .cta-button:hover {
+                background: #2051ff;
+                transform: translateY(-2px);
+                box-shadow: 0 10px 30px rgba(54, 111, 255, 0.3);
+            }
+            
+            /* Features 섹션 */
+            .features-section {
+                padding: 80px 0;
+                background: #f8f9fa;
+            }
+            
+            .section-header {
+                text-align: center;
+                margin-bottom: 60px;
+            }
+            
+            .section-title {
+                font-size: 36px;
+                font-weight: 700;
+                margin-bottom: 16px;
+                color: #333;
+            }
+            
+            .section-description {
+                font-size: 18px;
+                color: #666;
+            }
+            
+            .features-grid {
+                max-width: 1200px;
+                margin: 0 auto;
+                padding: 0 20px;
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+                gap: 30px;
+            }
+            
+            .feature-card {
+                background: white;
+                border-radius: 8px;
+                padding: 40px 30px;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+                transition: all 0.3s ease;
+                cursor: pointer;
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            
+            .feature-card:hover {
+                transform: translateY(-4px);
+                box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+            }
+            
+            .feature-icon {
+                width: 56px;
+                height: 56px;
+                background: #e1e7ff;
+                border-radius: 12px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-bottom: 20px;
+                font-size: 24px;
+            }
+            
+            .feature-title {
+                font-size: 20px;
+                font-weight: 600;
+                margin-bottom: 12px;
+                color: #333;
+            }
+            
+            .feature-description {
+                font-size: 16px;
+                color: #666;
+                line-height: 1.6;
+            }
+            
+            /* 애니메이션 클래스 */
+            .animate-fade-in {
+                opacity: 0;
+                transform: translateY(20px);
+                transition: all 0.8s ease;
+            }
+            
+            /* 반응형 디자인 */
+            @media (max-width: 768px) {
+                .hero-title {
+                    font-size: 32px;
+                }
+                
+                .hero-subtitle {
+                    font-size: 18px;
+                }
+                
+                .section-title {
+                    font-size: 28px;
+                }
+                
+                .features-grid {
+                    grid-template-columns: 1fr;
+                    gap: 20px;
+                }
+                
+                .feature-card {
+                    padding: 30px 20px;
+                }
+            }
+        ]]></style>
     </head>
     <body ev:onpageload="scwin.onpageload">
-    	<xf:group class="sub_contents" id="" meta_snippetCategory="00_화면시작" meta_snippetKeyComponent="true" meta_snippetName="0_01 페이지시작"
-    		style="">
-    		<section style="height:469px;background:linear-gradient(135deg, #667eea 0%, #764ba2 100%);" id="">
+        <xf:group class="sub_contents" id="">
+            <!-- Hero 섹션 -->
+            <section class="hero-section" id="">
+                <div class="hero-content">
+                    <h1 class="hero-title animate-fade-in">
+                        <w2:textbox id="" label="최고의 개발 인재를&lt;br&gt;가장 스마트하게 만나는 방법" escape="false"></w2:textbox>
+                    </h1>
+                    <xf:trigger class="cta-button animate-fade-in" id="btn_create_company" type="button" ev:onclick="scwin.btn_create_company_onclick">
+                        <xf:label><![CDATA[지금 시작하기]]></xf:label>
+                    </xf:trigger>
+                </div>
+            </section>
 
+            <!-- Features 섹션 -->
+            <section class="features-section" id="">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <w2:textbox id="" label="WeaveType이 특별한 이유"></w2:textbox>
+                    </h2>
+                    <p class="section-description">
+                        <w2:textbox id="" label="기존 채용 플랫폼과는 차원이 다른 스마트한 개발자 매칭 경험"></w2:textbox>
+                    </p>
+                </div>
 
+                <div class="features-grid">
+                    <xf:group class="feature-card animate-fade-in" id="">
+                        <div class="feature-icon">🧬</div>
+                        <h3 class="feature-title">
+                            <w2:textbox id="" label="MBTI 기반 팀 매칭"></w2:textbox>
+                        </h3>
+                        <p class="feature-description">
+                            <w2:textbox id="" label="개발자의 성향과 팀 문화의 적합도를 과학적으로 분석하여, 장기적으로 함께 성장할 수 있는 팀원을 찾아드립니다."></w2:textbox>
+                        </p>
+                    </xf:group>
 
-    			<w2:textbox id="" label="코드로 검증된&lt;br&gt;개발자를 만나보세요"
-    				style="width:938px;height:61px;padding-top:30px;margin:0px auto;font-size:50px;color:white;font-weight:bold;text-align:center;"
-    				escape="false">
-    			</w2:textbox>
+                    <xf:group class="feature-card animate-fade-in" id="">
+                        <div class="feature-icon">💻</div>
+                        <h3 class="feature-title">
+                            <w2:textbox id="" label="실제 코드 역량 분석"></w2:textbox>
+                        </h3>
+                        <p class="feature-description">
+                            <w2:textbox id="" label="GitHub 활동과 실제 코드를 AI가 분석하여, 이력서만으로는 알 수 없는 개발자의 진짜 실력을 평가합니다."></w2:textbox>
+                        </p>
+                    </xf:group>
 
-    			<w2:textbox id="" label="mbti와 코드분석을 통한 스마트 매칭으로 우리 회사에 딱 맞는 개발자를 찾아보세요"
-    				style="width:789px;height:37px;margin:0 auto;font-size:20px;color: white;padding-top: 80px;">
-    			</w2:textbox>
-    			<xf:trigger class="btn_cm" id="btn_create_company" meta_snippetCategory="08_버튼" meta_snippetKeyComponent="true" meta_snippetName="8_01 기본버튼"
-    				style="margin: 50px 50%;" type="button" ev:onclick="scwin.btn_create_company_onclick">
-    				<xf:label><![CDATA[인라인버튼]]></xf:label>
-    			</xf:trigger>
-    		</section>
-    		<section style="height:545px;" id="">
-    			<w2:textbox id="" label="왜 WeaveType을 선택해야 할까요?"
-    				style="height:83px;padding-top:60px;margin:0px auto;font-size:50px;font-weight:bold;text-align:center;">
-    			</w2:textbox>
-    			<w2:textbox id="" label="기존 채용 플랫폼과 차별화된 스마트한 개발자 매칭 서비스"
-    				style="padding-top:15px;padding-bottom: 30px;margin:0px auto;font-size:20px;font-weight:bold;text-align:center;">
-    			</w2:textbox>
+                    <xf:group class="feature-card animate-fade-in" id="">
+                        <div class="feature-icon">🎯</div>
+                        <h3 class="feature-title">
+                            <w2:textbox id="" label="AI 기반 스마트 추천"></w2:textbox>
+                        </h3>
+                        <p class="feature-description">
+                            <w2:textbox id="" label="기업의 기술 스택, 팀 문화, 프로젝트 특성을 종합적으로 분석하여 가장 적합한 개발자를 자동으로 추천합니다."></w2:textbox>
+                        </p>
+                    </xf:group>
 
-    			<xf:group class="lybox" id="" meta_snippetCategory="01_화면분할" meta_snippetKeyComponent="true"
-    				meta_snippetName="1_03 가변 3단 분할_width값 고정 33per" style="">
-    				<xf:group class="" id=""
-    					style="height: 200px;margin: 30px 30px;flex:1;background:#fff;border-radius:12px;padding:30px 30px;box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3);cursor:pointer;transition:all 0.3s;">
-    					<div class="feature-icon" style="font-size:40px; text-align:center;">🧬</div>
-    					<h3>MBTI 기반 매칭</h3>
-    					<p>개발자의 성향과 우리 팀의 문화가 맞는지 미리 확인하고, 더 나은 팀워크를 만들어보세요</p>
-    				</xf:group>
-    				<xf:group class="" id=""
-    					style="height: 200px;margin: 30px 30px;flex:1;background:#fff;border-radius:12px;padding:30px 30px;box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3);cursor:pointer;transition:all 0.3s;">
-    					<div class="feature-icon" style="font-size:40px; text-align:center;">💻</div>
-    					<h3>실제 코드 분석</h3>
-    					<p>이력서로는 알 수 없는 실제 개발 실력을 코드 분석을 통해 객관적으로 평가할 수 있습니다</p>
-    				</xf:group>
-    				<xf:group class="" id=""
-    					style="height: 200px;margin: 30px 30px;flex:1;background:#fff;border-radius:12px;padding:30px 30px;box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3);cursor:pointer;transition:all 0.3s;">
-    					<div class="feature-icon" style="font-size:40px; text-align:center;">🎯</div>
-    					<h3>스마트 추천</h3>
-    					<p>AI가 우리 회사의 조건과 문화에 가장 적합한 개발자를 자동으로 추천해드립니다</p>
-    				</xf:group>
-    			</xf:group>
+                    <xf:group class="feature-card animate-fade-in" id="">
+                        <div class="feature-icon">⚡</div>
+                        <h3 class="feature-title">
+                            <w2:textbox id="" label="빠른 채용 프로세스"></w2:textbox>
+                        </h3>
+                        <p class="feature-description">
+                            <w2:textbox id="" label="자동화된 스크리닝과 효율적인 지원자 관리 시스템으로 채용에 소요되는 시간을 획기적으로 단축합니다."></w2:textbox>
+                        </p>
+                    </xf:group>
 
-    			<xf:group class="lybox" id="" meta_snippetCategory="01_화면분할" meta_snippetKeyComponent="true"
-    				meta_snippetName="1_02 가변 3단 분할" style="">
-    				<xf:group class=" col_3" id=""
-    					style="height: 200px;margin: 30px 30px;flex:1;background:#fff;border-radius:12px;padding:30px;box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3);cursor:pointer;transition:all 0.3s;">
-    					<div class="feature-icon" style="font-size:40px; text-align:center;">⚡</div>
-    					<h3>빠른 채용 프로세스</h3>
-    					<p>효율적인 지원자 관리와 자동화된 매칭으로 채용 시간을 50% 단축할 수 있습니다</p>
-    				</xf:group>
-    				<xf:group class=" col_4" id=""
-    					style="height: 200px;margin: 30px 30px;flex:1;background:#fff;border-radius:12px;padding:30px;box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3);cursor:pointer;transition:all 0.3s;">
-    					<div class="feature-icon" style="font-size:40px; text-align:center;">📊</div>
-    					<h3>데이터 기반 채용</h3>
-    					<p>채용 현황과 성과를 한눈에 파악하고, 데이터 기반의 채용 전략을 수립하세요</p>
-    				</xf:group>
-    				<xf:group class=" col_3" id=""
-    					style="height: 200px;margin: 30px 30px;flex:1;background:#fff;border-radius:12px;padding:30px;box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3);cursor:pointer;transition:all 0.3s;">
-    					<div class="feature-icon" style="font-size:40px; text-align:center;">🤝</div>
-    					<h3>양방향 소통</h3>
-    					<p>지원자와 실시간으로 소통하고, 스카우트 제안을 통해 적극적으로 인재를 영입하세요</p>
-    				</xf:group>
-    			</xf:group>
+                    <xf:group class="feature-card animate-fade-in" id="">
+                        <div class="feature-icon">📊</div>
+                        <h3 class="feature-title">
+                            <w2:textbox id="" label="데이터 기반 인사이트"></w2:textbox>
+                        </h3>
+                        <p class="feature-description">
+                            <w2:textbox id="" label="채용 현황, 지원자 트렌드, 시장 동향을 실시간으로 분석하여 최적의 채용 전략을 수립할 수 있습니다."></w2:textbox>
+                        </p>
+                    </xf:group>
 
-    		</section>
-    	</xf:group>
-    	
+                    <xf:group class="feature-card animate-fade-in" id="">
+                        <div class="feature-icon">💬</div>
+                        <h3 class="feature-title">
+                            <w2:textbox id="" label="양방향 커뮤니케이션"></w2:textbox>
+                        </h3>
+                        <p class="feature-description">
+                            <w2:textbox id="" label="지원자와 실시간 채팅, 화상 면접, 스카우트 제안 등 다양한 방식으로 적극적인 소통이 가능합니다."></w2:textbox>
+                        </p>
+                    </xf:group>
+                </div>
+            </section>
+        </xf:group>
     </body>
 </html>

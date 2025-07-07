@@ -474,6 +474,7 @@ scwin.navigateToPage = function(pagePath, pageData, menuCode) {
 			</nav>
 
 		</xf:group>
-		<w2:pageFrame style="height:1958px;" id="pf_main" src="/InsWebApp/ui/common/weaveTypeMain.xml"></w2:pageFrame>
+        <w2:pageFrame style="height:calc(100vh - 70px)" id="pf_main" src="/InsWebApp/ui/common/weaveTypeMain.xml"></w2:pageFrame>
+
 	</body>
 </html>

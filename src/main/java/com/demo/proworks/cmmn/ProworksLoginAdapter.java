@@ -49,7 +49,7 @@ public class ProworksLoginAdapter extends LoginAdapter {
 	 */
 	@Override
 	public LoginInfo login(HttpServletRequest request, String email, Object... params) throws LoginException {
-		// 로그인 체크를 수행  (샘플 예제)
+		// 로그인 체크 수행
 		try{
 			String pw = (String)params[0];
 			UserService userService = (UserService)ElBeanUtils.getBean("userServiceImpl");
@@ -64,10 +64,6 @@ public class ProworksLoginAdapter extends LoginAdapter {
 			
 			// 비밀번호 확인
 			String resPw = String.valueOf(resUserVo.getPassword());
-			
-			System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> pw : " + pw);
-			System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> resPw : " + resPw);
-			System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> BCrypt.checkpw(pw, resPw) : " + BCrypt.checkpw(pw, resPw));
 			if(pw == null || !BCrypt.checkpw(pw, resPw)){
 				throw new LoginException("EL.ERROR.LOGIN.0002");
 			}
