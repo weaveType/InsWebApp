@@ -46,8 +46,8 @@ public class CorporateVo extends com.demo.proworks.cmmn.ProworksCommVO {
     @ElDtoField(logicalName = "권한", physicalName = "role", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
     private String role;
 
-    @ElDtoField(logicalName = "유저 ID", physicalName = "userId", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
-    private String userId;
+    @ElDtoField(logicalName = "유저 ID", physicalName = "userId", type = "int", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private int userId;
 
     @ElDtoField(logicalName = "수정시각", physicalName = "updatedAt", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
     private String updatedAt;
@@ -175,13 +175,12 @@ public class CorporateVo extends com.demo.proworks.cmmn.ProworksCommVO {
     }
 
     @ElVoField(physicalName = "userId")
-    public String getUserId(){
-        String ret = this.userId;
-        return ret;
+    public int getUserId(){
+        return userId;
     }
 
     @ElVoField(physicalName = "userId")
-    public void setUserId(String userId){
+    public void setUserId(int userId){
         this.userId = userId;
     }
 
