@@ -18,27 +18,24 @@
 		</xf:model>
 		<w2:layoutInfo />
 		<w2:publicInfo method="" />
-		<script type="text/javascript"><![CDATA[// 전역 사용자 정보 변수
-var globalUserInfo = null;
-
-// 사용자 정보 설정 함수 (헤더 업데이트 포함)
-scwin.setUserInfo = function (userInfo) {
-    globalUserInfo = userInfo;
+		<script type="text/javascript"><![CDATA[
+// 사용자 정보 설정 함수 (로그인 팝업에서 호출)
+scwin.setUserInfo = function(userInfo) {
+    // 세션에 사용자 정보 저장
+    WebSquare.session.setAttribute("userInfo", userInfo);
+    
+    // 헤더 UI 업데이트
     scwin.updateHeaderUI();
-};
-
-// 사용자 정보 조회 함수
-scwin.getUserInfo = function () {
-    return globalUserInfo;
-};
-
-scwin.getuserEmail = function () {
-    return globalUserInfo ? globalUserInfo.email : null;
+    
+    console.log("사용자 정보 설정 완료:", userInfo);
 };
 
 // 헤더 UI 업데이트 함수
 scwin.updateHeaderUI = function () {
-    if (globalUserInfo == null) {
+    var userInfo =  WebSquare.session.getAttribute("userInfo");
+    
+    console.log(userInfo);
+    if (userInfo == null) {
         // 비로그인 유저
         txb_login.hide();
         btnLogin.show();
@@ -47,23 +44,19 @@ scwin.updateHeaderUI = function () {
         btnLogin.hide();
         txb_login.show();
 
-        var userId = (globalUserInfo.email || "").split("@")[0];
-        txb_login.setValue(userId + " 님");
+        txb_login.setValue(userInfo.userId + " 님");
     }
 };
 
 // 페이지 로드 시 초기 헤더 상태 설정
 scwin.onpageload = function () {
-    // 초기 헤더 UI 설정
     scwin.updateHeaderUI();
-    
 };
 
 // 로그아웃
 scwin.logout = function () {
     globalUserInfo = null;
     scwin.updateHeaderUI();
-    // 메인 페이지로 이동하거나 필요한 처리
     pf_main.setSrc("weaveRtpeMain.xml");
 };
 
@@ -142,6 +135,37 @@ scwin.txb_login_onclick = function () {
     var userMenu = confirm("마이페이지로 이동하시겠습니까?");
     if (userMenu) {
         scwin.goToUserDetail();
+    }
+};
+
+// 로그인 팝업 닫기 콜백 함수
+scwin.login_popup_closeAction = function(result) {
+    console.log("팝업 클로즈 결과:", result);
+    
+    // 로그인 성공 시 결과 처리
+    if (result && result.success) {
+        console.log("로그인 성공:", result);
+        
+        // 헤더 UI 업데이트
+        scwin.updateHeaderUI();
+        
+        // 권한별 페이지 이동
+        var role = result.role;
+        if (role === "USER") {
+            pf_main.setSrc("weaveTypeMain.xml");
+        } else if (role === "COMPANY") {
+            pf_main.setSrc("../corporate/RecruitmentDashboard.xml");
+        } else if (role === "ADMIN") {
+            pf_main.setSrc("../admin/AdminDashboard.xml");
+        } else {
+            alert("알 수 없는 사용자 유형입니다. 관리자에게 문의하세요.");
+            console.log("Unknown role:", role);
+        }
+    }
+    // 회원가입 페이지로 이동
+    else if (result && result.action === "signup") {
+        console.log("회원가입 페이지로 이동");
+        pf_main.setSrc("../user/Signup.xml");
     }
 };
 

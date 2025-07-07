@@ -49,9 +49,6 @@ public class ProworksUserHeader extends com.inswave.elfw.core.UserHeader {
     @ElDtoField(logicalName = "테스트", physicalName = "location", type = "String", typeKind = "", fldYn = "Yes", delimeterYn = "Yes", cryptoGbn = "", cryptoKind = "", length = 10, dotLen = 0, baseValue = "", desc = "", attr = "")
     private String location;
 
-    @ElDtoField(logicalName = "사용자ID", physicalName = "testId", type = "String", typeKind = "", fldYn = "Yes", delimeterYn = "Yes", cryptoGbn = "", cryptoKind = "", length = 10, dotLen = 0, baseValue = "", desc = "", attr = "")
-    private String testId;
-
     @ElDtoField(logicalName = "테스트01 카운트", physicalName = "test01Cnt", type = "String", typeKind = "", fldYn = "No", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 11, dotLen = 0, baseValue = "", desc = "", attr = "")
     private String test01Cnt;
 
@@ -78,6 +75,9 @@ public class ProworksUserHeader extends com.inswave.elfw.core.UserHeader {
 
     @ElDtoField(logicalName = "유저 ID", physicalName = "userId", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
     private String userId;
+
+    @ElDtoField(logicalName = "사용자ID", physicalName = "testId", type = "int", typeKind = "", fldYn = "No", delimeterYn = "No", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private int testId;
 
     @ElVoField(physicalName = "fldLen")
     public int getFldLen(){
@@ -164,17 +164,6 @@ public class ProworksUserHeader extends com.inswave.elfw.core.UserHeader {
     @ElVoField(physicalName = "location")
     public void setLocation(String location){
         this.location = location;
-    }
-
-    @ElVoField(physicalName = "testId")
-    public String getTestId(){
-        String ret = this.testId;
-        return ret;
-    }
-
-    @ElVoField(physicalName = "testId")
-    public void setTestId(String testId){
-        this.testId = testId;
     }
 
     @ElVoField(physicalName = "test01Cnt")
@@ -274,6 +263,16 @@ public class ProworksUserHeader extends com.inswave.elfw.core.UserHeader {
         this.userId = userId;
     }
 
+    @ElVoField(physicalName = "testId")
+    public int getTestId(){
+        return testId;
+    }
+
+    @ElVoField(physicalName = "testId")
+    public void setTestId(int testId){
+        this.testId = testId;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -286,7 +285,6 @@ public class ProworksUserHeader extends com.inswave.elfw.core.UserHeader {
         sb.append("errorCode").append("=").append(errorCode).append(",");
         sb.append("errMag").append("=").append(errMag).append(",");
         sb.append("location").append("=").append(location).append(",");
-        sb.append("testId").append("=").append(testId).append(",");
         sb.append("test01Cnt").append("=").append(test01Cnt).append(",");
         sb.append("test01UserHeader").append("=").append(test01UserHeader).append(",");
         sb.append("test02UserHeader").append("=").append(test02UserHeader).append(",");
@@ -295,7 +293,8 @@ public class ProworksUserHeader extends com.inswave.elfw.core.UserHeader {
         sb.append("testDeptNo").append("=").append(testDeptNo).append(",");
         sb.append("email").append("=").append(email).append(",");
         sb.append("role").append("=").append(role).append(",");
-        sb.append("userId").append("=").append(userId);
+        sb.append("userId").append("=").append(userId).append(",");
+        sb.append("testId").append("=").append(testId);
         sb.append("]");
         return sb.toString();
 
@@ -322,7 +321,6 @@ public class ProworksUserHeader extends com.inswave.elfw.core.UserHeader {
             out.write( com.inswave.elfw.util.TypeConversionUtil.strToSpBytes(this.errorCode , 30, encode ) );
             out.write( com.inswave.elfw.util.TypeConversionUtil.strToSpBytes(this.errMag , 100, encode ) );
             out.write( com.inswave.elfw.util.TypeConversionUtil.strToSpBytes(this.location , 10, encode ) );
-            out.write( com.inswave.elfw.util.TypeConversionUtil.strToSpBytes(this.testId , 10, encode ) );
         } catch (IOException e) {
                 AppLog.error("marshalFld Error:["+ toString()+"]", e);
                 throw e;
@@ -363,8 +361,6 @@ public class ProworksUserHeader extends com.inswave.elfw.core.UserHeader {
              _offset += 100;
             this.location = com.inswave.elfw.util.TypeConversionUtil.getTrimmedString( bytes, _offset, 10, encode );
              _offset += 10;
-            this.testId = com.inswave.elfw.util.TypeConversionUtil.getTrimmedString( bytes, _offset, 10, encode );
-             _offset += 10;
         }catch(ElException e) { 
             String errorLine = com.inswave.elfw.util.TypeConversionUtil.getTrimmedString( bytes, 0, bytes.length, encode );
             AppLog.error("unMarshalFld Error:["+ errorLine+"]", e);
@@ -377,7 +373,7 @@ public class ProworksUserHeader extends com.inswave.elfw.core.UserHeader {
     }
 
     public int getFixedTotalLength(){
-        return 241;
+        return 231;
     }
 
     @Override

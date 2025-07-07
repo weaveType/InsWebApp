@@ -317,7 +317,7 @@ public class EmpController {
 		
 		ProworksUserHeader userHeader = new ProworksUserHeader();
 		userHeader.setSvcId("DmoEmpSelect");
-		userHeader.setTestId("TEST_ID");
+//		userHeader.setTestId("TEST_ID");
 		
 		ElResDataVO resVo = ProworksTcpLengthBaseSendUtil.sendFld("localhost", 9999, userHeader, eInVo, eOutVo, 10, false, "EUC-KR");
 		

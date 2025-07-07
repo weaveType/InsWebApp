@@ -201,31 +201,19 @@ scwin.btn_login_onclick = function (e) {
 // 로그인 성공 시 처리
 scwin.sbm_login_submitdone = function (e) {
     var userHeader = e.responseJSON.userHeader;
-    $p.parent().scwin.setUserInfo(userHeader);
-
+    // 쿠키에 사용자 정보 저장
+    WebSquare.cookie.setCookie("userInfo", JSON.stringify(userHeader));
     var role = userHeader.role;
-    // roleId에 따른 페이지 이동
+
     if (role === "USER") {
-        $p.parent().pf_main.setSrc("../common/weaveTypeMain.xml");
-        $p.closePopup();
+        $p.url("../common/weaveTypeMain.xml");  
+        $p.closePopup();                        
 
     } else if (role === "COMPANY") {
-        $p.parent().pf_main.setSrc("../corporate/RecruitmentDashboard.xml");
+        $p.url("../corporate/RecruitmentDashboard.xml");
         $p.closePopup();
-
-    } else if (role === "ADMIN") {
-        // 관리자 페이지로 이동
     }
-
-    else {
-        // 예상치 못한 roleId
-        alert("알 수 없는 사용자 유형입니다. 관리자에게 문의하세요.");
-        console.log(role);
-        if (window.opener) {
-            window.close();
-        }
-    }
-};
+}
 
 // 로그인 실패 시 처리
 scwin.sbm_login_submiterror = function (e) {
@@ -238,9 +226,8 @@ scwin.link_forgot_onclick = function (e) {
 };
 
 scwin.link_signup_onclick = function (e) {
-    window.opener.$p.parent().pf_main.setSrc("../user/Signup.xml");
-    window.close();
-
+    $p.parent().pf_main.setSrc("../user/Signup.xml");
+    $p.closePopup();
 };
 
 // Enter 키 이벤트 처리
