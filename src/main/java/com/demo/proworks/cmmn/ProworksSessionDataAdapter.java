@@ -66,10 +66,11 @@ public class ProworksSessionDataAdapter extends SessionDataAdapter {
 				throw new AdapterException("EL.ERROR.LOGIN.0004", new String[] { email });
 			}
 
-			// 필요정보 추가영역
-			userHeader.setUserId(userVo.getEmail());
-			userHeader.setTestId(userVo.getUserId());
-			
+			// 필요정보 추가영역 
+			userHeader.setUserId(String.valueOf(resUserVo.getUserId())); 
+			userHeader.setName(resUserVo.getName());
+			userHeader.setAccountId(resUserVo.getUserId());
+
 			int roleId = resUserVo.getRoleId();
 
 			switch (roleId) {
@@ -90,7 +91,9 @@ public class ProworksSessionDataAdapter extends SessionDataAdapter {
 			// 세션 데이터 설정 완료 로그
 			AppLog.debug("=== 세션 데이터 설정 완료 ===");
 			AppLog.debug("사용자 이메일: " + email);
-			AppLog.debug("권한 ID: " + resUserVo.getRole());
+			AppLog.debug("DB에서 조회된 int 타입 User ID : " + resUserVo.getUserId()); 
+			AppLog.debug("실제 설정된 userId (email): " + resUserVo.getEmail());
+			AppLog.debug("권한 ID: " + resUserVo.getRoleId());
 			AppLog.debug("설정된 UserHeader: " + userHeader.toString());
 
 		} catch (ElException e) {

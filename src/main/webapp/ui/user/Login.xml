@@ -201,8 +201,9 @@ scwin.btn_login_onclick = function (e) {
 // 로그인 성공 시 처리
 scwin.sbm_login_submitdone = function (e) {
     var userHeader = e.responseJSON.userHeader;
-    // 쿠키에 사용자 정보 저장
     WebSquare.cookie.setCookie("userInfo", JSON.stringify(userHeader));
+    debugger;
+    console.log(userHeader);
     var role = userHeader.role;
 
     if (role === "USER") {
