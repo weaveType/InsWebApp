@@ -13,8 +13,8 @@ public class CodeAnalysisRequestVo extends com.demo.proworks.cmmn.ProworksCommVO
     public CodeAnalysisRequestVo(){
     }
 
-    @ElDtoField(logicalName = "사용자ID", physicalName = "userId", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
-    private String userId;
+    @ElDtoField(logicalName = "타입ID", physicalName = "typeId", type = "Long", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private Long typeId;
 
     @ElDtoField(logicalName = "모델파일", physicalName = "modelFile", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
     private String modelFile;
@@ -40,14 +40,14 @@ public class CodeAnalysisRequestVo extends com.demo.proworks.cmmn.ProworksCommVO
     @ElDtoField(logicalName = "레포지토리파일명", physicalName = "repositoryFileName", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
     private String repositoryFileName;
 
-    @ElVoField(physicalName = "userId")
-    public String getUserId(){
-        return this.userId;
+    @ElVoField(physicalName = "typeId")
+    public Long getTypeId(){
+        return this.typeId;
     }
 
-    @ElVoField(physicalName = "userId")
-    public void setUserId(String userId){
-        this.userId = userId;
+    @ElVoField(physicalName = "typeId")
+    public void setTypeId(Long typeId){
+        this.typeId = typeId;
     }
 
     @ElVoField(physicalName = "modelFile")
@@ -134,7 +134,7 @@ public class CodeAnalysisRequestVo extends com.demo.proworks.cmmn.ProworksCommVO
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("CodeAnalysisRequestVo [");
-        sb.append("userId").append("=").append(userId).append(",");
+        sb.append("typeId").append("=").append(typeId).append(",");
         sb.append("modelFile").append("=").append(modelFile).append(",");
         sb.append("controllerFile").append("=").append(controllerFile).append(",");
         sb.append("serviceFile").append("=").append(serviceFile).append(",");

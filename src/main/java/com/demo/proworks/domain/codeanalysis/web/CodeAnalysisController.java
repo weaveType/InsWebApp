@@ -61,8 +61,8 @@ public class CodeAnalysisController {
             // CodeAnalysisRequestVo 생성 및 데이터 설정
             CodeAnalysisRequestVo requestVo = new CodeAnalysisRequestVo();
             
-            if (jsonNode.has("userId")) {
-                requestVo.setUserId(jsonNode.get("userId").asText());
+            if (jsonNode.has("typeId")) {
+                requestVo.setTypeId(jsonNode.get("typeId").asLong());
             }
             if (jsonNode.has("modelFile")) {
                 requestVo.setModelFile(jsonNode.get("modelFile").asText());
@@ -90,7 +90,7 @@ public class CodeAnalysisController {
             }
             
             AppLog.debug("파싱된 RequestVo: " + requestVo.toString());
-            AppLog.debug("코드 분석 시작 - 사용자ID: " + requestVo.getUserId());
+            AppLog.debug("코드 분석 시작 - 타입ID: " + requestVo.getTypeId());
             
             // 코드 분석 수행
             CodeAnalysisResultVo result = codeAnalysisService.analyzeCode(requestVo);
@@ -98,15 +98,12 @@ public class CodeAnalysisController {
             AppLog.debug("코드 분석 완료 - 결과 타입: " + result.getTypeCode());
             
             // 결과를 Map으로 변환
-            returnMap.put("codeAnalysisId", result.getCodeAnalysisId());
-            returnMap.put("userId", result.getUserId());
-            returnMap.put("programmingLanguage", result.getProgrammingLanguage());
+            returnMap.put("analysisId", result.getAnalysisId());
+            returnMap.put("typeId", result.getTypeId());
             returnMap.put("analysisResult", result.getAnalysisResult());
             returnMap.put("typeCode", result.getTypeCode());
-            returnMap.put("architectScore", result.getArchitectScore());
-            returnMap.put("builderScore", result.getBuilderScore());
-            returnMap.put("individualScore", result.getIndividualScore());
-            returnMap.put("teamScore", result.getTeamScore());
+            returnMap.put("developmentStyleScore", result.getDevelopmentStyleScore());
+            returnMap.put("collaborationScore", result.getCollaborationScore());
             returnMap.put("confidenceScore", result.getConfidenceScore());
             returnMap.put("createdAt", result.getCreatedAt());
             
@@ -119,7 +116,7 @@ public class CodeAnalysisController {
     }
 
     /**
-     * 사용자의 최신 코드 분석 결과를 조회합니다.
+     * 개발자 유형의 최신 코드 분석 결과를 조회합니다.
      * 
      * @param request 요청 정보 HttpServletRequest
      * @return 코드 분석 결과
@@ -127,7 +124,7 @@ public class CodeAnalysisController {
      */
     @ElService(key = "CA0001Result")
     @RequestMapping(value = "CA0001Result")
-    @ElDescription(sub = "코드 분석 결과 조회", desc = "사용자의 최신 코드 분석 결과를 조회합니다.")
+    @ElDescription(sub = "코드 분석 결과 조회", desc = "개발자 유형의 최신 코드 분석 결과를 조회합니다.")
     public Map<String, Object> getAnalysisResult(HttpServletRequest request) throws Exception {
         Map<String, Object> returnMap = new HashMap<String, Object>();
         
@@ -139,32 +136,29 @@ public class CodeAnalysisController {
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode jsonNode = objectMapper.readTree(jsonData);
             
-            String userId = null;
-            if (jsonNode.has("userId")) {
-                userId = jsonNode.get("userId").asText();
+            Long typeId = null;
+            if (jsonNode.has("typeId")) {
+                typeId = jsonNode.get("typeId").asLong();
             }
             
-            AppLog.debug("코드 분석 결과 조회 - 사용자ID: " + userId);
+            AppLog.debug("코드 분석 결과 조회 - 타입ID: " + typeId);
             
-            CodeAnalysisResultVo result = codeAnalysisService.getAnalysisResult(userId);
+            CodeAnalysisResultVo result = codeAnalysisService.getAnalysisResult(typeId);
             
             if (result == null) {
-                AppLog.debug("분석 결과가 없습니다 - 사용자ID: " + userId);
+                AppLog.debug("분석 결과가 없습니다 - 타입ID: " + typeId);
                 returnMap.put("hasResult", false);
             } else {
                 AppLog.debug("분석 결과 조회 완료 - 타입: " + result.getTypeCode());
                 
                 // 결과를 Map으로 변환
                 returnMap.put("hasResult", true);
-                returnMap.put("codeAnalysisId", result.getCodeAnalysisId());
-                returnMap.put("userId", result.getUserId());
-                returnMap.put("programmingLanguage", result.getProgrammingLanguage());
+                returnMap.put("analysisId", result.getAnalysisId());
+                returnMap.put("typeId", result.getTypeId());
                 returnMap.put("analysisResult", result.getAnalysisResult());
                 returnMap.put("typeCode", result.getTypeCode());
-                returnMap.put("architectScore", result.getArchitectScore());
-                returnMap.put("builderScore", result.getBuilderScore());
-                returnMap.put("individualScore", result.getIndividualScore());
-                returnMap.put("teamScore", result.getTeamScore());
+                returnMap.put("developmentStyleScore", result.getDevelopmentStyleScore());
+                returnMap.put("collaborationScore", result.getCollaborationScore());
                 returnMap.put("confidenceScore", result.getConfidenceScore());
                 returnMap.put("createdAt", result.getCreatedAt());
             }

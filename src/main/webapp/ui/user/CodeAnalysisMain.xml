@@ -399,11 +399,21 @@
                 $('.result-type-name').text(typeInfo.name);
                 $('.result-type-desc').text(typeInfo.desc);
                 
-                $('.score-architect').text((data.architectScore || 75) + '점');
-                $('.score-builder').text((data.builderScore || 75) + '점');
-                $('.score-individual').text((data.individualScore || 75) + '점');
-                $('.score-team').text((data.teamScore || 75) + '점');
-                $('.score-confidence').text(Math.round((data.confidenceScore || 0.75) * 100) + '%');
+                // 새로운 통합 점수 체계 적용
+                var devStyleScore = data.developmentStyleScore || 0;
+                var collabScore = data.collaborationScore || 0;
+                var confidenceScore = data.confidenceScore || 0;
+                
+                // 개발 스타일 점수 표시 (-50~+50 → 절댓값으로 표시)
+                $('.score-development-style').text(Math.abs(devStyleScore) + '점');
+                $('.development-style-type').text(devStyleScore > 0 ? 'Architect 우세' : 'Builder 우세');
+                
+                // 협업 성향 점수 표시 (-50~+50 → 절댓값으로 표시)  
+                $('.score-collaboration').text(Math.abs(collabScore) + '점');
+                $('.collaboration-type').text(collabScore > 0 ? 'Individual 우세' : 'Team 우세');
+                
+                // 신뢰도 표시
+                $('.score-confidence').text(Math.round(confidenceScore * 100) + '%');
                 
                 console.log('결과 표시 완료:', typeCode, typeInfo.name);
             };
@@ -724,10 +734,16 @@
                 margin-bottom: 8px;
             }
             
-            .score-architect, .score-builder, .score-individual, .score-team {
+            .score-development-style, .score-collaboration {
                 font-size: 24px;
                 font-weight: bold;
                 color: #007bff;
+            }
+            
+            .development-style-type, .collaboration-type {
+                font-size: 12px;
+                color: #666;
+                margin-top: 4px;
             }
             
             .confidence-section {
@@ -892,29 +908,21 @@
                         
                         <xf:group class="score-grid">
                             <xf:group class="score-item">
-                                <w2:textbox class="score-label" label="아키텍트 점수" tagname="div"></w2:textbox>
-                                <w2:textbox class="score-architect" label="75점" tagname="div"></w2:textbox>
+                                <w2:textbox class="score-label" label="개발 스타일" tagname="div"></w2:textbox>
+                                <w2:textbox class="score-development-style" label="0점" tagname="div"></w2:textbox>
+                                <w2:textbox class="development-style-type" label="분석 중..." tagname="div" style="font-size: 12px; color: #666; margin-top: 4px;"></w2:textbox>
                             </xf:group>
                             
                             <xf:group class="score-item">
-                                <w2:textbox class="score-label" label="빌더 점수" tagname="div"></w2:textbox>
-                                <w2:textbox class="score-builder" label="75점" tagname="div"></w2:textbox>
-                            </xf:group>
-                            
-                            <xf:group class="score-item">
-                                <w2:textbox class="score-label" label="개인작업 점수" tagname="div"></w2:textbox>
-                                <w2:textbox class="score-individual" label="75점" tagname="div"></w2:textbox>
-                            </xf:group>
-                            
-                            <xf:group class="score-item">
-                                <w2:textbox class="score-label" label="팀작업 점수" tagname="div"></w2:textbox>
-                                <w2:textbox class="score-team" label="75점" tagname="div"></w2:textbox>
+                                <w2:textbox class="score-label" label="협업 성향" tagname="div"></w2:textbox>
+                                <w2:textbox class="score-collaboration" label="0점" tagname="div"></w2:textbox>
+                                <w2:textbox class="collaboration-type" label="분석 중..." tagname="div" style="font-size: 12px; color: #666; margin-top: 4px;"></w2:textbox>
                             </xf:group>
                         </xf:group>
                         
                         <xf:group class="confidence-section">
                             <w2:textbox class="confidence-label" label="분석 신뢰도" tagname="div"></w2:textbox>
-                            <w2:textbox class="score-confidence" label="75%" tagname="div"></w2:textbox>
+                            <w2:textbox class="score-confidence" label="0%" tagname="div"></w2:textbox>
                         </xf:group>
                     </xf:group>
                     

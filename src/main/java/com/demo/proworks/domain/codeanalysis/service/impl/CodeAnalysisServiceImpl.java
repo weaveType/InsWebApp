@@ -45,7 +45,7 @@ public class CodeAnalysisServiceImpl implements CodeAnalysisService {
     public CodeAnalysisResultVo analyzeCode(CodeAnalysisRequestVo requestVo) throws Exception {
         try {
             AppLog.debug("=== 코드 분석 시작 (REST API 방식) ===");
-            AppLog.debug("사용자ID: " + requestVo.getUserId());
+            AppLog.debug("타입ID: " + requestVo.getTypeId());
             AppLog.debug("Gemini API 키 존재 여부: " + (geminiApiKey != null && !geminiApiKey.isEmpty()));
             AppLog.debug("모델명: " + modelName);
             
@@ -102,16 +102,17 @@ public class CodeAnalysisServiceImpl implements CodeAnalysisService {
             
             // 결과 VO 생성
             CodeAnalysisResultVo resultVo = new CodeAnalysisResultVo();
-            resultVo.setUserId(requestVo.getUserId());
-            resultVo.setProgrammingLanguage("Java");
+            
+            // typeId는 NULL로 설정 (독립적인 코드분석 테이블)
+            resultVo.setTypeId(null);
+            
             // 전체 분석 결과 저장 (새로운 JSON 구조)
+            String typeCode = parsedResult.getString("typeCode");
             resultVo.setAnalysisResult(parsedResult.optString("fullAnalysis", parsedResult.toString()));
-            resultVo.setTypeCode(parsedResult.getString("typeCode"));
-            // 2차원 분석 결과를 기존 4개 필드에 매핑 (A vs B, I vs T)
-                         resultVo.setArchitectScore(parsedResult.getInt("architectScore"));        // A(Architect) 점수
-             resultVo.setBuilderScore(parsedResult.getInt("builderScore"));  // B(Builder) 점수  
-             resultVo.setIndividualScore(parsedResult.getInt("individualScore"));     // I(Individual) 점수
-             resultVo.setTeamScore(parsedResult.getInt("teamScore")); // T(Team) 점수
+            resultVo.setTypeCode(typeCode);
+            // 2차원 분석 결과를 새로운 통합 점수 필드에 매핑 (+-50 범위)
+            resultVo.setDevelopmentStyleScore(parsedResult.getInt("developmentStyleScore"));
+            resultVo.setCollaborationScore(parsedResult.getInt("collaborationScore"));
             resultVo.setConfidenceScore(parsedResult.getDouble("confidenceScore"));
             resultVo.setCreatedAt(new Date());
             
@@ -165,7 +166,7 @@ public class CodeAnalysisServiceImpl implements CodeAnalysisService {
             generationConfig.put("maxOutputTokens", 1024);  // 토큰 수 대폭 감소
             generationConfig.put("responseMimeType", "application/json");
             
-            // @코드분석 프롬프트.txt 기준 상세 응답 스키마
+            // 상세 응답 스키마
             JSONObject responseSchema = new JSONObject();
             responseSchema.put("type", "object");
             JSONObject properties = new JSONObject();
@@ -183,7 +184,7 @@ public class CodeAnalysisServiceImpl implements CodeAnalysisService {
             analysisDetails.put("type", "object");
             JSONObject detailsProperties = new JSONObject();
             
-            // architect_indicators 또는 builder_indicators
+            // architect_indicators (A 타입인 경우)
             JSONObject architectIndicators = new JSONObject();
             architectIndicators.put("type", "object");
             JSONObject architectProps = new JSONObject();
@@ -193,7 +194,17 @@ public class CodeAnalysisServiceImpl implements CodeAnalysisService {
             architectProps.put("architecture_complexity", new JSONObject().put("type", "integer").put("minimum", 0).put("maximum", 100));
             architectIndicators.put("properties", architectProps);
             
-            // team_indicators 또는 individual_indicators
+            // builder_indicators (B 타입인 경우)
+            JSONObject builderIndicators = new JSONObject();
+            builderIndicators.put("type", "object");
+            JSONObject builderProps = new JSONObject();
+            builderProps.put("fast_implementation", new JSONObject().put("type", "integer").put("minimum", 0).put("maximum", 100));
+            builderProps.put("prototype_patterns", new JSONObject().put("type", "integer").put("minimum", 0).put("maximum", 100));
+            builderProps.put("simple_solutions", new JSONObject().put("type", "integer").put("minimum", 0).put("maximum", 100));
+            builderProps.put("hardcoding_frequency", new JSONObject().put("type", "integer").put("minimum", 0).put("maximum", 100));
+            builderIndicators.put("properties", builderProps);
+            
+            // team_indicators (T 타입인 경우)
             JSONObject teamIndicators = new JSONObject();
             teamIndicators.put("type", "object");
             JSONObject teamProps = new JSONObject();
@@ -204,14 +215,28 @@ public class CodeAnalysisServiceImpl implements CodeAnalysisService {
             teamProps.put("code_review_patterns", new JSONObject().put("type", "integer").put("minimum", 0).put("maximum", 100));
             teamIndicators.put("properties", teamProps);
             
+            // individual_indicators (I 타입인 경우)
+            JSONObject individualIndicators = new JSONObject();
+            individualIndicators.put("type", "object");
+            JSONObject individualProps = new JSONObject();
+            individualProps.put("personal_naming_style", new JSONObject().put("type", "integer").put("minimum", 0).put("maximum", 100));
+            individualProps.put("independent_modules", new JSONObject().put("type", "integer").put("minimum", 0).put("maximum", 100));
+            individualProps.put("large_commits", new JSONObject().put("type", "integer").put("minimum", 0).put("maximum", 100));
+            individualProps.put("minimal_documentation", new JSONObject().put("type", "integer").put("minimum", 0).put("maximum", 100));
+            individualIndicators.put("properties", individualProps);
+            
+            // 우세한 타입에 따라 해당 지표들만 포함
             detailsProperties.put("architect_indicators", architectIndicators);
+            detailsProperties.put("builder_indicators", builderIndicators);
             detailsProperties.put("team_indicators", teamIndicators);
+            detailsProperties.put("individual_indicators", individualIndicators);
             analysisDetails.put("properties", detailsProperties);
             
             properties.put("analysis_details", analysisDetails);
             
             responseSchema.put("properties", properties);
-            responseSchema.put("required", new JSONArray().put("language").put("dev_style").put("dev_score").put("collab_style").put("collab_score").put("type_code").put("confidence"));
+            // analysis_details를 필수 필드에 추가
+            responseSchema.put("required", new JSONArray().put("language").put("dev_style").put("dev_score").put("collab_style").put("collab_score").put("type_code").put("confidence").put("analysis_details"));
             
             generationConfig.put("responseSchema", responseSchema);
             requestBody.put("generationConfig", generationConfig);
@@ -315,15 +340,15 @@ public class CodeAnalysisServiceImpl implements CodeAnalysisService {
                 throw new Exception("API 응답을 JSON으로 파싱할 수 없습니다: " + e.getMessage());
             }
             
-            // 필수 필드 검증 (@코드분석 프롬프트.txt 기준)
-            String[] requiredFields = {"dev_style", "dev_score", "collab_style", "collab_score", "type_code", "confidence"};
+            // 필수 필드 검증
+            String[] requiredFields = {"dev_style", "dev_score", "collab_style", "collab_score", "type_code", "confidence", "analysis_details"};
             for (String field : requiredFields) {
                 if (!analysisResult.has(field)) {
                     throw new Exception("응답에 필수 필드가 없습니다: " + field);
                 }
             }
             
-            // 기존 데이터베이스 구조에 맞게 변환
+            // 새로운 데이터베이스 구조에 맞게 변환 (+-50 범위)
             JSONObject result = new JSONObject();
             
             // 타입 코드
@@ -335,28 +360,39 @@ public class CodeAnalysisServiceImpl implements CodeAnalysisService {
             String collabType = analysisResult.getString("collab_style");
             int collabScore = analysisResult.getInt("collab_score");
             
-            // 기존 점수 필드에 새로운 의미로 매핑 (2차원 A/B, I/T)
+            // 새로운 통합 점수 계산 (+-50 범위)
+            // 개발 스타일 점수: A는 +, B는 -
+            int developmentStyleScore;
             if ("A".equals(devType)) {
-                result.put("architectScore", devScore);           // A(Architect) 점수
-                result.put("builderScore", 100 - devScore); // B(Builder) 점수 (반대)
+                // A(Architect)가 우세: 점수를 -50~+50 범위의 + 값으로 변환
+                developmentStyleScore = (int) Math.round((devScore - 50) * 50.0 / 50.0);
+                developmentStyleScore = Math.max(1, Math.min(50, developmentStyleScore)); // 1~50 범위
             } else {
-                result.put("architectScore", 100 - devScore);     // A(Architect) 점수 (반대)
-                result.put("builderScore", devScore);       // B(Builder) 점수
+                // B(Builder)가 우세: 점수를 -50~+50 범위의 - 값으로 변환
+                developmentStyleScore = (int) Math.round((devScore - 50) * -50.0 / 50.0);
+                developmentStyleScore = Math.min(-1, Math.max(-50, developmentStyleScore)); // -50~-1 범위
             }
             
+            // 협업 성향 점수: S는 +, T는 -
+            int collaborationScore_value;
             if ("I".equals(collabType)) {
-                result.put("individualScore", collabScore);          // I(Individual) 점수
-                result.put("teamScore", 100 - collabScore); // T(Team) 점수 (반대)
+                // I(Individual/Soloist)가 우세: 점수를 -50~+50 범위의 + 값으로 변환  
+                collaborationScore_value = (int) Math.round((collabScore - 50) * 50.0 / 50.0);
+                collaborationScore_value = Math.max(1, Math.min(50, collaborationScore_value)); // 1~50 범위
             } else {
-                result.put("individualScore", 100 - collabScore);     // I(Individual) 점수 (반대)
-                result.put("teamScore", collabScore);       // T(Team) 점수
+                // T(Team)가 우세: 점수를 -50~+50 범위의 - 값으로 변환
+                collaborationScore_value = (int) Math.round((collabScore - 50) * -50.0 / 50.0);
+                collaborationScore_value = Math.min(-1, Math.max(-50, collaborationScore_value)); // -50~-1 범위
             }
             
-            // @코드분석 프롬프트.txt 기준 신뢰도 사용 (Gemini에서 직접 계산)
+            result.put("developmentStyleScore", developmentStyleScore);
+            result.put("collaborationScore", collaborationScore_value);
+            
+            // 신뢰도 사용 (Gemini에서 직접 계산)
             double geminiConfidence = analysisResult.optDouble("confidence", 0.5);
             result.put("confidenceScore", Math.min(0.99, geminiConfidence)); // 최대 0.99로 제한
             
-            // 상세 분석 결과 저장 (@코드분석 프롬프트.txt 기준)
+            // 상세 분석 결과 저장
             if (analysisResult.has("analysis_details")) {
                 result.put("analysisDetails", analysisResult.getJSONObject("analysis_details").toString());
             }
@@ -391,7 +427,7 @@ public class CodeAnalysisServiceImpl implements CodeAnalysisService {
             if (result <= 0) {
                 throw new Exception("코드 분석 결과 저장에 실패했습니다.");
             }
-            AppLog.debug("코드 분석 결과 저장 완료 - ID: " + resultVo.getCodeAnalysisId());
+            AppLog.debug("코드 분석 결과 저장 완료 - ID: " + resultVo.getAnalysisId());
         } catch (ElException e) {
             AppLog.error("코드 분석 결과 저장 중 DAO 오류 발생", e);
             throw new Exception("코드 분석 결과 저장 중 데이터베이스 오류가 발생했습니다: " + e.getMessage(), e);
@@ -399,13 +435,13 @@ public class CodeAnalysisServiceImpl implements CodeAnalysisService {
     }
     
     @Override
-    public CodeAnalysisResultVo getAnalysisResult(String userId) throws Exception {
+    public CodeAnalysisResultVo getAnalysisResult(Long typeId) throws Exception {
         try {
-            CodeAnalysisResultVo result = codeAnalysisDAO.selectLatestCodeAnalysisResult(userId);
+            CodeAnalysisResultVo result = codeAnalysisDAO.selectLatestCodeAnalysisResult(typeId);
             if (result != null) {
-                AppLog.debug("코드 분석 결과 조회 완료 - 사용자ID: " + userId);
+                AppLog.debug("코드 분석 결과 조회 완료 - 타입ID: " + typeId);
             } else {
-                AppLog.debug("코드 분석 결과가 없습니다 - 사용자ID: " + userId);
+                AppLog.debug("코드 분석 결과가 없습니다 - 타입ID: " + typeId);
             }
             return result;
         } catch (ElException e) {
@@ -415,7 +451,7 @@ public class CodeAnalysisServiceImpl implements CodeAnalysisService {
     }
     
     /**
-     * @코드분석 프롬프트.txt 기준에 맞는 상세한 분석 프롬프트 생성
+     * 상세한 분석 프롬프트 생성
      */
     private String buildAnalysisPrompt() {
         StringBuilder prompt = new StringBuilder();
@@ -604,7 +640,7 @@ public class CodeAnalysisServiceImpl implements CodeAnalysisService {
         prompt.append("- type_code는 2글자 조합 (AI, AT, BI, BT)\n");
         prompt.append("- confidence는 0-1 사이의 소수\n");
         prompt.append("- 객관적이고 일관된 기준 적용\n");
-        prompt.append("- 패턴의 질을 양보다 우선시\n");
+        prompt.append("- 패턴의 질을 양보다 우세시\n");
         prompt.append("- 언어 규칙 존중\n");
         prompt.append("- 간결하고 집중적인 출력 유지\n");
         
