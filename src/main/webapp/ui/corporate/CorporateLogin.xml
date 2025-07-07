@@ -55,28 +55,13 @@ scwin.onpageload = function () {
 
 // 회원가입 페이지로 이동
 scwin.lnk_create_corporate_onclick = function () {
-    try {
-        // 부모 페이지의 pf_main 컴포넌트에 직접 접근
-        if ($p.parent().pf_main) {
-            $p.parent().pf_main.setSrc("../corporate/CreateCompany.xml");
-        } else {
-            console.warn("부모 페이지에 pf_main이 없습니다.");
-            $p.url("../corporate/CreateCompany.xml");
-        }
-    } catch (e) {
-        console.error("페이지 이동 중 오류:", e);
-        $p.url("../corporate/CorporateLogin.xml");
-    }
+    $p.parent().pf_main.setSrc("../corporate/CreateCompany.xml");
+
 };
 
 // 로그인 버튼 클릭 이벤트
 scwin.btn_login_onclick = function () {
-    try {
-        $c.sbm.execute(sbm_login);
-
-    } catch (error) {
-        scwin.showErrorMessage("로그인 처리 중 오류가 발생했습니다.");
-    }
+    $c.sbm.execute(sbm_login);
 };
 
 // 폼 검증 함수
@@ -87,41 +72,27 @@ scwin.validateLoginForm = function () {
 // 로그인 성공 처리
 scwin.sbm_login_submitdone = function (e) {
     // WebSquare 응답 구조에 맞게 수정
-    var elHeader = e.responseJSON.elHeader;
     var userHeader = e.responseJSON.userHeader;
 
     // 성공 여부 체크: elHeader.resSuc 사용
-    if (elHeader && elHeader.resSuc === true) {
-        var role = userHeader.role;
-        try {
-            if (role === "COMPANY") {
-                // 부모 페이지에 사용자 정보 저장
-                if ($p.parent().scwin && $p.parent().scwin.setUserInfo) {
-                    $p.parent().scwin.setUserInfo(userHeader);
-                }
-                
-                if ($p.parent().pf_main) {
-                    $p.parent().pf_main.setSrc("../corporate/RecruitmentDashboard.xml");
-                } else {
-                    console.warn("부모 페이지에 pf_main이 없습니다.");
-                    $p.url("../corporate/RecruitmentDashboard.xml");
-                }
-            } else {
-                alert("기업 회원이 아닙니다. 재가입 해주세요");
-            }
-        } catch (e) {
-            console.error("페이지 이동 중 오류:", e);
-            $p.url("../corporate/CorporateLogin.xml");
+    var role = userHeader.role;
+
+    if (role === "COMPANY") {
+        // 부모 페이지에 사용자 정보 저장
+        if ($p.parent().scwin && $p.parent().scwin.setUserInfo) {
+            $p.parent().scwin.setUserInfo(userHeader);
+        }
+
+        if ($p.parent().pf_main) {
+            $p.parent().pf_main.setSrc("../corporate/RecruitmentDashboard.xml");
+        } else {
+            console.warn("부모 페이지에 pf_main이 없습니다.");
+            $p.url("../corporate/RecruitmentDashboard.xml");
         }
     } else {
-        // 로그인 실패
-        var message = (elHeader && elHeader.resMsg) || "로그인에 실패했습니다. 아이디와 비밀번호를 확인해주세요.";
-        alert(message);
-
-        // 비밀번호 필드 초기화
-        inp_userPw.setValue("");
-        inp_userPw.focus();
+        alert("기업 회원이 아닙니다. 재가입 해주세요");
     }
+
 };
 
 // 에러 메시지 표시
@@ -157,43 +128,6 @@ scwin.saveRememberedEmail = function (email) {
     }
 };
 
-// 저장된 이메일 로드
-scwin.loadRememberedEmail = function () {
-    try {
-        if (typeof (Storage) !== "undefined") {
-            var savedEmail = localStorage.getItem("rememberedEmail");
-            if (savedEmail) {
-                dmp_loginVo.set("email", savedEmail);
-                dmp_loginVo.set("rememberMe", "Y");
-            }
-        }
-    } catch (error) {
-        console.warn("저장된 이메일 로드 실패:", error);
-    }
-};
-
-// 저장된 이메일 삭제
-scwin.clearRememberedEmail = function () {
-    try {
-        if (typeof (Storage) !== "undefined") {
-            localStorage.removeItem("rememberedEmail");
-        }
-    } catch (error) {
-        console.warn("저장된 이메일 삭제 실패:", error);
-    }
-};
-
-// 비밀번호 표시/숨기기 토글
-scwin.btn_toggle_password_onclick = function () {
-    var passwordInput = inp_password;
-    if (passwordInput.getAttribute("type") === "password") {
-        passwordInput.setAttribute("type", "text");
-        lnk_toggle_password.setValue("비밀번호 숨기기");
-    } else {
-        passwordInput.setAttribute("type", "password");
-        lnk_toggle_password.setValue("비밀번호 보기");
-    }
-};
 
 // Enter 키 이벤트 처리
 scwin.inp_email_onkeypress = function (e) {
@@ -206,6 +140,14 @@ scwin.inp_password_onkeypress = function (e) {
     if (e.keyCode === 13) { // Enter 키
         scwin.btn_login_onclick();
     }
+};
+
+scwin.sbm_login_submiterror = function (e) {
+    alert("로그인에 실패했습니다. 아이디와 비밀번호를 확인해주세요. " + e);
+
+    // 비밀번호 필드 초기화
+    inp_userPw.setValue("");
+    inp_userPw.focus();
 };
 ]]></script>
             

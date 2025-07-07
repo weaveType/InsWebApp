@@ -1,49 +1,74 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:ev="http://www.w3.org/2001/xml-events"
-      xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
-    <head>
-        <w2:type>COMPONENT</w2:type>
-        <w2:buildDate/>
-        <w2:MSA/>
-        <xf:model>
-            <w2:dataCollection baseNode="map">
-                <w2:dataMap id="dma_main" baseNode="map">
-                    <w2:keyInfo>
-                        <w2:key id="searchText" name="searchText" dataType="text"/>
-                        <w2:key id="totalUsers" name="totalUsers" dataType="text"/>
-                    </w2:keyInfo>
-                </w2:dataMap>
-            </w2:dataCollection>
-            <w2:workflowCollection/>
-        </xf:model>
-        <w2:layoutInfo/>
-        <w2:publicInfo method=""/>
-        <script type="text/javascript"><![CDATA[// 전역 사용자 정보 변수
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare"
+	xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>COMPONENT</w2:type>
+		<w2:buildDate />
+		<w2:MSA />
+		<xf:model>
+			<w2:dataCollection baseNode="map">
+				<w2:dataMap id="dma_main" baseNode="map">
+					<w2:keyInfo>
+						<w2:key id="searchText" name="searchText" dataType="text" />
+						<w2:key id="totalUsers" name="totalUsers" dataType="text" />
+					</w2:keyInfo>
+				</w2:dataMap>
+			</w2:dataCollection>
+			<w2:workflowCollection />
+		</xf:model>
+		<w2:layoutInfo />
+		<w2:publicInfo method="" />
+		<script type="text/javascript"><![CDATA[// 전역 사용자 정보 변수
 var globalUserInfo = null;
 
-// 사용자 정보 설정 함수
-scwin.setUserInfo = function(userInfo) {
+// 사용자 정보 설정 함수 (헤더 업데이트 포함)
+scwin.setUserInfo = function (userInfo) {
     globalUserInfo = userInfo;
+    scwin.updateHeaderUI();
 };
 
 // 사용자 정보 조회 함수
-scwin.getUserInfo = function() {
+scwin.getUserInfo = function () {
     return globalUserInfo;
 };
 
-scwin.getuserEmail = function() {
-    return globalUserInfo.email;
-}
-
-// 페이지 로드 시 팝업 닫기 액션 함수들 정의
-scwin.onpageload = function () {
+scwin.getuserEmail = function () {
+    return globalUserInfo ? globalUserInfo.email : null;
 };
 
-// 로그인 관련 팝업 호출 함수들
-scwin.btnLogin_onclick = function () {
+// 헤더 UI 업데이트 함수
+scwin.updateHeaderUI = function () {
+    if (globalUserInfo == null) {
+        // 비로그인 유저
+        txb_login.hide();
+        btnLogin.show();
+    } else {
+        // 로그인 유저
+        btnLogin.hide();
+        txb_login.show();
+
+        var userId = (globalUserInfo.email || "").split("@")[0];
+        txb_login.setValue(userId + " 님");
+    }
+};
+
+// 페이지 로드 시 초기 헤더 상태 설정
+scwin.onpageload = function () {
+    // 초기 헤더 UI 설정
+    scwin.updateHeaderUI();
     
-    // 로그인 팝업에 전달할 데이터
+};
+
+// 로그아웃
+scwin.logout = function () {
+    globalUserInfo = null;
+    scwin.updateHeaderUI();
+    // 메인 페이지로 이동하거나 필요한 처리
+    pf_main.setSrc("weaveRtpeMain.xml");
+};
+
+// 로그인 관련 팝업 호출 함수
+scwin.btnLogin_onclick = function () {
     var loginPopupData = {
         "type": "json",
         "name": "login_param",
@@ -52,13 +77,14 @@ scwin.btnLogin_onclick = function () {
             "returnUrl": window.location.href
         }
     };
+
     // 팝업 생성 옵션 지정
     var options = {
         id: "login_popup",
         type: "wframePopup",
         width: "430px",
         height: "530px",
-        modal: true,
+        // modal: true,
         resizable: true,
         center: true,
         popupName: "로그인/회원가입",
@@ -70,39 +96,8 @@ scwin.btnLogin_onclick = function () {
     $p.openPopup("../user/Login.xml", options);
 };
 
-scwin.ad_onclick = function (e) {
-    // 광고 클릭 로그인 팝업에 전달할 데이터
-    var adLoginPopupData = {
-        "type": "json",
-        "name": "login_param",
-        "data": {
-            "loginType": "ad_click",
-            "returnUrl": window.location.href,
-            "source": "hero_ad_banner"
-        }
-    };
-
-    // 팝업 생성 옵션 지정
-    var options = {
-        id: "ad_login_popup",
-        type: "wframePopup",
-        width: "460px",
-        height: "475px",
-        modal: true,
-        resizable: true,
-        center: true,
-        popupName: "로그인",
-        closeAction: "scwin.login_popup_closeAction",
-        dataObject: adLoginPopupData
-    };
-
-    // 팝업 생성
-    $p.openPopup("../user/Login.xml", options);
-};
-
-// 기타 함수들은 그대로 유지
 scwin.weaveTypeLogo_onclick = function () {
-    pf_main.setSrc("weaveRtpeMain.xml");
+    pf_main.setSrc("weaveTypeMain.xml");
 };
 
 scwin.menu1_onclick = function () {
@@ -121,7 +116,6 @@ scwin.btnEnterprise_onclick = function () {
     pf_main.setSrc("CompanyMain.xml");
 };
 
-
 // 사이드 메뉴 닫기
 scwin.closeSideMenu = function () {
     var sideMenu = document.getElementById('sideMenu');
@@ -133,16 +127,47 @@ scwin.closeSideMenu = function () {
 
 // 내 정보 페이지로 이동
 scwin.goToUserDetail = function () {
-    $p.url("../user/UserDetail.xml");
-    scwin.closeSideMenu();
 };
 
 // 기업 등록 페이지로 이동
 scwin.goToCompanyRegister = function () {
     location.href = '/websquare/websquare.html?w2xPath=/ui/create_company.xml';
     scwin.closeSideMenu();
+};
+
+// 사용자 정보 텍스트박스 클릭 시 (드롭다운 메뉴 등)
+scwin.txb_login_onclick = function () {
+    // 사용자 메뉴 표시 (예: 마이페이지, 로그아웃 등)
+    // 필요에 따라 구현
+    var userMenu = confirm("마이페이지로 이동하시겠습니까?");
+    if (userMenu) {
+        scwin.goToUserDetail();
+    }
+};
+
+// 페이지 이동 함수 (메인 페이지에 선언)
+scwin.navigateToPage = function(pagePath, pageData, menuCode) {
+    // 현재 상태를 브라우저 히스토리에 저장
+    $c.win.pushState({
+        page: pagePath,
+        data: pageData,
+        menu: menuCode,
+        timestamp: new Date().getTime()
+    });
+    
+    // localStorage에도 백업 저장
+    localStorage.setItem('currentPageState', JSON.stringify({
+        page: pagePath,
+        data: pageData,
+        menu: menuCode
+    }));
+    
+    // 페이지 이동
+    pf_main.setSrc(pagePath, {
+        dataObject: pageData
+    });
 };]]></script>
-        <style type="text/css"><![CDATA[
+		<style type="text/css"><![CDATA[
             /* 기본 설정 */
             * {
                 box-sizing: border-box;
@@ -289,41 +314,9 @@ scwin.goToCompanyRegister = function () {
             }
 
             .header-right {
+                display:flex;
                 float: right;
                 padding-top: 18px;
-            }
-
-            .search-container {
-                display: inline-block;
-                background-color: #f5f5f5;
-                border-radius: 20px;
-                padding: 6px 15px;
-                margin-right: 10px;
-                vertical-align: middle;
-            }
-
-            .search-input {
-                border: none;
-                background: transparent;
-                width: 150px;
-                outline: none;
-                font-size: 13px;
-                height: 24px;
-                vertical-align: middle;
-            }
-
-            .search-input::placeholder {
-                color: #999;
-                font-size: 13px;
-            }
-
-            .search-btn {
-                border: none;
-                background: none;
-                cursor: pointer;
-                margin-left: 8px;
-                font-size: 14px;
-                vertical-align: middle;
             }
 
             .btn-login {
@@ -356,74 +349,6 @@ scwin.goToCompanyRegister = function () {
                 clear: both;
             }
 
-            /* 메인 히어로 섹션 - 완전 반응형 */
-            .hero-section {
-                background-color: #f8f8f8;
-                padding: min(60px, 8vw) min(30px, 4vw);
-            }
-
-            .hero-container {
-                max-width: 1100px;
-                width: 100%;
-                margin: 0 auto;
-                display: flex;
-                gap: 30px;
-                align-items: flex-start;
-            }
-
-            .hero-left {
-                flex: 1;
-                min-width: 0;
-            }
-
-            .hero-right {
-                flex: 0 0 400px;
-                min-width: 280px;
-            }
-
-            .ad-area {
-                width: 100%;
-                min-height: 350px;
-                background-color: #667eea;
-                border-radius: 10px;
-                cursor: pointer;
-                text-align: center;
-                padding: min(80px, 10vw) 20px 40px;
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-            }
-
-            .ad-title {
-                font-size: clamp(24px, 4vw, 32px);
-                color: #fff;
-                font-weight: bold;
-                margin-bottom: 10px;
-                display: block;
-                line-height: 1.2;
-            }
-
-            .ad-subtitle {
-                font-size: clamp(14px, 2.5vw, 18px);
-                color: #fff;
-                margin-bottom: 30px;
-                display: block;
-                line-height: 1.4;
-            }
-
-            .ad-button {
-                background-color: #fff;
-                color: #667eea;
-                border: none;
-                padding: 15px 40px;
-                border-radius: 30px;
-                font-size: clamp(14px, 2vw, 16px);
-                font-weight: bold;
-                cursor: pointer;
-                margin: 0 auto;
-                width: fit-content;
-            }
-
             .login-area {
                 width: 100%;
                 background-color: #fff;
@@ -450,330 +375,6 @@ scwin.goToCompanyRegister = function () {
                 font-size: clamp(14px, 2vw, 16px);
                 margin-bottom: 20px;
                 cursor: pointer;
-            }
-
-            .gift-area {
-                background-color: #f0fff5;
-                padding: 20px;
-                border-radius: 5px;
-                text-align: center;
-            }
-
-            .gift-text {
-                font-size: clamp(12px, 1.8vw, 14px);
-                color: #00a832;
-                margin-bottom: 5px;
-                display: block;
-                line-height: 1.4;
-            }
-
-            .gift-text-bold {
-                font-size: clamp(12px, 1.8vw, 14px);
-                color: #00a832;
-                font-weight: bold;
-                margin-bottom: 5px;
-                display: block;
-                line-height: 1.4;
-            }
-
-            .gift-icon {
-                font-size: clamp(24px, 4vw, 32px);
-                margin-top: 10px;
-                display: block;
-            }
-
-            /* 섹션 공통 - 반응형 패딩 */
-            .section {
-                padding: min(60px, 8vw) min(50px, 4vw);
-            }
-
-            .section-white {
-                background-color: #fff;
-            }
-
-            .section-gray {
-                background-color: #f8f8f8;
-            }
-
-            .section-title {
-                font-size: clamp(20px, 3vw, 24px);
-                font-weight: bold;
-                color: #333;
-                margin-bottom: 30px;
-                text-align: center;
-            }
-
-            .section-subtitle {
-                font-size: clamp(14px, 2vw, 16px);
-                color: #666;
-                text-align: center;
-                margin-top: -20px;
-                margin-bottom: 30px;
-            }
-
-            /* 카드 - 완전 반응형 그리드 */
-            .cards-container {
-                display: grid;
-                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-                gap: 20px;
-                margin-top: 30px;
-                max-width: 1000px;
-                margin-left: auto;
-                margin-right: auto;
-            }
-
-            .card {
-                background-color: #e8f5e9;
-                border-radius: 10px;
-                padding: 30px;
-                text-align: center;
-                cursor: pointer;
-                transition: transform 0.2s ease;
-                min-height: 250px;
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-            }
-
-            .card:hover {
-                transform: translateY(-5px);
-            }
-
-            .card-green {
-                background-color: #e8f5e9;
-            }
-
-            .card-orange {
-                background-color: #fff3e0;
-            }
-
-            .card-blue {
-                background-color: #e3f2fd;
-            }
-
-            .card-icon {
-                width: 80px;
-                height: 80px;
-                border-radius: 10px;
-                margin: 0 auto 20px;
-            }
-
-            .card-icon-green {
-                background-color: #c8e6c9;
-            }
-
-            .card-icon-orange {
-                background-color: #ffe0b2;
-            }
-
-            .card-icon-blue {
-                background-color: #bbdefb;
-            }
-
-            .card-title {
-                font-size: clamp(16px, 2.5vw, 18px);
-                font-weight: bold;
-                color: #333;
-                margin-bottom: 10px;
-                display: block;
-            }
-
-            .card-text {
-                font-size: clamp(14px, 2vw, 16px);
-                color: #333;
-                margin-bottom: 5px;
-                display: block;
-                line-height: 1.4;
-            }
-
-            .card-small-text {
-                font-size: clamp(11px, 1.5vw, 13px);
-                color: #666;
-                margin-bottom: 10px;
-                display: block;
-                line-height: 1.4;
-            }
-
-            .card-link {
-                color: #00c73c;
-                font-size: clamp(11px, 1.5vw, 13px);
-                cursor: pointer;
-                text-decoration: none;
-            }
-
-            /* 포지션 카드 - 반응형 그리드 */
-            .positions-container {
-                display: grid;
-                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-                gap: 20px;
-                margin-top: 30px;
-                max-width: 1000px;
-                margin-left: auto;
-                margin-right: auto;
-            }
-
-            .position-card {
-                background-color: #fff;
-                border-radius: 10px;
-                padding: 20px;
-                cursor: pointer;
-                border: 1px solid #e0e0e0;
-                transition: transform 0.2s ease, box-shadow 0.2s ease;
-            }
-
-            .position-card:hover {
-                transform: translateY(-3px);
-                box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            }
-
-            .position-header {
-                width: 100%;
-                height: 100px;
-                border-radius: 5px;
-                margin-bottom: 15px;
-                position: relative;
-            }
-
-            .position-header-dark {
-                background-color: #333;
-            }
-
-            .position-header-blue {
-                background-color: #e3f2fd;
-            }
-
-            .position-status {
-                position: absolute;
-                top: 10px;
-                right: 10px;
-                font-size: 11px;
-                padding: 2px 6px;
-                border-radius: 3px;
-                background-color: #e8f5e9;
-                color: #00a832;
-            }
-
-            .position-company {
-                font-size: clamp(12px, 1.8vw, 14px);
-                color: #666;
-                margin-bottom: 5px;
-                text-align: left;
-                display: block;
-            }
-
-            .position-title {
-                font-size: clamp(14px, 2vw, 16px);
-                font-weight: bold;
-                color: #333;
-                margin-bottom: 5px;
-                text-align: left;
-                display: block;
-                line-height: 1.3;
-            }
-
-            .position-status-text {
-                font-size: clamp(10px, 1.5vw, 12px);
-                color: #666;
-                text-align: left;
-                display: block;
-            }
-
-            /* 회사 목록 - 반응형 그리드 */
-            .companies-container {
-                margin-top: 30px;
-            }
-
-            .company-row {
-                display: grid;
-                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-                gap: 20px;
-                margin-bottom: 20px;
-                max-width: 1000px;
-                margin-left: auto;
-                margin-right: auto;
-            }
-
-            .company-item {
-                height: 80px;
-                background-color: #f9f9f9;
-                border-radius: 10px;
-                border: 1px solid #e0e0e0;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                text-align: center;
-                transition: transform 0.2s ease;
-            }
-
-            .company-item:hover {
-                transform: translateY(-2px);
-                box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-            }
-
-            .company-name {
-                font-size: clamp(12px, 1.8vw, 14px);
-                color: #333;
-                padding: 0 10px;
-                word-break: keep-all;
-            }
-
-            /* 푸터 */
-            .footer {
-                background-color: #f8f8f8;
-                border-top: 1px solid #e0e0e0;
-                padding: min(40px, 5vw) min(50px, 4vw);
-            }
-
-            .footer-title {
-                font-size: clamp(18px, 3vw, 20px);
-                font-weight: bold;
-                color: #333;
-                margin-bottom: 20px;
-                display: block;
-            }
-
-            .footer-text {
-                font-size: clamp(10px, 1.5vw, 12px);
-                color: #666;
-                line-height: 1.8;
-                display: block;
-                margin-bottom: 5px;
-            }
-
-            /* 태블릿 반응형 */
-            @media (max-width: 1024px) {
-                .header {
-                    padding: 0 20px;
-                }
-                
-                .nav-link {
-                    margin-right: 15px;
-                    font-size: 13px;
-                }
-                
-                .search-input {
-                    width: 120px;
-                }
-
-                .hero-container {
-                    flex-direction: column;
-                    gap: 20px;
-                }
-
-                .hero-right {
-                    flex: none;
-                    width: 100%;
-                    max-width: 400px;
-                    margin: 0 auto;
-                }
-
-                .cards-container {
-                    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-                }
-
-                .positions-container {
-                    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-                }
             }
 
             /* 모바일 반응형 */
@@ -807,141 +408,72 @@ scwin.goToCompanyRegister = function () {
                     font-size: 11px;
                     height: 28px;
                 }
-
-                .hero-section {
-                    padding: 40px 15px;
-                }
-
-                .ad-area {
-                    min-height: 280px;
-                    padding: 40px 15px;
-                }
-
-                .cards-container {
-                    grid-template-columns: 1fr;
-                    gap: 15px;
-                }
-
-                .positions-container {
-                    grid-template-columns: 1fr;
-                    gap: 15px;
-                }
-
-                .company-row {
-                    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-                    gap: 15px;
-                }
-
-                .section {
-                    padding: 40px 15px;
-                }
-
-                .section-title {
-                    margin-bottom: 20px;
-                }
-
-                .section-subtitle {
-                    margin-top: -10px;
-                    margin-bottom: 20px;
-                }
-            }
-
-            /* 작은 모바일 */
-            @media (max-width: 480px) {
-                .company-row {
-                    grid-template-columns: 1fr;
-                }
-
-                .ad-area {
-                    min-height: 250px;
-                    padding: 30px 10px;
-                }
-
-                .card {
-                    padding: 20px;
-                    min-height: 220px;
-                }
-
-                .position-card {
-                    padding: 15px;
-                }
             }
         ]]></style>
-    </head>
-    <body ev:onpageload="scwin.onpageload">
-    	<xf:group class="main-wrap">
+	</head>
+	<body ev:onpageload="scwin.onpageload">
+		<xf:group class="main-wrap">
 
-    		<!-- 헤더 영역 -->
-    		<xf:group class="header clearfix" tagname="header">
-    			<xf:group class="header-left">
-    				<!-- 햄버거 메뉴 -->
-    				<div class="hamburger-menu" ev:onclick="scwin.toggleSideMenu()">
-    					<div class="hamburger-line"></div>
-    					<div class="hamburger-line"></div>
-    					<div class="hamburger-line"></div>
-    				</div>
+			<!-- 헤더 영역 -->
+			<xf:group class="header clearfix" tagname="header">
+				<xf:group class="header-left">
+					<!-- 햄버거 메뉴 -->
+					<div class="hamburger-menu" ev:onclick="scwin.toggleSideMenu()">
+						<div class="hamburger-line"></div>
+						<div class="hamburger-line"></div>
+						<div class="hamburger-line"></div>
+					</div>
 
-    				<xf:group class="nav-menu">
-    					<xf:image src="/InsWebApp/images/ws5/weaveTypeLogo.png" style="width:130px;height:32px;object-fit:contain;"
-    						id="weaveTypeLogo" class="logo" ev:onclick="scwin.weaveTypeLogo_onclick">
-    					</xf:image>
-    					<w2:anchor class="nav-link" id="anchor1" ev:onclick="scwin.menu1_onclick" outerDiv="false">
-    						<xf:label><![CDATA[매칭]]></xf:label>
-    					</w2:anchor>
-    					<w2:anchor class="nav-link" id="anchor2" ev:onclick="scwin.menu2_onclick" outerDiv="false">
-    						<xf:label><![CDATA[mbti검사]]></xf:label>
-    					</w2:anchor>
-    					<w2:anchor class="nav-link" id="anchor3" ev:onclick="scwin.menu3_onclick" outerDiv="false">
-    						<xf:label><![CDATA[기업 둘러보기]]></xf:label>
-    					</w2:anchor>
-    				</xf:group>
-    			</xf:group>
-    			<xf:group class="header-right">
-    				<xf:group class="search-container">
-    					<input id="searchInput" class="search-input" type="text" placeholder="검색어를 입력하세요" />
-    					<button class="search-btn" id="btnSearch" type="button">������</button>
-    				</xf:group>
-    				<xf:trigger class="btn-login" id="btnLogin" ev:onclick="scwin.btnLogin_onclick" type="button">
-    					<xf:label><![CDATA[로그인/회원가입]]></xf:label>
-    				</xf:trigger>
-    				<xf:trigger class="btn-enterprise" id="btnEnterprise" ev:onclick="scwin.btnEnterprise_onclick" type="button">
-    					<xf:label><![CDATA[기업 서비스]]></xf:label>
-    				</xf:trigger>
-    			</xf:group>
-    		</xf:group>
+					<xf:group class="nav-menu">
+						<xf:image src="/InsWebApp/images/ws5/weaveTypeLogo.png" style="width:143px;height:32px;object-fit:contain;"
+							id="weaveTypeLogo" class="logo" ev:onclick="scwin.weaveTypeLogo_onclick">
+						</xf:image>
+						<w2:anchor class="nav-link" id="anchor1" ev:onclick="scwin.menu1_onclick" outerDiv="false">
+							<xf:label><![CDATA[매칭]]></xf:label>
+						</w2:anchor>
+						<w2:anchor class="nav-link" id="anchor2" ev:onclick="scwin.menu2_onclick" outerDiv="false">
+							<xf:label><![CDATA[mbti검사]]></xf:label>
+						</w2:anchor>
+						<w2:anchor class="nav-link" id="anchor3" ev:onclick="scwin.menu3_onclick" outerDiv="false">
+							<xf:label><![CDATA[기업 둘러보기]]></xf:label>
+						</w2:anchor>
+					</xf:group>
+				</xf:group>
+				<xf:group class="header-right" style="">
+					<xf:trigger class="btn-login" id="btnLogin" ev:onclick="scwin.btnLogin_onclick" type="button">
+						<xf:label><![CDATA[로그인/회원가입]]></xf:label>
+					</xf:trigger>
+					<w2:textbox id="txb_login" label="" style="width:150px;height:32px;text-align:left;font-size: 16px;"></w2:textbox>
 
-    		<!-- 사이드 메뉴 오버레이 -->
-    		<div class="side-menu-overlay" id="sideMenuOverlay" ev:onclick="scwin.closeSideMenu()"></div>
+					<xf:trigger class="btn-enterprise" id="btnEnterprise" ev:onclick="scwin.btnEnterprise_onclick" type="button">
+						<xf:label><![CDATA[기업 서비스]]></xf:label>
+					</xf:trigger>
+				</xf:group>
+			</xf:group>
 
-    		<!-- 사이드 메뉴 -->
-    		<nav class="side-menu" id="sideMenu">
-    			<w2:textbox class="side-menu-title" label="메뉴"></w2:textbox>
+			<!-- 사이드 메뉴 오버레이 -->
+			<div class="side-menu-overlay" id="sideMenuOverlay" ev:onclick="scwin.closeSideMenu()"></div>
 
-    			<div class="side-menu-section">
-    				<w2:textbox class="side-menu-section-title" label="매칭 서비스"></w2:textbox>
-    				<w2:anchor class="side-menu-item" ev:onclick="scwin.menu1_onclick">
-    					<xf:label><![CDATA[매칭]]></xf:label>
-    				</w2:anchor>
-    				<w2:anchor class="side-menu-item" ev:onclick="scwin.menu2_onclick">
-    					<xf:label><![CDATA[MBTI 검사]]></xf:label>
-    				</w2:anchor>
-    				<w2:anchor class="side-menu-item" ev:onclick="scwin.menu3_onclick">
-    					<xf:label><![CDATA[기업 둘러보기]]></xf:label>
-    				</w2:anchor>
-    			</div>
+			<!-- 사이드 메뉴 -->
+			<nav class="side-menu" id="sideMenu">
+				<w2:textbox class="side-menu-title" label="메뉴"></w2:textbox>
 
-    		</nav>
+				<div class="side-menu-section">
+					<w2:textbox class="side-menu-section-title" label="매칭 서비스"></w2:textbox>
+					<w2:anchor class="side-menu-item" ev:onclick="scwin.menu1_onclick">
+						<xf:label><![CDATA[매칭]]></xf:label>
+					</w2:anchor>
+					<w2:anchor class="side-menu-item" ev:onclick="scwin.menu2_onclick">
+						<xf:label><![CDATA[MBTI 검사]]></xf:label>
+					</w2:anchor>
+					<w2:anchor class="side-menu-item" ev:onclick="scwin.menu3_onclick">
+						<xf:label><![CDATA[기업 둘러보기]]></xf:label>
+					</w2:anchor>
+				</div>
 
+			</nav>
 
-    		<!-- 푸터 -->
-    		<xf:group class="footer" tagname="footer">
-    			<w2:textbox class="footer-title" label="WeaveType"></w2:textbox>
-    			<w2:textbox class="footer-text" label="(주)위브타입 | 대표이사 홍길동 | 대표고객문의 support@weavetype.com"></w2:textbox>
-    			<w2:textbox class="footer-text" label="서울특별시 강남구 테헤란로 123 위브타워 15층 | 전화번호: 02-123-4567"></w2:textbox>
-    			<w2:textbox class="footer-text" label="© 2023 WeaveType Inc. All Rights Reserved."></w2:textbox>
-    		</xf:group>
-
-    	</xf:group>
-    	<w2:pageFrame style="height: 300px;" id="pf_main" src="/InsWebApp/ui/common/weaveTypeMain.xml"></w2:pageFrame>
-    </body>
+		</xf:group>
+		<w2:pageFrame style="height:1958px;" id="pf_main" src="/InsWebApp/ui/common/weaveTypeMain.xml"></w2:pageFrame>
+	</body>
 </html>
