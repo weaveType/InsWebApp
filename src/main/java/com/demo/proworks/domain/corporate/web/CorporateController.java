@@ -124,8 +124,6 @@ public class CorporateController {
 	@ElValidator(errUrl = "/corporate/corporateRegister", errContinue = true)
 	@ElDescription(sub = "회사정보 갱신처리", desc = "회사정보를 갱신 처리 한다.")
 	public void updateCorporate(CorporateVo corporateVo) throws Exception {
-
-	System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 니가 와 일로오노?");
 		corporateService.updateCorporate(corporateVo);
 	}
 
@@ -166,7 +164,6 @@ public class CorporateController {
 	@RequestMapping(value = "CP0002Upd")
 	@ElDescription(sub = "회사정보 갱신처리", desc = "이메일로 회사정보를 갱신 처리 한다.")
 	public void updateCorporateByEmail(CorporateVo corporateVo) throws Exception {
-		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>> 여기로 또 안오나");
 		corporateService.updateCorporateByEmail(corporateVo);
 	}
 

@@ -62,7 +62,7 @@
                 margin-bottom: 30px;
             }
             
-            .login-title {
+            .login-title2 {
                 font-size: 24px;
                 font-weight: bold;
                 color: #333;
@@ -105,18 +105,6 @@
                 position: relative;
             }
             
-            .password-toggle {
-                position: absolute;
-                right: 10px;
-                top: 50%;
-                transform: translateY(-50%);
-                background: none;
-                border: none;
-                font-size: 12px;
-                color: #666;
-                cursor: pointer;
-            }
-            
             .checkbox-group {
                 display: flex;
                 align-items: center;
@@ -132,7 +120,7 @@
                 color: #666;
             }
             
-            .btn-login {
+            .btn-login2 {
                 width: 100%;
                 height: 45px;
                 background-color: #007bff;
@@ -145,11 +133,11 @@
                 transition: background-color 0.3s;
             }
             
-            .btn-login:hover {
+            .btn-login2:hover {
                 background-color: #0056b3;
             }
             
-            .btn-login:disabled {
+            .btn-login2:disabled {
                 background-color: #ccc;
                 cursor: not-allowed;
             }
@@ -178,7 +166,7 @@
                 font-size: 14px;
             }
         ]]></style>
-        <script type="text/javascript"><![CDATA[ scwin.onpageload = function () {
+        <script type="text/javascript"><![CDATA[scwin.onpageload = function () {
     // 페이지 로드 시 초기화
     scwin.initializeLogin();
 };
@@ -212,75 +200,37 @@ scwin.btn_login_onclick = function (e) {
 
 // 로그인 성공 시 처리
 scwin.sbm_login_submitdone = function (e) {
-
-    // WebSquare 응답 구조에 맞게 수정
-    var elHeader = e.responseJSON.elHeader;
     var userHeader = e.responseJSON.userHeader;
-    WebSquare.util.setData("userHeader", userHeader);
-    // 성공 여부 체크: elHeader.resSuc 사용
-    if (elHeader && elHeader.resSuc === true) {
+    $p.parent().scwin.setUserInfo(userHeader);
 
-        var role = userHeader.role;
-        // roleId에 따른 페이지 이동
-        if (role === "USER") {
-            // 일반 사용자 - 팝업 닫고 부모 페이지에서 weaveTypeMain.xml로 이동
-            if (window.opener) {
-                // 부모 창에서 메인 페이지로 이동
-                window.opener.$p.url("../common/weaveTypeMain.xml");
-                window.close();
-            } else {
-                // 팝업이 아닌 경우 직접 이동
-                $p.url("weaveTypeMain.xml");
-            }
-        } else if (role === "COMPANY") {
-            // 기업 사용자 - 채용 관리 대시보드로 이동
-            if (window.opener) {
-                // 팝업인 경우 부모 창에서 이동
-                window.opener.$p.url("../corporate/RecruitmentDashboard.xml");
-                window.close();
-            } else {
-                // 팝업이 아닌 경우 직접 이동
-                $p.url("../corporate/RecruitmentDashboard.xml");
-            }
-        } else {
-            // 예상치 못한 roleId
-            alert("알 수 없는 사용자 유형입니다. 관리자에게 문의하세요.");
-            console.log(role);
-            if (window.opener) {
-                window.close();
-            }
+    var role = userHeader.role;
+    // roleId에 따른 페이지 이동
+    if (role === "USER") {
+        $p.parent().pf_main.setSrc("../common/weaveTypeMain.xml");
+        $p.closePopup();
+
+    } else if (role === "COMPANY") {
+        $p.parent().pf_main.setSrc("../corporate/RecruitmentDashboard.xml");
+        $p.closePopup();
+
+    } else if (role === "ADMIN") {
+        // 관리자 페이지로 이동
+    }
+
+    else {
+        // 예상치 못한 roleId
+        alert("알 수 없는 사용자 유형입니다. 관리자에게 문의하세요.");
+        console.log(role);
+        if (window.opener) {
+            window.close();
         }
-    } else {
-        // 로그인 실패
-        var message = (elHeader && elHeader.resMsg) || "로그인에 실패했습니다. 아이디와 비밀번호를 확인해주세요.";
-        alert(message);
-
-        // 비밀번호 필드 초기화
-        inp_userPw.setValue("");
-        inp_userPw.focus();
     }
 };
 
 // 로그인 실패 시 처리
 scwin.sbm_login_submiterror = function (e) {
-    // 로그인 버튼 다시 활성화
     btn_login.setDisabled(false);
-
     alert("로그인 중 오류가 발생했습니다. 다시 시도해주세요.");
-    console.error("Login error:", e);
-};
-
-scwin.btn_password_show_onclick = function (e) {
-    var passwordField = inp_userPw;
-    var currentType = passwordField.getElement().type;
-
-    if (currentType === "password") {
-        passwordField.getElement().type = "text";
-        btn_password_show.setLabel("숨김");
-    } else {
-        passwordField.getElement().type = "password";
-        btn_password_show.setLabel("보기");
-    }
 };
 
 scwin.link_forgot_onclick = function (e) {
@@ -288,14 +238,9 @@ scwin.link_forgot_onclick = function (e) {
 };
 
 scwin.link_signup_onclick = function (e) {
-    if (window.opener) {
-        // 부모 창에서 메인 페이지로 이동
-        window.opener.$p.url("../user/Signup.xml");
-        window.close();
-    } else {
-        // 팝업이 아닌 경우 직접 이동
-        $p.url("../user/Signup.xml");
-    }
+    window.opener.$p.parent().pf_main.setSrc("../user/Signup.xml");
+    window.close();
+
 };
 
 // Enter 키 이벤트 처리
@@ -316,7 +261,7 @@ scwin.inp_userPw_onkeypress = function (e) {
         <xf:group class="login-container">
             <!-- 로그인 헤더 -->
             <xf:group class="login-header">
-                <w2:textbox class="login-title" label="로그인"></w2:textbox>
+                <w2:textbox class="login-title2" label="로그인"></w2:textbox>
                 <w2:textbox class="login-subtitle" label="WeaveType에 오신 것을 환영합니다"></w2:textbox>
             </xf:group>
             
@@ -332,15 +277,11 @@ scwin.inp_userPw_onkeypress = function (e) {
                 <xf:group class="password-group">
                     <xf:secret class="form-input" id="inp_userPw" placeholder="비밀번호를 입력하세요" 
                         ev:onkeypress="scwin.inp_userPw_onkeypress" ref="data:dmp_loginVo.password"></xf:secret>
-                    <xf:trigger class="password-toggle" id="btn_password_show" 
-                        ev:onclick="scwin.btn_password_show_onclick" type="button">
-                        <xf:label>보기</xf:label>
-                    </xf:trigger>
                 </xf:group>
             </xf:group>
             
             <!-- 로그인 버튼 -->
-            <xf:trigger class="btn-login" id="btn_login" 
+            <xf:trigger class="btn-login2" id="btn_login" 
                 ev:onclick="scwin.btn_login_onclick" type="button">
                 <xf:label>로그인</xf:label>
             </xf:trigger>
