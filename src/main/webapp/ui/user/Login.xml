@@ -202,8 +202,6 @@ scwin.btn_login_onclick = function (e) {
 scwin.sbm_login_submitdone = function (e) {
     var userHeader = e.responseJSON.userHeader;
     WebSquare.cookie.setCookie("userInfo", JSON.stringify(userHeader));
-    debugger;
-    console.log(userHeader);
     var role = userHeader.role;
 
     if (role === "USER") {

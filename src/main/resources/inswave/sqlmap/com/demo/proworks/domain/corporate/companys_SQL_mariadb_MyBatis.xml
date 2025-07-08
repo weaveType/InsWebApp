@@ -40,7 +40,7 @@
 	</insert>
 
 	<update id="updateCorporate" parameterType="com.demo.proworks.domain.corporate.vo.CorporateVo">
-		<!-- 회사정보를 갱신한다. -->
+<!-- 회사정보를 갱신한다. -->
 
 		UPDATE COMPANYS /* QueryID : com.demo.proworks.domain.corporate.updateCorporate */
 		SET
@@ -52,20 +52,19 @@
 		<if test="description         != null"> , DESCRIPTION = #{description}          </if>
 		<if test="logoFileName      != null"> , LOGO_FILE_NAME = #{logoFileName}       </if>
 		WHERE COMPANY_ID = #{companyId}
-	</update>
+</update>
 
 	<delete id="deleteCorporate" parameterType="com.demo.proworks.domain.corporate.vo.CorporateVo">
-		<!-- 회사정보를 삭제한다. -->
+<!-- 회사정보를 삭제한다. -->
 
-		UPDATE COMPANYS /* QueryID : com.demo.proworks.domain.corporate.deleteCorporate */
-		SET is_deleted = TRUE
-		WHERE
-		COMPANY_ID = #{companyId}
-	</delete>
+UPDATE COMPANYS /* QueryID : com.demo.proworks.domain.corporate.deleteCorporate */
+	SET is_deleted = TRUE, updated_at = NOW()
+WHERE COMPANY_ID = #{companyId} AND is_deleted = FALSE;
+</delete>
 
 	<select id="selectCorporate" parameterType="com.demo.proworks.domain.corporate.vo.CorporateVo"
 		resultType="com.demo.proworks.domain.corporate.vo.CorporateVo">
-		<!-- 회사정보를 상세 조회한다. -->
+<!-- 회사정보를 상세 조회한다. -->
 		SELECT /* QueryID : com.demo.proworks.domain.corporate.selectCorporate */
 		COMPANY_ID as companyId, BUSINESS_NUMBER as businessNumber,
 		BUSINESS_CERTIFICATE as businessCertificate, INDUSTRY as industry, EMP_COUNT as
@@ -73,12 +72,12 @@
 		logoFileName
 		FROM COMPANYS
 		WHERE
-		COMPANY_ID = #{companyId}
-	</select>
+		COMPANY_ID = #{companyId} AND is_deleted = FALSE;
+</select>
 
 	<select id="selectListCorporate" parameterType="com.demo.proworks.domain.corporate.vo.CorporateVo"
 		resultType="com.demo.proworks.domain.corporate.vo.CorporateVo">
-		<!-- 회사정보 목록을 조회한다. -->
+<!-- 회사정보 목록을 조회한다. -->
 		SELECT /* QueryID : com.demo.proworks.domain.corporate.selectListCorporate */
 		COMPANY_ID as companyId, BUSINESS_NUMBER as businessNumber,
 		BUSINESS_CERTIFICATE as businessCertificate, INDUSTRY as industry, EMP_COUNT as
@@ -91,13 +90,12 @@
 		*
 		FROM COMPANYS
 		WHERE 1=1
-		AND is_deleted = FALSE  <!--
-			is_deleted가 FALSE인 회사만 조회 -->
+		AND is_deleted = FALSE 
 
 		) S, (SELECT @ROWNUM := 0) TMP
 		) A
 		WHERE PAGE = #{pageIndex}
-	</select>
+</select>
 
 	<select id="selectListCountCorporate" parameterType="com.demo.proworks.domain.corporate.vo.CorporateVo" resultType="long">
 		<!-- 회사정보 목록의 카운트를 조회한다. -->
@@ -111,12 +109,12 @@
 	</select>
 	<select id="selectCorporateByEmail" parameterType="com.demo.proworks.domain.corporate.vo.CorporateVo"
 		resultType="com.demo.proworks.domain.corporate.vo.CorporateVo">
-		<!-- 이메일로 회사정보를 상세 조회한다. -->
+<!-- 이메일로 회사정보를 상세 조회한다. -->
 		SELECT /* QueryID : com.demo.proworks.domain.corporate.selectCorporateByEmail */ c.COMPANY_ID as companyId, c.BUSINESS_NUMBER as
 		businessNumber, c.BUSINESS_CERTIFICATE as businessCertificate, c.INDUSTRY as industry, c.EMP_COUNT as empCount, c.DESCRIPTION as
 		description, c.LOGO_FILE_NAME as logoFileName, u.NAME as name, u.email as email, u.password as password, r.role_name as role FROM COMPANYS
-		c INNER JOIN USERS u ON c.USER_ID = u.USER_ID LEFT JOIN ROLES r ON u.role_id = r.role_id WHERE u.email = #{email}
-	</select>
+		c INNER JOIN USERS u ON c.USER_ID = u.USER_ID LEFT JOIN ROLES r ON u.role_id = r.role_id WHERE u.email = #{email} AND is_deleted = FALSE;
+</select>
 
 <update id="updateCorporateByEmail" parameterType="com.demo.proworks.domain.corporate.vo.CorporateVo">
 <!-- 이메일로 회사정보 및 user 정보를 갱신한다. -->

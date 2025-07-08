@@ -44,7 +44,7 @@ scwin.updateHeaderUI = function () {
         btnLogin.hide();
         txb_login.show();
 
-        txb_login.setValue(userInfo.userId + " 님");
+        txb_login.setValue(userInfo.name + " 님");
     }
 };
 
@@ -154,42 +154,17 @@ scwin.login_popup_closeAction = function(result) {
         if (role === "USER") {
             pf_main.setSrc("weaveTypeMain.xml");
         } else if (role === "COMPANY") {
-            pf_main.setSrc("../corporate/RecruitmentDashboard.xml");
+            $p.url("../corporate/RecruitmentDashboard.xml");
         } else if (role === "ADMIN") {
-            pf_main.setSrc("../admin/AdminDashboard.xml");
+            
         } else {
             alert("알 수 없는 사용자 유형입니다. 관리자에게 문의하세요.");
-            console.log("Unknown role:", role);
         }
     }
     // 회원가입 페이지로 이동
     else if (result && result.action === "signup") {
-        console.log("회원가입 페이지로 이동");
-        pf_main.setSrc("../user/Signup.xml");
+       btnLogin_onclick();
     }
-};
-
-// 페이지 이동 함수 (메인 페이지에 선언)
-scwin.navigateToPage = function(pagePath, pageData, menuCode) {
-    // 현재 상태를 브라우저 히스토리에 저장
-    $c.win.pushState({
-        page: pagePath,
-        data: pageData,
-        menu: menuCode,
-        timestamp: new Date().getTime()
-    });
-    
-    // localStorage에도 백업 저장
-    localStorage.setItem('currentPageState', JSON.stringify({
-        page: pagePath,
-        data: pageData,
-        menu: menuCode
-    }));
-    
-    // 페이지 이동
-    pf_main.setSrc(pagePath, {
-        dataObject: pageData
-    });
 };]]></script>
 		<style type="text/css"><![CDATA[
             /* 기본 설정 */

@@ -137,6 +137,8 @@ public class CorporateController {
 	@RequestMapping(value = "CP0001Del")
 	@ElDescription(sub = "회사정보 삭제처리", desc = "회사정보를 삭제 처리한다.")
 	public void deleteCorporate(CorporateVo corporateVo) throws Exception {
+	
+		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 컨트롤러 : " + corporateVo.toString());
 		corporateService.deleteCorporate(corporateVo);
 	}
 

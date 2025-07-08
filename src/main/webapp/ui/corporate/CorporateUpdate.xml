@@ -20,6 +20,7 @@
 						<w2:key dataType="text" name="회사 설명" id="description"></w2:key>
 						<w2:key dataType="text" name="로고파일명" id="logoFileName"></w2:key>
 						<w2:key dataType="text" name="유저 권한" id="role"></w2:key>
+						<w2:key dataType="number" name="회사 ID" id="companyId"></w2:key>
 					</w2:keyInfo>
 				</w2:dataMap>
 				<w2:dataMap baseNode="map" id="dmp_searchCorporate">
@@ -40,15 +41,18 @@
 				replace="" errorHandler="" customHandler="" mode="asynchronous" processMsg="" ev:submit=""
 				ev:submitdone="scwin.sbm_updateCorporateVo_submitdone" ev:submiterror="" abortTrigger="">
 			</xf:submission>
-			<xf:submission id="sbm_selectCorporateVo" action="/InsWebApp/CP0002UpdView.pwkjson" method="post"
-				mediatype="application/json" ref='data:json,{"id":"dmp_searchCorporate","key":"emailVo"}'
-				target='data:json,{"id":"dmp_corporateVoDetail","key":"elData"}' encoding="UTF-8" instance="" replace="" errorHandler=""
-				customHandler="" mode="asynchronous" processMsg="회사정보를 조회 중입니다." ev:submit="" ev:submitdone="scwin.sbm_selectCorporateVo_submitdone"
-				ev:submiterror="" abortTrigger="">
+			<xf:submission id="sbm_selectCorporateVo" action="/InsWebApp/CP0002UpdView.pwkjson" method="post" mediatype="application/json"
+				ref='data:json,{"id":"dmp_searchCorporate","key":"emailVo"}' target='data:json,{"id":"dmp_corporateVoDetail","key":"elData"}'
+				encoding="UTF-8" instance="" replace="" errorHandler="" customHandler="" mode="asynchronous" processMsg="회사정보를 조회 중입니다." ev:submit=""
+				ev:submitdone="scwin.sbm_selectCorporateVo_submitdone" ev:submiterror="" abortTrigger="">
 			</xf:submission>
-			<xf:submission id="sbm_selectIndustryList" action="/InsWebApp/CP0001INDList.pwkjson" method="post"
-				mediatype="application/json" ref="" target='data:json,{"id":"dlt_industryList","key":"indusrtyVoList.industryList"}' encoding="UTF-8"
-				mode="asynchronous" processMsg="산업 목록을 조회 중입니다." ev:submitdone="scwin.sbm_selectIndustryList_submitdone">
+			<xf:submission id="sbm_selectIndustryList" action="/InsWebApp/CP0001INDList.pwkjson" method="post" mediatype="application/json"
+				ref="" target='data:json,{"id":"dlt_industryList","key":"indusrtyVoList.industryList"}' encoding="UTF-8" mode="asynchronous"
+				processMsg="산업 목록을 조회 중입니다." ev:submitdone="scwin.sbm_selectIndustryList_submitdone">
+			</xf:submission>
+			<xf:submission id="sbm_deleteCorporateVo" action="/InsWebApp/CP0001Del.pwkjson" method="post" mediatype="application/json"
+				ref='data:json,{"id":"dmp_corporateVoDetail","key":"corporateVo"}' target="" encoding="UTF-8" instance="" replace="" errorHandler="" customHandler="" mode="asynchronous" processMsg=""
+				ev:submit="" ev:submitdone="scwin.sbm_deleteCorporateVo_submitdone" ev:submiterror="" abortTrigger="">
 			</xf:submission>
 		</xf:model>
 		<w2:layoutInfo />
@@ -596,7 +600,32 @@ scwin.sbm_selectIndustryList_submitdone = function (e) {
     } catch (error) {
         alert("산업 목록 로드에 실패했습니다.");
     }
-};]]></script>
+};
+scwin.withdrawal_link_onclick = function () {
+
+    if (confirm) {
+        // 유효성 체크
+        var valInfo = [
+            { id: "companyId", mandatory: true }
+
+        ];
+
+        if ($c.data.validateGroup(grp_corporateInfo, valInfo) === true) {
+            var promise = $c.win.confirm("삭제하시겠습니까?");
+            promise.then(function (result) {
+                if (result) {
+                    // dmp_corporateVoDetail.set("companyId", companyId);
+                    $c.sbm.execute(sbm_deleteCorporateVo);
+                }
+            })
+        }
+    };
+};
+
+scwin.sbm_deleteCorporateVo_submitdone = function (e) {
+
+};
+]]></script>
 	</head>
 
 	<body ev:onpageload="scwin.onpageload">
@@ -640,7 +669,8 @@ scwin.sbm_selectIndustryList_submitdone = function (e) {
 					</xf:group>
 					<xf:group class="input-with-button">
 						<xf:input class="form-input-with-btn" placeholder="10자리 숫자" id="biz_reg_number"
-							ref="data:dmp_corporateVoDetail.businessNumber" readOnly="true"></xf:input>
+							ref="data:dmp_corporateVoDetail.businessNumber" readOnly="true">
+						</xf:input>
 						<xf:trigger class="check-btn" type="button" disabled="true">
 							<xf:label><![CDATA[검사]]></xf:label>
 						</xf:trigger>
@@ -669,8 +699,7 @@ scwin.sbm_selectIndustryList_submitdone = function (e) {
 				<xf:group class="form-group">
 					<w2:textbox class="form-label required" label="산업 선택"></w2:textbox>
 					<xf:select1 appearance="minimal" chooseOption="" chooseOptionLabel="산업을 선택하세요" class="form-select"
-						ref="data:dmp_corporateVoDetail.industry" style="width: 100% !important; height: 56px !important;" id="slt_industryBox"
-						allOption="">
+						ref="data:dmp_corporateVoDetail.industry" style="width: 100% !important; height: 56px !important;" id="slt_industryBox" allOption="">
 						<w2:itemset nodeset="data:dlt_industryList">
 							<w2:label ref="industryName"></w2:label>
 							<w2:value ref="industryCode"></w2:value>
@@ -689,7 +718,8 @@ scwin.sbm_selectIndustryList_submitdone = function (e) {
 				<xf:group class="form-group">
 					<w2:textbox class="form-label" label="회사 소개"></w2:textbox>
 					<xf:textarea class="form-textarea" placeholder="개발자들이 우리 회사를 이해할 수 있도록 자세히 작성해주세요."
-						ref="data:dmp_corporateVoDetail.description" id="description"></xf:textarea>
+						ref="data:dmp_corporateVoDetail.description" id="description">
+					</xf:textarea>
 					<w2:textbox class="help-text" label="개발자들이 우리 회사를 이해할 수 있도록 자세히 작성해주세요."></w2:textbox>
 				</xf:group>
 
@@ -731,10 +761,18 @@ scwin.sbm_selectIndustryList_submitdone = function (e) {
 					<xf:trigger class="btn-cancel" type="button">
 						<xf:label><![CDATA[취소]]></xf:label>
 					</xf:trigger>
-					<xf:trigger class="btn-primary" type="button" id="btn_update_corporate" ev:onclick="scwin.btn_create_update_onclick">
+
+					<xf:trigger class="btn-primary" ev:onclick="scwin.btn_create_update_onclick" id="trigger2" type="button" style="">
 						<xf:label><![CDATA[수정하기]]></xf:label>
 					</xf:trigger>
 				</xf:group>
+				<xf:group style="text-align: center; margin-top: 20px;">
+					<w2:anchor class="withdrawal-link" id="withdrawal_link"
+						style="color: #9ca3af;font-size: 14px; text-decoration: underline; cursor: pointer;" ev:onclick="scwin.withdrawal_link_onclick">
+						<xf:label><![CDATA[탈퇴하기]]></xf:label>
+					</w2:anchor>
+				</xf:group>
+
 			</xf:group>
 		</xf:group>
 	</body>
