@@ -1097,7 +1097,7 @@ scwin.getResponsiveCenterPosition = function(options) {
         			<!-- 카드 3: MBTI 검사 -->
         			<xf:group class="card card-blue" id="card3" ev:onclick="scwin.card3_onclick">
         				<xf:group class="card-icon card-icon-blue">
-        					<xf:image src="" style="width: 150px;height: 150px;" id=""></xf:image>
+        					<xf:image src="/InsWebApp/images/ws5/code_check_image.png" style="width: 150px;height: 150px;" id=""></xf:image>
         				</xf:group>
         				<w2:textbox class="card-title" label="mbti검사"></w2:textbox>
         			</xf:group>
