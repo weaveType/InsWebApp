@@ -162,8 +162,17 @@ scwin.login_popup_closeAction = function (result) {
                 padding: 0 min(30px, 4vw);
             }
 
+            .header-container {
+                max-width: 1100px;
+                width: 100%;
+                margin: 0 auto;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                height: 100%;
+            }
+
             .header-left {
-                float: left;
                 display: flex;
                 align-items: center;
                 gap: 15px;
@@ -387,38 +396,40 @@ scwin.login_popup_closeAction = function (result) {
 		<xf:group class="main-wrap">
 
 			<!-- 헤더 영역 -->
-			<xf:group class="header clearfix" tagname="header">
-				<xf:group class="header-left" style="">
-					<!-- 햄버거 메뉴 -->
+			<xf:group class="header" tagname="header">
+				<xf:group class="header-container">
+					<xf:group class="header-left" style="">
+						<!-- 햄버거 메뉴 -->
 
 
-					<xf:group class="nav-menu" style="margin-top:-8px; margin-left: min(20px, 0vw);">
-						<xf:image src="/InsWebApp/images/ws5/codefit_logo.png" style="width:150px;height:50px;"
-							id="codeFITLogo" class="logo" ev:onclick="scwin.weaveTypeLogo_onclick">
-						</xf:image>
-						<w2:anchor class="nav-link" id="anchor1" ev:onclick="scwin.menu1_onclick" outerDiv="false"
-							style="margin-left: 20px;font-size: 16px;">
-							<xf:label><![CDATA[매칭]]></xf:label>
-						</w2:anchor>
-						<w2:anchor class="nav-link" id="anchor2" ev:onclick="scwin.menu2_onclick" outerDiv="false"
-							style="font-size: 16px;">
-							<xf:label><![CDATA[mbti검사]]></xf:label>
-						</w2:anchor>
-						<w2:anchor class="nav-link" id="anchor3" ev:onclick="scwin.menu3_onclick" outerDiv="false"
-							style="font-size: 16px;">
-							<xf:label><![CDATA[기업 둘러보기]]></xf:label>
-						</w2:anchor>
+						<xf:group class="nav-menu" style="margin-top:-8px;">
+							<xf:image src="/InsWebApp/images/ws5/codefit_logo.png" style="width:150px;height:50px;"
+								id="codeFITLogo" class="logo" ev:onclick="scwin.weaveTypeLogo_onclick">
+							</xf:image>
+							<w2:anchor class="nav-link" id="anchor1" ev:onclick="scwin.menu1_onclick" outerDiv="false"
+								style="margin-left: 20px;font-size: 16px;">
+								<xf:label><![CDATA[매칭]]></xf:label>
+							</w2:anchor>
+							<w2:anchor class="nav-link" id="anchor2" ev:onclick="scwin.menu2_onclick" outerDiv="false"
+								style="font-size: 16px;">
+								<xf:label><![CDATA[mbti검사]]></xf:label>
+							</w2:anchor>
+							<w2:anchor class="nav-link" id="anchor3" ev:onclick="scwin.menu3_onclick" outerDiv="false"
+								style="font-size: 16px;">
+								<xf:label><![CDATA[기업 둘러보기]]></xf:label>
+							</w2:anchor>
+						</xf:group>
 					</xf:group>
-				</xf:group>
-				<xf:group class="header-right" style="">
-					<xf:trigger class="btn-login" id="btnLogin" ev:onclick="scwin.btnLogin_onclick" type="button">
-						<xf:label><![CDATA[로그인/회원가입]]></xf:label>
-					</xf:trigger>
-					<w2:textbox id="txb_login" label="" style="width:150px;height:32px;text-align:left;font-size: 16px;"></w2:textbox>
+					<xf:group class="header-right" style="">
+						<xf:trigger class="btn-login" id="btnLogin" ev:onclick="scwin.btnLogin_onclick" type="button">
+							<xf:label><![CDATA[로그인/회원가입]]></xf:label>
+						</xf:trigger>
+						<w2:textbox id="txb_login" label="" style="width:150px;height:32px;text-align:left;font-size: 16px;"></w2:textbox>
 
-					<xf:trigger class="btn-enterprise" id="btnEnterprise" ev:onclick="scwin.btnEnterprise_onclick" type="button">
-						<xf:label><![CDATA[기업 서비스]]></xf:label>
-					</xf:trigger>
+						<xf:trigger class="btn-enterprise" id="btnEnterprise" ev:onclick="scwin.btnEnterprise_onclick" type="button">
+							<xf:label><![CDATA[기업 서비스]]></xf:label>
+						</xf:trigger>
+					</xf:group>
 				</xf:group>
 			</xf:group>
 
