@@ -46,8 +46,14 @@ public class ProworksUserHeader extends com.inswave.elfw.core.UserHeader {
     @ElDtoField(logicalName = "에러메시지", physicalName = "errMag", type = "String", typeKind = "", fldYn = "Yes", delimeterYn = "Yes", cryptoGbn = "", cryptoKind = "", length = 100, dotLen = 0, baseValue = "", desc = "", attr = "")
     private String errMag;
 
+    @ElDtoField(logicalName = "유저 ID", physicalName = "userId", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private String userId;
+
     @ElDtoField(logicalName = "테스트", physicalName = "location", type = "String", typeKind = "", fldYn = "Yes", delimeterYn = "Yes", cryptoGbn = "", cryptoKind = "", length = 10, dotLen = 0, baseValue = "", desc = "", attr = "")
     private String location;
+
+    @ElDtoField(logicalName = "사용자ID", physicalName = "testId", type = "int", typeKind = "", fldYn = "No", delimeterYn = "No", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private int testId;
 
     @ElDtoField(logicalName = "테스트01 카운트", physicalName = "test01Cnt", type = "String", typeKind = "", fldYn = "No", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 11, dotLen = 0, baseValue = "", desc = "", attr = "")
     private String test01Cnt;
@@ -73,11 +79,11 @@ public class ProworksUserHeader extends com.inswave.elfw.core.UserHeader {
     @ElDtoField(logicalName = "권한", physicalName = "role", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
     private String role;
 
-    @ElDtoField(logicalName = "유저 ID", physicalName = "userId", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
-    private String userId;
+    @ElDtoField(logicalName = "유저이름", physicalName = "name", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private String name;
 
-    @ElDtoField(logicalName = "사용자ID", physicalName = "testId", type = "int", typeKind = "", fldYn = "No", delimeterYn = "No", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
-    private int testId;
+    @ElDtoField(logicalName = "로그인유저", physicalName = "accountId", type = "int", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private int accountId;
 
     @ElVoField(physicalName = "fldLen")
     public int getFldLen(){
@@ -155,6 +161,17 @@ public class ProworksUserHeader extends com.inswave.elfw.core.UserHeader {
         this.errMag = errMag;
     }
 
+    @ElVoField(physicalName = "userId")
+    public String getUserId(){
+        String ret = this.userId;
+        return ret;
+    }
+
+    @ElVoField(physicalName = "userId")
+    public void setUserId(String userId){
+        this.userId = userId;
+    }
+
     @ElVoField(physicalName = "location")
     public String getLocation(){
         String ret = this.location;
@@ -164,6 +181,16 @@ public class ProworksUserHeader extends com.inswave.elfw.core.UserHeader {
     @ElVoField(physicalName = "location")
     public void setLocation(String location){
         this.location = location;
+    }
+
+    @ElVoField(physicalName = "testId")
+    public int getTestId(){
+        return testId;
+    }
+
+    @ElVoField(physicalName = "testId")
+    public void setTestId(int testId){
+        this.testId = testId;
     }
 
     @ElVoField(physicalName = "test01Cnt")
@@ -252,25 +279,25 @@ public class ProworksUserHeader extends com.inswave.elfw.core.UserHeader {
         this.role = role;
     }
 
-    @ElVoField(physicalName = "userId")
-    public String getUserId(){
-        String ret = this.userId;
+    @ElVoField(physicalName = "name")
+    public String getName(){
+        String ret = this.name;
         return ret;
     }
 
-    @ElVoField(physicalName = "userId")
-    public void setUserId(String userId){
-        this.userId = userId;
+    @ElVoField(physicalName = "name")
+    public void setName(String name){
+        this.name = name;
     }
 
-    @ElVoField(physicalName = "testId")
-    public int getTestId(){
-        return testId;
+    @ElVoField(physicalName = "accountId")
+    public int getAccountId(){
+        return accountId;
     }
 
-    @ElVoField(physicalName = "testId")
-    public void setTestId(int testId){
-        this.testId = testId;
+    @ElVoField(physicalName = "accountId")
+    public void setAccountId(int accountId){
+        this.accountId = accountId;
     }
 
     @Override
@@ -284,7 +311,9 @@ public class ProworksUserHeader extends com.inswave.elfw.core.UserHeader {
         sb.append("sucYn").append("=").append(sucYn).append(",");
         sb.append("errorCode").append("=").append(errorCode).append(",");
         sb.append("errMag").append("=").append(errMag).append(",");
+        sb.append("userId").append("=").append(userId).append(",");
         sb.append("location").append("=").append(location).append(",");
+        sb.append("testId").append("=").append(testId).append(",");
         sb.append("test01Cnt").append("=").append(test01Cnt).append(",");
         sb.append("test01UserHeader").append("=").append(test01UserHeader).append(",");
         sb.append("test02UserHeader").append("=").append(test02UserHeader).append(",");
@@ -293,8 +322,8 @@ public class ProworksUserHeader extends com.inswave.elfw.core.UserHeader {
         sb.append("testDeptNo").append("=").append(testDeptNo).append(",");
         sb.append("email").append("=").append(email).append(",");
         sb.append("role").append("=").append(role).append(",");
-        sb.append("userId").append("=").append(userId).append(",");
-        sb.append("testId").append("=").append(testId);
+        sb.append("name").append("=").append(name).append(",");
+        sb.append("accountId").append("=").append(accountId);
         sb.append("]");
         return sb.toString();
 
