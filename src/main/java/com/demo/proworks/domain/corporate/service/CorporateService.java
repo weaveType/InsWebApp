@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.demo.proworks.common.vo.EmailVo;
+import com.demo.proworks.domain.corporate.vo.CorporateMainListVo;
+import com.demo.proworks.domain.corporate.vo.CorporateSearchVo;
 import com.demo.proworks.domain.corporate.vo.CorporateVo;
 import com.demo.proworks.domain.corporate.vo.IndusrtyVoList;
 
@@ -100,4 +102,13 @@ public interface CorporateService {
 	 * @throws ElException
 	 */
 	public int updateCorporateByEmail(CorporateVo vo) throws Exception;
+	
+	 /**
+	 * 권한 ID로 회사이름을 가져온다.
+	 *
+	 * @param corporateVo 회사정보 CorporateVo
+	 * @return 단건 조회 결과
+	 * @throws Exception
+	 */
+	public CorporateMainListVo selectCorporateMainList(CorporateSearchVo vo) throws Exception;
 }

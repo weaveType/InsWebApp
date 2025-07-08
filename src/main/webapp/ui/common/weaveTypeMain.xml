@@ -7,45 +7,30 @@
 		<w2:MSA />
 		<xf:model>
 			<w2:dataCollection baseNode="map">
-				<!-- 기업 검색 조건용 dataMap -->
-				<w2:dataMap id="dmp_company_search" baseNode="map">
+				<!-- 검색 조건용 dataMap -->
+				<w2:dataMap id="dmp_company_list" baseNode="map">
 					<w2:keyInfo>
+						<w2:key id="roleId" name="역할ID" dataType="text" defaultValue="2" />
 						<w2:key id="pageIndex" name="페이지번호" dataType="text" defaultValue="1" />
-						<w2:key id="pageSize" name="페이지사이즈" dataType="text" defaultValue="20" />
-						<w2:key id="searchKeyword" name="검색키워드" dataType="text" />
-						<w2:key id="industry" name="업종" dataType="text" />
+						<w2:key id="pageSize" name="페이지크기" dataType="text" defaultValue="12" />
 					</w2:keyInfo>
 				</w2:dataMap>
 
-				<!-- 기업 리스트 데이터 -->
+				<!-- 회사 목록용 dataList -->
 				<w2:dataList baseNode="list" repeatNode="map" id="dlt_company_list" saveRemovedData="true">
 					<w2:columnInfo>
-						<w2:column id="companyId" name="기업ID" dataType="text" />
-						<w2:column id="companyName" name="기업명" dataType="text" />
-						<w2:column id="logoFileName" name="로고파일명" dataType="text" />
-						<w2:column id="industry" name="업종" dataType="text" />
-						<w2:column id="empCount" name="직원수" dataType="text" />
-						<w2:column id="description" name="기업설명" dataType="text" />
+						<w2:column dataType="text" id="userId" name="사용자ID"></w2:column>
+						<w2:column dataType="text" id="companyName" name="회사명"></w2:column>
 					</w2:columnInfo>
 				</w2:dataList>
-
-				<!-- 기업 리스트 응답 정보 -->
-				<w2:dataMap id="dmp_company_response" baseNode="map">
-					<w2:keyInfo>
-						<w2:key id="totalCount" name="총기업수" dataType="text" defaultValue="0" />
-						<w2:key id="currentPage" name="현재페이지" dataType="text" defaultValue="1" />
-						<w2:key id="totalPages" name="총페이지수" dataType="text" defaultValue="0" />
-					</w2:keyInfo>
-				</w2:dataMap>
 			</w2:dataCollection>
 
-			<w2:workflowCollection />
+			<w2:workflowCollection></w2:workflowCollection>
 
-			<!-- 기업 리스트 조회 submission -->
-			<xf:submission id="sbm_selectCompanyList" ref='data:json,{"id":"dmp_company_search","key":"searchVo"}'
-				target='data:json,[{"id":"dlt_company_list","key":"elData.companyList"},{"id":"dmp_company_response","key":"elData"}]'
-				action="/InsWebApp/CP0003List.pwkjson" method="post" mediatype="application/json" encoding="UTF-8" mode="asynchronous"
-				processMsg="매칭 참여 기업 목록을 조회 중입니다." ev:submitdone="scwin.sbm_selectCompanyList_submitdone"
+			<!-- 회사 목록 조회 Submission -->
+			<xf:submission id="sbm_selectCompanyList" action="/InsWebApp/CP0003List.pwkjson" method="post" mediatype="application/json"
+				ref='data:json,{"id":"dmp_company_list","key":"searchVo"}' target='data:json,{"id":"dlt_company_list","key":"elData.companyList"}'
+				mode="asynchronous" encoding="UTF-8" processMsg="참여 기업 목록을 조회 중입니다." ev:submitdone="scwin.sbm_selectCompanyList_submitdone"
 				ev:submiterror="scwin.sbm_selectCompanyList_submiterror">
 			</xf:submission>
 		</xf:model>
@@ -64,25 +49,8 @@ scwin.onpageload = function () {
         return true; // 팝업 닫기 허용
     };
 
-    // 검색 이벤트 바인딩
-    setTimeout(function () {
-        var searchInput = document.getElementById('searchInput');
-        var searchBtn = document.getElementById('btnSearch');
-
-        if (searchInput) {
-            searchInput.addEventListener('keydown', function (e) {
-                if (e.keyCode === 13) {
-                    scwin.performSearch();
-                }
-            });
-        }
-
-        if (searchBtn) {
-            searchBtn.addEventListener('click', function () {
-                scwin.performSearch();
-            });
-        }
-    }, 100);
+    // 페이지 로드 시 회사 목록 조회
+    scwin.loadCompanyList();
 };
 
 // 로그인 관련 팝업 호출 함수들
@@ -301,6 +269,105 @@ scwin.getResponsiveCenterPosition = function(options) {
        left: leftPos,
        top: topPos
    };
+};
+
+/**
+ * 회사 목록 조회
+ */
+scwin.loadCompanyList = function() {
+    // role_id=2 (COMPANY) 사용자들 조회
+    dmp_company_list.set("roleId", "2");
+    
+    // 서버 통신 실행
+    $c.sbm.execute($p, sbm_selectCompanyList);
+};
+
+/**
+ * 회사 목록 조회 성공 콜백
+ */
+scwin.sbm_selectCompanyList_submitdone = function(e) {
+    try {
+        // 응답 데이터 확인
+        var elData = e.responseJSON.elData;
+        var elHeader = e.responseJSON.elHeader;
+        
+        if (elHeader && elHeader.resSuc === false) {
+            $c.win.alert(`에러코드: ${elHeader.resCode}\n에러메시지: ${elHeader.resMsg}`);
+            return false;
+        }
+        
+        // 총 회사 수 업데이트
+        var totalCount = dlt_company_list.getRowCount();
+        txt_company_count.setLabel(`참여 기업: ${totalCount}개`);
+        
+        // 동적으로 회사 목록 생성
+        scwin.createCompanyList();
+        
+    } catch (error) {
+        console.error("회사 목록 조회 처리 중 오류:", error);
+        $c.win.alert("회사 목록을 불러오는 중 오류가 발생했습니다.");
+    }
+};
+
+/**
+ * 회사 목록 조회 에러 콜백
+ */
+scwin.sbm_selectCompanyList_submiterror = function(e) {
+    console.error("회사 목록 조회 실패:", e);
+    $c.win.alert("회사 목록을 불러오는데 실패했습니다.");
+};
+
+/**
+ * 동적으로 회사 목록 UI 생성
+ */
+scwin.createCompanyList = function() {
+    // 기존 내용 클리어
+    var container = grp_companies_container;
+    container.removeChild();
+    
+    var rowCount = dlt_company_list.getRowCount();
+    var companiesPerRow = 4; // 한 행당 회사 수
+    
+    for (var i = 0; i < rowCount; i += companiesPerRow) {
+        // 행 그룹 생성
+        var rowGroup = $c.util.createComponent(
+            `company_row_${Math.floor(i/companiesPerRow)}`, 
+            "group", 
+            { "class": "company-row" }, 
+            container
+        );
+        
+        // 각 행에 회사 아이템들 추가
+        for (var j = i; j < Math.min(i + companiesPerRow, rowCount); j++) {
+            var companyData = dlt_company_list.getRowJSON(j);
+            
+            // 회사 아이템 그룹 생성
+            var itemGroup = $c.util.createComponent(
+                `company_item_${j}`, 
+                "group", 
+                { "class": "company-item" }, 
+                rowGroup
+            );
+            
+            // 회사명 텍스트박스 생성
+            var companyTextbox = $c.util.createComponent(
+                `company_name_${j}`, 
+                "textbox", 
+                { 
+                    "class": "company-name",
+                    "label": companyData.companyName || "회사명 없음"
+                }, 
+                itemGroup
+            );
+        }
+    }
+};
+
+/**
+ * 회사 목록 새로고침
+ */
+scwin.refreshCompanyList = function() {
+    scwin.loadCompanyList();
 };]]></script>
 		<style type="text/css"><![CDATA[
             /* 기본 설정 */
@@ -1182,53 +1249,10 @@ scwin.getResponsiveCenterPosition = function(options) {
 			<!-- 매칭 참여 기업 섹션 -->
 			<xf:group class="section section-white" tagname="section">
 				<w2:textbox class="section-title" label="매칭 참여 기업"></w2:textbox>
-				<w2:textbox class="section-subtitle" label="참여 기업: 253개"></w2:textbox>
+				<w2:textbox class="section-subtitle" id="txt_company_count" label="참여 기업: 0개"></w2:textbox>
 
-				<xf:group class="companies-container">
-					<xf:group class="company-row">
-						<xf:group class="company-item">
-							<w2:textbox class="company-name" label="������️ kakaobank"></w2:textbox>
-						</xf:group>
-						<xf:group class="company-item">
-							<w2:textbox class="company-name" label="(주)카카오페이"></w2:textbox>
-						</xf:group>
-						<xf:group class="company-item">
-							<w2:textbox class="company-name" label="(주)파라다이스"></w2:textbox>
-						</xf:group>
-						<xf:group class="company-item">
-							<w2:textbox class="company-name" label="������ SHINSEGAE"></w2:textbox>
-						</xf:group>
-					</xf:group>
-
-					<xf:group class="company-row">
-						<xf:group class="company-item">
-							<w2:textbox class="company-name" label="현대로템(주)"></w2:textbox>
-						</xf:group>
-						<xf:group class="company-item">
-							<w2:textbox class="company-name" label="������ DAS"></w2:textbox>
-						</xf:group>
-						<xf:group class="company-item">
-							<w2:textbox class="company-name" label="������ com2uS"></w2:textbox>
-						</xf:group>
-						<xf:group class="company-item">
-							<w2:textbox class="company-name" label="(주)원티드랩"></w2:textbox>
-						</xf:group>
-					</xf:group>
-
-					<xf:group class="company-row">
-						<xf:group class="company-item">
-							<w2:textbox class="company-name" label="⛽ S-OIL(주)"></w2:textbox>
-						</xf:group>
-						<xf:group class="company-item">
-							<w2:textbox class="company-name" label="한국전력공사"></w2:textbox>
-						</xf:group>
-						<xf:group class="company-item">
-							<w2:textbox class="company-name" label="������ 그린케미칼"></w2:textbox>
-						</xf:group>
-						<xf:group class="company-item">
-							<w2:textbox class="company-name" label="케이티(KT)"></w2:textbox>
-						</xf:group>
-					</xf:group>
+				<xf:group class="companies-container" id="grp_companies_container">
+					<!-- 동적으로 생성될 회사 목록 영역 -->
 				</xf:group>
 			</xf:group>
 

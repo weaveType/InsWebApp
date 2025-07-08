@@ -12,6 +12,8 @@ import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
 import com.demo.proworks.domain.corporate.service.CorporateService;
+import com.demo.proworks.domain.corporate.vo.CorporateMainListVo;
+import com.demo.proworks.domain.corporate.vo.CorporateSearchVo;
 import com.demo.proworks.domain.corporate.vo.CorporateVo;
 import com.demo.proworks.domain.corporate.vo.IndusrtyVoList;
 import com.demo.proworks.domain.user.dao.UserDAO;
@@ -186,6 +188,23 @@ public class CorporateServiceImpl implements CorporateService {
 		String hashedPassword = BCrypt.hashpw(vo.getPassword(), BCrypt.gensalt(12));
 		vo.setPassword(hashedPassword);
 		return corporateDAO.updateCorporateByEmail(vo);
+	}
+
+	/**
+	 * roleId로 회사 이름을 가져온다.
+	 *
+	 * @process 1. 회사정보를 상세 조회한다. 2. 결과 CorporateVo을(를) 리턴한다.
+	 * 
+	 * @param corporateVo 회사정보 CorporateVo
+	 * @return 단건 조회 결과
+	 * @throws Exception
+	 */
+	public CorporateMainListVo selectCorporateMainList(CorporateSearchVo vo) throws Exception {
+		CorporateMainListVo resultVO = corporateDAO.selectCorporateMainList(vo);
+		resultVO.setTotalCount(corporateDAO.selectListCountCorporate(new CorporateVo()));
+		System.out.println(
+				">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> CorporateMainListVo : " + resultVO.toString());
+		return resultVO;
 	}
 
 }
