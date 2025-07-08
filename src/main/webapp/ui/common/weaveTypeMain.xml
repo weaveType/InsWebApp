@@ -680,8 +680,8 @@ scwin.getResponsiveCenterPosition = function(options) {
             }
 
             .card-icon {
-                width: 80px;
-                height: 80px;
+                width: 150px;
+                height: 150px;
                 border-radius: 10px;
                 margin: 0 auto 20px;
             }
@@ -1085,27 +1085,27 @@ scwin.getResponsiveCenterPosition = function(options) {
         		<xf:group class="cards-container">
         			<!-- 카드 1: 튜토리얼 -->
         			<xf:group class="card card-green" id="card1" ev:onclick="scwin.card1_onclick">
-        				<xf:group class="card-icon card-icon-green"></xf:group>
+        				<xf:group class="card-icon card-icon-green">
+        					<xf:image src="/InsWebApp/images/ws5/tutorial_image.png" style="width: 150px;height: 150px;" id=""></xf:image>
+        				</xf:group>
         				<w2:textbox class="card-title" label="튜토리얼"></w2:textbox>
         			</xf:group>
 
         			<!-- 카드 2: 자소서 업체검토 -->
-        			<xf:group class="card card-orange" id="card2" ev:onclick="scwin.card2_onclick">
-        				<xf:group class="card-icon card-icon-orange"></xf:group>
-        				<w2:textbox class="card-text" label="자소서와 입사지원은"></w2:textbox>
-        				<w2:textbox class="card-text" label="이제 그만!"></w2:textbox>
-        				<w2:textbox style="" label="매칭 프로필 등록하면" class="card-text"></w2:textbox>
-        				<w2:textbox style="position" label="기업의 제안이 도착해요." class="card-text"></w2:textbox>
-        				<w2:textbox class="card-small-text" label="매칭 프로필 등록하면 기업의 제안이 도착해요."></w2:textbox>
-        				<w2:anchor class="card-link" ev:onclick="scwin.btnProfile_onclick" outerDiv="false">
-        					<xf:label><![CDATA[매칭 프로필 채우기 >]]></xf:label>
-        				</w2:anchor>
-        			</xf:group>
+
 
         			<!-- 카드 3: MBTI 검사 -->
         			<xf:group class="card card-blue" id="card3" ev:onclick="scwin.card3_onclick">
-        				<xf:group class="card-icon card-icon-blue"></xf:group>
+        				<xf:group class="card-icon card-icon-blue">
+        					<xf:image src="" style="width: 150px;height: 150px;" id=""></xf:image>
+        				</xf:group>
         				<w2:textbox class="card-title" label="mbti검사"></w2:textbox>
+        			</xf:group>
+        			<xf:group class="card card-orange" id="card2" ev:onclick="scwin.card2_onclick">
+        				<xf:group class="card-icon card-icon-orange">
+        					<xf:image src="/InsWebApp/images/ws5/mbti_check_image.png" style="width: 150px;height: 150px;" id=""></xf:image>
+        				</xf:group>
+        				<w2:textbox class="card-title" label="코드분석" style=""></w2:textbox>
         			</xf:group>
         		</xf:group>
         	</xf:group>
