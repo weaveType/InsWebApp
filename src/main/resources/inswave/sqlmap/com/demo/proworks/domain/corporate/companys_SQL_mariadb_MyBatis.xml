@@ -56,10 +56,10 @@
 
 	<delete id="deleteCorporate" parameterType="com.demo.proworks.domain.corporate.vo.CorporateVo">
 <!-- 회사정보를 삭제한다. -->
-
-UPDATE COMPANYS /* QueryID : com.demo.proworks.domain.corporate.deleteCorporate */
-	SET is_deleted = TRUE, updated_at = NOW()
-WHERE COMPANY_ID = #{companyId} AND is_deleted = FALSE;
+		UPDATE COMPANYS /* QueryID : com.demo.proworks.domain.corporate.deleteCorporate */
+		SET is_deleted = TRUE
+		WHERE
+		COMPANY_ID = #{companyId}
 </delete>
 
 	<select id="selectCorporate" parameterType="com.demo.proworks.domain.corporate.vo.CorporateVo"
