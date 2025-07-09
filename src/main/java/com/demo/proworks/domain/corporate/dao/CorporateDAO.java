@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import com.inswave.elfw.exception.ElException;
 import com.demo.proworks.domain.corporate.vo.CorporateMainListVo;
+import com.demo.proworks.domain.corporate.vo.CorporateMainVo;
 import com.demo.proworks.domain.corporate.vo.CorporateSearchVo;
 import com.demo.proworks.domain.corporate.vo.CorporateVo;
 import com.demo.proworks.common.vo.EmailVo;
@@ -120,8 +121,8 @@ public class CorporateDAO extends com.demo.proworks.cmmn.dao.ProworksDefaultAbst
 	 * @return CorporateMainListVo 회사 리스트
 	 * @throws ElException
 	 */
-	public CorporateMainListVo selectCorporateMainList(CorporateSearchVo vo) throws ElException {
-		return (CorporateMainListVo) selectByPk("com.demo.proworks.domain.corporate.selectCorporateMainList", vo);
+	public List<CorporateMainVo> selectCorporateMainList(CorporateSearchVo vo) throws ElException {
+		return (List<CorporateMainVo>) list("com.demo.proworks.domain.corporate.selectCorporateMainList", vo);
 	}
 
 }

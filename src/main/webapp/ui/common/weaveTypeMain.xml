@@ -276,7 +276,7 @@ scwin.getResponsiveCenterPosition = function(options) {
  */
 scwin.loadCompanyList = function() {
     // role_id=2 (COMPANY) 사용자들 조회
-    dmp_corporateSearchVo.set("roleId", 2);
+    dmp_corporateSearchVo.set("6roleId", 2);
     dmp_corporateSearchVo.set("pageIndex", 1);
     dmp_corporateSearchVo.set("pageSize", 12);
     

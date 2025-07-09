@@ -13,20 +13,20 @@ public class CorporateMainListVo extends com.demo.proworks.cmmn.ProworksCommVO {
     public CorporateMainListVo(){
     }
 
-    @ElDtoField(logicalName = "회사정보", physicalName = "corporateSearchVo", type = "", typeKind = "List", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
-    private java.util.List<com.demo.proworks.domain.corporate.vo.CorporateSearchVo> corporateSearchVo;
+    @ElDtoField(logicalName = "회사정보", physicalName = "corporateMainVo", type = "", typeKind = "List", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private java.util.List<com.demo.proworks.domain.corporate.vo.CorporateMainVo> corporateMainVo;
 
     @ElDtoField(logicalName = "등록된 회사 수", physicalName = "totalCount", type = "long", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
     private long totalCount;
 
-    @ElVoField(physicalName = "corporateSearchVo")
-    public java.util.List<com.demo.proworks.domain.corporate.vo.CorporateSearchVo> getCorporateSearchVo(){
-        return corporateSearchVo;
+    @ElVoField(physicalName = "corporateMainVo")
+    public java.util.List<com.demo.proworks.domain.corporate.vo.CorporateMainVo> getCorporateMainVo(){
+        return corporateMainVo;
     }
 
-    @ElVoField(physicalName = "corporateSearchVo")
-    public void setCorporateSearchVo(java.util.List<com.demo.proworks.domain.corporate.vo.CorporateSearchVo> corporateSearchVo){
-        this.corporateSearchVo = corporateSearchVo;
+    @ElVoField(physicalName = "corporateMainVo")
+    public void setCorporateMainVo(java.util.List<com.demo.proworks.domain.corporate.vo.CorporateMainVo> corporateMainVo){
+        this.corporateMainVo = corporateMainVo;
     }
 
     @ElVoField(physicalName = "totalCount")
@@ -43,7 +43,7 @@ public class CorporateMainListVo extends com.demo.proworks.cmmn.ProworksCommVO {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("CorporateMainListVo [");
-        sb.append("corporateSearchVo").append("=").append(corporateSearchVo).append(",");
+        sb.append("corporateMainVo").append("=").append(corporateMainVo).append(",");
         sb.append("totalCount").append("=").append(totalCount);
         sb.append("]");
         return sb.toString();
@@ -56,8 +56,8 @@ public class CorporateMainListVo extends com.demo.proworks.cmmn.ProworksCommVO {
 
     @Override
     public void _xStreamEnc() {
-        for( int i=0 ; corporateSearchVo != null && i < corporateSearchVo.size() ; i++ ) {
-            com.demo.proworks.domain.corporate.vo.CorporateSearchVo vo = (com.demo.proworks.domain.corporate.vo.CorporateSearchVo)corporateSearchVo.get(i);
+        for( int i=0 ; corporateMainVo != null && i < corporateMainVo.size() ; i++ ) {
+            com.demo.proworks.domain.corporate.vo.CorporateMainVo vo = (com.demo.proworks.domain.corporate.vo.CorporateMainVo)corporateMainVo.get(i);
             vo._xStreamEnc();	 
         }
     }
@@ -65,8 +65,8 @@ public class CorporateMainListVo extends com.demo.proworks.cmmn.ProworksCommVO {
 
     @Override
     public void _xStreamDec() {
-        for( int i=0 ; corporateSearchVo != null && i < corporateSearchVo.size() ; i++ ) {
-            com.demo.proworks.domain.corporate.vo.CorporateSearchVo vo = (com.demo.proworks.domain.corporate.vo.CorporateSearchVo)corporateSearchVo.get(i);
+        for( int i=0 ; corporateMainVo != null && i < corporateMainVo.size() ; i++ ) {
+            com.demo.proworks.domain.corporate.vo.CorporateMainVo vo = (com.demo.proworks.domain.corporate.vo.CorporateMainVo)corporateMainVo.get(i);
             vo._xStreamDec();	 
         }
     }

@@ -200,10 +200,11 @@ public class CorporateServiceImpl implements CorporateService {
 	 * @throws Exception
 	 */
 	public CorporateMainListVo selectCorporateMainList(CorporateSearchVo vo) throws Exception {
-		CorporateMainListVo resultVO = corporateDAO.selectCorporateMainList(vo);
+		CorporateMainListVo resultVO = new CorporateMainListVo();
+		resultVO.setCorporateMainVo(corporateDAO.selectCorporateMainList(vo));
 		resultVO.setTotalCount(corporateDAO.selectListCountCorporate(new CorporateVo()));
-		System.out.println(
-				">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> CorporateMainListVo : " + resultVO.toString());
+		
+		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> resultVO : " + resultVO.toString());
 		return resultVO;
 	}
 

@@ -179,7 +179,6 @@ public class CorporateController {
 	@RequestMapping(value = "CP0003List")
 	@ElDescription(sub = "기업정보 목록조회", desc = "메인에 출력할 기업정보 목록 조회를 한다.")
 	public CorporateMainListVo selectCorporateMainList(CorporateSearchVo corporateSearchVo) throws Exception {
-        // 회사 목록 조회 (role_id = 2인 사용자들)
        return corporateService.selectCorporateMainList(corporateSearchVo);
             
     }
