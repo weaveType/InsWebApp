@@ -3,6 +3,7 @@ package com.demo.proworks.domain.post.service;
 import java.util.List;
 
 import com.demo.proworks.domain.post.vo.PostVo;
+import com.demo.proworks.domain.post.vo.TechStackVo;
 
 /**  
  * @subject     : 공고정보 관련 처리를 담당하는 인터페이스
@@ -71,5 +72,22 @@ public interface PostService {
      * @throws Exception
      */
 	public int deletePost(PostVo postVo) throws Exception;
+
+    /**
+     * 기술스택 목록을 조회한다.
+     *
+     * @return 기술스택 목록 List<TechStackVo>
+     * @throws Exception
+     */
+	public List<TechStackVo> selectListTechStack() throws Exception;
+
+    /**
+     * 공고 등록 시 선택된 기술스택들을 company_tech_stack_relation 테이블에 저장한다.
+     *
+     * @param  postVo 공고정보 PostVo (jobPostingId 포함)
+     * @param  techStackIds 선택된 기술스택 ID 목록
+     * @throws Exception
+     */
+	public void saveTechStackRelations(PostVo postVo, List<String> techStackIds) throws Exception;
 	
 }

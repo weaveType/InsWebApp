@@ -1,6 +1,8 @@
 package com.demo.proworks.domain.post.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -9,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.demo.proworks.domain.post.service.PostService;
 import com.demo.proworks.domain.post.vo.PostVo;
+import com.demo.proworks.domain.post.vo.TechStackVo;
 import com.demo.proworks.domain.post.dao.PostDAO;
 
 /**  
@@ -121,5 +124,53 @@ public class PostServiceImpl implements PostService {
 	public int deletePost(PostVo postVo) throws Exception {
 		return postDAO.deletePost(postVo);
 	}
+
+    /**
+     * 기술스택 목록을 조회한다.
+     *
+     * @process
+     * 1. 기술스택 목록을 조회한다.
+     * 
+     * @return 기술스택 목록 List<TechStackVo>
+     * @throws Exception
+     */
+    public List<TechStackVo> selectListTechStack() throws Exception {
+        return postDAO.selectListTechStack();
+    }
+
+    /**
+     * 공고 등록 시 선택된 기술스택들을 company_tech_stack_relation 테이블에 저장한다.
+     *
+     * @process
+     * 1. 기존 관계 데이터 삭제 (수정 시를 위해)
+     * 2. 선택된 기술스택들을 순회하며 관계 데이터 저장
+     * 
+     * @param  postVo 공고정보 PostVo (jobPostingId 포함)
+     * @param  techStackIds 선택된 기술스택 ID 목록
+     * @throws Exception
+     */
+    public void saveTechStackRelations(PostVo postVo, List<String> techStackIds) throws Exception {
+        String jobPostingId = postVo.getJobPostingId();
+        
+        if (jobPostingId == null || jobPostingId.trim().isEmpty()) {
+            throw new Exception("공고 ID가 없습니다.");
+        }
+        
+        // 기존 관계 데이터 삭제 (수정 시를 위해)
+        postDAO.deleteCompanyTechStackRelationByJobId(jobPostingId);
+        
+        // 선택된 기술스택들을 순회하며 관계 데이터 저장
+        if (techStackIds != null && !techStackIds.isEmpty()) {
+            for (String techStackId : techStackIds) {
+                if (techStackId != null && !techStackId.trim().isEmpty()) {
+                    Map<String, Object> params = new HashMap<>();
+                    params.put("jobPostingId", jobPostingId);
+                    params.put("techStackId", techStackId);
+                    
+                    postDAO.insertCompanyTechStackRelation(params);
+                }
+            }
+        }
+    }
 	
 }
