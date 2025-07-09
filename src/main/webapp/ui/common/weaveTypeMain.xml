@@ -52,7 +52,7 @@ scwin.onpageload = function () {
     };
 
     // 페이지 완전 로드 후 회사 목록 조회 (약간의 지연)
-    setTimeout(function() {
+    setTimeout(function () {
         console.log('회사 목록 조회 시작');
         scwin.loadCompanyList();
     }, 500);
@@ -293,34 +293,34 @@ scwin.loadCompanyList = function () {
  * 회사 목록 조회 성공 콜백
  */
 scwin.sbm_selectCompanyList_submitdone = function (e) {
-        // 응답 데이터 확인
-        var elData = e.responseJSON.elData;
-        var elHeader = e.responseJSON.elHeader;
+    // 응답 데이터 확인
+    var elData = e.responseJSON.elData;
+    var elHeader = e.responseJSON.elHeader;
 
-        if (elHeader && elHeader.resSuc === false) {
-            $c.win.alert(`에러코드: ${elHeader.resCode}\n에러메시지: ${elHeader.resMsg}`);
-            return false;
+    if (elHeader && elHeader.resSuc === false) {
+        $c.win.alert(`에러코드: ${elHeader.resCode}\n에러메시지: ${elHeader.resMsg}`);
+        return false;
+    }
+
+    // 총 회사 수 업데이트
+    var totalCount = dlt_company_list.getRowCount();
+    console.log('데이터 로드 완료. 총 회사 수:', totalCount);
+
+    // txt_company_count 컴포넌트 찾기 및 업데이트
+    try {
+        if (txt_company_count && txt_company_count.setLabel) {
+            txt_company_count.setLabel(`참여 기업: ${totalCount}개`);
+        } else {
+            console.warn('txt_company_count 컴포넌트를 찾을 수 없습니다.');
         }
+    } catch (error) {
+        console.error('회사 수 업데이트 오류:', error);
+    }
 
-        // 총 회사 수 업데이트
-        var totalCount = dlt_company_list.getRowCount();
-        console.log('데이터 로드 완료. 총 회사 수:', totalCount);
-        
-        // txt_company_count 컴포넌트 찾기 및 업데이트
-        try {
-            if (txt_company_count && txt_company_count.setLabel) {
-                txt_company_count.setLabel(`참여 기업: ${totalCount}개`);
-            } else {
-                console.warn('txt_company_count 컴포넌트를 찾을 수 없습니다.');
-            }
-        } catch (error) {
-            console.error('회사 수 업데이트 오류:', error);
-        }
-
-        // 동적으로 회사 목록 생성 (약간의 지연 후 실행)
-        setTimeout(function() {
-            scwin.createCompanyList();
-        }, 200);
+    // 동적으로 회사 목록 생성 (약간의 지연 후 실행)
+    setTimeout(function () {
+        scwin.createCompanyList();
+    }, 200);
 };
 
 /**
@@ -333,30 +333,30 @@ scwin.sbm_selectCompanyList_submiterror = function (e) {
 
 scwin.createCompanyList = function () {
     console.log('회사 목록 생성 시작');
-    
+
     // WebSquare 컴포넌트 객체 가져오기
     var containerComponent = grp_companies_container;
     if (!containerComponent) {
         console.error('회사 목록 컨테이너 컴포넌트를 찾을 수 없습니다.');
         return;
     }
-    
+
     // setTimeout을 사용해서 렌더링 완료 후 실행
-    setTimeout(function() {
+    setTimeout(function () {
         try {
             // 다양한 방법으로 DOM 요소 찾기 시도
             var container = null;
-            
+
             // 방법 1: 컴포넌트의 실제 DOM 요소 찾기
             if (containerComponent.getRef && typeof containerComponent.getRef === 'function') {
                 container = containerComponent.getRef();
             }
-            
+
             // 방법 2: ID로 직접 찾기
             if (!container) {
                 container = document.getElementById('grp_companies_container');
             }
-            
+
             // 방법 3: 클래스명으로 찾기
             if (!container) {
                 var elements = document.getElementsByClassName('companies-container');
@@ -364,12 +364,12 @@ scwin.createCompanyList = function () {
                     container = elements[0];
                 }
             }
-            
+
             // 방법 4: querySelector 사용
             if (!container) {
                 container = document.querySelector('.companies-container');
             }
-            
+
             if (!container) {
                 console.error('회사 목록 컨테이너 DOM 요소를 찾을 수 없습니다.');
                 // 대안: 컴포넌트 내부에 직접 HTML 삽입
@@ -379,25 +379,25 @@ scwin.createCompanyList = function () {
                 }
                 return;
             }
-            
+
             console.log('컨테이너 DOM 요소를 찾았습니다:', container);
-            
+
             // 기존 내용 제거
             container.innerHTML = '';
-            
+
             // DataList에서 데이터 가져오기
             var rowCount = dlt_company_list.getRowCount();
             console.log('회사 데이터 행 수:', rowCount);
-            
+
             if (rowCount === 0) {
                 container.innerHTML = '<div style="text-align: center; padding: 40px; color: #666; font-size: 16px;">등록된 기업이 없습니다.</div>';
                 return;
             }
-            
+
             // 회사 데이터를 그룹화하여 행별로 표시 (한 행에 4개씩)
             var companiesPerRow = 4;
             var currentRow = null;
-            
+
             for (var i = 0; i < rowCount; i++) {
                 // 새로운 행 생성 (4개마다)
                 if (i % companiesPerRow === 0) {
@@ -405,65 +405,79 @@ scwin.createCompanyList = function () {
                     currentRow.className = 'company-row';
                     container.appendChild(currentRow);
                 }
-                
+
                 // 회사 데이터 가져오기
                 var companyData = {
                     userId: dlt_company_list.getCellData(i, 'userId'),
                     name: dlt_company_list.getCellData(i, 'name') || '회사명 없음',
                     logoFileName: dlt_company_list.getCellData(i, 'logoFileName')
                 };
-                
-                console.log('회사 데이터 ' + (i+1) + ':', companyData);
-                
+
+                console.log('회사 데이터 ' + (i + 1) + ':', companyData);
+
                 // 회사 카드 요소 생성
                 var companyCard = document.createElement('div');
                 companyCard.className = 'company-item';
                 companyCard.style.cursor = 'pointer';
-                
+
                 // 로고가 있는 경우와 없는 경우 분기
                 var cardContent = '';
                 if (companyData.logoFileName && companyData.logoFileName.trim() !== '') {
-                    // 로고가 있는 경우
+
+                    const prefix = "C:\\fakepath\\";
+                    const testFile = companyData.logoFileName.substring(prefix.length);
+                    console.log(testFile); // 테스트용
                     cardContent = '<div style="display: flex; align-items: center; justify-content: center; height: 100%; gap: 10px;">' +
-                                 '<img src="/InsWebApp/upload/logo/' + companyData.logoFileName + '" ' +
-                                 'style="max-width: 40px; max-height: 40px; object-fit: contain;" ' +
-                                 'onerror="this.style.display=\'none\'; this.nextElementSibling.style.display=\'block\';" alt="' + companyData.name + ' 로고" />' +
-                                 '<span class="company-name" style="display: none;">' + companyData.name + '</span>' +
-                                 '<span class="company-name" style="font-weight: 500;">' + companyData.name + '</span>' +
-                                 '</div>';
-                } else {
+                        '<img src="/InsWebApp/upload/logo/' + testFile + '" ' +
+                        'style="max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain;" ' +
+                        'onerror="this.style.display=\'none\'; this.nextElementSibling.style.display=\'block\';" alt="' + companyData.name + ' 로고" />' +
+                        '<span class="company-name" style="display: none;">' + companyData.name + '</span>' +
+                        '<span class="company-name" style="font-weight: 500;">' + companyData.name + '</span>' +
+                        '</div>';
+                }
+
+                // 로고가 있는 경우
+                //     cardContent = '<div style="display: flex; align-items: center; justify-content: center; height: 100%; gap: 10px;">' +
+                //         '<img src="/InsWebApp/upload/logo/' + companyData.logoFileName + '" ' +
+                //         'style="max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain;" ' +
+                //         'onerror="this.style.display=\'none\'; this.nextElementSibling.style.display=\'block\';" alt="' + companyData.name + ' 로고" />' +
+                //         '<span class="company-name" style="display: none;">' + companyData.name + '</span>' +
+                //         '<span class="company-name" style="font-weight: 500;">' + companyData.name + '</span>' +
+                //         '</div>';
+                // } 
+                else {
                     // 로고가 없는 경우
                     cardContent = '<div style="display: flex; align-items: center; justify-content: center; height: 100%;">' +
-                                 '<span class="company-name" style="font-weight: 500;">' + companyData.name + '</span>' +
-                                 '</div>';
+                        '<span class="company-name" style="font-weight: 500;">' + companyData.name + '</span>' +
+                        '</div>';
                 }
-                
+
                 companyCard.innerHTML = cardContent;
-                
+
                 // 클릭 이벤트 추가 (클로저 사용하여 데이터 바인딩)
-                (function(data) {
-                    companyCard.addEventListener('click', function() {
+                (function (data) {
+                    companyCard.addEventListener('click', function () {
                         scwin.onCompanyCardClick(data);
                     });
                 })(companyData);
-                
+
                 // 호버 효과 추가
-                companyCard.addEventListener('mouseenter', function() {
+                companyCard.addEventListener('mouseenter', function () {
                     this.style.backgroundColor = '#f8fbff';
                     this.style.borderColor = '#007bff';
                 });
-                
-                companyCard.addEventListener('mouseleave', function() {
+
+                companyCard.addEventListener('mouseleave', function () {
                     this.style.backgroundColor = '#fff';
                     this.style.borderColor = '#e8f0fe';
                 });
-                
+
                 // 현재 행에 카드 추가
                 currentRow.appendChild(companyCard);
             }
-            
+
             console.log('회사 목록이 성공적으로 생성되었습니다. 총 ' + rowCount + '개 기업');
-            
+
         } catch (error) {
             console.error('회사 목록 생성 중 오류 발생:', error);
         }
@@ -471,15 +485,15 @@ scwin.createCompanyList = function () {
 };
 
 // HTML 생성 헬퍼 함수
-scwin.generateCompanyListHTML = function() {
+scwin.generateCompanyListHTML = function () {
     var rowCount = dlt_company_list.getRowCount();
     if (rowCount === 0) {
         return '<div style="text-align: center; padding: 40px; color: #666; font-size: 16px;">등록된 기업이 없습니다.</div>';
     }
-    
+
     var html = '';
     var companiesPerRow = 4;
-    
+
     for (var i = 0; i < rowCount; i++) {
         if (i % companiesPerRow === 0) {
             if (i > 0) {
@@ -487,18 +501,18 @@ scwin.generateCompanyListHTML = function() {
             }
             html += '<div class="company-row">';
         }
-        
+
         var companyData = {
             userId: dlt_company_list.getCellData(i, 'userId'),
             name: dlt_company_list.getCellData(i, 'name') || '회사명 없음',
             logoFileName: dlt_company_list.getCellData(i, 'logoFileName')
         };
-        
+
         html += '<div class="company-item" style="cursor: pointer;" onclick="scwin.onCompanyCardClick({userId:' + companyData.userId + ',name:\'' + companyData.name + '\',logoFileName:\'' + (companyData.logoFileName || '') + '\'})">';
-        
+
         if (companyData.logoFileName && companyData.logoFileName.trim() !== '') {
             html += '<div style="display: flex; align-items: center; justify-content: center; height: 100%; gap: 10px;">';
-            html += '<img src="/InsWebApp/upload/logo/' + companyData.logoFileName + '" style="max-width: 40px; max-height: 40px; object-fit: contain;" alt="' + companyData.name + ' 로고" />';
+            html += '<img src="/InsWebApp/upload/logo/' + companyData.logoFileName + '" style="max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain;" alt="' + companyData.name + ' 로고" />';
             html += '<span class="company-name" style="font-weight: 500;">' + companyData.name + '</span>';
             html += '</div>';
         } else {
@@ -506,22 +520,22 @@ scwin.generateCompanyListHTML = function() {
             html += '<span class="company-name" style="font-weight: 500;">' + companyData.name + '</span>';
             html += '</div>';
         }
-        
+
         html += '</div>';
     }
-    
+
     if (rowCount > 0) {
         html += '</div>'; // 마지막 행 닫기
     }
-    
+
     return html;
 };
 
 /* 회사 카드 클릭 이벤트 핸들러 */
-scwin.onCompanyCardClick = function(companyData) {
+scwin.onCompanyCardClick = function (companyData) {
     // 회사 상세 정보 팝업 또는 페이지 이동
     console.log("선택된 회사:", companyData);
-    
+
     $c.win.alert(companyData.name + " 기업 정보 페이지로 이동합니다.\n(userId: " + companyData.userId + ")");
 };
 
