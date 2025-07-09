@@ -15,6 +15,8 @@ import com.demo.proworks.domain.corporate.service.CorporateService;
 import com.demo.proworks.domain.corporate.vo.CorporateVo;
 import com.demo.proworks.domain.corporate.vo.IndusrtyVoList;
 import com.demo.proworks.domain.corporate.vo.CorporateListVo;
+import com.demo.proworks.domain.corporate.vo.CorporateSearchVo;
+import com.demo.proworks.domain.corporate.vo.CorporateMainListVo;
 
 import com.inswave.elfw.annotation.ElDescription;
 import com.inswave.elfw.annotation.ElService;
@@ -137,22 +139,19 @@ public class CorporateController {
 	@RequestMapping(value = "CP0001Del")
 	@ElDescription(sub = "회사정보 삭제처리", desc = "회사정보를 삭제 처리한다.")
 	public void deleteCorporate(CorporateVo corporateVo) throws Exception {
-	
-		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 컨트롤러 : " + corporateVo.toString());
 		corporateService.deleteCorporate(corporateVo);
 	}
 
 	/**
-	 * 기업정보 목록을 조회합니다.
+	 * 산업 목록을 조회합니다.
 	 *
-	 * @param corporateVo 회사정보
-	 * @return 목록조회 결과
+	 * @return 산업 목록 조회 결과
 	 * @throws Exception
 	 */
 	@ElService(key = "CP0001INDList")
 	@RequestMapping(value = "CP0001INDList")
-	@ElDescription(sub = "기업정보 목록조회", desc = "모든 기업정보 목록 조회를 한다.")
-	public IndusrtyVoList IndusrtyList() throws Exception {
+	@ElDescription(sub = "산업 목록조회", desc = "산업 목록 조회를 한다.")
+	public IndusrtyVoList industryList() throws Exception {
 		return corporateService.industryList();
 	}
 
@@ -169,4 +168,18 @@ public class CorporateController {
 		corporateService.updateCorporateByEmail(corporateVo);
 	}
 
+	/**
+	 * 기업정보 목록을 조회합니다.
+	 *
+	 * @param corporateVo 회사정보
+	 * @return 목록조회 결과
+	 * @throws Exception
+	 */
+	@ElService(key = "CP0003List")
+	@RequestMapping(value = "CP0003List")
+	@ElDescription(sub = "기업정보 목록조회", desc = "메인에 출력할 기업정보 목록 조회를 한다.")
+	public CorporateMainListVo selectCorporateMainList(CorporateSearchVo corporateSearchVo) throws Exception {
+       return corporateService.selectCorporateMainList(corporateSearchVo);
+            
+    }
 }

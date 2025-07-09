@@ -453,13 +453,17 @@ scwin.uploadFiles = function () {
     // 사업자등록증명원 업로드
     if (hasBusinessCert) {
         business_cert_upload.submit();
+        var fullPath = logo_upload.getValue();
+        var fileName = fullPath.split('\\').pop(); // Extract filename
         dmp_corporateVoDetail.set("businessCertificate", business_cert_upload.getValue());
     }
 
     // 로고 업로드
     if (hasLogo) {
         logo_upload.submit();
-        dmp_corporateVoDetail.set("logoFileName", logo_upload.getValue());
+        var fullPath = logo_upload.getValue();
+        var fileName = fullPath.split('\\').pop(); // Extract filename
+        dmp_corporateVoDetail.set("logoFileName", fileName);
     }
 
     // 권한 부여
@@ -522,7 +526,7 @@ scwin.saveData = function () {
 
 scwin.sbm_insertCorporateVo_submitdone = function (e) {
     try {
-        $p.url("../company/RecruitmentDashboard.xml");
+        $p.url("../RecruitmentDashboard.xml");
     } catch (error) {
         // 페이지 이동이 실패한 경우 폼 초기화
         scwin.resetForm();
@@ -558,10 +562,10 @@ scwin.resetForm = function () {
 				</xf:group>
 
 				<!-- 패스워드 -->
-                <xf:group class="form-group">
-                    <w2:textbox class="form-label required" label="패스워드"></w2:textbox>
-                    <w2:secret class="form-input" plceholder="8자 이상 입력해주세요" ref="data:dmp_corporateVoDetail.password"></w2:secret>
-                </xf:group>
+				<xf:group class="form-group">
+					<w2:textbox class="form-label required" label="패스워드"></w2:textbox>
+					<w2:secret class="form-input" plceholder="8자 이상 입력해주세요" ref="data:dmp_corporateVoDetail.password"></w2:secret>
+				</xf:group>
 
 				<!-- 기업명 -->
 				<xf:group class="form-group">
@@ -589,26 +593,28 @@ scwin.resetForm = function () {
 				</xf:group>
 
 				<!-- 기업인증 (사업자등록증명원) -->
-                <xf:group class="form-group">
-                    <w2:textbox class="form-label" label="사업자등록증명원"></w2:textbox>
-                    <xf:group class="upload-container" id="cert_upload_container">
-                    	<w2:textbox class="upload-label" label="PDF, JPG, PNG 파일 업로드 (최대 10MB)"></w2:textbox>
-                    	<w2:upload imageStyle="position:absolute;vertical-align:middle;word-wrap:break-word"
-                    		inputStyle="vertical-align:middle;word-wrap:break-word" style="width: 250px;height: 23px;" id="business_cert_upload" ev:ondone="scwin.business_cert_upload_ondone" ev:onInputValueChange="scwin.business_cert_upload_onInputValueChange">
-                    	</w2:upload>
-                    	
-                        <div id="cert_file_info" class="file-info">
-                    		<span class="file-name" id="cert_file_name"></span>
-                    		<div>✓ 파일이 선택되었습니다</div>
-                    	</div>
-                    </xf:group>
-                </xf:group>
+				<xf:group class="form-group">
+					<w2:textbox class="form-label" label="사업자등록증명원"></w2:textbox>
+					<xf:group class="upload-container" id="cert_upload_container">
+						<w2:textbox class="upload-label" label="PDF, JPG, PNG 파일 업로드 (최대 10MB)"></w2:textbox>
+						<w2:upload imageStyle="position:absolute;vertical-align:middle;word-wrap:break-word"
+							inputStyle="vertical-align:middle;word-wrap:break-word" style="width: 250px;height: 23px;" id="business_cert_upload"
+							ev:ondone="scwin.business_cert_upload_ondone" ev:onInputValueChange="scwin.business_cert_upload_onInputValueChange">
+						</w2:upload>
+
+						<div id="cert_file_info" class="file-info">
+							<span class="file-name" id="cert_file_name"></span>
+							<div>✓ 파일이 선택되었습니다</div>
+						</div>
+					</xf:group>
+				</xf:group>
 
 				<!-- 산업 선택 -->
 				<xf:group class="form-group">
 					<w2:textbox class="form-label required" label="산업 선택"></w2:textbox>
 					<xf:select1 appearance="minimal" chooseOption="선택하기" class="form-select" ref="data:dmp_corporateVoDetail.industry"
-						id="industry" style="width: 100% !important; height: 56px !important; padding: 0 16px !important; border: 2px solid #e5e7eb !important; border-radius: 12px !important; font-size: 16px !important; color: #333 !important; background-color: #ffffff !important; appearance: none !important; cursor: pointer !important; transition: all 0.2s ease !important; box-sizing: border-box !important;">
+						id="industry"
+						style="width: 100% !important; height: 56px !important; padding: 0 16px !important; border: 2px solid #e5e7eb !important; border-radius: 12px !important; font-size: 16px !important; color: #333 !important; background-color: #ffffff !important; appearance: none !important; cursor: pointer !important; transition: all 0.2s ease !important; box-sizing: border-box !important;">
 						<xf:choices>
 							<xf:item>
 								<xf:label><![CDATA[IT/소프트웨어]]></xf:label>
@@ -650,8 +656,9 @@ scwin.resetForm = function () {
 					<xf:group class="upload-container" id="logo_upload_container">
 						<w2:textbox class="upload-label" label="PNG, JPG, SVG 파일 업로드 (최대 5MB)"></w2:textbox>
 						<w2:upload imageStyle="position:absolute;vertical-align:middle;word-wrap:break-word"
-							inputStyle="vertical-align:middle;word-wrap:break-word" style="width: 250px;height: 23px;" id="logo_upload" ev:ondone="scwin.logo_upload_ondone" ev:onInputValueChange="scwin.logo_upload_onInputValueChange">
-                        </w2:upload>
+							inputStyle="vertical-align:middle;word-wrap:break-word" style="width: 250px;height: 23px;" id="logo_upload"
+							ev:ondone="scwin.logo_upload_ondone" ev:onInputValueChange="scwin.logo_upload_onInputValueChange">
+						</w2:upload>
 
 						<div id="logo_file_info" class="file-info">
 							<span class="file-name" id="logo_file_name"></span>

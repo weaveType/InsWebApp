@@ -19,7 +19,7 @@ public class CorporateVo extends com.demo.proworks.cmmn.ProworksCommVO {
     @ElDtoField(logicalName = "이메일", physicalName = "email", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
     private String email;
 
-    @ElDtoField(logicalName = "비밀번호", physicalName = "password", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "IO+DB", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    @ElDtoField(logicalName = "비밀번호", physicalName = "password", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
     private String password;
 
     @ElDtoField(logicalName = "회사명", physicalName = "name", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
@@ -77,13 +77,12 @@ public class CorporateVo extends com.demo.proworks.cmmn.ProworksCommVO {
     @ElVoField(physicalName = "password")
     public String getPassword(){
         String ret = this.password;
-        ret = com.inswave.elfw.security.ElCryptoUtil.getEncrypt("", ret, true, true);
         return ret;
     }
 
     @ElVoField(physicalName = "password")
     public void setPassword(String password){
-        this.password = com.inswave.elfw.security.ElCryptoUtil.getDecrypt("", password, true, true);
+        this.password = password;
     }
 
     @ElVoField(physicalName = "name")
@@ -201,7 +200,7 @@ public class CorporateVo extends com.demo.proworks.cmmn.ProworksCommVO {
         sb.append("CorporateVo [");
         sb.append("companyId").append("=").append(companyId).append(",");
         sb.append("email").append("=").append(email).append(",");
-        sb.append("password").append("=").append(this.getPassword()).append(",");
+        sb.append("password").append("=").append(password).append(",");
         sb.append("name").append("=").append(name).append(",");
         sb.append("businessNumber").append("=").append(businessNumber).append(",");
         sb.append("businessCertificate").append("=").append(businessCertificate).append(",");
@@ -223,13 +222,11 @@ public class CorporateVo extends com.demo.proworks.cmmn.ProworksCommVO {
 
     @Override
     public void _xStreamEnc() {
-        this.password = getPassword();
     }
 
 
     @Override
     public void _xStreamDec() {
-        setPassword(this.password);
     }
 
 

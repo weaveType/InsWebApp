@@ -5,6 +5,9 @@ import java.util.List;
 import org.springframework.stereotype.Repository;
 
 import com.inswave.elfw.exception.ElException;
+import com.demo.proworks.domain.corporate.vo.CorporateMainListVo;
+import com.demo.proworks.domain.corporate.vo.CorporateMainVo;
+import com.demo.proworks.domain.corporate.vo.CorporateSearchVo;
 import com.demo.proworks.domain.corporate.vo.CorporateVo;
 import com.demo.proworks.common.vo.EmailVo;
 import com.demo.proworks.domain.corporate.dao.CorporateDAO;
@@ -109,6 +112,17 @@ public class CorporateDAO extends com.demo.proworks.cmmn.dao.ProworksDefaultAbst
 	 */
 	public int updateCorporateByEmail(CorporateVo vo) throws ElException {
 		return update("com.demo.proworks.domain.corporate.updateCorporateByEmail", vo);
+	}
+
+	/**
+	 * 메인에서 사용할 회사 정보를 조회한다.
+	 * 
+	 * @param CorporateSearchVo 회사정보
+	 * @return CorporateMainListVo 회사 리스트
+	 * @throws ElException
+	 */
+	public List<CorporateMainVo> selectCorporateMainList(CorporateSearchVo vo) throws ElException {
+		return (List<CorporateMainVo>) list("com.demo.proworks.domain.corporate.selectCorporateMainList", vo);
 	}
 
 }
