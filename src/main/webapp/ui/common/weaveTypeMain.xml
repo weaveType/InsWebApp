@@ -303,7 +303,7 @@ scwin.sbm_selectCompanyList_submitdone = function (e) {
     }
 
     // 총 회사 수 업데이트
-    var totalCount = dlt_company_list.getRowCount();
+    var totalCount = e.responseJSON.elData.totalCount;
     console.log('데이터 로드 완료. 총 회사 수:', totalCount);
 
     // txt_company_count 컴포넌트 찾기 및 업데이트

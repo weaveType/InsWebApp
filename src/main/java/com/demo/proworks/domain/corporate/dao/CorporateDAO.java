@@ -125,4 +125,9 @@ public class CorporateDAO extends com.demo.proworks.cmmn.dao.ProworksDefaultAbst
 		return (List<CorporateMainVo>) list("com.demo.proworks.domain.corporate.selectCorporateMainList", vo);
 	}
 
+	/* 총 카운트 – RowBounds 없이 단건 조회 */
+	public long selectListCountCorporate(CorporateSearchVo vo) {
+		return (Long) getSqlSession().selectOne("com.demo.proworks.domain.corporate.selectListCountCorporate", vo);
+	}
+
 }

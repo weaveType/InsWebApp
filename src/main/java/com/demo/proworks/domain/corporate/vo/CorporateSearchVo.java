@@ -22,6 +22,9 @@ public class CorporateSearchVo extends com.demo.proworks.cmmn.ProworksCommVO {
     @ElDtoField(logicalName = "페이지 크기", physicalName = "pageSize", type = "int", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
     private int pageSize;
 
+    @ElDtoField(logicalName = "오프셋", physicalName = "offset", type = "long", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private long offset;
+
     @ElVoField(physicalName = "roleId")
     public int getRoleId(){
         return roleId;
@@ -52,13 +55,24 @@ public class CorporateSearchVo extends com.demo.proworks.cmmn.ProworksCommVO {
         this.pageSize = pageSize;
     }
 
+    @ElVoField(physicalName = "offset")
+    public long getOffset(){
+        return offset;
+    }
+
+    @ElVoField(physicalName = "offset")
+    public void setOffset(long offset){
+        this.offset = offset;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("CorporateSearchVo [");
         sb.append("roleId").append("=").append(roleId).append(",");
         sb.append("pageIndex").append("=").append(pageIndex).append(",");
-        sb.append("pageSize").append("=").append(pageSize);
+        sb.append("pageSize").append("=").append(pageSize).append(",");
+        sb.append("offset").append("=").append(offset);
         sb.append("]");
         return sb.toString();
 

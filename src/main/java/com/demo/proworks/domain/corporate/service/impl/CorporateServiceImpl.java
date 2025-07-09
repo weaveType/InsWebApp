@@ -202,8 +202,8 @@ public class CorporateServiceImpl implements CorporateService {
 	public CorporateMainListVo selectCorporateMainList(CorporateSearchVo vo) throws Exception {
 		CorporateMainListVo resultVO = new CorporateMainListVo();
 		resultVO.setCorporateMainVo(corporateDAO.selectCorporateMainList(vo));
-		resultVO.setTotalCount(corporateDAO.selectListCountCorporate(new CorporateVo()));
-		
+		long totalCnt = corporateDAO.selectListCountCorporate(vo); // DAO 안에서 selectOne 사용
+		resultVO.setTotalCount(totalCnt);
 		return resultVO;
 	}
 
