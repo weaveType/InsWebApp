@@ -1,11 +1,13 @@
 package com.demo.proworks.domain.post.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
 import com.inswave.elfw.exception.ElException;
 import com.demo.proworks.domain.post.vo.PostVo;
+import com.demo.proworks.domain.post.vo.TechStackVo;
 import com.demo.proworks.domain.post.dao.PostDAO;
 
 /**  
@@ -87,6 +89,49 @@ public class PostDAO extends com.demo.proworks.cmmn.dao.ProworksDefaultAbstractD
      */
     public int deletePost(PostVo vo) throws ElException {
         return delete("com.demo.proworks.domain.post.deletePost", vo);
+    }
+
+    /**
+     * 기술스택 목록을 조회한다.
+     *  
+     * @return List<TechStackVo> 기술스택 목록
+     * @throws ElException
+     */
+    public List<TechStackVo> selectListTechStack() throws ElException {
+        return (List<TechStackVo>)list("com.demo.proworks.domain.post.selectListTechStack", null);
+    }
+
+    /**
+     * 공고-기술스택 관계를 저장한다.
+     *  
+     * @param  Map 공고ID와 기술스택ID
+     * @return 번호
+     * @throws ElException
+     */
+    public int insertCompanyTechStackRelation(Map<String, Object> params) throws ElException {
+        return insert("com.demo.proworks.domain.post.insertCompanyTechStackRelation", params);
+    }
+
+    /**
+     * 특정 공고의 기술스택 관계를 삭제한다.
+     *  
+     * @param  String 공고ID
+     * @return 번호
+     * @throws ElException
+     */
+    public int deleteCompanyTechStackRelationByJobId(String jobPostingId) throws ElException {
+        return delete("com.demo.proworks.domain.post.deleteCompanyTechStackRelationByJobId", jobPostingId);
+    }
+
+    /**
+     * 특정 공고의 기술스택 목록을 조회한다.
+     *  
+     * @param  String 공고ID
+     * @return List<TechStackVo> 기술스택 목록
+     * @throws ElException
+     */
+    public List<TechStackVo> selectTechStacksByJobId(String jobPostingId) throws ElException {
+        return (List<TechStackVo>)list("com.demo.proworks.domain.post.selectTechStacksByJobId", jobPostingId);
     }
 
 }

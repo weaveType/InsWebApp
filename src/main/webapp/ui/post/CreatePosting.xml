@@ -20,13 +20,20 @@
             			<w2:column dataType="text" name="personality" id="personality"></w2:column>
             		</w2:columnInfo>
             	</w2:dataList>
+            	<!-- 서버에서 가져온 전체 기술스택 목록 -->
+            	<w2:dataList baseNode="list" repeatNode="map" id="dlt_all_techstacks" saveRemovedData="true">
+            		<w2:columnInfo>
+            			<w2:column dataType="text" name="techStackId" id="techStackId"></w2:column>
+            			<w2:column dataType="text" name="techStackName" id="techStackName"></w2:column>
+            		</w2:columnInfo>
+            	</w2:dataList>
             	<w2:dataMap baseNode="map" id="dmp_postVo" style="">
             		<w2:keyInfo>
             			<w2:key dataType="text" id="jobPostingId" name="job_posting_id"></w2:key>
             			<w2:key dataType="text" id="companyId" name="company_id"></w2:key>
             			<w2:key dataType="text" id="title" name="title"></w2:key>
             			<w2:key dataType="text" id="description" name="description"></w2:key>
-            			<w2:key dataType="text" id="requiredSkills" name="required_skills"></w2:key>
+            			<w2:key dataType="text" id="selectedTechStackNames" name="selected_tech_stack_names"></w2:key>
             			<w2:key dataType="text" id="experienceLevel" name="experience_level"></w2:key>
             			<w2:key dataType="text" id="salaryRange" name="salary_range"></w2:key>
             			<w2:key dataType="text" id="location" name="location"></w2:key>
@@ -43,6 +50,11 @@
             <xf:submission id="sbm_insertPost" ref='data:json,{"id":"dmp_postVo","key":"postVo"}' target="" action="/InsWebApp/POS0001Ins.pwkjson" method="post"
             	mediatype="application/json" encoding="UTF-8" instance="" replace="" errorHandler="" customHandler="" mode="asynchronous" processMsg="공고를 등록 중입니다."
             	ev:submit="" ev:submitdone="scwin.sbm_insertPost_submitdone" ev:submiterror="" abortTrigger="">
+            </xf:submission>
+            
+            <xf:submission id="sbm_selectTechStackList" ref="" target="data:json,dlt_all_techstacks" action="/InsWebApp/POS0002List.pwkjson" method="post"
+            	mediatype="application/json" encoding="UTF-8" instance="" replace="" errorHandler="" customHandler="" mode="asynchronous" processMsg="기술스택 목록을 불러오는 중입니다."
+            	ev:submit="" ev:submitdone="scwin.sbm_selectTechStackList_submitdone" ev:submiterror="" abortTrigger="">
             </xf:submission>
         </xf:model>
         <w2:layoutInfo/>
@@ -832,22 +844,9 @@ scwin.onpageload = function () {
     scwin.selectedPersonalities = [];
     scwin.updatePersonalityCounter();
     
-    // 사용 가능한 기술스택 목록 정의 (카테고리별로 분류)
-    scwin.availableTechStacks = {
-        "프로그래밍 언어": ["Java", "JavaScript", "TypeScript", "Python", "C++", "C#", "Go", "Rust", "PHP", "Swift", "Kotlin"],
-        "프론트엔드": ["React", "Vue.js", "Angular", "Next.js", "Nuxt.js", "Svelte"],
-        "백엔드": ["Spring Boot", "Spring Framework", "Node.js", "Express.js", "Django", "Flask", "FastAPI", "Laravel"],
-        "데이터베이스": ["MySQL", "PostgreSQL", "MongoDB", "Redis", "SQLite", "Oracle", "MariaDB"],
-        "DevOps": ["Docker", "Kubernetes", "Jenkins", "GitLab CI", "GitHub Actions"],
-        "클라우드": ["AWS", "GCP", "Azure", "Heroku", "Vercel", "Netlify"],
-        "기타": ["Git", "Linux", "Nginx", "Apache", "GraphQL", "REST API"]
-    };
-    
-    // 전체 기술스택 목록 (검색용)
-    scwin.allTechStacks = [];
-    for (var category in scwin.availableTechStacks) {
-        scwin.allTechStacks = scwin.allTechStacks.concat(scwin.availableTechStacks[category]);
-    }
+    // 서버에서 기술스택 목록 불러오기
+    console.log("=== 기술스택 목록 불러오기 시작 ===");
+    $p.executeSubmission("sbm_selectTechStackList");
     
     // 페이지 로드 애니메이션 시작
     setTimeout(function() {
@@ -934,53 +933,156 @@ scwin.onpageload = function () {
             scwin.debugLog("성향 섹션에 이벤트 위임 추가 완료");
         }
         
-        // 기술스택 섹션에도 이벤트 위임 추가
-        var techstackGrid = document.querySelector('.techstack-grid');
-        if (techstackGrid) {
-            techstackGrid.addEventListener('click', function(e) {
-                scwin.debugLog("기술스택 그리드 클릭 감지됨");
-                
-                var target = e.target;
-                var isTechStackClick = false;
-                var techStackName = "";
-                
-                // 클릭된 요소나 상위 요소가 기술스택 카드인지 확인
-                var currentElement = target;
-                var maxDepth = 5;
-                var depth = 0;
-                
-                while (currentElement && depth < maxDepth) {
-                    if (currentElement.classList && currentElement.classList.contains('techstack-card')) {
-                        isTechStackClick = true;
-                        
-                        // 기술스택 이름 추출
-                        var label = currentElement.querySelector('label');
-                        if (label) {
-                            techStackName = label.textContent.trim();
-                        }
-                        
-                        scwin.debugLog("기술스택 카드 클릭으로 판단됨:", techStackName);
-                        break;
-                    }
-                    
-                    currentElement = currentElement.parentNode;
-                    depth++;
-                }
-                
-                if (isTechStackClick && techStackName) {
-                    scwin.debugLog("이벤트 위임에서 기술스택 카드 클릭 처리");
-                    scwin.selectTechStackCard(techStackName, e);
-                }
-            });
-            
-            scwin.debugLog("기술스택 그리드에 이벤트 위임 추가 완료");
-        }
-        
         scwin.debugLog("=== 이벤트 위임 설정 완료 ===");
     }, 2000);
 };
 
-// 웹스퀘어 이벤트 핸들러들
+// 기술스택 목록 조회 완료 후 처리
+scwin.sbm_selectTechStackList_submitdone = function(e) {
+    console.log("=== 기술스택 목록 조회 완료 ===");
+    console.log("응답 데이터:", e.responseJSON);
+    
+    try {
+        // 서버에서 받은 기술스택 데이터로 전역 변수 설정
+        scwin.allTechStacks = [];
+        scwin.techStacksMap = {}; // 이름 -> ID 매핑
+        
+        // 서버 응답에서 techStackVoList 배열 가져오기
+        var techStackList = e.responseJSON && e.responseJSON.techStackVoList ? e.responseJSON.techStackVoList : [];
+        console.log("서버에서 받은 기술스택 배열:", techStackList);
+        console.log("받은 기술스택 개수:", techStackList.length);
+        
+        for (var i = 0; i < techStackList.length; i++) {
+            var techStack = techStackList[i];
+            var techStackId = techStack.techStackId;
+            var techStackName = techStack.techStackName;
+            
+            if (techStackName) {
+                scwin.allTechStacks.push(techStackName);
+                scwin.techStacksMap[techStackName] = techStackId;
+            }
+        }
+        
+        console.log("처리된 기술스택 목록:", scwin.allTechStacks);
+        console.log("기술스택 매핑:", scwin.techStacksMap);
+        
+        // 동적으로 기술스택 카드들 생성
+        scwin.createTechStackCards();
+        
+        // 기술스택 그리드에 이벤트 위임 추가
+        setTimeout(function() {
+            scwin.addTechStackEventDelegation();
+        }, 500);
+        
+    } catch (error) {
+        console.error("기술스택 목록 처리 중 오류:", error);
+        alert("기술스택 목록을 불러오는 중 오류가 발생했습니다.");
+    }
+};
+
+// 동적으로 기술스택 카드들 생성
+scwin.createTechStackCards = function() {
+    console.log("=== 기술스택 카드 동적 생성 시작 ===");
+    
+    var techstackGrid = document.querySelector('.techstack-grid');
+    if (!techstackGrid) {
+        console.error("기술스택 그리드를 찾을 수 없습니다");
+        return;
+    }
+    
+    // 기존 하드코딩된 카드들 제거
+    techstackGrid.innerHTML = '';
+    
+    // 인기 기술스택들을 우선적으로 표시 (12개)
+    var popularTechStacks = ["Java", "JavaScript", "Python", "React", "Spring Boot", "Node.js", 
+                            "MySQL", "MongoDB", "Docker", "Kubernetes", "Vue.js", "Angular"];
+    
+    var displayTechStacks = [];
+    
+    // 인기 기술스택 중 서버에 있는 것들 먼저 추가
+    for (var i = 0; i < popularTechStacks.length; i++) {
+        var techStack = popularTechStacks[i];
+        if (scwin.allTechStacks.indexOf(techStack) !== -1) {
+            displayTechStacks.push(techStack);
+        }
+    }
+    
+    // 12개가 안 되면 나머지 기술스택들로 채우기
+    if (displayTechStacks.length < 12) {
+        for (var i = 0; i < scwin.allTechStacks.length && displayTechStacks.length < 12; i++) {
+            var techStack = scwin.allTechStacks[i];
+            if (displayTechStacks.indexOf(techStack) === -1) {
+                displayTechStacks.push(techStack);
+            }
+        }
+    }
+    
+    console.log("표시할 기술스택들:", displayTechStacks);
+    
+    // 카드들 동적 생성
+    for (var i = 0; i < displayTechStacks.length; i++) {
+        var techStack = displayTechStacks[i];
+        var cardId = "techstack_" + techStack.toLowerCase().replace(/[^a-z0-9]/g, '');
+        
+        var cardElement = document.createElement('div');
+        cardElement.className = 'techstack-card';
+        cardElement.id = cardId;
+        cardElement.setAttribute('data-techstack', techStack);
+        cardElement.style.cursor = 'pointer';
+        
+        var label = document.createElement('label');
+        label.textContent = techStack;
+        label.style.cursor = 'pointer';
+        
+        cardElement.appendChild(label);
+        techstackGrid.appendChild(cardElement);
+    }
+    
+    console.log("기술스택 카드 동적 생성 완료:", displayTechStacks.length + "개");
+};
+
+// 기술스택 그리드에 이벤트 위임 추가
+scwin.addTechStackEventDelegation = function() {
+    console.log("=== 기술스택 이벤트 위임 추가 ===");
+    
+    var techstackGrid = document.querySelector('.techstack-grid');
+    if (!techstackGrid) {
+        console.error("기술스택 그리드를 찾을 수 없습니다");
+        return;
+    }
+    
+    // 기존 이벤트 리스너 제거 방지를 위해 체크
+    if (techstackGrid._eventDelegationAdded) {
+        console.log("이미 이벤트 위임이 추가되어 있습니다");
+        return;
+    }
+    
+    techstackGrid.addEventListener('click', function(e) {
+        var target = e.target;
+        var techStackName = "";
+        var cardElement = null;
+        
+        // 클릭된 요소가 카드나 라벨인지 확인
+        if (target.classList.contains('techstack-card')) {
+            cardElement = target;
+            var label = cardElement.querySelector('label');
+            if (label) {
+                techStackName = label.textContent.trim();
+            }
+        } else if (target.tagName === 'LABEL' && target.parentElement.classList.contains('techstack-card')) {
+            cardElement = target.parentElement;
+            techStackName = target.textContent.trim();
+        }
+        
+        if (cardElement && techStackName) {
+            console.log("기술스택 카드 클릭됨:", techStackName);
+            scwin.selectTechStackCard(techStackName, e);
+        }
+    });
+    
+    techstackGrid._eventDelegationAdded = true;
+    console.log("기술스택 이벤트 위임 추가 완료");
+};
 scwin.input_techstack_oninput = function(e) {
     scwin.debugLog("=== 입력 이벤트 발생 ===");
     var inputValue = input_techstack.getValue();
@@ -1012,9 +1114,10 @@ scwin.input_techstack_onblur = function(e) {
     }, 200);
 };
 
-// 기술스택 이름 정규화 (대소문자 무시하고 매칭) - 수정된 버전
+// 기술스택 이름 정규화 (서버 데이터 사용) - 수정된 버전
 scwin.normalizeTechStack = function(input) {
     if (!input || typeof input !== 'string') return null;
+    if (!scwin.allTechStacks || scwin.allTechStacks.length === 0) return null;
     
     var inputLower = input.toLowerCase().trim();
     
@@ -1036,10 +1139,15 @@ scwin.normalizeTechStack = function(input) {
     return null; // 매칭되는 기술스택 없음
 };
 
-// 자동완성 추천 목록 보이기 - 이벤트 위임 방식으로 수정
+// 자동완성 추천 목록 보이기 (서버 데이터 사용) - 수정된 버전
 scwin.showTechStackSuggestions = function(inputValue) {
     scwin.debugLog("=== 추천 목록 표시 시작 ===");
     scwin.debugLog("입력값:", inputValue);
+    
+    if (!scwin.allTechStacks || scwin.allTechStacks.length === 0) {
+        scwin.debugLog("서버 기술스택 데이터가 아직 로드되지 않았습니다");
+        return;
+    }
     
     var suggestionsContainer = document.getElementById('techstack-suggestions');
     if (!suggestionsContainer) {
@@ -1067,23 +1175,20 @@ scwin.showTechStackSuggestions = function(inputValue) {
     
     var suggestions = [];
     
-    // 카테고리별로 검색
-    for (var category in scwin.availableTechStacks) {
-        var categoryTechs = scwin.availableTechStacks[category];
-        for (var i = 0; i < categoryTechs.length; i++) {
-            var tech = categoryTechs[i];
-            
-            // 이미 선택된 기술스택은 제외
-            if (selectedTechStacks.indexOf(tech) !== -1) continue;
-            
-            // 입력값과 매칭되는지 확인
-            if (tech.toLowerCase().includes(input)) {
-                suggestions.push({
-                    name: tech,
-                    category: category,
-                    matchIndex: tech.toLowerCase().indexOf(input)
-                });
-            }
+    // 서버에서 받은 기술스택들에서 검색
+    for (var i = 0; i < scwin.allTechStacks.length; i++) {
+        var techStack = scwin.allTechStacks[i];
+        
+        // 이미 선택된 기술스택은 제외
+        if (selectedTechStacks.indexOf(techStack) !== -1) continue;
+        
+        // 입력값과 매칭되는지 확인
+        if (techStack.toLowerCase().includes(input)) {
+            suggestions.push({
+                name: techStack,
+                category: "기술스택", // 서버 데이터는 카테고리 정보가 없으므로 기본값
+                matchIndex: techStack.toLowerCase().indexOf(input)
+            });
         }
     }
     
@@ -1250,12 +1355,11 @@ scwin.addTechStackFromInput = function(e) {
         return;
     }
     
-    // 기술스택 정규화
+    // 기술스택 정규화 (서버 데이터 사용)
     var normalizedTechStack = scwin.normalizeTechStack(inputValue);
     
     if (!normalizedTechStack) {
-        alert("지원하지 않는 기술스택입니다.\n다음 기술스택들을 사용해주세요:\n" + 
-              scwin.allTechStacks.slice(0, 10).join(", ") + "...");
+        alert("지원하지 않는 기술스택입니다.\n사용 가능한 기술스택 목록에서 선택해주세요.");
         return;
     }
     
@@ -1523,24 +1627,6 @@ scwin.updateTechStackCards = function() {
     scwin.debugLog("상태 업데이트된 카드 개수:", updatedCards);
     scwin.debugLog("=== 카드 상태 업데이트 완료 ===");
 };
-
-// 각 기술스택 카드별 개별 이벤트 함수들
-scwin.techstack_java_onclick = function(e) { scwin.selectTechStackCard("Java", e); };
-scwin.techstack_javascript_onclick = function(e) { scwin.selectTechStackCard("JavaScript", e); };
-scwin.techstack_python_onclick = function(e) { scwin.selectTechStackCard("Python", e); };
-scwin.techstack_react_onclick = function(e) { scwin.selectTechStackCard("React", e); };
-scwin.techstack_springboot_onclick = function(e) { scwin.selectTechStackCard("Spring Boot", e); };
-scwin.techstack_nodejs_onclick = function(e) { scwin.selectTechStackCard("Node.js", e); };
-scwin.techstack_mysql_onclick = function(e) { scwin.selectTechStackCard("MySQL", e); };
-scwin.techstack_mongodb_onclick = function(e) { scwin.selectTechStackCard("MongoDB", e); };
-scwin.techstack_docker_onclick = function(e) { scwin.selectTechStackCard("Docker", e); };
-scwin.techstack_kubernetes_onclick = function(e) { scwin.selectTechStackCard("Kubernetes", e); };
-scwin.techstack_vuejs_onclick = function(e) { scwin.selectTechStackCard("Vue.js", e); };
-scwin.techstack_angular_onclick = function(e) { scwin.selectTechStackCard("Angular", e); };
-
-// AutoComplete onChange 이벤트 - 완전 제거됨
-
-// AutoComplete 수동 추가 함수 - 더 이상 사용하지 않음
 
 // 개별 기술스택 제거 함수 (Generator 내부에서 호출) - 타입에러 해결
 scwin.removeTechStackByIndex = function(rowIndex) {
@@ -2260,7 +2346,7 @@ scwin.btn_create_posting_onclick = function (e) {
         dmp_postVo.set("expiresAt", expiryString);
         dmp_postVo.set("status", "active"); // ENUM 값에 맞게 소문자
         
-        // 선택된 기술스택들을 JSON 배열로 변환하여 requiredSkills에 저장
+        // 선택된 기술스택들을 JSON 배열로 변환하여 selectedTechStackNames에 저장
         var techStackArray = [];
         for(var i = 0; i < dlt_techstack.getRowCount(); i++) {
             var techstack = dlt_techstack.getCellData(i, "techstack");
@@ -2268,7 +2354,7 @@ scwin.btn_create_posting_onclick = function (e) {
                 techStackArray.push(techstack);
             }
         }
-        dmp_postVo.set("requiredSkills", JSON.stringify(techStackArray)); // JSON 문자열로 저장
+        dmp_postVo.set("selectedTechStackNames", JSON.stringify(techStackArray)); // JSON 문자열로 저장
         
         // 선택된 성향들을 JSON 배열로 변환하여 preferredDeveloperTypes에 저장 (수정된 부분)
         var personalityArray = [];
@@ -2282,7 +2368,7 @@ scwin.btn_create_posting_onclick = function (e) {
         
         console.log("등록할 데이터 - 제목:", dmp_postVo.get("title"));
         console.log("등록할 데이터 - 지역:", dmp_postVo.get("location"));
-        console.log("등록할 데이터 - 기술스택:", dmp_postVo.get("requiredSkills"));
+        console.log("등록할 데이터 - 기술스택:", dmp_postVo.get("selectedTechStackNames"));
         console.log("등록할 데이터 - 성향:", dmp_postVo.get("preferredDeveloperTypes"));
         console.log("등록할 데이터 - 상태:", dmp_postVo.get("status"));
         
@@ -2420,11 +2506,7 @@ scwin.sbm_insertPost_submitdone = function(e) {
                                     <xf:item>
                                         <xf:label><![CDATA[광주]]></xf:label>
                                         <xf:value><![CDATA[광주]]></xf:value>
-                                    </xf:item>
-                                    <xf:item>
-                                        <xf:label><![CDATA[원격근무]]></xf:label>
-                                        <xf:value><![CDATA[원격근무]]></xf:value>
-                                    </xf:item>
+                                    </xf:item>                                   
                                 </xf:choices>
                             </xf:select1>
                         </xf:group>
@@ -2464,42 +2546,7 @@ scwin.sbm_insertPost_submitdone = function(e) {
                         <w2:textbox class="help-text" label="클릭하여 빠르게 선택하거나, 아래 입력창에 직접 입력하세요. 입력하면 자동완성 추천이 표시됩니다. (예: 'J' 입력 → Java, JavaScript 추천)"></w2:textbox>
                         
                         <xf:group class="techstack-grid">
-                            <xf:trigger class="techstack-card" type="button" id="techstack_java" ev:onclick="scwin.techstack_java_onclick">
-                                <xf:label><![CDATA[Java]]></xf:label>
-                            </xf:trigger>
-                            <xf:trigger class="techstack-card" type="button" id="techstack_javascript" ev:onclick="scwin.techstack_javascript_onclick">
-                                <xf:label><![CDATA[JavaScript]]></xf:label>
-                            </xf:trigger>
-                            <xf:trigger class="techstack-card" type="button" id="techstack_python" ev:onclick="scwin.techstack_python_onclick">
-                                <xf:label><![CDATA[Python]]></xf:label>
-                            </xf:trigger>
-                            <xf:trigger class="techstack-card" type="button" id="techstack_react" ev:onclick="scwin.techstack_react_onclick">
-                                <xf:label><![CDATA[React]]></xf:label>
-                            </xf:trigger>
-                            <xf:trigger class="techstack-card" type="button" id="techstack_springboot" ev:onclick="scwin.techstack_springboot_onclick">
-                                <xf:label><![CDATA[Spring Boot]]></xf:label>
-                            </xf:trigger>
-                            <xf:trigger class="techstack-card" type="button" id="techstack_nodejs" ev:onclick="scwin.techstack_nodejs_onclick">
-                                <xf:label><![CDATA[Node.js]]></xf:label>
-                            </xf:trigger>
-                            <xf:trigger class="techstack-card" type="button" id="techstack_mysql" ev:onclick="scwin.techstack_mysql_onclick">
-                                <xf:label><![CDATA[MySQL]]></xf:label>
-                            </xf:trigger>
-                            <xf:trigger class="techstack-card" type="button" id="techstack_mongodb" ev:onclick="scwin.techstack_mongodb_onclick">
-                                <xf:label><![CDATA[MongoDB]]></xf:label>
-                            </xf:trigger>
-                            <xf:trigger class="techstack-card" type="button" id="techstack_docker" ev:onclick="scwin.techstack_docker_onclick">
-                                <xf:label><![CDATA[Docker]]></xf:label>
-                            </xf:trigger>
-                            <xf:trigger class="techstack-card" type="button" id="techstack_kubernetes" ev:onclick="scwin.techstack_kubernetes_onclick">
-                                <xf:label><![CDATA[Kubernetes]]></xf:label>
-                            </xf:trigger>
-                            <xf:trigger class="techstack-card" type="button" id="techstack_vuejs" ev:onclick="scwin.techstack_vuejs_onclick">
-                                <xf:label><![CDATA[Vue.js]]></xf:label>
-                            </xf:trigger>
-                            <xf:trigger class="techstack-card" type="button" id="techstack_angular" ev:onclick="scwin.techstack_angular_onclick">
-                                <xf:label><![CDATA[Angular]]></xf:label>
-                            </xf:trigger>
+                            <!-- 기술스택 카드들은 JavaScript에서 동적으로 생성됩니다 -->
                         </xf:group>
                         
                         <!-- 자동완성 입력 - 추천 목록 기능 추가 -->
