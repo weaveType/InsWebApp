@@ -10,7 +10,7 @@
 				<!-- 검색 조건용 dataMap -->
 				<w2:dataMap id="dmp_corporateSearchVo" baseNode="map">
 					<w2:keyInfo>
-						<w2:key id="roleId" name="역할ID" dataType="number" defaultValue="2" />
+						<w2:key id="roleId" name="권한ID" dataType="number" defaultValue="2" />
 						<w2:key id="pageIndex" name="페이지번호" dataType="number" defaultValue="1" />
 						<w2:key id="pageSize" name="페이지크기" dataType="number" />
 					</w2:keyInfo>
@@ -29,7 +29,7 @@
 
 			<!-- 회사 목록 조회 Submission -->
 			<xf:submission id="sbm_selectCompanyList" action="/InsWebApp/CP0003List.pwkjson" method="post" mediatype="application/json"
-				ref='data:json,{"id":"dmp_company_list"}' target='data:json,{"id":"dlt_company_list","key":"elData.companyList"}'
+				ref='data:json,{"id":"dmp_corporateSearchVo","key":"corporateSearchVo"}' target='data:json,{"id":"dlt_company_list","key":"elData.companyList"}'
 				mode="asynchronous" encoding="UTF-8" processMsg="참여 기업 목록을 조회 중입니다." ev:submitdone="scwin.sbm_selectCompanyList_submitdone"
 				ev:submiterror="scwin.sbm_selectCompanyList_submiterror">
 			</xf:submission>
