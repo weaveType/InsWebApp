@@ -142,14 +142,17 @@ UPDATE COMPANYS C
 <select id="selectCorporateMainList" parameterType="com.demo.proworks.domain.corporate.vo.CorporateSearchVo"
     resultType="com.demo.proworks.domain.corporate.vo.CorporateMainVo">
 <!-- 메인에서 사용할 회사 정보를 조회한다. -->
-SELECT 
-    U.USER_ID         AS userId,
-    U.NAME            AS name,
-    C.LOGO_FILE_NAME  AS logoFileName
-FROM COMPANYS C
-    JOIN USERS U ON C.USER_ID = U.USER_ID
-WHERE 
-    U.ROLE_ID = #{roleId}
-    AND C.IS_DELETED = FALSE
+    SELECT
+        U.USER_ID         AS userId,
+        U.NAME            AS name,
+        C.LOGO_FILE_NAME  AS logoFileName
+    FROM COMPANYS  C
+        JOIN USERS U ON C.USER_ID = U.USER_ID
+    WHERE
+        U.ROLE_ID     = #{roleId}           -- 기업(ROLE_ID=2)
+        AND C.IS_DELETED = FALSE
+   ORDER BY U.CREATED_AT DESC               <!-- 또는 U.CREATED_AT DESC -->
+    LIMIT  #{pageSize}
+    OFFSET #{offset}
 </select>
 </mapper>
