@@ -374,27 +374,29 @@ scwin.createCompanyList = function () {
                     logoFileName: dlt_company_list.getCellData(i, 'logoFileName')
                 };
 
-                // 회사 카드 요소 생성
+                // ── 회사 카드 요소 생성 ─────────────────────────────
                 var companyCard = document.createElement('div');
                 companyCard.className = 'company-item';
                 companyCard.style.cursor = 'pointer';
 
-                // 로고가 있는 경우와 없는 경우 분기
-                var cardContent = '';
-                        if (companyData.logoFileName && companyData.logoFileName.trim() !== '') {
-                    cardContent = '<div style="display: flex; align-items: center; justify-content: center; height: 100%; gap: 10px;">' +
-                                 '<img src="/InsWebApp/images/ws5/tutorial_image.png" ' +
-                                 'style="max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain;" ' +
-                                 'onerror="this.style.display=\'none\'; this.nextElementSibling.style.display=\'block\';" alt="' + companyData.name + ' 로고" />' +
-                                 '<span class="company-name" style="display: none;">' + companyData.name + '</span>' +
-                                 '<span class="company-name" style="font-weight: 500;">' + companyData.name + '</span>' +
-                                 '</div>';
-                } else {
-                    cardContent = '<div style="display: flex; align-items: center; justify-content: center; height: 100%; gap: 10px;">' +
-                                 '<img src="/InsWebApp/images/ws5/sik.gif" style="width: 40px; height: 40px; object-fit: contain;" alt="기본 로고" />' +
-                                 '<span class="company-name" style="font-weight: 500;">' + companyData.name + '</span>' +
-                                 '</div>';
-                }
+                // 로고 경로(있으면) vs 기본 이미지(없으면)
+                var logoBase = '/InsWebApp/images/company/'; // 실제 로고가 저장된 폴더
+                var defaultLogo = '/InsWebApp/images/ws5/sik.gif';   // 기본 이미지
+
+                var hasLogo = companyData.logoFileName && companyData.logoFileName.trim() !== '';
+                var imgSrc = hasLogo ? logoBase + encodeURIComponent(companyData.logoFileName)
+                    : defaultLogo;
+
+                // 카드 HTML
+                var cardContent =
+                    '<div style="display:flex;align-items:center;justify-content:center;height:100%;gap:10px;">' +
+                    '<img src="' + imgSrc + '" ' +
+                    'style="max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;" ' +
+                    // 깨졌을 때도 기본 이미지로 대체
+                    'onerror="this.onerror=null;this.src=\'' + defaultLogo + '\';" ' +
+                    'alt="' + companyData.name + ' 로고" />' +
+                    '<span class="company-name" style="font-weight:500;">' + companyData.name + '</span>' +
+                    '</div>';
 
                 companyCard.innerHTML = cardContent;
 
