@@ -381,7 +381,7 @@ scwin.createCompanyList = function () {
 
                 // 로고가 있는 경우와 없는 경우 분기
                 var cardContent = '';
-                if (companyData.logoFileName && companyData.logoFileName.trim() !== '') {
+                        if (companyData.logoFileName && companyData.logoFileName.trim() !== '') {
                     cardContent = '<div style="display: flex; align-items: center; justify-content: center; height: 100%; gap: 10px;">' +
                                  '<img src="/InsWebApp/images/ws5/tutorial_image.png" ' +
                                  'style="max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain;" ' +
@@ -391,7 +391,7 @@ scwin.createCompanyList = function () {
                                  '</div>';
                 } else {
                     cardContent = '<div style="display: flex; align-items: center; justify-content: center; height: 100%; gap: 10px;">' +
-                                 '<img src="/InsWebApp/images/ws5/logo_inswave_w.png" style="width: 40px; height: 40px; object-fit: contain;" alt="기본 로고" />' +
+                                 '<img src="/InsWebApp/images/ws5/sik.gif" style="width: 40px; height: 40px; object-fit: contain;" alt="기본 로고" />' +
                                  '<span class="company-name" style="font-weight: 500;">' + companyData.name + '</span>' +
                                  '</div>';
                 }
