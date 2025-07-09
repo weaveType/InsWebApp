@@ -290,7 +290,6 @@ scwin.loadCompanyList = function () {
  * 회사 목록 조회 성공 콜백
  */
 scwin.sbm_selectCompanyList_submitdone = function (e) {
-    try {
         // 응답 데이터 확인
         var elData = e.responseJSON.elData;
         var elHeader = e.responseJSON.elHeader;
@@ -306,11 +305,6 @@ scwin.sbm_selectCompanyList_submitdone = function (e) {
 
         // 동적으로 회사 목록 생성
         scwin.createCompanyList();
-
-    } catch (error) {
-        console.error("회사 목록 조회 처리 중 오류:", error);
-        $c.win.alert("회사 목록을 불러오는 중 오류가 발생했습니다.");
-    }
 };
 
 /**
@@ -321,81 +315,18 @@ scwin.sbm_selectCompanyList_submiterror = function (e) {
     $c.win.alert("회사 목록을 불러오는데 실패했습니다.");
 };
 
-/**
- * 동적으로 회사 목록 UI 생성
- */
-// 
-
 scwin.createCompanyList = function () {
-    /* 1) 컨테이너 확보 & 초기화 */
-    // ※ id만 있다면 lookup("grp_companies_container") 로도 가능
-    var container = grp_companies_container;
 
-    if (container && container.removeAll) {          // WebSquare API
-        container.removeAll();
-    } else {
-        // 혹시 DOM 노드일 때를 대비한 Fallback
-        var dom = container.getReal ? container.getReal() : container;
-        while (dom && dom.firstChild) {
-            dom.removeChild(dom.firstChild);
-        }
-    }
-
-    /* 2) 데이터셋 행 수 계산 */
-    var rowCount        = dlt_company_list.getRowCount();
-    var companiesPerRow = 4;      // 한 행에 4개 카드
-
-    /* 3) 행 단위 반복 */
-    for (var i = 0; i < rowCount; i += companiesPerRow) {
-
-        /* 3-1) 행(그룹) 생성 */
-        var rowGroup = $c.util.createComponent(
-            `company_row_${i}`,
-            "group",
-            { "class": "company-row" },   // 그리드·플렉스 레이아웃용 CSS
-            container
-        );
-
-        /* 3-2) 행 안에 카드(아이템) 생성 */
-        for (var j = i; j < Math.min(i + companiesPerRow, rowCount); j++) {
-
-            var companyData = dlt_company_list.getRowJSON(j);
-
-            // ① 카드 그룹
-            var itemGroup = $c.util.createComponent(
-                `company_item_${j}`,
-                "group",
-                { "class": "company-item" },
-                rowGroup
-            );
-
-            // ② 회사명
-            $c.util.createComponent(
-                `company_name_${j}`,
-                "textbox",
-                {
-                    "class": "company-name",
-                    "label": companyData.name || "회사명 없음"
-                },
-                itemGroup
-            );
-
-            // ③ 필요하면 로고 이미지도
-            if (companyData.logoFileName) {
-                $c.util.createComponent(
-                    `company_logo_${j}`,
-                    "image",
-                    { "src": `/files/logo/${companyData.logoFileName}` },
-                    itemGroup
-                );
-            }
-        }
-    }
 };
 
-/**
- * 회사 목록 새로고침
- */
+/* 회사 카드 클릭 이벤트 핸들러 */
+scwin.onCompanyCardClick = function(companyData) {
+    // 회사 상세 정보 팝업 또는 페이지 이동
+    console.log("선택된 회사:", companyData);
+    
+    $c.win.alert(companyData.name + " 기업 정보 페이지로 이동합니다.\n(userId: " + companyData.userId + ")");
+};
+
 scwin.refreshCompanyList = function () {
     scwin.loadCompanyList();
 };]]></script>
