@@ -8,11 +8,11 @@
 		<xf:model>
 			<w2:dataCollection baseNode="map">
 				<!-- 검색 조건용 dataMap -->
-				<w2:dataMap id="dmp_company_list" baseNode="map">
+				<w2:dataMap id="dmp_corporateSearchVo" baseNode="map">
 					<w2:keyInfo>
-						<w2:key id="roleId" name="역할ID" dataType="text" defaultValue="2" />
-						<w2:key id="pageIndex" name="페이지번호" dataType="text" defaultValue="1" />
-						<w2:key id="pageSize" name="페이지크기" dataType="text" defaultValue="12" />
+						<w2:key id="roleId" name="역할ID" dataType="number" defaultValue="2" />
+						<w2:key id="pageIndex" name="페이지번호" dataType="number" defaultValue="1" />
+						<w2:key id="pageSize" name="페이지크기" dataType="number" />
 					</w2:keyInfo>
 				</w2:dataMap>
 
@@ -29,7 +29,7 @@
 
 			<!-- 회사 목록 조회 Submission -->
 			<xf:submission id="sbm_selectCompanyList" action="/InsWebApp/CP0003List.pwkjson" method="post" mediatype="application/json"
-				ref='data:json,{"id":"dmp_company_list","key":"searchVo"}' target='data:json,{"id":"dlt_company_list","key":"elData.companyList"}'
+				ref='data:json,{"id":"dmp_company_list"}' target='data:json,{"id":"dlt_company_list","key":"elData.companyList"}'
 				mode="asynchronous" encoding="UTF-8" processMsg="참여 기업 목록을 조회 중입니다." ev:submitdone="scwin.sbm_selectCompanyList_submitdone"
 				ev:submiterror="scwin.sbm_selectCompanyList_submiterror">
 			</xf:submission>
@@ -38,7 +38,7 @@
 		<w2:publicInfo method="" />
 		<script type="text/javascript"><![CDATA[// 페이지 로드 시 팝업 닫기 액션 함수들 정의
 scwin.onpageload = function () {
-    dma_main.set("totalUsers", "120,739");
+    
 
     // 팝업 닫기 액션 함수들 정의
     scwin.login_popup_closeAction = function (argRuntimeID, argJsnInfo) {
@@ -276,7 +276,9 @@ scwin.getResponsiveCenterPosition = function(options) {
  */
 scwin.loadCompanyList = function() {
     // role_id=2 (COMPANY) 사용자들 조회
-    dmp_company_list.set("roleId", "2");
+    dmp_corporateSearchVo.set("roleId", 2);
+    dmp_corporateSearchVo.set("pageIndex", 1);
+    dmp_corporateSearchVo.set("pageSize", 12);
     
     // 서버 통신 실행
     $c.sbm.execute($p, sbm_selectCompanyList);
