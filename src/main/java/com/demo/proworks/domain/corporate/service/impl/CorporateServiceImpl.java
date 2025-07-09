@@ -204,7 +204,6 @@ public class CorporateServiceImpl implements CorporateService {
 		resultVO.setCorporateMainVo(corporateDAO.selectCorporateMainList(vo));
 		resultVO.setTotalCount(corporateDAO.selectListCountCorporate(new CorporateVo()));
 		
-		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> resultVO : " + resultVO.toString());
 		return resultVO;
 	}
 
