@@ -22,8 +22,8 @@ public class PostVo extends com.demo.proworks.cmmn.ProworksCommVO {
     @ElDtoField(logicalName = "description", physicalName = "description", type = "String", typeKind = "", fldYn = "", length = 0, dotLen = 0, baseValue = "", desc = "")
     private String description;
 
-    @ElDtoField(logicalName = "required_skills", physicalName = "requiredSkills", type = "String", typeKind = "", fldYn = "", length = 0, dotLen = 0, baseValue = "", desc = "")
-    private String requiredSkills;
+    @ElDtoField(logicalName = "selected_tech_stack_names", physicalName = "selectedTechStackNames", type = "String", typeKind = "", fldYn = "", length = 0, dotLen = 0, baseValue = "", desc = "")
+    private String selectedTechStackNames;
 
     @ElDtoField(logicalName = "experience_level", physicalName = "experienceLevel", type = "String", typeKind = "", fldYn = "", length = 0, dotLen = 0, baseValue = "", desc = "")
     private String experienceLevel;
@@ -89,14 +89,14 @@ public class PostVo extends com.demo.proworks.cmmn.ProworksCommVO {
         this.description = description;
     }
 
-    @ElVoField(physicalName = "requiredSkills")
-    public String getRequiredSkills(){
-        return requiredSkills;
+    @ElVoField(physicalName = "selectedTechStackNames")
+    public String getSelectedTechStackNames(){
+        return selectedTechStackNames;
     }
 
-    @ElVoField(physicalName = "requiredSkills")
-    public void setRequiredSkills(String requiredSkills){
-        this.requiredSkills = requiredSkills;
+    @ElVoField(physicalName = "selectedTechStackNames")
+    public void setSelectedTechStackNames(String selectedTechStackNames){
+        this.selectedTechStackNames = selectedTechStackNames;
     }
 
     @ElVoField(physicalName = "experienceLevel")
@@ -181,7 +181,7 @@ public class PostVo extends com.demo.proworks.cmmn.ProworksCommVO {
 
     @Override
     public String toString() {
-        return "PostVo [jobPostingId=" + jobPostingId + ",companyId=" + companyId + ",title=" + title + ",description=" + description + ",requiredSkills=" + requiredSkills + ",experienceLevel=" + experienceLevel + ",salaryRange=" + salaryRange + ",location=" + location + ",workType=" + workType + ",preferredDeveloperTypes=" + preferredDeveloperTypes + ",expiresAt=" + expiresAt + ",postedAt=" + postedAt + ",status=" + status + "]";
+        return "PostVo [jobPostingId=" + jobPostingId + ",companyId=" + companyId + ",title=" + title + ",description=" + description + ",selectedTechStackNames=" + selectedTechStackNames + ",experienceLevel=" + experienceLevel + ",salaryRange=" + salaryRange + ",location=" + location + ",workType=" + workType + ",preferredDeveloperTypes=" + preferredDeveloperTypes + ",expiresAt=" + expiresAt + ",postedAt=" + postedAt + ",status=" + status + "]";
     }
 
     public boolean isFixedLengthVo() {

@@ -23,7 +23,6 @@
             COMPANY_ID
             <if test="title                    != null"> , TITLE                     </if>
             <if test="description              != null"> , DESCRIPTION               </if>
-            <if test="requiredSkills          != null"> , REQUIRED_SKILLS           </if>
             <if test="experienceLevel         != null"> , EXPERIENCE_LEVEL          </if>
             <if test="salaryRange             != null"> , SALARY_RANGE              </if>
             <if test="location                 != null"> , LOCATION                  </if>
@@ -38,7 +37,6 @@
             #{companyId}
             <if test="title                    != null"> , #{title}                     </if>
             <if test="description              != null"> , #{description}               </if>
-            <if test="requiredSkills          != null"> , #{requiredSkills}           </if>
             <if test="experienceLevel         != null"> , #{experienceLevel}          </if>
             <if test="salaryRange             != null"> , #{salaryRange}              </if>
             <if test="location                 != null"> , #{location}                  </if>
@@ -61,7 +59,6 @@
             <if test="companyId               != null"> , COMPANY_ID                = #{companyId}                </if>
             <if test="title                    != null"> , TITLE                     = #{title}                     </if>
             <if test="description              != null"> , DESCRIPTION               = #{description}               </if>
-            <if test="requiredSkills          != null"> , REQUIRED_SKILLS           = #{requiredSkills}           </if>
             <if test="experienceLevel         != null"> , EXPERIENCE_LEVEL          = #{experienceLevel}          </if>
             <if test="salaryRange             != null"> , SALARY_RANGE              = #{salaryRange}              </if>
             <if test="location                 != null"> , LOCATION                  = #{location}                  </if>
@@ -87,7 +84,7 @@
     <select id="selectPost" parameterType="com.demo.proworks.domain.post.vo.PostVo" resultType="com.demo.proworks.domain.post.vo.PostVo">
     	<!-- 공고정보를 상세 조회한다. -->	
         SELECT     /* QueryID : com.demo.proworks.domain.post.selectPost */
-            JOB_POSTING_ID as jobPostingId, COMPANY_ID as companyId, TITLE as title, DESCRIPTION as description, REQUIRED_SKILLS as requiredSkills, EXPERIENCE_LEVEL as experienceLevel, SALARY_RANGE as salaryRange, LOCATION as location, WORK_TYPE as workType, PREFERRED_DEVELOPER_TYPES as preferredDeveloperTypes, EXPIRES_AT as expiresAt, POSTED_AT as postedAt, STATUS as status
+            JOB_POSTING_ID as jobPostingId, COMPANY_ID as companyId, TITLE as title, DESCRIPTION as description, EXPERIENCE_LEVEL as experienceLevel, SALARY_RANGE as salaryRange, LOCATION as location, WORK_TYPE as workType, PREFERRED_DEVELOPER_TYPES as preferredDeveloperTypes, EXPIRES_AT as expiresAt, POSTED_AT as postedAt, STATUS as status
         FROM POSTS 
         WHERE 
                 JOB_POSTING_ID            = #{jobPostingId}           
@@ -97,7 +94,7 @@
     <select id="selectListPost" parameterType="com.demo.proworks.domain.post.vo.PostVo" resultType="com.demo.proworks.domain.post.vo.PostVo">
     	<!-- 공고정보 목록을 조회한다. -->
            SELECT    /* QueryID : com.demo.proworks.domain.post.selectListPost */
-               JOB_POSTING_ID as jobPostingId, COMPANY_ID as companyId, TITLE as title, DESCRIPTION as description, REQUIRED_SKILLS as requiredSkills, EXPERIENCE_LEVEL as experienceLevel, SALARY_RANGE as salaryRange, LOCATION as location, WORK_TYPE as workType, PREFERRED_DEVELOPER_TYPES as preferredDeveloperTypes, EXPIRES_AT as expiresAt, POSTED_AT as postedAt, STATUS as status		       
+               JOB_POSTING_ID as jobPostingId, COMPANY_ID as companyId, TITLE as title, DESCRIPTION as description, EXPERIENCE_LEVEL as experienceLevel, SALARY_RANGE as salaryRange, LOCATION as location, WORK_TYPE as workType, PREFERRED_DEVELOPER_TYPES as preferredDeveloperTypes, EXPIRES_AT as expiresAt, POSTED_AT as postedAt, STATUS as status		       
            FROM (
                SELECT  S.*, CEIL( (@ROWNUM:=@ROWNUM+1) / #{pageSize} ) AS PAGE
                FROM (				
@@ -119,6 +116,50 @@
          FROM POSTS
          WHERE  1=1    		
 
+    </select>
+
+    <!-- 기술스택 관련 쿼리 -->
+    <select id="selectListTechStack" resultType="com.demo.proworks.domain.post.vo.TechStackVo">
+        <!-- 기술스택 목록을 조회한다. -->
+        SELECT  /* QueryID : com.demo.proworks.domain.post.selectListTechStack */
+            tech_stack_id as techStackId,
+            tech_stack_name as techStackName
+        FROM tech_stack
+        ORDER BY tech_stack_name
+    </select>
+
+    <!-- 공고-기술스택 관계 저장 -->
+    <insert id="insertCompanyTechStackRelation" parameterType="map">
+        <!-- 공고별 기술스택 관계를 저장한다. -->
+        INSERT INTO company_tech_stack_relation  /* QueryID : com.demo.proworks.domain.post.insertCompanyTechStackRelation */
+        (
+            job_posting_id,
+            tech_stack_id
+        )
+        VALUES
+        (
+            #{jobPostingId},
+            #{techStackId}
+        )
+    </insert>
+
+    <!-- 공고-기술스택 관계 삭제 (공고 삭제 시 사용) -->
+    <delete id="deleteCompanyTechStackRelationByJobId" parameterType="String">
+        <!-- 특정 공고의 기술스택 관계를 삭제한다. -->
+        DELETE FROM company_tech_stack_relation  /* QueryID : com.demo.proworks.domain.post.deleteCompanyTechStackRelationByJobId */
+        WHERE job_posting_id = #{jobPostingId}
+    </delete>
+
+    <!-- 공고별 선택된 기술스택 조회 -->
+    <select id="selectTechStacksByJobId" parameterType="String" resultType="com.demo.proworks.domain.post.vo.TechStackVo">
+        <!-- 특정 공고의 기술스택 목록을 조회한다. -->
+        SELECT  /* QueryID : com.demo.proworks.domain.post.selectTechStacksByJobId */
+            ts.tech_stack_id as techStackId,
+            ts.tech_stack_name as techStackName
+        FROM tech_stack ts
+        INNER JOIN company_tech_stack_relation ctsr ON ts.tech_stack_id = ctsr.tech_stack_id
+        WHERE ctsr.job_posting_id = #{jobPostingId}
+        ORDER BY ts.tech_stack_name
     </select>
 
 </mapper>
