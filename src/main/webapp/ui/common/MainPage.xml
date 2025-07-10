@@ -42,11 +42,72 @@
 scwin.onpageload = function () {
     console.log('페이지 로드 시작');
 
+    // 로그인 상태 확인 및 UI 업데이트
+    scwin.updateLoginArea();
+
     // 페이지 완전 로드 후 회사 목록 조회 (약간의 지연)
     setTimeout(function () {
         console.log('회사 목록 조회 시작');
         scwin.loadCompanyList();
     }, 500);
+};
+
+// 로그인 영역 업데이트
+scwin.updateLoginArea = function () {
+    var userInfoCookie = WebSquare.cookie.getCookie("userInfo");
+    var userInfo = null;
+    
+    if (userInfoCookie) {
+        try {
+            userInfo = JSON.parse(userInfoCookie);
+        } catch (e) {
+            console.error("사용자 정보 파싱 오류:", e);
+            userInfo = null;
+        }
+    }
+    
+    if (userInfo != null) {
+        // 로그인 상태 - 프로필 영역 표시
+        grp_login_area.hide();
+        grp_profile_area.show();
+        
+        // 사용자 정보 업데이트
+        txb_user_name.setValue(userInfo.name);
+        
+        // 매칭 상태 초기화 (임시 데이터)
+        scwin.updateMatchingStatus();
+    } else {
+        // 비로그인 상태 - 로그인 영역 표시
+        grp_login_area.show();
+        grp_profile_area.hide();
+    }
+};
+
+// 매칭 상태 업데이트
+scwin.updateMatchingStatus = function () {
+    // 임시 데이터로 설정
+    txb_matching_status.setValue("매칭 OFF");
+    txb_profile_complete.setValue("10%");
+    txb_bookmark_count.setValue("0");
+    txb_matching_count.setValue("0");
+    txb_application_count.setValue("0");
+};
+
+// 매칭 토글 기능
+scwin.toggleMatching = function () {
+    var currentStatus = txb_matching_status.getValue();
+    if (currentStatus === "매칭 OFF") {
+        txb_matching_status.setValue("매칭 ON");
+        swt_matching_toggle.setValue("true");
+    } else {
+        txb_matching_status.setValue("매칭 OFF");
+        swt_matching_toggle.setValue("false");
+    }
+};
+
+// 매칭 검사 설정 클릭
+scwin.goToMatchingSettings = function () {
+    alert("매칭 검사 설정 페이지로 이동합니다.");
 };
 
 // 로그인 관련 팝업 호출 함수들
@@ -834,6 +895,143 @@ scwin.refreshCompanyList = function () {
                 }
             }
 
+            /* 프로필 영역 스타일 */
+            .profile-area {
+                width: 100%;
+                min-height: 350px;
+                background-color: #fff;
+                padding: 20px;
+                border-radius: 10px;
+                border: 1px solid #e0e0e0;
+            }
+
+            .profile-header {
+                display: flex;
+                align-items: center;
+                margin-bottom: 20px;
+                gap: 12px;
+            }
+
+            .profile-avatar {
+                flex-shrink: 0;
+            }
+
+            .profile-info {
+                flex: 1;
+            }
+
+            .profile-name {
+                font-size: 18px;
+                font-weight: bold;
+                color: #333;
+                margin-bottom: 5px;
+                display: block;
+            }
+
+            .profile-matching-status {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+
+            .matching-status-text {
+                font-size: 14px;
+                color: #666;
+            }
+
+            .profile-completion {
+                margin-bottom: 20px;
+            }
+
+            .completion-text {
+                font-size: 12px;
+                color: #666;
+                line-height: 1.4;
+            }
+
+            .matching-status-section {
+                border: 1px solid #e0e0e0;
+                border-radius: 8px;
+                padding: 15px;
+                margin-bottom: 15px;
+            }
+
+            .matching-status-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 15px;
+            }
+
+            .matching-status-title {
+                font-size: 16px;
+                font-weight: bold;
+                color: #333;
+            }
+
+            .matching-settings-link {
+                font-size: 12px;
+                color: #007bff;
+                text-decoration: none;
+                cursor: pointer;
+            }
+
+            .profile-progress {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 8px;
+            }
+
+            .progress-label {
+                font-size: 14px;
+                color: #666;
+            }
+
+            .progress-percent {
+                font-size: 14px;
+                color: #666;
+            }
+
+            .progress-bar {
+                width: 100%;
+                height: 8px;
+                background-color: #e0e0e0;
+                border-radius: 4px;
+                overflow: hidden;
+                margin-bottom: 15px;
+            }
+
+            .progress-fill {
+                height: 100%;
+                background: linear-gradient(90deg, #00d4ff, #2ecc71);
+                transition: width 0.3s ease;
+            }
+
+            .stats-section {
+                display: grid;
+                grid-template-columns: 1fr 1fr 1fr;
+                gap: 15px;
+                padding: 0 5px;
+            }
+
+            .stats-item {
+                text-align: center;
+            }
+
+            .stats-number {
+                font-size: 24px;
+                font-weight: bold;
+                color: #333;
+                margin-bottom: 5px;
+                display: block;
+            }
+
+            .stats-label {
+                font-size: 12px;
+                color: #666;
+            }
+
             /* 작은 모바일 */
             @media (max-width: 480px) {
                 .company-row {
@@ -852,6 +1050,31 @@ scwin.refreshCompanyList = function () {
 
                 .position-card {
                     padding: 15px;
+                }
+
+                .profile-area {
+                    padding: 15px;
+                }
+
+                .profile-header {
+                    flex-direction: column;
+                    text-align: center;
+                    gap: 10px;
+                }
+
+                .profile-matching-status {
+                    justify-content: center;
+                }
+
+                .matching-status-header {
+                    flex-direction: column;
+                    gap: 10px;
+                    text-align: center;
+                }
+
+                .stats-section {
+                    grid-template-columns: 1fr;
+                    gap: 10px;
                 }
             }
         ]]></style>
@@ -923,7 +1146,8 @@ scwin.refreshCompanyList = function () {
 
 					<!-- 로그인 박스 -->
 					<xf:group class="hero-right">
-						<xf:group class="login-area">
+						<!-- 비로그인 상태 -->
+						<xf:group class="login-area" id="grp_login_area">
 							<w2:textbox class="login-title" label="로그인하고 기업 매칭에 참여해 보세요."></w2:textbox>
 							<xf:trigger class="btn-main-login" id="btnMainLogin" ev:onclick="scwin.btnLogin_onclick" type="button">
 								<xf:label><![CDATA[로그인]]></xf:label>
@@ -932,6 +1156,63 @@ scwin.refreshCompanyList = function () {
 								<w2:textbox class="gift-text" label="매칭 퀘스트 완료하고"></w2:textbox>
 								<w2:textbox class="gift-text-bold" label="합격자 이력서 받아가세요!"></w2:textbox>
 								<w2:textbox class="gift-icon" label="🎁"></w2:textbox>
+							</xf:group>
+						</xf:group>
+						
+						<!-- 로그인 상태 - 프로필 영역 -->
+						<xf:group class="profile-area" id="grp_profile_area" style="display:none;">
+							<!-- 사용자 정보 헤더 -->
+							<xf:group class="profile-header">
+								<xf:group class="profile-avatar">
+									<xf:image src="/InsWebApp/images/ws5/default_avatar.png" style="width:40px;height:40px;border-radius:50%;" id="img_user_avatar"></xf:image>
+								</xf:group>
+								<xf:group class="profile-info">
+									<w2:textbox class="profile-name" id="txb_user_name" label="김지훈님"></w2:textbox>
+									<xf:group class="profile-matching-status">
+										<w2:textbox class="matching-status-text" id="txb_matching_status" label="매칭 OFF"></w2:textbox>
+										<w2:switch id="swt_matching_toggle" ev:onchange="scwin.toggleMatching" style="margin-left:10px;"></w2:switch>
+									</xf:group>
+								</xf:group>
+							</xf:group>
+							
+							<!-- 프로필 완성도 -->
+							<xf:group class="profile-completion">
+								<w2:textbox class="completion-text" label="필수 조건을 입력하여 매칭 프로필 완성도를 높이세요!"></w2:textbox>
+							</xf:group>
+							
+							<!-- 매칭 상태 -->
+							<xf:group class="matching-status-section">
+								<xf:group class="matching-status-header">
+									<w2:textbox class="matching-status-title" label="매칭 상태"></w2:textbox>
+									<w2:anchor class="matching-settings-link" ev:onclick="scwin.goToMatchingSettings">
+										<xf:label><![CDATA[매칭 검사 설정 >]]></xf:label>
+									</w2:anchor>
+								</xf:group>
+								
+								<!-- 프로필 완성도 바 -->
+								<xf:group class="profile-progress">
+									<w2:textbox class="progress-label" label="매칭 프로필 완성도"></w2:textbox>
+									<w2:textbox class="progress-percent" id="txb_profile_complete" label="10%"></w2:textbox>
+								</xf:group>
+								<xf:group class="progress-bar">
+									<xf:group class="progress-fill" style="width:10%;"></xf:group>
+								</xf:group>
+							</xf:group>
+							
+							<!-- 통계 영역 -->
+							<xf:group class="stats-section">
+								<xf:group class="stats-item">
+									<w2:textbox class="stats-number" id="txb_bookmark_count" label="0"></w2:textbox>
+									<w2:textbox class="stats-label" label="북마크"></w2:textbox>
+								</xf:group>
+								<xf:group class="stats-item">
+									<w2:textbox class="stats-number" id="txb_matching_count" label="0"></w2:textbox>
+									<w2:textbox class="stats-label" label="매칭 제안"></w2:textbox>
+								</xf:group>
+								<xf:group class="stats-item">
+									<w2:textbox class="stats-number" id="txb_application_count" label="0"></w2:textbox>
+									<w2:textbox class="stats-label" label="지원현황"></w2:textbox>
+								</xf:group>
 							</xf:group>
 						</xf:group>
 					</xf:group>
