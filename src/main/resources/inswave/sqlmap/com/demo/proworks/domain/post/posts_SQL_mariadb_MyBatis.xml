@@ -72,14 +72,15 @@
                 JOB_POSTING_ID            = #{jobPostingId}           
     </update>
 	
-    <delete id="deletePost" parameterType="com.demo.proworks.domain.post.vo.PostVo">
-    	<!-- 공고정보를 삭제한다. -->
+    <update id="deletePost" parameterType="com.demo.proworks.domain.post.vo.PostVo">
+    	<!-- 공고정보를 소프트 삭제한다. (is_deleted = 1로 설정) -->
     	
-        DELETE FROM POSTS   /* QueryID : com.demo.proworks.domain.post.deletePost */ 
+        UPDATE POSTS   /* QueryID : com.demo.proworks.domain.post.deletePost */ 
+        SET IS_DELETED = 1
         WHERE   
                 JOB_POSTING_ID            = #{jobPostingId}           
         
-    </delete>
+    </update>
 	
     <select id="selectPost" parameterType="com.demo.proworks.domain.post.vo.PostVo" resultType="com.demo.proworks.domain.post.vo.PostVo">
     	<!-- 공고정보를 상세 조회한다. -->	
@@ -92,29 +93,47 @@
     </select>
 	
     <select id="selectListPost" parameterType="com.demo.proworks.domain.post.vo.PostVo" resultType="com.demo.proworks.domain.post.vo.PostVo">
-    	<!-- 공고정보 목록을 조회한다. -->
+    	<!-- 공고정보 목록을 조회한다. (디버깅용: 모든 공고 조회) -->
            SELECT    /* QueryID : com.demo.proworks.domain.post.selectListPost */
-               JOB_POSTING_ID as jobPostingId, COMPANY_ID as companyId, TITLE as title, DESCRIPTION as description, EXPERIENCE_LEVEL as experienceLevel, SALARY_RANGE as salaryRange, LOCATION as location, WORK_TYPE as workType, PREFERRED_DEVELOPER_TYPES as preferredDeveloperTypes, EXPIRES_AT as expiresAt, POSTED_AT as postedAt, STATUS as status		       
-           FROM (
-               SELECT  S.*, CEIL( (@ROWNUM:=@ROWNUM+1) / #{pageSize} ) AS PAGE
-               FROM (				
-                   SELECT 
-                       *  		                  
-                   FROM POSTS
-                   WHERE  1=1    		
-	     																														
-               ) S, (SELECT @ROWNUM := 0) TMP
-           ) A
-            WHERE PAGE = #{pageIndex}
+               JOB_POSTING_ID as jobPostingId, 
+               COMPANY_ID as companyId, 
+               TITLE as title, 
+               DESCRIPTION as description, 
+               EXPERIENCE_LEVEL as experienceLevel, 
+               SALARY_RANGE as salaryRange, 
+               LOCATION as location, 
+               WORK_TYPE as workType, 
+               PREFERRED_DEVELOPER_TYPES as preferredDeveloperTypes, 
+               EXPIRES_AT as expiresAt, 
+               POSTED_AT as postedAt, 
+               STATUS as status		       
+           FROM POSTS
+           WHERE  1=1
+           AND (IS_DELETED IS NULL OR IS_DELETED = 0)    
+           <!-- 임시로 company_id 조건 제거 (디버깅용) -->
+           <!--
+           <if test="companyId != null and companyId != ''">
+           AND COMPANY_ID = #{companyId}
+           </if>
+           -->
+           ORDER BY POSTED_AT DESC
+           LIMIT 20
     </select>
 	
     <select id="selectListCountPost" parameterType="com.demo.proworks.domain.post.vo.PostVo" resultType="long">
-    <!-- 공고정보 목록의 카운트를 조회한다. -->
+    <!-- 공고정보 목록의 카운트를 조회한다. (디버깅용: 모든 공고 카운트) -->
     
          SELECT    /* QueryID : com.demo.proworks.domain.post.selectListCountPost */
              COUNT(*) totcnt  		                  
          FROM POSTS
-         WHERE  1=1    		
+         WHERE  1=1
+         AND (IS_DELETED IS NULL OR IS_DELETED = 0)
+         <!-- 임시로 company_id 조건 제거 (디버깅용) -->
+         <!--
+         <if test="companyId != null and companyId != ''">
+         AND COMPANY_ID = #{companyId}
+         </if>
+         -->
 
     </select>
 
@@ -154,6 +173,18 @@
     <select id="selectTechStacksByJobId" parameterType="String" resultType="com.demo.proworks.domain.post.vo.TechStackVo">
         <!-- 특정 공고의 기술스택 목록을 조회한다. -->
         SELECT  /* QueryID : com.demo.proworks.domain.post.selectTechStacksByJobId */
+            ts.tech_stack_id as techStackId,
+            ts.tech_stack_name as techStackName
+        FROM tech_stack ts
+        INNER JOIN company_tech_stack_relation ctsr ON ts.tech_stack_id = ctsr.tech_stack_id
+        WHERE ctsr.job_posting_id = #{jobPostingId}
+        ORDER BY ts.tech_stack_name
+    </select>
+
+    <!-- 공고별 선택된 기술스택 조회 (PostService 인터페이스 호환용) -->
+    <select id="selectTechStacksByPostId" parameterType="String" resultType="com.demo.proworks.domain.post.vo.TechStackVo">
+        <!-- 특정 공고의 기술스택 목록을 조회한다. (PostService 호환) -->
+        SELECT  /* QueryID : com.demo.proworks.domain.post.selectTechStacksByPostId */
             ts.tech_stack_id as techStackId,
             ts.tech_stack_name as techStackName
         FROM tech_stack ts
