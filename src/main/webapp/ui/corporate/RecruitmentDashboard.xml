@@ -668,6 +668,7 @@ scwin.btn_refresh_onclick = function() {
 scwin.btn_newJob_onclick = function (e) {
     // $p.url("CreatePosting.xml");
     $p.url("../post/CreatePosting.xml");
+<<<<<<< Updated upstream
 };
 
 // 공고 관리 카드 클릭
@@ -680,6 +681,8 @@ scwin.grp_quickManagement_onclick = function(e) {
 	if (recruitmentSection) {
 		recruitmentSection.scrollIntoView({ behavior: 'smooth' });
 	}
+=======
+>>>>>>> Stashed changes
 };
 
 // 채용 통계 클릭

@@ -8,6 +8,7 @@
         <w2:MSA/>
         <w2:layoutInfo/>
         <w2:publicInfo method=""/>
+        <link rel="stylesheet" type="text/css" href="/cm/css/gridview-enhancement.css"/>
         <style>
             .header-container {
                 display: flex;

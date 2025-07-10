@@ -19,33 +19,20 @@
 		<w2:layoutInfo />
 		<w2:publicInfo method="" />
 		<script type="text/javascript"><![CDATA[
-// 사용자 정보 설정 함수 (로그인 팝업에서 호출)
-scwin.setUserInfo = function (userInfo) {
-    // 세션에 사용자 정보 저장
-    WebSquare.session.setAttribute("userInfo", userInfo);
-
-    // 헤더 UI 업데이트
-    scwin.updateHeaderUI();
-
-    console.log("사용자 정보 설정 완료:", userInfo);
-};
-
 // 헤더 UI 업데이트 함수
 scwin.updateHeaderUI = function () {
-    var userInfo = WebSquare.session.getAttribute("userInfo");
+    
+    // if (userInfo == null) {
+    //     // 비로그인 유저
+    //     txb_login.hide();
+    //     btnLogin.show();
+    // } else {
+    //     // 로그인 유저
+    //     btnLogin.hide();
+    //     txb_login.show();
 
-    console.log(userInfo);
-    if (userInfo == null) {
-        // 비로그인 유저
-        txb_login.hide();
-        btnLogin.show();
-    } else {
-        // 로그인 유저
-        btnLogin.hide();
-        txb_login.show();
-
-        txb_login.setValue(userInfo.name + " 님");
-    }
+    //     txb_login.setValue(userInfo.name + " 님");
+    // }
 };
 
 // 페이지 로드 시 초기 헤더 상태 설정
@@ -55,7 +42,7 @@ scwin.onpageload = function () {
 
 // 로그아웃
 scwin.logout = function () {
-    globalUserInfo = null;
+    // 쿠키 비우기 추가하기
     scwin.updateHeaderUI();
     pf_main.setSrc("weaveRtpeMain.xml");
 };

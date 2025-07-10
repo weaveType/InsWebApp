@@ -284,9 +284,9 @@ scwin.loadCompanyList = function () {
     dmp_corporateSearchVo.set("roleId", 2);
     dmp_corporateSearchVo.set("pageIndex", 1);
     dmp_corporateSearchVo.set("pageSize", 12);
-
+7
     // 서버 통신 실행
-    $c.sbm.execute($p, sbm_selectCompanyList);
+    $c.sbm.execute(sbm_selectCompanyList);
 };
 
 /**
