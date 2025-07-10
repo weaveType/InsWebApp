@@ -303,6 +303,7 @@ scwin.login_popup_closeAction = function (result) {
                 display:flex;
                 float: right;
                 padding-top: 18px;
+                align-items: center;
             }
 
             .btn-login {
@@ -424,7 +425,7 @@ scwin.login_popup_closeAction = function (result) {
 						<xf:trigger class="btn-login" id="btnLogin" ev:onclick="scwin.btnLogin_onclick" type="button">
 							<xf:label><![CDATA[로그인/회원가입]]></xf:label>
 						</xf:trigger>
-						<w2:textbox id="txb_login" label="" style="width:150px;height:32px;text-align:left;font-size: 16px;cursor:pointer;color:#666666;text-decoration:underline;vertical-align:middle;"
+						<w2:textbox id="txb_login" label="" style="width:150px;height:32px;text-align:left;font-size: 16px;cursor:pointer;color:#666666;text-decoration:underline;border:none;background:transparent;line-height:32px;padding:0;margin:0;"
 							ev:onclick="scwin.txb_login_onclick" title="클릭하여 로그아웃"></w2:textbox>
 
 						<xf:trigger class="btn-enterprise" id="btnEnterprise" ev:onclick="scwin.btnEnterprise_onclick" type="button">
