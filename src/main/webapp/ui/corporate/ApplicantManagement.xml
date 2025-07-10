@@ -338,21 +338,8 @@ scwin.fail_btn_onclick = function (e) {
 ]]></script>
     </head>
     <body ev:onpageload="scwin.onpageload">
+        <w2:wframe src="../common/Header.xml" id="headerFrame" />
         <xf:group class="sub_contents" style="background-color:#f8f9fa;">
-
-        	<!-- 헤더 영역 -->
-        	<xf:group class="header-container"
-        		style="display:flex; justify-content:space-between; align-items:center; padding:20px; background-color:#f8f9fa; border-bottom:1px solid #e9ecef;">
-        		<xf:group class="header-left" style="display:flex; align-items:center;">
-        			<w2:span
-        				style="width:30px; height:30px; background-color:#3498db; border-radius:6px; margin-right:12px; display:inline-block; text-align:center; line-height:30px; color:white; font-weight:bold;">
-        				������
-        			</w2:span>
-        			<w2:textbox id="" label="지원자 관리"
-        				style="font-size:24px; font-weight:bold; color:#2c3e50; border:none; background:transparent;" />
-        		</xf:group>
-        		<w2:textbox id="totalCount" label="총 5명의 지원자" style="color:#6c757d; font-size:14px; border:none; background:transparent;" />
-        	</xf:group>
 
         	<!-- 컨트롤 바 -->
         	<xf:group class="control-bar"
@@ -372,8 +359,8 @@ scwin.fail_btn_onclick = function (e) {
         	</xf:group>
 
         	<!-- 그리드 영역 -->
-        	<xf:group style="">
-        		<w2:gridView checkAllType="false" defaultCellHeight="20" id="" style="height:633px;" dataList="data:applicant_list"
+        	<xf:group style="display:flex; flex-direction:column; justify-content:center; align-items:center; padding:20px;">
+        		<w2:gridView checkAllType="false" defaultCellHeight="20" id="" style="height:633px;width: 80%;" dataList="data:applicant_list"
         			readOnly="true">
         			<w2:caption style="" id="caption2" value="this is a grid caption."></w2:caption>
         			<w2:header style="" id="header2">
@@ -408,7 +395,7 @@ scwin.fail_btn_onclick = function (e) {
         			</w2:gBody>
         		</w2:gridView>
         		<xf:group class="pglbox" id="" meta_snippetCategory="06_그리드" meta_snippetKeyComponent="true"
-        			meta_snippetName="6_03 페이지리스트">
+        			meta_snippetName="6_03 페이지리스트" style="margin-top:20px;">
         			<w2:pageList class="pgl" displayButtonType="display" displayFormat="#" id="pageList1" pageSize="10" pagingType="0"
         				style="">
         			</w2:pageList>

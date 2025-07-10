@@ -856,7 +856,7 @@ scwin.refreshCompanyList = function () {
         ]]></style>
 	</head>
 	<body ev:onpageload="scwin.onpageload">
-        <w2:wframe src="Header.xml" id="headerFrame" style="width:100%;height:70px;"/>
+        <w2:wframe src="Header.xml" id="headerFrame" />
 		<xf:group class="main-wrap">
 			<!-- 사이드 메뉴 오버레이 -->
 			<xf:group class="side-menu-overlay" id="sideMenuOverlay" ev:onclick="scwin.closeSideMenu()"></xf:group>
