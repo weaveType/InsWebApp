@@ -134,4 +134,15 @@ public class PostDAO extends com.demo.proworks.cmmn.dao.ProworksDefaultAbstractD
         return (List<TechStackVo>)list("com.demo.proworks.domain.post.selectTechStacksByJobId", jobPostingId);
     }
 
+    /**
+     * 특정 공고의 기술스택 목록을 조회한다. (PostService 인터페이스 호환)
+     *  
+     * @param  String 공고ID
+     * @return List<TechStackVo> 기술스택 목록
+     * @throws ElException
+     */
+    public List<TechStackVo> selectTechStacksByPostId(String jobPostingId) throws ElException {
+        return selectTechStacksByJobId(jobPostingId);
+    }
+
 }

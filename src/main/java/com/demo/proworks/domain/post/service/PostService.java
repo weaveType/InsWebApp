@@ -89,5 +89,22 @@ public interface PostService {
      * @throws Exception
      */
 	public void saveTechStackRelations(PostVo postVo, List<String> techStackIds) throws Exception;
+
+    /**
+     * 특정 공고의 기술스택 관계를 모두 삭제한다.
+     *
+     * @param  jobPostingId 공고 ID
+     * @throws Exception
+     */
+	public void deleteTechStackRelationsByPostId(String jobPostingId) throws Exception;
+
+    /**
+     * 특정 공고의 기술스택 목록을 조회한다.
+     *
+     * @param  jobPostingId 공고 ID
+     * @return 기술스택 목록 List<TechStackVo>
+     * @throws Exception
+     */
+	public List<TechStackVo> selectTechStacksByPostId(String jobPostingId) throws Exception;
 	
 }
