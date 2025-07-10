@@ -435,6 +435,7 @@ scwin.searchBox_onenter = function() {
 ]]></script>
     </head>
     <body ev:onpageload="scwin.onpageload">
+        <w2:wframe src="../common/Header.xml" id="headerFrame" />
         <xf:group class="sub_contents" style="background-color:#f8f9fa;">
 
             <!-- 헤더 영역 -->

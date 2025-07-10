@@ -18,21 +18,31 @@
 		</xf:model>
 		<w2:layoutInfo />
 		<w2:publicInfo method="" />
-		<script type="text/javascript"><![CDATA[
-// 헤더 UI 업데이트 함수
+		<script type="text/javascript"><![CDATA[// 헤더 UI 업데이트 함수
 scwin.updateHeaderUI = function () {
+    // 쿠키에서 사용자 정보 읽어오기
+    var userInfoCookie = WebSquare.cookie.getCookie("userInfo");
+    var userInfo = null;
     
-    // if (userInfo == null) {
-    //     // 비로그인 유저
-    //     txb_login.hide();
-    //     btnLogin.show();
-    // } else {
-    //     // 로그인 유저
-    //     btnLogin.hide();
-    //     txb_login.show();
-
-    //     txb_login.setValue(userInfo.name + " 님");
-    // }
+    if (userInfoCookie) {
+        try {
+            userInfo = JSON.parse(userInfoCookie);
+        } catch (e) {
+            console.error("사용자 정보 파싱 오류:", e);
+            userInfo = null;
+        }
+    }
+    
+    if (userInfo == null) {
+        // 비로그인 상태
+        txb_login.hide();
+        btnLogin.show();
+    } else {
+        // 로그인 상태
+        btnLogin.hide();
+        txb_login.show();
+        txb_login.setValue(userInfo.name + " 님");
+    }
 };
 
 // 페이지 로드 시 초기 헤더 상태 설정
@@ -42,7 +52,8 @@ scwin.onpageload = function () {
 
 // 로그아웃
 scwin.logout = function () {
-    // 쿠키 비우기 추가하기
+    // 쿠키 삭제
+    WebSquare.cookie.removeCookie("userInfo");
     scwin.updateHeaderUI();
     pf_main.setSrc("weaveRtpeMain.xml");
 };
@@ -103,6 +114,13 @@ scwin.goToUserDetail = function () {
 // 기업 등록 페이지로 이동
 scwin.goToCompanyRegister = function () {
     $p.url("../company/create_company.xml");
+};
+
+// 사용자 이름 클릭 시 로그아웃 (옵션)
+scwin.txb_login_onclick = function () {
+    if (confirm("로그아웃 하시겠습니까?")) {
+        scwin.logout();
+    }
 };
 
 // 로그인 팝업 닫기 콜백 함수
@@ -387,19 +405,17 @@ scwin.login_popup_closeAction = function (result) {
 				<xf:group class="header-container">
 					<xf:group class="header-left" style="">
 						<xf:group class="nav-menu" style="">
-							<xf:image src="/InsWebApp/images/ws5/codefit_logo.png" style="width:150px;height:50px;"
-								id="codeFITLogo" class="logo" ev:onclick="scwin.weaveTypeLogo_onclick">
+							<xf:image src="/InsWebApp/images/ws5/codefit_logo.png" style="width:150px;height:50px;" id="codeFITLogo" class="logo"
+								ev:onclick="scwin.weaveTypeLogo_onclick">
 							</xf:image>
 							<w2:anchor class="nav-link" id="anchor1" ev:onclick="scwin.menu1_onclick" outerDiv="false"
 								style="margin-left: 20px;font-size: 16px;">
 								<xf:label><![CDATA[매칭]]></xf:label>
 							</w2:anchor>
-							<w2:anchor class="nav-link" id="anchor2" ev:onclick="scwin.menu2_onclick" outerDiv="false"
-								style="font-size: 16px;">
+							<w2:anchor class="nav-link" id="anchor2" ev:onclick="scwin.menu2_onclick" outerDiv="false" style="font-size: 16px;">
 								<xf:label><![CDATA[mbti검사]]></xf:label>
 							</w2:anchor>
-							<w2:anchor class="nav-link" id="anchor3" ev:onclick="scwin.menu3_onclick" outerDiv="false"
-								style="font-size: 16px;">
+							<w2:anchor class="nav-link" id="anchor3" ev:onclick="scwin.menu3_onclick" outerDiv="false" style="font-size: 16px;">
 								<xf:label><![CDATA[기업 둘러보기]]></xf:label>
 							</w2:anchor>
 						</xf:group>
@@ -408,7 +424,8 @@ scwin.login_popup_closeAction = function (result) {
 						<xf:trigger class="btn-login" id="btnLogin" ev:onclick="scwin.btnLogin_onclick" type="button">
 							<xf:label><![CDATA[로그인/회원가입]]></xf:label>
 						</xf:trigger>
-						<w2:textbox id="txb_login" label="" style="width:150px;height:32px;text-align:left;font-size: 16px;"></w2:textbox>
+						<w2:textbox id="txb_login" label="" style="width:150px;height:32px;text-align:left;font-size: 16px;cursor:pointer;"
+							ev:onclick="scwin.txb_login_onclick" title="클릭하여 로그아웃"></w2:textbox>
 
 						<xf:trigger class="btn-enterprise" id="btnEnterprise" ev:onclick="scwin.btnEnterprise_onclick" type="button">
 							<xf:label><![CDATA[기업 서비스]]></xf:label>

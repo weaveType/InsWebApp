@@ -212,7 +212,7 @@ scwin.sbm_login_submitdone = function (e) {
             $p.closePopup();
 
         } else if (role === "COMPANY") {
-            $p.url("../corporate/RecruitmentDashboard.xml");
+            $p.url("RecruitmentDashboard.xml");
             $p.closePopup();
         }
     }

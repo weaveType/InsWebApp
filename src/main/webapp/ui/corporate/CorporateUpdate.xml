@@ -629,6 +629,7 @@ scwin.sbm_deleteCorporateVo_submitdone = function (e) {
 	</head>
 
 	<body ev:onpageload="scwin.onpageload">
+        <w2:wframe src="../common/Header.xml" id="headerFrame" />
 		<xf:group class="main-container">
 			<!-- 페이지 제목 -->
 			<xf:group class="page-title">
