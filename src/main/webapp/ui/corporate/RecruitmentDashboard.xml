@@ -461,8 +461,9 @@ scwin.sbm_postList_submitdone = function(e) {
 		return false;
 	}
 
-	// 공고정보 dataMap 초기화
+	// ✅ 공고정보 dataMap 초기화 (새로운 목록 조회 시 이전 선택 해제)
 	dmp_postVoDetail.setEmptyValue();
+	console.log("선택된 공고 정보 초기화 완료");
 
 	// 총 레코드 수 업데이트
 	spn_listCnt.setLabel(elData.totalCount);
@@ -485,10 +486,12 @@ scwin.sbm_postList_submitdone = function(e) {
 		console.log("- 제목:", dlt_postVoList.getCellData(i, "title"));
 		console.log("- 상태:", dlt_postVoList.getCellData(i, "status"));
 	}
+	
+	console.log("������ 삭제하려면: 1) 행 클릭하여 공고 선택 → 2) 삭제 버튼 클릭");
 };
 
 /**
- * GridView 행 클릭 이벤트 (상세 조회) - 표준 패턴 적용
+ * GridView 행 클릭 이벤트 (상세 조회) - 표준 패턴 + 선택 표시 개선
  */
 scwin.grd_postList_oncellclick = function(row, col) {
 	console.log("=== 공고 행 클릭 ===");
@@ -501,6 +504,9 @@ scwin.grd_postList_oncellclick = function(row, col) {
 	
 	var postData = dmp_postVoDetail.getJSON();
 	console.log("선택된 공고 데이터:", postData);
+	
+	// ✅ 선택된 행 정보를 UI에서 확인할 수 있도록 표시
+	console.log("✅ 공고 선택됨 - ID: " + postData.jobPostingId + ", 제목: " + postData.title);
 	
 	// 상세보기/수정 UI 표시
 	scwin.showPostDetail();
@@ -597,34 +603,41 @@ scwin.sbm_updatePost_submitdone = function(e) {
 };
 
 /**
- * 삭제 버튼 클릭 - 표준 패턴 적용
+ * 삭제 버튼 클릭 - 웹스퀘어 표준 패턴 적용
  */
 scwin.btn_delete_onclick = function() {
 	console.log("=== 삭제 버튼 클릭 ===");
 	
-	var selectedRowIndex = grd_postList.getSelectedRowIndex();
-	if (selectedRowIndex < 0) {
-		alert("삭제할 공고를 선택해주세요.");
+	// ✅ 웹스퀘어 표준 패턴: DataMap에 설정된 데이터 확인
+	var postData = dmp_postVoDetail.getJSON();
+	
+	// 선택된 공고가 없는 경우
+	if (!postData || !postData.jobPostingId) {
+		alert("삭제할 공고를 먼저 선택해주세요.\n(목록에서 행을 클릭하여 공고를 선택하세요)");
 		return;
 	}
 	
-	// ✅ 표준 패턴: 선택된 행의 데이터를 detail에 설정
-	dmp_postVoDetail.setJSON(dlt_postVoList.getRowJSON(selectedRowIndex));
-	var postData = dmp_postVoDetail.getJSON();
-	
 	console.log("삭제 대상 - ID:", postData.jobPostingId, "제목:", postData.title);
 	
-	if (confirm("'" + postData.title + "' 공고를 삭제하시겠습니까?\n\n삭제된 공고는 복구할 수 없습니다.")) {
+	// ✅ 소프트 삭제 확인 메시지
+	var confirmMsg = "'" + (postData.title || "선택된 공고") + "' 공고를 삭제하시겠습니까?\n\n" +
+					"※ 삭제된 공고는 목록에서 보이지 않게 됩니다.\n" +
+					"※ 소프트 삭제 방식으로 데이터베이스에서 완전히 삭제되지는 않습니다.";
+	
+	if (confirm(confirmMsg)) {
+		// 삭제 요청 전 로그
+		console.log("소프트 삭제 요청 - 전송 데이터:", postData);
+		
 		// 삭제 요청
 		$c.sbm.execute($p, sbm_deletePostVo);
 	}
 };
 
 /**
- * 공고 삭제 완료
+ * 공고 소프트 삭제 완료
  */
 scwin.sbm_deletePost_submitdone = function(e) {
-	console.log("=== 공고 삭제 완료 ===");
+	console.log("=== 공고 소프트 삭제 완료 ===");
 	console.log("삭제 응답:", e.responseJSON);
 	
 	var elHeader = e.responseJSON.elHeader;
@@ -634,9 +647,15 @@ scwin.sbm_deletePost_submitdone = function(e) {
 		return false;
 	}
 	
-	alert("공고가 성공적으로 삭제되었습니다!");
+	// ✅ 소프트 삭제 완료 메시지
+	alert("공고가 성공적으로 삭제되었습니다!\n\n" +
+		  "※ 소프트 삭제 방식으로 처리되어 목록에서 보이지 않습니다.\n" +
+		  "※ 데이터베이스에서는 is_deleted=1로 표시되었습니다.");
 	
-	// 목록 새로고침
+	// 선택된 공고 정보 초기화
+	dmp_postVoDetail.setEmptyValue();
+	
+	// 목록 새로고침 (삭제된 공고는 더 이상 보이지 않음)
 	scwin.loadPostList();
 };
 
@@ -888,7 +907,7 @@ scwin.formatDate = function(dateString) {
                 	<w2:gridView autoFit="allColumn" checkReadOnlyOnPasteEnable="" class="gvw" dataList="data:dlt_postVoList"
                 		defaultCellHeight="26" focusMode="row" id="grd_postList" scrollByColumn="false" scrollByColumnAdaptive="false" style="height: 300px;"
                 		visibleRowNum="10" ev:oncellclick="scwin.grd_postList_oncellclick" readOnly="true">
-                		<w2:caption style="" id="caption1" value="채용공고 목록 (행을 클릭하면 상세보기/수정이 가능합니다)"></w2:caption>
+                		<w2:caption style="" id="caption1" value="📋 채용공고 목록 (행을 클릭하여 공고를 선택한 후 수정/삭제 가능)"></w2:caption>
                 		<w2:header style="" id="header1">
                 			<w2:row style="" id="row1">
                 				<w2:column width="80" inputType="text" style="" id="column1" value="공고ID" displayMode="label"></w2:column>

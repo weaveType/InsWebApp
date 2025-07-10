@@ -209,49 +209,179 @@ public class PostController {
     @ElDescription(sub="공고정보 등록처리",desc="공고정보를 등록 처리 한다.")
     public void insertPost(PostVo postVo) throws Exception {    	 
         
+        System.out.println("=== 🔥 강화된 공고 등록 처리 시작 ===");
+        System.out.println("입력받은 PostVo: " + postVo.toString());
+        
+        // 🔥 중요한 필드들 개별 검증
+        System.out.println("=== 🔍 프론트엔드에서 받은 데이터 상세 검증 ===");
+        System.out.println("제목: '" + postVo.getTitle() + "'");
+        System.out.println("지역: '" + postVo.getLocation() + "'");
+        System.out.println("근무형태: '" + postVo.getWorkType() + "'");
+        System.out.println("기술스택 JSON: '" + postVo.getSelectedTechStackNames() + "'");
+        System.out.println("성향 JSON: '" + postVo.getPreferredDeveloperTypes() + "'");
+        System.out.println("상태: '" + postVo.getStatus() + "'");
+        
+        // 🔥 기술스택 JSON 즉시 검증
+        String selectedTechStackNames = postVo.getSelectedTechStackNames();
+        if (selectedTechStackNames == null || selectedTechStackNames.trim().isEmpty()) {
+            System.err.println("❌❌❌ 중대한 문제: 기술스택 JSON이 비어있습니다!");
+            System.err.println("받은 기술스택 데이터: " + selectedTechStackNames);
+            throw new RuntimeException("기술스택이 선택되지 않았습니다. 최소 1개 이상 선택해야 합니다.");
+        }
+        
+        // 🔥 JSON 파싱 미리 테스트
+        try {
+            ObjectMapper testMapper = new ObjectMapper();
+            String[] testArray = testMapper.readValue(selectedTechStackNames, String[].class);
+            if (testArray == null || testArray.length == 0) {
+                throw new RuntimeException("기술스택 배열이 비어있습니다");
+            }
+            System.out.println("✅ 기술스택 JSON 사전 검증 통과: " + java.util.Arrays.toString(testArray));
+        } catch (Exception e) {
+            System.err.println("❌❌❌ 기술스택 JSON 파싱 사전 검증 실패!");
+            System.err.println("오류: " + e.getMessage());
+            System.err.println("JSON: " + selectedTechStackNames);
+            throw new RuntimeException("기술스택 데이터 형식이 올바르지 않습니다: " + e.getMessage());
+        }
+        
         // 현재 사용자의 Company ID 설정 (세션에서 가져오기)
         String currentCompanyId = getCurrentUserCompanyId();
         if (currentCompanyId == null) {
             throw new RuntimeException("로그인 정보를 확인할 수 없습니다.");
         }
         postVo.setCompanyId(currentCompanyId);
+        System.out.println("Company ID 설정 완료: " + currentCompanyId);
         
     	// 1. 공고 정보 등록 (job_posting_id가 자동 생성됨)
+    	System.out.println("=== 📝 공고 정보 등록 시작 ===");
     	int result = postService.insertPost(postVo);
+    	System.out.println("공고 등록 결과: " + result);
     	
-    	if (result > 0) {
-    	    // 2. 기술스택 관계 데이터 저장
-    	    String selectedTechStackNames = postVo.getSelectedTechStackNames();
-    	    if (selectedTechStackNames != null && !selectedTechStackNames.trim().isEmpty()) {
+    	// ✅ 등록 후 생성된 jobPostingId 확인 (중요!)
+    	String generatedJobPostingId = postVo.getJobPostingId();
+    	System.out.println("생성된 Job Posting ID: " + generatedJobPostingId);
+    	
+    	if (result > 0 && generatedJobPostingId != null && !generatedJobPostingId.trim().isEmpty()) {
+    	    // 2. 🔥 기술스택 관계 데이터 저장 (강화된 버전)
+    	    System.out.println("=== 💻 기술스택 관계 저장 시작 ===");
+    	    System.out.println("처리할 기술스택 JSON: '" + selectedTechStackNames + "'");
+    	    
+    	    // 🔥 기술스택이 확실히 있는지 재검증
+    	    if (selectedTechStackNames != null && !selectedTechStackNames.trim().isEmpty() && 
+    	        !selectedTechStackNames.equals("[]") && !selectedTechStackNames.equals("null")) {
+    	        
     	        try {
+    	            System.out.println("=== JSON 파싱 시작 ===");
+    	            
     	            // JSON 문자열을 파싱하여 기술스택 이름들 추출
     	            ObjectMapper objectMapper = new ObjectMapper();
     	            String[] techStackNames = objectMapper.readValue(selectedTechStackNames, String[].class);
+    	            System.out.println("✅ JSON 파싱 성공!");
+    	            System.out.println("파싱된 기술스택 개수: " + techStackNames.length);
+    	            System.out.println("파싱된 기술스택 이름들: " + java.util.Arrays.toString(techStackNames));
+    	            
+    	            if (techStackNames.length == 0) {
+    	                throw new RuntimeException("파싱된 기술스택 배열이 비어있습니다");
+    	            }
     	            
     	            // 기술스택 이름으로 ID 찾아서 관계 테이블에 저장
     	            List<TechStackVo> allTechStacks = postService.selectListTechStack();
+    	            System.out.println("DB에서 조회한 전체 기술스택 개수: " + allTechStacks.size());
+    	            
     	            List<String> techStackIds = new ArrayList<>();
     	            
     	            for (String techStackName : techStackNames) {
+    	                System.out.println("🔍 기술스택 이름 매핑 시도: '" + techStackName + "'");
+    	                boolean found = false;
+    	                
+    	                if (techStackName == null || techStackName.trim().isEmpty()) {
+    	                    System.err.println("⚠️ 빈 기술스택 이름 건너뜀");
+    	                    continue;
+    	                }
+    	                
     	                for (TechStackVo techStack : allTechStacks) {
-    	                    if (techStack.getTechStackName().equals(techStackName)) {
+    	                    if (techStack.getTechStackName().trim().equals(techStackName.trim())) {
     	                        techStackIds.add(techStack.getTechStackId());
+    	                        System.out.println("✅ 매핑 성공: '" + techStackName + "' -> ID: " + techStack.getTechStackId());
+    	                        found = true;
     	                        break;
+    	                    }
+    	                }
+    	                
+    	                if (!found) {
+    	                    System.err.println("❌ 매핑 실패: '" + techStackName + "' (DB에 존재하지 않음)");
+    	                    // 유사한 이름들 찾아보기
+    	                    System.err.println("🔍 유사한 기술스택 찾기:");
+    	                    for (TechStackVo techStack : allTechStacks) {
+    	                        if (techStack.getTechStackName().toLowerCase().contains(techStackName.toLowerCase()) ||
+    	                            techStackName.toLowerCase().contains(techStack.getTechStackName().toLowerCase())) {
+    	                            System.err.println("  유사: '" + techStack.getTechStackName() + "' (ID: " + techStack.getTechStackId() + ")");
+    	                        }
     	                    }
     	                }
     	            }
     	            
+    	            System.out.println("=== 매핑 결과 ===");
+    	            System.out.println("매핑된 기술스택 ID들: " + techStackIds);
+    	            System.out.println("매핑 성공 개수: " + techStackIds.size() + " / " + techStackNames.length);
+    	            
     	            // 관계 데이터 저장
     	            if (!techStackIds.isEmpty()) {
+    	                System.out.println("=== 💾 관계 테이블 저장 시작 ===");
+    	                System.out.println("Job Posting ID: " + generatedJobPostingId);
+    	                System.out.println("저장할 기술스택 ID들: " + techStackIds);
+    	                
     	                postService.saveTechStackRelations(postVo, techStackIds);
+    	                
+    	                System.out.println("✅✅✅ 기술스택 관계 데이터 저장 완료!");
+    	                
+    	                // 🔥 저장 후 즉시 검증
+    	                System.out.println("=== 저장 후 검증 ===");
+    	                try {
+    	                    List<TechStackVo> savedTechStacks = postService.selectTechStacksByPostId(generatedJobPostingId);
+    	                    System.out.println("저장 후 조회된 기술스택 개수: " + savedTechStacks.size());
+    	                    for (TechStackVo savedTech : savedTechStacks) {
+    	                        System.out.println("  - " + savedTech.getTechStackName() + " (ID: " + savedTech.getTechStackId() + ")");
+    	                    }
+    	                } catch (Exception verifyError) {
+    	                    System.err.println("저장 후 검증 중 오류: " + verifyError.getMessage());
+    	                }
+    	                
+    	            } else {
+    	                System.err.println("❌❌❌ 치명적 오류: 저장할 기술스택 ID가 없습니다!");
+    	                System.err.println("원인 분석:");
+    	                System.err.println("  - 파싱된 기술스택 이름들: " + java.util.Arrays.toString(techStackNames));
+    	                System.err.println("  - DB 기술스택 개수: " + allTechStacks.size());
+    	                throw new RuntimeException("기술스택 매핑에 실패했습니다. 선택한 기술스택이 DB에 존재하지 않습니다.");
     	            }
     	            
     	        } catch (Exception e) {
-    	            // JSON 파싱 실패 시 로그 남기고 계속 진행
-    	            System.err.println("기술스택 JSON 파싱 오류: " + e.getMessage());
+    	            // JSON 파싱 실패 시 상세 로그 및 예외 처리
+    	            System.err.println("❌❌❌ 기술스택 처리 중 치명적 오류 발생!");
+    	            System.err.println("- 오류 클래스: " + e.getClass().getSimpleName());
+    	            System.err.println("- 오류 메시지: " + e.getMessage());
+    	            System.err.println("- 입력된 JSON: '" + selectedTechStackNames + "'");
+    	            System.err.println("- JSON 길이: " + selectedTechStackNames.length());
+    	            System.err.println("- JSON 첫 문자: " + (selectedTechStackNames.length() > 0 ? selectedTechStackNames.charAt(0) : "없음"));
+    	            System.err.println("- JSON 마지막 문자: " + (selectedTechStackNames.length() > 0 ? selectedTechStackNames.charAt(selectedTechStackNames.length()-1) : "없음"));
+    	            e.printStackTrace();
+    	            
+    	            // 🔥 기술스택 저장 실패는 치명적 오류로 처리
+    	            throw new RuntimeException("기술스택 저장 중 오류가 발생했습니다: " + e.getMessage());
     	        }
+    	    } else {
+    	        System.err.println("❌❌❌ 치명적 오류: 기술스택 JSON이 비어있거나 null입니다!");
+    	        System.err.println("받은 데이터: '" + selectedTechStackNames + "'");
+    	        throw new RuntimeException("기술스택이 선택되지 않았습니다. 최소 1개 이상 선택해야 합니다.");
     	    }
+    	} else {
+    	    System.err.println("❌❌❌ 공고 등록 실패 또는 Job Posting ID 생성 실패");
+    	    System.err.println("- 등록 결과: " + result);
+    	    System.err.println("- 생성된 ID: " + generatedJobPostingId);
+    	    throw new RuntimeException("공고 등록에 실패했습니다.");
     	}
+    	
+    	System.out.println("=== ✅ 공고 등록 처리 완료 ===");
     }
        
     /**
@@ -325,21 +455,28 @@ public class PostController {
     @ElDescription(sub = "공고정보 삭제처리", desc = "공고정보를 삭제 처리한다.")    
     public void deletePost(PostVo postVo) throws Exception {
         
+        System.out.println("=== 공고 삭제 처리 시작 ===");
+        System.out.println("삭제할 공고 ID: " + postVo.getJobPostingId());
+        
         // 권한 검증: 기존 공고 조회해서 현재 사용자 회사 것인지 확인
         PostVo existingPost = postService.selectPost(postVo);
         if (existingPost == null) {
             throw new RuntimeException("존재하지 않는 공고입니다.");
         }
         
+        System.out.println("기존 공고 확인 - 제목: " + existingPost.getTitle() + ", Company ID: " + existingPost.getCompanyId());
+        
         if (!hasCompanyPermission(existingPost.getCompanyId())) {
             throw new RuntimeException("해당 공고를 삭제할 권한이 없습니다.");
         }
         
-        // 기술스택 관계 먼저 삭제
-        postService.deleteTechStackRelationsByPostId(postVo.getJobPostingId());
+        // ✅ 소프트 삭제 방식: 기술스택 관계는 그대로 두고 공고만 is_deleted = 1로 설정
+        // 공고가 is_deleted = 1이 되면 목록 조회 시 제외되므로 기술스택 관계도 자연스럽게 보이지 않음
+        // 나중에 공고를 복구할 때 기술스택 관계도 함께 복구됨
         
-        // 공고 삭제 (소프트 삭제로 is_deleted = 1 설정)
+        System.out.println("공고 소프트 삭제 실행...");
         postService.deletePost(postVo);
+        System.out.println("=== 공고 삭제 처리 완료 ===");
     }
 
     /**
