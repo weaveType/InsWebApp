@@ -342,19 +342,20 @@ scwin.fail_btn_onclick = function (e) {
         <xf:group class="sub_contents" style="background-color:#f8f9fa;">
 
         	<!-- 컨트롤 바 -->
-        	<xf:group class="control-bar"
-        		style="display:flex; justify-content:space-between; align-items:center; padding:15px 20px; background-color:#ffffff; border-bottom:1px solid #e9ecef;">
-        		<w2:textbox id="selectedCount" label="4명 선택됨" style="color:#6c757d; font-size:14px; border:none; background:transparent;" />
-        		<xf:group class="button-group" style="display:flex; align-items:center; gap:10px;">
-        			<xf:trigger class="btn-approve"
-        				style="background-color:#28a745; color:white; border:none; padding:8px 16px; border-radius:4px; margin-right:10px;"
-        				type="button" id="pass_btn" ev:onclick="scwin.pass_btn_onclick">
-        				<xf:label><![CDATA[✓ 일괄 합격]]></xf:label>
-        			</xf:trigger>
-        			<xf:trigger class="btn-reject"
-        				style="background-color:#dc3545; color:white; border:none; padding:8px 16px; border-radius:4px;" type="button" id="fail_btn" ev:onclick="scwin.fail_btn_onclick">
-        				<xf:label><![CDATA[✗ 일괄 불합격]]></xf:label>
-        			</xf:trigger>
+        	<xf:group style="display:flex; justify-content:center; background-color:#ffffff; border-bottom:1px solid #e9ecef; padding:15px 0;">
+        		<xf:group class="control-bar" style="display:flex; justify-content:space-between; align-items:center; max-width:1100px; width:100%; padding:0 min(30px, 4vw);">
+        			<w2:textbox id="selectedCount" label="4명 선택됨" style="color:#6c757d; font-size:14px; border:none; background:transparent;" />
+        			<xf:group class="button-group" style="display:flex; align-items:center; gap:10px;">
+        				<xf:trigger class="btn-approve"
+        					style="background-color:#28a745; color:white; border:none; padding:8px 16px; border-radius:4px; margin-right:10px;"
+        					type="button" id="pass_btn" ev:onclick="scwin.pass_btn_onclick">
+        					<xf:label><![CDATA[✓ 일괄 합격]]></xf:label>
+        				</xf:trigger>
+        				<xf:trigger class="btn-reject"
+        					style="background-color:#dc3545; color:white; border:none; padding:1px 16px; border-radius:4px;" type="button" id="fail_btn" ev:onclick="scwin.fail_btn_onclick">
+        					<xf:label><![CDATA[✗ 일괄 불합격]]></xf:label>
+        				</xf:trigger>
+        			</xf:group>
         		</xf:group>
         	</xf:group>
 
