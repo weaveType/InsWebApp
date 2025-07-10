@@ -260,29 +260,23 @@
             width: 80px;
             height: 80px;
             border-radius: 50%;
-            background: black;
+            background: #f0f0f0; /* 이미지 로딩 전 배경색 */
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
-            font-size: clamp(18px, 3vw, 24px);
-            font-weight: bold;
             flex-shrink: 0;
+            overflow: hidden; /* 이미지가 원형 영역을 벗어나지 않도록 */
+        }
+
+        .profile-career {
+            margin: 4px 0 8px 0;
         }
 
         .profile-details h2 {
             font-size: clamp(20px, 3.5vw, 24px);
             font-weight: bold;
             color: #333;
-            margin: 0 0 8px 0;
-        }
-
-        .profile-status {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: clamp(13px, 1.8vw, 14px);
-            color: #666;
+            margin: 0 0 4px 0; /* 하단 마진 줄임 */
         }
 
         .status-badge {
@@ -350,20 +344,19 @@
             margin-bottom: 32px;
         }
 
-        .info-card {
-            width: 100%;
-            background-color: white;
-            border-radius: 12px;
-            padding: 24px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-            cursor: pointer;
-        }
+.info-card {
+    width: 100%;
+    background-color: #fff;
+    border: 1px solid #e0e0e0;   /* ← 옅은 테두리로 구분감만 */
+    border-radius: 12px;
+    padding: 24px;
 
-        .info-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 16px rgba(0,0,0,0.12);
-        }
+    /* 그림자·움직임 제거 */
+    box-shadow: none;
+    transition: none;
+    cursor: default;             /* 선택적으로 pointer → default 변경 */
+}
+
 
         .info-card-header {
             display: flex;
@@ -376,13 +369,6 @@
             font-size: clamp(14px, 2vw, 16px);
             font-weight: 600;
             color: #666;
-        }
-
-        .info-card-edit {
-            color: #007bff;
-            font-size: clamp(12px, 1.8vw, 14px);
-            cursor: pointer;
-            text-decoration: none;
         }
 
         /* 카드 내부 정보 그리드 */
@@ -823,22 +809,26 @@ scwin.startCodeAnalysis_onclick = function() {
 
 					<!-- 개인정보 카드들 -->
 					<section class="info-grid">
-						<div class="profile-info" style="">
-							<div class="profile-avatar">
-								<w2:textbox ref="data:dma_userInfo.userName" style="margin:0;"></w2:textbox>
-							</div>
-							<div class="profile-details">
-								<h2 ref="data:dma_userInfo.userName"></h2>
-								<div class="profile-status">
-									<div class="status-badge" ref="data:dma_userInfo.careerLevel"></div>
-									<w2:textbox label="인사선별접수 최신 정보에 가장 먼저 눈길이 갑니다. 프로필을 업데이트고 더 많은 기회를 잡아보세요!"></w2:textbox>
-								</div>
-							</div>
-						</div>
+						<xf:group class="profile-info" style="">
+							<xf:group class="profile-avatar">
+								<w2:image alt="프로필 이미지" src="../images/default-profile.png"
+									style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+								</w2:image>
+							</xf:group>
+							<xf:group class="profile-details">
+								<w2:textbox ref="data:dma_userInfo.userName"
+									style="font-size: 20px; font-weight: bold; color: #666; margin: 4px 0 8px 0;">
+								</w2:textbox>
+								<xf:group class="profile-career">
+									<w2:textbox ref="data:dma_userInfo.careerLevel" style="font-size: 14px; color: #666; margin: 4px 0 8px 0;">
+									</w2:textbox>
+								</xf:group>
+							</xf:group>
+						</xf:group>
 						<xf:group class="info-card" ev:onclick="scwin.editInfo_onclick('profile')">
 							<xf:group class="info-card-header">
 								<w2:textbox class="info-card-title" label="개인정보"></w2:textbox>
-								<w2:textbox class="info-card-edit" label="✏️"></w2:textbox>
+								<w2:textbox class="info-card-edit" label="✏️" style="color:#007bff;    font-size:clamp(18px,3vw,18px);    font-weight:700;    border:2px solid #ccc;    border-radius:12px;    aspect-ratio:1/1;    width: clamp(36px, 4vw, 56px);    display:flex;    align-items:center;    justify-content:center;    cursor:pointer;    text-decoration:none;"></w2:textbox>
 							</xf:group>
 
 							<xf:group class="info-content-grid">
@@ -868,6 +858,7 @@ scwin.startCodeAnalysis_onclick = function() {
 							</xf:group>
 
 						</xf:group>
+
 					</section>
 
 					<!-- 매칭에 필요한 정보 섹션 -->
@@ -878,7 +869,8 @@ scwin.startCodeAnalysis_onclick = function() {
 							<!-- MBTI 성격 검사 카드 -->
 							<div class="action-card incomplete" ev:onclick="scwin.startMbti_onclick()">
 								<div class="incomplete-badge">미완료</div>
-								<div class="action-card-icon" style="background: linear-gradient(135deg, #667eea, #764ba2); color: white;">
+								<div class="action-card-icon"
+									style="background: linear-gradient(135deg, #667eea, #764ba2); color: white;">
 									������
 								</div>
 								<w2:textbox class="action-card-title" label="mbti 성격 검사"></w2:textbox>
@@ -891,7 +883,8 @@ scwin.startCodeAnalysis_onclick = function() {
 							<!-- 코드분석 카드 -->
 							<div class="action-card incomplete" ev:onclick="scwin.startCodeAnalysis_onclick()">
 								<div class="incomplete-badge">미완료</div>
-								<div class="action-card-icon" style="background: linear-gradient(135deg, #f093fb, #f5576c); color: white;">
+								<div class="action-card-icon"
+									style="background: linear-gradient(135deg, #f093fb, #f5576c); color: white;">
 									������
 								</div>
 								<w2:textbox class="action-card-title" label="코드분석"></w2:textbox>
