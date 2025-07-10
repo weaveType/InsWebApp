@@ -141,13 +141,13 @@
             margin: 0 auto;
             background-color: #f8f9fa;
         }
-
+        
         /* 사이드바 */
         .sidebar {
             width: 280px;
             background-color: #ffffff;
             border-right: 1px solid #e0e0e0;
-            padding: min(30px, 4vw);
+            padding: 20px 20px 20px 5px; /* 좌측 패딩을 5px로 더 줄임 */
             flex-shrink: 0;
         }
 
@@ -156,6 +156,7 @@
             font-weight: bold;
             color: #333;
             margin-bottom: 30px;
+            margin-left: 0px; /* 제목 좌측 여백 제거 */
         }
 
         .sidebar-menu {
@@ -174,12 +175,13 @@
             color: #666;
             margin-bottom: 15px;
             padding-bottom: 8px;
+            padding-left: 5px; /* 카테고리 제목도 왼쪽으로 */
             border-bottom: 1px solid #f0f0f0;
         }
 
         .menu-item {
             display: block;
-            padding: 12px 16px;
+            padding: 12px 16px 12px 8px; /* 좌측 패딩을 8px로 줄임 */
             margin-bottom: 4px;
             color: #333;
             text-decoration: none;
@@ -414,6 +416,33 @@
             text-align: center;
         }
 
+        /* 완료된 액션 카드 스타일 */
+        .action-card.completed {
+            border: 2px solid #28a745; /* 녹색 테두리 */
+            background: linear-gradient(135deg, #f8fff8, #e8f5e8);
+        }
+
+        .completed-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background-color: #28a745; /* 녹색 배경 */
+            color: white;
+            font-size: 10px;
+            padding: 4px 8px;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+
+        .action-card.completed .action-card-button {
+            background-color: #28a745; /* 녹색 배경 */
+            cursor: default;
+        }
+
+        .action-card.completed .action-card-button:hover {
+            background-color: #28a745; /* 호버시에도 녹색 유지 */
+        }
+
         /* 액션 카드 */
         .action-cards {
             display: grid;
@@ -422,28 +451,20 @@
         }
 
         .action-card {
-            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
             border-radius: 12px;
             padding: 30px;
             text-align: center;
-            cursor: pointer;
-            transition: transform 0.2s ease;
             position: relative;
             overflow: hidden;
         }
 
-        .action-card:hover {
-            transform: translateY(-4px);
-        }
-
         .action-card.incomplete {
-            background: linear-gradient(135deg, #fff5f5, #fed7d7);
             border: 2px solid #fc8181;
         }
 
         .action-card-icon {
-            width: 80px;
-            height: 80px;
+            width: 150px;
+            height: 150px;
             border-radius: 16px;
             margin: 0 auto 20px;
             display: flex;
@@ -510,9 +531,9 @@
 
             .sidebar {
                 width: 100%;
-                padding: 20px;
                 border-right: none;
                 border-bottom: 1px solid #e0e0e0;
+                padding: 15px 15px 15px 10px; /* 모바일에서도 좌측 패딩 줄임 */
             }
 
             .sidebar-menu {
@@ -542,6 +563,10 @@
 
             .sidebar, .main-content {
                 padding: 15px;
+            }
+
+            .sidebar {
+                padding-left: 10px; /* 모바일에서도 좌측 패딩 유지 */
             }
 
             .profile-header {
@@ -580,6 +605,10 @@
                 padding: 10px;
             }
 
+            .sidebar {
+                padding-left: 8px; /* 작은 화면에서는 더 줄임 */
+            }
+
             .profile-header, .section {
                 padding: 20px;
             }
@@ -595,12 +624,14 @@
         }
         ]]></style>
 
-		<script lazy="false" type="text/javascript"><![CDATA[
-scwin.onpageload = function() {
+		<script lazy="false" type="text/javascript"><![CDATA[scwin.onpageload = function () {
     scwin.initializeUserData();
+    setTimeout(function () {
+        scwin.updateCardStatus();
+    }, 100);
 };
 
-scwin.initializeUserData = function() {
+scwin.initializeUserData = function () {
     dma_userInfo.set("userName", "김지훈");
     dma_userInfo.set("matchingEnabled", "ON");
     dma_userInfo.set("careerLevel", "신입");
@@ -608,36 +639,36 @@ scwin.initializeUserData = function() {
     dma_userInfo.set("jobCategory", "기타 직종/업무");
     dma_userInfo.set("salary", "3,000만원 이상");
     dma_userInfo.set("skills", "-");
-    dma_userInfo.set("mbtiCompleted", "false");
+    dma_userInfo.set("mbtiCompleted", "true");
     dma_userInfo.set("codeAnalysisCompleted", "false");
 };
 
 // 헤더 이벤트들
-scwin.weaveTypeLogo_onclick = function() {
+scwin.weaveTypeLogo_onclick = function () {
     $p.url("../common/weaveTypeMain.xml");
 };
 
-scwin.menu1_onclick = function() {
+scwin.menu1_onclick = function () {
     alert("매칭 페이지로 이동합니다.");
 };
 
-scwin.menu2_onclick = function() {
+scwin.menu2_onclick = function () {
     alert("MBTI 검사 페이지로 이동합니다.");
 };
 
-scwin.menu3_onclick = function() {
+scwin.menu3_onclick = function () {
     $p.url("../posting/PostList.xml");
 };
 
-scwin.btnLogin_onclick = function() {
+scwin.btnLogin_onclick = function () {
     alert("로그인/회원가입 페이지로 이동합니다.");
 };
 
-scwin.btnEnterprise_onclick = function() {
+scwin.btnEnterprise_onclick = function () {
     alert("기업 서비스 페이지로 이동합니다.");
 };
 
-scwin.searchInput_onkeypress = function(e) {
+scwin.searchInput_onkeypress = function (e) {
     if (e.keyCode === 13) {
         var searchText = searchInput.getValue();
         if (searchText && searchText.trim() !== "") {
@@ -646,7 +677,7 @@ scwin.searchInput_onkeypress = function(e) {
     }
 };
 
-scwin.btnSearch_onclick = function() {
+scwin.btnSearch_onclick = function () {
     var searchText = searchInput.getValue();
     if (searchText && searchText.trim() !== "") {
         alert("'" + searchText + "'를 검색합니다.");
@@ -654,11 +685,11 @@ scwin.btnSearch_onclick = function() {
 };
 
 // 매칭 토글
-scwin.toggleMatching_onclick = function() {
+scwin.toggleMatching_onclick = function () {
     var currentStatus = dma_userInfo.get("matchingEnabled");
     var newStatus = currentStatus === "ON" ? "OFF" : "ON";
     dma_userInfo.set("matchingEnabled", newStatus);
-    
+
     var toggleElement = document.querySelector('.toggle-switch');
     if (newStatus === "OFF") {
         toggleElement.classList.add('off');
@@ -668,8 +699,8 @@ scwin.toggleMatching_onclick = function() {
 };
 
 // 사이드바 메뉴 클릭
-scwin.sidebarMenu_onclick = function(menuId) {
-    switch(menuId) {
+scwin.sidebarMenu_onclick = function (menuId) {
+    switch (menuId) {
         case 'matching_home':
             alert("매칭 홈으로 이동합니다.");
             break;
@@ -705,8 +736,8 @@ scwin.sidebarMenu_onclick = function(menuId) {
 };
 
 // 정보 카드 수정
-scwin.editInfo_onclick = function(infoType) {
-    switch(infoType) {
+scwin.editInfo_onclick = function (infoType) {
+    switch (infoType) {
         case 'location':
             // 지역 수정 페이지로 이동
             $p.url("LocationEdit.xml");
@@ -727,18 +758,136 @@ scwin.editInfo_onclick = function(infoType) {
 };
 
 // MBTI 검사 시작
-scwin.startMbti_onclick = function() {
+scwin.startMbti_onclick = function () {
     alert("MBTI 성격 검사를 시작합니다.");
 };
 
 // 코드분석 시작
-scwin.startCodeAnalysis_onclick = function() {
+scwin.startCodeAnalysis_onclick = function () {
     alert("코드분석을 시작합니다.");
+};
+
+// 카드 상태 업데이트 함수
+scwin.updateCardStatus = function () {
+   var mbtiCompleted = dma_userInfo.get("mbtiCompleted") === "true";
+   var codeCompleted = dma_userInfo.get("codeAnalysisCompleted") === "true";
+
+   // MBTI 카드 상태 업데이트
+   scwin.updateSingleCard("mbti-card", mbtiCompleted);
+
+   // 코드분석 카드 상태 업데이트
+   scwin.updateSingleCard("code-card", codeCompleted);
+};
+
+// 개별 카드 상태 업데이트
+scwin.updateSingleCard = function (cardId, isCompleted) {
+   try {
+       // 클래스로 카드 찾기 (ID가 안되니까)
+       var cards = document.querySelectorAll('.action-card');
+       var cardElement = null;
+       
+       if (cardId === 'mbti-card' && cards.length > 0) {
+           cardElement = cards[0]; // 첫 번째 카드가 MBTI
+       } else if (cardId === 'code-card' && cards.length > 1) {
+           cardElement = cards[1]; // 두 번째 카드가 코드분석
+       }
+       
+       if (!cardElement) return;
+       
+       var badgeElement = cardElement.querySelector('.incomplete-badge, .completed-badge');
+       var buttonElement = cardElement.querySelector('.action-card-button');
+
+       if (isCompleted) {
+           // 완료 상태로 변경
+           cardElement.classList.remove('incomplete');
+           cardElement.classList.add('completed');
+           
+           // 직접 스타일 변경
+           cardElement.style.border = '2px solid #28a745';
+           cardElement.style.background = 'linear-gradient(135deg, #f8fff8, #e8f5e8)';
+
+           // 배지 업데이트
+           if (badgeElement) {
+               badgeElement.textContent = '완료';
+               badgeElement.className = 'completed-badge';
+               badgeElement.style.backgroundColor = '#28a745';
+           }
+
+           // 버튼 숨김 처리
+           if (buttonElement) {
+               buttonElement.style.display = 'none';
+           }
+           
+       } else {
+           // 미완료 상태로 변경
+           cardElement.classList.remove('completed');
+           cardElement.classList.add('incomplete');
+           
+           // 원래 스타일로 복원
+           cardElement.style.border = '2px solid #fc8181';
+           cardElement.style.background = 'linear-gradient(135deg, #fff5f5, #fed7d7)';
+
+           // 배지 업데이트
+           if (badgeElement) {
+               badgeElement.textContent = '미완료';
+               badgeElement.className = 'incomplete-badge';
+               badgeElement.style.backgroundColor = '#dc3545';
+           }
+
+           // 버튼 텍스트 업데이트 및 표시
+           if (buttonElement) {
+               buttonElement.style.display = 'block'; // 버튼 다시 표시
+               buttonElement.style.backgroundColor = '#dc3545';
+               if (cardId === 'mbti-card') {
+                   buttonElement.textContent = '시작하기';
+               } else if (cardId === 'code-card') {
+                   buttonElement.textContent = '분석하기';
+               }
+           }
+       }
+   } catch(e) {
+       console.log('updateSingleCard 에러:', e);
+   }
+};
+scwin.btn_userUpdate_onclick = function (e) {
+    $p.url("updateUser.xml");
 };
 ]]></script>
 	</head>
 
 	<body ev:onpageload="scwin.onpageload">
+		<xf:group tagname="header" style="" class="header">
+			<xf:group class="header-container">
+				<xf:group style="" class="header-left">
+					<xf:group style="margin-top:-8px;" class="nav-menu">
+						<xf:image src="/InsWebApp/images/ws5/codefit_logo.png" ev:onclick="scwin.weaveTypeLogo_onclick"
+							style="width:150px;height:50px;" id="image1" class="logo">
+						</xf:image>
+						<w2:anchor ev:onclick="scwin.menu1_onclick" outerDiv="false" style="margin-left: 20px;font-size: 16px;" id="anchor1"
+							class="nav-link">
+							<xf:label><![CDATA[매칭]]></xf:label>
+						</w2:anchor>
+						<w2:anchor ev:onclick="scwin.menu2_onclick" outerDiv="false" style="font-size: 16px;" id="anchor2"
+							class="nav-link">
+							<xf:label><![CDATA[mbti검사]]></xf:label>
+						</w2:anchor>
+						<w2:anchor ev:onclick="scwin.menu3_onclick" outerDiv="false" style="font-size: 16px;" id="anchor3"
+							class="nav-link">
+							<xf:label><![CDATA[기업 둘러보기]]></xf:label>
+						</w2:anchor>
+					</xf:group>
+				</xf:group>
+				<xf:group style="margin-top: -15px;margin-right: 30px;" class="header-right">
+					<xf:trigger ev:onclick="scwin.btnLogin_onclick" id="trigger1" type="button" class="btn-login">
+						<xf:label><![CDATA[로그인/회원가입]]></xf:label>
+					</xf:trigger>
+					<w2:textbox style="width:150px;height:32px;text-align:left;font-size: 16px;" id="textbox1" label=""></w2:textbox>
+					<xf:trigger ev:onclick="scwin.btnEnterprise_onclick" id="trigger2" type="button" class="btn-enterprise">
+						<xf:label><![CDATA[기업 서비스]]></xf:label>
+					</xf:trigger>
+				</xf:group>
+			</xf:group>
+		</xf:group>
 		<xf:group class="main-wrap">
 			<!-- 헤더 영역 -->
 
@@ -748,79 +897,50 @@ scwin.startCodeAnalysis_onclick = function() {
 				<aside class="sidebar">
 					<w2:textbox class="sidebar-title" label="MY JOBDA"></w2:textbox>
 
-					<div class="sidebar-menu">
-						<!-- 잡대해 섹션 -->
-						<div class="menu-category">
-							<w2:textbox class="menu-category-title" label="잡대해">
+					<xf:group class="sidebar-menu">
+						<xf:group class="menu-category">
+							<w2:textbox class="menu-category-title" label="메인">
 								<w2:span class="new-badge" label="NEW"></w2:span>
 							</w2:textbox>
 							<w2:anchor class="menu-item" ev:onclick="scwin.sidebarMenu_onclick('matching_home')">
-								<xf:label><![CDATA[매칭 홈]]></xf:label>
+								<xf:label><![CDATA[기업 둘러보기]]></xf:label>
 							</w2:anchor>
 							<w2:anchor class="menu-item" ev:onclick="scwin.sidebarMenu_onclick('matching_inquiry')">
 								<xf:label><![CDATA[매칭 현황]]></xf:label>
 							</w2:anchor>
-							<w2:anchor class="menu-item active incomplete" ev:onclick="scwin.sidebarMenu_onclick('matching_profile')">
-								<xf:label><![CDATA[매칭 프로필]]></xf:label>
-							</w2:anchor>
-							<w2:anchor class="menu-item incomplete" ev:onclick="scwin.sidebarMenu_onclick('matching_settings')">
-								<xf:label><![CDATA[매칭 설정]]></xf:label>
-							</w2:anchor>
-						</div>
+						</xf:group>
 
 						<!-- 내 정보 섹션 -->
-						<div class="menu-category">
+						<xf:group class="menu-category">
 							<w2:textbox class="menu-category-title" label="내 정보"></w2:textbox>
-							<w2:anchor class="menu-item" ev:onclick="scwin.sidebarMenu_onclick('profile')">
+							<w2:anchor class="menu-item active incomplete" ev:onclick="scwin.sidebarMenu_onclick('matching_profile')">
 								<xf:label><![CDATA[프로필]]></xf:label>
 							</w2:anchor>
-							<w2:anchor class="menu-item" ev:onclick="scwin.sidebarMenu_onclick('login_connection')">
-								<xf:label><![CDATA[로그인 연결]]></xf:label>
-							</w2:anchor>
-						</div>
-
-						<!-- 취업활동 관리 섹션 -->
-						<div class="menu-category">
-							<w2:textbox class="menu-category-title" label="취업활동 관리"></w2:textbox>
 							<w2:anchor class="menu-item" ev:onclick="scwin.sidebarMenu_onclick('application_history')">
 								<xf:label><![CDATA[지원현황]]></xf:label>
 							</w2:anchor>
 							<w2:anchor class="menu-item" ev:onclick="scwin.sidebarMenu_onclick('interest_company')">
 								<xf:label><![CDATA[관심기업]]></xf:label>
 							</w2:anchor>
-							<w2:anchor class="menu-item" ev:onclick="scwin.sidebarMenu_onclick('bookmark')">
-								<xf:label><![CDATA[북마크]]></xf:label>
-							</w2:anchor>
-						</div>
-
-						<!-- 계정 관리 섹션 -->
-						<div class="menu-category">
-							<w2:textbox class="menu-category-title" label="계정 관리"></w2:textbox>
-							<w2:anchor class="menu-item" ev:onclick="scwin.sidebarMenu_onclick('notification_management')">
-								<xf:label><![CDATA[알림 관리]]></xf:label>
-							</w2:anchor>
-						</div>
-					</div>
+						</xf:group>
+					</xf:group>
 				</aside>
 
 				<!-- 메인 콘텐츠 -->
 				<main class="main-content">
-					<!-- 사용자 프로필 헤더 -->
-
-					<!-- 개인정보 카드들 -->
+					<!-- 개인정보 카드 -->
 					<section class="info-grid">
 						<xf:group class="profile-info" style="">
 							<xf:group class="profile-avatar">
-								<w2:image alt="프로필 이미지" src="../images/default-profile.png"
-									style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
-								</w2:image>
+								<xf:image src="/InsWebApp/images/ws5/default_user.png" style="width: 80px;height: 80px;" id=""></xf:image>
 							</xf:group>
 							<xf:group class="profile-details">
 								<w2:textbox ref="data:dma_userInfo.userName"
 									style="font-size: 20px; font-weight: bold; color: #666; margin: 4px 0 8px 0;">
 								</w2:textbox>
 								<xf:group class="profile-career">
-									<w2:textbox ref="data:dma_userInfo.careerLevel" style="font-size: 14px; color: #666; margin: 4px 0 8px 0;">
+									<w2:textbox ref="data:dma_userInfo.careerLevel"
+										style="font-size: 14px; color: #666; margin: 4px 0 8px 0;">
 									</w2:textbox>
 								</xf:group>
 							</xf:group>
@@ -828,7 +948,10 @@ scwin.startCodeAnalysis_onclick = function() {
 						<xf:group class="info-card" ev:onclick="scwin.editInfo_onclick('profile')">
 							<xf:group class="info-card-header">
 								<w2:textbox class="info-card-title" label="개인정보"></w2:textbox>
-								<w2:textbox class="info-card-edit" label="✏️" style="color:#007bff;    font-size:clamp(18px,3vw,18px);    font-weight:700;    border:2px solid #ccc;    border-radius:12px;    aspect-ratio:1/1;    width: clamp(36px, 4vw, 56px);    display:flex;    align-items:center;    justify-content:center;    cursor:pointer;    text-decoration:none;"></w2:textbox>
+								<w2:textbox class="info-card-edit" label="✏️"
+									style="color:#007bff;    font-size:clamp(18px,3vw,18px);    font-weight:700;    border:1px solid #ccc;    border-radius:12px;    aspect-ratio:1/1;    width: clamp(36px, 4vw, 56px);    display:flex;    align-items:center;    justify-content:center;    cursor:pointer;    text-decoration:none;"
+									id="btn_userUpdate" ev:onclick="scwin.btn_userUpdate_onclick">
+								</w2:textbox>
 							</xf:group>
 
 							<xf:group class="info-content-grid">
@@ -856,47 +979,42 @@ scwin.startCodeAnalysis_onclick = function() {
 									<w2:textbox class="info-item-value" ref="data:dma_userInfo.skills"></w2:textbox>
 								</xf:group>
 							</xf:group>
-
 						</xf:group>
-
 					</section>
 
 					<!-- 매칭에 필요한 정보 섹션 -->
 					<section class="section">
 						<w2:textbox class="section-title" label="매칭에 필요한 정보를 입력해주세요."></w2:textbox>
 
-						<div class="action-cards">
+						<xf:group class="action-cards">
 							<!-- MBTI 성격 검사 카드 -->
-							<div class="action-card incomplete" ev:onclick="scwin.startMbti_onclick()">
-								<div class="incomplete-badge">미완료</div>
-								<div class="action-card-icon"
-									style="background: linear-gradient(135deg, #667eea, #764ba2); color: white;">
-									������
-								</div>
+							<xf:group class="action-card incomplete" ev:onclick="scwin.startMbti_onclick()">
+								<xf:group class="incomplete-badge">미완료</xf:group>
+								<xf:group class="action-card-icon" style="">
+									<xf:image src="/InsWebApp/images/ws5/code_checking.png" style="width:100%;height:100%;" id=""></xf:image>
+								</xf:group>
 								<w2:textbox class="action-card-title" label="mbti 성격 검사"></w2:textbox>
 								<w2:textbox class="action-card-subtitle" label="ex : 8가지 성향을 4개의 성향을 알아 낼 수 있습니다"></w2:textbox>
 								<xf:trigger class="action-card-button" type="button">
 									<xf:label><![CDATA[시작하기]]></xf:label>
 								</xf:trigger>
-							</div>
+							</xf:group>
 
 							<!-- 코드분석 카드 -->
-							<div class="action-card incomplete" ev:onclick="scwin.startCodeAnalysis_onclick()">
-								<div class="incomplete-badge">미완료</div>
-								<div class="action-card-icon"
-									style="background: linear-gradient(135deg, #f093fb, #f5576c); color: white;">
-									������
-								</div>
+							<xf:group class="action-card incomplete" ev:onclick="scwin.startCodeAnalysis_onclick()">
+								<xf:group class="incomplete-badge">미완료</xf:group>
+
+								<xf:group class="action-card-icon" style="">
+									<xf:image src="/InsWebApp/images/ws5/mbti_logo.png" style="width:100%;height:100%;" id=""></xf:image>
+								</xf:group>
 								<w2:textbox class="action-card-title" label="코드분석"></w2:textbox>
 								<w2:textbox class="action-card-subtitle" label="ex : 8가지 성향을 4개의 성향을 알아 낼 수 있습니다"></w2:textbox>
 								<xf:trigger class="action-card-button" type="button">
 									<xf:label><![CDATA[분석하기]]></xf:label>
 								</xf:trigger>
-							</div>
-						</div>
+							</xf:group>
+						</xf:group>
 					</section>
-
-
 				</main>
 			</xf:group>
 		</xf:group>
