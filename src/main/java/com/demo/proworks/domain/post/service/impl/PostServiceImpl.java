@@ -1,5 +1,6 @@
 package com.demo.proworks.domain.post.service.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -152,25 +153,148 @@ public class PostServiceImpl implements PostService {
     public void saveTechStackRelations(PostVo postVo, List<String> techStackIds) throws Exception {
         String jobPostingId = postVo.getJobPostingId();
         
+        System.out.println("=== 🔥 강화된 기술스택 관계 저장 서비스 시작 ===");
+        System.out.println("Job Posting ID: '" + jobPostingId + "'");
+        System.out.println("기술스택 ID 목록: " + techStackIds);
+        System.out.println("입력 검증:");
+        System.out.println("  - postVo null 여부: " + (postVo == null));
+        System.out.println("  - jobPostingId null 여부: " + (jobPostingId == null));
+        System.out.println("  - jobPostingId 길이: " + (jobPostingId != null ? jobPostingId.length() : 0));
+        System.out.println("  - techStackIds null 여부: " + (techStackIds == null));
+        System.out.println("  - techStackIds 크기: " + (techStackIds != null ? techStackIds.size() : 0));
+        
+        // 🔥 강화된 입력 검증
         if (jobPostingId == null || jobPostingId.trim().isEmpty()) {
-            throw new Exception("공고 ID가 없습니다.");
+            String errorMsg = "공고 ID가 없습니다. jobPostingId: '" + jobPostingId + "'";
+            System.err.println("❌❌❌ " + errorMsg);
+            throw new Exception(errorMsg);
         }
+        
+        if (techStackIds == null || techStackIds.isEmpty()) {
+            String errorMsg = "저장할 기술스택이 없습니다. techStackIds: " + techStackIds;
+            System.err.println("❌❌❌ " + errorMsg);
+            throw new Exception(errorMsg);
+        }
+        
+        // 🔥 DB 연결 상태 확인
+        System.out.println("=== DB 연결 및 DAO 상태 확인 ===");
+        if (postDAO == null) {
+            System.err.println("❌❌❌ postDAO가 null입니다!");
+            throw new Exception("DAO 객체가 초기화되지 않았습니다.");
+        }
+        System.out.println("✅ postDAO 정상 확인");
         
         // 기존 관계 데이터 삭제 (수정 시를 위해)
-        postDAO.deleteCompanyTechStackRelationByJobId(jobPostingId);
-        
-        // 선택된 기술스택들을 순회하며 관계 데이터 저장
-        if (techStackIds != null && !techStackIds.isEmpty()) {
-            for (String techStackId : techStackIds) {
-                if (techStackId != null && !techStackId.trim().isEmpty()) {
-                    Map<String, Object> params = new HashMap<>();
-                    params.put("jobPostingId", jobPostingId);
-                    params.put("techStackId", techStackId);
-                    
-                    postDAO.insertCompanyTechStackRelation(params);
-                }
-            }
+        System.out.println("=== 🗑️ 기존 관계 데이터 삭제 시도 ===");
+        try {
+            int deletedCount = postDAO.deleteCompanyTechStackRelationByJobId(jobPostingId);
+            System.out.println("✅ 삭제된 기존 관계 데이터: " + deletedCount + "개");
+        } catch (Exception e) {
+            System.err.println("⚠️ 기존 관계 데이터 삭제 중 오류 (계속 진행): " + e.getMessage());
+            e.printStackTrace();
         }
+        
+        // 🔥 각 기술스택 ID 상세 검증 및 저장
+        System.out.println("=== 💾 개별 기술스택 관계 저장 시작 ===");
+        int successCount = 0;
+        int failureCount = 0;
+        List<String> failedTechStacks = new ArrayList<>();
+        
+        for (int i = 0; i < techStackIds.size(); i++) {
+            String techStackId = techStackIds.get(i);
+            
+            System.out.println("--- 기술스택 " + (i+1) + "/" + techStackIds.size() + " 처리 시작 ---");
+            System.out.println("기술스택 ID: '" + techStackId + "'");
+            
+            // 개별 ID 검증
+            if (techStackId == null || techStackId.trim().isEmpty()) {
+                failureCount++;
+                failedTechStacks.add("null_or_empty_" + i);
+                System.err.println("❌ 잘못된 기술스택 ID (null 또는 빈 문자열): 인덱스 " + i);
+                continue;
+            }
+            
+            try {
+                // 파라미터 맵 생성
+                Map<String, Object> params = new HashMap<>();
+                params.put("jobPostingId", jobPostingId);
+                params.put("techStackId", techStackId);
+                
+                System.out.println("DB 삽입 파라미터:");
+                System.out.println("  - jobPostingId: '" + params.get("jobPostingId") + "'");
+                System.out.println("  - techStackId: '" + params.get("techStackId") + "'");
+                
+                // 🔥 실제 DB 삽입 실행
+                System.out.println("DAO.insertCompanyTechStackRelation 호출...");
+                int insertResult = postDAO.insertCompanyTechStackRelation(params);
+                
+                System.out.println("삽입 결과: " + insertResult);
+                
+                if (insertResult > 0) {
+                    successCount++;
+                    System.out.println("✅ 관계 데이터 저장 성공: Job ID=" + jobPostingId + ", Tech Stack ID=" + techStackId);
+                } else {
+                    failureCount++;
+                    failedTechStacks.add(techStackId);
+                    System.err.println("❌ 관계 데이터 저장 실패 (결과: " + insertResult + "): " + techStackId);
+                }
+                
+            } catch (Exception e) {
+                failureCount++;
+                failedTechStacks.add(techStackId);
+                System.err.println("❌ 관계 데이터 저장 중 예외 발생: " + techStackId);
+                System.err.println("예외 클래스: " + e.getClass().getSimpleName());
+                System.err.println("예외 메시지: " + e.getMessage());
+                e.printStackTrace();
+            }
+            
+            System.out.println("--- 기술스택 " + (i+1) + " 처리 완료 ---");
+        }
+        
+        // 🔥 최종 결과 분석
+        System.out.println("=== 📊 최종 처리 결과 ===");
+        System.out.println("총 처리 대상: " + techStackIds.size() + "개");
+        System.out.println("성공: " + successCount + "개");
+        System.out.println("실패: " + failureCount + "개");
+        System.out.println("성공률: " + (techStackIds.size() > 0 ? (successCount * 100 / techStackIds.size()) : 0) + "%");
+        
+        if (!failedTechStacks.isEmpty()) {
+            System.err.println("실패한 기술스택 ID들: " + failedTechStacks);
+        }
+        
+        // 🔥 저장 후 즉시 검증
+        System.out.println("=== 🔍 저장 후 검증 ===");
+        try {
+            List<TechStackVo> savedTechStacks = postDAO.selectTechStacksByPostId(jobPostingId);
+            System.out.println("DB에서 실제 조회된 기술스택 개수: " + savedTechStacks.size());
+            
+            if (savedTechStacks.size() != successCount) {
+                System.err.println("⚠️ 예상 저장 개수와 실제 조회 개수가 다릅니다!");
+                System.err.println("예상: " + successCount + ", 실제: " + savedTechStacks.size());
+            }
+            
+            for (TechStackVo savedTech : savedTechStacks) {
+                System.out.println("  ✓ " + savedTech.getTechStackName() + " (ID: " + savedTech.getTechStackId() + ")");
+            }
+        } catch (Exception verifyError) {
+            System.err.println("❌ 저장 후 검증 중 오류: " + verifyError.getMessage());
+            verifyError.printStackTrace();
+        }
+        
+        // 🔥 실패 시 예외 발생
+        if (successCount == 0 && !techStackIds.isEmpty()) {
+            String errorMsg = "모든 기술스택 관계 저장에 실패했습니다. 실패 개수: " + failureCount;
+            System.err.println("❌❌❌ " + errorMsg);
+            throw new Exception(errorMsg);
+        }
+        
+        if (failureCount > 0) {
+            String warningMsg = failureCount + "개의 기술스택 관계 저장에 실패했습니다.";
+            System.err.println("⚠️ " + warningMsg);
+            // 일부 실패는 경고로만 처리 (전체가 실패한 게 아니므로)
+        }
+        
+        System.out.println("=== ✅ 기술스택 관계 저장 서비스 완료 ===");
     }
 
     /**

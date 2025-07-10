@@ -2289,13 +2289,65 @@ scwin.btn_create_posting_onclick = function (e) {
         return;
     }
     
-    // 기술스택 필수 선택 검증 추가
-    if (dlt_techstack.getRowCount() === 0) {
-        alert("최소 1개 이상의 기술스택을 선택해주세요.");
+    // ������ 기술스택 강화된 검증 및 수집
+    console.log("=== 강화된 기술스택 데이터 수집 시작 ===");
+    
+    // 1단계: 데이터리스트 상태 확인
+    var techStackRowCount = dlt_techstack.getRowCount();
+    console.log("기술스택 데이터리스트 행 개수:", techStackRowCount);
+    
+    // 2단계: 모든 행 내용 확인
+    var techStackArray = [];
+    var validTechStacks = [];
+    
+    for(var i = 0; i < techStackRowCount; i++) {
+        try {
+            var techstack = dlt_techstack.getCellData(i, "techstack");
+            console.log("기술스택 행 " + i + ":", techstack, "(타입:", typeof techstack, ")");
+            
+            if (techstack) {
+                var cleanTechstack = String(techstack).trim();
+                if (cleanTechstack !== "" && cleanTechstack !== "null" && cleanTechstack !== "undefined") {
+                    validTechStacks.push(cleanTechstack);
+                    techStackArray.push(cleanTechstack);
+                }
+            }
+        } catch (error) {
+            console.error("기술스택 행 " + i + " 처리 중 오류:", error);
+        }
+    }
+    
+    console.log("유효한 기술스택들:", validTechStacks);
+    console.log("수집된 기술스택 배열:", techStackArray);
+    
+    // 3단계: 최종 검증
+    if (techStackArray.length === 0) {
+        console.error("❌ 기술스택이 선택되지 않았습니다!");
+        alert("최소 1개 이상의 기술스택을 선택해주세요.\n\n현재 데이터리스트 상태:\n- 행 개수: " + techStackRowCount + "\n- 유효한 데이터: " + validTechStacks.length + "개");
         return;
     }
     
-    // 성향 필수 선택 검증 추가 (배열과 데이터리스트 모두 확인)
+    // 4단계: JSON 변환 (안전하게)
+    var techStackJson = "";
+    try {
+        techStackJson = JSON.stringify(techStackArray);
+        console.log("JSON 변환 성공:", techStackJson);
+        
+        // JSON 유효성 재검증
+        var parsedBack = JSON.parse(techStackJson);
+        if (!Array.isArray(parsedBack) || parsedBack.length === 0) {
+            throw new Error("JSON 파싱 후 배열이 비어있습니다");
+        }
+        console.log("JSON 유효성 검증 통과:", parsedBack);
+        
+    } catch (jsonError) {
+        console.error("❌ JSON 변환 실패:", jsonError);
+        alert("기술스택 데이터 변환 중 오류가 발생했습니다: " + jsonError.message);
+        return;
+    }
+    
+    // 성향 검증도 강화
+    console.log("=== 성향 데이터 검증 시작 ===");
     var personalityCount = dlt_personalities.getRowCount();
     var arrayCount = scwin.selectedPersonalities ? scwin.selectedPersonalities.length : 0;
     
@@ -2314,7 +2366,7 @@ scwin.btn_create_posting_onclick = function (e) {
     console.log("=== 모든 필수 필드 검증 통과 ===");
     
     // 기본 confirm으로 확인
-    if (confirm("공고를 등록하시겠습니까?")) {
+    if (confirm("공고를 등록하시겠습니까?\n\n기술스택: " + techStackArray.join(", ") + "\n성향: " + personalityCount + "개 선택됨")) {
         console.log("=== 사용자가 확인 버튼 클릭 ===");
         
         // 기본 값들 설정
@@ -2340,23 +2392,26 @@ scwin.btn_create_posting_onclick = function (e) {
         console.log("현재시간:", dateString);
         console.log("만료시간:", expiryString);
         
-        // 데이터 설정 (job_posting_id는 AUTO_INCREMENT이므로 제외)
-        // companyId는 서버에서 세션 정보로 설정되므로 클라이언트에서 설정하지 않음
+        // 데이터 설정
         dmp_postVo.set("postedAt", dateString);
         dmp_postVo.set("expiresAt", expiryString);
-        dmp_postVo.set("status", "active"); // ENUM 값에 맞게 소문자
+        dmp_postVo.set("status", "active");
         
-        // 선택된 기술스택들을 JSON 배열로 변환하여 selectedTechStackNames에 저장
-        var techStackArray = [];
-        for(var i = 0; i < dlt_techstack.getRowCount(); i++) {
-            var techstack = dlt_techstack.getCellData(i, "techstack");
-            if (techstack && techstack.trim() !== "") {
-                techStackArray.push(techstack);
-            }
+        // ������ 기술스택 JSON 안전하게 설정
+        console.log("=== 기술스택 JSON 설정 ===");
+        dmp_postVo.set("selectedTechStackNames", techStackJson);
+        
+        // 즉시 재확인
+        var setTechStackJson = dmp_postVo.get("selectedTechStackNames");
+        console.log("DataMap에 설정된 값 재확인:", setTechStackJson);
+        
+        if (!setTechStackJson || setTechStackJson.trim() === "" || setTechStackJson === "[]") {
+            console.error("❌ 기술스택 JSON 설정 실패!");
+            alert("기술스택 데이터 설정에 실패했습니다. 다시 시도해주세요.");
+            return;
         }
-        dmp_postVo.set("selectedTechStackNames", JSON.stringify(techStackArray)); // JSON 문자열로 저장
         
-        // 선택된 성향들을 JSON 배열로 변환하여 preferredDeveloperTypes에 저장 (수정된 부분)
+        // 성향 데이터 설정
         var personalityArray = [];
         for(var i = 0; i < dlt_personalities.getRowCount(); i++) {
             var personality = dlt_personalities.getCellData(i, "personality");
@@ -2364,54 +2419,33 @@ scwin.btn_create_posting_onclick = function (e) {
                 personalityArray.push(personality);
             }
         }
-        dmp_postVo.set("preferredDeveloperTypes", JSON.stringify(personalityArray)); // JSON 문자열로 저장
+        dmp_postVo.set("preferredDeveloperTypes", JSON.stringify(personalityArray));
         
-        console.log("등록할 데이터 - 제목:", dmp_postVo.get("title"));
-        console.log("등록할 데이터 - 지역:", dmp_postVo.get("location"));
-        console.log("등록할 데이터 - 기술스택:", dmp_postVo.get("selectedTechStackNames"));
-        console.log("등록할 데이터 - 성향:", dmp_postVo.get("preferredDeveloperTypes"));
-        console.log("등록할 데이터 - 상태:", dmp_postVo.get("status"));
+        console.log("=== 최종 등록 데이터 확인 ===");
+        console.log("제목:", dmp_postVo.get("title"));
+        console.log("지역:", dmp_postVo.get("location"));
+        console.log("근무형태:", dmp_postVo.get("workType"));
+        console.log("기술스택 JSON:", dmp_postVo.get("selectedTechStackNames"));
+        console.log("성향 JSON:", dmp_postVo.get("preferredDeveloperTypes"));
+        console.log("상태:", dmp_postVo.get("status"));
+        
+        // ������ 서버 전송 전 마지막 안전 장치
+        if (!dmp_postVo.get("selectedTechStackNames") || 
+            dmp_postVo.get("selectedTechStackNames").trim() === "" || 
+            dmp_postVo.get("selectedTechStackNames") === "[]") {
+            console.error("❌ 최종 검증에서 기술스택 JSON이 비어있음!");
+            alert("기술스택 데이터가 손실되었습니다. 다시 선택하고 등록해주세요.");
+            return;
+        }
         
         console.log("=== 서버 통신 시작 ===");
         
         // 웹스퀘어 submission 실행
         try {
-            var submission = $p.getComponentById("sbm_insertPost");
-            if (submission) {
-                // 여러 방법 시도
-                var success = false;
-                
-                // 방법 1: 표준 웹스퀘어 API
-                try {
-                    $p.executeSubmission("sbm_insertPost");
-                    success = true;
-                    console.log("✅ submission 실행 성공");
-                } catch (error1) {
-                    console.log("방법1 실패:", error1.message);
-                    
-                    // 방법 2: DOM 이벤트 트리거
-                    try {
-                        var submitEvent = document.createEvent('Event');
-                        submitEvent.initEvent('submit', true, true);
-                        submission.xmlNode.dispatchEvent(submitEvent);
-                        success = true;
-                        console.log("✅ DOM 이벤트 트리거 성공");
-                    } catch (error2) {
-                        console.log("방법2 실패:", error2.message);
-                        throw new Error("모든 submission 실행 방법 실패");
-                    }
-                }
-                
-                if (success) {
-                    console.log("=== submission 실행 완료 - 서버 응답 대기 중 ===");
-                }
-                
-            } else {
-                throw new Error("submission 객체를 찾을 수 없습니다");
-            }
-            
+            $p.executeSubmission("sbm_insertPost");
+            console.log("✅ submission 실행 성공");
         } catch (error) {
-            console.error("submission 실행 최종 오류:", error);
+            console.error("submission 실행 오류:", error);
             alert("서버 통신 중 오류가 발생했습니다: " + error.message);
         }
     } else {
