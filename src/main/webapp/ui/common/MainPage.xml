@@ -366,6 +366,7 @@ scwin.refreshCompanyList = function () {
 
             .login-area {
                 width: 100%;
+                min-height: 350px;
                 background-color: #fff;
                 padding: min(40px, 5vw);
                 border-radius: 10px;
@@ -930,7 +931,7 @@ scwin.refreshCompanyList = function () {
 							<xf:group class="gift-area">
 								<w2:textbox class="gift-text" label="매칭 퀘스트 완료하고"></w2:textbox>
 								<w2:textbox class="gift-text-bold" label="합격자 이력서 받아가세요!"></w2:textbox>
-								<w2:textbox class="gift-icon" label="������"></w2:textbox>
+								<w2:textbox class="gift-icon" label="🎁"></w2:textbox>
 							</xf:group>
 						</xf:group>
 					</xf:group>
