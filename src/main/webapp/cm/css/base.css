@@ -595,7 +595,7 @@ span.w2autoComplete_label {padding:0 0 0 8px;text-align:left;color:var(--ws-form
 /* ############################## Grid ############################## */
 
 /* gridview */
-.w2grid, #gridView {outline:0;background:var(--ws-gray-0);border-radius:16px;overflow:hidden;box-shadow:0 4px 6px rgba(0,0,0,0.07),0 1px 3px rgba(0,0,0,0.05);border:1px solid var(--ws-gray-300);transition:all 0.3s ease}
+.w2grid, #gridView {outline:0;background:var(--ws-gray-0);overflow:hidden;box-shadow:0 4px 6px rgba(0,0,0,0.07),0 1px 3px rgba(0,0,0,0.05);border:1px solid var(--ws-gray-300);transition:all 0.3s}
 
 /* WebSquare GridView Table Structure */
 #gridView table {width:100%;border-collapse:collapse;border:none}

@@ -1,310 +1,349 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<html xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:ev="http://www.w3.org/2001/xml-events"
-    xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
-    <head meta_screenName="지원자 상세보기">
-        <w2:type>COMPONENT</w2:type>
-        <w2:buildDate/>
-        <w2:MSA/>
-        <w2:layoutInfo/>
-        <w2:publicInfo method=""/>
-        <link rel="stylesheet" type="text/css" href="../../cm/css/gridview-enhancement.css"></link>
-        <style>
-            .header-container {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                padding: 20px;
-                background-color: #f8f9fa;
-                border-bottom: 1px solid #e9ecef;
-            }
-            .header-left {
-                display: flex;
-                align-items: center;
-                font-size: 24px;
-                font-weight: bold;
-                color: #2c3e50;
-            }
-            .header-icon {
-                width: 30px;
-                height: 30px;
-                background-color: #3498db;
-                border-radius: 6px;
-                margin-right: 12px;
-                display: inline-block;
-                text-align: center;
-                line-height: 30px;
-                color: white;
-                font-weight: bold;
-            }
-            .stats-info {
-                color: #6c757d;
-                font-size: 14px;
-            }
-            .control-bar {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                padding: 15px 20px;
-                background-color: #ffffff;
-            }
-            .selected-count {
-                color: #6c757d;
-                font-size: 14px;
-            }
-            .button-group {
-                display: flex;
-                align-items: center;
-                gap: 10px;
-            }
-            .btn-template {
-                background-color: #6c757d;
-                color: white;
-                border: none;
-                padding: 8px 16px;
-                border-radius: 4px;
-                cursor: pointer;
-            }
-            .btn-approve {
-                background-color: #28a745;
-                color: white;
-                border: none;
-                padding: 8px 16px;
-                border-radius: 4px;
-                cursor: pointer;
-            }
-            .btn-reject {
-                background-color: #dc3545;
-                color: white;
-                border: none;
-                padding: 8px 16px;
-                border-radius: 4px;
-                cursor: pointer;
-            }
-            .skill-tag {
-                display: inline-block;
-                background-color: #e3f2fd;
-                color: #1976d2;
-                padding: 2px 8px;
-                margin: 2px;
-                border-radius: 12px;
-                font-size: 12px;
-                border: 1px solid #bbdefb;
-            }
-            .mbti-badge {
-                background-color: #9c27b0;
-                color: white;
-                padding: 4px 8px;
-                border-radius: 4px;
-                font-size: 12px;
-                font-weight: bold;
-            }
-            .preview-link {
-                color: #007bff;
-                text-decoration: none;
-                cursor: pointer;
-            }
-            .preview-link:hover {
-                text-decoration: underline;
-            }
-            .school-badge {
-                background-color: #28a745;
-                color: white;
-                padding: 2px 6px;
-                border-radius: 3px;
-                font-size: 11px;
-                margin-left: 5px;
-            }
-            .status-waiting {
-                background-color: #ffc107;
-                color: #212529;
-                padding: 4px 8px;
-                border-radius: 4px;
-                font-size: 12px;
-                font-weight: bold;
-            }
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare"
+	xmlns:xf="http://www.w3.org/2002/xforms">
+	<head meta_screenName="지원자 상세보기">
+		<w2:type>COMPONENT</w2:type>
+		<w2:buildDate />
+		<w2:MSA />
+		<w2:layoutInfo />
+		<w2:publicInfo method="" />
+		<link rel="stylesheet" type="text/css" href="../../cm/css/gridview-enhancement.css"></link>
+		<style>
+			.header-container {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			padding: 20px;
+			background-color: #f8f9fa;
+			border-bottom: 1px solid #e9ecef;
+			}
+			.header-left {
+			display: flex;
+			align-items: center;
+			font-size: 24px;
+			font-weight: bold;
+			color: #2c3e50;
+			}
+			.header-icon {
+			width: 30px;
+			height: 30px;
+			background-color: #3498db;
+			border-radius: 6px;
+			margin-right: 12px;
+			display: inline-block;
+			text-align: center;
+			line-height: 30px;
+			color: white;
+			font-weight: bold;
+			}
+			.stats-info {
+			color: #6c757d;
+			font-size: 14px;
+			}
+			.control-bar {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			padding: 15px 20px;
+			background-color: #ffffff;
+			}
+			.selected-count {
+			color: #6c757d;
+			font-size: 14px;
+			}
+			.button-group {
+			display: flex;
+			align-items: center;
+			gap: 10px;
+			}
+			.btn-template {
+			background-color: #6c757d;
+			color: white;
+			border: none;
+			padding: 8px 16px;
+			border-radius: 4px;
+			cursor: pointer;
+			}
+			.btn-approve {
+			background-color: #28a745;
+			color: white;
+			border: none;
+			padding: 8px 16px;
+			border-radius: 4px;
+			cursor: pointer;
+			}
+			.btn-reject {
+			background-color: #dc3545;
+			color: white;
+			border: none;
+			padding: 8px 16px;
+			border-radius: 4px;
+			cursor: pointer;
+			}
+			.skill-tag {
+			display: inline-block;
+			background-color: #e3f2fd;
+			color: #1976d2;
+			padding: 2px 8px;
+			margin: 2px;
+			border-radius: 12px;
+			font-size: 12px;
+			border: 1px solid #bbdefb;
+			}
+			.mbti-badge {
+			background-color: #9c27b0;
+			color: white;
+			padding: 4px 8px;
+			border-radius: 4px;
+			font-size: 12px;
+			font-weight: bold;
+			}
+			.preview-link {
+			color: #007bff;
+			text-decoration: none;
+			cursor: pointer;
+			}
+			.preview-link:hover {
+			text-decoration: underline;
+			}
+			.school-badge {
+			background-color: #28a745;
+			color: white;
+			padding: 2px 6px;
+			border-radius: 3px;
+			font-size: 11px;
+			margin-left: 5px;
+			}
+			.status-waiting {
+			background-color: #ffc107;
+			color: #212529;
+			padding: 4px 8px;
+			border-radius: 4px;
+			font-size: 12px;
+			font-weight: bold;
+			}
 
-            /* 이메일 작성 모달 스타일 */
-            .email-modal {
-                display: none; /* 기본적으로 숨김 */
-                position: fixed;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                background-color: white;
-                border-radius: 8px;
-                padding: 20px;
-                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-                width: 400px;
-                z-index: 1000;
-            }
-            .email-modal-overlay {
-                display: none;
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(0, 0, 0, 0.5);
-                z-index: 999;
-            }
-            .email-modal input, .email-modal textarea {
-                width: 100%;
-                margin: 8px 0;
-                padding: 8px;
-                border-radius: 4px;
-                border: 1px solid #ddd;
-            }
-            .email-modal button {
-                padding: 8px 16px;
-                background-color: #28a745;
-                color: white;
-                border: none;
-                border-radius: 4px;
-                cursor: pointer;
-            }
-            .email-modal button.cancel {
-                background-color: #dc3545;
-            }
-        </style>
-        <xf:model>
-        	<w2:dataCollection baseNode="map">
-        		<w2:dataList baseNode="list" repeatNode="map" id="applicant_list" saveRemovedData="true">
-        			<w2:columnInfo>
-        				<w2:column dataType="text" name="체크박스" id="chk"></w2:column>
-        				<w2:column dataType="text" name="이름" id="username"></w2:column>
-        				<w2:column dataType="text" name="경력" id="total_experience"></w2:column>
-        				<w2:column dataType="text" name="포지션" id="position"></w2:column>
-        				<w2:column dataType="text" name="기술스택" id="tech_stack"></w2:column>
-        				<w2:column dataType="text" name="mbti" id="mbti"></w2:column>
-        				<w2:column dataType="text" name="이력서" id="profile"></w2:column>
-        				<w2:column dataType="text" name="졸업증명서" id="graduationCertificateFile"></w2:column>
-        				<w2:column dataType="text" name="상태" id="status"></w2:column>
-        			</w2:columnInfo>
-        			<w2:data use="true">
-        				<w2:row>
-        					<username><![CDATA[김지훈]]></username>
-        					<total_experience><![CDATA[신입]]></total_experience>
-        					<position><![CDATA[backend]]></position>
-        					<tech_stack><![CDATA[springboot, spring, redis, rabbitmq]]></tech_stack>
-        					<mbti><![CDATA[entj]]></mbti>
-        					<profile><![CDATA[이력서1]]></profile>
-        					<graduationCertificateFile><![CDATA[졸업증명서1]]></graduationCertificateFile>
-        					<status><![CDATA[진행중]]></status>
-        				</w2:row>
-        				<w2:row>
-        					<username><![CDATA[박수진]]></username>
-        					<total_experience><![CDATA[2년]]></total_experience>
-        					<position><![CDATA[fullstack]]></position>
-        					<tech_stack><![CDATA[react, springboot, js]]></tech_stack>
-        					<mbti><![CDATA[infp]]></mbti>
-        					<profile><![CDATA[이력서2]]></profile>
-        					<graduationCertificateFile><![CDATA[졸증서2]]></graduationCertificateFile>
-        					<status><![CDATA[합격]]></status>
-        				</w2:row>
-        				<w2:row>
-        					<username><![CDATA[이민호]]></username>
-        					<total_experience><![CDATA[신입]]></total_experience>
-        					<position><![CDATA[backend]]></position>
-        					<tech_stack><![CDATA[django, postgresql, redis]]></tech_stack>
-        					<mbti><![CDATA[enfp]]></mbti>
-        					<profile><![CDATA[이력서1]]></profile>
-        					<graduationCertificateFile><![CDATA[졸업증명서1]]></graduationCertificateFile>
-        					<status><![CDATA[진행중]]></status>
-        				</w2:row>
-        				<w2:row>
-        					<username><![CDATA[정수연]]></username>
-        					<total_experience><![CDATA[1년]]></total_experience>
-        					<position><![CDATA[frontend]]></position>
-        					<tech_stack><![CDATA[react, typescript, redux]]></tech_stack>
-        					<mbti><![CDATA[isfj]]></mbti>
-        					<profile><![CDATA[이력서1]]></profile>
-        					<graduationCertificateFile><![CDATA[졸업증명서1]]></graduationCertificateFile>
-        					<status><![CDATA[서류검토]]></status>
-        				</w2:row>
-        				<w2:row>
-        					<username><![CDATA[최도윤]]></username>
-        					<total_experience><![CDATA[신입]]></total_experience>
-        					<position><![CDATA[fullstack]]></position>
-        					<tech_stack><![CDATA[vue, nodejs, mongodb]]></tech_stack>
-        					<mbti><![CDATA[entp]]></mbti>
-        					<profile><![CDATA[이력서2]]></profile>
-        					<graduationCertificateFile><![CDATA[졸증서2]]></graduationCertificateFile>
-        					<status><![CDATA[면접대기]]></status>
-        				</w2:row>
-        				<w2:row>
-        					<username><![CDATA[김서아]]></username>
-        					<total_experience><![CDATA[3년]]></total_experience>
-        					<position><![CDATA[backend]]></position>
-        					<tech_stack><![CDATA[springboot, jpa, mysql]]></tech_stack>
-        					<mbti><![CDATA[intj]]></mbti>
-        					<profile><![CDATA[이력서3]]></profile>
-        					<graduationCertificateFile><![CDATA[졸업증명서3]]></graduationCertificateFile>
-        					<status><![CDATA[합격]]></status>
-        				</w2:row>
-        				<w2:row>
-        					<username><![CDATA[박준혁]]></username>
-        					<total_experience><![CDATA[신입]]></total_experience>
-        					<position><![CDATA[backend]]></position>
-        					<tech_stack><![CDATA[fastapi, sqlalchemy, redis]]></tech_stack>
-        					<mbti><![CDATA[estp]]></mbti>
-        					<profile><![CDATA[이력서1]]></profile>
-        					<graduationCertificateFile><![CDATA[졸업증명서1]]></graduationCertificateFile>
-        					<status><![CDATA[진행중]]></status>
-        				</w2:row>
-        				<w2:row>
-        					<username><![CDATA[이지우]]></username>
-        					<total_experience><![CDATA[2년]]></total_experience>
-        					<position><![CDATA[fullstack]]></position>
-        					<tech_stack><![CDATA[angular, nestjs, postgresql]]></tech_stack>
-        					<mbti><![CDATA[isfp]]></mbti>
-        					<profile><![CDATA[이력서2]]></profile>
-        					<graduationCertificateFile><![CDATA[졸증서2]]></graduationCertificateFile>
-        					<status><![CDATA[불합격]]></status>
-        				</w2:row>
-        				<w2:row>
-        					<username><![CDATA[윤채영]]></username>
-        					<total_experience><![CDATA[신입]]></total_experience>
-        					<position><![CDATA[frontend]]></position>
-        					<tech_stack><![CDATA[react, next.js, tailwind]]></tech_stack>
-        					<mbti><![CDATA[esfj]]></mbti>
-        					<profile><![CDATA[이력서1]]></profile>
-        					<graduationCertificateFile><![CDATA[졸업증명서1]]></graduationCertificateFile>
-        					<status><![CDATA[서류검토]]></status>
-        				</w2:row>
-        				<w2:row>
-        					<username><![CDATA[장민석]]></username>
-        					<total_experience><![CDATA[4년]]></total_experience>
-        					<position><![CDATA[backend]]></position>
-        					<tech_stack><![CDATA[spring, kafka, elasticsearch]]></tech_stack>
-        					<mbti><![CDATA[entj]]></mbti>
-        					<profile><![CDATA[이력서4]]></profile>
-        					<graduationCertificateFile><![CDATA[졸업증명서4]]></graduationCertificateFile>
-        					<status><![CDATA[합격]]></status>
-        				</w2:row>
-        				<w2:row>
-        					<username><![CDATA[한소영]]></username>
-        					<total_experience><![CDATA[신입]]></total_experience>
-        					<position><![CDATA[fullstack]]></position>
-        					<tech_stack><![CDATA[svelte, express, sqlite]]></tech_stack>
-        					<mbti><![CDATA[infp]]></mbti>
-        					<profile><![CDATA[이력서1]]></profile>
-        					<graduationCertificateFile><![CDATA[졸업증명서1]]></graduationCertificateFile>
-        					<status><![CDATA[면접대기]]></status>
-        				</w2:row>
-        			</w2:data>
-        		</w2:dataList>
-        	</w2:dataCollection>
-        	<xf:submission id="sbm_applicant_list" action="" method="post" mediatype="application/json" ref="data:json,applicant_list"
-        		target="" encoding="UTF-8" instance="" replace="" errorHandler="" customHandler="" mode="asynchronous" processMsg="" ev:submit=""
-        		ev:submitdone="" ev:submiterror="" abortTrigger="">
-        	</xf:submission>
-        </xf:model>
-        <script lazy="false" type="text/javascript"><![CDATA[scwin.onpageload = function() {
+			/* 이메일 작성 모달 스타일 */
+			.email-modal {
+			display: none; /* 기본적으로 숨김 */
+			position: fixed;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			background-color: white;
+			border-radius: 8px;
+			padding: 20px;
+			box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+			width: 400px;
+			z-index: 1000;
+			}
+			.email-modal-overlay {
+			display: none;
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background: rgba(0, 0, 0, 0.5);
+			z-index: 999;
+			}
+			.email-modal input, .email-modal textarea {
+			width: 100%;
+			margin: 8px 0;
+			padding: 8px;
+			border-radius: 4px;
+			border: 1px solid #ddd;
+			}
+			.email-modal button {
+			padding: 8px 16px;
+			background-color: #28a745;
+			color: white;
+			border: none;
+			border-radius: 4px;
+			cursor: pointer;
+			}
+			.email-modal button.cancel {
+			background-color: #dc3545;
+			}
+		</style>
+		<xf:model>
+			<w2:dataCollection baseNode="map">
+				<w2:dataList baseNode="list" repeatNode="map" id="applicant_list" saveRemovedData="true">
+					<w2:columnInfo>
+						<w2:column dataType="text" name="체크박스" id="chk"></w2:column>
+						<w2:column dataType="text" name="이름" id="username"></w2:column>
+						<w2:column dataType="text" name="경력" id="total_experience"></w2:column>
+						<w2:column dataType="text" name="포지션" id="position"></w2:column>
+						<w2:column dataType="text" name="기술스택" id="tech_stack"></w2:column>
+						<w2:column dataType="text" name="mbti" id="mbti"></w2:column>
+						<w2:column dataType="text" name="이력서" id="profile"></w2:column>
+						<w2:column dataType="text" name="상태" id="status"></w2:column>
+					</w2:columnInfo>
+					<w2:data use="true">
+						<w2:row>
+							<username><![CDATA[김지훈]]></username>
+							<total_experience><![CDATA[신입]]></total_experience>
+							<position><![CDATA[backend]]></position>
+							<tech_stack><![CDATA[springboot, spring, redis, rabbitmq]]></tech_stack>
+							<mbti><![CDATA[entj]]></mbti>
+							<profile><![CDATA[이력서1]]></profile>
+							<status><![CDATA[진행중]]></status>
+						</w2:row>
+						<w2:row>
+							<username><![CDATA[박수진]]></username>
+							<total_experience><![CDATA[2년]]></total_experience>
+							<position><![CDATA[fullstack]]></position>
+							<tech_stack><![CDATA[react, springboot, js]]></tech_stack>
+							<mbti><![CDATA[infp]]></mbti>
+							<profile><![CDATA[이력서2]]></profile>
+							<status><![CDATA[합격]]></status>
+						</w2:row>
+						<w2:row>
+							<username><![CDATA[이민호]]></username>
+							<total_experience><![CDATA[신입]]></total_experience>
+							<position><![CDATA[backend]]></position>
+							<tech_stack><![CDATA[django, postgresql, redis]]></tech_stack>
+							<mbti><![CDATA[enfp]]></mbti>
+							<profile><![CDATA[이력서1]]></profile>
+							<status><![CDATA[진행중]]></status>
+						</w2:row>
+						<w2:row>
+							<username><![CDATA[정수연]]></username>
+							<total_experience><![CDATA[1년]]></total_experience>
+							<position><![CDATA[frontend]]></position>
+							<tech_stack><![CDATA[react, typescript, redux]]></tech_stack>
+							<mbti><![CDATA[isfj]]></mbti>
+							<profile><![CDATA[이력서1]]></profile>
+							<status><![CDATA[서류검토]]></status>
+						</w2:row>
+						<w2:row>
+							<username><![CDATA[최도윤]]></username>
+							<total_experience><![CDATA[신입]]></total_experience>
+							<position><![CDATA[fullstack]]></position>
+							<tech_stack><![CDATA[vue, nodejs, mongodb]]></tech_stack>
+							<mbti><![CDATA[entp]]></mbti>
+							<profile><![CDATA[이력서2]]></profile>
+							<status><![CDATA[면접대기]]></status>
+						</w2:row>
+						<w2:row>
+							<username><![CDATA[김서아]]></username>
+							<total_experience><![CDATA[3년]]></total_experience>
+							<position><![CDATA[backend]]></position>
+							<tech_stack><![CDATA[springboot, jpa, mysql]]></tech_stack>
+							<mbti><![CDATA[intj]]></mbti>
+							<profile><![CDATA[이력서3]]></profile>
+							<status><![CDATA[합격]]></status>
+						</w2:row>
+						<w2:row>
+							<username><![CDATA[박준혁]]></username>
+							<total_experience><![CDATA[신입]]></total_experience>
+							<position><![CDATA[backend]]></position>
+							<tech_stack><![CDATA[fastapi, sqlalchemy, redis]]></tech_stack>
+							<mbti><![CDATA[estp]]></mbti>
+							<profile><![CDATA[이력서1]]></profile>
+							<status><![CDATA[진행중]]></status>
+						</w2:row>
+						<w2:row>
+							<username><![CDATA[이지우]]></username>
+							<total_experience><![CDATA[2년]]></total_experience>
+							<position><![CDATA[fullstack]]></position>
+							<tech_stack><![CDATA[angular, nestjs, postgresql]]></tech_stack>
+							<mbti><![CDATA[isfp]]></mbti>
+							<profile><![CDATA[이력서2]]></profile>
+							<status><![CDATA[불합격]]></status>
+						</w2:row>
+						<w2:row>
+							<username><![CDATA[윤채영]]></username>
+							<total_experience><![CDATA[신입]]></total_experience>
+							<position><![CDATA[frontend]]></position>
+							<tech_stack><![CDATA[react, next.js, tailwind]]></tech_stack>
+							<mbti><![CDATA[esfj]]></mbti>
+							<profile><![CDATA[이력서1]]></profile>
+							<status><![CDATA[서류검토]]></status>
+						</w2:row>
+						<w2:row>
+							<username><![CDATA[장민석]]></username>
+							<total_experience><![CDATA[4년]]></total_experience>
+							<position><![CDATA[backend]]></position>
+							<tech_stack><![CDATA[spring, kafka, elasticsearch]]></tech_stack>
+							<mbti><![CDATA[entj]]></mbti>
+							<profile><![CDATA[이력서4]]></profile>
+							<status><![CDATA[합격]]></status>
+						</w2:row>
+						<w2:row>
+							<username><![CDATA[한소영]]></username>
+							<total_experience><![CDATA[신입]]></total_experience>
+							<position><![CDATA[fullstack]]></position>
+							<tech_stack><![CDATA[svelte, express, sqlite]]></tech_stack>
+							<mbti><![CDATA[infp]]></mbti>
+							<profile><![CDATA[이력서1]]></profile>
+							<status><![CDATA[면접대기]]></status>
+						</w2:row>
+					</w2:data>
+				</w2:dataList>
+			</w2:dataCollection>
+			<xf:submission id="sbm_applicant_list" action="" method="post" mediatype="application/json" ref="data:json,applicant_list"
+				target="" encoding="UTF-8" instance="" replace="" errorHandler="" customHandler="" mode="asynchronous" processMsg="" ev:submit=""
+				ev:submitdone="" ev:submiterror="" abortTrigger="">
+			</xf:submission>
+		</xf:model>
+		<script lazy="false" type="text/javascript"><![CDATA[scwin.onpageload = function() {
+    // 필터 변경 이벤트 리스너 추가
+    mbtiFilter.addEventListener("onviewchange", function() {
+        applyFilters();
+    });
+    techStackFilter.addEventListener("onviewchange", function() {
+        applyFilters();
+    });
+    statusFilter.addEventListener("onviewchange", function() {
+        applyFilters();
+    });
 };
 
-scwin.pass_btn_onclick = function (e) {
-        // 팝업 옵션 설정
+
+applyFilters = function() {
+    var mbtiValue = mbtiFilter.getValue();
+    var techStackValue = techStackFilter.getValue();
+    var statusValue = statusFilter.getValue();
+
+    applicant_list.unfilter(); // 기존 필터 초기화
+
+    var conditions = [];
+
+    // MBTI 필터
+    if (mbtiValue && mbtiValue.trim() !== "") {
+        conditions.push("mbti == '" + mbtiValue + "'");
+    }
+
+    // 기술스택 필터 (다중 선택)
+    if (techStackValue && techStackValue.trim() !== "") {
+        var techStackArray = techStackValue.split(' ');
+        var techStackConditions = [];
+        
+        for (var i = 0; i < techStackArray.length; i++) {
+            if (techStackArray[i].trim() !== "") {
+                techStackConditions.push("tech_stack.indexOf('" + techStackArray[i] + "') != -1");
+            }
+        }
+        
+        if (techStackConditions.length > 0) {
+            conditions.push("(" + techStackConditions.join(" || ") + ")");
+        }
+    }
+
+    // 상태 필터
+    if (statusValue && statusValue.trim() !== "") {
+        conditions.push("status == '" + statusValue + "'");
+    }
+
+    // 모든 조건을 AND로 결합하여 필터링
+    if (conditions.length > 0) {
+        applicant_list.filter(conditions.join(" && "));
+    }
+};
+
+pass_btn_onclick = function (e) {
+    // 팝업 옵션 설정
     var options = {
         id: 'email_popup',
         type: 'browser',        // 또는 'window'
@@ -319,9 +358,8 @@ scwin.pass_btn_onclick = function (e) {
     $p.openPopup('pass_email.xml', options);
 };
 
-
-scwin.fail_btn_onclick = function (e) {
-        // 팝업 옵션 설정
+fail_btn_onclick = function (e) {
+    // 팝업 옵션 설정
     var options = {
         id: 'email_popup',
         type: 'browser',        // 또는 'window'
@@ -336,72 +374,251 @@ scwin.fail_btn_onclick = function (e) {
     $p.openPopup('fail_email.xml', options);
 };
 ]]></script>
-    </head>
-    <body ev:onpageload="scwin.onpageload">
-        <w2:wframe src="../common/Header.xml" id="headerFrame" />
-        <xf:group class="sub_contents" style="background-color:#f8f9fa;">
+	</head>
+	<body ev:onpageload="scwin.onpageload">
+		<w2:wframe src="../common/Header.xml" id="headerFrame" />
+		<xf:group class="sub_contents" style="background-color:#f8f9fa;">
 
-        	<!-- 컨트롤 바 -->
-        	<xf:group style="display:flex; justify-content:center; background-color:#ffffff; border-bottom:1px solid #e9ecef; padding:15px 0;">
-        		<xf:group class="control-bar" style="display:flex;justify-content:space-between;align-items:center;max-width:1100px;width:94.92%;padding:0 min(30px, 4vw);">
-        			<w2:textbox id="selectedCount" label="4명 선택됨" style="color:#6c757d; font-size:14px; border:none; background:transparent;" />
-        			<xf:group class="button-group" style="display:flex; align-items:center; gap:10px;">
-        				<xf:trigger class="btn-approve"
-        					style="background-color:#28a745; color:white; border:none; padding:8px 16px; border-radius:4px; margin-right:10px;"
-        					type="button" id="pass_btn" ev:onclick="scwin.pass_btn_onclick">
-        					<xf:label><![CDATA[✓ 일괄 합격]]></xf:label>
-        				</xf:trigger>
-        				<xf:trigger class="btn-reject"
-        					style="background-color:#dc3545; color:white; border:none; padding:8px 16px; border-radius:4px;" type="button" id="fail_btn" ev:onclick="scwin.fail_btn_onclick">
-        					<xf:label><![CDATA[✗ 일괄 불합격]]></xf:label>
-        				</xf:trigger>
-        			</xf:group>
-        		</xf:group>
-        	</xf:group>
+			<!-- 컨트롤 바 -->
+			<xf:group
+				style="display:flex; justify-content:center; background-color:#ffffff; border-bottom:1px solid #e9ecef; padding:15px 0;">
+				<xf:group class="control-bar"
+					style="display:flex;justify-content:space-between;align-items:center;max-width:1100px;width:94.92%;padding:0 min(30px, 4vw);">
+					<xf:group style="display:flex; align-items:center; gap:10px;">
+						<w2:selectbox id="mbtiFilter" style="width: 120px;height: 32px;" submenuSize="auto" appearance="minimal" direction="auto"
+							chooseOption="true" chooseOptionLabel="MBTI 필터">
+							<w2:choices>
+								<w2:item>
+									<w2:label><![CDATA[ENTJ]]></w2:label>
+									<w2:value><![CDATA[entj]]></w2:value>
+								</w2:item>
+								<w2:item>
+									<w2:label><![CDATA[INFP]]></w2:label>
+									<w2:value><![CDATA[infp]]></w2:value>
+								</w2:item>
+								<w2:item>
+									<w2:label><![CDATA[ENFP]]></w2:label>
+									<w2:value><![CDATA[enfp]]></w2:value>
+								</w2:item>
+								<w2:item>
+									<w2:label><![CDATA[ISFJ]]></w2:label>
+									<w2:value><![CDATA[isfj]]></w2:value>
+								</w2:item>
+								<w2:item>
+									<w2:label><![CDATA[ENTP]]></w2:label>
+									<w2:value><![CDATA[entp]]></w2:value>
+								</w2:item>
+								<w2:item>
+									<w2:label><![CDATA[INTJ]]></w2:label>
+									<w2:value><![CDATA[intj]]></w2:value>
+								</w2:item>
+								<w2:item>
+									<w2:label><![CDATA[ESTP]]></w2:label>
+									<w2:value><![CDATA[estp]]></w2:value>
+								</w2:item>
+								<w2:item>
+									<w2:label><![CDATA[ISFP]]></w2:label>
+									<w2:value><![CDATA[isfp]]></w2:value>
+								</w2:item>
+								<w2:item>
+									<w2:label><![CDATA[ESFJ]]></w2:label>
+									<w2:value><![CDATA[esfj]]></w2:value>
+								</w2:item>
+							</w2:choices>
+						</w2:selectbox>
 
-        	<!-- 그리드 영역 -->
-        	<xf:group style="display:flex; flex-direction:column; justify-content:center; align-items:center; padding:20px;">
-        		<w2:gridView checkAllType="false" defaultCellHeight="20" id="gridView" style="height:633px;width: 80%;border-radius:12px;overflow:hidden;box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);border:none;background:#ffffff;" dataList="data:applicant_list"
-        			readOnly="true">
-        			<w2:caption style="" id="caption2" value="this is a grid caption."></w2:caption>
-        			<w2:header style="" id="header2">
-        				<w2:row style="" id="row3">
-        					<w2:column width="70" inputType="checkbox" style="" id="chk3" value="" displayMode="label"
-        						readOnly="false">
-        					</w2:column>
-        					<w2:column width="150" inputType="text" style="" id="column10" value="이름" displayMode="label"></w2:column>
-        					<w2:column width="150" inputType="text" style="" id="column9" value="경력" displayMode="label"></w2:column>
-        					<w2:column width="150" inputType="text" style="" id="column8" value="포지션" displayMode="label"></w2:column>
-        					<w2:column width="250" inputType="text" style="" id="column7" value="기술스택" displayMode="label"></w2:column>
-        					<w2:column width="150" inputType="text" style="" id="column6" value="mbti" displayMode="label"></w2:column>
-        					<w2:column width="150" inputType="text" style="" id="column5" value="이력서" displayMode="label"></w2:column>
-        					<w2:column width="202" inputType="text" style="" id="column4" value="졸업증명서" displayMode="label"></w2:column>
-        					<w2:column width="150" inputType="text" style="" id="column3" value="상태" displayMode="label"></w2:column>
-        				</w2:row>
-        			</w2:header>
-        			<w2:gBody style="" id="gBody2">
-        				<w2:row style="" id="row4">
-        					<w2:column width="70" inputType="checkbox" style="height:50px;" id="chk" value="" displayMode="label"
-        						readOnly="false">
-        					</w2:column>
-        					<w2:column width="70" inputType="text" style="" id="username" value="" displayMode="label"></w2:column>
-        					<w2:column width="70" inputType="text" style="" id="total_experience" value="" displayMode="label"></w2:column>
-        					<w2:column width="70" inputType="text" style="" id="position" value="" displayMode="label"></w2:column>
-        					<w2:column width="70" inputType="text" style="" id="tech_stack" value="" displayMode="label"></w2:column>
-        					<w2:column width="70" inputType="text" style="" id="mbti" value="" displayMode="label"></w2:column>
-        					<w2:column width="70" inputType="text" style="" id="profile" value="" displayMode="label"></w2:column>
-        					<w2:column width="202" inputType="text" style="" id="graduationCertificateFile" value="" displayMode="label"></w2:column>
-        					<w2:column width="70" inputType="text" style="" id="status" value="" displayMode="label"></w2:column>
-        				</w2:row>
-        			</w2:gBody>
-        		</w2:gridView>
-        		<xf:group class="pglbox" id="" meta_snippetCategory="06_그리드" meta_snippetKeyComponent="true"
-        			meta_snippetName="6_03 페이지리스트" style="margin-top:20px;">
-        			<w2:pageList class="pgl" displayButtonType="display" displayFormat="#" id="pageList1" pageSize="10" pagingType="0"
-        				style="">
-        			</w2:pageList>
-        		</xf:group>
-        	</xf:group>
-        </xf:group>
-    </body>
+						<!-- 기술스택 필터를 MultiSelect로 변경 -->
+						<w2:multiselect id="techStackFilter" style="width: 200px;height: 32px;" separator=" " appearance="minimal">
+							<w2:item>
+								<w2:label><![CDATA[Spring Boot]]></w2:label>
+								<w2:value><![CDATA[springboot]]></w2:value>
+							</w2:item>
+							<w2:item>
+								<w2:label><![CDATA[Spring]]></w2:label>
+								<w2:value><![CDATA[spring]]></w2:value>
+							</w2:item>
+							<w2:item>
+								<w2:label><![CDATA[React]]></w2:label>
+								<w2:value><![CDATA[react]]></w2:value>
+							</w2:item>
+							<w2:item>
+								<w2:label><![CDATA[Django]]></w2:label>
+								<w2:value><![CDATA[django]]></w2:value>
+							</w2:item>
+							<w2:item>
+								<w2:label><![CDATA[Vue]]></w2:label>
+								<w2:value><![CDATA[vue]]></w2:value>
+							</w2:item>
+							<w2:item>
+								<w2:label><![CDATA[JavaScript]]></w2:label>
+								<w2:value><![CDATA[js]]></w2:value>
+							</w2:item>
+							<w2:item>
+								<w2:label><![CDATA[TypeScript]]></w2:label>
+								<w2:value><![CDATA[typescript]]></w2:value>
+							</w2:item>
+							<w2:item>
+								<w2:label><![CDATA[Node.js]]></w2:label>
+								<w2:value><![CDATA[nodejs]]></w2:value>
+							</w2:item>
+							<w2:item>
+								<w2:label><![CDATA[Angular]]></w2:label>
+								<w2:value><![CDATA[angular]]></w2:value>
+							</w2:item>
+							<w2:item>
+								<w2:label><![CDATA[Next.js]]></w2:label>
+								<w2:value><![CDATA[next.js]]></w2:value>
+							</w2:item>
+							<w2:item>
+								<w2:label><![CDATA[Svelte]]></w2:label>
+								<w2:value><![CDATA[svelte]]></w2:value>
+							</w2:item>
+							<w2:item>
+								<w2:label><![CDATA[Redis]]></w2:label>
+								<w2:value><![CDATA[redis]]></w2:value>
+							</w2:item>
+							<w2:item>
+								<w2:label><![CDATA[PostgreSQL]]></w2:label>
+								<w2:value><![CDATA[postgresql]]></w2:value>
+							</w2:item>
+							<w2:item>
+								<w2:label><![CDATA[MySQL]]></w2:label>
+								<w2:value><![CDATA[mysql]]></w2:value>
+							</w2:item>
+							<w2:item>
+								<w2:label><![CDATA[MongoDB]]></w2:label>
+								<w2:value><![CDATA[mongodb]]></w2:value>
+							</w2:item>
+							<w2:item>
+								<w2:label><![CDATA[SQLite]]></w2:label>
+								<w2:value><![CDATA[sqlite]]></w2:value>
+							</w2:item>
+							<w2:item>
+								<w2:label><![CDATA[FastAPI]]></w2:label>
+								<w2:value><![CDATA[fastapi]]></w2:value>
+							</w2:item>
+							<w2:item>
+								<w2:label><![CDATA[NestJS]]></w2:label>
+								<w2:value><![CDATA[nestjs]]></w2:value>
+							</w2:item>
+							<w2:item>
+								<w2:label><![CDATA[Express]]></w2:label>
+								<w2:value><![CDATA[express]]></w2:value>
+							</w2:item>
+							<w2:item>
+								<w2:label><![CDATA[JPA]]></w2:label>
+								<w2:value><![CDATA[jpa]]></w2:value>
+							</w2:item>
+							<w2:item>
+								<w2:label><![CDATA[SQLAlchemy]]></w2:label>
+								<w2:value><![CDATA[sqlalchemy]]></w2:value>
+							</w2:item>
+							<w2:item>
+								<w2:label><![CDATA[Redux]]></w2:label>
+								<w2:value><![CDATA[redux]]></w2:value>
+							</w2:item>
+							<w2:item>
+								<w2:label><![CDATA[Tailwind]]></w2:label>
+								<w2:value><![CDATA[tailwind]]></w2:value>
+							</w2:item>
+							<w2:item>
+								<w2:label><![CDATA[RabbitMQ]]></w2:label>
+								<w2:value><![CDATA[rabbitmq]]></w2:value>
+							</w2:item>
+							<w2:item>
+								<w2:label><![CDATA[Kafka]]></w2:label>
+								<w2:value><![CDATA[kafka]]></w2:value>
+							</w2:item>
+							<w2:item>
+								<w2:label><![CDATA[Elasticsearch]]></w2:label>
+								<w2:value><![CDATA[elasticsearch]]></w2:value>
+							</w2:item>
+						</w2:multiselect>
+
+						<!-- 상태 필터 추가 -->
+						<w2:selectbox id="statusFilter" style="width: 130px;height: 32px;" submenuSize="auto" appearance="minimal"
+							direction="auto" chooseOption="true" chooseOptionLabel="상태 필터">
+							<w2:choices>
+								<w2:item>
+									<w2:label><![CDATA[서류검토]]></w2:label>
+									<w2:value><![CDATA[서류검토]]></w2:value>
+								</w2:item>
+								<w2:item>
+									<w2:label><![CDATA[면접대기]]></w2:label>
+									<w2:value><![CDATA[면접대기]]></w2:value>
+								</w2:item>
+								<w2:item>
+									<w2:label><![CDATA[진행중]]></w2:label>
+									<w2:value><![CDATA[진행중]]></w2:value>
+								</w2:item>
+								<w2:item>
+									<w2:label><![CDATA[합격]]></w2:label>
+									<w2:value><![CDATA[합격]]></w2:value>
+								</w2:item>
+								<w2:item>
+									<w2:label><![CDATA[불합격]]></w2:label>
+									<w2:value><![CDATA[불합격]]></w2:value>
+								</w2:item>
+							</w2:choices>
+						</w2:selectbox>
+
+						<w2:textbox id="selectedCount" label="4명 선택됨" style="color:#6c757d; font-size:14px; border:none; background:transparent;" />
+					</xf:group>
+
+					<xf:group class="button-group" style="display:flex; align-items:center; gap:10px;">
+						<xf:trigger class="btn-approve"
+							style="background-color:#28a745; color:white; border:none; padding:8px 16px; border-radius:4px; margin-right:10px;" type="button"
+							id="pass_btn" ev:onclick="scwin.pass_btn_onclick">
+							<xf:label><![CDATA[✓ 일괄 합격]]></xf:label>
+						</xf:trigger>
+						<xf:trigger class="btn-reject"
+							style="background-color:#dc3545; color:white; border:none; padding:8px 16px; border-radius:4px;" type="button" id="fail_btn"
+							ev:onclick="scwin.fail_btn_onclick">
+							<xf:label><![CDATA[✗ 일괄 불합격]]></xf:label>
+						</xf:trigger>
+					</xf:group>
+				</xf:group>
+			</xf:group>
+
+			<!-- 그리드 영역 -->
+			<xf:group style="display:flex; flex-direction:column; justify-content:center; align-items:center; padding:20px;">
+				<w2:gridView checkAllType="false" defaultCellHeight="20" id="gridView"
+					style="height:633px;width: 80%;overflow:hidden;box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);border:none;background:#ffffff;"
+					dataList="data:applicant_list" readOnly="true">
+					<w2:caption style="" id="caption2" value="this is a grid caption."></w2:caption>
+					<w2:header style="" id="header2">
+						<w2:row style="" id="row3">
+							<w2:column width="70" inputType="checkbox" style="height: 40px;" id="chk3" value="" displayMode="label" readOnly="false">
+							</w2:column>
+							<w2:column width="150" inputType="text" style="" id="column10" value="이름" displayMode="label"></w2:column>
+							<w2:column width="150" inputType="text" style="" id="column9" value="경력" displayMode="label"></w2:column>
+							<w2:column width="150" inputType="text" style="" id="column8" value="포지션" displayMode="label"></w2:column>
+							<w2:column width="250" inputType="text" style="" id="column7" value="기술스택" displayMode="label"></w2:column>
+							<w2:column width="150" inputType="text" style="" id="column6" value="mbti" displayMode="label"></w2:column>
+							<w2:column width="150" inputType="text" style="" id="column5" value="이력서" displayMode="label"></w2:column>
+							<w2:column width="203" inputType="text" style="" id="column3" value="상태" displayMode="label"></w2:column>
+						</w2:row>
+					</w2:header>
+					<w2:gBody style="" id="gBody2">
+						<w2:row style="" id="row4">
+							<w2:column width="70" inputType="checkbox" style="height:50px;" id="chk" value="" displayMode="label" readOnly="false">
+							</w2:column>
+							<w2:column width="70" inputType="text" style="" id="username" value="" displayMode="label"></w2:column>
+							<w2:column width="70" inputType="text" style="" id="total_experience" value="" displayMode="label"></w2:column>
+							<w2:column width="70" inputType="text" style="" id="position" value="" displayMode="label"></w2:column>
+							<w2:column width="70" inputType="text" style="" id="tech_stack" value="" displayMode="label"></w2:column>
+							<w2:column width="70" inputType="text" style="" id="mbti" value="" displayMode="label"></w2:column>
+							<w2:column width="70" inputType="text" style="" id="profile" value="" displayMode="label"></w2:column>
+							<w2:column width="203" inputType="text" style="" id="status" value="" displayMode="label"></w2:column>
+						</w2:row>
+					</w2:gBody>
+				</w2:gridView>
+				<xf:group class="pglbox" id="" meta_snippetCategory="06_그리드" meta_snippetKeyComponent="true" meta_snippetName="6_03 페이지리스트"
+					style="margin-top:20px;">
+					<w2:pageList class="pgl" displayButtonType="display" displayFormat="#" id="pageList1" pageSize="10" pagingType="0" style="">
+					</w2:pageList>
+				</xf:group>
+			</xf:group>
+		</xf:group>
+	</body>
 </html>
