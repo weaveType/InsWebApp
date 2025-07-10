@@ -8,6 +8,7 @@
         <w2:MSA/>
         <w2:layoutInfo/>
         <w2:publicInfo method=""/>
+        <link rel="stylesheet" type="text/css" href="../../cm/css/gridview-enhancement.css"></link>
         <style>
             .header-container {
                 display: flex;
@@ -46,7 +47,6 @@
                 align-items: center;
                 padding: 15px 20px;
                 background-color: #ffffff;
-                border-bottom: 1px solid #e9ecef;
             }
             .selected-count {
                 color: #6c757d;
@@ -343,7 +343,7 @@ scwin.fail_btn_onclick = function (e) {
 
         	<!-- 컨트롤 바 -->
         	<xf:group style="display:flex; justify-content:center; background-color:#ffffff; border-bottom:1px solid #e9ecef; padding:15px 0;">
-        		<xf:group class="control-bar" style="display:flex; justify-content:space-between; align-items:center; max-width:1100px; width:100%; padding:0 min(30px, 4vw);">
+        		<xf:group class="control-bar" style="display:flex;justify-content:space-between;align-items:center;max-width:1100px;width:94.92%;padding:0 min(30px, 4vw);">
         			<w2:textbox id="selectedCount" label="4명 선택됨" style="color:#6c757d; font-size:14px; border:none; background:transparent;" />
         			<xf:group class="button-group" style="display:flex; align-items:center; gap:10px;">
         				<xf:trigger class="btn-approve"
@@ -352,7 +352,7 @@ scwin.fail_btn_onclick = function (e) {
         					<xf:label><![CDATA[✓ 일괄 합격]]></xf:label>
         				</xf:trigger>
         				<xf:trigger class="btn-reject"
-        					style="background-color:#dc3545; color:white; border:none; padding:1px 16px; border-radius:4px;" type="button" id="fail_btn" ev:onclick="scwin.fail_btn_onclick">
+        					style="background-color:#dc3545; color:white; border:none; padding:8px 16px; border-radius:4px;" type="button" id="fail_btn" ev:onclick="scwin.fail_btn_onclick">
         					<xf:label><![CDATA[✗ 일괄 불합격]]></xf:label>
         				</xf:trigger>
         			</xf:group>
@@ -361,12 +361,12 @@ scwin.fail_btn_onclick = function (e) {
 
         	<!-- 그리드 영역 -->
         	<xf:group style="display:flex; flex-direction:column; justify-content:center; align-items:center; padding:20px;">
-        		<w2:gridView checkAllType="false" defaultCellHeight="20" id="" style="height:633px;width: 80%;" dataList="data:applicant_list"
+        		<w2:gridView checkAllType="false" defaultCellHeight="20" id="gridView" style="height:633px;width: 80%;border-radius:12px;overflow:hidden;box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);border:none;background:#ffffff;" dataList="data:applicant_list"
         			readOnly="true">
         			<w2:caption style="" id="caption2" value="this is a grid caption."></w2:caption>
         			<w2:header style="" id="header2">
         				<w2:row style="" id="row3">
-        					<w2:column width="70" inputType="checkbox" style="height: 50px" id="chk3" value="" displayMode="label"
+        					<w2:column width="70" inputType="checkbox" style="" id="chk3" value="" displayMode="label"
         						readOnly="false">
         					</w2:column>
         					<w2:column width="150" inputType="text" style="" id="column10" value="이름" displayMode="label"></w2:column>
@@ -375,7 +375,7 @@ scwin.fail_btn_onclick = function (e) {
         					<w2:column width="250" inputType="text" style="" id="column7" value="기술스택" displayMode="label"></w2:column>
         					<w2:column width="150" inputType="text" style="" id="column6" value="mbti" displayMode="label"></w2:column>
         					<w2:column width="150" inputType="text" style="" id="column5" value="이력서" displayMode="label"></w2:column>
-        					<w2:column width="250" inputType="text" style="" id="column4" value="졸업증명서" displayMode="label"></w2:column>
+        					<w2:column width="202" inputType="text" style="" id="column4" value="졸업증명서" displayMode="label"></w2:column>
         					<w2:column width="150" inputType="text" style="" id="column3" value="상태" displayMode="label"></w2:column>
         				</w2:row>
         			</w2:header>
@@ -390,7 +390,7 @@ scwin.fail_btn_onclick = function (e) {
         					<w2:column width="70" inputType="text" style="" id="tech_stack" value="" displayMode="label"></w2:column>
         					<w2:column width="70" inputType="text" style="" id="mbti" value="" displayMode="label"></w2:column>
         					<w2:column width="70" inputType="text" style="" id="profile" value="" displayMode="label"></w2:column>
-        					<w2:column width="70" inputType="text" style="" id="graduationCertificateFile" value="" displayMode="label"></w2:column>
+        					<w2:column width="202" inputType="text" style="" id="graduationCertificateFile" value="" displayMode="label"></w2:column>
         					<w2:column width="70" inputType="text" style="" id="status" value="" displayMode="label"></w2:column>
         				</w2:row>
         			</w2:gBody>

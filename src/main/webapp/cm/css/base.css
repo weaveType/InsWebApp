@@ -80,15 +80,15 @@
 	--ws-table-td-bg:var(--ws-gray-0);
 	--ws-table-bd:var(--ws-gray-300);
     
-	--ws-grid-header-bg:var(--ws-gray-0);
-	--ws-grid-header-bd:var(--ws-gray-400);
-	--ws-grid-header-color:var(--ws-gray-800);
+	--ws-grid-header-bg:#212529;
+	--ws-grid-header-bd:#495057;
+	--ws-grid-header-color:#F8F9FA;
 	--ws-grid-bg:var(--ws-gray-0);
 	--ws-grid-bd:var(--ws-gray-200);
 	--ws-grid-color:var(--ws-gray-700);
-	--ws-grid-hover-bg:var(--ws-gray-50);
-	--ws-grid-selected-row-bg:var(--ws-primary-50);
-	--ws-grid-selected-cell-bg:var(--ws-primary-100);
+	--ws-grid-hover-bg:#f5f5f5;
+	--ws-grid-selected-row-bg:#e3f2fd;
+	--ws-grid-selected-cell-bg:#bbdefb;
 	--ws-grid-subtotal-bg:var(--ws-gray-100);
 	--ws-grid-subtotal-bd:var(--ws-gray-300);
 	--ws-grid-footer-bg:var(--ws-gray-200);
@@ -601,7 +601,7 @@ span.w2autoComplete_label {padding:0 0 0 8px;text-align:left;color:var(--ws-form
 #gridView table {width:100%;border-collapse:collapse;border:none}
 #gridView .w2header table, #gridView .w2gBody table {width:100%;border-collapse:collapse}
 .w2grid .gridHeaderTableDefault {border:0}
-.w2grid th.gridHeaderTDDefault {height:52px;border-color:var(--ws-primary-500);background:linear-gradient(135deg, #667eea 0%, #764ba2 100%);color:#ffffff;font-size:15px;font-weight:700;text-shadow:0 1px 2px rgba(0,0,0,0.1);padding:0 20px;text-align:center;vertical-align:middle;border-left:none;border-right:none;border-top:none;border-bottom:2px solid var(--ws-gray-300)}
+.w2grid th.gridHeaderTDDefault {height:52px;border-color:transparent;background:#212529;color:#F8F9FA;font-size:14px;font-weight:600;letter-spacing:0.03em;border-bottom:1px solid #495057;text-shadow:none;padding:0 24px;text-align:center;vertical-align:middle;border-left:none;border-right:none;border-top:none;text-transform:none}
 .w2grid th.gridHeaderTDDefault nobr {padding:0}
 .w2grid td.gridBodyDefault {height:52px;border:none;border-bottom:1px solid var(--ws-gray-300);background-color:var(--ws-gray-0);color:var(--ws-gray-800);font-size:14px;transition:all 0.2s ease;padding:2px 4px;vertical-align:middle;text-align:center;border-left:none;border-right:none;border-top:none}
 .w2grid .gridBodyDefault button {overflow:hidden;display:inline-flex;align-items:center;justify-content:center;position:relative;width:100% !important;height:46px !important;padding:0 12px;border:1px solid var(--ws-gray-400);border-radius:6px;background-color:var(--ws-gray-0);color:var(--ws-gray-800);font-size:13px;font-weight:500;vertical-align:middle;cursor:pointer;transition:all 0.2s ease;margin:0 !important;box-sizing:border-box !important}
