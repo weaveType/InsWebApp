@@ -229,7 +229,7 @@ scwin.link_forgot_onclick = function (e) {
 };
 
 scwin.link_signup_onclick = function (e) {
-    $p.parent().pf_main.setSrc("../user/Signup.xml");
+    $p.url("../user/Signup.xml");
     $p.closePopup();
 };
 
@@ -282,7 +282,7 @@ scwin.inp_userPw_onkeypress = function (e) {
                     <xf:label>비밀번호 찾기</xf:label>
                 </w2:anchor>
                 <w2:span label="|" style="color: #ddd; margin: 0 10px;"></w2:span>
-                <w2:anchor class="login-link" ev:onclick="scwin.link_signup_onclick">
+                <w2:anchor class="login-link" ev:onclick="scwin.link_signup_onclick" id="link_signup">
                     <xf:label>회원가입</xf:label>
                 </w2:anchor>
             </xf:group>

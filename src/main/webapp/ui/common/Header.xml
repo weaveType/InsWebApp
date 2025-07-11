@@ -104,7 +104,7 @@ scwin.menu3_onclick = function () {
 };
 
 scwin.btnEnterprise_onclick = function () {
-    $p.url("CompanyMain.xml");
+    $p.url("../common/CompanyMain.xml");
 };
 
 // 내 정보 페이지로 이동
