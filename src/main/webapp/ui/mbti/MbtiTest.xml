@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ev="http://www.w3.org/2001/xml-events"
+    xmlns:w2="http://www.inswave.com/websquare" 
+    xmlns:xf="http://www.w3.org/2002/xforms">
+    <head>
+        <w2:type>COMPONENT</w2:type>
+        <w2:buildDate/>
+        <w2:MSA/>
+        <xf:model>
+            <w2:dataCollection baseNode="map"/>
+            <w2:workflowCollection/>
+        </xf:model>
+        <w2:layoutInfo/>
+        <w2:publicInfo method=""/>
+        <style>
+            <![CDATA[
+            body {
+                margin: 0;
+                padding: 0;
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+                background-color: #f8f9fa;
+            }
+            
+            .personality-header {
+                background: #088cdb;
+                color: white;
+                text-align: center;
+                padding: 80px 20px;
+                min-height: 300px;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+            }
+            
+            .main-title {
+                font-size: 3.5rem;
+                font-weight: 700;
+                margin-bottom: 20px;
+                letter-spacing: -1px;
+            }
+            
+            .sub-title {
+                font-size: 1.3rem;
+                font-weight: 400;
+                opacity: 0.9;
+                margin-bottom: 40px;
+            }
+            
+            .cards-container {
+                max-width: 1200px;
+                margin: -100px auto 60px;
+                padding: 0 20px;
+                display: flex;
+                gap: 30px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .personality-card {
+                background: white;
+                border-radius: 16px;
+                padding: 40px 30px;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+                text-align: center;
+                flex: 1;
+                max-width: 350px;
+                min-width: 300px;
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+            }
+            
+            .personality-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            }
+            
+            .card-icon {
+                width: 80px;
+                height: 80px;
+                border-radius: 50%;
+                margin: 0 auto 25px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 2.5rem;
+            }
+            
+            .icon-blue {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            }
+            
+            .icon-yellow {
+                background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            }
+            
+            .icon-purple {
+                background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            }
+            
+            .card-text {
+                font-size: 1.1rem;
+                line-height: 1.6;
+                color: #4a5568;
+            }
+            
+            .progress-section {
+                max-width: 800px;
+                margin: 60px auto;
+                text-align: center;
+                padding: 0 20px;
+            }
+            
+            .progress-question {
+                font-size: 1.4rem;
+                color: #2d3748;
+                margin-bottom: 40px;
+                font-weight: 500;
+            }
+            
+            .progress-scale {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 15px;
+                margin: 40px 0;
+            }
+            
+            .scale-label {
+                font-size: 1rem;
+                color: #718096;
+                font-weight: 500;
+                min-width: 60px;
+            }
+            
+            .scale-dots {
+                display: flex;
+                gap: 12px;
+            }
+            
+            .scale-dot {
+                width: 50px;
+                height: 50px;
+                border-radius: 50%;
+                border: 3px solid #e2e8f0;
+                cursor: pointer;
+                transition: all 0.3s ease;
+            }
+            
+            .scale-dot:nth-child(1) { background-color: #48bb78; border-color: #48bb78; }
+            .scale-dot:nth-child(2) { background-color: #68d391; border-color: #68d391; }
+            .scale-dot:nth-child(3) { background-color: #9ae6b4; border-color: #9ae6b4; }
+            .scale-dot:nth-child(4) { background-color: #e2e8f0; border-color: #cbd5e0; }
+            .scale-dot:nth-child(5) { background-color: #d6bcfa; border-color: #d6bcfa; }
+            .scale-dot:nth-child(6) { background-color: #b794f6; border-color: #b794f6; }
+            .scale-dot:nth-child(7) { background-color: #9f7aea; border-color: #9f7aea; }
+            
+            .scale-dot:hover {
+                transform: scale(1.1);
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            }
+            
+            @media (max-width: 768px) {
+                .main-title {
+                    font-size: 2.5rem;
+                }
+                
+                .cards-container {
+                    flex-direction: column;
+                    align-items: center;
+                    margin-top: -80px;
+                }
+                
+                .personality-card {
+                    max-width: 100%;
+                }
+                
+                .progress-scale {
+                    flex-direction: column;
+                    gap: 20px;
+                }
+                
+                .scale-dots {
+                    gap: 8px;
+                }
+                
+                .scale-dot {
+                    width: 40px;
+                    height: 40px;
+                }
+            }
+            ]]>
+        </style>
+        <script lazy="false" type="text/javascript">
+            <![CDATA[
+scwin.onpageload = function () {
+    // 진행률 점 클릭 이벤트
+    scwin.initProgressDots();
+};
+
+scwin.initProgressDots = function () {
+    const dots = document.querySelectorAll('.scale-dot');
+    dots.forEach((dot, index) => {
+        dot.addEventListener('click', function () {
+            // 모든 점의 활성화 상태 초기화
+            dots.forEach(d => d.classList.remove('active'));
+            // 클릭된 점 활성화
+            this.classList.add('active');
+            console.log('선택된 값:', index + 1);
+        });
+    });
+};
+]]>
+        </script>
+    </head>
+    <body ev:onpageload="scwin.onpageload">
+    	<w2:wframe src="../common/Header.xml" id="headerFrame" />
+
+    	<!-- 메인 헤더 섹션 -->
+
+    	<!-- 카드 섹션 -->
+
+    	<!-- 진행률 섹션 -->
+    	<xf:group class="sub_contents" id="" meta_snippetCategory="00_화면시작" meta_snippetKeyComponent="true" meta_snippetName="0_01 페이지시작"
+    		style="">
+    		<xf:group class="personality-header">
+    			<xf:group class="main-title" style="margin-bottom: 100px;">개발자 MBTI 테스트</xf:group>
+    		</xf:group>
+    		<xf:group class="cards-container">
+    			<xf:group class="personality-card">
+    				<xf:group class="card-icon icon-blue">Image</xf:group>
+    				<xf:group class="card-text">어떤분의 성격 유형을 확인할 수 있도록 출력하게 만들겠 주세요.</xf:group>
+    			</xf:group>
+    			<xf:group class="personality-card">
+    				<xf:group class="card-icon icon-yellow">Image</xf:group>
+    				<xf:group class="card-text">어떤분의 성격 유형이 삶의 다양한 영역에 어떤 영향을 미치는지 알아보세요.</xf:group>
+    			</xf:group>
+    			<xf:group class="personality-card">
+    				<xf:group class="card-icon icon-purple">Image</xf:group>
+    				<xf:group class="card-text">프리미엄 자료를 통해 완전한 사람으로 성장하세요.</xf:group>
+    			</xf:group>
+    		</xf:group>
+    		<xf:group style="margin-top: 20px;" class="progress-section">
+    			<xf:group class="progress-question">주기적으로 새로운 친구를 사귄다.</xf:group>
+    			<xf:group class="progress-scale">
+    				<xf:group class="scale-label">그렇다</xf:group>
+    				<xf:group class="scale-dots">
+    					<xf:group class="scale-dot"></xf:group>
+    					<xf:group class="scale-dot"></xf:group>
+    					<xf:group class="scale-dot"></xf:group>
+    					<xf:group class="scale-dot"></xf:group>
+    					<xf:group class="scale-dot"></xf:group>
+    					<xf:group class="scale-dot"></xf:group>
+    					<xf:group class="scale-dot"></xf:group>
+    				</xf:group>
+    				<xf:group class="scale-label">그렇지 않다</xf:group>
+    			</xf:group>
+    		</xf:group>
+    		<xf:group class="progress-section" style="margin-top: 20px;">
+    			<xf:group class="progress-question">주기적으로 새로운 친구를 사귄다.</xf:group>
+    			<xf:group class="progress-scale">
+    				<xf:group class="scale-label">그렇다</xf:group>
+    				<xf:group class="scale-dots">
+    					<xf:group class="scale-dot"></xf:group>
+    					<xf:group class="scale-dot"></xf:group>
+    					<xf:group class="scale-dot"></xf:group>
+    					<xf:group class="scale-dot"></xf:group>
+    					<xf:group class="scale-dot"></xf:group>
+    					<xf:group class="scale-dot"></xf:group>
+    					<xf:group class="scale-dot"></xf:group>
+    				</xf:group>
+    				<xf:group class="scale-label">그렇지 않다</xf:group>
+    			</xf:group>
+    		</xf:group>
+    	</xf:group>
+    </body>
+</html>

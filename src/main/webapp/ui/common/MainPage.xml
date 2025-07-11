@@ -41,11 +41,10 @@
 		<script type="text/javascript"><![CDATA[// 페이지 로드 시 팝업 닫기 액션 함수들 정의
 scwin.onpageload = function () {
     // 로그인 상태 확인 및 UI 업데이트
-    scwin.updateLoginArea(userInfo);
+    scwin.updateLoginArea();
 
     // 페이지 완전 로드 후 회사 목록 조회 (약간의 지연)
     setTimeout(function () {
-        console.log('회사 목록 조회 시작');
         scwin.loadCompanyList();
     }, 500);
 };
@@ -144,7 +143,7 @@ scwin.card1_onclick = function () {
 };
 
 scwin.card2_onclick = function () {
-    alert("MBTI 검사 페이지로 이동합니다.");
+    $p.url("../mbti/MbtiTest.xml");
 };
 
 scwin.card3_onclick = function () {
@@ -254,7 +253,6 @@ createCompanyList = function () {
                     name: dlt_company_list.getCellData(i, 'name') || '회사명 없음',
                     logoFileName: dlt_company_list.getCellData(i, 'logoFileName')
                 };
-
                 // ── 회사 카드 요소 생성 ─────────────────────────────
                 var companyCard = document.createElement('xf:group');
                 companyCard.className = 'company-item';
@@ -1130,7 +1128,7 @@ scwin.refreshCompanyList = function () {
 							<!-- 사용자 정보 헤더 -->
 							<xf:group class="profile-header">
 								<xf:group class="profile-avatar">
-									<xf:image src="/InsWebApp/images/ws5/default_avatar.png" style="width:40px;height:40px;border-radius:50%;" id="img_user_avatar"></xf:image>
+									<xf:image src="/InsWebApp/images/ws5/default_user.png" style="width:40px;height:40px;border-radius:50%;" id="img_user_avatar"></xf:image>
 								</xf:group>
 								<xf:group class="profile-info">
 									<w2:textbox class="profile-name" id="txb_user_name"></w2:textbox>
