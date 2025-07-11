@@ -37,6 +37,7 @@
                         <w2:column dataType="text" id="industry" name="industry"></w2:column>
                         <w2:column dataType="text" id="empCount" name="emp_count"></w2:column>
                         <w2:column dataType="text" id="techStackNames" name="tech_stack_names"></w2:column>
+                        <w2:column dataType="text" id="preferredDeveloperTypes" name="preferred_developer_types"></w2:column>
                     </w2:columnInfo>
                 </w2:dataList>
             </w2:dataCollection>
@@ -569,6 +570,19 @@ scwin.createJobCard = function(jobData, index) {
         }
     }
     
+    // 선호 개발자 유형 태그 생성
+    var developerTypeTags = '';
+    if (jobData.preferredDeveloperTypes) {
+        try {
+            var devTypeArray = JSON.parse(jobData.preferredDeveloperTypes);
+            developerTypeTags = devTypeArray.map(function(type) {
+                return '<span class="tech-tag">' + type + '</span>';
+            }).join('');
+        } catch (e) {
+            developerTypeTags = '<span class="tech-tag">정보없음</span>';
+        }
+    }
+    
     card.innerHTML = 
         '<div class="job-content">' +
             '<div class="job-header">' +
@@ -596,6 +610,7 @@ scwin.createJobCard = function(jobData, index) {
                 '</div>' +
             '</div>' +
             (techTags ? '<div class="tech-tags">' + techTags + '</div>' : '') +
+            (developerTypeTags ? '<div class="tech-tags">' + developerTypeTags + '</div>' : '') +
             '<div class="job-footer">' +
                 '<div class="job-salary">' + scwin.getSalaryRangeText(jobData.salaryRange) + '</div>' +
                 '<div class="job-date">' + scwin.formatDate(jobData.postedAt) + '</div>' +
