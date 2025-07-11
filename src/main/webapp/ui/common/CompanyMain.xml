@@ -1092,7 +1092,6 @@ body, html {
 						<w2:textbox id="" label="CodeFIT이 특별한 이유"></w2:textbox>
 					</h2>
 					<p class="section-description">
-						<w2:textbox id="" label="기존 채용 플랫폼과는 차원이 다른 스마트한 개발자 매칭 경험"></w2:textbox>
 					</p>
 				</xf:group>
 

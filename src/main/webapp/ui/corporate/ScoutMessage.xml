@@ -346,7 +346,6 @@ scwin.remoteTemplate_onclick = function() {
 ]]></script>
     </head>
     <body ev:onpageload="scwin.onpageload">
-        <w2:wframe src="../common/Header.xml" id="headerFrame" />
         <xf:group class="scout-container">
             <!-- 헤더 -->
             <xf:group class="scout-header">
