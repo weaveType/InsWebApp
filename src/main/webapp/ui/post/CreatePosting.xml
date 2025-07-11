@@ -2391,11 +2391,14 @@ scwin.btn_create_posting_onclick = function (e) {
         console.log("=== 날짜 설정 완료 ===");
         console.log("현재시간:", dateString);
         console.log("만료시간:", expiryString);
-        
+        var userInfoCookie = JSON.parse(WebSquare.cookie.getCookie("userInfo"));;
         // 데이터 설정
         dmp_postVo.set("postedAt", dateString);
         dmp_postVo.set("expiresAt", expiryString);
         dmp_postVo.set("status", "active");
+        debugger;
+        dmp_postVo.set("companyId", userInfoCookie.accountId);
+        console.log(dmp_postVo.get("companyId"));
         
         // ������ 기술스택 JSON 안전하게 설정
         console.log("=== 기술스택 JSON 설정 ===");

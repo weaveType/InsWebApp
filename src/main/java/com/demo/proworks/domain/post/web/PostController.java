@@ -249,7 +249,8 @@ public class PostController {
         if (currentCompanyId == null) {
             throw new RuntimeException("로그인 정보를 확인할 수 없습니다.");
         }
-        postVo.setCompanyId(currentCompanyId);
+        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> companyId : " + postVo.getCompanyId());
+        postVo.setCompanyId(postVo.getCompanyId());
         System.out.println("Company ID 설정 완료: " + currentCompanyId);
         
     	// 1. 공고 정보 등록 (job_posting_id가 자동 생성됨)
