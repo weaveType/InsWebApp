@@ -63,7 +63,6 @@
         <style type="text/css"><![CDATA[
             /* 전체 컨테이너 스타일 */
             .main-container {
-                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
                 min-height: 100vh;
                 padding: 20px;
                 font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -2483,6 +2482,8 @@ scwin.sbm_insertPost_submitdone = function(e) {
 ]]></script>
     </head>
     <body ev:onpageload="scwin.onpageload">
+        <w2:wframe src="../common/Header.xml" id="headerFrame" />
+        
         <!-- 배경 장식 요소 -->
         <xf:group class="background-decoration">
             <xf:group class="floating-shape shape-1"></xf:group>
