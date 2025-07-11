@@ -49,111 +49,6 @@
                 background-color: #ffffff;
             }
 
-
-            /* 햄버거 메뉴 */
-            .hamburger-menu {
-                width: 24px;
-                height: 24px;
-                cursor: pointer;
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                align-items: center;
-                padding: 4px;
-                border-radius: 4px;
-                transition: background-color 0.2s ease;
-            }
-
-            .hamburger-menu:hover {
-                background-color: #f5f5f5;
-            }
-
-            .hamburger-line {
-                width: 16px;
-                height: 2px;
-                background-color: #333;
-                margin: 1px 0;
-                transition: 0.3s;
-                border-radius: 1px;
-            }
-
-            .nav-menu {
-                display: inline-block;
-                vertical-align: middle;
-            }
-
-            .nav-menu xf:image {
-                vertical-align: middle;
-                max-height: 34px;
-            }
-
-            .nav-link {
-                font-size: 14px;
-                color: #333;
-                text-decoration: none;
-                cursor: pointer;
-                margin-right: 20px;
-                vertical-align: middle;
-            }
-
-            .search-container {
-                display: inline-block;
-                background-color: #f5f5f5;
-                border-radius: 20px;
-                padding: 6px 15px;
-                margin-right: 10px;
-                vertical-align: middle;
-            }
-
-            .search-input {
-                border: none;
-                background: transparent;
-                width: 150px;
-                outline: none;
-                font-size: 13px;
-                height: 24px;
-                vertical-align: middle;
-            }
-
-            .search-btn {
-                border: none;
-                background: none;
-                cursor: pointer;
-                margin-left: 8px;
-                font-size: 14px;
-                vertical-align: middle;
-            }
-
-            .btn-login {
-                background-color: #fff;
-                border: 1px solid #ddd;
-                padding: 6px 12px;
-                border-radius: 4px;
-                cursor: pointer;
-                font-size: 12px;
-                margin-right: 8px;
-                height: 32px;
-                vertical-align: middle;
-            }
-
-            .btn-enterprise {
-                background-color: #333;
-                color: #fff;
-                border: none;
-                padding: 6px 12px;
-                border-radius: 4px;
-                cursor: pointer;
-                font-size: 12px;
-                height: 32px;
-                vertical-align: middle;
-            }
-
-            .clearfix::after {
-                content: "";
-                display: table;
-                clear: both;
-            }
-
             /* 필터 섹션 */
             .filter-section {
                 background-color: #ffffff;
@@ -740,55 +635,9 @@ scwin.goToCompanyRegister = function() {
     </head>
     
     <body ev:onpageload="scwin.onpageload">
+        <w2:wframe src="../common/Header.xml" id="headerFrame" />
         <xf:group class="main-wrap">
           
-            <!-- 사이드 메뉴 오버레이 -->
-            <div class="side-menu-overlay" id="sideMenuOverlay" ev:onclick="scwin.closeSideMenu()"></div>
-            
-            <!-- 사이드 메뉴 -->
-            <nav class="side-menu" id="sideMenu">
-                <w2:textbox class="side-menu-title" label="메뉴"></w2:textbox>
-                
-                <div class="side-menu-section">
-                    <w2:textbox class="side-menu-section-title" label="매칭 서비스"></w2:textbox>
-                    <w2:anchor class="side-menu-item" ev:onclick="scwin.menu1_onclick">
-                        <xf:label><![CDATA[💼 매칭]]></xf:label>
-                    </w2:anchor>
-                    <w2:anchor class="side-menu-item" ev:onclick="scwin.menu2_onclick">
-                        <xf:label><![CDATA[🧠 MBTI 검사]]></xf:label>
-                    </w2:anchor>
-                    <w2:anchor class="side-menu-item" style="background-color:#e3f2fd;color:#1976d2;font-weight:600;">
-                        <xf:label><![CDATA[🏢 기업 둘러보기 (현재 페이지)]]></xf:label>
-                    </w2:anchor>
-                </div>
-                
-                <div class="side-menu-section">
-                    <w2:textbox class="side-menu-section-title" label="개인 서비스"></w2:textbox>
-                    <w2:anchor class="side-menu-item" ev:onclick="scwin.goToUserDetail()">
-                        <xf:label><![CDATA[👤 내 정보]]></xf:label>
-                    </w2:anchor>
-                    <w2:anchor class="side-menu-item">
-                        <xf:label><![CDATA[📝 지원현황]]></xf:label>
-                    </w2:anchor>
-                    <w2:anchor class="side-menu-item">
-                        <xf:label><![CDATA[❤️ 관심기업]]></xf:label>
-                    </w2:anchor>
-                    <w2:anchor class="side-menu-item">
-                        <xf:label><![CDATA[🔖 북마크]]></xf:label>
-                    </w2:anchor>
-                </div>
-                
-                <div class="side-menu-section">
-                    <w2:textbox class="side-menu-section-title" label="기업 서비스"></w2:textbox>
-                    <w2:anchor class="side-menu-item" ev:onclick="scwin.btnEnterprise_onclick">
-                        <xf:label><![CDATA[📊 채용관리 대시보드]]></xf:label>
-                    </w2:anchor>
-                    <w2:anchor class="side-menu-item" ev:onclick="scwin.goToCompanyRegister()">
-                        <xf:label><![CDATA[📋 기업 등록]]></xf:label>
-                    </w2:anchor>
-                </div>
-            </nav>
-
             <!-- 필터 섹션 -->
             <section class="filter-section">
                 <!-- 메인 필터 드롭다운 -->
