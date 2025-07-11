@@ -207,4 +207,18 @@ public class CorporateServiceImpl implements CorporateService {
 		return resultVO;
 	}
 
+	/**
+	 * 유저 ID로 회사 ID를 가져온다.
+	 *
+	 * @process 1. 회사정보를 상세 조회한다. 2. 회사 ID를 리턴한다.
+	 * 
+	 * @param userId 유저 ID
+	 * @return 회사 ID
+	 * @throws Exception
+	 */
+	public Long getCompanyIdByUserId(int userId) throws Exception {
+	return corporateDAO.getCompanyIdByUserId(userId);
+	
+	}
+
 }

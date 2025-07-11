@@ -9,10 +9,9 @@ import com.inswave.elfw.exception.ElException;
 import com.inswave.elfw.log.AppLog;
 import com.inswave.elfw.session.SessionDataAdapter;
 import com.inswave.elfw.util.ElBeanUtils;
+import com.demo.proworks.domain.corporate.service.CorporateService;
 import com.demo.proworks.domain.user.service.UserService;
 import com.demo.proworks.domain.user.vo.UserVo;
-import com.demo.proworks.emp.service.EmpService;
-import com.demo.proworks.emp.vo.EmpVo;
 
 /**
  * @Class Name : ProworksSessionDataAdapter.java
@@ -57,6 +56,7 @@ public class ProworksSessionDataAdapter extends SessionDataAdapter {
 		userHeader.setEmail(email);
 		try {
 			UserService userService = (UserService) ElBeanUtils.getBean("userServiceImpl");
+			CorporateService corporateService = (CorporateService) ElBeanUtils.getBean("corporateServiceImpl");
 			UserVo userVo = new UserVo();
 
 			userVo.setEmail(email);
@@ -66,8 +66,8 @@ public class ProworksSessionDataAdapter extends SessionDataAdapter {
 				throw new AdapterException("EL.ERROR.LOGIN.0004", new String[] { email });
 			}
 
-			// 필요정보 추가영역 
-			userHeader.setUserId(String.valueOf(resUserVo.getUserId())); 
+			// 필요정보 추가영역
+			userHeader.setUserId(String.valueOf(resUserVo.getUserId()));
 			userHeader.setName(resUserVo.getName());
 			userHeader.setAccountId(resUserVo.getUserId());
 
@@ -79,6 +79,15 @@ public class ProworksSessionDataAdapter extends SessionDataAdapter {
 				break;
 			case 2:
 				userHeader.setRole("COMPANY");
+				AppLog.info("Role 설정: COMPANY - 회사 정보 조회 시작");
+				try {
+					Long companyId = corporateService.getCompanyIdByUserId(resUserVo.getUserId());
+					userHeader.setCompanyId(companyId); // 메서드명 수정 필요
+					AppLog.info("회사 정보 조회 성공 - companyId: " + companyId);
+				} catch (Exception e) {
+					AppLog.error("회사 정보 조회 실패 - userId: " + resUserVo.getUserId(), e);
+					throw new AdapterException("회사 정보 조회 실패", e);
+				}
 				break;
 			case 3:
 				userHeader.setRole("ADMIN");
@@ -87,14 +96,6 @@ public class ProworksSessionDataAdapter extends SessionDataAdapter {
 				userHeader.setRole("UNKNOWN"); // 예외 처리: 유효하지 않은 roleId 값에 대해 처리
 				break;
 			}
-
-			// 세션 데이터 설정 완료 로그
-			AppLog.debug("=== 세션 데이터 설정 완료 ===");
-			AppLog.debug("사용자 이메일: " + email);
-			AppLog.debug("DB에서 조회된 int 타입 User ID : " + resUserVo.getUserId()); 
-			AppLog.debug("실제 설정된 userId (email): " + resUserVo.getEmail());
-			AppLog.debug("권한 ID: " + resUserVo.getRoleId());
-			AppLog.debug("설정된 UserHeader: " + userHeader.toString());
 
 		} catch (ElException e) {
 			AppLog.error("setSessionData Error1", e);

@@ -102,8 +102,8 @@ public interface CorporateService {
 	 * @throws ElException
 	 */
 	public int updateCorporateByEmail(CorporateVo vo) throws Exception;
-	
-	 /**
+
+	/**
 	 * 권한 ID로 회사이름을 가져온다.
 	 *
 	 * @param corporateVo 회사정보 CorporateVo
@@ -111,4 +111,13 @@ public interface CorporateService {
 	 * @throws Exception
 	 */
 	public CorporateMainListVo selectCorporateMainList(CorporateSearchVo vo) throws Exception;
+
+	/**
+	 * 유저 ID로 회사 ID를 가져온다.
+	 *
+	 * @param userId 유저 ID
+	 * @return 회사 ID
+	 * @throws Exception
+	 */
+	public Long getCompanyIdByUserId(int userId) throws Exception;
 }
