@@ -129,5 +129,9 @@ public class CorporateDAO extends com.demo.proworks.cmmn.dao.ProworksDefaultAbst
 	public long selectListCountCorporate(CorporateSearchVo vo) {
 		return (Long) getSqlSession().selectOne("com.demo.proworks.domain.corporate.selectListCountCorporate", vo);
 	}
+	
+	public Long getCompanyIdByUserId(long userId){
+	 	return (Long) selectByPk("com.demo.proworks.domain.corporate.getCompanyIdByUserId", userId);
+	 }
 
 }

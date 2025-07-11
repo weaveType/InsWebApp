@@ -373,6 +373,14 @@ fail_btn_onclick = function (e) {
     // 팝업 열기
     $p.openPopup('fail_email.xml', options);
 };
+
+scwin.pass_btn_onclick = function (e) {
+    $p.openPopup("PassEmail.xml");
+};
+
+scwin.fail_btn_onclick = function (e) {
+    $p.openPopup("FailEmail.xml;");
+};
 ]]></script>
 	</head>
 	<body ev:onpageload="scwin.onpageload">
@@ -572,8 +580,7 @@ fail_btn_onclick = function (e) {
 							<xf:label><![CDATA[✓ 일괄 합격]]></xf:label>
 						</xf:trigger>
 						<xf:trigger class="btn-reject"
-							style="background-color:#dc3545; color:white; border:none; padding:8px 16px; border-radius:4px;" type="button" id="fail_btn"
-							ev:onclick="scwin.fail_btn_onclick">
+							style="background-color:#dc3545; color:white; border:none; padding:8px 16px; border-radius:4px;" type="button" id="fail_btn" ev:onclick="scwin.fail_btn_onclick">
 							<xf:label><![CDATA[✗ 일괄 불합격]]></xf:label>
 						</xf:trigger>
 					</xf:group>
