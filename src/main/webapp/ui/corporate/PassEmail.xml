@@ -30,18 +30,6 @@
                 margin-bottom: 40px;
             }
             
-            .main-title {
-                font-size: 24px;
-                font-weight: 700;
-                color: #333;
-                margin: 0;
-                padding: 16px 20px;
-                background-color: #e8f5e8;
-                border: 2px solid #4CAF50;
-                border-radius: 12px;
-                letter-spacing: -0.3px;
-            }
-            
             /* 템플릿 섹션 */
             .template-section {
                 background-color: #ffffff;
@@ -316,7 +304,6 @@ scwin.btn_close_onclick = function (e) {
         <xf:group class="main-container">
             <!-- 헤더 영역 -->
             <xf:group class="page-header">
-                <w2:textbox class="main-title" label="이메일 템플릿 관리"></w2:textbox>
             </xf:group>
             
             <!-- 합격자 메일 템플릿 섹션 -->

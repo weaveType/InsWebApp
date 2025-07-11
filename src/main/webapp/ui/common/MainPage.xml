@@ -93,8 +93,8 @@ scwin.btnLogin_onclick = function () {
     var options = {
         id: "login_popup",
         type: "wframePopup",
-        width: "430px",
-        height: "530px",
+        width: "450px",
+        height: "550px",
         modal: true,
         resizable: true,
         center: true,
@@ -123,8 +123,8 @@ scwin.ad_onclick = function (e) {
     var options = {
         id: "ad_login_popup",
         type: "wframePopup",
-        width: "460px",
-        height: "475px",
+        width: "450px",
+        height: "550px",
         modal: true,
         resizable: true,
         center: true,
@@ -320,10 +320,6 @@ scwin.refreshCompanyList = function () {
     scwin.loadCompanyList();
 };]]></script>
 		<style type="text/css"><![CDATA[
-            /* 기본 설정 */
-            * {
-                box-sizing: border-box;
-            }
 
             /* 메인 히어로 섹션 - 완전 반응형 */
             .hero-section {
