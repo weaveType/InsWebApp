@@ -38,6 +38,9 @@
                 margin-bottom: 32px;
                 box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
                 border: 1px solid #f1f3f4;
+                position: relative;
+                top: 0;
+                z-index: 10;
             }
             
             .section-title {
@@ -302,10 +305,6 @@ scwin.btn_close_onclick = function (e) {
     </head>
     <body ev:onpageload="scwin.onpageload">
         <xf:group class="main-container">
-            <!-- 헤더 영역 -->
-            <xf:group class="page-header">
-            </xf:group>
-            
             <!-- 합격자 메일 템플릿 섹션 -->
             <xf:group class="template-section">
                 <w2:textbox class="section-title" label="✅ 합격자 메일 템플릿"></w2:textbox>
