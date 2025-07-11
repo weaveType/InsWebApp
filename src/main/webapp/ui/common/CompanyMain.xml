@@ -698,7 +698,9 @@ body, html {
 .features-section {
     padding: 80px 0 120px 0;
     background: #f8f9fa;
-    overflow: visible;
+    overflow: hidden;
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
 }
 
 .section-header {
@@ -725,7 +727,7 @@ body, html {
     position: relative;
     height: 650px;
     padding: 0 60px;
-    overflow: visible;
+    overflow: hidden;
 }
 
 .features-carousel {

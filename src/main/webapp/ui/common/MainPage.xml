@@ -72,42 +72,13 @@ scwin.updateLoginArea = function () {
         grp_profile_area.show();
         
         // 사용자 정보 업데이트
-        txb_user_name.setValue(userInfo.name);
+        txb_user_name.setValue(userInfo.name + "님");
         
-        // 매칭 상태 초기화 (임시 데이터)
-        scwin.updateMatchingStatus();
     } else {
         // 비로그인 상태 - 로그인 영역 표시
         grp_login_area.show();
         grp_profile_area.hide();
     }
-};
-
-// 매칭 상태 업데이트
-scwin.updateMatchingStatus = function () {
-    // 임시 데이터로 설정
-    txb_matching_status.setValue("매칭 OFF");
-    txb_profile_complete.setValue("10%");
-    txb_bookmark_count.setValue("0");
-    txb_matching_count.setValue("0");
-    txb_application_count.setValue("0");
-};
-
-// 매칭 토글 기능
-scwin.toggleMatching = function () {
-    var currentStatus = txb_matching_status.getValue();
-    if (currentStatus === "매칭 OFF") {
-        txb_matching_status.setValue("매칭 ON");
-        swt_matching_toggle.setValue("true");
-    } else {
-        txb_matching_status.setValue("매칭 OFF");
-        swt_matching_toggle.setValue("false");
-    }
-};
-
-// 매칭 검사 설정 클릭
-scwin.goToMatchingSettings = function () {
-    alert("매칭 검사 설정 페이지로 이동합니다.");
 };
 
 // 로그인 관련 팝업 호출 함수들
@@ -1090,10 +1061,6 @@ scwin.refreshCompanyList = function () {
 				<w2:textbox class="side-menu-title" label="메뉴"></w2:textbox>
 
 				<xf:group class="side-menu-section">
-					<w2:textbox class="side-menu-section-title" label="매칭 서비스"></w2:textbox>
-					<w2:anchor class="side-menu-item" ev:onclick="scwin.menu1_onclick">
-						<xf:label><![CDATA[������ 매칭]]></xf:label>
-					</w2:anchor>
 					<w2:anchor class="side-menu-item" ev:onclick="scwin.menu2_onclick">
 						<xf:label><![CDATA[������ MBTI 검사]]></xf:label>
 					</w2:anchor>
@@ -1167,9 +1134,8 @@ scwin.refreshCompanyList = function () {
 									<xf:image src="/InsWebApp/images/ws5/default_avatar.png" style="width:40px;height:40px;border-radius:50%;" id="img_user_avatar"></xf:image>
 								</xf:group>
 								<xf:group class="profile-info">
-									<w2:textbox class="profile-name" id="txb_user_name" label="김지훈님"></w2:textbox>
+									<w2:textbox class="profile-name" id="txb_user_name"></w2:textbox>
 									<xf:group class="profile-matching-status">
-										<w2:textbox class="matching-status-text" id="txb_matching_status" label="매칭 OFF"></w2:textbox>
 										<w2:switch id="swt_matching_toggle" ev:onchange="scwin.toggleMatching" style="margin-left:10px;"></w2:switch>
 									</xf:group>
 								</xf:group>
@@ -1201,10 +1167,6 @@ scwin.refreshCompanyList = function () {
 							
 							<!-- 통계 영역 -->
 							<xf:group class="stats-section">
-								<xf:group class="stats-item">
-									<w2:textbox class="stats-number" id="txb_bookmark_count" label="0"></w2:textbox>
-									<w2:textbox class="stats-label" label="북마크"></w2:textbox>
-								</xf:group>
 								<xf:group class="stats-item">
 									<w2:textbox class="stats-number" id="txb_matching_count" label="0"></w2:textbox>
 									<w2:textbox class="stats-label" label="매칭 제안"></w2:textbox>

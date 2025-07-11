@@ -88,7 +88,7 @@ scwin.btnLogin_onclick = function () {
 };
 
 scwin.weaveTypeLogo_onclick = function () {
-    pf_main.setSrc("weaveTypeMain.xml");
+    $p.url("/InsWebApp/ui/common/MainPage.xml");
 };
 
 scwin.menu1_onclick = function () {
@@ -100,7 +100,7 @@ scwin.menu2_onclick = function () {
 };
 
 scwin.menu3_onclick = function () {
-    pf_main.setSrc("../posting/PostList.xml");
+    $p.url("../posting/PostList.xml");
 };
 
 scwin.btnEnterprise_onclick = function () {
@@ -406,7 +406,7 @@ scwin.login_popup_closeAction = function (result) {
 				<xf:group class="header-container">
 					<xf:group class="header-left" style="">
 						<xf:group class="nav-menu" style="">
-							<xf:image src="/InsWebApp/images/ws5/codefit_logo.png" style="width:150px;height:50px;" id="codeFITLogo" class="logo"
+							<xf:image src="/InsWebApp/images/ws5/codefit_logo.png" style="width:150px;height:50px; cursor: pointer;" id="codeFITLogo" class="logo"
 								ev:onclick="scwin.weaveTypeLogo_onclick">
 							</xf:image>
 							<w2:anchor class="nav-link" id="anchor1" ev:onclick="scwin.menu1_onclick" outerDiv="false"
