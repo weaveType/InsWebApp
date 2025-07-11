@@ -573,12 +573,20 @@ scwin.createJobCard = function(jobData, index) {
     // 선호 개발자 유형 태그 생성
     var developerTypeTags = '';
     if (jobData.preferredDeveloperTypes) {
+        var devTypeArray = [];
         try {
-            var devTypeArray = JSON.parse(jobData.preferredDeveloperTypes);
+            // JSON 배열로 파싱 시도
+            devTypeArray = JSON.parse(jobData.preferredDeveloperTypes);
+        } catch (e) {
+            // JSON 파싱 실패 시 쉼표로 분리
+            devTypeArray = jobData.preferredDeveloperTypes.split(',').map(function(item) { return item.trim(); });
+        }
+        
+        if (Array.isArray(devTypeArray) && devTypeArray.length > 0) {
             developerTypeTags = devTypeArray.map(function(type) {
                 return '<span class="tech-tag">' + type + '</span>';
             }).join('');
-        } catch (e) {
+        } else {
             developerTypeTags = '<span class="tech-tag">정보없음</span>';
         }
     }
