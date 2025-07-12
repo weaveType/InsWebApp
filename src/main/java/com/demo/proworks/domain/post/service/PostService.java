@@ -106,5 +106,14 @@ public interface PostService {
      * @throws Exception
      */
 	public List<TechStackVo> selectTechStacksByPostId(String jobPostingId) throws Exception;
+
+    /**
+     * 사용자 ID로 회사 ID를 조회한다.
+     *
+     * @param  userId 사용자 ID
+     * @return 회사 ID String
+     * @throws Exception
+     */
+	public String selectCompanyIdByUserId(String userId) throws Exception;
 	
 }
