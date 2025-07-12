@@ -99,4 +99,11 @@
 		FROM USERS 
 		WHERE EMAIL = #{email}
 </select>
+<select id="selectDevMbti" parameterType="int" resultType="com.demo.proworks.common.enumType.DevMbti">
+<!-- userId로 개발자 Mbti를 가져온다 -->
+SELECT	/* QueryID : com.demo.proworks.domain.user.getDevMbti */  
+    type_code       AS typeCode
+	FROM users_mbti_types 
+    WHERE user_id = #{userId}
+</select>
 </mapper>

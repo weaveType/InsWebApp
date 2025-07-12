@@ -2,6 +2,7 @@ package com.demo.proworks.domain.user.service;
 
 import java.util.List;
 
+import com.demo.proworks.common.enumType.DevMbti;
 import com.demo.proworks.domain.user.vo.UserVo;
 
 /**
@@ -79,5 +80,14 @@ public interface UserService {
 	 * @throws Exception
 	 */
 	public UserVo selectUserByEmail(UserVo userVo) throws Exception;
+
+	/**
+	 * userId를 통해 개발자용 MBTI를 가져온다
+	 *
+	 * @param userId 유저의 id
+	 * @return MBTI 종류
+	 * @throws Exception
+	 */
+	public DevMbti selectDevMbti(int userId) throws Exception;
 
 }
