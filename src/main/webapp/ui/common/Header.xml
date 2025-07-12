@@ -37,10 +37,12 @@ scwin.updateHeaderUI = function () {
         // 비로그인 상태
         txb_login.hide();
         btnLogin.show();
+        btnLogout.hide(); // 로그아웃 버튼 숨김
     } else {
         // 로그인 상태
         btnLogin.hide();
         txb_login.show();
+        btnLogout.show(); // 로그아웃 버튼 표시
         txb_login.setValue(userInfo.name + " 님");
     }
 };
@@ -51,11 +53,12 @@ scwin.onpageload = function () {
 };
 
 // 로그아웃
-scwin.logout = function () {
+scwin.logout_onclick = function () {
     // 쿠키 삭제
-    WebSquare.cookie.removeCookie("userInfo");
+    WebSquare.cookie.delCookie("userInfo");
     scwin.updateHeaderUI();
-    pf_main.setSrc("weaveRtpeMain.xml");
+    // 메인 페이지로 이동 (필요에 따라 변경)
+    $p.url("/InsWebApp/ui/common/MainPage.xml");
 };
 
 // 로그인 관련 팝업 호출 함수
@@ -324,6 +327,9 @@ scwin.txb_login_onclick = function () {
 						</xf:trigger>
 						<w2:textbox id="txb_login" label="" style="width:150px;height:32px;text-align:left;font-size: 16px;cursor:pointer;color:#666666;text-decoration:underline;border:none;background:transparent;line-height:32px;="
 							ev:onclick="scwin.txb_login_onclick" title="클릭하여 로그아웃"></w2:textbox>
+						<xf:trigger class="btn-login" id="btnLogout" ev:onclick="scwin.logout_onclick" type="button" style="display:none;">
+							<xf:label><![CDATA[로그아웃]]></xf:label>
+						</xf:trigger>
 
 						<xf:trigger class="btn-enterprise" id="btnEnterprise" ev:onclick="scwin.btnEnterprise_onclick" type="button">
 							<xf:label><![CDATA[기업 서비스]]></xf:label>
