@@ -3,6 +3,7 @@ target/
 /.settings/meta/localStorage.dat
 /.vscode/
 inswave_JSON/
+GEMINI.md
 
 # 프로퍼티 파일
 src/main/resources/inswave/properties/gemini.properties 
