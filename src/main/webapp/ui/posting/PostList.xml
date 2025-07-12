@@ -684,12 +684,21 @@ scwin.openJobDetail = function(jobPostingId) {
         return;
     }
     
-    // PostDetail.xml로 이동하면서 파라미터 전달
-    var detailUrl = "PostDetail.xml?jobPostingId=" + encodeURIComponent(jobPostingId);
-    console.log("이동할 URL:", detailUrl);
-    
     try {
-        $p.url(detailUrl);
+        // 웹스퀘어 환경에서 pageFrame 방식으로 파라미터 전달
+        if ($p.parent() && $p.parent().pf_main) {
+            console.log("pageFrame을 통한 이동:", jobPostingId);
+            $p.parent().pf_main.setSrc("ui/posting/PostDetail.xml", {
+                dataObject: {
+                    jobPostingId: jobPostingId
+                }
+            });
+        } else {
+            // 대안 방법: URL 방식
+            console.log("URL 방식으로 이동:", jobPostingId);
+            var detailUrl = "PostDetail.xml?jobPostingId=" + encodeURIComponent(jobPostingId);
+            $p.url(detailUrl);
+        }
         console.log("✅ 페이지 이동 요청 완료");
     } catch (error) {
         console.error("❌ 페이지 이동 중 오류:", error);
