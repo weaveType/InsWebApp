@@ -481,6 +481,56 @@ public class PostController {
     }
 
     /**
+     * 공고정보 상세 조회 (유저용 - 권한 검증 없음)
+     *
+     * @param  postVo 공고정보
+     * @return 단건 조회 결과
+     * @throws Exception
+     */
+    @ElService(key = "POS0001Detail")    
+    @RequestMapping(value="POS0001Detail") 
+    @ElDescription(sub = "공고정보 상세 조회 (유저용)", desc = "유저가 공고 상세정보를 조회한다.")    
+    public PostVo selectPostDetail(PostVo postVo) throws Exception {
+        
+        System.out.println("=== 공고 상세 조회 (유저용) ===");
+        System.out.println("조회할 공고 ID: " + postVo.getJobPostingId());
+        
+        // 공고 기본 정보 조회
+        PostVo selectPostVo = postService.selectPost(postVo);
+        
+        if (selectPostVo != null) {
+            System.out.println("조회된 공고 제목: " + selectPostVo.getTitle());
+            System.out.println("조회된 공고 회사: " + selectPostVo.getCompanyId());
+            
+            // 해당 공고의 기술스택 목록도 함께 조회하여 JSON으로 설정
+            try {
+                List<TechStackVo> techStacks = postService.selectTechStacksByPostId(selectPostVo.getJobPostingId());
+                if (techStacks != null && !techStacks.isEmpty()) {
+                    // 기술스택 이름들을 배열로 변환
+                    String[] techStackNames = new String[techStacks.size()];
+                    for (int i = 0; i < techStacks.size(); i++) {
+                        techStackNames[i] = techStacks.get(i).getTechStackName();
+                    }
+                    
+                    // JSON 문자열로 변환하여 설정
+                    ObjectMapper objectMapper = new ObjectMapper();
+                    selectPostVo.setSelectedTechStackNames(objectMapper.writeValueAsString(techStackNames));
+                    
+                    System.out.println("기술스택 정보 설정 완료: " + selectPostVo.getSelectedTechStackNames());
+                }
+            } catch (Exception e) {
+                System.err.println("기술스택 조회 중 오류: " + e.getMessage());
+                // 기술스택 조회 실패 시에도 공고 정보는 반환
+            }
+        } else {
+            System.out.println("공고를 찾을 수 없습니다. ID: " + postVo.getJobPostingId());
+        }
+        
+        System.out.println("=== 공고 상세 조회 완료 ===");
+        return selectPostVo;
+    }
+
+    /**
      * 기술스택 목록을 조회한다.
      *
      * @return 기술스택 목록 조회 결과
