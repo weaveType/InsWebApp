@@ -203,12 +203,14 @@ scwin.sbm_login_submitdone = function (e) {
     const resultObj = e.responseJSON;
     const elHeader = resultObj.elHeader;
     const userHeader = resultObj.userHeader;
+    debugger;
     
     if (elHeader && elHeader.resSuc == true) {
         WebSquare.cookie.setCookie("userInfo", JSON.stringify(userHeader));
+        console.log(JSON.stringify(userHeader));
         var role = userHeader.role;
         if (role === "USER") {
-            $p.url("../common/weaveTypeMain.xml");
+            $p.url("../common/MainPage.xml");
             $p.closePopup();
 
         } else if (role === "COMPANY") {
