@@ -79,13 +79,10 @@ public class ProworksSessionDataAdapter extends SessionDataAdapter {
 				userHeader.setRole("USER");
 				try {
 					DevMbti devMbti = userService.selectDevMbti(userId);
-					System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> mbti : " + devMbti.getCode());
-					userHeader.setMbti(devMbti.toString());
-					System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> userHeader.getMbti : " + devMbti.getCode());
+					userHeader.setMbti(devMbti.getCode());
 				} catch (Exception e) {
 					throw new AdapterException("MBTI 조회 실패", e);
 				}
-				userHeader.setMbti(email);
 				break;
 			case 2:
 				userHeader.setRole("COMPANY");
