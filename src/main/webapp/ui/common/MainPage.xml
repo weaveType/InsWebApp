@@ -1183,7 +1183,7 @@ scwin.refreshCompanyList = function () {
 					<!-- 카드 1: 튜토리얼 -->
 					<xf:group class="card card-green" id="card1" ev:onclick="scwin.card1_onclick">
 						<xf:group class="card-icon card-icon-green">
-							<xf:image src="/InsWebApp/images/ws5/tutorial_image.png" style="width: 150px;height: 150px;" id=""></xf:image>
+							<xf:image src="/InsWebApp/images/ws5/main/tutorial.png" style="width: 150px;height: 150px;" id=""></xf:image>
 						</xf:group>
 						<w2:textbox class="card-title" label="튜토리얼"></w2:textbox>
 					</xf:group>
@@ -1194,13 +1194,13 @@ scwin.refreshCompanyList = function () {
 					<!-- 카드 3: MBTI 검사 -->
 					<xf:group class="card card-blue" id="card2" ev:onclick="scwin.card2_onclick">
 						<xf:group class="card-icon card-icon-blue">
-							<xf:image src="/InsWebApp/images/ws5/mbti_logo.png" style="width: 150px;height: 150px;" id=""></xf:image>
+							<xf:image src="/InsWebApp/images/ws5/main/mbti_check.png" style="width: 150px;height: 150px;" id=""></xf:image>
 						</xf:group>
 						<w2:textbox class="card-title" label="mbti검사"></w2:textbox>
 					</xf:group>
 					<xf:group class="card card-orange" id="card3" ev:onclick="scwin.card3_onclick">
 						<xf:group class="card-icon card-icon-orange">
-							<xf:image src="/InsWebApp/images/ws5/code_checking.png" style="width: 150px;height: 150px;" id=""></xf:image>
+							<xf:image src="/InsWebApp/images/ws5/main/code_check.png" style="width: 150px;height: 150px;" id=""></xf:image>
 						</xf:group>
 						<w2:textbox class="card-title" label="코드분석" style=""></w2:textbox>
 					</xf:group>
@@ -1253,9 +1253,6 @@ scwin.refreshCompanyList = function () {
 					<!-- 동적으로 생성될 회사 목록 영역 -->
 				</xf:group>
 			</xf:group>
-
-			<!-- 푸터 -->
-
 		</xf:group>
 	</body>
 </html>
