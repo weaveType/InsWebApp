@@ -10,17 +10,45 @@
         <w2:MSA/>
         <xf:model>
             <w2:dataCollection baseNode="map">
-                <w2:dataMap baseNode="map" id="dma_jobDetail">
+                <!-- 공고 상세 조회용 파라미터 -->
+                <w2:dataMap baseNode="map" id="dmp_postParam" style="">
                     <w2:keyInfo>
-                        <w2:key id="companyName" name="회사명" dataType="text"></w2:key>
-                        <w2:key id="jobTitle" name="직무명" dataType="text"></w2:key>
-                        <w2:key id="jobDescription" name="직무내용" dataType="text"></w2:key>
-                        <w2:key id="requirements" name="자격요건" dataType="text"></w2:key>
-                        <w2:key id="preferences" name="우대사항" dataType="text"></w2:key>
-                        <w2:key id="benefits" name="혜택" dataType="text"></w2:key>
+                        <w2:key dataType="text" id="jobPostingId" name="공고_ID"></w2:key>
                     </w2:keyInfo>
+                    <w2:data use="false"></w2:data>
+                </w2:dataMap>
+                
+                <!-- 공고 상세 정보 -->
+                <w2:dataMap baseNode="map" id="dmp_postDetail" style="">
+                    <w2:keyInfo>
+                        <w2:key dataType="text" id="jobPostingId" name="job_posting_id"></w2:key>
+                        <w2:key dataType="text" id="companyId" name="company_id"></w2:key>
+                        <w2:key dataType="text" id="title" name="title"></w2:key>
+                        <w2:key dataType="text" id="description" name="description"></w2:key>
+                        <w2:key dataType="text" id="experienceLevel" name="experience_level"></w2:key>
+                        <w2:key dataType="text" id="salaryRange" name="salary_range"></w2:key>
+                        <w2:key dataType="text" id="location" name="location"></w2:key>
+                        <w2:key dataType="text" id="workType" name="work_type"></w2:key>
+                        <w2:key dataType="text" id="expiresAt" name="expires_at"></w2:key>
+                        <w2:key dataType="text" id="postedAt" name="posted_at"></w2:key>
+                        <w2:key dataType="text" id="status" name="status"></w2:key>
+                        <w2:key dataType="text" id="companyName" name="company_name"></w2:key>
+                        <w2:key dataType="text" id="industry" name="industry"></w2:key>
+                        <w2:key dataType="text" id="empCount" name="emp_count"></w2:key>
+                        <w2:key dataType="text" id="selectedTechStackNames" name="selected_tech_stack_names"></w2:key>
+                        <w2:key dataType="text" id="preferredDeveloperTypes" name="preferred_developer_types"></w2:key>
+                    </w2:keyInfo>
+                    <w2:data use="false"></w2:data>
                 </w2:dataMap>
             </w2:dataCollection>
+            <w2:workflowCollection/>
+            
+            <!-- 공고 상세 조회 Submission -->
+            <xf:submission id="sbm_selectPostDetail" ref='data:json,{"id":"dmp_postParam","key":"postVo"}'
+                target='data:json,{"id":"dmp_postDetail","key":"elData"}' action="/InsWebApp/POS0001Detail.pwkjson" method="post"
+                mediatype="application/json" encoding="UTF-8" instance="" replace="" errorHandler="" customHandler="" mode="asynchronous"
+                processMsg="공고 상세정보를 조회중입니다." ev:submit="" ev:submitdone="scwin.sbm_selectPostDetail_submitdone" ev:submiterror="" abortTrigger="">
+            </xf:submission>
         </xf:model>
         <w2:layoutInfo/>
         <w2:publicInfo method=""/>
@@ -428,62 +456,250 @@
         
         <script lazy="false" type="text/javascript"><![CDATA[
 scwin.onpageload = function() {
-    // 페이지 로드 시 샘플 데이터 설정
-    scwin.initializeJobData();
+    console.log("=== PostDetail 페이지 로드 ===");
+    
+    // URL 파라미터에서 jobPostingId 추출
+    var jobPostingId = $c.util.getParameter("jobPostingId");
+    
+    console.log("URL에서 받은 jobPostingId:", jobPostingId);
+    
+    if (jobPostingId && jobPostingId.trim() !== "") {
+        // 파라미터 설정하고 서버에서 실제 데이터 조회
+        dmp_postParam.set("jobPostingId", jobPostingId);
+        console.log("서버 조회 시작...");
+        $c.sbm.execute($p, sbm_selectPostDetail);
+    } else {
+        console.warn("jobPostingId 파라미터가 없습니다. 샘플 데이터를 표시합니다.");
+        // 파라미터가 없는 경우 샘플 데이터로 초기화
+        scwin.initializeSampleData();
+    }
 };
 
-scwin.onpageload = function() {
-    // 페이지 로드 시 샘플 데이터 설정
-    scwin.initializeJobData();
+/**
+ * 공고 상세 조회 완료 콜백
+ */
+scwin.sbm_selectPostDetail_submitdone = function(e) {
+    console.log("=== 공고 상세 조회 완료 ===");
+    console.log("응답 데이터:", e.responseJSON);
+
+    var elData = e.responseJSON.elData;
+    var elHeader = e.responseJSON.elHeader;
+    
+    // 에러 체크
+    if(elHeader == null || elHeader == "" || elHeader == "undefined" || elHeader.resSuc == false) {
+        console.error("공고 상세 조회 에러:", elHeader);
+        var errorMsg = "공고를 불러올 수 없습니다.";
+        if (elHeader && elHeader.resMsg) {
+            errorMsg += "\n" + elHeader.resMsg;
+        }
+        alert(errorMsg);
+        
+        // 에러 시 목록으로 돌아가기
+        setTimeout(function() {
+            scwin.goBackToList();
+        }, 1000);
+        return false;
+    }
+
+    // 데이터 존재 여부 체크
+    if (!elData) {
+        console.error("조회된 데이터가 없습니다.");
+        alert("해당 공고 정보를 찾을 수 없습니다.\n공고가 삭제되었거나 존재하지 않을 수 있습니다.");
+        
+        setTimeout(function() {
+            scwin.goBackToList();
+        }, 1000);
+        return false;
+    }
+
+    console.log("조회된 공고 정보:");
+    console.log("- 공고 ID:", elData.jobPostingId);
+    console.log("- 제목:", elData.title);
+    console.log("- 회사명:", elData.companyName);
+    console.log("- 상태:", elData.status);
+    
+    // 비활성화된 공고 체크
+    if (elData.status === 'inactive' || elData.status === 'deleted') {
+        console.warn("비활성화된 공고입니다.");
+        alert("이 공고는 현재 모집이 중단되었습니다.");
+        
+        setTimeout(function() {
+            scwin.goBackToList();
+        }, 1000);
+        return false;
+    }
+
+    try {
+        // 데이터를 DataMap에 설정
+        dmp_postDetail.setJSON(elData);
+        
+        // 화면 업데이트
+        scwin.updateUI();
+        
+        console.log("✅ 공고 상세 정보 바인딩 완료");
+        
+        // 성공적으로 로드되었음을 표시
+        setTimeout(function() {
+            var loadingElements = document.querySelectorAll('.tag:contains("로딩중")');
+            if (loadingElements.length === 0) {
+                console.log("✅ UI 로딩 완료");
+            }
+        }, 500);
+        
+    } catch (error) {
+        console.error("데이터 바인딩 중 오류:", error);
+        alert("데이터를 화면에 표시하는 중 오류가 발생했습니다.");
+    }
 };
 
-// 채용공고 샘플 데이터 초기화
-scwin.initializeJobData = function() {
-    dma_jobDetail.set("companyName", "DRM 제품 개발팀원 (Global SaaS Product)");
-    dma_jobDetail.set("jobTitle", "풀스택 개발자");
-    dma_jobDetail.set("jobDescription", 
-        "• DRM 솔루션의 프론트엔드 및 백엔드 개발\n" +
-        "• React.js 기반 사용자 인터페이스 구현\n" +
-        "• Node.js/Express를 활용한 서버 사이드 개발\n" +
-        "• RESTful API 설계 및 구현\n" +
-        "• 데이터베이스 설계 및 최적화\n" +
-        "• 코드 리뷰 및 기술 문서화"
-    );
-    dma_jobDetail.set("requirements",
-        "• 컴퓨터공학 또는 관련 분야 학사 이상\n" +
-        "• React.js, Vue.js 등 프론트엔드 프레임워크 경험 2년 이상\n" +
-        "• Node.js, Express 백엔드 개발 경험\n" +
-        "• MySQL, MongoDB 등 데이터베이스 활용 경험\n" +
-        "• Git을 활용한 협업 경험\n" +
-        "• 원활한 의사소통 능력"
-    );
-    dma_jobDetail.set("preferences",
-        "• AWS, GCP 등 클라우드 서비스 경험\n" +
-        "• Docker, Kubernetes 컨테이너 기술 경험\n" +
-        "• TypeScript 개발 경험\n" +
-        "• 테스트 코드 작성 경험\n" +
-        "• 애자일 개발 방법론 경험\n" +
-        "• 오픈소스 프로젝트 기여 경험"
-    );
-    dma_jobDetail.set("benefits",
-        "• 4대보험 + 퇴직연금\n" +
-        "• 연차 15일 + 리프레시 휴가\n" +
-        "• 교육비 지원 (연 200만원)\n" +
-        "• 건강검진 비용 지원\n" +
-        "• 자유로운 출퇴근 시간\n" +
-        "• 재택근무 지원\n" +
-        "• 최신 개발 장비 지원"
-    );
+/**
+ * UI 업데이트 (실제 데이터로)
+ */
+scwin.updateUI = function() {
+    console.log("=== UI 업데이트 시작 ===");
+    
+    // 기술스택 태그 동적 생성
+    scwin.updateTechStackTags();
+    
+    // 개발자 선호 유형 태그 동적 생성  
+    scwin.updateDeveloperTypeTags();
+    
+    // 메타 정보 업데이트
+    scwin.updateJobMeta();
+    
+    console.log("✅ UI 업데이트 완료");
+};
+
+/**
+ * 기술스택 태그 동적 생성
+ */
+scwin.updateTechStackTags = function() {
+    var techStackJson = dmp_postDetail.get("selectedTechStackNames");
+    var tagsContainer = document.querySelector('.tech-tags');
+    
+    if (tagsContainer && techStackJson) {
+        try {
+            var techStacks = JSON.parse(techStackJson);
+            var tagsHtml = '';
+            
+            for (var i = 0; i < techStacks.length; i++) {
+                tagsHtml += '<span class="tag">' + techStacks[i] + '</span>';
+            }
+            
+            tagsContainer.innerHTML = tagsHtml;
+            console.log("기술스택 태그 생성 완료:", techStacks.length + "개");
+        } catch (e) {
+            console.error("기술스택 JSON 파싱 오류:", e);
+            tagsContainer.innerHTML = '<span class="tag">정보없음</span>';
+        }
+    }
+};
+
+/**
+ * 개발자 선호 유형 태그 동적 생성
+ */
+scwin.updateDeveloperTypeTags = function() {
+    var developerTypesJson = dmp_postDetail.get("preferredDeveloperTypes");
+    
+    if (developerTypesJson) {
+        try {
+            var developerTypes = JSON.parse(developerTypesJson);
+            var techTagsContainer = document.querySelector('.tech-tags');
+            
+            if (techTagsContainer && developerTypes && developerTypes.length > 0) {
+                var existingHtml = techTagsContainer.innerHTML;
+                var additionalTags = '';
+                
+                for (var i = 0; i < developerTypes.length; i++) {
+                    additionalTags += '<span class="tag" style="background: #e8f4fd; color: #1976d2;">' + developerTypes[i] + '</span>';
+                }
+                
+                techTagsContainer.innerHTML = existingHtml + additionalTags;
+                console.log("개발자 유형 태그 추가 완료:", developerTypes.length + "개");
+            }
+        } catch (e) {
+            console.error("개발자 유형 JSON 파싱 오류:", e);
+        }
+    }
+};
+
+/**
+ * 메타 정보 업데이트
+ */
+scwin.updateJobMeta = function() {
+    var companyName = dmp_postDetail.get("companyName") || "정보없음";
+    var experienceLevel = scwin.getExperienceLevelText(dmp_postDetail.get("experienceLevel"));
+    var location = dmp_postDetail.get("location") || "정보없음";
+    
+    var metaText = companyName + " • " + experienceLevel + " • " + location + " 등 근무";
+    
+    // 메타 정보 업데이트
+    var metaElement = document.querySelector('.job-meta');
+    if (metaElement && metaElement.querySelector('w2\\:textbox')) {
+        metaElement.querySelector('w2\\:textbox').textContent = metaText;
+    }
+};
+
+/**
+ * 샘플 데이터 초기화 (파라미터가 없는 경우)
+ */
+scwin.initializeSampleData = function() {
+    console.log("샘플 데이터로 초기화");
+    
+    var sampleData = {
+        jobPostingId: "sample-001",
+        companyId: "1",
+        title: "DRM 제품 개발팀원 (Global SaaS Product)",
+        description: "• DRM 솔루션의 프론트엔드 및 백엔드 개발\n• React.js 기반 사용자 인터페이스 구현\n• Node.js/Express를 활용한 서버 사이드 개발\n• RESTful API 설계 및 구현\n• 데이터베이스 설계 및 최적화\n• 코드 리뷰 및 기술 문서화",
+        experienceLevel: "senior",
+        salaryRange: "over50",
+        location: "서울",
+        workType: "hybrid",
+        companyName: "잉카엔터웍스",
+        industry: "IT/소프트웨어",
+        empCount: "201-500명",
+        selectedTechStackNames: '["JavaScript", "React", "Node.js", "TypeScript", "Express", "MySQL", "MongoDB", "AWS", "Docker", "Git"]',
+        preferredDeveloperTypes: '["풀스택 개발자", "프론트엔드 개발자", "백엔드 개발자"]',
+        postedAt: "2025-07-10",
+        status: "active"
+    };
+    
+    dmp_postDetail.setJSON(sampleData);
+    scwin.updateUI();
+};
+
+/**
+ * 목록으로 돌아가기
+ */
+scwin.goBackToList = function() {
+    $p.url("PostList.xml");
 };
 
 // 지원하기 버튼 클릭
 scwin.btnApply_onclick = function(e) {
-    alert("지원서 작성 페이지로 이동합니다.");
+    var jobPostingId = dmp_postDetail.get("jobPostingId");
+    var title = dmp_postDetail.get("title");
+    
+    if (confirm(title + " 공고에 지원하시겠습니까?")) {
+        // TODO: 실제 지원 페이지로 이동
+        alert("지원서 작성 페이지로 이동합니다.\n공고 ID: " + jobPostingId);
+    }
 };
 
 // 북마크 버튼 클릭
 scwin.btnBookmark_onclick = function(e) {
-    alert("북마크에 추가되었습니다.");
+    var jobPostingId = dmp_postDetail.get("jobPostingId");
+    
+    // TODO: 실제 북마크 서버 요청
+    alert("북마크에 추가되었습니다.\n공고 ID: " + jobPostingId);
+    
+    // 버튼 텍스트 변경
+    var btnElement = e.target;
+    if (btnElement.textContent.includes('🤍')) {
+        btnElement.textContent = '❤️ 북마크됨';
+    } else {
+        btnElement.textContent = '🤍 북마크';
+    }
 };
 
 // 관련 포지션 카드 클릭
@@ -493,24 +709,76 @@ scwin.relatedPosition_onclick = function(e) {
 
 // 뒤로가기
 scwin.btnBack_onclick = function(e) {
-    history.back();
+    if (history.length > 1) {
+        history.back();
+    } else {
+        scwin.goBackToList();
+    }
 };
 
 // 공유하기
 scwin.btnShare_onclick = function(e) {
+    var title = dmp_postDetail.get("title") || "채용공고";
+    var jobPostingId = dmp_postDetail.get("jobPostingId");
+    
     if (navigator.share) {
         navigator.share({
-            title: '채용공고',
-            text: dma_jobDetail.get("companyName"),
+            title: title,
+            text: title + " - 채용공고",
             url: window.location.href
         });
     } else {
         // 공유 API 미지원 시 클립보드 복사
         navigator.clipboard.writeText(window.location.href).then(function() {
             alert("링크가 클립보드에 복사되었습니다.");
+        }).catch(function() {
+            // 클립보드 복사 실패 시 직접 표시
+            prompt("아래 링크를 복사하세요:", window.location.href);
         });
     }
-};]]></script>
+};
+
+// =========================
+// 유틸리티 함수들
+// =========================
+
+/**
+ * 경력수준 한글 변환
+ */
+scwin.getExperienceLevelText = function(experienceLevel) {
+    switch(experienceLevel) {
+        case 'any': return '경력무관';
+        case 'junior': return '신입·1-3년';
+        case 'senior': return '시니어·3년+';
+        default: return experienceLevel || '정보없음';
+    }
+};
+
+/**
+ * 근무형태 한글 변환
+ */
+scwin.getWorkTypeText = function(workType) {
+    switch(workType) {
+        case 'remote': return '원격근무';
+        case 'onsite': return '출근근무';
+        case 'hybrid': return '하이브리드';
+        default: return workType || '정보없음';
+    }
+};
+
+/**
+ * 급여범위 한글 변환
+ */
+scwin.getSalaryRangeText = function(salaryRange) {
+    switch(salaryRange) {
+        case 'under25': return '~2,500만원';
+        case '25to35': return '2,500~3,500만원';
+        case '35to50': return '3,500~5,000만원';
+        case 'over50': return '5,000만원+';
+        default: return salaryRange || '협의';
+    }
+};
+]]></script>
     </head>
     
     <body ev:onpageload="scwin.onpageload">
@@ -524,7 +792,7 @@ scwin.btnShare_onclick = function(e) {
                     <section class="company-images">
                         <xf:group class="image-gallery">
                             <xf:group class="main-image">
-                                <w2:textbox label="INKA"></w2:textbox>
+                                <w2:textbox ref="data:dmp_postDetail.companyName" label="회사명"></w2:textbox>
                             </xf:group>
                             <xf:group class="sub-image">
                                 <w2:textbox label="appsealing"></w2:textbox>
@@ -538,7 +806,7 @@ scwin.btnShare_onclick = function(e) {
                     <!-- 공고 헤더 -->
                     <section class="job-header">
                         <w2:textbox class="job-meta" label="잉카엔터웍스 • 5년차 • 한국 등 근무"></w2:textbox>
-                        <w2:textbox class="job-title" ref="data:dma_jobDetail.companyName"></w2:textbox>
+                        <w2:textbox class="job-title" ref="data:dmp_postDetail.title"></w2:textbox>
                         
                         <xf:group class="job-actions">
                             <xf:trigger class="btn-apply" type="button" ev:onclick="scwin.btnApply_onclick">
@@ -555,41 +823,48 @@ scwin.btnShare_onclick = function(e) {
                         <!-- 주요업무 -->
                         <xf:group class="content-section">
                             <w2:textbox class="section-title" label="주요업무"></w2:textbox>
-                            <w2:textbox class="section-content" ref="data:dma_jobDetail.jobDescription"></w2:textbox>
+                            <w2:textbox class="section-content" ref="data:dmp_postDetail.description"></w2:textbox>
                         </xf:group>
 
                         <!-- 자격요건 -->
                         <xf:group class="content-section">
                             <w2:textbox class="section-title" label="자격요건"></w2:textbox>
-                            <w2:textbox class="section-content" ref="data:dma_jobDetail.requirements"></w2:textbox>
+                            <w2:textbox class="section-content" label="해당 공고의 자격요건 정보입니다."></w2:textbox>
                         </xf:group>
 
                         <!-- 우대사항 -->
                         <xf:group class="content-section">
                             <w2:textbox class="section-title" label="우대사항"></w2:textbox>
-                            <w2:textbox class="section-content" ref="data:dma_jobDetail.preferences"></w2:textbox>
+                            <w2:textbox class="section-content" label="해당 공고의 우대사항 정보입니다."></w2:textbox>
                         </xf:group>
 
                         <!-- 혜택 및 복리후생 -->
                         <xf:group class="content-section">
                             <w2:textbox class="section-title" label="혜택 및 복리후생"></w2:textbox>
-                            <w2:textbox class="section-content" ref="data:dma_jobDetail.benefits"></w2:textbox>
+                            <w2:textbox class="section-content" label="해당 공고의 혜택 및 복리후생 정보입니다."></w2:textbox>
                         </xf:group>
 
                         <!-- 기술 스택 -->
                         <xf:group class="content-section">
                             <w2:textbox class="section-title" label="기술스택 · 툴"></w2:textbox>
+                            <xf:group class="tags tech-tags">
+                                <!-- 기술스택 태그들이 JavaScript로 동적 생성됩니다 -->
+                                <w2:span class="tag" label="로딩중..."></w2:span>
+                            </xf:group>
+                        </xf:group>
+                        
+                        <!-- 기타 정보 -->
+                        <xf:group class="content-section">
+                            <w2:textbox class="section-title" label="기타 정보"></w2:textbox>
                             <xf:group class="tags">
-                                <w2:span class="tag" label="JavaScript"></w2:span>
-                                <w2:span class="tag" label="React"></w2:span>
-                                <w2:span class="tag" label="Node.js"></w2:span>
-                                <w2:span class="tag" label="TypeScript"></w2:span>
-                                <w2:span class="tag" label="Express"></w2:span>
-                                <w2:span class="tag" label="MySQL"></w2:span>
-                                <w2:span class="tag" label="MongoDB"></w2:span>
-                                <w2:span class="tag" label="AWS"></w2:span>
-                                <w2:span class="tag" label="Docker"></w2:span>
-                                <w2:span class="tag" label="Git"></w2:span>
+                                <w2:span class="tag" label="경력" style="background: #e8f5e8; color: #2e7d32;"></w2:span>
+                                <w2:textbox class="tag" ref="data:dmp_postDetail.experienceLevel" style="background: #e8f5e8; color: #2e7d32;"></w2:textbox>
+                                <w2:span class="tag" label="지역" style="background: #fff3e0; color: #ef6c00;"></w2:span>
+                                <w2:textbox class="tag" ref="data:dmp_postDetail.location" style="background: #fff3e0; color: #ef6c00;"></w2:textbox>
+                                <w2:span class="tag" label="근무형태" style="background: #f3e5f5; color: #7b1fa2;"></w2:span>
+                                <w2:textbox class="tag" ref="data:dmp_postDetail.workType" style="background: #f3e5f5; color: #7b1fa2;"></w2:textbox>
+                                <w2:span class="tag" label="급여" style="background: #e1f5fe; color: #0277bd;"></w2:span>
+                                <w2:textbox class="tag" ref="data:dmp_postDetail.salaryRange" style="background: #e1f5fe; color: #0277bd;"></w2:textbox>
                             </xf:group>
                         </xf:group>
                     </section>
