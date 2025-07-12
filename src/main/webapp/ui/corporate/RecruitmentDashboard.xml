@@ -685,19 +685,8 @@ scwin.btn_refresh_onclick = function() {
 
 // 새 공고 작성 버튼 클릭
 scwin.btn_newJob_onclick = function (e) {
+    // $p.url("CreatePosting.xml");
     $p.url("../post/CreatePosting.xml");
-};
-
-// 공고 관리 카드 클릭
-scwin.grp_quickManagement_onclick = function(e) {
-	// 공고 목록 새로고침
-	scwin.loadPostList();
-	
-	// 공고 관리 섹션으로 스크롤
-	var recruitmentSection = document.querySelector('.recruitment-section');
-	if (recruitmentSection) {
-		recruitmentSection.scrollIntoView({ behavior: 'smooth' });
-	}
 };
 
 // 채용 통계 클릭

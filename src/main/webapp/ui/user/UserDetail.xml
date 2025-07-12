@@ -32,6 +32,107 @@
             box-sizing: border-box;
         }
 
+        .main-wrap {
+            width: 100%;
+            background-color: #ffffff;
+            font-family: "Malgun Gothic", "맑은 고딕", sans-serif;
+        }
+
+        /* 헤더 스타일 */
+        .header {
+            width: 100%;
+            height: 70px;
+            background-color: #ffffff;
+            border-bottom: 1px solid #e0e0e0;
+            position: relative;
+            padding: 0 min(30px, 4vw);
+        }
+
+        .header-left {
+            float: left;
+            padding-top: 18px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .nav-menu {
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        .nav-link {
+            font-size: 14px;
+            color: #333;
+            text-decoration: none;
+            cursor: pointer;
+            margin-right: 20px;
+            vertical-align: middle;
+        }
+
+        .header-right {
+            float: right;
+            padding-top: 18px;
+        }
+
+        .search-container {
+            display: inline-block;
+            background-color: #f5f5f5;
+            border-radius: 20px;
+            padding: 6px 15px;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+
+        .search-input {
+            border: none;
+            background: transparent;
+            width: 150px;
+            outline: none;
+            font-size: 13px;
+            height: 24px;
+            vertical-align: middle;
+        }
+
+        .search-btn {
+            border: none;
+            background: none;
+            cursor: pointer;
+            margin-left: 8px;
+            font-size: 14px;
+            vertical-align: middle;
+        }
+
+        .btn-login {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            margin-right: 8px;
+            height: 32px;
+            vertical-align: middle;
+        }
+
+        .btn-enterprise {
+            background-color: #333;
+            color: #fff;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            height: 32px;
+            vertical-align: middle;
+        }
+
+        .clearfix::after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+
         /* 메인 레이아웃 */
         .main-container {
             display: flex;
@@ -48,6 +149,14 @@
             border-right: 1px solid #e0e0e0;
             padding: 20px 20px 20px 5px; /* 좌측 패딩을 5px로 더 줄임 */
             flex-shrink: 0;
+        }
+
+        .sidebar-title {
+            font-size: clamp(18px, 3vw, 20px);
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 30px;
+            margin-left: 0px; /* 제목 좌측 여백 제거 */
         }
 
         .sidebar-menu {
@@ -534,6 +643,61 @@ scwin.initializeUserData = function () {
     dma_userInfo.set("codeAnalysisCompleted", "false");
 };
 
+// 헤더 이벤트들
+scwin.weaveTypeLogo_onclick = function () {
+    $p.url("../common/weaveTypeMain.xml");
+};
+
+scwin.menu1_onclick = function () {
+    alert("매칭 페이지로 이동합니다.");
+};
+
+scwin.menu2_onclick = function () {
+    alert("MBTI 검사 페이지로 이동합니다.");
+};
+
+scwin.menu3_onclick = function () {
+    $p.url("../posting/PostList.xml");
+};
+
+scwin.btnLogin_onclick = function () {
+    alert("로그인/회원가입 페이지로 이동합니다.");
+};
+
+scwin.btnEnterprise_onclick = function () {
+    alert("기업 서비스 페이지로 이동합니다.");
+};
+
+scwin.searchInput_onkeypress = function (e) {
+    if (e.keyCode === 13) {
+        var searchText = searchInput.getValue();
+        if (searchText && searchText.trim() !== "") {
+            alert("'" + searchText + "'를 검색합니다.");
+        }
+    }
+};
+
+scwin.btnSearch_onclick = function () {
+    var searchText = searchInput.getValue();
+    if (searchText && searchText.trim() !== "") {
+        alert("'" + searchText + "'를 검색합니다.");
+    }
+};
+
+// 매칭 토글
+scwin.toggleMatching_onclick = function () {
+    var currentStatus = dma_userInfo.get("matchingEnabled");
+    var newStatus = currentStatus === "ON" ? "OFF" : "ON";
+    dma_userInfo.set("matchingEnabled", newStatus);
+
+    var toggleElement = document.querySelector('.toggle-switch');
+    if (newStatus === "OFF") {
+        toggleElement.classList.add('off');
+    } else {
+        toggleElement.classList.remove('off');
+    }
+};
+
 // 사이드바 메뉴 클릭
 scwin.sidebarMenu_onclick = function (menuId) {
     switch (menuId) {
@@ -569,6 +733,38 @@ scwin.sidebarMenu_onclick = function (menuId) {
             alert("알림 관리 페이지로 이동합니다.");
             break;
     }
+};
+
+// 정보 카드 수정
+scwin.editInfo_onclick = function (infoType) {
+    switch (infoType) {
+        case 'location':
+            // 지역 수정 페이지로 이동
+            $p.url("LocationEdit.xml");
+            break;
+        case 'job':
+            // 직무/분야 수정 페이지로 이동
+            $p.url("JobEdit.xml");
+            break;
+        case 'salary':
+            // 연봉 수정 페이지로 이동
+            $p.url("SalaryEdit.xml");
+            break;
+        case 'skills':
+            // 기술스택 수정 페이지로 이동
+            $p.url("UserStackEdit.xml");
+            break;
+    }
+};
+
+// MBTI 검사 시작
+scwin.startMbti_onclick = function () {
+    alert("MBTI 성격 검사를 시작합니다.");
+};
+
+// 코드분석 시작
+scwin.startCodeAnalysis_onclick = function () {
+    alert("코드분석을 시작합니다.");
 };
 
 // 카드 상태 업데이트 함수
@@ -656,21 +852,17 @@ scwin.updateSingleCard = function (cardId, isCompleted) {
 scwin.btn_userUpdate_onclick = function (e) {
     $p.url("updateUser.xml");
 };
-
-scwin.btn_code_analysis_main_onclick = function (e) {
-    $p.url("CodeAnalysisMain.xml");
-};
 ]]></script>
 	</head>
 
 	<body ev:onpageload="scwin.onpageload">
-		<w2:wframe src="../common/Header.xml" id="headerFrame" />
+        <w2:wframe src="../common/Header.xml" id="headerFrame" />
 		<xf:group class="main-wrap">
-
 			<!-- 메인 컨테이너 -->
 			<xf:group class="main-container">
 				<!-- 사이드바 -->
 				<aside class="sidebar">
+					<w2:textbox class="sidebar-title" label="MY JOBDA"></w2:textbox>
 
 					<xf:group class="sidebar-menu">
 						<xf:group class="menu-category">
@@ -714,7 +906,8 @@ scwin.btn_code_analysis_main_onclick = function (e) {
 									style="font-size: 20px; font-weight: bold; color: #666; margin: 4px 0 8px 0;">
 								</w2:textbox>
 								<xf:group class="profile-career">
-									<w2:textbox ref="data:dma_userInfo.careerLevel" style="font-size: 14px; color: #666; margin: 4px 0 8px 0;">
+									<w2:textbox ref="data:dma_userInfo.careerLevel"
+										style="font-size: 14px; color: #666; margin: 4px 0 8px 0;">
 									</w2:textbox>
 								</xf:group>
 							</xf:group>
@@ -775,7 +968,7 @@ scwin.btn_code_analysis_main_onclick = function (e) {
 							</xf:group>
 
 							<!-- 코드분석 카드 -->
-							<xf:group class="action-card incomplete">
+							<xf:group class="action-card incomplete" ev:onclick="scwin.startCodeAnalysis_onclick()">
 								<xf:group class="incomplete-badge">미완료</xf:group>
 
 								<xf:group class="action-card-icon" style="">
@@ -783,7 +976,7 @@ scwin.btn_code_analysis_main_onclick = function (e) {
 								</xf:group>
 								<w2:textbox class="action-card-title" label="코드분석"></w2:textbox>
 								<w2:textbox class="action-card-subtitle" label="ex : 8가지 성향을 4개의 성향을 알아 낼 수 있습니다"></w2:textbox>
-								<xf:trigger class="action-card-button" type="button" id="btn_code_analysis_main" ev:onclick="scwin.btn_code_analysis_main_onclick">
+								<xf:trigger class="action-card-button" type="button">
 									<xf:label><![CDATA[분석하기]]></xf:label>
 								</xf:trigger>
 							</xf:group>
