@@ -1,0 +1,9 @@
+{
+   "charset": "UTF-8",
+   "reqMethod": "POST",
+   "serviceURL": "http://localhost:9093/InsWebApp/US0002UpdView.pwkjson",
+   "contentType": "application/json",
+   "requestContent": "{\"user\": {\n   \"accountId\": \"SampleValue_0\",\n   \"career\": \"SampleValue_2\",\n   \"isMbtiChecked\": \"SampleValue_6\",\n   \"currentPosition\": \"SampleValue_4\",\n   \"isCodeChecked\": \"SampleValue_7\",\n   \"name\": \"SampleValue_1\",\n   \"preferredLocations\": \"SampleValue_3\",\n   \"yearSalary\": \"SampleValue_5\"\n}}",
+   "responseContent": "{\"elHeader\":{\"reqUrl\":\"/InsWebApp/US0002UpdView.pwkjson\",\"traceId\":\"2025071421173280800029809\",\"bArgResolveParsing\":false,\"resSuc\":false,\"resMsg\":\"수행 중 오류가 발생하였습니다.\",\"resCode\":\"ERROR.SYS.002\",\"validateSuc\":false,\"saveTokenKey\":false,\"removeTokenKey\":false,\"locale\":\"ko\",\"language\":\"ko\",\"startTime\":0,\"svcTimeOut\":0,\"inOutDataEnc\":true,\"dbDataEnc\":false,\"gTraceId\":\"2025071421173280800029809\",\"fieldApplyAttr\":true,\"simurate\":false,\"deferredSvc\":false,\"centerCutSvc\":false}}",
+   "sendTime": "2025-07-14 21:17:32"
+}

@@ -8,20 +8,23 @@
 		<w2:MSA />
 		<xf:model>
 			<w2:dataCollection baseNode="map">
-				<w2:dataMap baseNode="map" id="dma_userInfo">
+				<w2:dataMap baseNode="map" id="dma_userInfoVo">
 					<w2:keyInfo>
-						<w2:key id="userName" name="사용자명" dataType="text"></w2:key>
-						<w2:key id="matchingEnabled" name="매칭활성화" dataType="text"></w2:key>
-						<w2:key id="careerLevel" name="경력수준" dataType="text"></w2:key>
-						<w2:key id="location" name="지역" dataType="text"></w2:key>
-						<w2:key id="jobCategory" name="직무분야" dataType="text"></w2:key>
-						<w2:key id="salary" name="희망연봉" dataType="text"></w2:key>
-						<w2:key id="skills" name="보유기술" dataType="text"></w2:key>
-						<w2:key id="mbtiCompleted" name="MBTI완료여부" dataType="text"></w2:key>
-						<w2:key id="codeAnalysisCompleted" name="코드분석완료여부" dataType="text"></w2:key>
+						<w2:key id="accountId" name="계정 ID" dataType="number"></w2:key>
+						<w2:key id="name" name="사용자명" dataType="text"></w2:key>
+						<w2:key id="career" name="경력수준" dataType="text"></w2:key>
+						<w2:key id="preferred_locations" name="지역" dataType="text"></w2:key>
+						<w2:key id="current_position" name="직무분야" dataType="text"></w2:key>
+						<w2:key id="year_salary" name="희망연봉" dataType="number"></w2:key>
+						<w2:key id="is_mbti_checked" name="MBTI완료여부" dataType="text"></w2:key>
+						<w2:key id="is_code_checked" name="코드분석완료여부" dataType="text"></w2:key>
 					</w2:keyInfo>
 				</w2:dataMap>
 			</w2:dataCollection>
+			<xf:submission id="sbm_userDetail" action="/InsWebApp/US0002UpdView.pwkjson" method="post" mediatype="application/json"
+				ref='data:json,{"id":"dma_userInfoVo", "key":"userInfoVo"}' target='data:json,{"id":"dma_userInfoVo", "key":"elData"}' encoding="UTF-8" instance="" replace="" errorHandler=""
+				customHandler="" mode="asynchronous" processMsg="유저 정보 조회중" ev:submit="" ev:submitdone="" ev:submiterror="" abortTrigger="">
+			</xf:submission>
 		</xf:model>
 		<w2:layoutInfo />
 		<w2:publicInfo method="" />
@@ -625,134 +628,29 @@
         ]]></style>
 
 		<script lazy="false" type="text/javascript"><![CDATA[scwin.onpageload = function () {
-    scwin.initializeUserData();
-    setTimeout(function () {
-        scwin.updateCardStatus();
-    }, 100);
-};
+    var userInfoStr = WebSquare.cookie.getCookie("userInfo");
+    var userInfo = JSON.parse(userInfoStr);
+    dma_userInfoVo.set("accountId", userInfo.accountId);
+    console.log(dma_userInfoVo);
 
-scwin.initializeUserData = function () {
-    dma_userInfo.set("userName", "김지훈");
-    dma_userInfo.set("matchingEnabled", "ON");
-    dma_userInfo.set("careerLevel", "신입");
-    dma_userInfo.set("location", "서울특별시");
-    dma_userInfo.set("jobCategory", "기타 직종/업무");
-    dma_userInfo.set("salary", "3,000만원 이상");
-    dma_userInfo.set("skills", "-");
-    dma_userInfo.set("mbtiCompleted", "true");
-    dma_userInfo.set("codeAnalysisCompleted", "false");
-};
-
-// 헤더 이벤트들
-scwin.weaveTypeLogo_onclick = function () {
-    $p.url("../common/weaveTypeMain.xml");
-};
-
-scwin.menu1_onclick = function () {
-    alert("매칭 페이지로 이동합니다.");
-};
-
-scwin.menu2_onclick = function () {
-    alert("MBTI 검사 페이지로 이동합니다.");
-};
-
-scwin.menu3_onclick = function () {
-    $p.url("../posting/PostList.xml");
-};
-
-scwin.btnLogin_onclick = function () {
-    alert("로그인/회원가입 페이지로 이동합니다.");
-};
-
-scwin.btnEnterprise_onclick = function () {
-    alert("기업 서비스 페이지로 이동합니다.");
-};
-
-scwin.searchInput_onkeypress = function (e) {
-    if (e.keyCode === 13) {
-        var searchText = searchInput.getValue();
-        if (searchText && searchText.trim() !== "") {
-            alert("'" + searchText + "'를 검색합니다.");
-        }
-    }
-};
-
-scwin.btnSearch_onclick = function () {
-    var searchText = searchInput.getValue();
-    if (searchText && searchText.trim() !== "") {
-        alert("'" + searchText + "'를 검색합니다.");
-    }
-};
-
-// 매칭 토글
-scwin.toggleMatching_onclick = function () {
-    var currentStatus = dma_userInfo.get("matchingEnabled");
-    var newStatus = currentStatus === "ON" ? "OFF" : "ON";
-    dma_userInfo.set("matchingEnabled", newStatus);
-
-    var toggleElement = document.querySelector('.toggle-switch');
-    if (newStatus === "OFF") {
-        toggleElement.classList.add('off');
-    } else {
-        toggleElement.classList.remove('off');
-    }
+    // 서버 통신
+    $c.sbm.execute($p, sbm_userDetail);
 };
 
 // 사이드바 메뉴 클릭
 scwin.sidebarMenu_onclick = function (menuId) {
     switch (menuId) {
-        case 'matching_home':
-            alert("매칭 홈으로 이동합니다.");
-            break;
         case 'matching_inquiry':
             alert("매칭 현황 페이지로 이동합니다.");
             break;
         case 'matching_profile':
             // 현재 페이지이므로 아무것도 하지 않음
             break;
-        case 'matching_settings':
-            alert("매칭 설정 페이지로 이동합니다.");
-            break;
         case 'profile':
             $p.url("ProfileEditStep1.xml");
             break;
-        case 'login_connection':
-            alert("로그인 연결 페이지로 이동합니다.");
-            break;
         case 'application_history':
-            // 지원현황 페이지로 이동
             $p.url("ApplicationHistory.xml");
-            break;
-        case 'interest_company':
-            alert("관심기업 페이지로 이동합니다.");
-            break;
-        case 'bookmark':
-            alert("북마크 페이지로 이동합니다.");
-            break;
-        case 'notification_management':
-            alert("알림 관리 페이지로 이동합니다.");
-            break;
-    }
-};
-
-// 정보 카드 수정
-scwin.editInfo_onclick = function (infoType) {
-    switch (infoType) {
-        case 'location':
-            // 지역 수정 페이지로 이동
-            $p.url("LocationEdit.xml");
-            break;
-        case 'job':
-            // 직무/분야 수정 페이지로 이동
-            $p.url("JobEdit.xml");
-            break;
-        case 'salary':
-            // 연봉 수정 페이지로 이동
-            $p.url("SalaryEdit.xml");
-            break;
-        case 'skills':
-            // 기술스택 수정 페이지로 이동
-            $p.url("UserStackEdit.xml");
             break;
     }
 };
@@ -769,85 +667,85 @@ scwin.startCodeAnalysis_onclick = function () {
 
 // 카드 상태 업데이트 함수
 scwin.updateCardStatus = function () {
-   var mbtiCompleted = dma_userInfo.get("mbtiCompleted") === "true";
-   var codeCompleted = dma_userInfo.get("codeAnalysisCompleted") === "true";
+    var mbtiCompleted = dma_userInfo.get("mbtiCompleted") === "true";
+    var codeCompleted = dma_userInfo.get("codeAnalysisCompleted") === "true";
 
-   // MBTI 카드 상태 업데이트
-   scwin.updateSingleCard("mbti-card", mbtiCompleted);
+    // MBTI 카드 상태 업데이트
+    scwin.updateSingleCard("mbti-card", mbtiCompleted);
 
-   // 코드분석 카드 상태 업데이트
-   scwin.updateSingleCard("code-card", codeCompleted);
+    // 코드분석 카드 상태 업데이트
+    scwin.updateSingleCard("code-card", codeCompleted);
 };
 
 // 개별 카드 상태 업데이트
 scwin.updateSingleCard = function (cardId, isCompleted) {
-   try {
-       // 클래스로 카드 찾기 (ID가 안되니까)
-       var cards = document.querySelectorAll('.action-card');
-       var cardElement = null;
-       
-       if (cardId === 'mbti-card' && cards.length > 0) {
-           cardElement = cards[0]; // 첫 번째 카드가 MBTI
-       } else if (cardId === 'code-card' && cards.length > 1) {
-           cardElement = cards[1]; // 두 번째 카드가 코드분석
-       }
-       
-       if (!cardElement) return;
-       
-       var badgeElement = cardElement.querySelector('.incomplete-badge, .completed-badge');
-       var buttonElement = cardElement.querySelector('.action-card-button');
+    try {
+        // 클래스로 카드 찾기 (ID가 안되니까)
+        var cards = document.querySelectorAll('.action-card');
+        var cardElement = null;
 
-       if (isCompleted) {
-           // 완료 상태로 변경
-           cardElement.classList.remove('incomplete');
-           cardElement.classList.add('completed');
-           
-           // 직접 스타일 변경
-           cardElement.style.border = '2px solid #28a745';
-           cardElement.style.background = 'linear-gradient(135deg, #f8fff8, #e8f5e8)';
+        if (cardId === 'mbti-card' && cards.length > 0) {
+            cardElement = cards[0]; // 첫 번째 카드가 MBTI
+        } else if (cardId === 'code-card' && cards.length > 1) {
+            cardElement = cards[1]; // 두 번째 카드가 코드분석
+        }
 
-           // 배지 업데이트
-           if (badgeElement) {
-               badgeElement.textContent = '완료';
-               badgeElement.className = 'completed-badge';
-               badgeElement.style.backgroundColor = '#28a745';
-           }
+        if (!cardElement) return;
 
-           // 버튼 숨김 처리
-           if (buttonElement) {
-               buttonElement.style.display = 'none';
-           }
-           
-       } else {
-           // 미완료 상태로 변경
-           cardElement.classList.remove('completed');
-           cardElement.classList.add('incomplete');
-           
-           // 원래 스타일로 복원
-           cardElement.style.border = '2px solid #fc8181';
-           cardElement.style.background = 'linear-gradient(135deg, #fff5f5, #fed7d7)';
+        var badgeElement = cardElement.querySelector('.incomplete-badge, .completed-badge');
+        var buttonElement = cardElement.querySelector('.action-card-button');
 
-           // 배지 업데이트
-           if (badgeElement) {
-               badgeElement.textContent = '미완료';
-               badgeElement.className = 'incomplete-badge';
-               badgeElement.style.backgroundColor = '#dc3545';
-           }
+        if (isCompleted) {
+            // 완료 상태로 변경
+            cardElement.classList.remove('incomplete');
+            cardElement.classList.add('completed');
 
-           // 버튼 텍스트 업데이트 및 표시
-           if (buttonElement) {
-               buttonElement.style.display = 'block'; // 버튼 다시 표시
-               buttonElement.style.backgroundColor = '#dc3545';
-               if (cardId === 'mbti-card') {
-                   buttonElement.textContent = '시작하기';
-               } else if (cardId === 'code-card') {
-                   buttonElement.textContent = '분석하기';
-               }
-           }
-       }
-   } catch(e) {
-       console.log('updateSingleCard 에러:', e);
-   }
+            // 직접 스타일 변경
+            cardElement.style.border = '2px solid #28a745';
+            cardElement.style.background = 'linear-gradient(135deg, #f8fff8, #e8f5e8)';
+
+            // 배지 업데이트
+            if (badgeElement) {
+                badgeElement.textContent = '완료';
+                badgeElement.className = 'completed-badge';
+                badgeElement.style.backgroundColor = '#28a745';
+            }
+
+            // 버튼 숨김 처리
+            if (buttonElement) {
+                buttonElement.style.display = 'none';
+            }
+
+        } else {
+            // 미완료 상태로 변경
+            cardElement.classList.remove('completed');
+            cardElement.classList.add('incomplete');
+
+            // 원래 스타일로 복원
+            cardElement.style.border = '2px solid #fc8181';
+            cardElement.style.background = 'linear-gradient(135deg, #fff5f5, #fed7d7)';
+
+            // 배지 업데이트
+            if (badgeElement) {
+                badgeElement.textContent = '미완료';
+                badgeElement.className = 'incomplete-badge';
+                badgeElement.style.backgroundColor = '#dc3545';
+            }
+
+            // 버튼 텍스트 업데이트 및 표시
+            if (buttonElement) {
+                buttonElement.style.display = 'block'; // 버튼 다시 표시
+                buttonElement.style.backgroundColor = '#dc3545';
+                if (cardId === 'mbti-card') {
+                    buttonElement.textContent = '시작하기';
+                } else if (cardId === 'code-card') {
+                    buttonElement.textContent = '분석하기';
+                }
+            }
+        }
+    } catch (e) {
+        console.log('updateSingleCard 에러:', e);
+    }
 };
 scwin.btn_userUpdate_onclick = function (e) {
     $p.url("updateUser.xml");
@@ -856,7 +754,7 @@ scwin.btn_userUpdate_onclick = function (e) {
 	</head>
 
 	<body ev:onpageload="scwin.onpageload">
-        <w2:wframe src="../common/Header.xml" id="headerFrame" />
+		<w2:wframe src="../common/Header.xml" id="headerFrame" />
 		<xf:group class="main-wrap">
 			<!-- 메인 컨테이너 -->
 			<xf:group class="main-container">
@@ -906,8 +804,7 @@ scwin.btn_userUpdate_onclick = function (e) {
 									style="font-size: 20px; font-weight: bold; color: #666; margin: 4px 0 8px 0;">
 								</w2:textbox>
 								<xf:group class="profile-career">
-									<w2:textbox ref="data:dma_userInfo.careerLevel"
-										style="font-size: 14px; color: #666; margin: 4px 0 8px 0;">
+									<w2:textbox ref="data:dma_userInfo.careerLevel" style="font-size: 14px; color: #666; margin: 4px 0 8px 0;">
 									</w2:textbox>
 								</xf:group>
 							</xf:group>
@@ -958,7 +855,7 @@ scwin.btn_userUpdate_onclick = function (e) {
 							<xf:group class="action-card incomplete" ev:onclick="scwin.startMbti_onclick()">
 								<xf:group class="incomplete-badge">미완료</xf:group>
 								<xf:group class="action-card-icon" style="">
-									<xf:image src="/InsWebApp/images/ws5/code_checking.png" style="width:100%;height:100%;" id=""></xf:image>
+									<xf:image src="/InsWebApp/images/ws5/main/mbti_check.png" style="width:100%;height:100%;" id=""></xf:image>
 								</xf:group>
 								<w2:textbox class="action-card-title" label="mbti 성격 검사"></w2:textbox>
 								<w2:textbox class="action-card-subtitle" label="ex : 8가지 성향을 4개의 성향을 알아 낼 수 있습니다"></w2:textbox>
@@ -972,7 +869,7 @@ scwin.btn_userUpdate_onclick = function (e) {
 								<xf:group class="incomplete-badge">미완료</xf:group>
 
 								<xf:group class="action-card-icon" style="">
-									<xf:image src="/InsWebApp/images/ws5/mbti_logo.png" style="width:100%;height:100%;" id=""></xf:image>
+									<xf:image src="/InsWebApp/images/ws5/main/code_check.png" style="width:100%;height:100%;" id=""></xf:image>
 								</xf:group>
 								<w2:textbox class="action-card-title" label="코드분석"></w2:textbox>
 								<w2:textbox class="action-card-subtitle" label="ex : 8가지 성향을 4개의 성향을 알아 낼 수 있습니다"></w2:textbox>

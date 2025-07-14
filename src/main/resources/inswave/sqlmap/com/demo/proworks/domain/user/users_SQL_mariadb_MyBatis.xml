@@ -231,4 +231,19 @@ SELECT	/* QueryID : com.demo.proworks.domain.user.getDevMbti */
 		UPDATED_AT = CURRENT_TIMESTAMP
 		WHERE USER_ID = #{userId}
 	</update>
+<select id="selectUserDetail" parameterType="com.demo.proworks.domain.user.vo.UserInfoVo" resultType="com.demo.proworks.domain.user.vo.UserInfoVo">
+<!-- user 상세보기 페이지에서 사용할 값을 불러온다. -->        
+        SELECT /* QueryID : com.demo.proworks.domain.user.UserInfoVo */
+            u.user_id as accountId,
+            u.name,
+            ui.career as career,
+            ui.current_position as current_position,
+            ui.year_salary year_salary,
+            ui.is_mbti_checked is_mbti_checked,
+            ui.is_code_checked is_code_checked,
+            ui.preferred_locations
+        FROM Users u
+        LEFT JOIN users_info ui ON u.user_id = ui.user_id  
+        WHERE u.user_id = #{accountId}
+</select>
 </mapper>

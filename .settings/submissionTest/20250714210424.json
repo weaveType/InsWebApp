@@ -1,0 +1,9 @@
+{
+   "charset": "UTF-8",
+   "reqMethod": "POST",
+   "serviceURL": "http://localhost:9093/InsWebApp/US0002UpdView.pwkjson",
+   "contentType": "application/json",
+   "requestContent": "{\"userInfoVo\": {\n   \"year_salary\": \"SampleValue_5\",\n   \"is_code_checked\": \"SampleValue_7\",\n   \"is_mbti_checked\": \"SampleValue_6\",\n   \"career\": \"SampleValue_2\",\n   \"account_id\": \"SampleValue_0\",\n   \"preferred_locations\": \"SampleValue_3\",\n   \"name\": \"SampleValue_1\",\n   \"current_position\": \"SampleValue_4\"\n}}",
+   "responseContent": "{\"elHeader\":{\"reqUrl\":\"/InsWebApp/US0002UpdView.pwkjson\",\"traceId\":\"2025071421042495600029802\",\"bArgResolveParsing\":false,\"resSuc\":false,\"resMsg\":\"입력데이터 처리과정에 문제가 발생하였습니다.\",\"resCode\":\"ERROR.SYS.013\",\"validateSuc\":false,\"saveTokenKey\":false,\"removeTokenKey\":false,\"locale\":\"ko\",\"language\":\"ko\",\"startTime\":0,\"svcTimeOut\":0,\"inOutDataEnc\":true,\"dbDataEnc\":false,\"gTraceId\":\"2025071421042495600029802\",\"fieldApplyAttr\":true,\"simurate\":false,\"deferredSvc\":false,\"centerCutSvc\":false}}",
+   "sendTime": "2025-07-14 21:04:24"
+}
