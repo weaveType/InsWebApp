@@ -349,8 +349,8 @@ public class PostServiceImpl implements PostService {
 		}
 	}
 
-	public List<PostMatchVo> findPostsByMbti(PostMatchVo postMatchVo) throws Exception {
-		return postDAO.findPostsByMbti(postMatchVo);
+	public List<PostVo> findPostsByMbti(PostVo postVo) throws Exception {
+		return postDAO.findPostsByMbti(postVo);
 	};
 
 }

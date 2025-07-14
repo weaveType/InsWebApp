@@ -124,6 +124,7 @@ public interface PostService {
 	 * @return 회사 ID String
 	 * @throws Exception
 	 */
-	public List<PostMatchVo> findPostsByMbti(PostMatchVo postMatchVo) throws Exception;
+	public List<PostVo> findPostsByMbti(PostVo postVo) throws Exception;
+
 
 }

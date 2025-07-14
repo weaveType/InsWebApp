@@ -195,8 +195,79 @@
         LIMIT 1
     </select>
 
-<select id="findPostsByMbti" resultType="com.demo.proworks.domain.post.vo.PostVo" parameterType="com.demo.proworks.domain.post.vo.PostMatchVo">
-SELECT * 
-  FROM
+<select id="findPostsByMbti" resultType="com.demo.proworks.domain.post.vo.PostVo" parameterType="com.demo.proworks.domain.post.vo.PostVo">
+    <!-- MBTI별 일치하는 공고를 호환성 순으로 조회 -->
+    SELECT /* QueryID : com.demo.proworks.domain.post.findPostsByMbti */
+        p.JOB_POSTING_ID as jobPostingId,
+        p.COMPANY_ID as companyId,
+        p.TITLE as title,
+        p.DESCRIPTION as description,
+        p.SELECTED_TECH_STACK_NAMES as selectedTechStackNames,
+        p.EXPERIENCE_LEVEL as experienceLevel,
+        p.SALARY_RANGE as salaryRange,
+        p.LOCATION as location,
+        p.WORK_TYPE as workType,
+        p.PREFERRED_DEVELOPER_TYPES as preferredDeveloperTypes,
+        p.EXPIRES_AT as expiresAt,
+        p.POSTED_AT as postedAt,
+        p.STATUS as status,
+        #{mbtiMatchFilter} as mbtiMatchFilter,
+        #{userMbti} as userMbti,
+        MIN(compat_data.rank_value) as best_rank,
+        MIN(compat_data.diff_cnt) as best_diff,
+        MAX(compat_data.match_cnt) as best_match
+    FROM POSTS p
+    INNER JOIN post_mbti_pref pref ON p.JOB_POSTING_ID = pref.job_posting_id
+    INNER JOIN (
+        SELECT 
+            mc.code2 as cmp_code,
+            mc.diff_cnt,
+            mc.match_cnt,
+            CASE mc.level
+                WHEN 'PERFECT' THEN 1
+                WHEN 'HIGH' THEN 2
+                WHEN 'MEDIUM' THEN 3
+                WHEN 'LOW' THEN 4
+                ELSE 5
+            END as rank_value
+        FROM mbti_compat mc
+        INNER JOIN mbti_code_map mcm ON mc.code1 = mcm.code
+        WHERE mcm.mbti = #{userMbti}
+    ) compat_data ON compat_data.cmp_code = pref.code
+    WHERE p.STATUS = 'active'
+        AND p.EXPIRES_AT > NOW()
+        <if test="mbtiMatchFilter != null and mbtiMatchFilter != ''">
+            <choose>
+                <when test="mbtiMatchFilter == 'PERFECT'">
+                    AND compat_data.rank_value = 1
+                </when>
+                <when test="mbtiMatchFilter == 'HIGH'">
+                    AND compat_data.rank_value &lt;= 2
+                </when>
+                <when test="mbtiMatchFilter == 'MEDIUM'">
+                    AND compat_data.rank_value &lt;= 3
+                </when>
+                <when test="mbtiMatchFilter == 'LOW'">
+                    AND compat_data.rank_value &lt;= 4
+                </when>
+            </choose>
+        </if>
+        <if test="experienceLevel != null and experienceLevel != ''">
+            AND p.EXPERIENCE_LEVEL = #{experienceLevel}
+        </if>
+        <if test="location != null and location != ''">
+            AND p.LOCATION LIKE CONCAT('%', #{location}, '%')
+        </if>
+        <if test="workType != null and workType != ''">
+            AND p.WORK_TYPE = #{workType}
+        </if>
+    GROUP BY p.JOB_POSTING_ID, p.COMPANY_ID, p.TITLE, p.DESCRIPTION, 
+             p.SELECTED_TECH_STACK_NAMES, p.EXPERIENCE_LEVEL, p.SALARY_RANGE, 
+             p.LOCATION, p.WORK_TYPE, p.PREFERRED_DEVELOPER_TYPES, 
+             p.EXPIRES_AT, p.POSTED_AT, p.STATUS
+    ORDER BY best_rank ASC, best_diff ASC, best_match DESC, p.POSTED_AT DESC
+    <if test="limit != null and limit > 0">
+        LIMIT #{limit}
+    </if>
 </select>
 </mapper>
