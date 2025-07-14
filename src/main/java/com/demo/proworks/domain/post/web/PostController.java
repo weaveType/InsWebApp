@@ -101,7 +101,7 @@ public class PostController {
     @ElDescription(sub = "공고정보 목록조회", desc = "유저의 기준에서 공고정보 목록 조회를 한다.")
     public Map<String, Object> findPostsByMbti(PostMatchVo postMatchVo) throws Exception {
         List<PostVo> postList = postService.findPostsByMbti(postMatchVo);
-        	System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> " + postMatchVo.getMbtiMatchFilter() + " 개가 맞는 회사 갯수 : " + postList.toString());
+        	System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> " + postMatchVo.getMbtiMatchFilter() + " 개가 맞는 회사 갯수 : " + postList.size());
                // 수정해야됨            
         long totCnt = postService.selectListCountPost(new PostVo());
         
@@ -169,7 +169,7 @@ public class PostController {
     public void insertPost(PostVo postVo) throws Exception {
 
         System.out.println("=== 🔥 강화된 공고 등록 처리 시작 ===");
-        System.out.println("입력받은 PostVo: " + postVo.toStri최종 설정된 회사ng());
+        System.out.println("입력받은 PostVo: " + postVo.toString());
 
         // 🔥 중요한 필드들 개별 검증
         System.out.println("=== 🔍 프론트엔드에서 받은 데이터 상세 검증 ===");
