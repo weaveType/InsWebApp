@@ -52,7 +52,6 @@ public class UserVo extends com.demo.proworks.cmmn.ProworksCommVO {
     @ElDtoField(logicalName = "phone_number", physicalName = "phoneNumber", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
     private String phoneNumber;
 
-    // users_info 테이블 관련 필드들 추가
     @ElDtoField(logicalName = "year_salary", physicalName = "yearSalary", type = "int", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
     private int yearSalary;
 
@@ -74,9 +73,6 @@ public class UserVo extends com.demo.proworks.cmmn.ProworksCommVO {
     @ElDtoField(logicalName = "profile_image_name", physicalName = "profileImageName", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
     private String profileImageName;
 
-
-
-    // 추가로 근무지역 관련 필드들
     @ElDtoField(logicalName = "preferred_locations", physicalName = "preferredLocations", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
     private String preferredLocations;
 
@@ -85,6 +81,9 @@ public class UserVo extends com.demo.proworks.cmmn.ProworksCommVO {
 
     @ElDtoField(logicalName = "career_period", physicalName = "careerPeriod", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
     private String careerPeriod;
+
+    @ElDtoField(logicalName = "role_name", physicalName = "roleName", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private String roleName;
 
     @ElVoField(physicalName = "userId")
     public int getUserId(){
@@ -227,7 +226,6 @@ public class UserVo extends com.demo.proworks.cmmn.ProworksCommVO {
         this.phoneNumber = phoneNumber;
     }
 
-    // users_info 테이블 관련 필드들의 getter/setter 메서드 추가
     @ElVoField(physicalName = "yearSalary")
     public int getYearSalary(){
         return yearSalary;
@@ -283,7 +281,7 @@ public class UserVo extends com.demo.proworks.cmmn.ProworksCommVO {
     }
 
     @ElVoField(physicalName = "testChecked")
-    public boolean getTestChecked(){
+    public boolean isTestChecked(){
         return testChecked;
     }
 
@@ -302,8 +300,6 @@ public class UserVo extends com.demo.proworks.cmmn.ProworksCommVO {
     public void setProfileImageName(String profileImageName){
         this.profileImageName = profileImageName;
     }
-
-
 
     @ElVoField(physicalName = "preferredLocations")
     public String getPreferredLocations(){
@@ -338,6 +334,17 @@ public class UserVo extends com.demo.proworks.cmmn.ProworksCommVO {
         this.careerPeriod = careerPeriod;
     }
 
+    @ElVoField(physicalName = "roleName")
+    public String getRoleName(){
+        String ret = this.roleName;
+        return ret;
+    }
+
+    @ElVoField(physicalName = "roleName")
+    public void setRoleName(String roleName){
+        this.roleName = roleName;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -351,9 +358,21 @@ public class UserVo extends com.demo.proworks.cmmn.ProworksCommVO {
         sb.append("createdAt").append("=").append(createdAt).append(",");
         sb.append("updatedAt").append("=").append(updatedAt).append(",");
         sb.append("roleId").append("=").append(roleId).append(",");
+        sb.append("userRole").append("=").append(userRole).append(",");
         sb.append("gender").append("=").append(gender).append(",");
         sb.append("birthDate").append("=").append(birthDate).append(",");
-        sb.append("phoneNumber").append("=").append(phoneNumber);
+        sb.append("phoneNumber").append("=").append(phoneNumber).append(",");
+        sb.append("yearSalary").append("=").append(yearSalary).append(",");
+        sb.append("career").append("=").append(career).append(",");
+        sb.append("currentPosition").append("=").append(currentPosition).append(",");
+        sb.append("bio").append("=").append(bio).append(",");
+        sb.append("resumeFileName").append("=").append(resumeFileName).append(",");
+        sb.append("testChecked").append("=").append(testChecked).append(",");
+        sb.append("profileImageName").append("=").append(profileImageName).append(",");
+        sb.append("preferredLocations").append("=").append(preferredLocations).append(",");
+        sb.append("salaryRange").append("=").append(salaryRange).append(",");
+        sb.append("careerPeriod").append("=").append(careerPeriod).append(",");
+        sb.append("roleName").append("=").append(roleName);
         sb.append("]");
         return sb.toString();
 

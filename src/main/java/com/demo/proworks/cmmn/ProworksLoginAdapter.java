@@ -16,103 +16,111 @@ import com.inswave.elfw.login.LoginInfo;
 import com.inswave.elfw.util.ElBeanUtils;
 
 /**
- * @subject		: ProworksLoginAdapter.java 
+ * @subject : ProworksLoginAdapter.java
  * @description : 프로젝트 로그인 어댑터
- * @author		: 개발팀
- * @since 		: 2025/05/19
- * @modification
- * ===========================================================
- * DATE				AUTHOR				NOTE
- * ===========================================================
- * 2025/05/19		샘플개발팀			최초 생성
+ * @author : 개발팀
+ * @since : 2025/05/19
+ * @modification ===========================================================
+ *               DATE AUTHOR NOTE
+ *               ===========================================================
+ *               2025/05/19 샘플개발팀 최초 생성
  * 
  */
 public class ProworksLoginAdapter extends LoginAdapter {
 
-    
 	/**
 	 * 데모용 로그인 어댑터의 생성자
+	 * 
 	 * @param adapterInfoMap Adapter 정보
 	 */
-	public ProworksLoginAdapter(Map<String, Object> adapterInfoMap){
+	public ProworksLoginAdapter(Map<String, Object> adapterInfoMap) {
 		super(adapterInfoMap);
 	}
 
 	/**
-	 * 데모용 로그인 처리를 담당하는 구현체 메소드.
-	 * 프레임워크 DefaultLoginAdapter 추상클래스의 로그인 구현체 메소드
+	 * 데모용 로그인 처리를 담당하는 구현체 메소드. 프레임워크 DefaultLoginAdapter 추상클래스의 로그인 구현체 메소드
+	 * 
 	 * @param request
 	 * @param id
-	 * @param params 기타 동적 파라미터에 추가할 수 있다.(ex. 서비스 구현체 )
+	 * @param params  기타 동적 파라미터에 추가할 수 있다.(ex. 서비스 구현체 )
 	 * @return LoginInfo
 	 * @throws LoginException
 	 */
 	@Override
 	public LoginInfo login(HttpServletRequest request, String email, Object... params) throws LoginException {
 		// 로그인 체크 수행
-		try{
-			String pw = (String)params[0];
-			UserService userService = (UserService)ElBeanUtils.getBean("userServiceImpl");
+		try {
+			String pw = (String) params[0];
+			UserService userService = (UserService) ElBeanUtils.getBean("userServiceImpl");
 			UserVo userVo = new UserVo();
 
 			userVo.setEmail(email);
 			UserVo resUserVo = userService.selectUserByEmail(userVo);
+			System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> roleId : " + resUserVo.getRoleId());
+			if (resUserVo == null) {
+				System.out.println("[DEBUG] 사용자 조회 결과 없음 (null)");
+				throw new LoginException("EL.ERROR.LOGIN.0001");
+			} else {
+				System.out.println("[DEBUG] 사용자 조회 성공: " + resUserVo);
+				System.out.println("[DEBUG] 암호화된 비밀번호: " + resUserVo.getPassword());
+				System.out.println("[DEBUG] 입력한 비밀번호: " + pw);
+				System.out.println("[DEBUG] BCrypt 비교 결과: " + BCrypt.checkpw(pw, resUserVo.getPassword()));
+			}
 
-			if( resUserVo == null ) {
+			if (resUserVo == null) {
 				throw new LoginException("EL.ERROR.LOGIN.0001");
 			}
-			
+
 			// 비밀번호 확인
 			String resPw = String.valueOf(resUserVo.getPassword());
 			System.out.println("입력 비밀번호 (pw): " + resPw);
 			System.out.println("저장된 암호화 비밀번호 (resPw): " + resPw);
 			System.out.println("비밀번호 일치 여부 (BCrypt.checkpw 결과): " + BCrypt.checkpw(pw, resPw));
-			if(pw == null || !BCrypt.checkpw(pw, resPw)){
+			if (pw == null || !BCrypt.checkpw(pw, resPw)) {
 				throw new LoginException("EL.ERROR.LOGIN.0002");
 			}
 
-		}catch(NumberFormatException e){
-			AppLog.error("login Error1",e);
+		} catch (NumberFormatException e) {
+			AppLog.error("login Error1", e);
 			throw new LoginException("EL.ERROR.LOGIN.0001");
-		}catch(ElException e){
-			AppLog.error("login Error2",e);
-			throw e;		
-		}catch(Exception e){
-			AppLog.error("login Error3",e);
+		} catch (ElException e) {
+			AppLog.error("login Error2", e);
+			throw e;
+		} catch (Exception e) {
+			AppLog.error("login Error3", e);
 			throw new LoginException("EL.ERROR.LOGIN.0003");
 		}
 
-		
-		// 3. 로그인 성공 설정 
-		LoginInfo info = new LoginInfo();		
+		// 3. 로그인 성공 설정
+		LoginInfo info = new LoginInfo();
 		info.setSuc(true);
 		AppLog.debug("[Login] Proworks Login 성공.....");
-			
+
 		return info;
 	}
 
 	/**
-	 * 데모용 로그아웃 처리를 담당하는 구현체 메소드.
-	 * 프레임워크 DefaultLoginAdapter 추상클래스의 로그아웃 구현체 메소드
+	 * 데모용 로그아웃 처리를 담당하는 구현체 메소드. 프레임워크 DefaultLoginAdapter 추상클래스의 로그아웃 구현체 메소드
+	 * 
 	 * @param request
 	 * @param id
-	 * @param params 기타 동적 파라미터에 추가할 수 있다.
+	 * @param params  기타 동적 파라미터에 추가할 수 있다.
 	 * @return LoginInfo
 	 * @throws LoginException
 	 */
 	@Override
 	public LoginInfo logout(HttpServletRequest request, String id, Object... params) throws LoginException {
 		LoginInfo info = new LoginInfo();
-		try{			
+		try {
 			// 1. 로그아웃 처리로직 추가
-			
-			// 2. 로그아웃 성공 설정 
+
+			// 2. 로그아웃 성공 설정
 			info.setSuc(true);
 			AppLog.debug("[Logout] Proworks Logout 성공.....");
-			
-		}catch(Exception e){
+
+		} catch (Exception e) {
 			throw new LoginException(e);
-		}		
+		}
 		return info;
 	}
 

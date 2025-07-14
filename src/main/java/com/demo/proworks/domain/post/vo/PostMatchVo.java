@@ -7,10 +7,10 @@ import com.fasterxml.jackson.annotation.JsonFilter;
 
 @JsonFilter("elExcludeFilter")
 @ElDto(FldYn = "", delimeterYn = "", logicalName = "공고정보")
-public class PostVo extends com.demo.proworks.cmmn.ProworksCommVO {
+public class PostMatchVo extends com.demo.proworks.cmmn.ProworksCommVO {
     private static final long serialVersionUID = 1L;
 
-    public PostVo(){
+    public PostMatchVo(){
     }
 
     @ElDtoField(logicalName = "job_posting_id", physicalName = "jobPostingId", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
@@ -57,6 +57,9 @@ public class PostVo extends com.demo.proworks.cmmn.ProworksCommVO {
 
     @ElDtoField(logicalName = "사용자_MBTI", physicalName = "userMbti", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
     private String userMbti;
+
+    @ElDtoField(logicalName = "최대_조회_건수", physicalName = "limit", type = "int", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private int limit;
 
     @ElVoField(physicalName = "jobPostingId")
     public String getJobPostingId(){
@@ -223,10 +226,20 @@ public class PostVo extends com.demo.proworks.cmmn.ProworksCommVO {
         this.userMbti = userMbti;
     }
 
+    @ElVoField(physicalName = "limit")
+    public int getLimit(){
+        return limit;
+    }
+
+    @ElVoField(physicalName = "limit")
+    public void setLimit(int limit){
+        this.limit = limit;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("PostVo [");
+        sb.append("PostMatchVo [");
         sb.append("jobPostingId").append("=").append(jobPostingId).append(",");
         sb.append("companyId").append("=").append(companyId).append(",");
         sb.append("title").append("=").append(title).append(",");
@@ -241,7 +254,8 @@ public class PostVo extends com.demo.proworks.cmmn.ProworksCommVO {
         sb.append("postedAt").append("=").append(postedAt).append(",");
         sb.append("status").append("=").append(status).append(",");
         sb.append("mbtiMatchFilter").append("=").append(mbtiMatchFilter).append(",");
-        sb.append("userMbti").append("=").append(userMbti);
+        sb.append("userMbti").append("=").append(userMbti).append(",");
+        sb.append("limit").append("=").append(limit);
         sb.append("]");
         return sb.toString();
 

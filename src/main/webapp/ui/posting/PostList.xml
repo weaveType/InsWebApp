@@ -438,16 +438,6 @@ scwin.onpageload = function () {
     scwin.loadPostList();
     
     // 검색 이벤트 바인딩
-    setTimeout(function() {
-        var searchInput = document.getElementById('searchInput');
-        if (searchInput) {
-            searchInput.addEventListener('keydown', function(e) {
-                if (e.keyCode === 13) {
-                    scwin.performSearch();
-                }
-            });
-        }
-    }, 100);
 };
 
 // ========================= 
@@ -707,23 +697,6 @@ scwin.openJobDetail = function(jobPostingId) {
 };
 
 /**
- * 북마크 토글
- */
-scwin.toggleBookmark = function(event, jobPostingId) {
-    event.stopPropagation(); // 카드 클릭 이벤트 방지
-    console.log("북마크 토글:", jobPostingId);
-    
-    var bookmarkBtn = event.target;
-    if (bookmarkBtn.textContent === '������') {
-        bookmarkBtn.textContent = '❤️';
-        // TODO: 서버에 북마크 추가 요청
-    } else {
-        bookmarkBtn.textContent = '������';
-        // TODO: 서버에 북마크 제거 요청
-    }
-};
-
-/**
  * 회사 정보 보기
  */
 scwin.viewCompany = function(event, companyId) {
@@ -731,20 +704,6 @@ scwin.viewCompany = function(event, companyId) {
     console.log("회사 정보 보기:", companyId);
     // 회사 상세 페이지로 이동
     // $p.url("../company/CompanyDetail.xml?companyId=" + companyId);
-};
-
-/**
- * 검색 실행
- */
-scwin.performSearch = function() {
-    var searchInput = document.getElementById('searchInput');
-    if (searchInput) {
-        var searchText = searchInput.value.trim();
-        // TODO: 검색 기능은 향후 구현 예정
-        // 현재는 기본 목록만 조회
-        console.log("검색어:", searchText);
-        scwin.loadPostList();
-    }
 };
 
 /**
@@ -759,101 +718,6 @@ scwin.pgl_postList_onclick = function(idx) {
     scwin.loadPostList();
 };
 
-// =========================
-// 헤더 이벤트들 (기존 코드 유지)
-// =========================
-
-scwin.weaveTypeLogo_onclick = function() {
-    $p.url("../common/weaveTypeMain.xml");
-};
-
-scwin.searchInput_onkeypress = function(e) {
-    if (e.keyCode === 13) {
-        scwin.performSearch();
-    }
-};
-
-scwin.btnSearch_onclick = function() {
-    scwin.performSearch();
-};
-
-// 필터 이벤트들
-scwin.filter_dropdown_onclick = function(filterType) {
-    console.log('필터 드롭다운 클릭:', filterType);
-    // 실제로는 드롭다운 메뉴 표시
-};
-
-scwin.filter_tag_onclick = function(tagName) {
-    console.log('필터 태그 클릭:', tagName);
-    // 태그 활성화/비활성화 토글
-    var tag = event.target;
-    tag.classList.toggle('active');
-    
-    // 필터 적용 후 목록 새로고침
-    scwin.loadPostList();
-};
-
-// 햄버거 메뉴 토글
-scwin.toggleSideMenu = function() {
-    var sideMenu = document.getElementById('sideMenu');
-    var overlay = document.getElementById('sideMenuOverlay');
-    
-    if (sideMenu && sideMenu.classList.contains('open')) {
-        scwin.closeSideMenu();
-    } else if (sideMenu && overlay) {
-        sideMenu.classList.add('open');
-        overlay.classList.add('open');
-    }
-};
-
-scwin.closeSideMenu = function() {
-    var sideMenu = document.getElementById('sideMenu');
-    var overlay = document.getElementById('sideMenuOverlay');
-    
-    if (sideMenu) sideMenu.classList.remove('open');
-    if (overlay) overlay.classList.remove('open');
-};
-
-// =========================
-// 유틸리티 함수들
-// =========================
-
-/**
- * 경력수준 한글 변환
- */
-scwin.getExperienceLevelText = function(experienceLevel) {
-    switch(experienceLevel) {
-        case 'any': return '경력무관';
-        case 'junior': return '신입·1-3년';
-        case 'senior': return '시니어·3년+';
-        default: return experienceLevel || '정보없음';
-    }
-};
-
-/**
- * 근무형태 한글 변환
- */
-scwin.getWorkTypeText = function(workType) {
-    switch(workType) {
-        case 'remote': return '원격근무';
-        case 'onsite': return '출근근무';
-        case 'hybrid': return '하이브리드';
-        default: return workType || '정보없음';
-    }
-};
-
-/**
- * 급여범위 한글 변환
- */
-scwin.getSalaryRangeText = function(salaryRange) {
-    switch(salaryRange) {
-        case 'under25': return '~2,500만원';
-        case '25to35': return '2,500~3,500만원';
-        case '35to50': return '3,500~5,000만원';
-        case 'over50': return '5,000만원+';
-        default: return salaryRange || '협의';
-    }
-};
 
 /**
  * 날짜 포맷팅
@@ -891,38 +755,33 @@ scwin.formatDate = function(dateString) {
             <section class="filter-section">
                 <!-- 메인 필터 드롭다운 -->
                 <xf:group class="main-filters">
-                    <xf:group class="filter-dropdown" ev:onclick="scwin.filter_dropdown_onclick('job_type')">
-                        <w2:textbox label="개발 · 개발 전체"></w2:textbox>
-                        <w2:span class="dropdown-arrow" label="▼"></w2:span>
-                    </xf:group>
-                    
-                    <xf:group class="filter-dropdown" ev:onclick="scwin.filter_dropdown_onclick('experience')">
-                        <w2:textbox label="경력 전체"></w2:textbox>
-                        <w2:span class="dropdown-arrow" label="▼"></w2:span>
-                    </xf:group>
-                    
-                    <xf:group style="margin-left: auto; display: flex; gap: 12px;">
-                        <w2:textbox label="최신순" style="font-size: 13px; color: #666;"></w2:textbox>
-                        <w2:textbox label="추천순" style="font-size: 13px; color: #666;"></w2:textbox>
-                        <w2:textbox label="인기순" style="font-size: 13px; color: #666;"></w2:textbox>
-                    </xf:group>
+                	<xf:select1 id="" chooseOption="true" style="width: 148px;height: 21px;" submenuSize="auto" allOption=""
+                		disabled="false" direction="auto" appearance="minimal" disabledClass="w2selectbox_disabled" chooseOptionLabel="모든 MBTI 조회"
+                		ref="">
+                		<xf:choices></xf:choices>
+                	</xf:select1>
+
+                	<xf:group class="filter-dropdown" ev:onclick="scwin.filter_dropdown_onclick('experience')">
+                		<w2:textbox label="경력 전체"></w2:textbox>
+                		<w2:span class="dropdown-arrow" label="▼"></w2:span>
+                	</xf:group>
+
+
+                	<xf:group style="margin-left: auto; display: flex; gap: 12px;">
+                		<w2:textbox label="최신순" style="font-size: 13px; color: #666;"></w2:textbox>
+                		<w2:textbox label="추천순" style="font-size: 13px; color: #666;"></w2:textbox>
+                		<w2:textbox label="인기순" style="font-size: 13px; color: #666;"></w2:textbox>
+                	</xf:group>
+
                 </xf:group>
 
                 <!-- 필터 태그들 -->
                 <xf:group class="filter-tags">
-                    <w2:span class="filter-tag" label="≥ 태그 전체" ev:onclick="scwin.filter_tag_onclick('tag_all')"></w2:span>
                     <w2:span class="filter-tag" label="한국" ev:onclick="scwin.filter_tag_onclick('korea')"></w2:span>
                     <w2:span class="filter-tag" label="채용유형" ev:onclick="scwin.filter_tag_onclick('job_type')"></w2:span>
                     <w2:span class="filter-tag" label="기술스택" ev:onclick="scwin.filter_tag_onclick('tech_stack')"></w2:span>
-                    <w2:span class="filter-tag highlight" label="아기 유니콘" ev:onclick="scwin.filter_tag_onclick('unicorn')"></w2:span>
-                    <w2:span class="filter-tag highlight" label="적극 채용 중" ev:onclick="scwin.filter_tag_onclick('active_hiring')"></w2:span>
                     <w2:span class="filter-tag highlight" label="대규모 채용 중" ev:onclick="scwin.filter_tag_onclick('mass_hiring')"></w2:span>
                     <w2:span class="filter-tag" label="1,001-10,000명" ev:onclick="scwin.filter_tag_onclick('company_size')"></w2:span>
-                    <w2:span class="filter-tag" label="누적투자100억이상" ev:onclick="scwin.filter_tag_onclick('investment')"></w2:span>
-                    <w2:span class="filter-tag" label="퇴사율5%이하" ev:onclick="scwin.filter_tag_onclick('low_turnover')"></w2:span>
-                    <w2:span class="filter-tag" label="보너스" ev:onclick="scwin.filter_tag_onclick('bonus')"></w2:span>
-                    <w2:span class="filter-tag" label="인원 급성장" ev:onclick="scwin.filter_tag_onclick('rapid_growth')"></w2:span>
-                    <w2:span class="filter-tag" label="유연" ev:onclick="scwin.filter_tag_onclick('flexible')"></w2:span>
                 </xf:group>
             </section>
 

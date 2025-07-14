@@ -131,18 +131,18 @@
 
 	<select id="selectUserByEmail" parameterType="com.demo.proworks.domain.user.vo.UserVo"
 		resultType="com.demo.proworks.domain.user.vo.UserVo">
-<!-- 이메일로 일반회원을 상세 조회한다. -->
-		SELECT /* QueryID : com.demo.proworks.domain.user.selectUserByEmail */ 
-		USER_ID as userId, 
-		EMAIL as email, 
-		PASSWORD as password, 
-		USER_ROLE as userRole, 
-		NAME as name, 
-		IS_EMAIL_CONSENT as emailConsent, 
-		CREATED_AT as createdAt, 
-		UPDATED_AT as updatedAt 
-		FROM USERS 
-		WHERE EMAIL = #{email}
+<!-- 이메일로 상세조회 한다. -->
+SELECT 
+    USER_ID AS userId, 
+    EMAIL AS email, 
+    PASSWORD AS password, 
+    ROLE_ID AS roleId, 
+    NAME AS name, 
+    IS_EMAIL_CONSENT AS emailConsent, 
+    CREATED_AT AS createdAt, 
+    UPDATED_AT AS updatedAt 
+FROM USERS
+WHERE EMAIL = #{email}
 </select>
 
 <select id="selectDevMbti" parameterType="int" resultType="com.demo.proworks.common.enumType.DevMbti">
