@@ -105,9 +105,11 @@ public class PostController {
                // 수정해야됨            
         long totCnt = postService.selectListCountPost(new PostVo());
         
-		PostMatchVo retPostList = new PostMatchVo();
+		PostListVo retPostList = new PostListVo();
+		retPostList.setPostVoList(postList); 
 		retPostList.setTotalCount(totCnt);
         Map<String, Object> response = new HashMap<>();
+        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> retPostList : " + retPostList.toString());
         response.put("elData", retPostList); // PostListVo 객체를 "elData" 키 아래에 넣습니다.
         return response;
     }
@@ -123,7 +125,7 @@ public class PostController {
     @RequestMapping(value="POS0001UpdView")
     @ElDescription(sub = "공고정보 갱신 폼을 위한 조회", desc = "공고정보 갱신 폼을 위한 조회를 한다.")
     public PostVo selectPost(PostVo postVo) throws Exception {
-
+    	
         // 권한 검증: 해당 공고가 현재 사용자의 회사 것인지 확인
         PostVo selectPostVo = postService.selectPost(postVo);
 
@@ -167,7 +169,7 @@ public class PostController {
     public void insertPost(PostVo postVo) throws Exception {
 
         System.out.println("=== 🔥 강화된 공고 등록 처리 시작 ===");
-        System.out.println("입력받은 PostVo: " + postVo.toString());
+        System.out.println("입력받은 PostVo: " + postVo.toStri최종 설정된 회사ng());
 
         // 🔥 중요한 필드들 개별 검증
         System.out.println("=== 🔍 프론트엔드에서 받은 데이터 상세 검증 ===");

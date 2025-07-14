@@ -198,35 +198,41 @@
         parameterType="com.demo.proworks.domain.post.vo.PostMatchVo"
         resultType="com.demo.proworks.domain.post.vo.PostVo">
 <!-- ① 사용자 MBTI(4글자 문자열) → 코드(0~15) 매핑 -->
-  WITH user_mbti AS (
-    SELECT #{userMbti} AS mbti
-  ),
-  compat AS (
+WITH user_mbti AS (
+    SELECT 'BRTD' AS mbti
+),
+compat AS (
     SELECT c.code2 AS preferred_mbti,
            c.match_cnt
     FROM mbti_compat c
     JOIN user_mbti u ON c.code1 = u.mbti
-    WHERE c.match_cnt >= #{mbtiMatchFilter}
-  )
-  SELECT 
-    p.job_posting_id,
-    p.company_id,
-    p.title,
-    p.description,
-    (
-      SELECT MAX(c.match_cnt)
-      FROM compat c
-      WHERE JSON_CONTAINS(p.preferred_developer_types, JSON_QUOTE(c.preferred_mbti))
-    ) AS match_cnt
-  FROM Posts p
-  WHERE p.status = 'active'
-    AND p.expires_at > NOW()
-    AND EXISTS (
-      SELECT 1
-      FROM compat c
-      WHERE JSON_CONTAINS(p.preferred_developer_types, JSON_QUOTE(c.preferred_mbti))
-    )
-  ORDER BY match_cnt DESC, p.posted_at DESC
-  LIMIT #{limit}
+    WHERE c.match_cnt >= 2  -- mbtiMatchFilter
+),
+post_mbti_flat AS (
+    SELECT 
+        p.job_posting_id,
+        p.company_id,
+        p.title,
+        p.description,
+        p.status,
+        p.expires_at,
+        p.posted_at,
+        JSON_UNQUOTE(JSON_EXTRACT(j.value, '$')) AS preferred_mbti
+    FROM Posts p
+    JOIN JSON_TABLE(p.preferred_developer_types, '$[*]' COLUMNS (value JSON PATH '$')) j
+        ON JSON_VALID(p.preferred_developer_types)
+    WHERE p.status = 'active' AND p.expires_at > NOW()
+)
+SELECT 
+    pmf.job_posting_id,
+    pmf.company_id,
+    pmf.title,
+    pmf.description,
+    MAX(c.match_cnt) AS match_cnt
+FROM post_mbti_flat pmf
+JOIN compat c ON pmf.preferred_mbti = c.preferred_mbti
+GROUP BY pmf.job_posting_id, pmf.company_id, pmf.title, pmf.description
+ORDER BY match_cnt DESC, pmf.posted_at DESC
+LIMIT 10;
 </select>
 </mapper>
