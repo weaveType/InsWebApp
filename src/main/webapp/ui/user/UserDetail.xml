@@ -23,7 +23,7 @@
 			</w2:dataCollection>
 			<xf:submission id="sbm_userDetail" action="/InsWebApp/US0002UpdView.pwkjson" method="post" mediatype="application/json"
 				ref='data:json,{"id":"dma_userInfoVo", "key":"userInfoVo"}' target='data:json,{"id":"dma_userInfoVo", "key":"elData"}' encoding="UTF-8" instance="" replace="" errorHandler=""
-				customHandler="" mode="asynchronous" processMsg="유저 정보 조회중" ev:submit="" ev:submitdone="" ev:submiterror="" abortTrigger="">
+				customHandler="" mode="asynchronous" processMsg="유저 정보 조회중" ev:submit="" ev:submitdone="scwin.updateCardStatus" ev:submiterror="" abortTrigger="">
 			</xf:submission>
 		</xf:model>
 		<w2:layoutInfo />
@@ -425,27 +425,6 @@
             background: linear-gradient(135deg, #f8fff8, #e8f5e8);
         }
 
-        .completed-badge {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background-color: #28a745; /* 녹색 배경 */
-            color: white;
-            font-size: 10px;
-            padding: 4px 8px;
-            border-radius: 8px;
-            font-weight: bold;
-        }
-
-        .action-card.completed .action-card-button {
-            background-color: #28a745; /* 녹색 배경 */
-            cursor: default;
-        }
-
-        .action-card.completed .action-card-button:hover {
-            background-color: #28a745; /* 호버시에도 녹색 유지 */
-        }
-
         /* 액션 카드 */
         .action-cards {
             display: grid;
@@ -667,78 +646,47 @@ scwin.startCodeAnalysis_onclick = function () {
 
 // 카드 상태 업데이트 함수
 scwin.updateCardStatus = function () {
-    var mbtiCompleted = dma_userInfo.get("mbtiCompleted") === "true";
-    var codeCompleted = dma_userInfo.get("codeAnalysisCompleted") === "true";
+    var mbtiCompleted = dma_userInfoVo.get("is_mbti_checked") === "1";
+    var codeCompleted = dma_userInfoVo.get("is_code_checked") === "1";
 
     // MBTI 카드 상태 업데이트
-    scwin.updateSingleCard("mbti-card", mbtiCompleted);
+    scwin.updateSingleCard("mbti_card", mbtiCompleted);
 
     // 코드분석 카드 상태 업데이트
-    scwin.updateSingleCard("code-card", codeCompleted);
+    scwin.updateSingleCard("code_card", codeCompleted);
 };
 
 // 개별 카드 상태 업데이트
 scwin.updateSingleCard = function (cardId, isCompleted) {
     try {
-        // 클래스로 카드 찾기 (ID가 안되니까)
-        var cards = document.querySelectorAll('.action-card');
-        var cardElement = null;
-
-        if (cardId === 'mbti-card' && cards.length > 0) {
-            cardElement = cards[0]; // 첫 번째 카드가 MBTI
-        } else if (cardId === 'code-card' && cards.length > 1) {
-            cardElement = cards[1]; // 두 번째 카드가 코드분석
-        }
-
+        var cardElement = document.getElementById(cardId);
         if (!cardElement) return;
 
         var badgeElement = cardElement.querySelector('.incomplete-badge, .completed-badge');
         var buttonElement = cardElement.querySelector('.action-card-button');
 
         if (isCompleted) {
-            // 완료 상태로 변경
             cardElement.classList.remove('incomplete');
             cardElement.classList.add('completed');
-
-            // 직접 스타일 변경
-            cardElement.style.border = '2px solid #28a745';
-            cardElement.style.background = 'linear-gradient(135deg, #f8fff8, #e8f5e8)';
-
-            // 배지 업데이트
             if (badgeElement) {
                 badgeElement.textContent = '완료';
                 badgeElement.className = 'completed-badge';
-                badgeElement.style.backgroundColor = '#28a745';
             }
-
-            // 버튼 숨김 처리
             if (buttonElement) {
                 buttonElement.style.display = 'none';
             }
-
         } else {
-            // 미완료 상태로 변경
             cardElement.classList.remove('completed');
             cardElement.classList.add('incomplete');
-
-            // 원래 스타일로 복원
-            cardElement.style.border = '2px solid #fc8181';
-            cardElement.style.background = 'linear-gradient(135deg, #fff5f5, #fed7d7)';
-
-            // 배지 업데이트
             if (badgeElement) {
                 badgeElement.textContent = '미완료';
                 badgeElement.className = 'incomplete-badge';
-                badgeElement.style.backgroundColor = '#dc3545';
             }
-
-            // 버튼 텍스트 업데이트 및 표시
             if (buttonElement) {
-                buttonElement.style.display = 'block'; // 버튼 다시 표시
-                buttonElement.style.backgroundColor = '#dc3545';
-                if (cardId === 'mbti-card') {
+                buttonElement.style.display = 'block';
+                if (cardId === 'mbti_card') {
                     buttonElement.textContent = '시작하기';
-                } else if (cardId === 'code-card') {
+                } else if (cardId === 'code_card') {
                     buttonElement.textContent = '분석하기';
                 }
             }
@@ -852,7 +800,7 @@ scwin.btn_userUpdate_onclick = function (e) {
 
 						<xf:group class="action-cards">
 							<!-- MBTI 성격 검사 카드 -->
-							<xf:group class="action-card incomplete" ev:onclick="scwin.startMbti_onclick()">
+							<xf:group id="mbti_card" class="action-card incomplete" ev:onclick="scwin.startMbti_onclick()">
 								<xf:group class="incomplete-badge">미완료</xf:group>
 								<xf:group class="action-card-icon" style="">
 									<xf:image src="/InsWebApp/images/ws5/main/mbti_check.png" style="width:100%;height:100%;" id=""></xf:image>
@@ -865,7 +813,7 @@ scwin.btn_userUpdate_onclick = function (e) {
 							</xf:group>
 
 							<!-- 코드분석 카드 -->
-							<xf:group class="action-card incomplete" ev:onclick="scwin.startCodeAnalysis_onclick()">
+							<xf:group id="code_card" class="action-card incomplete" ev:onclick="scwin.startCodeAnalysis_onclick()">
 								<xf:group class="incomplete-badge">미완료</xf:group>
 
 								<xf:group class="action-card-icon" style="">
