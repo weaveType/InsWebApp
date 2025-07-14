@@ -889,36 +889,43 @@ scwin.formatDate = function(dateString) {
           
             <!-- 필터 섹션 -->
             <section class="filter-section">
-                <!-- 메인 필터 드롭다운 -->
-                <xf:group class="main-filters">
-                	<xf:select1 id="" chooseOption="true" style="width: 148px;height: 21px;" submenuSize="auto" allOption=""
-                		disabled="false" direction="auto" appearance="minimal" disabledClass="w2selectbox_disabled" chooseOptionLabel="모든 MBTI 조회"
-                		ref="">
-                		<xf:choices></xf:choices>
-                	</xf:select1>
+            	<!-- 메인 필터 드롭다운 -->
 
-                	<xf:group class="filter-dropdown" ev:onclick="scwin.filter_dropdown_onclick('experience')">
-                		<w2:textbox label="경력 전체"></w2:textbox>
-                		<w2:span class="dropdown-arrow" label="▼"></w2:span>
-                	</xf:group>
-
-
-                	<xf:group style="margin-left: auto; display: flex; gap: 12px;">
-                		<w2:textbox label="최신순" style="font-size: 13px; color: #666;"></w2:textbox>
-                		<w2:textbox label="추천순" style="font-size: 13px; color: #666;"></w2:textbox>
-                		<w2:textbox label="인기순" style="font-size: 13px; color: #666;"></w2:textbox>
-                	</xf:group>
-
-                </xf:group>
-
-                <!-- 필터 태그들 -->
-                <xf:group class="filter-tags">
-                    <w2:span class="filter-tag" label="한국" ev:onclick="scwin.filter_tag_onclick('korea')"></w2:span>
-                    <w2:span class="filter-tag" label="채용유형" ev:onclick="scwin.filter_tag_onclick('job_type')"></w2:span>
-                    <w2:span class="filter-tag" label="기술스택" ev:onclick="scwin.filter_tag_onclick('tech_stack')"></w2:span>
-                    <w2:span class="filter-tag highlight" label="대규모 채용 중" ev:onclick="scwin.filter_tag_onclick('mass_hiring')"></w2:span>
-                    <w2:span class="filter-tag" label="1,001-10,000명" ev:onclick="scwin.filter_tag_onclick('company_size')"></w2:span>
-                </xf:group>
+            	<!-- 필터 태그들 -->
+            	<xf:group class="header-container" style="">
+            		<xf:group class="header-left">
+            			<xf:group class="main-filters" style="margin-bottom: 0;">
+            				<xf:group class="filter-dropdown" ev:onclick="scwin.filter_dropdown_onclick('job_type')">
+            					<w2:textbox label="개발 · 개발 전체"></w2:textbox>
+            					<w2:span class="dropdown-arrow" label="▼"></w2:span>
+            				</xf:group>
+            				<xf:group class="filter-dropdown" ev:onclick="scwin.filter_dropdown_onclick('experience')">
+            					<w2:textbox label="경력 전체"></w2:textbox>
+            					<w2:span class="dropdown-arrow" label="▼"></w2:span>
+            				</xf:group>
+            				<xf:select1 id="" chooseOption="true" style="width: 148px;height: 21px;" submenuSize="auto" allOption=""
+            					disabled="false" direction="auto" appearance="minimal" disabledClass="w2selectbox_disabled" chooseOptionLabel="모든 MBTI"
+            					ref="">
+            					<xf:choices></xf:choices>
+            				</xf:select1>
+            				<xf:select id="" appearance="minimal" style="width: 150px;height: 64px;" ref="">
+            					<xf:choices>
+            						<xf:itemset nodeset="">
+            							<xf:label ref=""></xf:label>
+            							<xf:value ref=""></xf:value>
+            						</xf:itemset>
+            					</xf:choices>
+            				</xf:select>
+            			</xf:group>
+            		</xf:group>
+            		<xf:group class="header-right">
+            			<xf:group style="display: flex; gap: 12px; margin-left: 24px;">
+            				<w2:textbox label="최신순" style="font-size: 13px; color: #666;"></w2:textbox>
+            				<w2:textbox label="추천순" style="font-size: 13px; color: #666;"></w2:textbox>
+            				<w2:textbox label="인기순" style="font-size: 13px; color: #666;"></w2:textbox>
+            			</xf:group>
+            		</xf:group>
+            	</xf:group>
             </section>
 
             <!-- 메인 컨텐츠 -->
