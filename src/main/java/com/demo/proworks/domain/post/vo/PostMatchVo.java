@@ -7,10 +7,10 @@ import com.fasterxml.jackson.annotation.JsonFilter;
 
 @JsonFilter("elExcludeFilter")
 @ElDto(FldYn = "", delimeterYn = "", logicalName = "공고정보")
-public class PostVo extends com.demo.proworks.cmmn.ProworksCommVO {
+public class PostMatchVo extends com.demo.proworks.cmmn.ProworksCommVO {
     private static final long serialVersionUID = 1L;
 
-    public PostVo(){
+    public PostMatchVo(){
     }
 
     @ElDtoField(logicalName = "job_posting_id", physicalName = "jobPostingId", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
@@ -51,6 +51,12 @@ public class PostVo extends com.demo.proworks.cmmn.ProworksCommVO {
 
     @ElDtoField(logicalName = "status", physicalName = "status", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
     private String status;
+
+    @ElDtoField(logicalName = "MBTI_매칭_필터", physicalName = "mbtiMatchFilter", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private String mbtiMatchFilter;
+
+    @ElDtoField(logicalName = "사용자_MBTI", physicalName = "userMbti", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private String userMbti;
 
     @ElVoField(physicalName = "jobPostingId")
     public String getJobPostingId(){
@@ -195,10 +201,32 @@ public class PostVo extends com.demo.proworks.cmmn.ProworksCommVO {
         this.status = status;
     }
 
+    @ElVoField(physicalName = "mbtiMatchFilter")
+    public String getMbtiMatchFilter(){
+        String ret = this.mbtiMatchFilter;
+        return ret;
+    }
+
+    @ElVoField(physicalName = "mbtiMatchFilter")
+    public void setMbtiMatchFilter(String mbtiMatchFilter){
+        this.mbtiMatchFilter = mbtiMatchFilter;
+    }
+
+    @ElVoField(physicalName = "userMbti")
+    public String getUserMbti(){
+        String ret = this.userMbti;
+        return ret;
+    }
+
+    @ElVoField(physicalName = "userMbti")
+    public void setUserMbti(String userMbti){
+        this.userMbti = userMbti;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("PostVo [");
+        sb.append("PostMatchVo [");
         sb.append("jobPostingId").append("=").append(jobPostingId).append(",");
         sb.append("companyId").append("=").append(companyId).append(",");
         sb.append("title").append("=").append(title).append(",");
@@ -211,7 +239,9 @@ public class PostVo extends com.demo.proworks.cmmn.ProworksCommVO {
         sb.append("preferredDeveloperTypes").append("=").append(preferredDeveloperTypes).append(",");
         sb.append("expiresAt").append("=").append(expiresAt).append(",");
         sb.append("postedAt").append("=").append(postedAt).append(",");
-        sb.append("status").append("=").append(status);
+        sb.append("status").append("=").append(status).append(",");
+        sb.append("mbtiMatchFilter").append("=").append(mbtiMatchFilter).append(",");
+        sb.append("userMbti").append("=").append(userMbti);
         sb.append("]");
         return sb.toString();
 

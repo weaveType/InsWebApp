@@ -12,6 +12,9 @@ public class PostListVo extends com.demo.proworks.cmmn.ProworksCommVO {
     @ElDtoField(logicalName = "공고정보List", physicalName = "postVoList", type = "com.demo.proworks.domain.post.PostVo", typeKind = "List", fldYn = "", length = 0, dotLen = 0, baseValue = "", desc = "")
     private java.util.List<com.demo.proworks.domain.post.vo.PostVo> postVoList;
 
+    @ElDtoField(logicalName = "총 개수", physicalName = "totalCount", type = "long", fldYn = "", length = 0, dotLen = 0, baseValue = "", desc = "")
+    private long totalCount;
+
     public java.util.List<com.demo.proworks.domain.post.vo.PostVo> getPostVoList(){
         return postVoList;
     }
@@ -20,9 +23,17 @@ public class PostListVo extends com.demo.proworks.cmmn.ProworksCommVO {
         this.postVoList = postVoList;
     }
 
+    public long getTotalCount() {
+        return totalCount;
+    }
+
+    public void setTotalCount(long totalCount) {
+        this.totalCount = totalCount;
+    }
+
     @Override
     public String toString() {
-        return "PostListVo [postVoList=" + postVoList+ "]";
+        return "PostListVo [postVoList=" + postVoList + ", totalCount=" + totalCount + "]";
     }
 
     public boolean isFixedLengthVo() {

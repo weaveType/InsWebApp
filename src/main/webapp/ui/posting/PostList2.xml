@@ -59,7 +59,7 @@
 
 			<!-- 개발자 MBTI 목록 조회 Submission -->
 			<xf:submission id="sbm_selectDevMbtiList" ref="" target='data:json,{"id":"dlt_devMbtiList","key":"elData.devMbtiList"}'
-				action="/InsWebApp/POS0003List.pwkjson" method="post" mediatype="application/json" encoding="UTF-8" instance="" replace=""
+				action="/InsWebApp/POS0004List.pwkjson" method="post" mediatype="application/json" encoding="UTF-8" instance="" replace=""
 				errorHandler="" customHandler="" mode="asynchronous" processMsg="개발자 MBTI 목록을 조회중입니다." ev:submit=""
 				ev:submitdone="scwin.sbm_selectDevMbtiList_submitdone" ev:submiterror="" abortTrigger="">
 			</xf:submission>
@@ -826,14 +826,13 @@ scwin.slb_dev_mbti_onselected = function () {
 
     // DataMap에 필터 값 설정
     dmp_postVo.set("mbtiMatchFilter", selectedValue);
-    dmp_postVo.set("userMbti", mbti);
 
     // 페이지를 1로 리셋 (필터 변경 시)
     dmp_postVo.set("pageIndex", "1");
 
     // 검색 함수 호출 (검색 함수가 있다면)
     // scwin.searchPosts();
-    $c.sbm.execute($p, sbm_selectPostList);
+    $c.sbm.execute($p, sbm_selectDevMbtiList);
 };
 ]]></script>
 	</head>

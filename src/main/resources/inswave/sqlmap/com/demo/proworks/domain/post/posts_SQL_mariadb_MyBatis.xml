@@ -93,7 +93,7 @@
     </select>
 	
     <select id="selectListPost" parameterType="com.demo.proworks.domain.post.vo.PostVo" resultType="com.demo.proworks.domain.post.vo.PostVo">
-    	<!-- 공고정보 목록을 조회한다. (디버깅용: 모든 공고 조회) -->
+    	<!-- 공고정보 목록을 조회한다. -->
            SELECT    /* QueryID : com.demo.proworks.domain.post.selectListPost */
                JOB_POSTING_ID as jobPostingId, 
                COMPANY_ID as companyId, 
@@ -109,31 +109,22 @@
                STATUS as status		       
            FROM POSTS
            WHERE  1=1
-           AND (IS_DELETED IS NULL OR IS_DELETED = 0)    
-           <!-- 임시로 company_id 조건 제거 (디버깅용) -->
-           <!--
            <if test="companyId != null and companyId != ''">
            AND COMPANY_ID = #{companyId}
            </if>
-           -->
            ORDER BY POSTED_AT DESC
-           LIMIT 20
     </select>
 	
     <select id="selectListCountPost" parameterType="com.demo.proworks.domain.post.vo.PostVo" resultType="long">
-    <!-- 공고정보 목록의 카운트를 조회한다. (디버깅용: 모든 공고 카운트) -->
+    <!-- 공고정보 목록의 카운트를 조회한다. -->
     
          SELECT    /* QueryID : com.demo.proworks.domain.post.selectListCountPost */
              COUNT(*) totcnt  		                  
          FROM POSTS
          WHERE  1=1
-         AND (IS_DELETED IS NULL OR IS_DELETED = 0)
-         <!-- 임시로 company_id 조건 제거 (디버깅용) -->
-         <!--
          <if test="companyId != null and companyId != ''">
          AND COMPANY_ID = #{companyId}
          </if>
-         -->
 
     </select>
 
@@ -193,4 +184,19 @@
         ORDER BY ts.tech_stack_name
     </select>
 
+    <!-- 사용자 ID로 회사 ID 조회 -->
+    <select id="selectCompanyIdByUserId" parameterType="String" resultType="String">
+        <!-- 사용자 ID로 해당 사용자의 회사 ID를 조회한다. -->
+        SELECT  /* QueryID : com.demo.proworks.domain.post.selectCompanyIdByUserId */
+            company_id
+        FROM companys
+        WHERE user_id = #{userId}
+        AND (is_deleted IS NULL OR is_deleted = 0)
+        LIMIT 1
+    </select>
+
+<select id="findPostsByMbti" resultType="com.demo.proworks.domain.post.vo.PostVo" parameterType="com.demo.proworks.domain.post.vo.PostMatchVo">
+SELECT * 
+  FROM
+</select>
 </mapper>

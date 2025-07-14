@@ -64,7 +64,9 @@ public class ProworksLoginAdapter extends LoginAdapter {
 			
 			// 비밀번호 확인
 			String resPw = String.valueOf(resUserVo.getPassword());
-			System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> : " + !BCrypt.checkpw(pw, resPw));
+			System.out.println("입력 비밀번호 (pw): " + resPw);
+			System.out.println("저장된 암호화 비밀번호 (resPw): " + resPw);
+			System.out.println("비밀번호 일치 여부 (BCrypt.checkpw 결과): " + BCrypt.checkpw(pw, resPw));
 			if(pw == null || !BCrypt.checkpw(pw, resPw)){
 				throw new LoginException("EL.ERROR.LOGIN.0002");
 			}

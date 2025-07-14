@@ -171,8 +171,8 @@ public enum DevMbti {
 	}
 
 	public static List<String> getAllCodes() {
-		return Arrays.stream(DevMbti.values()) // 모든 enum 값들을 스트림으로 변환
-				.map(DevMbti::getCode) // 각 enum의 code 값만 추출
-				.collect(Collectors.toList()); // 리스트로 반환
+		return Arrays.stream(DevMbti.values())
+				.map(DevMbti::getCode)
+				.collect(Collectors.toList());
 	}
 }
