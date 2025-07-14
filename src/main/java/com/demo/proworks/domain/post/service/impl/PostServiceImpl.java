@@ -40,7 +40,7 @@ public class PostServiceImpl implements PostService {
      * 공고정보 목록을 조회합니다.
      *
      * @process
-     * 1. 공고정보 페이징 처리하여 목록을 조회한다.
+     * 1. 공고정보 목록을 조회한다.
      * 2. 결과 List<PostVo>을(를) 리턴한다.
      * 
      * @param  postVo 공고정보 PostVo
@@ -49,7 +49,6 @@ public class PostServiceImpl implements PostService {
      */
 	public List<PostVo> selectListPost(PostVo postVo) throws Exception {
 		List<PostVo> list = postDAO.selectListPost(postVo);	
-	
 		return list;
 	}
 

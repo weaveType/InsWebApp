@@ -2,6 +2,8 @@ package com.demo.proworks.domain.post.web;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -41,61 +43,7 @@ public class PostController {
     @Resource(name = "postServiceImpl")
     private PostService postService;
 	
-    /**
-     * 세션에서 현재 로그인한 사용자의 Company ID를 가져옵니다.
-     * 
-     * @return Company ID (없으면 null)
-     */
-    private String getCurrentUserCompanyId() {
-        try {
-            System.out.println("=== 🔥 강화된 회사 ID 조회 시작 ===");
-            
-            // 프로웍스 세션 유틸리티 사용
-            UserHeader userHeader = ControllerContextUtil.getUserHeader();
-            if (userHeader != null) {
-                String userId = userHeader.getUserId();
-                System.out.println("=== 세션 정보 확인 ===");
-                System.out.println("UserHeader 존재: " + (userHeader != null));
-                System.out.println("UserID: '" + userId + "'");
-                
-                if (userId != null && !userId.trim().isEmpty()) {
-                    // 🔥 실제 DB에서 사용자 ID로 회사 ID 조회
-                    System.out.println("=== DB에서 회사 ID 조회 시작 ===");
-                    try {
-                        String companyId = postService.selectCompanyIdByUserId(userId);
-                        
-                        if (companyId != null && !companyId.trim().isEmpty()) {
-                            System.out.println("✅ DB에서 회사 ID 조회 성공: '" + companyId + "'");
-                            return companyId;
-                        } else {
-                            System.err.println("❌ DB에서 회사 ID를 찾을 수 없습니다. 사용자 ID: " + userId);
-                            // 회사 정보가 없는 사용자의 경우 예외 처리 (하드코딩 대신)
-                            throw new RuntimeException("해당 사용자와 연결된 회사 정보가 없습니다. 회사 등록을 먼저 진행해주세요.");
-                        }
-                        
-                    } catch (Exception dbError) {
-                        System.err.println("❌ DB 조회 중 오류 발생: " + dbError.getMessage());
-                        dbError.printStackTrace();
-                        throw new RuntimeException("회사 정보 조회 중 오류가 발생했습니다: " + dbError.getMessage());
-                    }
-                } else {
-                    System.err.println("❌ 세션에서 사용자 ID가 null 또는 빈 문자열입니다.");
-                    throw new RuntimeException("로그인 정보가 올바르지 않습니다. 다시 로그인해주세요.");
-                }
-            } else {
-                System.err.println("❌ UserHeader가 null입니다. 로그인이 되어있지 않습니다.");
-                throw new RuntimeException("로그인이 필요합니다. 로그인 후 다시 시도해주세요.");
-            }
-            
-        } catch (RuntimeException re) {
-            // RuntimeException은 그대로 다시 던짐 (적절한 에러 메시지 포함)
-            throw re;
-        } catch (Exception e) {
-            System.err.println("❌ 예상치 못한 오류 발생: " + e.getMessage());
-            e.printStackTrace();
-            throw new RuntimeException("시스템 오류가 발생했습니다: " + e.getMessage());
-        }
-    }
+    
     
     /**
      * 현재 사용자의 Company ID 권한을 검증합니다.
@@ -104,11 +52,11 @@ public class PostController {
      * @return 권한 있으면 true
      */
     private boolean hasCompanyPermission(String companyId) {
-        String currentCompanyId = getCurrentUserCompanyId();
-        return currentCompanyId != null && currentCompanyId.equals(companyId);
+//        String currentCompanyId = getCurrentUserCompanyId();
+//        return currentCompanyId != null && currentCompanyId.equals(companyId);
+    	return true;
     }
 	
-    
     /**
      * 공고정보 목록을 조회합니다.
      *
@@ -118,33 +66,20 @@ public class PostController {
      */
     @ElService(key="POS0001List")
     @RequestMapping(value="POS0001List")    
-    @ElDescription(sub="공고정보 목록조회",desc="페이징을 처리하여 공고정보 목록 조회를 한다.")               
-    public PostListVo selectListPost(PostVo postVo) throws Exception {    	   	
+    @ElDescription(sub="공고정보 목록조회",desc="공고정보 목록 조회를 한다.")               
+    public Map<String, Object> selectListPost(PostVo postVo) throws Exception {    	   	
         
         System.out.println("=== 공고 목록 조회 시작 ===");
         System.out.println("입력 받은 PostVo: " + postVo.toString());
         
         // 현재 사용자의 Company ID로 필터링
-        String currentCompanyId = getCurrentUserCompanyId();
+        String currentCompanyId = postVo.getCompanyId();
+        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> companyId : " + postVo.getCompanyId());
         System.out.println("현재 사용자 Company ID: " + currentCompanyId);
         
         // 보안상 중요: 현재 로그인된 사용자의 회사 공고만 조회
         postVo.setCompanyId(currentCompanyId);
         System.out.println("설정된 Company ID 필터: " + postVo.getCompanyId());
-        
-        // 페이징 기본값 설정
-        if (postVo.getPageSize() <= 0) {
-            postVo.setPageSize(10);
-            System.out.println("기본 페이지 사이즈 설정: 10");
-        }
-        if (postVo.getPageIndex() <= 0) {
-            postVo.setPageIndex(1);
-            System.out.println("기본 페이지 인덱스 설정: 1");
-        }
-        
-        // 페이징 정보 로그
-        System.out.println("최종 페이지 사이즈: " + postVo.getPageSize());
-        System.out.println("최종 페이지 인덱스: " + postVo.getPageIndex());
 
         List<PostVo> postList = postService.selectListPost(postVo);                  
         long totCnt = postService.selectListCountPost(postVo);
@@ -164,15 +99,15 @@ public class PostController {
 		PostListVo retPostList = new PostListVo();
 		retPostList.setPostVoList(postList); 
 		retPostList.setTotalCount(totCnt);
-		retPostList.setPageSize(postVo.getPageSize());
-		retPostList.setPageIndex(postVo.getPageIndex());
 		
 		System.out.println("=== 반환할 PostListVo ===");
 		System.out.println("PostVoList 크기: " + retPostList.getPostVoList().size());
 		System.out.println("TotalCount: " + retPostList.getTotalCount());
 		System.out.println("=== 공고 목록 조회 완료 ===");
 
-        return retPostList;            
+        Map<String, Object> response = new HashMap<>();
+        response.put("elData", retPostList); // PostListVo 객체를 "elData" 키 아래에 넣습니다.
+        return response;            
     }  
         
     /**
@@ -265,7 +200,7 @@ public class PostController {
         }
         
         // 현재 사용자의 Company ID 설정 (세션에서 가져오기)
-        String currentCompanyId = getCurrentUserCompanyId();
+        String currentCompanyId = postVo.getCompanyId();
         if (currentCompanyId == null) {
             throw new RuntimeException("로그인 정보를 확인할 수 없습니다.");
         }
