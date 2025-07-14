@@ -194,80 +194,46 @@
         AND (is_deleted IS NULL OR is_deleted = 0)
         LIMIT 1
     </select>
+<select id="findPostsByMbti"
+        parameterType="com.demo.proworks.domain.post.vo.PostMatchVo"
+        resultType="com.demo.proworks.domain.post.vo.PostVo">
 
-<select id="findPostsByMbti" resultType="com.demo.proworks.domain.post.vo.PostVo" parameterType="com.demo.proworks.domain.post.vo.PostVo">
-<!-- MBTI별 일치하는 공고를 호환성 순으로 조회 -->
-    SELECT /* QueryID : com.demo.proworks.domain.post.findPostsByMbti */
-        p.JOB_POSTING_ID as jobPostingId,
-        p.COMPANY_ID as companyId,
-        p.TITLE as title,
-        p.DESCRIPTION as description,
-        p.SELECTED_TECH_STACK_NAMES as selectedTechStackNames,
-        p.EXPERIENCE_LEVEL as experienceLevel,
-        p.SALARY_RANGE as salaryRange,
-        p.LOCATION as location,
-        p.WORK_TYPE as workType,
-        p.PREFERRED_DEVELOPER_TYPES as preferredDeveloperTypes,
-        p.EXPIRES_AT as expiresAt,
-        p.POSTED_AT as postedAt,
-        p.STATUS as status,
-        #{mbtiMatchFilter} as mbtiMatchFilter,
-        #{userMbti} as userMbti,
-        MIN(compat_data.rank_value) as best_rank,
-        MIN(compat_data.diff_cnt) as best_diff,
-        MAX(compat_data.match_cnt) as best_match
-    FROM POSTS p
-    INNER JOIN post_mbti_pref pref ON p.JOB_POSTING_ID = pref.job_posting_id
-    INNER JOIN (
-        SELECT 
-            mc.code2 as cmp_code,
-            mc.diff_cnt,
-            mc.match_cnt,
-            CASE mc.level
-                WHEN 'PERFECT' THEN 1
-                WHEN 'HIGH' THEN 2
-                WHEN 'MEDIUM' THEN 3
-                WHEN 'LOW' THEN 4
-                ELSE 5
-            END as rank_value
-        FROM mbti_compat mc
-        INNER JOIN mbti_code_map mcm ON mc.code1 = mcm.code
-        WHERE mcm.mbti = #{userMbti}
-    ) compat_data ON compat_data.cmp_code = pref.code
-    WHERE p.STATUS = 'active'
-        AND p.EXPIRES_AT > NOW()
-        <if test="mbtiMatchFilter != null and mbtiMatchFilter != ''">
-            <choose>
-                <when test="mbtiMatchFilter == 'PERFECT'">
-                    AND compat_data.rank_value = 1
-                </when>
-                <when test="mbtiMatchFilter == 'HIGH'">
-                    AND compat_data.rank_value &lt;= 2
-                </when>
-                <when test="mbtiMatchFilter == 'MEDIUM'">
-                    AND compat_data.rank_value &lt;= 3
-                </when>
-                <when test="mbtiMatchFilter == 'LOW'">
-                    AND compat_data.rank_value &lt;= 4
-                </when>
-            </choose>
-        </if>
-        <if test="experienceLevel != null and experienceLevel != ''">
-            AND p.EXPERIENCE_LEVEL = #{experienceLevel}
-        </if>
-        <if test="location != null and location != ''">
-            AND p.LOCATION LIKE CONCAT('%', #{location}, '%')
-        </if>
-        <if test="workType != null and workType != ''">
-            AND p.WORK_TYPE = #{workType}
-        </if>
-    GROUP BY p.JOB_POSTING_ID, p.COMPANY_ID, p.TITLE, p.DESCRIPTION, 
-             p.SELECTED_TECH_STACK_NAMES, p.EXPERIENCE_LEVEL, p.SALARY_RANGE, 
-             p.LOCATION, p.WORK_TYPE, p.PREFERRED_DEVELOPER_TYPES, 
-             p.EXPIRES_AT, p.POSTED_AT, p.STATUS
-    ORDER BY best_rank ASC, best_diff ASC, best_match DESC, p.POSTED_AT DESC
-	<if test="pageSize != null and pageSize > 0">
-LIMIT   #{offset}, #{pageSize}
-</if>
+    <!-- ① 사용자 MBTI(4글자 문자열) → 코드(0~15) 매핑 -->
+    WITH dev AS (
+        SELECT code
+        FROM   mbti_code_map
+        WHERE  mbti = #{userMbti}
+    ),
+    /* ② 호환 MBTI 목록 (16행) */
+    compat AS (
+        SELECT c.code2 AS cmp_code,
+               c.diff_cnt,
+               c.match_cnt,
+               CASE c.level
+                    WHEN 'PERFECT' THEN 1
+                    WHEN 'HIGH'    THEN 2
+                    WHEN 'MEDIUM'  THEN 3
+                    WHEN 'LOW'     THEN 4
+                    ELSE 5
+               END AS rank
+        FROM   mbti_compat c
+        JOIN   dev d ON d.code = c.code1      <!-- code1 = 내 MBTI -->
+    )
+    /* ③ 실제 공고 조회 */
+    SELECT  p.job_posting_id,
+            p.company_id,
+            p.title,
+            p.description,
+            MIN(c.rank)      AS best_rank,
+            MIN(c.diff_cnt)  AS best_diff,
+            MAX(c.match_cnt) AS best_match
+    FROM    post_mbti_pref pref
+    JOIN    compat c        ON c.cmp_code = pref.code
+    JOIN    Posts  p        ON p.job_posting_id = pref.job_posting_id
+    WHERE   p.status = 'active'
+      AND   p.expires_at > NOW()
+    GROUP BY p.job_posting_id
+    ORDER BY best_rank, best_diff, best_match DESC
+    LIMIT   #{limit}
 </select>
 </mapper>

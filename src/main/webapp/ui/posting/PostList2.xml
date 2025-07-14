@@ -64,7 +64,7 @@
 			</xf:submission>
 
 			<!-- 개발자 MBTI 목록 조회 Submission -->
-			<xf:submission id="sbm_selectDevMbtiList" ref='data:json,{"id":"dmp_postMatchVo","key":"postVo"}' target='data:json,{"id":"dlt_postList","key":"elData.postVoList"}'
+			<xf:submission id="sbm_selectDevMbtiList" ref='data:json,{"id":"dmp_postMatchVo","key":"postMatchVo"}' target='data:json,{"id":"dlt_postList","key":"elData.postVoList"}'
 				action="/InsWebApp/POS0004List.pwkjson" method="post" mediatype="application/json" encoding="UTF-8" instance="" replace=""
 				errorHandler="" customHandler="" mode="asynchronous" processMsg="개발자 MBTI 목록을 조회중입니다." ev:submit=""
 				ev:submitdone="scwin.sbm_selectDevMbtiList_submitdone" ev:submiterror="" abortTrigger="">

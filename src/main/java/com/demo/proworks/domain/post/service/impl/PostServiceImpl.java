@@ -349,8 +349,13 @@ public class PostServiceImpl implements PostService {
 		}
 	}
 
+
 	public List<PostVo> findPostsByMbti(PostMatchVo postMatchVo) throws Exception {
-		return postDAO.findPostsByMbti(postMatchVo);
+		PostMatchVo vo = new PostMatchVo();
+		vo.setUserMbti(postMatchVo.getUserMbti()); // 로그인 사용자 MBTI
+		vo.setMbtiMatchFilter(postMatchVo.getMbtiMatchFilter()); // 몇개의 mbti가 일치하여야 하는지.. 
+		vo.setLimit(20);        // 20건만
+		return postDAO.findPostsByMbti(vo);
 	};
 
 }

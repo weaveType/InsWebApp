@@ -106,8 +106,6 @@ public class PostController {
         long totCnt = postService.selectListCountPost(new PostVo());
         
 		PostMatchVo retPostList = new PostMatchVo();
-//		retPostList.set
-//		retPostList.setPostVoList(postList); 
 		retPostList.setTotalCount(totCnt);
         Map<String, Object> response = new HashMap<>();
         response.put("elData", retPostList); // PostListVo 객체를 "elData" 키 아래에 넣습니다.

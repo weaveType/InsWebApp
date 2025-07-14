@@ -58,6 +58,9 @@ public class PostMatchVo extends com.demo.proworks.cmmn.ProworksCommVO {
     @ElDtoField(logicalName = "사용자_MBTI", physicalName = "userMbti", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
     private String userMbti;
 
+    @ElDtoField(logicalName = "최대_조회_건수", physicalName = "limit", type = "int", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private int limit;
+
     @ElVoField(physicalName = "jobPostingId")
     public String getJobPostingId(){
         String ret = this.jobPostingId;
@@ -223,6 +226,16 @@ public class PostMatchVo extends com.demo.proworks.cmmn.ProworksCommVO {
         this.userMbti = userMbti;
     }
 
+    @ElVoField(physicalName = "limit")
+    public int getLimit(){
+        return limit;
+    }
+
+    @ElVoField(physicalName = "limit")
+    public void setLimit(int limit){
+        this.limit = limit;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -241,7 +254,8 @@ public class PostMatchVo extends com.demo.proworks.cmmn.ProworksCommVO {
         sb.append("postedAt").append("=").append(postedAt).append(",");
         sb.append("status").append("=").append(status).append(",");
         sb.append("mbtiMatchFilter").append("=").append(mbtiMatchFilter).append(",");
-        sb.append("userMbti").append("=").append(userMbti);
+        sb.append("userMbti").append("=").append(userMbti).append(",");
+        sb.append("limit").append("=").append(limit);
         sb.append("]");
         return sb.toString();
 
