@@ -800,11 +800,11 @@ scwin.btn_userUpdate_onclick = function (e) {
 								<xf:image src="/InsWebApp/images/ws5/default_user.png" style="width: 80px;height: 80px;" id=""></xf:image>
 							</xf:group>
 							<xf:group class="profile-details">
-								<w2:textbox ref="data:dma_userInfo.userName"
+								<w2:textbox ref="data:dma_userInfoVo.name"
 									style="font-size: 20px; font-weight: bold; color: #666; margin: 4px 0 8px 0;">
 								</w2:textbox>
 								<xf:group class="profile-career">
-									<w2:textbox ref="data:dma_userInfo.careerLevel" style="font-size: 14px; color: #666; margin: 4px 0 8px 0;">
+									<w2:textbox ref="data:dma_userInfoVo.career" style="font-size: 14px; color: #666; margin: 4px 0 8px 0;">
 									</w2:textbox>
 								</xf:group>
 							</xf:group>
@@ -821,26 +821,26 @@ scwin.btn_userUpdate_onclick = function (e) {
 							<xf:group class="info-content-grid">
 								<!-- 지역·직무 -->
 								<xf:group class="info-item">
-									<w2:textbox class="info-item-label" label="지역·직무"></w2:textbox>
-									<w2:textbox class="info-item-value" ref="data:dma_userInfo.jobCategory"></w2:textbox>
+									<w2:textbox class="info-item-label" label="직무"></w2:textbox>
+									<w2:textbox class="info-item-value" ref="data:dma_userInfoVo.current_position"></w2:textbox>
 								</xf:group>
 
 								<!-- 근무 지역 -->
 								<xf:group class="info-item">
 									<w2:textbox class="info-item-label" label="근무 지역"></w2:textbox>
-									<w2:textbox class="info-item-value" ref="data:dma_userInfo.location"></w2:textbox>
+									<w2:textbox class="info-item-value" ref="data:dma_userInfoVo.preferred_locations"></w2:textbox>
 								</xf:group>
 
 								<!-- 연봉 -->
 								<xf:group class="info-item">
-									<w2:textbox class="info-item-label" label="연봉"></w2:textbox>
-									<w2:textbox class="info-item-value" ref="data:dma_userInfo.salary"></w2:textbox>
+									<w2:textbox class="info-item-label" label="희망 연봉"></w2:textbox>
+									<w2:textbox class="info-item-value" ref="data:dma_userInfoVo.year_salary"></w2:textbox>
 								</xf:group>
 
-								<!-- 기타 희망사항 -->
+								<!-- 경력 수준 -->
 								<xf:group class="info-item">
-									<w2:textbox class="info-item-label" label="기타 희망사항"></w2:textbox>
-									<w2:textbox class="info-item-value" ref="data:dma_userInfo.skills"></w2:textbox>
+									<w2:textbox class="info-item-label" label="경력 수준"></w2:textbox>
+									<w2:textbox class="info-item-value" ref="data:dma_userInfoVo.career"></w2:textbox>
 								</xf:group>
 							</xf:group>
 						</xf:group>
