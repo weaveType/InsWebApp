@@ -16,6 +16,9 @@ public class EmailVo extends com.demo.proworks.cmmn.ProworksCommVO {
     @ElDtoField(logicalName = "이메일", physicalName = "email", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
     private String email;
 
+    @ElDtoField(logicalName = "상태", physicalName = "role", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "이메일 중복 확인 결과 상태 (AVAILABLE/DUPLICATE)", attr = "")
+    private String role;
+
     @ElVoField(physicalName = "email")
     public String getEmail(){
         String ret = this.email;
@@ -27,11 +30,23 @@ public class EmailVo extends com.demo.proworks.cmmn.ProworksCommVO {
         this.email = email;
     }
 
+    @ElVoField(physicalName = "role")
+    public String getRole(){
+        String ret = this.role;
+        return ret;
+    }
+
+    @ElVoField(physicalName = "role")
+    public void setRole(String role){
+        this.role = role;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("EmailVo [");
-        sb.append("email").append("=").append(email);
+        sb.append("email").append("=").append(email).append(",");
+        sb.append("role").append("=").append(role);
         sb.append("]");
         return sb.toString();
 

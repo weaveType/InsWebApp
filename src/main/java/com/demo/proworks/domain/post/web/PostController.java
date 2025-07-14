@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.demo.proworks.domain.post.service.PostService;
 import com.demo.proworks.domain.post.vo.PostVo;
 import com.demo.proworks.domain.post.vo.PostListVo;
+import com.demo.proworks.domain.post.vo.PostMatchVo;
 import com.demo.proworks.domain.post.vo.TechStackVo;
 import com.demo.proworks.domain.post.vo.TechStackListVo;
 
@@ -23,6 +24,7 @@ import com.inswave.elfw.annotation.ElService;
 import com.inswave.elfw.annotation.ElValidator;
 import com.inswave.elfw.core.UserHeader;
 import com.inswave.elfw.util.ControllerContextUtil;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 /**  
  * @subject     : 공고정보 관련 처리를 담당하는 컨트롤러
@@ -43,11 +45,11 @@ public class PostController {
     @Resource(name = "postServiceImpl")
     private PostService postService;
 	
-    
-    
+
+
     /**
      * 현재 사용자의 Company ID 권한을 검증합니다.
-     * 
+     *
      * @param companyId 검증할 Company ID
      * @return 권한 있으면 true
      */
@@ -56,7 +58,7 @@ public class PostController {
 //        return currentCompanyId != null && currentCompanyId.equals(companyId);
     	return true;
     }
-	
+
     /**
      * 공고정보 목록을 조회합니다.
      *
@@ -65,18 +67,13 @@ public class PostController {
      * @throws Exception
      */
     @ElService(key="POS0001List")
-    @RequestMapping(value="POS0001List")    
-    @ElDescription(sub="공고정보 목록조회",desc="공고정보 목록 조회를 한다.")               
-    public Map<String, Object> selectListPost(PostVo postVo) throws Exception {    	   	
-        
-        System.out.println("=== 공고 목록 조회 시작 ===");
-        System.out.println("입력 받은 PostVo: " + postVo.toString());
+    @RequestMapping(value="POS0001List")
+    @ElDescription(sub="공고정보 목록조회",desc="공고정보 목록 조회를 한다.")
+    public Map<String, Object> selectListPost(PostVo postVo) throws Exception {
         
         // 현재 사용자의 Company ID로 필터링
         String currentCompanyId = postVo.getCompanyId();
-        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> companyId : " + postVo.getCompanyId());
-        System.out.println("현재 사용자 Company ID: " + currentCompanyId);
-        
+
         // 보안상 중요: 현재 로그인된 사용자의 회사 공고만 조회
         postVo.setCompanyId(currentCompanyId);
         System.out.println("설정된 Company ID 필터: " + postVo.getCompanyId());
@@ -84,32 +81,36 @@ public class PostController {
         List<PostVo> postList = postService.selectListPost(postVo);                  
         long totCnt = postService.selectListCountPost(postVo);
         
-        System.out.println("조회된 공고 개수: " + postList.size());
-        System.out.println("전체 공고 개수: " + totCnt);
-        
-        // 조회된 공고들 로그
-        for (int i = 0; i < postList.size(); i++) {
-            PostVo post = postList.get(i);
-            System.out.println("공고 " + (i+1) + ": ID=" + post.getJobPostingId() + 
-                             ", 제목=" + post.getTitle() + 
-                             ", 회사ID=" + post.getCompanyId() +
-                             ", 상태=" + post.getStatus());
-        }
-	
 		PostListVo retPostList = new PostListVo();
 		retPostList.setPostVoList(postList); 
 		retPostList.setTotalCount(totCnt);
-		
-		System.out.println("=== 반환할 PostListVo ===");
-		System.out.println("PostVoList 크기: " + retPostList.getPostVoList().size());
-		System.out.println("TotalCount: " + retPostList.getTotalCount());
-		System.out.println("=== 공고 목록 조회 완료 ===");
-
         Map<String, Object> response = new HashMap<>();
         response.put("elData", retPostList); // PostListVo 객체를 "elData" 키 아래에 넣습니다.
-        return response;            
-    }  
+        return response;
+    }
+    
+     /**
+     * 공고정보 목록을 조회합니다.
+     *
+     * @param  postMatchVo PostVo + 유저의 mbti, mbti 필터 갯수 추가
+     * @return 목록조회 결과
+     * @throws Exception
+     */
+    @ElService(key = "POS0004List")
+    @RequestMapping(value = "POS0004List")
+    @ElDescription(sub = "공고정보 목록조회", desc = "유저의 기준에서 공고정보 목록 조회를 한다.")
+    public Map<String, Object> findPostsByMbti(PostMatchVo postMatchVo) throws Exception {
+        List<PostVo> postList = postService.findPostsByMbti(postMatchVo);
+        long totCnt = postService.findPostsByMbtiCount(postMatchVo);
         
+		PostListVo retPostList = new PostListVo();
+		retPostList.setPostVoList(postList); 
+		retPostList.setTotalCount(totCnt);
+        Map<String, Object> response = new HashMap<>();
+        response.put("elData", retPostList);
+        return response;
+    }
+
     /**
      * 공고정보을 단건 조회 처리 한다.
      *
@@ -117,19 +118,19 @@ public class PostController {
      * @return 단건 조회 결과
      * @throws Exception
      */
-    @ElService(key = "POS0001UpdView")    
-    @RequestMapping(value="POS0001UpdView") 
-    @ElDescription(sub = "공고정보 갱신 폼을 위한 조회", desc = "공고정보 갱신 폼을 위한 조회를 한다.")    
+    @ElService(key = "POS0001UpdView")
+    @RequestMapping(value="POS0001UpdView")
+    @ElDescription(sub = "공고정보 갱신 폼을 위한 조회", desc = "공고정보 갱신 폼을 위한 조회를 한다.")
     public PostVo selectPost(PostVo postVo) throws Exception {
-        
+    	
         // 권한 검증: 해당 공고가 현재 사용자의 회사 것인지 확인
         PostVo selectPostVo = postService.selectPost(postVo);
-        
+
         if (selectPostVo != null) {
             if (!hasCompanyPermission(selectPostVo.getCompanyId())) {
                 throw new RuntimeException("해당 공고에 대한 권한이 없습니다.");
             }
-            
+
             // 해당 공고의 기술스택 목록도 함께 조회하여 JSON으로 설정
             try {
                 List<TechStackVo> techStacks = postService.selectTechStacksByPostId(selectPostVo.getJobPostingId());
@@ -139,7 +140,7 @@ public class PostController {
                     for (int i = 0; i < techStacks.size(); i++) {
                         techStackNames[i] = techStacks.get(i).getTechStackName();
                     }
-                    
+
                     // JSON 문자열로 변환하여 설정
                     ObjectMapper objectMapper = new ObjectMapper();
                     selectPostVo.setSelectedTechStackNames(objectMapper.writeValueAsString(techStackNames));
@@ -149,24 +150,24 @@ public class PostController {
                 // 기술스택 조회 실패 시에도 공고 정보는 반환
             }
         }
-        
+
         return selectPostVo;
-    } 
- 
+    }
+
     /**
      * 공고정보를 등록 처리 한다.
      *
      * @param  postVo 공고정보
      * @throws Exception
      */
-    @ElService(key="POS0001Ins")    
+    @ElService(key="POS0001Ins")
     @RequestMapping(value="POS0001Ins")
     @ElDescription(sub="공고정보 등록처리",desc="공고정보를 등록 처리 한다.")
-    public void insertPost(PostVo postVo) throws Exception {    	 
-        
+    public void insertPost(PostVo postVo) throws Exception {
+
         System.out.println("=== 🔥 강화된 공고 등록 처리 시작 ===");
         System.out.println("입력받은 PostVo: " + postVo.toString());
-        
+
         // 🔥 중요한 필드들 개별 검증
         System.out.println("=== 🔍 프론트엔드에서 받은 데이터 상세 검증 ===");
         System.out.println("제목: '" + postVo.getTitle() + "'");
@@ -175,7 +176,7 @@ public class PostController {
         System.out.println("기술스택 JSON: '" + postVo.getSelectedTechStackNames() + "'");
         System.out.println("성향 JSON: '" + postVo.getPreferredDeveloperTypes() + "'");
         System.out.println("상태: '" + postVo.getStatus() + "'");
-        
+
         // 🔥 기술스택 JSON 즉시 검증
         String selectedTechStackNames = postVo.getSelectedTechStackNames();
         if (selectedTechStackNames == null || selectedTechStackNames.trim().isEmpty()) {
@@ -183,7 +184,7 @@ public class PostController {
             System.err.println("받은 기술스택 데이터: " + selectedTechStackNames);
             throw new RuntimeException("기술스택이 선택되지 않았습니다. 최소 1개 이상 선택해야 합니다.");
         }
-        
+
         // 🔥 JSON 파싱 미리 테스트
         try {
             ObjectMapper testMapper = new ObjectMapper();
@@ -198,17 +199,17 @@ public class PostController {
             System.err.println("JSON: " + selectedTechStackNames);
             throw new RuntimeException("기술스택 데이터 형식이 올바르지 않습니다: " + e.getMessage());
         }
-        
+
         // 현재 사용자의 Company ID 설정 (세션에서 가져오기)
         String currentCompanyId = postVo.getCompanyId();
         if (currentCompanyId == null) {
             throw new RuntimeException("로그인 정보를 확인할 수 없습니다.");
         }
-        
+
         System.out.println("=== 회사 ID 설정 ===");
         System.out.println("세션에서 조회한 현재 사용자 회사 ID: " + currentCompanyId);
         System.out.println("프론트에서 전달받은 회사 ID: " + postVo.getCompanyId());
-        
+
         // 🔥 보안상 중요: 세션에서 조회한 회사 ID로 강제 설정 (프론트에서 전달받은 값 무시)
         postVo.setCompanyId(currentCompanyId);
         System.out.println("최종 설정된 회사 ID: " + postVo.getCompanyId());

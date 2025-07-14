@@ -40,6 +40,51 @@ public class UserVo extends com.demo.proworks.cmmn.ProworksCommVO {
     @ElDtoField(logicalName = "role_id", physicalName = "roleId", type = "int", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
     private int roleId;
 
+    @ElDtoField(logicalName = "user_role", physicalName = "userRole", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private String userRole;
+
+    @ElDtoField(logicalName = "gender", physicalName = "gender", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private String gender;
+
+    @ElDtoField(logicalName = "birth_date", physicalName = "birthDate", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private String birthDate;
+
+    @ElDtoField(logicalName = "phone_number", physicalName = "phoneNumber", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private String phoneNumber;
+
+    @ElDtoField(logicalName = "year_salary", physicalName = "yearSalary", type = "int", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private int yearSalary;
+
+    @ElDtoField(logicalName = "career", physicalName = "career", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private String career;
+
+    @ElDtoField(logicalName = "current_position", physicalName = "currentPosition", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private String currentPosition;
+
+    @ElDtoField(logicalName = "bio", physicalName = "bio", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private String bio;
+
+    @ElDtoField(logicalName = "resume_file_name", physicalName = "resumeFileName", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private String resumeFileName;
+
+    @ElDtoField(logicalName = "test_checked", physicalName = "testChecked", type = "boolean", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private boolean testChecked;
+
+    @ElDtoField(logicalName = "profile_image_name", physicalName = "profileImageName", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private String profileImageName;
+
+    @ElDtoField(logicalName = "preferred_locations", physicalName = "preferredLocations", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private String preferredLocations;
+
+    @ElDtoField(logicalName = "salary_range", physicalName = "salaryRange", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private String salaryRange;
+
+    @ElDtoField(logicalName = "career_period", physicalName = "careerPeriod", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private String careerPeriod;
+
+    @ElDtoField(logicalName = "role_name", physicalName = "roleName", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private String roleName;
+
     @ElVoField(physicalName = "userId")
     public int getUserId(){
         return userId;
@@ -137,6 +182,169 @@ public class UserVo extends com.demo.proworks.cmmn.ProworksCommVO {
         this.roleId = roleId;
     }
 
+    @ElVoField(physicalName = "userRole")
+    public String getUserRole(){
+        String ret = this.userRole;
+        return ret;
+    }
+
+    @ElVoField(physicalName = "userRole")
+    public void setUserRole(String userRole){
+        this.userRole = userRole;
+    }
+
+    @ElVoField(physicalName = "gender")
+    public String getGender(){
+        String ret = this.gender;
+        return ret;
+    }
+
+    @ElVoField(physicalName = "gender")
+    public void setGender(String gender){
+        this.gender = gender;
+    }
+
+    @ElVoField(physicalName = "birthDate")
+    public String getBirthDate(){
+        String ret = this.birthDate;
+        return ret;
+    }
+
+    @ElVoField(physicalName = "birthDate")
+    public void setBirthDate(String birthDate){
+        this.birthDate = birthDate;
+    }
+
+    @ElVoField(physicalName = "phoneNumber")
+    public String getPhoneNumber(){
+        String ret = this.phoneNumber;
+        return ret;
+    }
+
+    @ElVoField(physicalName = "phoneNumber")
+    public void setPhoneNumber(String phoneNumber){
+        this.phoneNumber = phoneNumber;
+    }
+
+    @ElVoField(physicalName = "yearSalary")
+    public int getYearSalary(){
+        return yearSalary;
+    }
+
+    @ElVoField(physicalName = "yearSalary")
+    public void setYearSalary(int yearSalary){
+        this.yearSalary = yearSalary;
+    }
+
+    @ElVoField(physicalName = "career")
+    public String getCareer(){
+        String ret = this.career;
+        return ret;
+    }
+
+    @ElVoField(physicalName = "career")
+    public void setCareer(String career){
+        this.career = career;
+    }
+
+    @ElVoField(physicalName = "currentPosition")
+    public String getCurrentPosition(){
+        String ret = this.currentPosition;
+        return ret;
+    }
+
+    @ElVoField(physicalName = "currentPosition")
+    public void setCurrentPosition(String currentPosition){
+        this.currentPosition = currentPosition;
+    }
+
+    @ElVoField(physicalName = "bio")
+    public String getBio(){
+        String ret = this.bio;
+        return ret;
+    }
+
+    @ElVoField(physicalName = "bio")
+    public void setBio(String bio){
+        this.bio = bio;
+    }
+
+    @ElVoField(physicalName = "resumeFileName")
+    public String getResumeFileName(){
+        String ret = this.resumeFileName;
+        return ret;
+    }
+
+    @ElVoField(physicalName = "resumeFileName")
+    public void setResumeFileName(String resumeFileName){
+        this.resumeFileName = resumeFileName;
+    }
+
+    @ElVoField(physicalName = "testChecked")
+    public boolean isTestChecked(){
+        return testChecked;
+    }
+
+    @ElVoField(physicalName = "testChecked")
+    public void setTestChecked(boolean testChecked){
+        this.testChecked = testChecked;
+    }
+
+    @ElVoField(physicalName = "profileImageName")
+    public String getProfileImageName(){
+        String ret = this.profileImageName;
+        return ret;
+    }
+
+    @ElVoField(physicalName = "profileImageName")
+    public void setProfileImageName(String profileImageName){
+        this.profileImageName = profileImageName;
+    }
+
+    @ElVoField(physicalName = "preferredLocations")
+    public String getPreferredLocations(){
+        String ret = this.preferredLocations;
+        return ret;
+    }
+
+    @ElVoField(physicalName = "preferredLocations")
+    public void setPreferredLocations(String preferredLocations){
+        this.preferredLocations = preferredLocations;
+    }
+
+    @ElVoField(physicalName = "salaryRange")
+    public String getSalaryRange(){
+        String ret = this.salaryRange;
+        return ret;
+    }
+
+    @ElVoField(physicalName = "salaryRange")
+    public void setSalaryRange(String salaryRange){
+        this.salaryRange = salaryRange;
+    }
+
+    @ElVoField(physicalName = "careerPeriod")
+    public String getCareerPeriod(){
+        String ret = this.careerPeriod;
+        return ret;
+    }
+
+    @ElVoField(physicalName = "careerPeriod")
+    public void setCareerPeriod(String careerPeriod){
+        this.careerPeriod = careerPeriod;
+    }
+
+    @ElVoField(physicalName = "roleName")
+    public String getRoleName(){
+        String ret = this.roleName;
+        return ret;
+    }
+
+    @ElVoField(physicalName = "roleName")
+    public void setRoleName(String roleName){
+        this.roleName = roleName;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -149,7 +357,22 @@ public class UserVo extends com.demo.proworks.cmmn.ProworksCommVO {
         sb.append("emailConsent").append("=").append(emailConsent).append(",");
         sb.append("createdAt").append("=").append(createdAt).append(",");
         sb.append("updatedAt").append("=").append(updatedAt).append(",");
-        sb.append("roleId").append("=").append(roleId);
+        sb.append("roleId").append("=").append(roleId).append(",");
+        sb.append("userRole").append("=").append(userRole).append(",");
+        sb.append("gender").append("=").append(gender).append(",");
+        sb.append("birthDate").append("=").append(birthDate).append(",");
+        sb.append("phoneNumber").append("=").append(phoneNumber).append(",");
+        sb.append("yearSalary").append("=").append(yearSalary).append(",");
+        sb.append("career").append("=").append(career).append(",");
+        sb.append("currentPosition").append("=").append(currentPosition).append(",");
+        sb.append("bio").append("=").append(bio).append(",");
+        sb.append("resumeFileName").append("=").append(resumeFileName).append(",");
+        sb.append("testChecked").append("=").append(testChecked).append(",");
+        sb.append("profileImageName").append("=").append(profileImageName).append(",");
+        sb.append("preferredLocations").append("=").append(preferredLocations).append(",");
+        sb.append("salaryRange").append("=").append(salaryRange).append(",");
+        sb.append("careerPeriod").append("=").append(careerPeriod).append(",");
+        sb.append("roleName").append("=").append(roleName);
         sb.append("]");
         return sb.toString();
 

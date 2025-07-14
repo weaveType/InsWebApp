@@ -8,6 +8,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
 import com.demo.proworks.domain.user.service.UserService;
+import com.demo.proworks.domain.user.vo.UserInfoVo;
 import com.demo.proworks.domain.user.vo.UserVo;
 import com.demo.proworks.common.enumType.DevMbti;
 import com.demo.proworks.domain.user.dao.UserDAO;
@@ -125,15 +126,107 @@ public class UserServiceImpl implements UserService {
 		return userDAO.selectUserByEmail(userVo);
 
 	}
-	
-		/**
+
+	/**
 	 * userId를 통해 개발자용 MBTI를 가져온다
 	 *
 	 * @param userId 유저의 id
 	 * @return MBTI 종류
 	 * @throws Exception
 	 */
-	public DevMbti selectDevMbti(int userId) throws Exception{
+	public DevMbti selectDevMbti(int userId) throws Exception {
 		return userDAO.selectDevMbti(userId);
-	};
+	}
+
+	/**
+	 * 이메일 중복 여부를 확인한다.
+	 *
+	 * @param email 확인할 이메일
+	 * @return 중복 여부 (true: 중복, false: 사용 가능)
+	 * @throws Exception
+	 */
+	public boolean checkEmailDuplicate(String email) throws Exception {
+		return userDAO.checkEmailDuplicate(email);
+	}
+
+	/**
+	 * 일반 사용자 회원가입을 처리한다.
+	 *
+	 * @param userVo 회원가입 정보 UserVo
+	 * @return 가입된 사용자 ID
+	 * @throws Exception
+	 */
+	public int registerUser(UserVo userVo) throws Exception {
+		// 이메일 중복 확인
+		if (checkEmailDuplicate(userVo.getEmail())) {
+			throw new Exception("이미 사용 중인 이메일입니다.");
+		}
+
+		return userDAO.registerUser(userVo);
+	}
+
+	/**
+	 * 사용자의 프로필 이미지를 업데이트한다.
+	 *
+	 * @param userId           사용자 ID
+	 * @param profileImageName 프로필 이미지 파일명
+	 * @return 업데이트 결과 (성공 시 1, 실패 시 0)
+	 * @throws Exception
+	 */
+	public int updateProfileImage(Long userId, String profileImageName) throws Exception {
+		return userDAO.updateProfileImage(userId, profileImageName);
+	}
+
+	/**
+	 * 사용자의 추가 정보를 users_info 테이블에 저장하거나 업데이트한다.
+	 *
+	 * @param userVo 사용자 추가 정보 UserVo
+	 * @return 처리 결과 (성공 시 1, 실패 시 0)
+	 * @throws Exception
+	 */
+	public int insertOrUpdateUserInfo(UserVo userVo) throws Exception {
+		// 기존 데이터 존재 여부 확인
+		UserVo existingInfo = userDAO.selectUserInfoByUserId(userVo);
+
+		if (existingInfo != null) {
+			// 기존 데이터가 있으면 업데이트
+			return userDAO.updateUserInfo(userVo);
+		} else {
+			// 기존 데이터가 없으면 신규 삽입
+			return userDAO.insertUserInfo(userVo);
+		}
+	}
+
+	/**
+	 * 사용자의 users_info 정보를 업데이트한다.
+	 *
+	 * @param userVo 사용자 정보 UserVo
+	 * @return 업데이트 결과 (성공 시 1, 실패 시 0)
+	 * @throws Exception
+	 */
+	public int updateUserInfo(UserVo userVo) throws Exception {
+		return userDAO.updateUserInfo(userVo);
+	}
+
+	/**
+	 * 사용자 ID로 users_info 테이블의 정보를 조회한다.
+	 *
+	 * @param userVo 사용자 정보 UserVo
+	 * @return UserVo 사용자 추가 정보 (없으면 null)
+	 * @throws Exception
+	 */
+	public UserVo selectUserInfoByUserId(UserVo userVo) throws Exception {
+		return userDAO.selectUserInfoByUserId(userVo);
+	}
+
+	/**
+	 * 사용자 ID로 users_info 테이블 및 users 의 정보를 조회한다.
+	 *
+	 * @param UserInfoVo 사용자 상세정보에 필요한 Vo
+	 * @return UserInfoVo 사용자 추가 정보 (없으면 null)
+	 * @throws Exception
+	 */
+	public UserInfoVo selectUserDetail(UserInfoVo userInfoVo) throws Exception {
+		return userDAO.selectUserDetail(userInfoVo);
+	}
 }

@@ -197,5 +197,66 @@
         AND (is_deleted IS NULL OR is_deleted = 0)
         LIMIT 1
     </select>
-
+<select id="findPostsByMbti"
+        parameterType="com.demo.proworks.domain.post.vo.PostMatchVo"
+        resultType="com.demo.proworks.domain.post.vo.PostVo">
+<!-- 더 안전한 MBTI 호환성 쿼리 -->
+SELECT /* QueryID : com.demo.proworks.domain.post.findPostsByMbti */
+    p.job_posting_id as jobPostingId,
+    p.company_id as companyId,
+    p.title as title,
+    p.description as description,
+    p.experience_level as experienceLevel,
+    p.salary_range as salaryRange,
+    p.location as location,
+    p.work_type as workType,
+    p.preferred_developer_types as preferredDeveloperTypes,
+    p.expires_at as expiresAt,
+    p.posted_at as postedAt,
+    p.status as status,
+    u.name as companyName,
+    c.industry as industry,
+    c.emp_count as empCount,
+    IFNULL(MAX(compat.match_cnt), 0) as bestMatchCount
+FROM posts p
+INNER JOIN companys c ON p.company_id = c.company_id
+INNER JOIN users u ON c.user_id = u.user_id
+LEFT JOIN JSON_TABLE(
+    p.preferred_developer_types,
+    "$[*]" COLUMNS(mbti CHAR(4) PATH "$")
+) jt ON JSON_VALID(p.preferred_developer_types) AND jt.mbti IS NOT NULL
+LEFT JOIN mbti_compat compat ON compat.code1 = #{userMbti}
+    AND compat.code2 = jt.mbti
+WHERE p.status = 'active'
+    AND p.expires_at > NOW()
+    AND (p.is_deleted IS NULL OR p.is_deleted = 0)
+    AND (c.is_deleted IS NULL OR c.is_deleted = 0)
+GROUP BY p.job_posting_id, p.company_id, p.title, p.description,
+    p.experience_level, p.salary_range, p.location, p.work_type,
+    p.preferred_developer_types, p.expires_at, p.posted_at, p.status,
+    u.name, c.industry, c.emp_count
+<if test="mbtiMatchFilter != null and mbtiMatchFilter != '' and mbtiMatchFilter != '0'">
+HAVING IFNULL(MAX(compat.match_cnt), 0) >= CAST(#{mbtiMatchFilter} AS UNSIGNED)
+</if>
+ORDER BY bestMatchCount DESC, p.posted_at DESC
+<if test="limit != null and limit > 0">
+LIMIT #{limit}
+</if>
+</select>
+<select id="findPostsByMbtiCount" resultType="long" parameterType="com.demo.proworks.domain.post.vo.PostMatchVo">
+<!-- mbti가 일치하는 갯수의 count 를 가져온다 -->
+SELECT COUNT(DISTINCT p.job_posting_id) as totalCount
+FROM posts p
+INNER JOIN companys c ON p.company_id = c.company_id
+LEFT JOIN JSON_TABLE(
+    p.preferred_developer_types, 
+    "$[*]" COLUMNS(mbti CHAR(4) PATH "$")
+) jt ON JSON_VALID(p.preferred_developer_types) AND jt.mbti IS NOT NULL
+LEFT JOIN mbti_compat compat ON compat.code1 = #{userMbti} AND compat.code2 = jt.mbti
+WHERE p.status = 'active'
+    AND p.expires_at > NOW()
+    AND (p.is_deleted IS NULL OR p.is_deleted = 0)
+    AND (c.is_deleted IS NULL OR c.is_deleted = 0)
+    AND IFNULL(compat.match_cnt, 0) >= CAST(#{mbtiMatchFilter} AS UNSIGNED);
+</select>
 </mapper>

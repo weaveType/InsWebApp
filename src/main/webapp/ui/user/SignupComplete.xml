@@ -4,7 +4,7 @@
     xmlns:w2="http://www.inswave.com/websquare" 
     xmlns:xf="http://www.w3.org/2002/xforms">
     
-    <head meta_screenName="weaveType 회원가입 완료">
+    <head meta_screenName="CodeFIT 회원가입 완료">
         <w2:type>COMPONENT</w2:type>
         <w2:buildDate/>
         <w2:MSA/>
@@ -201,11 +201,8 @@
     </head>
     
     <body ev:onpageload="scwin.onpageload">
+        <w2:wframe src="../common/SignupHeader.xml" id="signupHeaderFrame" />
         <xf:group class="main-container">
-            <xf:group class="header">
-                <xf:image src="/InsWebApp/images/ws5/weaveTypeLogo.png" class="header-logo" style="height: 40px; width: auto;"></xf:image>
-                <xf:group class="header-progress"></xf:group>
-            </xf:group>
             
             <xf:group class="content-area">
                 <xf:group class="success-icon">
@@ -213,7 +210,7 @@
                 </xf:group>
                 
                 <w2:textbox class="celebration-text" label="🎉 축하합니다!" tagname="div"></w2:textbox>
-                <w2:textbox class="main-title" label="weaveType 회원가입이 완료되었습니다!" tagname="h1"></w2:textbox>
+                <w2:textbox class="main-title" label="CodeFIT 회원가입이 완료되었습니다!" tagname="h1"></w2:textbox>
                 <w2:textbox class="sub-title" ref="data:dma_complete.userName" formatter="#binding + '님, 환영합니다!' " tagname="p"></w2:textbox>
                 <w2:textbox class="description" label="이제 당신만의 개발자 유형을 분석하고 맞춤형 채용 정보를 받아보세요." tagname="p"></w2:textbox>
                 

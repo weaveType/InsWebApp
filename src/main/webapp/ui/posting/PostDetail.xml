@@ -52,6 +52,13 @@
                 mediatype="application/json" encoding="UTF-8" instance="" replace="" errorHandler="" customHandler="" mode="asynchronous"
                 processMsg="공고 상세정보를 조회중입니다." ev:submit="" ev:submitdone="scwin.sbm_selectPostDetail_submitdone" ev:submiterror="" abortTrigger="">
             </xf:submission>
+            
+            <!-- 공고 삭제 Submission -->
+            <xf:submission id="sbm_deletePost" ref='data:json,{"id":"dmp_postParam","key":"postVo"}'
+                target="" action="/InsWebApp/POS0001Del.pwkjson" method="post"
+                mediatype="application/json" encoding="UTF-8" instance="" replace="" errorHandler="" customHandler="" mode="asynchronous"
+                processMsg="공고를 삭제중입니다." ev:submit="" ev:submitdone="scwin.sbm_deletePost_submitdone" ev:submiterror="" abortTrigger="">
+            </xf:submission>
         </xf:model>
         <w2:layoutInfo/>
         <w2:publicInfo method=""/>
@@ -256,6 +263,43 @@
             .btn-bookmark:hover {
                 background-color: #f8f9fa;
                 border-color: #c8d0d7;
+            }
+
+            /* 기업 사용자용 버튼 스타일 */
+            .btn-edit {
+                background-color: #28a745;
+                color: white;
+                border: none;
+                padding: 12px 20px;
+                border-radius: 25px;
+                font-size: clamp(14px, 2vw, 16px);
+                font-weight: 600;
+                cursor: pointer;
+                min-width: 80px;
+                white-space: nowrap;
+                transition: background-color 0.2s ease;
+            }
+
+            .btn-edit:hover {
+                background-color: #218838;
+            }
+
+            .btn-delete {
+                background-color: #dc3545;
+                color: white;
+                border: none;
+                padding: 12px 20px;
+                border-radius: 25px;
+                font-size: clamp(14px, 2vw, 16px);
+                font-weight: 600;
+                cursor: pointer;
+                min-width: 80px;
+                white-space: nowrap;
+                transition: background-color 0.2s ease;
+            }
+
+            .btn-delete:hover {
+                background-color: #c82333;
             }
 
             /* 공고 내용 섹션 */
@@ -571,10 +615,10 @@ scwin.onpageload = function() {
     }
     
     // 2. URL 쿼리스트링에서 파라미터 추출 시도 (URL 방식으로 전달된 경우)
-    if (!jobPostingId) {
-        jobPostingId = $c.util.getParameter("jobPostingId");
-        console.log("URL에서 jobPostingId 추출:", jobPostingId);
-    }
+    // if (!jobPostingId) {
+    //     jobPostingId = $c.util.getParameter("jobPostingId");
+    //     console.log("URL에서 jobPostingId 추출:", jobPostingId);
+    // }
     
     // 3. 직접 쿼리스트링 파싱 시도
     if (!jobPostingId) {
@@ -677,6 +721,9 @@ scwin.sbm_selectPostDetail_submitdone = function(e) {
         scwin.updateUI();
 
         console.log("✅ 공고 상세 정보 바인딩 완료");
+
+        // 권한 확인 및 UI 업데이트
+        scwin.checkUserPermissionAndUpdateUI();
 
     } catch (error) {
         console.error("데이터 바인딩 중 오류:", error);
@@ -872,6 +919,36 @@ scwin.btnShare_onclick = function(e) {
     }
 };
 
+/**
+ * 공고 삭제 완료 콜백
+ */
+scwin.sbm_deletePost_submitdone = function(e) {
+    console.log("=== 공고 삭제 응답 수신 ===");
+    console.log("응답 데이터:", e.responseJSON);
+
+    var elData = e.responseJSON.elData;
+    var elHeader = e.responseJSON.elHeader;
+
+    // 에러 체크
+    if(elHeader == null || elHeader == "" || elHeader == "undefined" || elHeader.resSuc == false) {
+        console.error("공고 삭제 에러:", elHeader);
+        var errorMsg = "공고를 삭제할 수 없습니다.";
+        if (elHeader && elHeader.resMsg) {
+            errorMsg += "\n" + elHeader.resMsg;
+        }
+        alert(errorMsg);
+        return false;
+    }
+
+    console.log("✅ 공고 삭제 성공");
+    alert("공고가 성공적으로 삭제되었습니다.");
+    
+    // 삭제 후 목록으로 이동
+    setTimeout(function() {
+        scwin.goBackToList();
+    }, 500);
+};
+
 // =========================
 // 유틸리티 함수들
 // =========================
@@ -912,6 +989,149 @@ scwin.getSalaryRangeText = function(salaryRange) {
         default: return salaryRange || '협의';
     }
 };
+
+/**
+ * 쿠키에서 사용자 정보 추출
+ */
+scwin.getUserInfoFromCookie = function() {
+    try {
+        var userInfoCookieStr = WebSquare.cookie.getCookie("userInfo");
+        if (userInfoCookieStr && userInfoCookieStr.trim() !== "") {
+            var userInfo = JSON.parse(userInfoCookieStr);
+            console.log("쿠키에서 추출한 사용자 정보:", userInfo);
+            return userInfo;
+        }
+    } catch (error) {
+        console.error("사용자 정보 쿠키 파싱 오류:", error);
+    }
+    return null;
+};
+
+/**
+ * 현재 사용자가 공고 작성자인지 확인
+ */
+scwin.checkUserPermissionAndUpdateUI = function() {
+    console.log("=== 사용자 권한 확인 시작 ===");
+    
+    var userInfo = scwin.getUserInfoFromCookie();
+    if (!userInfo) {
+        console.log("비로그인 사용자 - 일반 UI 표시");
+        scwin.showGeneralUserUI();
+        return;
+    }
+    
+    console.log("로그인 사용자 정보:", userInfo);
+    console.log("사용자 역할:", userInfo.role);
+    console.log("사용자 회사 ID:", userInfo.companyId);
+    
+    // COMPANY 역할이 아닌 경우 일반 사용자 UI
+    if (userInfo.role !== "COMPANY") {
+        console.log("일반 사용자(USER) - 일반 UI 표시");
+        scwin.showGeneralUserUI();
+        return;
+    }
+    
+    // 공고의 회사 ID 가져오기
+    var postCompanyId = dmp_postDetail.get("companyId");
+    console.log("공고 회사 ID:", postCompanyId);
+    
+    // 회사 ID 타입 변환 후 비교
+    var userCompanyId = userInfo.companyId;
+    
+    // 문자열/숫자 타입이 다를 수 있으므로 문자열로 변환하여 비교
+    if (String(userCompanyId) === String(postCompanyId)) {
+        console.log("✅ 본인 공고 확인됨 - 기업 관리 UI 표시");
+        scwin.showCompanyOwnerUI();
+    } else {
+        console.log("❌ 타 회사 공고 - 일반 UI 표시");
+        console.log("사용자 회사 ID:", userCompanyId, "(타입:", typeof userCompanyId, ")");
+        console.log("공고 회사 ID:", postCompanyId, "(타입:", typeof postCompanyId, ")");
+        scwin.showGeneralUserUI();
+    }
+    
+    console.log("=== 사용자 권한 확인 완료 ===");
+};
+
+/**
+ * 일반 사용자 UI 표시 (지원하기, 북마크)
+ */
+scwin.showGeneralUserUI = function() {
+    console.log("일반 사용자 UI 적용");
+    
+    // 일반 사용자 버튼 표시
+    btnApply.show();
+    btnBookmark.show();
+    
+    // 기업 관리 버튼 숨김
+    btnEdit.hide();
+    btnDelete.hide();
+};
+
+/**
+ * 기업 소유자 UI 표시 (수정하기, 삭제하기)
+ */
+scwin.showCompanyOwnerUI = function() {
+    console.log("기업 소유자 UI 적용");
+    
+    // 일반 사용자 버튼 숨김
+    btnApply.hide();
+    btnBookmark.hide();
+    
+    // 기업 관리 버튼 표시
+    btnEdit.show();
+    btnDelete.show();
+};
+
+// 수정하기 버튼 클릭
+scwin.btnEdit_onclick = function(e) {
+    var jobPostingId = dmp_postDetail.get("jobPostingId");
+    var title = dmp_postDetail.get("title");
+    
+    if (confirm(title + " 공고를 수정하시겠습니까?")) {
+        // TODO: 수정 페이지로 이동
+        console.log("공고 수정 페이지로 이동:", jobPostingId);
+        
+        try {
+            // 수정 페이지로 파라미터와 함께 이동
+            if ($p.parent() && $p.parent().pf_main) {
+                $p.parent().pf_main.setSrc("../post/EditPosting.xml", {
+                    dataObject: {
+                        jobPostingId: jobPostingId
+                    }
+                });
+            } else {
+                // EditPosting.xml이 없으면 일단 알림만
+                alert("수정 페이지로 이동합니다.\n공고 ID: " + jobPostingId);
+            }
+        } catch (error) {
+            console.error("수정 페이지 이동 오류:", error);
+            alert("수정 페이지로 이동 중 오류가 발생했습니다.");
+        }
+    }
+};
+
+// 삭제하기 버튼 클릭
+scwin.btnDelete_onclick = function(e) {
+    var jobPostingId = dmp_postDetail.get("jobPostingId");
+    var title = dmp_postDetail.get("title");
+    
+    if (confirm(title + " 공고를 정말 삭제하시겠습니까?\n삭제된 공고는 복구할 수 없습니다.")) {
+        console.log("공고 삭제 요청:", jobPostingId);
+        
+        // TODO: 삭제 Submission 실행
+        try {
+            // 삭제 파라미터 설정
+            // dmp_postParam에 jobPostingId 설정 (이미 있음)
+            
+            // 삭제 submission 실행 (submission을 추가해야 함)
+            $c.sbm.execute($p, sbm_deletePost);
+            
+        } catch (error) {
+            console.error("공고 삭제 오류:", error);
+            alert("공고 삭제 중 오류가 발생했습니다.");
+        }
+    }
+};
 ]]></script>
     </head>
 
@@ -945,11 +1165,20 @@ scwin.getSalaryRangeText = function(salaryRange) {
                         <w2:textbox class="job-title" ref="data:dmp_postDetail.title"></w2:textbox>
 
                         <xf:group class="job-actions">
-                            <xf:trigger class="btn-apply" type="button" ev:onclick="scwin.btnApply_onclick">
+                            <!-- 일반 사용자용 버튼들 -->
+                            <xf:trigger class="btn-apply" id="btnApply" type="button" ev:onclick="scwin.btnApply_onclick">
                                 <xf:label>지원하기</xf:label>
                             </xf:trigger>
-                            <xf:trigger class="btn-bookmark" type="button" ev:onclick="scwin.btnBookmark_onclick">
+                            <xf:trigger class="btn-bookmark" id="btnBookmark" type="button" ev:onclick="scwin.btnBookmark_onclick">
                                 <xf:label>🤍 북마크</xf:label>
+                            </xf:trigger>
+                            
+                            <!-- 기업 사용자용 버튼들 (작성자 본인만) -->
+                            <xf:trigger class="btn-edit" id="btnEdit" type="button" ev:onclick="scwin.btnEdit_onclick" style="display:none;">
+                                <xf:label>수정하기</xf:label>
+                            </xf:trigger>
+                            <xf:trigger class="btn-delete" id="btnDelete" type="button" ev:onclick="scwin.btnDelete_onclick" style="display:none;">
+                                <xf:label>삭제하기</xf:label>
                             </xf:trigger>
                         </xf:group>
                     </section>

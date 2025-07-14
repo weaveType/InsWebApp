@@ -47,6 +47,8 @@ scwin.onpageload = function () {
     setTimeout(function () {
         scwin.loadCompanyList();
     }, 500);
+
+    
 };
 
 // 로그인 영역 업데이트

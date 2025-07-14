@@ -399,7 +399,6 @@
 		<script lazy="false" type="text/javascript"><![CDATA[
 
 scwin.onpageload = function () {
-    // 디버깅: 모든 세션 정보 확인
     var userInfoStr = WebSquare.cookie.getCookie("userInfo");
     var userInfo = JSON.parse(userInfoStr);
 
@@ -413,8 +412,6 @@ scwin.onpageload = function () {
 
     try {
         var userInfo = JSON.parse(userInfoStr);
-        console.log("userInfoStr:", userInfoStr);
-        console.log("userInfo:", userInfo);
 
         // 권한 확인
         if (userInfo.role !== "COMPANY") {
