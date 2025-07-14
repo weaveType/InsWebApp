@@ -197,43 +197,36 @@
 <select id="findPostsByMbti"
         parameterType="com.demo.proworks.domain.post.vo.PostMatchVo"
         resultType="com.demo.proworks.domain.post.vo.PostVo">
-
-    <!-- ① 사용자 MBTI(4글자 문자열) → 코드(0~15) 매핑 -->
-    WITH dev AS (
-        SELECT code
-        FROM   mbti_code_map
-        WHERE  mbti = #{userMbti}
-    ),
-    /* ② 호환 MBTI 목록 (16행) */
-    compat AS (
-        SELECT c.code2 AS cmp_code,
-               c.diff_cnt,
-               c.match_cnt,
-               CASE c.level
-                    WHEN 'PERFECT' THEN 1
-                    WHEN 'HIGH'    THEN 2
-                    WHEN 'MEDIUM'  THEN 3
-                    WHEN 'LOW'     THEN 4
-                    ELSE 5
-               END AS rank
-        FROM   mbti_compat c
-        JOIN   dev d ON d.code = c.code1      <!-- code1 = 내 MBTI -->
+<!-- ① 사용자 MBTI(4글자 문자열) → 코드(0~15) 매핑 -->
+  WITH user_mbti AS (
+    SELECT #{userMbti} AS mbti
+  ),
+  compat AS (
+    SELECT c.code2 AS preferred_mbti,
+           c.match_cnt
+    FROM mbti_compat c
+    JOIN user_mbti u ON c.code1 = u.mbti
+    WHERE c.match_cnt >= #{mbtiMatchFilter}
+  )
+  SELECT 
+    p.job_posting_id,
+    p.company_id,
+    p.title,
+    p.description,
+    (
+      SELECT MAX(c.match_cnt)
+      FROM compat c
+      WHERE JSON_CONTAINS(p.preferred_developer_types, JSON_QUOTE(c.preferred_mbti))
+    ) AS match_cnt
+  FROM Posts p
+  WHERE p.status = 'active'
+    AND p.expires_at > NOW()
+    AND EXISTS (
+      SELECT 1
+      FROM compat c
+      WHERE JSON_CONTAINS(p.preferred_developer_types, JSON_QUOTE(c.preferred_mbti))
     )
-    /* ③ 실제 공고 조회 */
-    SELECT  p.job_posting_id,
-            p.company_id,
-            p.title,
-            p.description,
-            MIN(c.rank)      AS best_rank,
-            MIN(c.diff_cnt)  AS best_diff,
-            MAX(c.match_cnt) AS best_match
-    FROM    post_mbti_pref pref
-    JOIN    compat c        ON c.cmp_code = pref.code
-    JOIN    Posts  p        ON p.job_posting_id = pref.job_posting_id
-    WHERE   p.status = 'active'
-      AND   p.expires_at > NOW()
-    GROUP BY p.job_posting_id
-    ORDER BY best_rank, best_diff, best_match DESC
-    LIMIT   #{limit}
+  ORDER BY match_cnt DESC, p.posted_at DESC
+  LIMIT #{limit}
 </select>
 </mapper>
