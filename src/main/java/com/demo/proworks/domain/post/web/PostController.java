@@ -99,9 +99,9 @@ public class PostController {
     @ElService(key = "POS0004List")
     @RequestMapping(value = "POS0004List")
     @ElDescription(sub = "공고정보 목록조회", desc = "유저의 기준에서 공고정보 목록 조회를 한다.")
-    public Map<String, Object> findPostsByMbti(PostVo postVo) throws Exception {
+    public Map<String, Object> findPostsByMbti(PostMatchVo postMatchVo) throws Exception {
     	System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> : 여기로 요청옴");
-        List<PostVo> postList = postService.findPostsByMbti(postVo);      
+        List<PostVo> postList = postService.findPostsByMbti(postMatchVo);      
                // 수정해야됨            
         long totCnt = postService.selectListCountPost(new PostVo());
         

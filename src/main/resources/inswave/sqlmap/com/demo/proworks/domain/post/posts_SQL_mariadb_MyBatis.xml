@@ -196,7 +196,7 @@
     </select>
 
 <select id="findPostsByMbti" resultType="com.demo.proworks.domain.post.vo.PostVo" parameterType="com.demo.proworks.domain.post.vo.PostVo">
-    <!-- MBTI별 일치하는 공고를 호환성 순으로 조회 -->
+<!-- MBTI별 일치하는 공고를 호환성 순으로 조회 -->
     SELECT /* QueryID : com.demo.proworks.domain.post.findPostsByMbti */
         p.JOB_POSTING_ID as jobPostingId,
         p.COMPANY_ID as companyId,
@@ -266,8 +266,8 @@
              p.LOCATION, p.WORK_TYPE, p.PREFERRED_DEVELOPER_TYPES, 
              p.EXPIRES_AT, p.POSTED_AT, p.STATUS
     ORDER BY best_rank ASC, best_diff ASC, best_match DESC, p.POSTED_AT DESC
-    <if test="limit != null and limit > 0">
-        LIMIT #{limit}
-    </if>
+	<if test="pageSize != null and pageSize > 0">
+LIMIT   #{offset}, #{pageSize}
+</if>
 </select>
 </mapper>

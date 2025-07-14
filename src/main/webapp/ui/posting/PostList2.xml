@@ -13,8 +13,6 @@
 					<w2:keyInfo>
 						<w2:key dataType="text" id="pageIndex" name="페이지_번호" defaultValue="1"></w2:key>
 						<w2:key dataType="text" id="pageSize" name="페이지_건수" defaultValue="20"></w2:key>
-						<w2:key dataType="text" id="mbtiMatchFilter" name="MBTI_매칭_필터" defaultValue="0"></w2:key>
-						<w2:key dataType="text" name="유저_MBTI" id="userMbti" defaultValue="AAAA"></w2:key>
 					</w2:keyInfo>
 					<w2:data use="false"></w2:data>
 				</w2:dataMap>
@@ -47,6 +45,14 @@
 						<w2:column dataType="text" id="mbti" name="mbti"></w2:column>
 					</w2:columnInfo>
 				</w2:dataList>
+				<w2:dataMap baseNode="map" id="dmp_postMatchVo">
+					<w2:keyInfo>
+						<w2:key dataType="text" name="페이지_번호" id="pageIndex" defaultValue="1"></w2:key>
+						<w2:key defaultValue="20" dataType="text" name="페이지_건수" id="pageSize"></w2:key>
+						<w2:key defaultValue="0" dataType="text" name="MBTI_매칭_필터" id="mbtiMatchFilter"></w2:key>
+						<w2:key defaultValue="AAAA" dataType="text" name="유저_MBTI" id="userMbti"></w2:key>
+					</w2:keyInfo>
+				</w2:dataMap>
 			</w2:dataCollection>
 			<w2:workflowCollection />
 
@@ -58,7 +64,7 @@
 			</xf:submission>
 
 			<!-- 개발자 MBTI 목록 조회 Submission -->
-			<xf:submission id="sbm_selectDevMbtiList" ref="" target='data:json,{"id":"dlt_devMbtiList","key":"elData.devMbtiList"}'
+			<xf:submission id="sbm_selectDevMbtiList" ref='data:json,{"id":"dmp_postMatchVo","key":"postVo"}' target='data:json,{"id":"dlt_postList","key":"elData.postVoList"}'
 				action="/InsWebApp/POS0004List.pwkjson" method="post" mediatype="application/json" encoding="UTF-8" instance="" replace=""
 				errorHandler="" customHandler="" mode="asynchronous" processMsg="개발자 MBTI 목록을 조회중입니다." ev:submit=""
 				ev:submitdone="scwin.sbm_selectDevMbtiList_submitdone" ev:submiterror="" abortTrigger="">
@@ -812,7 +818,7 @@ scwin.slb_dev_mbti_onselected = function () {
             console.log(userInfo);
             // userInfo.mbti가 존재하는지 확인
             if (userInfo && userInfo.mbti) {
-                dmp_postVo.set("userMbti", userInfo.mbti);
+                dmp_postMatchVo.set("userMbti", userInfo.mbti);
             } else {
                 console.error("userInfo 객체에 mbti 값이 없습니다.");
             }
@@ -825,10 +831,10 @@ scwin.slb_dev_mbti_onselected = function () {
     }
 
     // DataMap에 필터 값 설정
-    dmp_postVo.set("mbtiMatchFilter", selectedValue);
+    dmp_postMatchVo.set("mbtiMatchFilter", selectedValue);
 
     // 페이지를 1로 리셋 (필터 변경 시)
-    dmp_postVo.set("pageIndex", "1");
+    dmp_postMatchVo.set("pageIndex", "1");
 
     // 검색 함수 호출 (검색 함수가 있다면)
     // scwin.searchPosts();
