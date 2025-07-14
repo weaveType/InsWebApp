@@ -30,112 +30,7 @@
 		<w2:publicInfo method="" />
 
 		<style type="text/css"><![CDATA[
-        /* 기본 설정 */
-        * {
-            box-sizing: border-box;
-        }
-
-        .main-wrap {
-            width: 100%;
-            background-color: #ffffff;
-            font-family: "Malgun Gothic", "맑은 고딕", sans-serif;
-        }
-
-        /* 헤더 스타일 */
-        .header {
-            width: 100%;
-            height: 70px;
-            background-color: #ffffff;
-            border-bottom: 1px solid #e0e0e0;
-            position: relative;
-            padding: 0 min(30px, 4vw);
-        }
-
-        .header-left {
-            float: left;
-            padding-top: 18px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .nav-menu {
-            display: inline-block;
-            vertical-align: middle;
-        }
-
-        .nav-link {
-            font-size: 14px;
-            color: #333;
-            text-decoration: none;
-            cursor: pointer;
-            margin-right: 20px;
-            vertical-align: middle;
-        }
-
-        .header-right {
-            float: right;
-            padding-top: 18px;
-        }
-
-        .search-container {
-            display: inline-block;
-            background-color: #f5f5f5;
-            border-radius: 20px;
-            padding: 6px 15px;
-            margin-right: 10px;
-            vertical-align: middle;
-        }
-
-        .search-input {
-            border: none;
-            background: transparent;
-            width: 150px;
-            outline: none;
-            font-size: 13px;
-            height: 24px;
-            vertical-align: middle;
-        }
-
-        .search-btn {
-            border: none;
-            background: none;
-            cursor: pointer;
-            margin-left: 8px;
-            font-size: 14px;
-            vertical-align: middle;
-        }
-
-        .btn-login {
-            background-color: #fff;
-            border: 1px solid #ddd;
-            padding: 6px 12px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 12px;
-            margin-right: 8px;
-            height: 32px;
-            vertical-align: middle;
-        }
-
-        .btn-enterprise {
-            background-color: #333;
-            color: #fff;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 12px;
-            height: 32px;
-            vertical-align: middle;
-        }
-
-        .clearfix::after {
-            content: "";
-            display: table;
-            clear: both;
-        }
-
+    
         /* 메인 레이아웃 */
         .main-container {
             display: flex;
@@ -150,7 +45,7 @@
             width: 280px;
             background-color: #ffffff;
             border-right: 1px solid #e0e0e0;
-            padding: 20px 20px 20px 5px; /* 좌측 패딩을 5px로 더 줄임 */
+            padding: 20px 20px 20px 5px;
             flex-shrink: 0;
         }
 
@@ -644,57 +539,6 @@ scwin.startCodeAnalysis_onclick = function () {
     alert("코드분석을 시작합니다.");
 };
 
-// 카드 상태 업데이트 함수
-scwin.updateCardStatus = function () {
-    var mbtiCompleted = dma_userInfoVo.get("is_mbti_checked") === "1";
-    var codeCompleted = dma_userInfoVo.get("is_code_checked") === "1";
-
-    // MBTI 카드 상태 업데이트
-    scwin.updateSingleCard("mbti_card", mbtiCompleted);
-
-    // 코드분석 카드 상태 업데이트
-    scwin.updateSingleCard("code_card", codeCompleted);
-};
-
-// 개별 카드 상태 업데이트
-scwin.updateSingleCard = function (cardId, isCompleted) {
-    try {
-        var cardElement = document.getElementById(cardId);
-        if (!cardElement) return;
-
-        var badgeElement = cardElement.querySelector('.incomplete-badge, .completed-badge');
-        var buttonElement = cardElement.querySelector('.action-card-button');
-
-        if (isCompleted) {
-            cardElement.classList.remove('incomplete');
-            cardElement.classList.add('completed');
-            if (badgeElement) {
-                badgeElement.textContent = '완료';
-                badgeElement.className = 'completed-badge';
-            }
-            if (buttonElement) {
-                buttonElement.style.display = 'none';
-            }
-        } else {
-            cardElement.classList.remove('completed');
-            cardElement.classList.add('incomplete');
-            if (badgeElement) {
-                badgeElement.textContent = '미완료';
-                badgeElement.className = 'incomplete-badge';
-            }
-            if (buttonElement) {
-                buttonElement.style.display = 'block';
-                if (cardId === 'mbti_card') {
-                    buttonElement.textContent = '시작하기';
-                } else if (cardId === 'code_card') {
-                    buttonElement.textContent = '분석하기';
-                }
-            }
-        }
-    } catch (e) {
-        console.log('updateSingleCard 에러:', e);
-    }
-};
 scwin.btn_userUpdate_onclick = function (e) {
     $p.url("updateUser.xml");
 };
