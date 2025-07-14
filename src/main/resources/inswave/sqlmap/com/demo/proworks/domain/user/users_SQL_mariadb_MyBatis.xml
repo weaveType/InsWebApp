@@ -13,6 +13,7 @@
 	DATE AUTHOR DESC
 	===========================================================
 	2025/07/03 Inswave 최초 생성
+	2025/01/10 이미지 기준 데이터베이스 구조로 수정
 -->
 <mapper namespace="com.demo.proworks.domain.user">
 	<insert id="insertUser" parameterType="com.demo.proworks.domain.user.vo.UserVo" useGeneratedKeys="true" keyProperty="userId">
@@ -22,21 +23,34 @@
 		(
 		EMAIL
 		<if test="password     != null"> , PASSWORD      </if>
-		<if test="roleId      != null"> , ROLE_ID       </if>
+		<if test="userRole     != null"> , USER_ROLE     </if>
 		<if test="name         != null"> , NAME          </if>
-		<if test="emailConsent!= null"> , EMAIL_CONSENT </if>
-		<if test="createdAt   != null"> , CREATED_AT    </if>
-		<if test="updatedAt   != null"> , UPDATED_AT    </if>
+		<if test="emailConsent != null"> , IS_EMAIL_CONSENT </if>
+		<if test="createdAt    != null"> , CREATED_AT    </if>
+		<if test="updatedAt    != null"> , UPDATED_AT    </if>
 		)
 		VALUES
 		(
 		#{email}
 		<if test="password     != null"> , #{password}      </if>
-		<if test="roleId      != null"> , #{roleId}       </if>
+		<if test="userRole     != null"> , #{userRole}     </if>
 		<if test="name         != null"> , #{name}          </if>
-		<if test="emailConsent!= null"> , #{emailConsent} </if>
-		<if test="createdAt   != null"> , #{createdAt}    </if>
-		<if test="updatedAt   != null"> , #{updatedAt}    </if>
+		<if test="emailConsent != null"> , #{emailConsent} </if>
+		<if test="createdAt    != null"> , #{createdAt}    </if>
+		<if test="updatedAt    != null"> , #{updatedAt}    </if>
+		)
+	</insert>
+
+	<insert id="registerUser" parameterType="com.demo.proworks.domain.user.vo.UserVo" useGeneratedKeys="true" keyProperty="userId">
+		<!-- 일반 사용자 회원가입을 처리한다. (기본 정보만 users 테이블에 저장) -->
+
+		INSERT INTO USERS /* QueryID : com.demo.proworks.domain.user.registerUser */
+		(
+		EMAIL, PASSWORD, USER_ROLE, NAME, IS_EMAIL_CONSENT
+		)
+		VALUES
+		(
+		#{email}, #{password}, #{userRole}, #{name}, #{emailConsent}
 		)
 	</insert>
 
@@ -48,11 +62,11 @@
 		USER_ID = #{userId}
 		<if test="email        != null"> , EMAIL = #{email}         </if>
 		<if test="password     != null"> , PASSWORD = #{password}      </if>
-		<if test="roleId      != null"> , ROLE_ID = #{roleId}       </if>
+		<if test="userRole     != null"> , USER_ROLE = #{userRole}     </if>
 		<if test="name         != null"> , NAME = #{name}          </if>
-		<if test="emailConsent!= null"> , EMAIL_CONSENT = #{emailConsent} </if>
-		<if test="createdAt   != null"> , CREATED_AT = #{createdAt}    </if>
-		<if test="updatedAt   != null"> , UPDATED_AT = #{updatedAt}    </if>
+		<if test="emailConsent != null"> , IS_EMAIL_CONSENT = #{emailConsent} </if>
+		<if test="createdAt    != null"> , CREATED_AT = #{createdAt}    </if>
+		<if test="updatedAt    != null"> , UPDATED_AT = #{updatedAt}    </if>
 		WHERE USER_ID = #{userId}
 	</update>
 
@@ -66,18 +80,35 @@
 
 	<select id="selectUser" parameterType="com.demo.proworks.domain.user.vo.UserVo" resultType="com.demo.proworks.domain.user.vo.UserVo">
 		<!-- 일반회원를 상세 조회한다. -->
-		SELECT u.USER_ID as userId, u.EMAIL as email, u.PASSWORD as password, r.DESCRIPTION as description, u.NAME as name, u.EMAIL_CONSENT as
-		emailConsent, u.CREATED_AT as createdAt, u.UPDATED_AT as updatedAt FROM USERS u JOIN ROLES r ON u.ROLE_ID = r.ROLE_ID WHERE u.USER_ID =
-		#{userId}
+		SELECT /* QueryID : com.demo.proworks.domain.user.selectUser */
+		USER_ID as userId, 
+		EMAIL as email, 
+		PASSWORD as password, 
+		USER_ROLE as userRole, 
+		NAME as name, 
+		IS_EMAIL_CONSENT as emailConsent, 
+		CREATED_AT as createdAt, 
+		UPDATED_AT as updatedAt 
+		FROM USERS 
+		WHERE USER_ID = #{userId}
 	</select>
 
 	<select id="selectListUser" parameterType="com.demo.proworks.domain.user.vo.UserVo"
 		resultType="com.demo.proworks.domain.user.vo.UserVo">
 		<!-- 일반회원 목록을 조회한다. -->
-		SELECT /* QueryID : com.demo.proworks.domain.user.selectListUser */ u.USER_ID as userId, u.EMAIL as email, u.PASSWORD as password,
-		u.ROLE_ID as roleId, r.DESCRIPTION as description, u.NAME as name, u.EMAIL_CONSENT as emailConsent, u.CREATED_AT as createdAt,
-		u.UPDATED_AT as updatedAt FROM ( SELECT S.*, CEIL((@ROWNUM:=@ROWNUM+1) / #{pageSize}) AS PAGE FROM ( SELECT u.*, r.DESCRIPTION FROM USERS
-		u JOIN ROLES r ON u.ROLE_ID = r.ROLE_ID WHERE 1=1 /* 여기에 추가 조건이 있으면 작성 */ ) S, (SELECT @ROWNUM := 0) TMP ) A WHERE PAGE = #{pageIndex}
+		SELECT /* QueryID : com.demo.proworks.domain.user.selectListUser */ 
+		USER_ID as userId, 
+		EMAIL as email, 
+		PASSWORD as password,
+		USER_ROLE as userRole, 
+		NAME as name, 
+		IS_EMAIL_CONSENT as emailConsent, 
+		CREATED_AT as createdAt,
+		UPDATED_AT as updatedAt 
+		FROM USERS
+		WHERE 1=1
+		/* 여기에 추가 조건이 있으면 작성 */
+		LIMIT #{pageIndex}, #{pageSize}
 	</select>
 
 	<select id="selectListCountUser" parameterType="com.demo.proworks.domain.user.vo.UserVo" resultType="long">
@@ -90,15 +121,30 @@
 
 	</select>
 
+	<select id="checkEmailDuplicateCount" parameterType="com.demo.proworks.domain.user.vo.UserVo" resultType="long">
+		<!-- 이메일 중복 여부를 확인한다. -->
+		SELECT /* QueryID : com.demo.proworks.domain.user.checkEmailDuplicateCount */ 
+		COUNT(*) 
+		FROM USERS 
+		WHERE EMAIL = #{email}
+	</select>
+
 	<select id="selectUserByEmail" parameterType="com.demo.proworks.domain.user.vo.UserVo"
 		resultType="com.demo.proworks.domain.user.vo.UserVo">
 <!-- 이메일로 일반회원을 상세 조회한다. -->
 		SELECT /* QueryID : com.demo.proworks.domain.user.selectUserByEmail */ 
-		USER_ID as userId, EMAIL as email, PASSWORD as password, ROLE_ID as
-		roleId, NAME as name, EMAIL_CONSENT as emailConsent, CREATED_AT as createdAt, UPDATED_AT as updatedAt 
+		USER_ID as userId, 
+		EMAIL as email, 
+		PASSWORD as password, 
+		USER_ROLE as userRole, 
+		NAME as name, 
+		IS_EMAIL_CONSENT as emailConsent, 
+		CREATED_AT as createdAt, 
+		UPDATED_AT as updatedAt 
 		FROM USERS 
 		WHERE EMAIL = #{email}
 </select>
+
 <select id="selectDevMbti" parameterType="int" resultType="com.demo.proworks.common.enumType.DevMbti">
 <!-- userId로 개발자 Mbti를 가져온다 -->
 SELECT	/* QueryID : com.demo.proworks.domain.user.getDevMbti */  
@@ -106,4 +152,83 @@ SELECT	/* QueryID : com.demo.proworks.domain.user.getDevMbti */
 	FROM users_mbti_types 
     WHERE user_id = #{userId}
 </select>
+
+	<update id="updateProfileImage" parameterType="java.util.Map">
+		<!-- 사용자의 프로필 이미지를 업데이트한다. -->
+		UPDATE USERS_INFO /* QueryID : com.demo.proworks.domain.user.updateProfileImage */
+		SET PROFILE_IMAGE_NAME = #{profileImageName},
+		    UPDATED_AT = CURRENT_TIMESTAMP
+		WHERE USER_ID = #{userId}
+	</update>
+
+	<!-- users_info 테이블 관련 쿼리들 -->
+	<select id="selectUserInfoByUserId" parameterType="com.demo.proworks.domain.user.vo.UserVo" resultType="com.demo.proworks.domain.user.vo.UserVo">
+		<!-- 사용자 ID로 users_info 테이블의 정보를 조회한다. -->
+		SELECT /* QueryID : com.demo.proworks.domain.user.selectUserInfoByUserId */
+		USER_ID as userId,
+		YEAR_SALARY as yearSalary,
+		CAREER as career,
+		CURRENT_POSITION as currentPosition,
+		PREFERRED_LOCATIONS as preferredLocations,
+		BIO as bio,
+		RESUME_FILE_NAME as resumeFileName,
+		TEST_CHECKED as testChecked,
+		GENDER as gender,
+		BIRTHDATE as birthDate,
+		PROFILE_IMAGE_NAME as profileImageName,
+		CREATED_AT as createdAt,
+		UPDATED_AT as updatedAt
+		FROM USERS_INFO
+		WHERE USER_ID = #{userId}
+	</select>
+
+	<insert id="insertUserInfo" parameterType="com.demo.proworks.domain.user.vo.UserVo">
+		<!-- users_info 테이블에 새로운 사용자 정보를 삽입한다. -->
+		INSERT INTO USERS_INFO /* QueryID : com.demo.proworks.domain.user.insertUserInfo */
+		(
+		USER_ID,
+		YEAR_SALARY,
+		CAREER,
+		CURRENT_POSITION,
+		PREFERRED_LOCATIONS,
+		BIO,
+		RESUME_FILE_NAME,
+		TEST_CHECKED,
+		GENDER,
+		BIRTHDATE,
+		PROFILE_IMAGE_NAME
+		)
+		VALUES
+		(
+		#{userId},
+		#{yearSalary},
+		#{career},
+		#{currentPosition},
+		#{preferredLocations},
+		#{bio},
+		#{resumeFileName},
+		#{testChecked},
+		#{gender},
+		#{birthDate},
+		#{profileImageName}
+		)
+	</insert>
+
+	<update id="updateUserInfo" parameterType="com.demo.proworks.domain.user.vo.UserVo">
+		<!-- users_info 테이블의 사용자 정보를 업데이트한다. -->
+		UPDATE USERS_INFO /* QueryID : com.demo.proworks.domain.user.updateUserInfo */
+		SET 
+		<if test="yearSalary != null">YEAR_SALARY = #{yearSalary},</if>
+		<if test="career != null">CAREER = #{career},</if>
+		<if test="currentPosition != null">CURRENT_POSITION = #{currentPosition},</if>
+		<if test="preferredLocations != null">PREFERRED_LOCATIONS = #{preferredLocations},</if>
+		<if test="bio != null">BIO = #{bio},</if>
+		<if test="resumeFileName != null">RESUME_FILE_NAME = #{resumeFileName},</if>
+		<if test="testChecked != null">TEST_CHECKED = #{testChecked},</if>
+		<if test="gender != null">GENDER = #{gender},</if>
+		<if test="birthDate != null">BIRTHDATE = #{birthDate},</if>
+		<if test="profileImageName != null">PROFILE_IMAGE_NAME = #{profileImageName},</if>
+		UPDATED_AT = CURRENT_TIMESTAMP
+		WHERE USER_ID = #{userId}
+	</update>
 </mapper>

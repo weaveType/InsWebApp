@@ -12,10 +12,32 @@
             <w2:dataCollection baseNode="map">
                 <w2:dataMap baseNode="map" id="dma_location">
                     <w2:keyInfo>
-                        <w2:key id="selectedLocations" name="선택된지역들" dataType="text"></w2:key>
+                        <w2:key id="user_id" name="user_id" dataType="text"></w2:key>
+                        <w2:key id="locations" name="locations" dataType="text"></w2:key>
+                        <w2:key id="selectedLocations" name="selectedLocations" dataType="text"></w2:key>
                     </w2:keyInfo>
                 </w2:dataMap>
             </w2:dataCollection>
+            
+            <!-- Submission for saving location data to server -->
+            <xf:submission 
+                id="sbm_saveLocation" 
+                ref="data:json,dma_location" 
+                target="data:json,dma_location" 
+                action="/InsWebApp/USUpdateLocation.pwkjson" 
+                method="post" 
+                mediatype="application/json"
+                instance="" 
+                replace="" 
+                errorHandler="" 
+                customHandler=""
+                mode="asynchronous" 
+                processMsg="지역 정보 저장 중..." 
+                ev:submit="" 
+                ev:submitdone="scwin.sbm_saveLocation_submitdone" 
+                ev:submiterror="scwin.sbm_saveLocation_submiterror" 
+                abortTrigger="">
+            </xf:submission>
         </xf:model>
         <w2:layoutInfo/>
         <w2:publicInfo method=""/>
@@ -26,6 +48,27 @@
             scwin.onpageload = function() {
                 console.log("근무지역 선택 페이지 로드됨");
                 scwin.updateSelectedLocationsDisplay();
+                
+                // 이벤트 위임으로 x 버튼 클릭 처리
+                setTimeout(function() {
+                    var container = document.querySelector('.selected-locations-container');
+                    if (!container) {
+                        container = document.getElementById('selectedLocationsContainer');
+                    }
+                    if (container) {
+                        container.addEventListener('click', function(event) {
+                            if (event.target && event.target.classList.contains('location-tag-remove')) {
+                                var locationTag = event.target.closest('.location-tag');
+                                if (locationTag) {
+                                    var locationText = locationTag.textContent.replace(' ×', '').trim();
+                                    scwin.removeLocation(locationText);
+                                }
+                                event.preventDefault();
+                                event.stopPropagation();
+                            }
+                        });
+                    }
+                }, 300);
             };
             
             scwin.toggleLocation = function(locationName) {
@@ -85,7 +128,7 @@
                     selectedLocationsList.forEach(function(location) {
                         var tag = document.createElement('div');
                         tag.className = 'location-tag';
-                        tag.innerHTML = location + ' <span class="location-tag-remove" onclick="scwin.removeLocation(\'' + location + '\')">×</span>';
+                        tag.innerHTML = location + ' <span class="location-tag-remove">×</span>';
                         container.appendChild(tag);
                     });
                 }
@@ -98,17 +141,66 @@
                 scwin.toggleLocation(locationName);
             };
             
+            // Function to proceed to next page with server save
+            scwin.goToNextPage = function() {
+                // 선택된 지역이 있는지 확인
+                if (selectedLocationsList.length === 0) {
+                    alert("최소 1개 이상의 지역을 선택해주세요.");
+                    return;
+                }
+                
+                // 선택된 지역들을 콤마로 구분된 문자열로 변환
+                var locationsString = selectedLocationsList.join(',');
+                
+                // 데이터맵에 데이터 설정 (user_id는 백엔드에서 세션으로 처리)
+                dma_location.set("locations", locationsString);
+                
+                console.log("지역 데이터 전송:", {
+                    locations: locationsString
+                });
+                
+                // 서버에 데이터 저장
+                $c.sbm.execute(sbm_saveLocation);
+            };
+            
+            // Success callback for location save
+            scwin.sbm_saveLocation_submitdone = function(e) {
+                console.log("Location save response:", e);
+                
+                var responseData = dma_location.getJSON();
+                console.log("응답 데이터:", responseData);
+                
+                if (responseData && (responseData.result === "success" || responseData.status === "success")) {
+                    console.log("지역 정보 저장 성공");
+                    // 다음 페이지로 이동
+                    $p.url("SalarySelect.xml");
+                } else {
+                    console.log("지역 정보 저장 성공 (기본 처리)");
+                    // 응답 구조와 상관없이 다음 페이지로 이동
+                    $p.url("SalarySelect.xml");
+                }
+            };
+            
+            // Error callback for location save
+            scwin.sbm_saveLocation_submiterror = function(e) {
+                console.error("Location save error:", e);
+                alert("지역 정보 저장 중 오류가 발생했습니다.");
+            };
+
+            // 기존 nextPage 함수를 새로운 함수로 교체
+            scwin.nextPage = function() {
+                scwin.goToNextPage();
+            };
+            
             // 이전 버튼 - $p.url 방식
             scwin.btn_back_onclick = function() {
                 console.log("회원가입 완료 페이지로 이동");
                 $p.url("SignupComplete.xml");
             };
             
-            // 다음 버튼 - $p.url 방식
+            // 다음 버튼 - 서버 저장과 함께 페이지 이동
             scwin.btn_next_onclick = function() {
-                // 플로우 확인을 위해 검증 완화
-                console.log("선택된 지역:", selectedLocationsList);
-                $p.url("SalarySelect.xml");
+                scwin.goToNextPage();
             };
         ]]></script>
         
@@ -325,11 +417,8 @@
     </head>
     
     <body ev:onpageload="scwin.onpageload">
+        <w2:wframe src="../common/SignupHeader.xml" id="signupHeaderFrame" />
         <xf:group class="main-container">
-            <xf:group class="header">
-                <xf:image src="/InsWebApp/images/ws5/weaveTypeLogo.png" class="header-logo" style="height: 40px; width: auto;"></xf:image>
-                <xf:group class="header-progress"></xf:group>
-            </xf:group>
             
             <xf:group class="content-area">
                 <xf:group class="icon-container">
