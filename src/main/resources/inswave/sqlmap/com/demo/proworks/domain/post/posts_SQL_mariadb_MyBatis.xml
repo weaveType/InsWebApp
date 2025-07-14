@@ -109,17 +109,10 @@
                STATUS as status		       
            FROM POSTS
            WHERE  1=1
-           AND (IS_DELETED IS NULL OR IS_DELETED = 0)    
            <if test="companyId != null and companyId != ''">
            AND COMPANY_ID = #{companyId}
            </if>
            ORDER BY POSTED_AT DESC
-           <if test="pageSize != null and pageSize > 0">
-           LIMIT #{pageSize}
-           <if test="pageIndex != null and pageIndex > 0">
-           OFFSET #{pageSize} * (#{pageIndex} - 1)
-           </if>
-           </if>
     </select>
 	
     <select id="selectListCountPost" parameterType="com.demo.proworks.domain.post.vo.PostVo" resultType="long">
@@ -129,7 +122,6 @@
              COUNT(*) totcnt  		                  
          FROM POSTS
          WHERE  1=1
-         AND (IS_DELETED IS NULL OR IS_DELETED = 0)
          <if test="companyId != null and companyId != ''">
          AND COMPANY_ID = #{companyId}
          </if>
