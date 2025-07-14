@@ -560,11 +560,11 @@ scwin.showEmptyState = function () {
     var jobCardsContainer = document.querySelector('.job-cards');
     if (jobCardsContainer) {
         jobCardsContainer.innerHTML =
-            '<div class="empty-state">' +
+            '<xf:group class="empty-state">' +
             '<img src="/InsWebApp/images/ws5/not_found.png" alt="빈 상태 이미지" class="empty-image" style="width: 150px; height: 150px; margin-top: 50px; margin-bottom: 50px;" />' +
-            '<div class="empty-message">등록된 채용공고가 없습니다</div>' +
-            '<div class="empty-submessage">나중에 다시 확인해보세요</div>' +
-            '</div>';
+            '<xf:group class="empty-message">등록된 채용공고가 없습니다</xf:group>' +
+            '<xf:group class="empty-submessage">나중에 다시 확인해보세요</xf:group>' +
+            '</xf:group>';
     }
 };
 
