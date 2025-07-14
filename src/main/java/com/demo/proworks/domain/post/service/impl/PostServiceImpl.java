@@ -358,4 +358,8 @@ public class PostServiceImpl implements PostService {
 		return postDAO.findPostsByMbti(vo);
 	};
 
+	public long findPostsByMbtiCount(PostMatchVo postMatchVo) throws Exception{
+	return postDAO.findPostsByMbtiCount(postMatchVo);
+	};
+	
 }

@@ -1,158 +1,83 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<html xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:ev="http://www.w3.org/2001/xml-events"
-    xmlns:w2="http://www.inswave.com/websquare" 
-    xmlns:xf="http://www.w3.org/2002/xforms">
-    
-    <head meta_screenName="채용공고 목록">
-        <w2:type>COMPONENT</w2:type>
-        <w2:buildDate/>
-        <w2:MSA/>
-        <xf:model>
-            <w2:dataCollection baseNode="map">
-                <!-- 공고 목록 조회용 -->
-                <w2:dataMap baseNode="map" id="dmp_postVo" style="">
-                    <w2:keyInfo>
-                        <w2:key dataType="text" id="pageIndex" name="페이지_번호" defaultValue="1"></w2:key>
-                        <w2:key dataType="text" id="pageSize" name="페이지_건수" defaultValue="20"></w2:key>
-                    </w2:keyInfo>
-                    <w2:data use="false"></w2:data>
-                </w2:dataMap>
-                
-                <!-- 공고 목록 데이터 -->
-                <w2:dataList baseNode="list" id="dlt_postList" repeatNode="map" saveRemovedData="true" style="">
-                    <w2:columnInfo>
-                        <w2:column dataType="text" id="jobPostingId" name="job_posting_id"></w2:column>
-                        <w2:column dataType="text" id="companyId" name="company_id"></w2:column>
-                        <w2:column dataType="text" id="title" name="title"></w2:column>
-                        <w2:column dataType="text" id="description" name="description"></w2:column>
-                        <w2:column dataType="text" id="experienceLevel" name="experience_level"></w2:column>
-                        <w2:column dataType="text" id="salaryRange" name="salary_range"></w2:column>
-                        <w2:column dataType="text" id="location" name="location"></w2:column>
-                        <w2:column dataType="text" id="workType" name="work_type"></w2:column>
-                        <w2:column dataType="text" id="expiresAt" name="expires_at"></w2:column>
-                        <w2:column dataType="text" id="postedAt" name="posted_at"></w2:column>
-                        <w2:column dataType="text" id="status" name="status"></w2:column>
-                        <w2:column dataType="text" id="companyName" name="company_name"></w2:column>
-                        <w2:column dataType="text" id="industry" name="industry"></w2:column>
-                        <w2:column dataType="text" id="empCount" name="emp_count"></w2:column>
-                        <w2:column dataType="text" id="techStackNames" name="tech_stack_names"></w2:column>
-                        <w2:column dataType="text" id="preferredDeveloperTypes" name="preferred_developer_types"></w2:column>
-                    </w2:columnInfo>
-                </w2:dataList>
-            </w2:dataCollection>
-            <w2:workflowCollection/>
-            
-            <!-- 공고 목록 조회 Submission -->
-            <xf:submission id="sbm_selectPostList" ref='data:json,{"id":"dmp_postVo","key":"postVo"}'
-                target='data:json,{"id":"dlt_postList","key":"elData.postVoList"}' action="/InsWebApp/POS0001List.pwkjson" method="post"
-                mediatype="application/json" encoding="UTF-8" instance="" replace="" errorHandler="" customHandler="" mode="asynchronous"
-                processMsg="채용공고 목록을 조회중입니다." ev:submit="" ev:submitdone="scwin.sbm_selectPostList_submitdone" ev:submiterror="" abortTrigger="">
-            </xf:submission>
-        </xf:model>
-        <w2:layoutInfo/>
-        <w2:publicInfo method=""/>
-        
-        <style type="text/css"><![CDATA[
-            /* 기본 설정 */
-            * {
-                box-sizing: border-box;
-            }
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare"
+	xmlns:xf="http://www.w3.org/2002/xforms">
 
-            body {
-                margin: 0;
-                padding: 0;
-                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-                background-color: #ffffff;
-                line-height: 1.6;
-            }
+	<head meta_screenName="채용공고 목록">
+		<w2:type>COMPONENT</w2:type>
+		<w2:buildDate />
+		<w2:MSA />
+		<xf:model>
+			<w2:dataCollection baseNode="map">
+				<!-- 공고 목록 조회용 -->
+				<w2:dataMap baseNode="map" id="dmp_postVo" style="">
+					<w2:keyInfo>
+						<w2:key dataType="text" id="pageIndex" name="페이지_번호" defaultValue="1"></w2:key>
+						<w2:key dataType="text" id="pageSize" name="페이지_건수" defaultValue="20"></w2:key>
+					</w2:keyInfo>
+					<w2:data use="false"></w2:data>
+				</w2:dataMap>
+
+				<!-- 공고 목록 데이터 -->
+				<w2:dataList baseNode="list" id="dlt_postList" repeatNode="map" saveRemovedData="true" style="">
+					<w2:columnInfo>
+						<w2:column dataType="text" id="jobPostingId" name="job_posting_id"></w2:column>
+						<w2:column dataType="text" id="companyId" name="company_id"></w2:column>
+						<w2:column dataType="text" id="title" name="title"></w2:column>
+						<w2:column dataType="text" id="description" name="description"></w2:column>
+						<w2:column dataType="text" id="experienceLevel" name="experience_level"></w2:column>
+						<w2:column dataType="text" id="salaryRange" name="salary_range"></w2:column>
+						<w2:column dataType="text" id="location" name="location"></w2:column>
+						<w2:column dataType="text" id="workType" name="work_type"></w2:column>
+						<w2:column dataType="text" id="expiresAt" name="expires_at"></w2:column>
+						<w2:column dataType="text" id="postedAt" name="posted_at"></w2:column>
+						<w2:column dataType="text" id="status" name="status"></w2:column>
+						<w2:column dataType="text" id="companyName" name="company_name"></w2:column>
+						<w2:column dataType="text" id="industry" name="industry"></w2:column>
+						<w2:column dataType="text" id="empCount" name="emp_count"></w2:column>
+						<w2:column dataType="text" id="techStackNames" name="tech_stack_names"></w2:column>
+						<w2:column dataType="text" id="preferredDeveloperTypes" name="preferred_developer_types"></w2:column>
+					</w2:columnInfo>
+				</w2:dataList>
+
+				<!-- 개발자 MBTI 목록 데이터 -->
+				<w2:dataList baseNode="list" id="dlt_devMbtiList" repeatNode="map" style="">
+					<w2:columnInfo>
+						<w2:column dataType="text" id="mbti" name="mbti"></w2:column>
+					</w2:columnInfo>
+				</w2:dataList>
+				<w2:dataMap baseNode="map" id="dmp_postMatchVo">
+					<w2:keyInfo>
+						<w2:key dataType="text" name="페이지_번호" id="pageIndex" defaultValue="1"></w2:key>
+						<w2:key defaultValue="20" dataType="text" name="페이지_건수" id="pageSize"></w2:key>
+						<w2:key defaultValue="0" dataType="text" name="MBTI_매칭_필터" id="mbtiMatchFilter"></w2:key>
+						<w2:key defaultValue="AAAA" dataType="text" name="유저_MBTI" id="userMbti"></w2:key>
+					</w2:keyInfo>
+				</w2:dataMap>
+			</w2:dataCollection>
+			<w2:workflowCollection />
+
+			<!-- 공고 목록 조회 Submission -->
+			<xf:submission id="sbm_selectPostList" ref='data:json,{"id":"dmp_postVo","key":"postVo"}'
+				target='data:json,{"id":"dlt_postList","key":"elData.postVoList"}' action="/InsWebApp/POS0001List.pwkjson" method="post"
+				mediatype="application/json" encoding="UTF-8" instance="" replace="" errorHandler="" customHandler="" mode="asynchronous"
+				processMsg="채용공고 목록을 조회중입니다." ev:submit="" ev:submitdone="scwin.sbm_selectPostList_submitdone" ev:submiterror="" abortTrigger="">
+			</xf:submission>
+
+			<!-- 개발자 MBTI 목록 조회 Submission -->
+			<xf:submission id="sbm_selectDevMbtiList" ref='data:json,{"id":"dmp_postMatchVo","key":"postMatchVo"}' target='data:json,{"id":"dlt_postList","key":"elData.postVoList"}'
+				action="/InsWebApp/POS0004List.pwkjson" method="post" mediatype="application/json" encoding="UTF-8" instance="" replace=""
+				errorHandler="" customHandler="" mode="asynchronous" processMsg="개발자 MBTI 목록을 조회중입니다." ev:submit=""
+				ev:submitdone="scwin.sbm_selectDevMbtiList_submitdone" ev:submiterror="" abortTrigger="">
+			</xf:submission>
+		</xf:model>
+		<w2:layoutInfo />
+		<w2:publicInfo method="" />
+
+		<style type="text/css"><![CDATA[
 
             .main-wrap {
                 width: 100%;
                 background-color: #ffffff;
-            }
-
-            /* 필터 섹션 */
-            .filter-section {
-                background-color: #ffffff;
-                border-bottom: 1px solid #e8e8e8;
-                padding: 16px 20px;
-            }
-
-            .main-filters {
-                display: flex;
-                align-items: center;
-                gap: 16px;
-                margin-bottom: 16px;
-            }
-
-            .filter-dropdown {
-                position: relative;
-                display: flex;
-                align-items: center;
-                gap: 8px;
-                padding: 12px 16px;
-                border: 1px solid #e1e2e3;
-                border-radius: 25px;
-                background: white;
-                cursor: pointer;
-                font-size: 14px;
-                font-weight: 600;
-                transition: all 0.2s;
-            }
-
-            .filter-dropdown:hover {
-                border-color: #36f;
-            }
-
-            .filter-dropdown.active {
-                border-color: #36f;
-                color: #36f;
-            }
-
-            .dropdown-arrow {
-                width: 12px;
-                height: 12px;
-                transition: transform 0.2s;
-            }
-
-            .filter-tags {
-                display: flex;
-                align-items: center;
-                gap: 8px;
-                flex-wrap: wrap;
-            }
-
-            .filter-tag {
-                display: flex;
-                align-items: center;
-                gap: 4px;
-                padding: 8px 12px;
-                background-color: #f8f9fa;
-                border: 1px solid #e1e2e3;
-                border-radius: 18px;
-                font-size: 13px;
-                color: #333;
-                cursor: pointer;
-                transition: all 0.2s;
-                white-space: nowrap;
-            }
-
-            .filter-tag:hover {
-                border-color: #36f;
-                color: #36f;
-            }
-
-            .filter-tag.active {
-                background-color: #36f;
-                border-color: #36f;
-                color: white;
-            }
-
-            .filter-tag.highlight {
-                background-color: #fff4e6;
-                border-color: #ffa940;
-                color: #d48806;
             }
 
             /* 메인 컨텐츠 */
@@ -428,34 +353,29 @@
                 }
             }
         ]]></style>
-        
-        <script lazy="false" type="text/javascript"><![CDATA[
+
+		<script lazy="false" type="text/javascript"><![CDATA[
 scwin.onpageload = function () {
     // 페이지 로드 시 초기화
     console.log("채용공고 목록 페이지 로드");
-    
+
     // 초기 공고 목록 조회
     scwin.loadPostList();
-    
-    // 검색 이벤트 바인딩
-};
 
-// ========================= 
-// 공고 목록 조회 기능
-// =========================
+    // 로그인 하지 않았을 경우 
+    scwin.checkUserStatusAndHideFilter();
+};
 
 /**
  * 공고 목록 조회
  */
-scwin.loadPostList = function() {
-    console.log("=== 공고 목록 조회 시작 ===");
-    
+scwin.loadPostList = function () {
     // 로딩 상태 표시
     scwin.showLoadingState();
-    
+
     // 페이지 번호 초기화
     dmp_postVo.set("pageIndex", "1");
-    
+
     // 서버통신 - 공고정보 조회
     $c.sbm.execute($p, sbm_selectPostList);
 };
@@ -463,7 +383,7 @@ scwin.loadPostList = function() {
 /**
  * 공고 목록 조회 완료
  */
-scwin.sbm_selectPostList_submitdone = function(e) {
+scwin.sbm_selectPostList_submitdone = function (e) {
     console.log("=== 공고 목록 조회 완료 ===");
     console.log("응답 데이터:", e.responseJSON);
 
@@ -473,7 +393,7 @@ scwin.sbm_selectPostList_submitdone = function(e) {
     // error 수신시
     var elData = e.responseJSON.elData;
     var elHeader = e.responseJSON.elHeader;
-    if(elHeader == null || elHeader == "" || elHeader == "undefined" || elHeader.resSuc == false) {
+    if (elHeader == null || elHeader == "" || elHeader == "undefined" || elHeader.resSuc == false) {
         console.error("공고 목록 조회 에러:", elHeader);
         alert(`에러코드 : ${elHeader.resCode}\n에러메시지 : ${elHeader.resMsg}`);
         scwin.showEmptyState();
@@ -482,84 +402,75 @@ scwin.sbm_selectPostList_submitdone = function(e) {
 
     // 데이터를 DataList에 셋팅
     dlt_postList.setJSON(elData.postVoList || []);
-    console.log("✅ 공고 목록 데이터 바인딩 완료 - 총 " + dlt_postList.getRowCount() + "개");
-    
+
     // 공고 수 업데이트
     spn_jobCount.setLabel(elData.totalCount || 0);
-    
+
     // 페이지 네비게이터 업데이트
     var totalPageCount = Math.ceil((elData.totalCount || 0) / dmp_postVo.get("pageSize"));
     if (pgl_postList) {
         pgl_postList.setCount(totalPageCount);
     }
-    
+
     // 공고 카드 UI 동적 생성
     scwin.renderJobCards();
-    
-    // 데이터 확인 로그
-    for (var i = 0; i < Math.min(dlt_postList.getRowCount(), 3); i++) {
-        console.log("공고 " + (i+1) + ":");
-        console.log("- ID:", dlt_postList.getCellData(i, "jobPostingId"));
-        console.log("- 제목:", dlt_postList.getCellData(i, "title"));
-        console.log("- 회사:", dlt_postList.getCellData(i, "companyName"));
-    }
 };
 
 /**
  * 공고 카드 UI 동적 생성
  */
-scwin.renderJobCards = function() {
+scwin.renderJobCards = function () {
     console.log("=== 공고 카드 UI 생성 ===");
-    
+
     var jobCardsContainer = document.querySelector('.job-cards');
     if (!jobCardsContainer) {
         console.error("job-cards 컨테이너를 찾을 수 없습니다.");
         return;
     }
-    
+
     // 기존 카드들 제거
     jobCardsContainer.innerHTML = '';
-    
+
     var rowCount = dlt_postList.getRowCount();
-    
+
     if (rowCount === 0) {
         scwin.showEmptyState();
         return;
     }
-    
+
     // 각 공고에 대해 카드 생성
     for (var i = 0; i < rowCount; i++) {
         var jobData = dlt_postList.getRowJSON(i);
         var cardElement = scwin.createJobCard(jobData, i);
         jobCardsContainer.appendChild(cardElement);
     }
-    
+
     console.log("✅ " + rowCount + "개 공고 카드 생성 완료");
 };
 
 /**
  * 개별 공고 카드 생성
  */
-scwin.createJobCard = function(jobData, index) {
-    var card = document.createElement('div');
+scwin.createJobCard = function (jobData, index) {
+    var card = document.createElement('xf:group');
     card.className = 'job-card';
     card.setAttribute('data-job-id', jobData.jobPostingId);
     card.setAttribute('data-index', index);
-    card.onclick = function() { scwin.openJobDetail(jobData.jobPostingId); };
-    
+    card.onclick = function () { scwin.openJobDetail(jobData.jobPostingId); };
+
     // 기술스택 태그 생성
     var techTags = '';
     if (jobData.techStackNames) {
         try {
             var techArray = JSON.parse(jobData.techStackNames);
-            techTags = techArray.map(function(tech) {
+            techTags = techArray.map(function (tech) {
                 return '<span class="tech-tag">' + tech + '</span>';
             }).join('');
         } catch (e) {
             techTags = '<span class="tech-tag">정보없음</span>';
         }
     }
-    
+
     // 선호 개발자 유형 태그 생성
     var developerTypeTags = '';
     if (jobData.preferredDeveloperTypes) {
@@ -569,73 +480,73 @@ scwin.createJobCard = function(jobData, index) {
             devTypeArray = JSON.parse(jobData.preferredDeveloperTypes);
         } catch (e) {
             // JSON 파싱 실패 시 쉼표로 분리
-            devTypeArray = jobData.preferredDeveloperTypes.split(',').map(function(item) { return item.trim(); });
+            devTypeArray = jobData.preferredDeveloperTypes.split(',').map(function (item) { return item.trim(); });
         }
-        
+
         if (Array.isArray(devTypeArray) && devTypeArray.length > 0) {
-            developerTypeTags = devTypeArray.map(function(type) {
+            developerTypeTags = devTypeArray.map(function (type) {
                 return '<span class="tech-tag">' + type + '</span>';
             }).join('');
         } else {
             developerTypeTags = '<span class="tech-tag">정보없음</span>';
         }
     }
-    
-    card.innerHTML = 
-        '<div class="job-content">' +
-            '<div class="job-header">' +
-                '<div class="job-title">' + (jobData.title || '제목없음') + '</div>' +
-                '<button class="bookmark-btn" onclick="scwin.toggleBookmark(event, \'' + jobData.jobPostingId + '\')">������</button>' +
-            '</div>' +
-            '<div class="job-company" onclick="scwin.viewCompany(event, \'' + jobData.companyId + '\')">' + 
-                (jobData.companyName || '회사명 정보없음') + 
-            '</div>' +
-            '<div class="job-description">' + 
-                (jobData.description || '설명이 없습니다.') + 
-            '</div>' +
-            '<div class="job-meta">' +
-                '<div class="job-meta-item">' +
-                    '<span class="job-meta-icon">������</span>' +
-                    '<span>' + (jobData.location || '지역정보없음') + '</span>' +
-                '</div>' +
-                '<div class="job-meta-item">' +
-                    '<span class="job-meta-icon">������</span>' +
-                    '<span>' + scwin.getExperienceLevelText(jobData.experienceLevel) + '</span>' +
-                '</div>' +
-                '<div class="job-meta-item">' +
-                    '<span class="job-meta-icon">������</span>' +
-                    '<span>' + scwin.getWorkTypeText(jobData.workType) + '</span>' +
-                '</div>' +
-            '</div>' +
-            (techTags ? '<div class="tech-tags">' + techTags + '</div>' : '') +
-            (developerTypeTags ? '<div class="tech-tags">' + developerTypeTags + '</div>' : '') +
-            '<div class="job-footer">' +
-                '<div class="job-salary">' + scwin.getSalaryRangeText(jobData.salaryRange) + '</div>' +
-                '<div class="job-date">' + scwin.formatDate(jobData.postedAt) + '</div>' +
-            '</div>' +
-        '</div>';
-    
+
+    card.innerHTML =
+        '<xf:group class="job-content">' +
+        '<xf:group class="job-header">' +
+        '<xf:group class="job-title">' + (jobData.title || '제목없음') + '</xf:group>' +
+        '<button class="bookmark-btn" onclick="scwin.toggleBookmark(event, \'' + jobData.jobPostingId + '\')">������</button>' +
+        '</xf:group>' +
+        '<xf:group class="job-company" onclick="scwin.viewCompany(event, \'' + jobData.companyId + '\')">' +
+        (jobData.companyName || '회사명 정보없음') +
+        '</xf:group>' +
+        '<xf:group class="job-description">' +
+        (jobData.description || '설명이 없습니다.') +
+        '</xf:group>' +
+        '<xf:group class="job-meta">' +
+        '<xf:group class="job-meta-item">' +
+        '<span class="job-meta-icon">������</span>' +
+        '<span>' + (jobData.location || '지역정보없음') + '</span>' +
+        '</xf:group>' +
+        '<xf:group class="job-meta-item">' +
+        '<span class="job-meta-icon">������</span>' +
+        '<span>' + scwin.getExperienceLevelText(jobData.experienceLevel) + '</span>' +
+        '</xf:group>' +
+        '<xf:group class="job-meta-item">' +
+        '<span class="job-meta-icon">������</span>' +
+        '<span>' + scwin.getWorkTypeText(jobData.workType) + '</span>' +
+        '</xf:group>' +
+        '</xf:group>' +
+        (techTags ? '<xf:group class="tech-tags">' + techTags + '</xf:group>' : '') +
+        (developerTypeTags ? '<xf:group class="tech-tags">' + developerTypeTags + '</xf:group>' : '') +
+        '<xf:group class="job-footer">' +
+        '<xf:group class="job-salary">' + scwin.getSalaryRangeText(jobData.salaryRange) + '</xf:group>' +
+        '<xf:group class="job-date">' + scwin.formatDate(jobData.postedAt) + '</xf:group>' +
+        '</xf:group>' +
+        '</xf:group>';
+
     return card;
 };
 
 /**
  * 로딩 상태 표시
  */
-scwin.showLoadingState = function() {
+scwin.showLoadingState = function () {
     var jobCardsContainer = document.querySelector('.job-cards');
     if (jobCardsContainer) {
-        jobCardsContainer.innerHTML = 
-            '<div class="loading-state">' +
-                '<div class="loading-spinner"></div>' +
-                '<div>채용공고를 불러오는 중...</div>' +
-            '</div>';
+        jobCardsContainer.innerHTML =
+            '<xf:group class="loading-state">' +
+            '<xf:group class="loading-spinner"></xf:group>' +
+            '<xf:group>채용공고를 불러오는 중...</xf:group>' +
+            '</xf:group>';
     }
 };
 
 /**
  * 로딩 상태 숨김
  */
-scwin.hideLoadingState = function() {
+scwin.hideLoadingState = function () {
     var loadingElement = document.querySelector('.loading-state');
     if (loadingElement) {
         loadingElement.remove();
@@ -645,14 +556,14 @@ scwin.hideLoadingState = function() {
 /**
  * 빈 상태 표시
  */
-scwin.showEmptyState = function() {
+scwin.showEmptyState = function () {
     var jobCardsContainer = document.querySelector('.job-cards');
     if (jobCardsContainer) {
-        jobCardsContainer.innerHTML = 
+        jobCardsContainer.innerHTML =
             '<div class="empty-state">' +
-                '<div class="empty-icon">������</div>' +
-                '<div class="empty-message">등록된 채용공고가 없습니다</div>' +
-                '<div class="empty-submessage">나중에 다시 확인해보세요</div>' +
+            '<img src="/InsWebApp/images/ws5/not_found.png" alt="빈 상태 이미지" class="empty-image" style="width: 150px; height: 150px; margin-top: 50px; margin-bottom: 50px;" />' +
+            '<div class="empty-message">등록된 채용공고가 없습니다</div>' +
+            '<div class="empty-submessage">나중에 다시 확인해보세요</div>' +
             '</div>';
     }
 };
@@ -664,16 +575,16 @@ scwin.showEmptyState = function() {
 /**
  * 공고 상세보기
  */
-scwin.openJobDetail = function(jobPostingId) {
+scwin.openJobDetail = function (jobPostingId) {
     console.log("=== 공고 상세보기 시작 ===");
     console.log("클릭된 공고 ID:", jobPostingId);
-    
+
     if (!jobPostingId || jobPostingId.trim() === "") {
         console.error("공고 ID가 없습니다.");
         alert("선택된 공고의 정보를 찾을 수 없습니다.");
         return;
     }
-    
+
     try {
         // 웹스퀘어 환경에서 pageFrame 방식으로 파라미터 전달
         if ($p.parent() && $p.parent().pf_main) {
@@ -697,9 +608,26 @@ scwin.openJobDetail = function(jobPostingId) {
 };
 
 /**
+ * 북마크 토글
+ */
+scwin.toggleBookmark = function (event, jobPostingId) {
+    event.stopPropagation(); // 카드 클릭 이벤트 방지
+    console.log("북마크 토글:", jobPostingId);
+
+    var bookmarkBtn = event.target;
+    if (bookmarkBtn.textContent === '������') {
+        bookmarkBtn.textContent = '❤️';
+        // TODO: 서버에 북마크 추가 요청
+    } else {
+        bookmarkBtn.textContent = '������';
+        // TODO: 서버에 북마크 제거 요청
+    }
+};
+
+/**
  * 회사 정보 보기
  */
-scwin.viewCompany = function(event, companyId) {
+scwin.viewCompany = function (event, companyId) {
     event.stopPropagation(); // 카드 클릭 이벤트 방지
     console.log("회사 정보 보기:", companyId);
     // 회사 상세 페이지로 이동
@@ -707,34 +635,143 @@ scwin.viewCompany = function(event, companyId) {
 };
 
 /**
+ * 검색 실행
+ */
+scwin.performSearch = function () {
+    var searchInput = document.getElementById('searchInput');
+    if (searchInput) {
+        var searchText = searchInput.value.trim();
+        // TODO: 검색 기능은 향후 구현 예정
+        // 현재는 기본 목록만 조회
+        console.log("검색어:", searchText);
+        scwin.loadPostList();
+    }
+};
+
+/**
  * 페이지 번호 클릭 이벤트
  */
-scwin.pgl_postList_onclick = function(idx) {
+scwin.pgl_postList_onclick = function (idx) {
     console.log("=== 페이지 변경 ===", idx);
-    
+
     // 페이지 번호 세팅
     dmp_postVo.set("pageIndex", idx);
     // 서버통신 - 공고목록 조회
     scwin.loadPostList();
 };
 
+// =========================
+// 헤더 이벤트들 (기존 코드 유지)
+// =========================
+
+scwin.weaveTypeLogo_onclick = function () {
+    $p.url("../common/weaveTypeMain.xml");
+};
+
+scwin.searchInput_onkeypress = function (e) {
+    if (e.keyCode === 13) {
+        scwin.performSearch();
+    }
+};
+
+scwin.btnSearch_onclick = function () {
+    scwin.performSearch();
+};
+
+// 필터 이벤트들
+scwin.filter_dropdown_onclick = function (filterType) {
+    console.log('필터 드롭다운 클릭:', filterType);
+    // 실제로는 드롭다운 메뉴 표시
+};
+
+scwin.filter_tag_onclick = function (tagName) {
+    console.log('필터 태그 클릭:', tagName);
+    // 태그 활성화/비활성화 토글
+    var tag = event.target;
+    tag.classList.toggle('active');
+
+    // 필터 적용 후 목록 새로고침
+    scwin.loadPostList();
+};
+
+// 햄버거 메뉴 토글
+scwin.toggleSideMenu = function () {
+    var sideMenu = document.getElementById('sideMenu');
+    var overlay = document.getElementById('sideMenuOverlay');
+
+    if (sideMenu && sideMenu.classList.contains('open')) {
+        scwin.closeSideMenu();
+    } else if (sideMenu && overlay) {
+        sideMenu.classList.add('open');
+        overlay.classList.add('open');
+    }
+};
+
+scwin.closeSideMenu = function () {
+    var sideMenu = document.getElementById('sideMenu');
+    var overlay = document.getElementById('sideMenuOverlay');
+
+    if (sideMenu) sideMenu.classList.remove('open');
+    if (overlay) overlay.classList.remove('open');
+};
+
+// =========================
+// 유틸리티 함수들
+// =========================
+
+/**
+ * 경력수준 한글 변환
+ */
+scwin.getExperienceLevelText = function (experienceLevel) {
+    switch (experienceLevel) {
+        case 'any': return '경력무관';
+        case 'junior': return '신입·1-3년';
+        case 'senior': return '시니어·3년+';
+        default: return experienceLevel || '정보없음';
+    }
+};
+
+/**
+ * 근무형태 한글 변환
+ */
+scwin.getWorkTypeText = function (workType) {
+    switch (workType) {
+        case 'remote': return '원격근무';
+        case 'onsite': return '출근근무';
+        case 'hybrid': return '하이브리드';
+        default: return workType || '정보없음';
+    }
+};
+
+/**
+ * 급여범위 한글 변환
+ */
+scwin.getSalaryRangeText = function (salaryRange) {
+    switch (salaryRange) {
+        case 'under25': return '~2,500만원';
+        case '25to35': return '2,500~3,500만원';
+        case '35to50': return '3,500~5,000만원';
+        case 'over50': return '5,000만원+';
+        default: return salaryRange || '협의';
+    }
+};
 
 /**
  * 날짜 포맷팅
  */
-scwin.formatDate = function(dateString) {
+scwin.formatDate = function (dateString) {
     if (!dateString) return "정보없음";
-    
+
     try {
         var date = new Date(dateString);
         var now = new Date();
         var diffTime = Math.abs(now - date);
         var diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-        
+
         if (diffDays === 1) return "어제";
         if (diffDays < 7) return diffDays + "일 전";
         if (diffDays < 30) return Math.floor(diffDays / 7) + "주 전";
-        
+
         return date.toLocaleDateString('ko-KR', {
             year: 'numeric',
             month: 'short',
@@ -744,73 +781,152 @@ scwin.formatDate = function(dateString) {
         return dateString;
     }
 };
+
+scwin.slb_dev_mbti_onselected = function () {
+    // 쿠키에서 userMbti 가져오기
+    var userInfoCookie = WebSquare.cookie.getCookie("userInfo");
+    if (!userInfoCookie) {
+        console.error("로그인 후 사용가능한 기능입니다.");
+        return; // 함수 종료
+    }
+
+    var userInfo;
+    try {
+        userInfo = JSON.parse(userInfoCookie);
+    } catch (e) {
+        console.error("사용자 정보 파싱 오류:", e);
+        return; // 함수 종료
+    }
+
+    // userInfo.mbti가 존재하는지 확인
+    if (!userInfo || !userInfo.mbti) {
+        console.error("mbti 및 성향검사 후 진행 가능합니다.");
+        return; // 함수 종료
+    }
+
+    // 여기까지 오면 로그인도 되어있고 MBTI도 있는 상태
+    // 선택된 값 가져오기
+    var selectedValue = slb_dev_mbti.getValue();
+
+    // DataMap에 값 설정
+    dmp_postMatchVo.set("userMbti", userInfo.mbti);
+    dmp_postMatchVo.set("mbtiMatchFilter", selectedValue);
+    dmp_postMatchVo.set("pageIndex", "1");
+
+    // API 호출
+    $c.sbm.execute($p, sbm_selectDevMbtiList);
+};
+
+scwin.sbm_selectDevMbtiList_submitdone = function (e) {
+    // 로딩 상태 숨김
+    scwin.hideLoadingState();
+
+    // error 수신시
+    var elData = e.responseJSON.elData;
+    var elHeader = e.responseJSON.elHeader;
+    dlt_postList.setJSON(elData.postVoList || []);
+    console.log("✅ 공고 목록 데이터 바인딩 완료 - 총 " + dlt_postList.getRowCount() + "개");
+
+    // 공고 수 업데이트
+    spn_jobCount.setLabel(elData.totalCount || 0);
+
+    // 페이지 네비게이터 업데이트
+    var totalPageCount = Math.ceil((elData.totalCount || 0) / dmp_postVo.get("pageSize"));
+    if (pgl_postList) {
+        pgl_postList.setCount(totalPageCount);
+    }
+
+    // 공고 카드 UI 동적 생성
+    scwin.renderJobCards();
+
+    // 데이터 확인 로그
+    for (var i = 0; i < Math.min(dlt_postList.getRowCount(), 3); i++) {
+        console.log("공고 " + (i + 1) + ":");
+        console.log("- ID:", dlt_postList.getCellData(i, "jobPostingId"));
+        console.log("- 제목:", dlt_postList.getCellData(i, "title"));
+        console.log("- 회사:", dlt_postList.getCellData(i, "companyName"));
+    }
+};
 ]]></script>
-    </head>
-    
-    <body ev:onpageload="scwin.onpageload">
-        <w2:wframe src="../common/Header.xml" id="headerFrame" />
-        <xf:group class="main-wrap">
-          
-            <!-- 필터 섹션 -->
-            <section class="filter-section">
-                <!-- 메인 필터 드롭다운 -->
-                <xf:group class="main-filters">
-                	<xf:select1 id="" chooseOption="true" style="width: 148px;height: 21px;" submenuSize="auto" allOption=""
-                		disabled="false" direction="auto" appearance="minimal" disabledClass="w2selectbox_disabled" chooseOptionLabel="모든 MBTI 조회"
-                		ref="">
-                		<xf:choices></xf:choices>
-                	</xf:select1>
+	</head>
 
-                	<xf:group class="filter-dropdown" ev:onclick="scwin.filter_dropdown_onclick('experience')">
-                		<w2:textbox label="경력 전체"></w2:textbox>
-                		<w2:span class="dropdown-arrow" label="▼"></w2:span>
-                	</xf:group>
+	<body ev:onpageload="scwin.onpageload">
+		<w2:wframe src="../common/Header.xml" id="headerFrame" />
+		<xf:group class="main-wrap">
 
+			<!-- 필터 섹션 -->
+			<section class="filter-section">
+				<!-- 메인 필터 드롭다운 -->
 
-                	<xf:group style="margin-left: auto; display: flex; gap: 12px;">
-                		<w2:textbox label="최신순" style="font-size: 13px; color: #666;"></w2:textbox>
-                		<w2:textbox label="추천순" style="font-size: 13px; color: #666;"></w2:textbox>
-                		<w2:textbox label="인기순" style="font-size: 13px; color: #666;"></w2:textbox>
-                	</xf:group>
+				<!-- 필터 태그들 -->
+				<xf:group class="header-container" style="">
+					<xf:group class="header-left">
+						<xf:group class="main-filters" style="margin-bottom: 0;">
+							<xf:select1 id="slb_dev_mbti" chooseOption="" style="width: 148px;height: 21px;" submenuSize="auto" allOption=""
+								disabled="false" direction="auto" appearance="minimal" disabledClass="w2selectbox_disabled" chooseOptionLabel="모든 MBTI" ref=""
+								ev:onselected="scwin.slb_dev_mbti_onselected">
+								<xf:choices>
+									<xf:item>
+										<xf:label><![CDATA[모든 MBTI]]></xf:label>
+										<xf:value><![CDATA[0]]></xf:value>
+									</xf:item>
+									<xf:item>
+										<xf:label><![CDATA[4개 이상만 보기]]></xf:label>
+										<xf:value><![CDATA[4]]></xf:value>
+									</xf:item>
+									<xf:item>
+										<xf:label><![CDATA[3개 이상만 보기]]></xf:label>
+										<xf:value><![CDATA[3]]></xf:value>
+									</xf:item>
+									<xf:item>
+										<xf:label><![CDATA[2개 이상만 보기]]></xf:label>
+										<xf:value><![CDATA[2]]></xf:value>
+									</xf:item>
+									<xf:item>
+										<xf:label><![CDATA[1개 이상만 보기]]></xf:label>
+										<xf:value><![CDATA[1]]></xf:value>
+									</xf:item>
+								</xf:choices>
+							</xf:select1>
+						</xf:group>
+					</xf:group>
+					<xf:group class="header-right">
+						<xf:group style="display: flex; gap: 12px; margin-left: 24px;">
+							<w2:textbox label="최신순" style="font-size: 13px; color: #666;"></w2:textbox>
+							<w2:textbox label="추천순" style="font-size: 13px; color: #666;"></w2:textbox>
+							<w2:textbox label="인기순" style="font-size: 13px; color: #666;"></w2:textbox>
+						</xf:group>
+					</xf:group>
+				</xf:group>
+			</section>
 
-                </xf:group>
+			<!-- 메인 컨텐츠 -->
+			<main class="main-content">
+				<!-- 채용공고 목록 섹션 -->
+				<section class="job-list-section">
+					<xf:group class="section-header">
+						<w2:textbox class="section-title" label="채용공고"></w2:textbox>
+						<xf:group class="job-count">
+							<w2:span label="총"></w2:span>
+							<w2:span class="num" id="spn_jobCount" label="0"></w2:span>
+							<w2:span label="개의 공고"></w2:span>
+						</xf:group>
+					</xf:group>
 
-                <!-- 필터 태그들 -->
-                <xf:group class="filter-tags">
-                    <w2:span class="filter-tag" label="한국" ev:onclick="scwin.filter_tag_onclick('korea')"></w2:span>
-                    <w2:span class="filter-tag" label="채용유형" ev:onclick="scwin.filter_tag_onclick('job_type')"></w2:span>
-                    <w2:span class="filter-tag" label="기술스택" ev:onclick="scwin.filter_tag_onclick('tech_stack')"></w2:span>
-                    <w2:span class="filter-tag highlight" label="대규모 채용 중" ev:onclick="scwin.filter_tag_onclick('mass_hiring')"></w2:span>
-                    <w2:span class="filter-tag" label="1,001-10,000명" ev:onclick="scwin.filter_tag_onclick('company_size')"></w2:span>
-                </xf:group>
-            </section>
+					<!-- 공고 카드 컨테이너 (JavaScript로 동적 생성) -->
+					<xf:group class="job-cards">
+						<!-- 공고 카드들이 동적으로 생성됩니다 -->
+					</xf:group>
 
-            <!-- 메인 컨텐츠 -->
-            <main class="main-content">
-                <!-- 채용공고 목록 섹션 -->
-                <section class="job-list-section">
-                    <xf:group class="section-header">
-                        <w2:textbox class="section-title" label="채용공고"></w2:textbox>
-                        <xf:group class="job-count">
-                            <w2:span label="총"></w2:span>
-                            <w2:span class="num" id="spn_jobCount" label="0"></w2:span>
-                            <w2:span label="개의 공고"></w2:span>
-                        </xf:group>
-                    </xf:group>
-
-                    <!-- 공고 카드 컨테이너 (JavaScript로 동적 생성) -->
-                    <xf:group class="job-cards">
-                        <!-- 공고 카드들이 동적으로 생성됩니다 -->
-                    </xf:group>
-                    
-                    <!-- 페이징 -->
-                    <xf:group class="paging-section">
-                        <w2:pageList class="pgl" displayButtonType="display" displayFormat="#" id="pgl_postList" 
-                            pageSize="5" pagingType="0" style="" ev:onclick="scwin.pgl_postList_onclick">
-                        </w2:pageList>
-                    </xf:group>
-                </section>
-            </main>
-        </xf:group>
+					<!-- 페이징 -->
+					<xf:group class="paging-section">
+						<w2:pageList class="pgl" displayButtonType="display" displayFormat="#" id="pgl_postList" pageSize="5" pagingType="0"
+							style="" ev:onclick="scwin.pgl_postList_onclick">
+						</w2:pageList>
+					</xf:group>
+				</section>
+			</main>
+		</xf:group>
+    	
     </body>
 </html>

@@ -101,16 +101,13 @@ public class PostController {
     @ElDescription(sub = "공고정보 목록조회", desc = "유저의 기준에서 공고정보 목록 조회를 한다.")
     public Map<String, Object> findPostsByMbti(PostMatchVo postMatchVo) throws Exception {
         List<PostVo> postList = postService.findPostsByMbti(postMatchVo);
-        	System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> " + postMatchVo.getMbtiMatchFilter() + " 개가 맞는 회사 갯수 : " + postList.size());
-               // 수정해야됨            
-        long totCnt = postService.selectListCountPost(new PostVo());
+        long totCnt = postService.findPostsByMbtiCount(postMatchVo);
         
 		PostListVo retPostList = new PostListVo();
 		retPostList.setPostVoList(postList); 
 		retPostList.setTotalCount(totCnt);
         Map<String, Object> response = new HashMap<>();
-        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> retPostList : " + retPostList.toString());
-        response.put("elData", retPostList); // PostListVo 객체를 "elData" 키 아래에 넣습니다.
+        response.put("elData", retPostList);
         return response;
     }
 
