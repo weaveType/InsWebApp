@@ -40,7 +40,7 @@ public class PostServiceImpl implements PostService {
      * 공고정보 목록을 조회합니다.
      *
      * @process
-     * 1. 공고정보 페이징 처리하여 목록을 조회한다.
+     * 1. 공고정보 목록을 조회한다.
      * 2. 결과 List<PostVo>을(를) 리턴한다.
      * 
      * @param  postVo 공고정보 PostVo
@@ -49,7 +49,6 @@ public class PostServiceImpl implements PostService {
      */
 	public List<PostVo> selectListPost(PostVo postVo) throws Exception {
 		List<PostVo> list = postDAO.selectListPost(postVo);	
-	
 		return list;
 	}
 
@@ -324,6 +323,44 @@ public class PostServiceImpl implements PostService {
      */
     public List<TechStackVo> selectTechStacksByPostId(String jobPostingId) throws Exception {
         return postDAO.selectTechStacksByPostId(jobPostingId);
+    }
+
+    /**
+     * 사용자 ID로 회사 ID를 조회한다.
+     *
+     * @process
+     * 1. 사용자 ID로 companys 테이블에서 회사 ID를 조회한다.
+     * 
+     * @param  userId 사용자 ID
+     * @return 회사 ID String
+     * @throws Exception
+     */
+    public String selectCompanyIdByUserId(String userId) throws Exception {
+        System.out.println("=== 사용자 ID로 회사 ID 조회 서비스 시작 ===");
+        System.out.println("입력 사용자 ID: '" + userId + "'");
+        
+        if (userId == null || userId.trim().isEmpty()) {
+            System.err.println("❌ 사용자 ID가 null 또는 빈 문자열입니다.");
+            throw new Exception("사용자 ID가 올바르지 않습니다.");
+        }
+        
+        try {
+            String companyId = postDAO.selectCompanyIdByUserId(userId);
+            System.out.println("조회된 회사 ID: '" + companyId + "'");
+            
+            if (companyId == null || companyId.trim().isEmpty()) {
+                System.err.println("❌ 해당 사용자와 연결된 회사가 없습니다. 사용자 ID: " + userId);
+                throw new Exception("해당 사용자와 연결된 회사 정보를 찾을 수 없습니다.");
+            }
+            
+            System.out.println("✅ 회사 ID 조회 성공: " + companyId);
+            return companyId;
+            
+        } catch (Exception e) {
+            System.err.println("❌ 회사 ID 조회 중 오류 발생: " + e.getMessage());
+            e.printStackTrace();
+            throw new Exception("회사 정보 조회 중 오류가 발생했습니다: " + e.getMessage());
+        }
     }
 	
 }

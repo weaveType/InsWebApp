@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.demo.proworks.domain.user.service.UserService;
 import com.demo.proworks.domain.user.vo.UserVo;
+import com.demo.proworks.common.enumType.DevMbti;
 import com.demo.proworks.domain.user.dao.UserDAO;
 
 /**
@@ -123,6 +124,17 @@ public class UserServiceImpl implements UserService {
 	public UserVo selectUserByEmail(UserVo userVo) throws Exception {
 		return userDAO.selectUserByEmail(userVo);
 
+	}
+	
+	/**
+	 * userId를 통해 개발자용 MBTI를 가져온다
+	 *
+	 * @param userId 유저의 id
+	 * @return MBTI 종류
+	 * @throws Exception
+	 */
+	public DevMbti selectDevMbti(int userId) throws Exception{
+		return userDAO.selectDevMbti(userId);
 	}
 
 	/**

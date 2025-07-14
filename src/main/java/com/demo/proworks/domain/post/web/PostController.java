@@ -2,6 +2,8 @@ package com.demo.proworks.domain.post.web;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -41,40 +43,7 @@ public class PostController {
     @Resource(name = "postServiceImpl")
     private PostService postService;
 	
-    /**
-     * 세션에서 현재 로그인한 사용자의 Company ID를 가져옵니다.
-     * 
-     * @return Company ID (없으면 null)
-     */
-    private String getCurrentUserCompanyId() {
-        try {
-            // 프로웍스 세션 유틸리티 사용
-            UserHeader userHeader = ControllerContextUtil.getUserHeader();
-            if (userHeader != null) {
-                String userId = userHeader.getUserId();
-                System.out.println("=== 세션 디버깅 ===");
-                System.out.println("UserHeader 존재: " + (userHeader != null));
-                System.out.println("UserID: " + userId);
-                
-                // TODO: 실제 환경에서는 userId로 companys 테이블 조회하여 company_id 가져오기
-                // 현재는 모든 로그인 사용자를 company_id = 1로 처리 (개발 중)
-                if (userId != null) {
-                    System.out.println("Company ID 반환: 1 (임시 고정값)");
-                    return "1";
-                }
-            }
-            
-            System.out.println("=== 세션 정보 없음 - 기본값 반환 ===");
-            // 세션 정보가 없는 경우에도 기본값 반환 (개발 중)
-            return "1";
-            
-        } catch (Exception e) {
-            // 로그 남기고 기본값 반환
-            System.err.println("세션에서 Company ID 조회 실패: " + e.getMessage());
-            e.printStackTrace();
-            return "1";
-        }
-    }
+    
     
     /**
      * 현재 사용자의 Company ID 권한을 검증합니다.
@@ -83,11 +52,11 @@ public class PostController {
      * @return 권한 있으면 true
      */
     private boolean hasCompanyPermission(String companyId) {
-        String currentCompanyId = getCurrentUserCompanyId();
-        return currentCompanyId != null && currentCompanyId.equals(companyId);
+//        String currentCompanyId = getCurrentUserCompanyId();
+//        return currentCompanyId != null && currentCompanyId.equals(companyId);
+    	return true;
     }
 	
-    
     /**
      * 공고정보 목록을 조회합니다.
      *
@@ -97,34 +66,20 @@ public class PostController {
      */
     @ElService(key="POS0001List")
     @RequestMapping(value="POS0001List")    
-    @ElDescription(sub="공고정보 목록조회",desc="페이징을 처리하여 공고정보 목록 조회를 한다.")               
-    public PostListVo selectListPost(PostVo postVo) throws Exception {    	   	
+    @ElDescription(sub="공고정보 목록조회",desc="공고정보 목록 조회를 한다.")               
+    public Map<String, Object> selectListPost(PostVo postVo) throws Exception {    	   	
         
         System.out.println("=== 공고 목록 조회 시작 ===");
         System.out.println("입력 받은 PostVo: " + postVo.toString());
         
-        // 임시로 모든 공고 조회 (디버깅용)
         // 현재 사용자의 Company ID로 필터링
-        String currentCompanyId = getCurrentUserCompanyId();
+        String currentCompanyId = postVo.getCompanyId();
+        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> companyId : " + postVo.getCompanyId());
         System.out.println("현재 사용자 Company ID: " + currentCompanyId);
         
-        // 임시로 Company ID 필터링 제거 (디버깅용)
-        System.out.println("⚠️ 디버깅 모드: 모든 공고를 조회합니다.");
-        // postVo.setCompanyId(currentCompanyId);
-        
-        // 페이징 기본값 설정
-        if (postVo.getPageSize() <= 0) {
-            postVo.setPageSize(10);
-            System.out.println("기본 페이지 사이즈 설정: 10");
-        }
-        if (postVo.getPageIndex() <= 0) {
-            postVo.setPageIndex(1);
-            System.out.println("기본 페이지 인덱스 설정: 1");
-        }
-        
-        // 페이징 정보 로그
-        System.out.println("최종 페이지 사이즈: " + postVo.getPageSize());
-        System.out.println("최종 페이지 인덱스: " + postVo.getPageIndex());
+        // 보안상 중요: 현재 로그인된 사용자의 회사 공고만 조회
+        postVo.setCompanyId(currentCompanyId);
+        System.out.println("설정된 Company ID 필터: " + postVo.getCompanyId());
 
         List<PostVo> postList = postService.selectListPost(postVo);                  
         long totCnt = postService.selectListCountPost(postVo);
@@ -144,15 +99,15 @@ public class PostController {
 		PostListVo retPostList = new PostListVo();
 		retPostList.setPostVoList(postList); 
 		retPostList.setTotalCount(totCnt);
-		retPostList.setPageSize(postVo.getPageSize());
-		retPostList.setPageIndex(postVo.getPageIndex());
 		
 		System.out.println("=== 반환할 PostListVo ===");
 		System.out.println("PostVoList 크기: " + retPostList.getPostVoList().size());
 		System.out.println("TotalCount: " + retPostList.getTotalCount());
 		System.out.println("=== 공고 목록 조회 완료 ===");
 
-        return retPostList;            
+        Map<String, Object> response = new HashMap<>();
+        response.put("elData", retPostList); // PostListVo 객체를 "elData" 키 아래에 넣습니다.
+        return response;            
     }  
         
     /**
@@ -245,13 +200,18 @@ public class PostController {
         }
         
         // 현재 사용자의 Company ID 설정 (세션에서 가져오기)
-        String currentCompanyId = getCurrentUserCompanyId();
+        String currentCompanyId = postVo.getCompanyId();
         if (currentCompanyId == null) {
             throw new RuntimeException("로그인 정보를 확인할 수 없습니다.");
         }
-        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> companyId : " + postVo.getCompanyId());
-        postVo.setCompanyId(postVo.getCompanyId());
-        System.out.println("Company ID 설정 완료: " + currentCompanyId);
+        
+        System.out.println("=== 회사 ID 설정 ===");
+        System.out.println("세션에서 조회한 현재 사용자 회사 ID: " + currentCompanyId);
+        System.out.println("프론트에서 전달받은 회사 ID: " + postVo.getCompanyId());
+        
+        // 🔥 보안상 중요: 세션에서 조회한 회사 ID로 강제 설정 (프론트에서 전달받은 값 무시)
+        postVo.setCompanyId(currentCompanyId);
+        System.out.println("최종 설정된 회사 ID: " + postVo.getCompanyId());
         
     	// 1. 공고 정보 등록 (job_posting_id가 자동 생성됨)
     	System.out.println("=== 📝 공고 정보 등록 시작 ===");

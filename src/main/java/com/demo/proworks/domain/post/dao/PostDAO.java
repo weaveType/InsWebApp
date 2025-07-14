@@ -145,4 +145,15 @@ public class PostDAO extends com.demo.proworks.cmmn.dao.ProworksDefaultAbstractD
         return selectTechStacksByJobId(jobPostingId);
     }
 
+    /**
+     * 사용자 ID로 회사 ID를 조회한다.
+     *  
+     * @param  String 사용자ID
+     * @return String 회사ID
+     * @throws ElException
+     */
+    public String selectCompanyIdByUserId(String userId) throws ElException {
+        return (String) selectByPk("com.demo.proworks.domain.post.selectCompanyIdByUserId", userId);
+    }
+
 }

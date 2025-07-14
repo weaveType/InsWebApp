@@ -9,6 +9,7 @@ import java.util.Map;
 
 import com.inswave.elfw.exception.ElException;
 import com.demo.proworks.domain.user.vo.UserVo;
+import com.demo.proworks.common.enumType.DevMbti;
 import com.demo.proworks.domain.user.dao.UserDAO;
 
 /**
@@ -112,6 +113,17 @@ public class UserDAO extends com.demo.proworks.cmmn.dao.ProworksDefaultAbstractD
 	 */
 	public UserVo selectUserByEmail(UserVo vo) throws ElException {
 		return (UserVo) selectByPk("com.demo.proworks.domain.user.selectUserByEmail", vo);
+	}
+	
+	/**
+	 * 이메일로 일반회원을 상세 조회한다.
+	 * 
+	 * @param UserVo 일반회원
+	 * @return UserVo 일반회원
+	 * @throws ElException
+	 */
+	public DevMbti selectDevMbti(int userId) throws ElException {
+		return (DevMbti) selectByPk("com.demo.proworks.domain.user.selectDevMbti", userId);
 	}
 
 	/**

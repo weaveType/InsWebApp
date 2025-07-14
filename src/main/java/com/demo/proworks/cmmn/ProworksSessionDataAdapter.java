@@ -9,6 +9,7 @@ import com.inswave.elfw.exception.ElException;
 import com.inswave.elfw.log.AppLog;
 import com.inswave.elfw.session.SessionDataAdapter;
 import com.inswave.elfw.util.ElBeanUtils;
+import com.demo.proworks.common.enumType.DevMbti;
 import com.demo.proworks.domain.corporate.service.CorporateService;
 import com.demo.proworks.domain.user.service.UserService;
 import com.demo.proworks.domain.user.vo.UserVo;
@@ -72,20 +73,23 @@ public class ProworksSessionDataAdapter extends SessionDataAdapter {
 			userHeader.setAccountId(resUserVo.getUserId());
 
 			int roleId = resUserVo.getRoleId();
-
+			int userId = resUserVo.getUserId();
 			switch (roleId) {
 			case 1:
 				userHeader.setRole("USER");
+				try {
+					DevMbti devMbti = userService.selectDevMbti(userId);
+					userHeader.setMbti(devMbti.getCode());
+				} catch (Exception e) {
+					throw new AdapterException("MBTI 조회 실패", e);
+				}
 				break;
 			case 2:
 				userHeader.setRole("COMPANY");
-				AppLog.info("Role 설정: COMPANY - 회사 정보 조회 시작");
 				try {
-					Long companyId = corporateService.getCompanyIdByUserId(resUserVo.getUserId());
-					userHeader.setCompanyId(companyId); // 메서드명 수정 필요
-					AppLog.info("회사 정보 조회 성공 - companyId: " + companyId);
+					Long companyId = corporateService.getCompanyIdByUserId(userId);
+					userHeader.setCompanyId(companyId);
 				} catch (Exception e) {
-					AppLog.error("회사 정보 조회 실패 - userId: " + resUserVo.getUserId(), e);
 					throw new AdapterException("회사 정보 조회 실패", e);
 				}
 				break;
