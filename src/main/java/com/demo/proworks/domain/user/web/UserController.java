@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.demo.proworks.domain.user.service.UserService;
 import com.demo.proworks.domain.user.vo.UserVo;
 import com.demo.proworks.domain.user.vo.LoginVo;
+import com.demo.proworks.domain.user.vo.UserInfoVo;
 import com.demo.proworks.domain.user.vo.UserListVo;
 import com.demo.proworks.common.vo.EmailVo;
 
@@ -135,7 +136,6 @@ public class UserController {
 		userService.insertUser(userVo);
 	}
 
-
 	/**
 	 * 일반회원를 갱신 처리 한다.
 	 *
@@ -172,11 +172,12 @@ public class UserController {
 	 * @throws Exception
 	 */
 	@ElService(key = "USCheckEmail")
-	@RequestMapping(value = {"USCheckEmail", "USCheckEmail.pwkjson"}, method = {RequestMethod.GET, RequestMethod.POST})
+	@RequestMapping(value = { "USCheckEmail", "USCheckEmail.pwkjson" }, method = { RequestMethod.GET,
+			RequestMethod.POST })
 	@ElDescription(sub = "이메일 중복 확인", desc = "회원가입 시 이메일 중복 여부를 확인한다.")
 	public EmailVo checkEmailDuplicate(HttpServletRequest request) throws Exception {
 		String email = null;
-		
+
 		try {
 			// JSON 문자열 읽기
 			BufferedReader reader = request.getReader();
@@ -186,10 +187,10 @@ public class UserController {
 				sb.append(line);
 			}
 			String jsonString = sb.toString();
-			
+
 			System.out.println("=== 요청 JSON 원본 ===");
 			System.out.println(jsonString);
-			
+
 			if (jsonString == null || jsonString.trim().isEmpty()) {
 				// JSON이 비어있으면 query parameter에서 확인
 				email = request.getParameter("email");
@@ -198,7 +199,7 @@ public class UserController {
 				// JSON 파싱
 				ObjectMapper objectMapper = new ObjectMapper();
 				JsonNode rootNode = objectMapper.readTree(jsonString);
-				
+
 				// {"dma_email_check":{"email":"..."}} 구조 처리
 				if (rootNode.has("dma_email_check")) {
 					JsonNode emailCheckNode = rootNode.get("dma_email_check");
@@ -209,23 +210,23 @@ public class UserController {
 					// 직접 {"email":"..."} 구조인 경우
 					email = rootNode.get("email").asText();
 				}
-				
+
 				System.out.println("JSON에서 이메일 추출: " + email);
 			}
-			
+
 		} catch (IOException e) {
 			System.out.println("JSON 파싱 실패: " + e.getMessage());
 			// JSON 파싱 실패시 query parameter 확인
 			email = request.getParameter("email");
 			System.out.println("Fallback - Query Parameter 이메일: " + email);
 		}
-		
+
 		System.out.println("=== ProWorks5 이메일 중복 확인 호출됨 ===");
 		System.out.println("입력 이메일: " + email);
-		
+
 		// EmailVo에 결과를 설정하여 반환 (ProWorks5 표준 방식)
 		EmailVo result = new EmailVo();
-		
+
 		if (email == null || email.trim().isEmpty()) {
 			// 이메일이 비어있는 경우 - 오류로 처리
 			System.out.println("오류: 이메일이 비어있음");
@@ -233,13 +234,13 @@ public class UserController {
 			result.setRole("ERROR");
 			return result;
 		}
-		
+
 		// 이메일 설정
 		result.setEmail(email);
-		
+
 		try {
 			boolean isDuplicate = userService.checkEmailDuplicate(email);
-			
+
 			if (isDuplicate) {
 				// 중복된 이메일인 경우
 				System.out.println("결과: 이메일 중복");
@@ -249,13 +250,13 @@ public class UserController {
 				System.out.println("결과: 이메일 사용 가능");
 				result.setRole("AVAILABLE");
 			}
-			
+
 		} catch (Exception e) {
 			System.out.println("서비스 호출 실패: " + e.getMessage());
 			e.printStackTrace();
 			result.setRole("ERROR");
 		}
-		
+
 		System.out.println("최종 응답: " + result.toString());
 		return result;
 	}
@@ -268,13 +269,13 @@ public class UserController {
 	 * @throws Exception
 	 */
 	@ElService(key = "USRegister")
-	@RequestMapping(value = {"USRegister", "USRegister.pwkjson"})
+	@RequestMapping(value = { "USRegister", "USRegister.pwkjson" })
 	@ElDescription(sub = "일반 사용자 회원가입", desc = "일반 사용자의 회원가입을 처리한다.")
 	public UserVo registerUser(HttpServletRequest request) throws Exception {
 		System.out.println("=== ProWorks5 회원가입 요청 시작 ===");
-		
+
 		UserVo userVo = new UserVo();
-		
+
 		try {
 			// JSON 문자열 읽기
 			BufferedReader reader = request.getReader();
@@ -284,10 +285,10 @@ public class UserController {
 				sb.append(line);
 			}
 			String jsonString = sb.toString();
-			
+
 			System.out.println("=== 요청 JSON 원본 ===");
 			System.out.println(jsonString);
-			
+
 			if (jsonString == null || jsonString.trim().isEmpty()) {
 				System.out.println("JSON이 비어있음 - Query Parameter 확인");
 				// Query parameter로 fallback
@@ -302,9 +303,9 @@ public class UserController {
 				// JSON 파싱
 				ObjectMapper objectMapper = new ObjectMapper();
 				JsonNode rootNode = objectMapper.readTree(jsonString);
-				
+
 				System.out.println("JSON 파싱 성공");
-				
+
 				// {"dma_register_request":{"name":"...", "email":"...", ...}} 구조 처리
 				JsonNode requestNode = null;
 				if (rootNode.has("dma_register_request")) {
@@ -315,7 +316,7 @@ public class UserController {
 					requestNode = rootNode;
 					System.out.println("직접 필드 구조");
 				}
-				
+
 				if (requestNode != null) {
 					if (requestNode.has("name")) {
 						userVo.setName(requestNode.get("name").asText());
@@ -340,12 +341,12 @@ public class UserController {
 					}
 				}
 			}
-			
+
 		} catch (IOException e) {
 			System.out.println("JSON 파싱 실패: " + e.getMessage());
 			e.printStackTrace();
 		}
-		
+
 		// 파싱된 데이터 로그
 		System.out.println("=== 파싱된 회원가입 정보 ===");
 		System.out.println("이름: " + userVo.getName());
@@ -354,54 +355,53 @@ public class UserController {
 		System.out.println("성별: " + userVo.getGender());
 		System.out.println("휴대폰: " + userVo.getPhoneNumber());
 		System.out.println("이메일수신동의: " + userVo.getEmailConsent());
-		
+
 		// 유효성 검사
 		if (userVo.getName() == null || userVo.getName().trim().isEmpty()) {
 			System.out.println("오류: 이름이 비어있음");
 			throw new IllegalArgumentException("이름은 필수입니다.");
 		}
-		
+
 		if (userVo.getEmail() == null || userVo.getEmail().trim().isEmpty()) {
 			System.out.println("오류: 이메일이 비어있음");
 			throw new IllegalArgumentException("이메일은 필수입니다.");
 		}
-		
+
 		if (userVo.getPassword() == null || userVo.getPassword().trim().isEmpty()) {
 			System.out.println("오류: 비밀번호가 비어있음");
 			throw new IllegalArgumentException("비밀번호는 필수입니다.");
 		}
-		
+
 		// 이메일 수신동의를 boolean 값으로 변환
 		if ("true".equals(userVo.getEmailConsent()) || "1".equals(userVo.getEmailConsent())) {
 			userVo.setEmailConsent("1");
 		} else {
 			userVo.setEmailConsent("0");
 		}
-		
+
 		// 기본 역할 설정 (DEVELOPER = 1)
 		userVo.setUserRole("developer");
-		
+
 		System.out.println("=== 서비스 호출 시작 ===");
-		
+
 		try {
 			int userId = userService.registerUser(userVo);
 			System.out.println("=== 회원가입 성공 ===");
 			System.out.println("생성된 사용자 ID: " + userId);
-			
+
 			// users_info 테이블에 기본 정보 저장
 			System.out.println("=== users_info 테이블에 기본 정보 저장 시작 ===");
 			UserVo userInfoVo = new UserVo();
 			userInfoVo.setUserId(userId);
-			
+
 			// 생년월일 파싱 및 저장
 			if (userVo.getBirthDate() != null && !userVo.getBirthDate().trim().isEmpty()) {
 				try {
 					String birthDateStr = userVo.getBirthDate();
 					if (birthDateStr.length() == 8) {
 						// YYYYMMDD 형태를 YYYY-MM-DD로 변환
-						String formattedDate = birthDateStr.substring(0, 4) + "-" + 
-											 birthDateStr.substring(4, 6) + "-" + 
-											 birthDateStr.substring(6, 8);
+						String formattedDate = birthDateStr.substring(0, 4) + "-" + birthDateStr.substring(4, 6) + "-"
+								+ birthDateStr.substring(6, 8);
 						userInfoVo.setBirthDate(formattedDate);
 						System.out.println("생년월일 저장: " + formattedDate);
 					}
@@ -409,7 +409,7 @@ public class UserController {
 					System.out.println("생년월일 파싱 오류: " + e.getMessage());
 				}
 			}
-			
+
 			// 성별 저장
 			if (userVo.getGender() != null && !userVo.getGender().trim().isEmpty()) {
 				String gender = userVo.getGender();
@@ -420,10 +420,10 @@ public class UserController {
 				}
 				System.out.println("성별 저장: " + userInfoVo.getGender());
 			}
-			
+
 			// 휴대폰번호는 현재 users_info에 필드가 없으므로 생략
 			// 향후 필요시 필드 추가 가능
-			
+
 			// users_info 테이블에 기본 정보 저장
 			try {
 				userService.insertOrUpdateUserInfo(userInfoVo);
@@ -432,24 +432,24 @@ public class UserController {
 				System.out.println("users_info 저장 오류: " + e.getMessage());
 				e.printStackTrace();
 			}
-			
+
 			// 세션에 사용자 ID 저장 (Integer 타입으로 저장)
 			HttpSession session = request.getSession();
 			session.setAttribute("userId", Integer.valueOf(userId));
 			session.setAttribute("userEmail", userVo.getEmail());
 			session.setAttribute("userName", userVo.getName());
 			System.out.println("세션에 사용자 정보 저장 완료: userId=" + userId + " (Integer 타입)");
-			
+
 			UserVo result = new UserVo();
 			result.setUserId(userId);
 			result.setEmail(userVo.getEmail());
 			result.setName(userVo.getName());
 			result.setRole("SUCCESS"); // 성공 표시
-			
+
 			AppLog.debug("- 회원가입 완료 : 사용자 ID " + userId);
-			
+
 			return result;
-			
+
 		} catch (Exception e) {
 			System.out.println("=== 회원가입 실패 ===");
 			System.out.println("오류 메시지: " + e.getMessage());
@@ -466,60 +466,60 @@ public class UserController {
 	 * @throws Exception
 	 */
 	@ElService(key = "USProfileImageUpload")
-	@RequestMapping(value = {"USProfileImageUpload", "USProfileImageUpload.pwkjson"})
+	@RequestMapping(value = { "USProfileImageUpload", "USProfileImageUpload.pwkjson" })
 	@ElDescription(sub = "프로필 이미지 업로드", desc = "사용자의 프로필 이미지를 업로드하고 서버에 저장한다.")
 	public Map<String, Object> uploadProfileImage(MultipartHttpServletRequest request) throws Exception {
 		System.out.println("=== ProWorks5 프로필 이미지 업로드 요청 시작 ===");
-		
+
 		Map<String, Object> result = new HashMap<>();
-		
+
 		try {
 			// 사용자 ID 추출
 			String userIdStr = request.getParameter("userId");
 			if (userIdStr == null || userIdStr.trim().isEmpty()) {
 				throw new IllegalArgumentException("사용자 ID가 필요합니다.");
 			}
-			
+
 			Long userId = Long.parseLong(userIdStr);
 			System.out.println("사용자 ID: " + userId);
-			
+
 			// 업로드된 파일 추출
 			MultipartFile file = request.getFile("profileImage");
 			if (file == null || file.isEmpty()) {
 				throw new IllegalArgumentException("업로드할 파일이 없습니다.");
 			}
-			
+
 			// 파일 유효성 검사
 			String originalFileName = file.getOriginalFilename();
 			String contentType = file.getContentType();
 			long fileSize = file.getSize();
-			
+
 			System.out.println("업로드 파일 정보:");
 			System.out.println("- 원본 파일명: " + originalFileName);
 			System.out.println("- Content Type: " + contentType);
 			System.out.println("- 파일 크기: " + fileSize + " bytes");
-			
+
 			// 파일 타입 검사
 			if (!contentType.startsWith("image/")) {
 				throw new IllegalArgumentException("이미지 파일만 업로드 가능합니다.");
 			}
-			
+
 			// 파일 크기 검사 (5MB = 5 * 1024 * 1024 bytes)
 			if (fileSize > 5 * 1024 * 1024) {
 				throw new IllegalArgumentException("파일 크기는 5MB 이하여야 합니다.");
 			}
-			
+
 			// 파일 확장자 추출
 			String fileExtension = "";
 			if (originalFileName != null && originalFileName.contains(".")) {
 				fileExtension = originalFileName.substring(originalFileName.lastIndexOf("."));
 			}
-			
+
 			// 새로운 파일명 생성 (profile_userId_timestamp.확장자)
 			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
 			String timestamp = dateFormat.format(new Date());
 			String newFileName = "profile_" + userId + "_" + timestamp + fileExtension;
-			
+
 			// 저장 디렉토리 설정
 			String uploadDir = request.getSession().getServletContext().getRealPath("/images/profile/");
 			File uploadDirectory = new File(uploadDir);
@@ -527,42 +527,42 @@ public class UserController {
 				uploadDirectory.mkdirs();
 				System.out.println("업로드 디렉토리 생성: " + uploadDir);
 			}
-			
+
 			// 파일 저장
 			File savedFile = new File(uploadDirectory, newFileName);
 			try (InputStream inputStream = file.getInputStream();
-				 FileOutputStream outputStream = new FileOutputStream(savedFile)) {
-				
+					FileOutputStream outputStream = new FileOutputStream(savedFile)) {
+
 				byte[] buffer = new byte[1024];
 				int bytesRead;
 				while ((bytesRead = inputStream.read(buffer)) != -1) {
 					outputStream.write(buffer, 0, bytesRead);
 				}
 			}
-			
+
 			System.out.println("파일 저장 완료: " + savedFile.getAbsolutePath());
-			
+
 			// 데이터베이스에 파일명 저장
 			userService.updateProfileImage(userId, newFileName);
-			
+
 			// 성공 응답
 			result.put("success", true);
 			result.put("fileName", newFileName);
 			result.put("filePath", "/InsWebApp/images/profile/" + newFileName);
 			result.put("message", "프로필 이미지가 성공적으로 업로드되었습니다.");
-			
+
 			System.out.println("=== 프로필 이미지 업로드 성공 ===");
 			System.out.println("저장된 파일명: " + newFileName);
-			
+
 		} catch (Exception e) {
 			System.out.println("=== 프로필 이미지 업로드 실패 ===");
 			System.out.println("오류 메시지: " + e.getMessage());
 			e.printStackTrace();
-			
+
 			result.put("success", false);
 			result.put("message", e.getMessage());
 		}
-		
+
 		return result;
 	}
 
@@ -574,11 +574,11 @@ public class UserController {
 	 * @throws Exception
 	 */
 	@ElService(key = "USUpdateAdditionalInfo")
-	@RequestMapping(value = {"USUpdateAdditionalInfo", "USUpdateAdditionalInfo.pwkjson"})
+	@RequestMapping(value = { "USUpdateAdditionalInfo", "USUpdateAdditionalInfo.pwkjson" })
 	@ElDescription(sub = "사용자 프로필 정보 저장", desc = "ProfileAdditional에서 입력된 자기소개와 프로필 이미지 정보를 users_info 테이블에 저장한다. 기존 데이터는 유지하고 전달된 필드만 업데이트한다.")
 	public Map<String, Object> updateAdditionalInfo(HttpServletRequest request) throws Exception {
 		Map<String, Object> result = new HashMap<>();
-		
+
 		try {
 			// JSON 문자열 읽기
 			BufferedReader reader = request.getReader();
@@ -588,20 +588,20 @@ public class UserController {
 				sb.append(line);
 			}
 			String jsonString = sb.toString();
-			
+
 			System.out.println("=== 프로필 정보 저장 요청 JSON ===");
 			System.out.println(jsonString);
-			
+
 			if (jsonString == null || jsonString.trim().isEmpty()) {
 				result.put("success", false);
 				result.put("message", "요청 데이터가 비어있습니다.");
 				return result;
 			}
-			
+
 			// JSON 파싱
 			ObjectMapper objectMapper = new ObjectMapper();
 			JsonNode rootNode = objectMapper.readTree(jsonString);
-			
+
 			// 세션에서 사용자 ID 가져오기
 			HttpSession session = request.getSession();
 			Integer sessionUserId = (Integer) session.getAttribute("userId");
@@ -611,19 +611,19 @@ public class UserController {
 				result.put("message", "로그인이 필요합니다.");
 				return result;
 			}
-			
+
 			int userId = sessionUserId.intValue();
 			System.out.println("세션에서 가져온 사용자 ID: " + userId);
-			
+
 			// 기존 사용자 정보 조회 (기존 데이터 유지를 위해)
 			UserVo queryVo = new UserVo();
 			queryVo.setUserId(userId);
 			UserVo existingUserVo = userService.selectUser(queryVo);
-			
+
 			// 기존 데이터가 있으면 사용, 없으면 새로 생성
 			UserVo userVo = existingUserVo != null ? existingUserVo : new UserVo();
 			userVo.setUserId(userId);
-			
+
 			// 현재 페이지에서 전달된 데이터만 업데이트 (빈 값은 무시)
 			if (rootNode.has("bio")) {
 				String bio = rootNode.get("bio").asText();
@@ -632,7 +632,7 @@ public class UserController {
 					System.out.println("자기소개 업데이트: " + bio);
 				}
 			}
-			
+
 			if (rootNode.has("profileImageName")) {
 				String profileImageName = rootNode.get("profileImageName").asText();
 				if (profileImageName != null && !profileImageName.trim().isEmpty()) {
@@ -640,25 +640,25 @@ public class UserController {
 					System.out.println("프로필 이미지 업데이트: " + profileImageName);
 				}
 			}
-			
+
 			// users_info 테이블에 데이터 저장 또는 업데이트 (기존 데이터 보존)
 			userService.insertOrUpdateUserInfo(userVo);
-			
+
 			result.put("success", true);
 			result.put("message", "프로필 정보가 성공적으로 저장되었습니다.");
 			result.put("userId", userId);
-			
+
 			System.out.println("프로필 정보 저장 완료 (기존 데이터 보존): userId=" + userId);
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("success", false);
 			result.put("message", "서버 오류가 발생했습니다: " + e.getMessage());
 		}
-		
+
 		return result;
 	}
-	
+
 	/**
 	 * 연봉 범위 문자열을 숫자로 변환한다.
 	 * 
@@ -669,7 +669,7 @@ public class UserController {
 		if (salaryRange == null || salaryRange.trim().isEmpty()) {
 			return 0;
 		}
-		
+
 		try {
 			// 전체 텍스트 매칭
 			if (salaryRange.contains("2,000만원 ~ 2,500만원")) {
@@ -698,7 +698,7 @@ public class UserController {
 		} catch (Exception e) {
 			System.out.println("연봉 범위 파싱 오류: " + e.getMessage());
 		}
-		
+
 		return 0;
 	}
 
@@ -706,11 +706,11 @@ public class UserController {
 	 * 사용자 지역 정보 업데이트
 	 */
 	@ElService(key = "USUpdateLocation")
-	@RequestMapping(value = {"USUpdateLocation", "USUpdateLocation.pwkjson"}, method = RequestMethod.POST)
+	@RequestMapping(value = { "USUpdateLocation", "USUpdateLocation.pwkjson" }, method = RequestMethod.POST)
 	public Map<String, Object> updateUserLocation(HttpServletRequest request) {
-		
+
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-		
+
 		try {
 			// JSON 문자열 읽기
 			BufferedReader reader = request.getReader();
@@ -720,24 +720,24 @@ public class UserController {
 				sb.append(line);
 			}
 			String jsonString = sb.toString();
-			
+
 			System.out.println("=== 지역 정보 업데이트 요청 JSON ===");
 			System.out.println(jsonString);
-			
+
 			if (jsonString == null || jsonString.trim().isEmpty()) {
 				resultMap.put("result", "fail");
 				resultMap.put("message", "요청 데이터가 비어있습니다.");
 				return resultMap;
 			}
-			
+
 			// JSON 파싱
 			ObjectMapper objectMapper = new ObjectMapper();
 			JsonNode rootNode = objectMapper.readTree(jsonString);
-			
+
 			// 세션에서 사용자 ID 가져오기
 			HttpSession session = request.getSession();
 			Integer sessionUserId = (Integer) session.getAttribute("userId");
-			
+
 			Integer userId;
 			if (sessionUserId != null) {
 				userId = sessionUserId;
@@ -748,7 +748,7 @@ public class UserController {
 				resultMap.put("message", "사용자 정보를 찾을 수 없습니다.");
 				return resultMap;
 			}
-			
+
 			// dma_location 노드에서 locations 추출
 			String locations = "";
 			if (rootNode.has("dma_location")) {
@@ -759,44 +759,44 @@ public class UserController {
 					locations = locationNode.get("selectedLocations").asText();
 				}
 			}
-			
+
 			System.out.println("지역 업데이트 - 최종 사용자 ID: " + userId + ", 지역: " + locations);
-			
+
 			// 기존 사용자 정보 조회 후 병합
 			UserVo queryVo = new UserVo();
 			queryVo.setUserId(userId);
 			UserVo existingUserVo = userService.selectUser(queryVo);
-			
+
 			// 기존 데이터가 있으면 병합, 없으면 새로 생성
 			UserVo userVo = existingUserVo != null ? existingUserVo : new UserVo();
 			userVo.setUserId(userId);
 			userVo.setPreferredLocations(locations);
-			
+
 			// 사용자 정보 업데이트 (insertOrUpdateUserInfo 사용)
 			userService.insertOrUpdateUserInfo(userVo);
-			
+
 			resultMap.put("result", "success");
 			resultMap.put("message", "지역 정보가 성공적으로 저장되었습니다.");
-			
+
 		} catch (Exception e) {
 			System.out.println("updateUserLocation error: " + e.getMessage());
 			e.printStackTrace();
 			resultMap.put("result", "error");
 			resultMap.put("message", "시스템 오류가 발생했습니다.");
 		}
-		
+
 		return resultMap;
 	}
-	
+
 	/**
 	 * 사용자 연봉 정보 업데이트
 	 */
 	@ElService(key = "USUpdateSalary")
-	@RequestMapping(value = {"USUpdateSalary", "USUpdateSalary.pwkjson"}, method = RequestMethod.POST)
+	@RequestMapping(value = { "USUpdateSalary", "USUpdateSalary.pwkjson" }, method = RequestMethod.POST)
 	public Map<String, Object> updateUserSalary(HttpServletRequest request) {
-		
+
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-		
+
 		try {
 			// JSON 문자열 읽기
 			BufferedReader reader = request.getReader();
@@ -806,24 +806,24 @@ public class UserController {
 				sb.append(line);
 			}
 			String jsonString = sb.toString();
-			
+
 			System.out.println("=== 연봉 정보 업데이트 요청 JSON ===");
 			System.out.println(jsonString);
-			
+
 			if (jsonString == null || jsonString.trim().isEmpty()) {
 				resultMap.put("result", "fail");
 				resultMap.put("message", "요청 데이터가 비어있습니다.");
 				return resultMap;
 			}
-			
+
 			// JSON 파싱
 			ObjectMapper objectMapper = new ObjectMapper();
 			JsonNode rootNode = objectMapper.readTree(jsonString);
-			
+
 			// 세션에서 사용자 ID 가져오기
 			HttpSession session = request.getSession();
 			Integer sessionUserId = (Integer) session.getAttribute("userId");
-			
+
 			Integer userId;
 			if (sessionUserId != null) {
 				userId = sessionUserId;
@@ -834,7 +834,7 @@ public class UserController {
 				resultMap.put("message", "사용자 정보를 찾을 수 없습니다.");
 				return resultMap;
 			}
-			
+
 			// dma_salary 노드에서 salary 추출
 			String salary = "";
 			if (rootNode.has("dma_salary")) {
@@ -845,14 +845,14 @@ public class UserController {
 					salary = salaryNode.get("selectedSalary").asText();
 				}
 			}
-			
+
 			System.out.println("연봉 업데이트 - 최종 사용자 ID: " + userId + ", 연봉: " + salary);
-			
+
 			// 기존 사용자 정보 조회 후 병합
 			UserVo queryVo = new UserVo();
 			queryVo.setUserId(userId);
 			UserVo existingUserVo = userService.selectUser(queryVo);
-			
+
 			// 기존 데이터가 있으면 병합, 없으면 새로 생성
 			UserVo userVo = existingUserVo != null ? existingUserVo : new UserVo();
 			userVo.setUserId(userId);
@@ -860,32 +860,32 @@ public class UserController {
 			// 연봉 범위를 숫자로 변환하여 저장
 			int yearSalary = parseSalaryRange(salary);
 			userVo.setYearSalary(yearSalary);
-			
+
 			// 사용자 정보 업데이트 (insertOrUpdateUserInfo 사용)
 			userService.insertOrUpdateUserInfo(userVo);
-			
+
 			resultMap.put("result", "success");
 			resultMap.put("message", "연봉 정보가 성공적으로 저장되었습니다.");
-			
+
 		} catch (Exception e) {
 			System.out.println("updateUserSalary error: " + e.getMessage());
 			e.printStackTrace();
 			resultMap.put("result", "error");
 			resultMap.put("message", "시스템 오류가 발생했습니다.");
 		}
-		
+
 		return resultMap;
 	}
-	
+
 	/**
 	 * 사용자 경력 정보 업데이트
 	 */
 	@ElService(key = "USUpdateCareer")
-	@RequestMapping(value = {"USUpdateCareer", "USUpdateCareer.pwkjson"}, method = RequestMethod.POST)
+	@RequestMapping(value = { "USUpdateCareer", "USUpdateCareer.pwkjson" }, method = RequestMethod.POST)
 	public Map<String, Object> updateUserCareer(HttpServletRequest request) {
-		
+
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-		
+
 		try {
 			// JSON 문자열 읽기
 			BufferedReader reader = request.getReader();
@@ -895,24 +895,24 @@ public class UserController {
 				sb.append(line);
 			}
 			String jsonString = sb.toString();
-			
+
 			System.out.println("=== 경력 정보 업데이트 요청 JSON ===");
 			System.out.println(jsonString);
-			
+
 			if (jsonString == null || jsonString.trim().isEmpty()) {
 				resultMap.put("result", "fail");
 				resultMap.put("message", "요청 데이터가 비어있습니다.");
 				return resultMap;
 			}
-			
+
 			// JSON 파싱
 			ObjectMapper objectMapper = new ObjectMapper();
 			JsonNode rootNode = objectMapper.readTree(jsonString);
-			
+
 			// 세션에서 사용자 ID 가져오기
 			HttpSession session = request.getSession();
 			Integer sessionUserId = (Integer) session.getAttribute("userId");
-			
+
 			Integer userId;
 			if (sessionUserId != null) {
 				userId = sessionUserId;
@@ -923,16 +923,16 @@ public class UserController {
 				resultMap.put("message", "사용자 정보를 찾을 수 없습니다.");
 				return resultMap;
 			}
-			
+
 			// dma_career 노드에서 데이터 추출
 			String career = "";
 			String careerType = "";
 			String careerPeriod = "";
 			String bio = "";
-			
+
 			if (rootNode.has("dma_career")) {
 				JsonNode careerNode = rootNode.get("dma_career");
-				
+
 				if (careerNode.has("career")) {
 					career = careerNode.get("career").asText();
 				}
@@ -948,46 +948,62 @@ public class UserController {
 					bio = careerNode.get("introduction").asText();
 				}
 			}
-			
-			System.out.println("경력 업데이트 - 최종 사용자 ID: " + userId + ", 경력: " + career + ", 타입: " + careerType + ", 기간: " + careerPeriod);
-			
+
+			System.out.println("경력 업데이트 - 최종 사용자 ID: " + userId + ", 경력: " + career + ", 타입: " + careerType + ", 기간: "
+					+ careerPeriod);
+
 			// 기존 사용자 정보 조회 후 병합
 			UserVo queryVo = new UserVo();
 			queryVo.setUserId(userId);
 			UserVo existingUserVo = userService.selectUser(queryVo);
-			
+
 			// 기존 데이터가 있으면 병합, 없으면 새로 생성
 			UserVo userVo = existingUserVo != null ? existingUserVo : new UserVo();
 			userVo.setUserId(userId);
-			
+
 			// career 필드에는 careerType을 저장 (신입/경력)
 			if (!careerType.trim().isEmpty()) {
 				userVo.setCareer(careerType);
 			} else if (!career.trim().isEmpty()) {
-			userVo.setCareer(career);
+				userVo.setCareer(career);
 			}
-			
+
 			// careerPeriod 저장
 			if (!careerPeriod.trim().isEmpty()) {
 				userVo.setCareerPeriod(careerPeriod);
 			}
-			
 
-			
 			// 사용자 정보 업데이트 (insertOrUpdateUserInfo 사용)
 			userService.insertOrUpdateUserInfo(userVo);
-			
-				resultMap.put("result", "success");
-				resultMap.put("message", "경력 정보가 성공적으로 저장되었습니다.");
-			
+
+			resultMap.put("result", "success");
+			resultMap.put("message", "경력 정보가 성공적으로 저장되었습니다.");
+
 		} catch (Exception e) {
 			System.out.println("updateUserCareer error: " + e.getMessage());
 			e.printStackTrace();
 			resultMap.put("result", "error");
 			resultMap.put("message", "시스템 오류가 발생했습니다.");
 		}
-		
+
 		return resultMap;
+	}
+
+	/**
+	 * 일반회원을 단건 조회 처리 한다.
+	 *
+	 * @param request HttpServletRequest 요청 객체
+	 * @return 단건 조회 결과
+	 * @throws Exception
+	 */
+	@ElService(key = "US0002UpdView")
+	@RequestMapping(value = "US0002UpdView")
+	@ElDescription(sub = "일반회원 갱신 폼을 위한 조회", desc = "일반회원 상세보기 페이지의 조회를 담당한다.")
+	public UserInfoVo selectUserDetail(UserInfoVo userInfoVo) throws Exception {
+
+		UserInfoVo selectUserVo = userService.selectUserDetail(userInfoVo);
+		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> : " + selectUserVo.toString());
+		return selectUserVo;
 	}
 
 }

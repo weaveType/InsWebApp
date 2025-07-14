@@ -160,4 +160,7 @@ public class PostDAO extends com.demo.proworks.cmmn.dao.ProworksDefaultAbstractD
 		return (List<PostVo>) list("com.demo.proworks.domain.post.findPostsByMbti", postMatchVo);
 	}
 
+	public long findPostsByMbtiCount(PostMatchVo postMatchVo) throws ElException {
+		return (long) selectByPk("com.demo.proworks.domain.post.findPostsByMbtiCount", postMatchVo);
+	}
 }

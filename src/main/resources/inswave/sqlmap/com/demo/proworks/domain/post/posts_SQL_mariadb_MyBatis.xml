@@ -240,4 +240,20 @@ ORDER BY bestMatchCount DESC, p.posted_at DESC
 LIMIT #{limit}
 </if>
 </select>
+<select id="findPostsByMbtiCount" resultType="long" parameterType="com.demo.proworks.domain.post.vo.PostMatchVo">
+<!-- mbti가 일치하는 갯수의 count 를 가져온다 -->
+SELECT COUNT(DISTINCT p.job_posting_id) as totalCount
+FROM posts p
+INNER JOIN companys c ON p.company_id = c.company_id
+LEFT JOIN JSON_TABLE(
+    p.preferred_developer_types, 
+    "$[*]" COLUMNS(mbti CHAR(4) PATH "$")
+) jt ON JSON_VALID(p.preferred_developer_types) AND jt.mbti IS NOT NULL
+LEFT JOIN mbti_compat compat ON compat.code1 = #{userMbti} AND compat.code2 = jt.mbti
+WHERE p.status = 'active'
+    AND p.expires_at > NOW()
+    AND (p.is_deleted IS NULL OR p.is_deleted = 0)
+    AND (c.is_deleted IS NULL OR c.is_deleted = 0)
+    AND IFNULL(compat.match_cnt, 0) >= CAST(#{mbtiMatchFilter} AS UNSIGNED);
+</select>
 </mapper>

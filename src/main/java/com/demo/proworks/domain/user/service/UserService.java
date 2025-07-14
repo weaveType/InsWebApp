@@ -3,6 +3,7 @@ package com.demo.proworks.domain.user.service;
 import java.util.List;
 
 import com.demo.proworks.common.enumType.DevMbti;
+import com.demo.proworks.domain.user.vo.UserInfoVo;
 import com.demo.proworks.domain.user.vo.UserVo;
 
 /**
@@ -111,7 +112,7 @@ public interface UserService {
 	/**
 	 * 사용자의 프로필 이미지를 업데이트한다.
 	 *
-	 * @param userId 사용자 ID
+	 * @param userId           사용자 ID
 	 * @param profileImageName 프로필 이미지 파일명
 	 * @return 업데이트 결과 (성공 시 1, 실패 시 0)
 	 * @throws Exception
@@ -144,5 +145,14 @@ public interface UserService {
 	 * @throws Exception
 	 */
 	public UserVo selectUserInfoByUserId(UserVo userVo) throws Exception;
+
+	/**
+	 * 사용자 ID로 users_info 테이블 및 users 의 정보를 조회한다.
+	 *
+	 * @param UserInfoVo 사용자 상세정보에 필요한 Vo
+	 * @return UserInfoVo 사용자 추가 정보 (없으면 null)
+	 * @throws Exception
+	 */
+	public UserInfoVo selectUserDetail(UserInfoVo userInfoVo) throws Exception;
 
 }

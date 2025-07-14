@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.inswave.elfw.exception.ElException;
+import com.demo.proworks.domain.user.vo.UserInfoVo;
 import com.demo.proworks.domain.user.vo.UserVo;
 import com.demo.proworks.common.enumType.DevMbti;
 import com.demo.proworks.domain.user.dao.UserDAO;
@@ -71,11 +72,11 @@ public class UserDAO extends com.demo.proworks.cmmn.dao.ProworksDefaultAbstractD
 		// 암호화 처리
 		String hashedPassword = BCrypt.hashpw(vo.getPassword(), BCrypt.gensalt(12));
 		vo.setPassword(hashedPassword);
-		if(vo.getRole().equals("USER")){
+		if (vo.getRole().equals("USER")) {
 			vo.setRoleId(1);
-		} else if(vo.getRole().equals("COMPANY")) {
+		} else if (vo.getRole().equals("COMPANY")) {
 			vo.setRoleId(2);
-		} else if(vo.getRole().equals("ADMIN")){
+		} else if (vo.getRole().equals("ADMIN")) {
 			vo.setRoleId(3);
 		}
 
@@ -114,7 +115,7 @@ public class UserDAO extends com.demo.proworks.cmmn.dao.ProworksDefaultAbstractD
 	public UserVo selectUserByEmail(UserVo vo) throws ElException {
 		return (UserVo) selectByPk("com.demo.proworks.domain.user.selectUserByEmail", vo);
 	}
-	
+
 	/**
 	 * 이메일로 일반회원을 상세 조회한다.
 	 * 
@@ -135,10 +136,10 @@ public class UserDAO extends com.demo.proworks.cmmn.dao.ProworksDefaultAbstractD
 	 */
 	public boolean checkEmailDuplicate(String email) throws ElException {
 		System.out.println("DEBUG - checkEmailDuplicate: 실제 DB 조회 - " + email);
-		
+
 		// 실제 DB에서 이메일 중복 개수 조회 (MariaDB COUNT()는 Long 반환)
 		Long count = (Long) selectByPk("com.demo.proworks.domain.user.checkEmailDuplicateCount", email);
-		
+
 		// count가 0보다 크면 이미 존재하는 이메일 (중복)
 		return count != null && count > 0;
 	}
@@ -154,13 +155,13 @@ public class UserDAO extends com.demo.proworks.cmmn.dao.ProworksDefaultAbstractD
 		// 비밀번호 암호화
 		String hashedPassword = BCrypt.hashpw(vo.getPassword(), BCrypt.gensalt(12));
 		vo.setPassword(hashedPassword);
-		
+
 		// 일반 사용자는 개발자 권한(role_id = 1)으로 설정
 		vo.setRoleId(1);
-		
+
 		// INSERT 실행 (useGeneratedKeys="true"로 설정되어 있어서 vo.userId에 생성된 ID가 설정됨)
 		insert("com.demo.proworks.domain.user.registerUser", vo);
-		
+
 		// 생성된 사용자 ID 반환
 		return vo.getUserId();
 	}
@@ -168,7 +169,7 @@ public class UserDAO extends com.demo.proworks.cmmn.dao.ProworksDefaultAbstractD
 	/**
 	 * 사용자의 프로필 이미지를 업데이트한다.
 	 * 
-	 * @param userId 사용자 ID
+	 * @param userId           사용자 ID
 	 * @param profileImageName 프로필 이미지 파일명
 	 * @return 업데이트 결과 (성공 시 1, 실패 시 0)
 	 * @throws ElException
@@ -177,7 +178,7 @@ public class UserDAO extends com.demo.proworks.cmmn.dao.ProworksDefaultAbstractD
 		Map<String, Object> params = new HashMap<>();
 		params.put("userId", userId);
 		params.put("profileImageName", profileImageName);
-		
+
 		return update("com.demo.proworks.domain.user.updateProfileImage", params);
 	}
 
@@ -212,5 +213,9 @@ public class UserDAO extends com.demo.proworks.cmmn.dao.ProworksDefaultAbstractD
 	 */
 	public int updateUserInfo(UserVo vo) throws ElException {
 		return update("com.demo.proworks.domain.user.updateUserInfo", vo);
+	}
+
+	public UserInfoVo selectUserDetail(UserInfoVo vo) throws Exception {
+		return (UserInfoVo) selectByPk("com.demo.proworks.domain.user.selectUserDetail", vo);
 	}
 }

@@ -4,7 +4,6 @@ import com.inswave.elfw.annotation.ElDto;
 import com.inswave.elfw.annotation.ElDtoField;
 import com.inswave.elfw.annotation.ElVoField;
 import com.fasterxml.jackson.annotation.JsonFilter;
-import com.inswave.elfw.annotation.OpenApi;
 
 @JsonFilter("elExcludeFilter")
 @ElDto(FldYn = "", delimeterYn = "", logicalName = "이메일 정보")
@@ -12,8 +11,6 @@ public class EmailVo extends com.demo.proworks.cmmn.ProworksCommVO {
     private static final long serialVersionUID = 1L;
 
     public EmailVo(){
-        // 초기화 시 role을 빈 문자열로 설정
-        this.role = "";
     }
 
     @ElDtoField(logicalName = "이메일", physicalName = "email", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
@@ -48,10 +45,11 @@ public class EmailVo extends com.demo.proworks.cmmn.ProworksCommVO {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("EmailVo [");
-        sb.append("email").append("=").append(email);
-        sb.append(", role").append("=").append(role);
+        sb.append("email").append("=").append(email).append(",");
+        sb.append("role").append("=").append(role);
         sb.append("]");
         return sb.toString();
+
     }
 
     public boolean isFixedLengthVo() {
@@ -62,7 +60,10 @@ public class EmailVo extends com.demo.proworks.cmmn.ProworksCommVO {
     public void _xStreamEnc() {
     }
 
+
     @Override
     public void _xStreamDec() {
     }
+
+
 }
