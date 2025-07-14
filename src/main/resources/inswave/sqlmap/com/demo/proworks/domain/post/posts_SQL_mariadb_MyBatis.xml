@@ -83,17 +83,18 @@
     </update>
 	
     <select id="selectPost" parameterType="com.demo.proworks.domain.post.vo.PostVo" resultType="com.demo.proworks.domain.post.vo.PostVo">
-    	<!-- 공고정보를 상세 조회한다. -->	
+    	<!-- 공고정보를 상세 조회한다. (소프트 삭제된 공고 제외) -->	
         SELECT     /* QueryID : com.demo.proworks.domain.post.selectPost */
             JOB_POSTING_ID as jobPostingId, COMPANY_ID as companyId, TITLE as title, DESCRIPTION as description, EXPERIENCE_LEVEL as experienceLevel, SALARY_RANGE as salaryRange, LOCATION as location, WORK_TYPE as workType, PREFERRED_DEVELOPER_TYPES as preferredDeveloperTypes, EXPIRES_AT as expiresAt, POSTED_AT as postedAt, STATUS as status
         FROM POSTS 
         WHERE 
-                JOB_POSTING_ID            = #{jobPostingId}           
+                JOB_POSTING_ID            = #{jobPostingId}
+        AND (IS_DELETED IS NULL OR IS_DELETED = 0)
 			
     </select>
 	
     <select id="selectListPost" parameterType="com.demo.proworks.domain.post.vo.PostVo" resultType="com.demo.proworks.domain.post.vo.PostVo">
-    	<!-- 공고정보 목록을 조회한다. -->
+    	<!-- 공고정보 목록을 조회한다. (소프트 삭제된 공고 제외) -->
            SELECT    /* QueryID : com.demo.proworks.domain.post.selectListPost */
                JOB_POSTING_ID as jobPostingId, 
                COMPANY_ID as companyId, 
@@ -109,6 +110,7 @@
                STATUS as status		       
            FROM POSTS
            WHERE  1=1
+           AND (IS_DELETED IS NULL OR IS_DELETED = 0)
            <if test="companyId != null and companyId != ''">
            AND COMPANY_ID = #{companyId}
            </if>
@@ -116,12 +118,13 @@
     </select>
 	
     <select id="selectListCountPost" parameterType="com.demo.proworks.domain.post.vo.PostVo" resultType="long">
-    <!-- 공고정보 목록의 카운트를 조회한다. -->
+    <!-- 공고정보 목록의 카운트를 조회한다. (소프트 삭제된 공고 제외) -->
     
          SELECT    /* QueryID : com.demo.proworks.domain.post.selectListCountPost */
              COUNT(*) totcnt  		                  
          FROM POSTS
          WHERE  1=1
+         AND (IS_DELETED IS NULL OR IS_DELETED = 0)
          <if test="companyId != null and companyId != ''">
          AND COMPANY_ID = #{companyId}
          </if>
