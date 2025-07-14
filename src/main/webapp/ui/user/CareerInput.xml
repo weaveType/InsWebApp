@@ -12,12 +12,35 @@
             <w2:dataCollection baseNode="map">
                 <w2:dataMap baseNode="map" id="dma_career">
                     <w2:keyInfo>
-                        <w2:key id="careerType" name="경력유형" dataType="text"></w2:key>
-                        <w2:key id="careerPeriod" name="경력기간" dataType="text"></w2:key>
-                        <w2:key id="introduction" name="자기소개" dataType="text"></w2:key>
+                        <w2:key id="user_id" name="user_id" dataType="text"></w2:key>
+                        <w2:key id="career" name="career" dataType="text"></w2:key>
+                        <w2:key id="bio" name="bio" dataType="text"></w2:key>
+                        <w2:key id="careerType" name="careerType" dataType="text"></w2:key>
+                        <w2:key id="careerPeriod" name="careerPeriod" dataType="text"></w2:key>
+                        <w2:key id="introduction" name="introduction" dataType="text"></w2:key>
                     </w2:keyInfo>
                 </w2:dataMap>
             </w2:dataCollection>
+            
+            <!-- Submission for saving career data to server -->
+            <xf:submission 
+                id="sbm_saveCareer" 
+                ref="data:json,dma_career" 
+                target="data:json,dma_career" 
+                action="/InsWebApp/USUpdateCareer.pwkjson" 
+                method="post" 
+                mediatype="application/json"
+                instance="" 
+                replace="" 
+                errorHandler="" 
+                customHandler=""
+                mode="asynchronous" 
+                processMsg="경력 정보 저장 중..." 
+                ev:submit="" 
+                ev:submitdone="scwin.sbm_saveCareer_submitdone" 
+                ev:submiterror="scwin.sbm_saveCareer_submiterror" 
+                abortTrigger="">
+            </xf:submission>
         </xf:model>
         <w2:layoutInfo/>
         <w2:publicInfo method=""/>
@@ -25,15 +48,6 @@
         <script type="text/javascript"><![CDATA[
             scwin.onpageload = function() {
                 console.log("경력 입력 페이지 로드됨");
-                
-                // 텍스트 영역 이벤트 바인딩
-                setTimeout(function() {
-                    var textarea = document.querySelector('.introduction-textarea');
-                    if (textarea) {
-                        textarea.addEventListener('input', scwin.updateCharCount);
-                        textarea.addEventListener('keyup', scwin.updateCharCount);
-                    }
-                }, 100);
             };
             
             scwin.selectCareerType = function(careerType) {
@@ -93,48 +107,11 @@
                 scwin.validateForm();
             };
             
-            scwin.updateCharCount = function(event) {
-                var textarea = event ? event.target : document.querySelector('.introduction-textarea');
-                var currentLength = textarea ? textarea.value.length : 0;
-                var maxLength = 500;
-                
-                // 글자 수 표시 업데이트
-                var charCountElement = document.querySelector('.char-count');
-                var charCountById = document.getElementById('introCharCount');
-                
-                if (charCountElement) {
-                    charCountElement.textContent = currentLength + '/' + maxLength;
-                }
-                if (charCountById) {
-                    charCountById.textContent = currentLength + '/' + maxLength;
-                }
-                
-                // 최대 길이 제한
-                if (currentLength > maxLength) {
-                    var limitedText = textarea.value.substring(0, maxLength);
-                    if (textarea) {
-                        textarea.value = limitedText;
-                    }
-                    dma_career.set("introduction", limitedText);
-                    
-                    if (charCountElement) {
-                        charCountElement.textContent = maxLength + '/' + maxLength;
-                    }
-                    if (charCountById) {
-                        charCountById.textContent = maxLength + '/' + maxLength;
-                    }
-                } else {
-                    dma_career.set("introduction", textarea.value);
-                }
-                
-                scwin.validateForm();
-            };
+
             
             scwin.validateForm = function() {
                 var careerType = dma_career.get("careerType");
                 var careerPeriod = dma_career.get("careerPeriod");
-                var textarea = document.querySelector('.introduction-textarea');
-                var introduction = textarea ? textarea.value : "";
                 
                 var isValid = true;
                 
@@ -148,17 +125,69 @@
                     isValid = false;
                 }
                 
-                // 자기소개 최소 길이 확인 (플로우 확인을 위해 완화)
-                // if (!introduction || introduction.trim().length < 50) {
-                //     isValid = false;
-                // }
-                
                 console.log("폼 유효성 검사:", {
                     careerType: careerType,
                     careerPeriod: careerPeriod,
-                    textLength: introduction ? introduction.length : 0,
                     isValid: isValid
                 });
+            };
+            
+            // Function to proceed to next page with server save
+            scwin.goToNextPage = function() {
+                // 경력이 선택되었는지 확인
+                var careerType = dma_career.get("careerType");
+                if (!careerType) {
+                    alert("경력을 선택해주세요.");
+                    return;
+                }
+                
+                // 경력자인 경우 경력 기간 선택 확인
+                if (careerType === "experienced") {
+                    var careerPeriod = dma_career.get("careerPeriod");
+                    if (!careerPeriod) {
+                        alert("경력 기간을 선택해주세요.");
+                        return;
+                    }
+                }
+                
+                // 데이터맵에 데이터 설정 (user_id는 백엔드에서 세션으로 처리)
+                dma_career.set("career", careerType + (careerType === "experienced" && dma_career.get("careerPeriod") ? " - " + dma_career.get("careerPeriod") : ""));
+                
+                console.log("경력 데이터 전송:", {
+                    career: dma_career.get("career")
+                });
+                
+                // 서버에 데이터 저장
+                $c.sbm.execute(sbm_saveCareer);
+            };
+            
+            // Success callback for career save
+            scwin.sbm_saveCareer_submitdone = function(e) {
+                console.log("Career save response:", e);
+                
+                var responseData = dma_career.getJSON();
+                console.log("응답 데이터:", responseData);
+                
+                if (responseData && (responseData.result === "success" || responseData.status === "success")) {
+                    console.log("경력 정보 저장 성공");
+                    // 다음 페이지로 이동
+                    $p.url("ProfileAdditional.xml");
+                } else {
+                    console.log("경력 정보 저장 성공 (기본 처리)");
+                    // 응답 구조와 상관없이 다음 페이지로 이동
+                    $p.url("ProfileAdditional.xml");
+                }
+            };
+            
+            // Error callback for career save
+            scwin.sbm_saveCareer_submiterror = function(e) {
+                console.error("Career save error:", e);
+                alert("경력 정보 저장 중 오류가 발생했습니다.");
+            };
+
+            // 기존 nextPage 함수를 새로운 함수로 교체
+            scwin.nextPage = function() {
+                scwin.goToNextPage();
             };
             
             // 이전 버튼 - $p.url 방식
@@ -167,23 +196,9 @@
                 $p.url("SalarySelect.xml");
             };
             
-            // 다음 버튼 - $p.url 방식
+            // 다음 버튼 - 서버 저장과 함께 페이지 이동
             scwin.btn_next_onclick = function() {
-                // 플로우 확인을 위해 검증 완화
-                var careerType = dma_career.get("careerType");
-                var textarea = document.querySelector('.introduction-textarea');
-                var introduction = textarea ? textarea.value : "";
-                
-                // 데이터 모델에 저장
-                dma_career.set("introduction", introduction);
-                
-                console.log("입력된 경력 정보:", {
-                    careerType: careerType,
-                    careerPeriod: dma_career.get("careerPeriod"),
-                    introduction: introduction
-                });
-                
-                $p.url("ProfileAdditional.xml");
+                scwin.goToNextPage();
             };
         ]]></script>
         
@@ -371,49 +386,7 @@
                 font-weight: bold;
             }
             
-            .introduction-section {
-                margin-bottom: 40px;
-            }
-            
-            .textarea-container {
-                position: relative;
-                margin-top: 16px;
-            }
-            
-            .introduction-textarea {
-                width: 100%;
-                min-height: 150px;
-                padding: 20px;
-                border: 2px solid #e0e0e0;
-                border-radius: 12px;
-                font-size: 16px;
-                font-family: "Malgun Gothic", "맑은 고딕", sans-serif;
-                line-height: 1.6;
-                resize: vertical;
-                transition: border-color 0.3s ease;
-                box-sizing: border-box;
-            }
-            
-            .introduction-textarea:focus {
-                outline: none;
-                border-color: #007bff;
-            }
-            
-            .introduction-textarea::placeholder {
-                color: #999;
-                line-height: 1.6;
-            }
-            
-            .char-count {
-                position: absolute;
-                bottom: 12px;
-                right: 16px;
-                font-size: 12px;
-                color: #999;
-                background-color: rgba(255, 255, 255, 0.9);
-                padding: 4px 8px;
-                border-radius: 4px;
-            }
+
             
             .buttons-section {
                 display: flex;
@@ -463,11 +436,8 @@
     </head>
     
     <body ev:onpageload="scwin.onpageload">
+        <w2:wframe src="../common/SignupHeader.xml" id="signupHeaderFrame" />
         <xf:group class="main-container">
-            <xf:group class="header">
-                <xf:image src="/InsWebApp/images/ws5/weaveTypeLogo.png" class="header-logo" style="height: 40px; width: auto;"></xf:image>
-                <xf:group class="header-progress"></xf:group>
-            </xf:group>
             
             <xf:group class="content-area">
                 <xf:group class="icon-container">
@@ -510,16 +480,7 @@
                     </xf:group>
                 </xf:group>
                 
-                <xf:group class="form-section introduction-section">
-                    <w2:textbox class="section-title" label="간단한 자기소개" tagname="div"></w2:textbox>
-                    <xf:group class="textarea-container">
-                        <textarea class="introduction-textarea" 
-                            placeholder="개발에 대한 관심을 갖게 된 계기나 배우고 싶은 기술, 목표 등을 자유롭게 작성해주세요. (선택사항)"
-                            oninput="scwin.updateCharCount(event)"
-                            onkeyup="scwin.updateCharCount(event)"></textarea>
-                        <w2:textbox class="char-count" id="introCharCount" label="0/500" tagname="div"></w2:textbox>
-                    </xf:group>
-                </xf:group>
+
                 
                 <xf:group class="buttons-section">
                     <xf:trigger class="btn-back" ev:onclick="scwin.btn_back_onclick">
