@@ -6,52 +6,62 @@ import com.inswave.elfw.annotation.ElVoField;
 import com.fasterxml.jackson.annotation.JsonFilter;
 
 @JsonFilter("elExcludeFilter")
-@ElDto(FldYn = "", logicalName = "공고정보")
+@ElDto(FldYn = "", delimeterYn = "", logicalName = "공고정보")
 public class PostVo extends com.demo.proworks.cmmn.ProworksCommVO {
     private static final long serialVersionUID = 1L;
 
-    @ElDtoField(logicalName = "job_posting_id", physicalName = "jobPostingId", type = "String", typeKind = "", fldYn = "", length = 0, dotLen = 0, baseValue = "", desc = "")
+    public PostVo(){
+    }
+
+    @ElDtoField(logicalName = "job_posting_id", physicalName = "jobPostingId", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
     private String jobPostingId;
 
-    @ElDtoField(logicalName = "company_id", physicalName = "companyId", type = "String", typeKind = "", fldYn = "", length = 0, dotLen = 0, baseValue = "", desc = "")
+    @ElDtoField(logicalName = "company_id", physicalName = "companyId", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
     private String companyId;
 
-    @ElDtoField(logicalName = "title", physicalName = "title", type = "String", typeKind = "", fldYn = "", length = 0, dotLen = 0, baseValue = "", desc = "")
+    @ElDtoField(logicalName = "title", physicalName = "title", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
     private String title;
 
-    @ElDtoField(logicalName = "description", physicalName = "description", type = "String", typeKind = "", fldYn = "", length = 0, dotLen = 0, baseValue = "", desc = "")
+    @ElDtoField(logicalName = "description", physicalName = "description", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
     private String description;
 
-    @ElDtoField(logicalName = "selected_tech_stack_names", physicalName = "selectedTechStackNames", type = "String", typeKind = "", fldYn = "", length = 0, dotLen = 0, baseValue = "", desc = "")
+    @ElDtoField(logicalName = "selected_tech_stack_names", physicalName = "selectedTechStackNames", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
     private String selectedTechStackNames;
 
-    @ElDtoField(logicalName = "experience_level", physicalName = "experienceLevel", type = "String", typeKind = "", fldYn = "", length = 0, dotLen = 0, baseValue = "", desc = "")
+    @ElDtoField(logicalName = "experience_level", physicalName = "experienceLevel", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
     private String experienceLevel;
 
-    @ElDtoField(logicalName = "salary_range", physicalName = "salaryRange", type = "String", typeKind = "", fldYn = "", length = 0, dotLen = 0, baseValue = "", desc = "")
+    @ElDtoField(logicalName = "salary_range", physicalName = "salaryRange", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
     private String salaryRange;
 
-    @ElDtoField(logicalName = "location", physicalName = "location", type = "String", typeKind = "", fldYn = "", length = 0, dotLen = 0, baseValue = "", desc = "")
+    @ElDtoField(logicalName = "location", physicalName = "location", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
     private String location;
 
-    @ElDtoField(logicalName = "work_type", physicalName = "workType", type = "String", typeKind = "", fldYn = "", length = 0, dotLen = 0, baseValue = "", desc = "")
+    @ElDtoField(logicalName = "work_type", physicalName = "workType", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
     private String workType;
 
-    @ElDtoField(logicalName = "preferred_developer_types", physicalName = "preferredDeveloperTypes", type = "String", typeKind = "", fldYn = "", length = 0, dotLen = 0, baseValue = "", desc = "")
+    @ElDtoField(logicalName = "preferred_developer_types", physicalName = "preferredDeveloperTypes", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
     private String preferredDeveloperTypes;
 
-    @ElDtoField(logicalName = "expires_at", physicalName = "expiresAt", type = "String", typeKind = "", fldYn = "", length = 0, dotLen = 0, baseValue = "", desc = "")
+    @ElDtoField(logicalName = "expires_at", physicalName = "expiresAt", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
     private String expiresAt;
 
-    @ElDtoField(logicalName = "posted_at", physicalName = "postedAt", type = "String", typeKind = "", fldYn = "", length = 0, dotLen = 0, baseValue = "", desc = "")
+    @ElDtoField(logicalName = "posted_at", physicalName = "postedAt", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
     private String postedAt;
 
-    @ElDtoField(logicalName = "status", physicalName = "status", type = "String", typeKind = "", fldYn = "", length = 0, dotLen = 0, baseValue = "", desc = "")
+    @ElDtoField(logicalName = "status", physicalName = "status", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
     private String status;
+
+    @ElDtoField(logicalName = "MBTI_매칭_필터", physicalName = "mbtiMatchFilter", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private String mbtiMatchFilter;
+
+    @ElDtoField(logicalName = "사용자_MBTI", physicalName = "userMbti", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private String userMbti;
 
     @ElVoField(physicalName = "jobPostingId")
     public String getJobPostingId(){
-        return jobPostingId;
+        String ret = this.jobPostingId;
+        return ret;
     }
 
     @ElVoField(physicalName = "jobPostingId")
@@ -61,7 +71,8 @@ public class PostVo extends com.demo.proworks.cmmn.ProworksCommVO {
 
     @ElVoField(physicalName = "companyId")
     public String getCompanyId(){
-        return companyId;
+        String ret = this.companyId;
+        return ret;
     }
 
     @ElVoField(physicalName = "companyId")
@@ -71,7 +82,8 @@ public class PostVo extends com.demo.proworks.cmmn.ProworksCommVO {
 
     @ElVoField(physicalName = "title")
     public String getTitle(){
-        return title;
+        String ret = this.title;
+        return ret;
     }
 
     @ElVoField(physicalName = "title")
@@ -81,7 +93,8 @@ public class PostVo extends com.demo.proworks.cmmn.ProworksCommVO {
 
     @ElVoField(physicalName = "description")
     public String getDescription(){
-        return description;
+        String ret = this.description;
+        return ret;
     }
 
     @ElVoField(physicalName = "description")
@@ -91,7 +104,8 @@ public class PostVo extends com.demo.proworks.cmmn.ProworksCommVO {
 
     @ElVoField(physicalName = "selectedTechStackNames")
     public String getSelectedTechStackNames(){
-        return selectedTechStackNames;
+        String ret = this.selectedTechStackNames;
+        return ret;
     }
 
     @ElVoField(physicalName = "selectedTechStackNames")
@@ -101,7 +115,8 @@ public class PostVo extends com.demo.proworks.cmmn.ProworksCommVO {
 
     @ElVoField(physicalName = "experienceLevel")
     public String getExperienceLevel(){
-        return experienceLevel;
+        String ret = this.experienceLevel;
+        return ret;
     }
 
     @ElVoField(physicalName = "experienceLevel")
@@ -111,7 +126,8 @@ public class PostVo extends com.demo.proworks.cmmn.ProworksCommVO {
 
     @ElVoField(physicalName = "salaryRange")
     public String getSalaryRange(){
-        return salaryRange;
+        String ret = this.salaryRange;
+        return ret;
     }
 
     @ElVoField(physicalName = "salaryRange")
@@ -121,7 +137,8 @@ public class PostVo extends com.demo.proworks.cmmn.ProworksCommVO {
 
     @ElVoField(physicalName = "location")
     public String getLocation(){
-        return location;
+        String ret = this.location;
+        return ret;
     }
 
     @ElVoField(physicalName = "location")
@@ -131,7 +148,8 @@ public class PostVo extends com.demo.proworks.cmmn.ProworksCommVO {
 
     @ElVoField(physicalName = "workType")
     public String getWorkType(){
-        return workType;
+        String ret = this.workType;
+        return ret;
     }
 
     @ElVoField(physicalName = "workType")
@@ -141,7 +159,8 @@ public class PostVo extends com.demo.proworks.cmmn.ProworksCommVO {
 
     @ElVoField(physicalName = "preferredDeveloperTypes")
     public String getPreferredDeveloperTypes(){
-        return preferredDeveloperTypes;
+        String ret = this.preferredDeveloperTypes;
+        return ret;
     }
 
     @ElVoField(physicalName = "preferredDeveloperTypes")
@@ -151,7 +170,8 @@ public class PostVo extends com.demo.proworks.cmmn.ProworksCommVO {
 
     @ElVoField(physicalName = "expiresAt")
     public String getExpiresAt(){
-        return expiresAt;
+        String ret = this.expiresAt;
+        return ret;
     }
 
     @ElVoField(physicalName = "expiresAt")
@@ -161,7 +181,8 @@ public class PostVo extends com.demo.proworks.cmmn.ProworksCommVO {
 
     @ElVoField(physicalName = "postedAt")
     public String getPostedAt(){
-        return postedAt;
+        String ret = this.postedAt;
+        return ret;
     }
 
     @ElVoField(physicalName = "postedAt")
@@ -171,7 +192,8 @@ public class PostVo extends com.demo.proworks.cmmn.ProworksCommVO {
 
     @ElVoField(physicalName = "status")
     public String getStatus(){
-        return status;
+        String ret = this.status;
+        return ret;
     }
 
     @ElVoField(physicalName = "status")
@@ -179,13 +201,64 @@ public class PostVo extends com.demo.proworks.cmmn.ProworksCommVO {
         this.status = status;
     }
 
+    @ElVoField(physicalName = "mbtiMatchFilter")
+    public String getMbtiMatchFilter(){
+        String ret = this.mbtiMatchFilter;
+        return ret;
+    }
+
+    @ElVoField(physicalName = "mbtiMatchFilter")
+    public void setMbtiMatchFilter(String mbtiMatchFilter){
+        this.mbtiMatchFilter = mbtiMatchFilter;
+    }
+
+    @ElVoField(physicalName = "userMbti")
+    public String getUserMbti(){
+        String ret = this.userMbti;
+        return ret;
+    }
+
+    @ElVoField(physicalName = "userMbti")
+    public void setUserMbti(String userMbti){
+        this.userMbti = userMbti;
+    }
+
     @Override
     public String toString() {
-        return "PostVo [jobPostingId=" + jobPostingId + ",companyId=" + companyId + ",title=" + title + ",description=" + description + ",selectedTechStackNames=" + selectedTechStackNames + ",experienceLevel=" + experienceLevel + ",salaryRange=" + salaryRange + ",location=" + location + ",workType=" + workType + ",preferredDeveloperTypes=" + preferredDeveloperTypes + ",expiresAt=" + expiresAt + ",postedAt=" + postedAt + ",status=" + status + "]";
+        StringBuilder sb = new StringBuilder();
+        sb.append("PostVo [");
+        sb.append("jobPostingId").append("=").append(jobPostingId).append(",");
+        sb.append("companyId").append("=").append(companyId).append(",");
+        sb.append("title").append("=").append(title).append(",");
+        sb.append("description").append("=").append(description).append(",");
+        sb.append("selectedTechStackNames").append("=").append(selectedTechStackNames).append(",");
+        sb.append("experienceLevel").append("=").append(experienceLevel).append(",");
+        sb.append("salaryRange").append("=").append(salaryRange).append(",");
+        sb.append("location").append("=").append(location).append(",");
+        sb.append("workType").append("=").append(workType).append(",");
+        sb.append("preferredDeveloperTypes").append("=").append(preferredDeveloperTypes).append(",");
+        sb.append("expiresAt").append("=").append(expiresAt).append(",");
+        sb.append("postedAt").append("=").append(postedAt).append(",");
+        sb.append("status").append("=").append(status).append(",");
+        sb.append("mbtiMatchFilter").append("=").append(mbtiMatchFilter).append(",");
+        sb.append("userMbti").append("=").append(userMbti);
+        sb.append("]");
+        return sb.toString();
+
     }
 
     public boolean isFixedLengthVo() {
         return false;
     }
+
+    @Override
+    public void _xStreamEnc() {
+    }
+
+
+    @Override
+    public void _xStreamDec() {
+    }
+
 
 }

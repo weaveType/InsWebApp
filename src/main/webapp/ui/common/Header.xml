@@ -103,7 +103,7 @@ scwin.menu2_onclick = function () {
 };
 
 scwin.menu3_onclick = function () {
-    $p.url("../posting/PostList.xml");
+    $p.url("../posting/PostList2.xml");
 };
 
 scwin.btnEnterprise_onclick = function () {

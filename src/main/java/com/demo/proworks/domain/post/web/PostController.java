@@ -99,18 +99,17 @@ public class PostController {
 	@RequestMapping(value = "POS0001List")
 	@ElDescription(sub = "공고정보 목록조회", desc = "페이징을 처리하여 공고정보 목록 조회를 한다.")
 	public PostListVo selectListPost(PostVo postVo) throws Exception {
-
-		System.out.println("=== 공고 목록 조회 시작 ===");
-		System.out.println("입력 받은 PostVo: " + postVo.toString());
+		
+		        // 추가된 필터 값들 확인
+        String mbtiMatchFilter = postVo.getMbtiMatchFilter(); // "0", "1", "2", "3", "4"
+        String userMbti = postVo.getUserMbti(); // "AITF", "BRSD" 등
+        
+        System.out.println("MBTI 매칭 필터: " + mbtiMatchFilter);
+        System.out.println("사용자 MBTI: " + userMbti);
 
 		// 임시로 모든 공고 조회 (디버깅용)
 		// 현재 사용자의 Company ID로 필터링
 		String currentCompanyId = getCurrentUserCompanyId();
-		System.out.println("현재 사용자 Company ID: " + currentCompanyId);
-
-		// 임시로 Company ID 필터링 제거 (디버깅용)
-		System.out.println("⚠️ 디버깅 모드: 모든 공고를 조회합니다.");
-		// postVo.setCompanyId(currentCompanyId);
 
 		// 페이징 기본값 설정
 		if (postVo.getPageSize() <= 0) {
@@ -122,33 +121,14 @@ public class PostController {
 			System.out.println("기본 페이지 인덱스 설정: 1");
 		}
 
-		// 페이징 정보 로그
-		System.out.println("최종 페이지 사이즈: " + postVo.getPageSize());
-		System.out.println("최종 페이지 인덱스: " + postVo.getPageIndex());
-
 		List<PostVo> postList = postService.selectListPost(postVo);
 		long totCnt = postService.selectListCountPost(postVo);
-
-		System.out.println("조회된 공고 개수: " + postList.size());
-		System.out.println("전체 공고 개수: " + totCnt);
-
-		// 조회된 공고들 로그
-		for (int i = 0; i < postList.size(); i++) {
-			PostVo post = postList.get(i);
-			System.out.println("공고 " + (i + 1) + ": ID=" + post.getJobPostingId() + ", 제목=" + post.getTitle()
-					+ ", 회사ID=" + post.getCompanyId() + ", 상태=" + post.getStatus());
-		}
 
 		PostListVo retPostList = new PostListVo();
 		retPostList.setPostVoList(postList);
 		retPostList.setTotalCount(totCnt);
 		retPostList.setPageSize(postVo.getPageSize());
 		retPostList.setPageIndex(postVo.getPageIndex());
-
-		System.out.println("=== 반환할 PostListVo ===");
-		System.out.println("PostVoList 크기: " + retPostList.getPostVoList().size());
-		System.out.println("TotalCount: " + retPostList.getTotalCount());
-		System.out.println("=== 공고 목록 조회 완료 ===");
 
 		return retPostList;
 	}
