@@ -225,13 +225,17 @@ public class UserController {
 		
 		// EmailVo에 결과를 설정하여 반환 (ProWorks5 표준 방식)
 		EmailVo result = new EmailVo();
-		result.setEmail(email != null ? email : "");
 		
 		if (email == null || email.trim().isEmpty()) {
 			// 이메일이 비어있는 경우 - 오류로 처리
 			System.out.println("오류: 이메일이 비어있음");
-			return result; // role 없이 반환하면 클라이언트에서 오류로 처리
+			result.setEmail("");
+			result.setRole("ERROR");
+			return result;
 		}
+		
+		// 이메일 설정
+		result.setEmail(email);
 		
 		try {
 			boolean isDuplicate = userService.checkEmailDuplicate(email);
@@ -239,14 +243,17 @@ public class UserController {
 			if (isDuplicate) {
 				// 중복된 이메일인 경우
 				System.out.println("결과: 이메일 중복");
-				// ProWorks5에서는 특별한 필드를 통해 상태를 전달할 수 있음
+				result.setRole("DUPLICATE");
 			} else {
 				// 사용 가능한 이메일인 경우
 				System.out.println("결과: 이메일 사용 가능");
+				result.setRole("AVAILABLE");
 			}
 			
 		} catch (Exception e) {
 			System.out.println("서비스 호출 실패: " + e.getMessage());
+			e.printStackTrace();
+			result.setRole("ERROR");
 		}
 		
 		System.out.println("최종 응답: " + result.toString());
