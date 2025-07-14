@@ -18,11 +18,68 @@
                         <w2:key id="휴대폰번호" name="휴대폰번호" dataType="text"></w2:key>
                         <w2:key id="이메일" name="이메일" dataType="text"></w2:key>
                         <w2:key id="비밀번호" name="비밀번호" dataType="text"></w2:key>
+                        <w2:key id="비밀번호확인" name="비밀번호확인" dataType="text"></w2:key>
                         <w2:key id="이메일수신동의" name="이메일수신동의" dataType="text"></w2:key>
                         <w2:key id="이메일인증여부" name="이메일인증여부" dataType="text" value="true"></w2:key>
                     </w2:keyInfo>
                 </w2:dataMap>
+                
+                <w2:dataMap baseNode="map" id="dma_email_check">
+                    <w2:keyInfo>
+                        <w2:key id="email" name="email" dataType="text"></w2:key>
+                    </w2:keyInfo>
+                </w2:dataMap>
+                
+                <w2:dataMap baseNode="map" id="dma_register_request">
+                    <w2:keyInfo>
+                        <w2:key id="name" name="name" dataType="text"></w2:key>
+                        <w2:key id="birthDate" name="birthDate" dataType="text"></w2:key>
+                        <w2:key id="gender" name="gender" dataType="text"></w2:key>
+                        <w2:key id="phoneNumber" name="phoneNumber" dataType="text"></w2:key>
+                        <w2:key id="email" name="email" dataType="text"></w2:key>
+                        <w2:key id="password" name="password" dataType="text"></w2:key>
+                        <w2:key id="emailConsent" name="emailConsent" dataType="text"></w2:key>
+                    </w2:keyInfo>
+                </w2:dataMap>
             </w2:dataCollection>
+            
+            <xf:submission 
+                id="sbm_email_check" 
+                ref="data:json,dma_email_check" 
+                target="data:json,dma_email_check" 
+                action="/InsWebApp/USCheckEmail.pwkjson" 
+                method="post" 
+                mediatype="application/json"
+                instance="" 
+                replace="" 
+                errorHandler="" 
+                customHandler=""
+                mode="asynchronous" 
+                processMsg="이메일 중복 확인 중..." 
+                ev:submit="" 
+                ev:submitdone="scwin.sbm_email_check_submitdone" 
+                ev:submiterror="scwin.sbm_email_check_submiterror" 
+                abortTrigger="">
+            </xf:submission>
+            
+            <xf:submission 
+                id="sbm_register" 
+                ref="data:json,dma_register_request" 
+                target="data:json,dma_register_request" 
+                action="/InsWebApp/USRegister.pwkjson" 
+                method="post" 
+                mediatype="application/json"
+                instance="" 
+                replace="" 
+                errorHandler="" 
+                customHandler=""
+                mode="asynchronous" 
+                processMsg="회원가입 처리 중..." 
+                ev:submit="" 
+                ev:submitdone="scwin.sbm_register_submitdone" 
+                ev:submiterror="scwin.sbm_register_submiterror" 
+                abortTrigger="">
+            </xf:submission>
         </xf:model>
         <w2:layoutInfo/>
         <w2:publicInfo method=""/>
@@ -30,9 +87,72 @@
         <script type="text/javascript"><![CDATA[
 scwin.onpageload = function () {
     console.log("회원가입 페이지 로드됨");
+    
+    // 비밀번호 필드 이벤트 바인딩
+    setTimeout(function() {
+        var passwordInput = document.getElementById("passwordInput");
+        var passwordConfirmInput = document.getElementById("passwordConfirmInput");
+        
+        if (passwordInput) {
+            passwordInput.addEventListener('input', scwin.checkPasswordMatch);
+            passwordInput.addEventListener('keyup', scwin.checkPasswordMatch);
+        }
+        
+        if (passwordConfirmInput) {
+            passwordConfirmInput.addEventListener('input', scwin.checkPasswordMatch);
+            passwordConfirmInput.addEventListener('keyup', scwin.checkPasswordMatch);
+        }
+    }, 500); // 500ms 지연 후 이벤트 바인딩
 };
 
-// 이메일 인증 버튼 클릭
+// 이메일 중복 확인 성공 처리
+scwin.sbm_email_check_submitdone = function (e) {
+    console.log("이메일 중복 확인 응답:", e);
+    
+    // 응답 데이터에서 role 필드 확인
+    var responseData = dma_email_check.getJSON();
+    console.log("응답 데이터:", responseData);
+    
+    if (responseData && responseData.role === "AVAILABLE") {
+        alert("사용 가능한 이메일입니다.");
+        dma_signup.set("이메일인증여부", "true");
+    } else if (responseData && responseData.role === "DUPLICATE") {
+        alert("이미 사용 중인 이메일입니다.");
+        dma_signup.set("이메일인증여부", "false");
+    } else if (responseData && responseData.email && !responseData.role) {
+        // ProWorks5에서 role 필드가 없는 경우, 기본적으로 사용 가능으로 처리
+        // (데이터베이스가 비어있으므로 새로운 이메일은 모두 사용 가능)
+        console.log("role 필드가 없음 - 기본적으로 사용 가능으로 처리");
+        alert("사용 가능한 이메일입니다.");
+        dma_signup.set("이메일인증여부", "true");
+    } else {
+        alert("이메일 확인 중 오류가 발생했습니다.");
+        dma_signup.set("이메일인증여부", "false");
+    }
+};
+
+// 이메일 중복 확인 실패 처리
+scwin.sbm_email_check_submiterror = function (e) {
+    console.log("이메일 중복 확인 실패:", e);
+    alert("이미 사용 중인 이메일입니다.");
+    dma_signup.set("이메일인증여부", "false");
+};
+
+// 회원가입 성공 처리
+scwin.sbm_register_submitdone = function (e) {
+    console.log("회원가입 성공:", e);
+    alert("회원가입이 완료되었습니다!");
+    // 회원가입 완료 페이지로 이동
+    $p.url("SignupComplete.xml");
+};
+
+// 회원가입 실패 처리
+scwin.sbm_register_submiterror = function (e) {
+    console.log("회원가입 실패:", e);
+    alert("회원가입에 실패했습니다. 다시 시도해주세요.");
+};
+
+// 이메일 중복 확인 버튼 클릭
 scwin.btn_email_verify_onclick = function () {
     var email = dma_signup.get("이메일");
     if (!email || email.trim() === "") {
@@ -45,20 +165,40 @@ scwin.btn_email_verify_onclick = function () {
         return;
     }
 
-    // 플로우 확인을 위해 간단히 인증 완료 처리
-    alert("인증번호가 발송되었습니다. 이메일을 확인해주세요.");
-    dma_signup.set("이메일인증여부", "true");
-    document.getElementById("verify_success").style.display = "block";
+    // 이메일 중복 확인 요청
+    dma_email_check.set("email", email);
+    $c.sbm.execute(sbm_email_check);
 };
 
-// 가입완료 버튼 클릭 - $p.url 방식 사용
+// 회원가입 완료 버튼 클릭
 scwin.btn_signup_onclick = function () {
-    // 플로우 확인을 위해 간단한 검증만 수행 (이메일 인증 확인 제거)
+    // 입력값 검증
     var name = dma_signup.get("이름");
+    var birthDate = dma_signup.get("생일");
+    var gender = dma_signup.get("성별");
+    var phoneNumber = dma_signup.get("휴대폰번호");
     var email = dma_signup.get("이메일");
+    var password = dma_signup.get("비밀번호");
+    var emailConsent = dma_signup.get("이메일수신동의");
+    var emailVerified = dma_signup.get("이메일인증여부");
 
     if (!name || name.trim() === "") {
         alert("이름을 입력해주세요.");
+        return;
+    }
+
+    if (!birthDate || birthDate.trim() === "") {
+        alert("생년월일을 입력해주세요.");
+        return;
+    }
+
+    if (!gender || gender.trim() === "") {
+        alert("성별을 선택해주세요.");
+        return;
+    }
+
+    if (!phoneNumber || phoneNumber.trim() === "") {
+        alert("휴대폰번호를 입력해주세요.");
         return;
     }
 
@@ -67,15 +207,47 @@ scwin.btn_signup_onclick = function () {
         return;
     }
 
-    // 이메일 인증 여부 확인 로직 제거 - view 테스트를 위해
-    console.log("회원가입 정보:", {
-        이름: dma_signup.get("이름"),
-        이메일: dma_signup.get("이메일"),
-        성별: dma_signup.get("성별")
+    if (!password || password.trim() === "") {
+        alert("비밀번호를 입력해주세요.");
+        return;
+    }
+    
+    var passwordConfirm = dma_signup.get("비밀번호확인");
+    if (!passwordConfirm || passwordConfirm.trim() === "") {
+        alert("비밀번호를 재확인해주세요.");
+        return;
+    }
+    
+    if (password !== passwordConfirm) {
+        alert("비밀번호가 일치하지 않습니다. 다시 확인해주세요.");
+        return;
+    }
+
+    if (emailVerified !== "true") {
+        alert("이메일 중복 확인을 해주세요.");
+        return;
+    }
+
+    // 회원가입 요청 데이터 설정
+    dma_register_request.set("name", name);
+    dma_register_request.set("birthDate", birthDate);
+    dma_register_request.set("gender", gender);
+    dma_register_request.set("phoneNumber", phoneNumber);
+    dma_register_request.set("email", email);
+    dma_register_request.set("password", password);
+    dma_register_request.set("emailConsent", emailConsent === "true" ? "1" : "0");
+
+    console.log("회원가입 요청 정보:", {
+        name: name,
+        birthDate: birthDate,
+        gender: gender,
+        phoneNumber: phoneNumber,
+        email: email,
+        emailConsent: emailConsent
     });
 
-    alert("회원가입이 완료되었습니다!");
-    $p.url("SignupComplete.xml");
+    // 회원가입 요청
+    $c.sbm.execute(sbm_register);
 };
 
 // 이메일 유효성 검사
@@ -84,26 +256,52 @@ scwin.validateEmail = function (email) {
     return re.test(email);
 };
 
+// 비밀번호 일치 검사
+scwin.checkPasswordMatch = function() {
+    var password = dma_signup.get("비밀번호");
+    var passwordConfirm = dma_signup.get("비밀번호확인");
+    
+    var statusElement = document.getElementById("passwordMatchStatus");
+    var successElement = document.getElementById("matchSuccess");
+    var errorElement = document.getElementById("matchError");
+    
+    // 두 비밀번호가 모두 입력되지 않은 경우 상태 숨기기
+    if (!password || !passwordConfirm) {
+        if (statusElement) statusElement.style.display = "none";
+        if (successElement) successElement.style.display = "none";
+        if (errorElement) errorElement.style.display = "none";
+        return false;
+    }
+    
+    // 상태 표시 영역 보이기
+    if (statusElement) statusElement.style.display = "block";
+    
+    // 비밀번호 일치 여부 확인
+    if (password === passwordConfirm) {
+        if (successElement) successElement.style.display = "block";
+        if (errorElement) errorElement.style.display = "none";
+        return true;
+    } else {
+        if (successElement) successElement.style.display = "none";
+        if (errorElement) errorElement.style.display = "block";
+        return false;
+    }
+};
+
 // 성별 선택
 scwin.selectGender = function (gender) {
-    console.log("성별 선택:", gender);
+    // 데이터맵에 성별 저장
     dma_signup.set("성별", gender);
 
-    setTimeout(function () {
-        var genderOptions = document.querySelectorAll('.gender-option');
-        if (genderOptions && genderOptions.length > 0) {
-            genderOptions.forEach(function (el) {
-                if (el && el.classList) {
-                    el.classList.remove('selected');
-                }
-            });
-        }
+    // WebSquare 컴포넌트 API를 이용하여 클래스 토글
+    var maleBtn  = $p.getComponentById("gender_남자");
+    var femaleBtn = $p.getComponentById("gender_여자");
 
-        var selectedBtn = document.getElementById('gender_' + gender);
-        if (selectedBtn && selectedBtn.classList) {
-            selectedBtn.classList.add('selected');
-        }
-    }, 50);
+    if (maleBtn)  maleBtn.removeClass("selected");
+    if (femaleBtn) femaleBtn.removeClass("selected");
+
+    var selectedBtn = $p.getComponentById("gender_" + gender);
+    if (selectedBtn) selectedBtn.addClass("selected");
 };
 ]]></script>
         
@@ -116,23 +314,7 @@ scwin.selectGender = function (gender) {
                 flex-direction: column;
             }
             
-            .header {
-                width: 100%;
-                height: 70px;
-                background-color: #ffffff;
-                border-bottom: 1px solid #e0e0e0;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                position: relative;
-            }
-            
-            .header-logo {
-                font-size: 24px;
-                font-weight: bold;
-                color: #333;
-                letter-spacing: 2px;
-            }
+
             
             .content-area {
                 flex: 1;
@@ -276,36 +458,7 @@ scwin.selectGender = function (gender) {
                 font-weight: 600;
             }
             
-            .agreement-section {
-                margin: 30px 0;
-                padding: 20px;
-                background-color: #f8f9fa;
-                border-radius: 12px;
-                text-align: left;
-            }
-            
-            .agreement-item {
-                display: flex;
-                align-items: flex-start;
-                gap: 12px;
-                margin-bottom: 16px;
-            }
-            
-            .agreement-item:last-child {
-                margin-bottom: 0;
-            }
-            
-            .agreement-checkbox {
-                width: 20px;
-                height: 20px;
-                margin-top: 2px;
-            }
-            
-            .agreement-text {
-                font-size: 14px;
-                color: #333;
-                line-height: 1.5;
-            }
+
             
             .btn-signup {
                 width: 100%;
@@ -331,14 +484,28 @@ scwin.selectGender = function (gender) {
                 margin-top: 8px;
                 line-height: 1.4;
             }
+            
+            .password-match-status {
+                margin-top: 8px;
+            }
+            
+            .match-success {
+                font-size: 14px;
+                color: #28a745;
+                font-weight: 600;
+            }
+            
+            .match-error {
+                font-size: 14px;
+                color: #dc3545;
+                font-weight: 600;
+            }
         ]]></style>
     </head>
     
     <body ev:onpageload="scwin.onpageload">
+        <w2:wframe src="../common/SignupHeader.xml" id="signupHeaderFrame" />
         <xf:group class="main-container">
-            <xf:group class="header">
-                <xf:image src="/InsWebApp/images/ws5/weaveTypeLogo.png" class="header-logo" style="height: 40px; width: auto;"></xf:image>
-            </xf:group>
             
             <xf:group class="content-area">
                 <w2:textbox class="main-title" label="환영합니다!" tagname="h1"></w2:textbox>
@@ -392,32 +559,20 @@ scwin.selectGender = function (gender) {
                     
                     <xf:group class="form-group">
                         <w2:textbox class="form-label" label="비밀번호" tagname="label"></w2:textbox>
-                        <xf:secret class="form-input" ref="data:dma_signup.비밀번호" placeholder="비밀번호 입력"></xf:secret>
+                        <xf:secret class="form-input" ref="data:dma_signup.비밀번호" placeholder="비밀번호 입력" id="passwordInput"></xf:secret>
                         <w2:textbox class="info-text" label="8-16자, 영문 대/소문자, 숫자, 특수문자 중 3개 이상 사용" tagname="div"></w2:textbox>
                     </xf:group>
                     
-                    <xf:group class="agreement-section">
-                        <xf:group class="agreement-item">
-                            <xf:input type="checkbox" class="agreement-checkbox" style="width: auto;"></xf:input>
-                            <xf:group style="flex: 1;">
-                                <w2:textbox class="agreement-text" label="서비스 이용약관 동의 (필수)" tagname="div"></w2:textbox>
-                            </xf:group>
-                        </xf:group>
-                        
-                        <xf:group class="agreement-item">
-                            <xf:input type="checkbox" class="agreement-checkbox" style="width: auto;"></xf:input>
-                            <xf:group style="flex: 1;">
-                                <w2:textbox class="agreement-text" label="개인정보 수집 및 이용 동의 (필수)" tagname="div"></w2:textbox>
-                            </xf:group>
-                        </xf:group>
-                        
-                        <xf:group class="agreement-item">
-                            <xf:input type="checkbox" class="agreement-checkbox" style="width: auto;"></xf:input>
-                            <xf:group style="flex: 1;">
-                                <w2:textbox class="agreement-text" label="마케팅 정보 수신 동의 (선택)" tagname="div"></w2:textbox>
-                            </xf:group>
+                    <xf:group class="form-group">
+                        <w2:textbox class="form-label" label="비밀번호 재확인" tagname="label"></w2:textbox>
+                        <xf:secret class="form-input" ref="data:dma_signup.비밀번호확인" placeholder="비밀번호를 다시 입력하세요" id="passwordConfirmInput"></xf:secret>
+                        <xf:group class="password-match-status" id="passwordMatchStatus" style="display: none;">
+                            <w2:textbox class="match-success" id="matchSuccess" label="✓ 비밀번호가 일치합니다." tagname="div" style="display: none;"></w2:textbox>
+                            <w2:textbox class="match-error" id="matchError" label="✗ 비밀번호가 일치하지 않습니다." tagname="div" style="display: none;"></w2:textbox>
                         </xf:group>
                     </xf:group>
+                    
+
                     
                     <xf:trigger class="btn-signup" ev:onclick="scwin.btn_signup_onclick">
                         <xf:label>가입 완료</xf:label>

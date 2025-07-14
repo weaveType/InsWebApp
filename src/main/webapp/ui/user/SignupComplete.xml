@@ -201,11 +201,8 @@
     </head>
     
     <body ev:onpageload="scwin.onpageload">
+        <w2:wframe src="../common/SignupHeader.xml" id="signupHeaderFrame" />
         <xf:group class="main-container">
-            <xf:group class="header">
-                <xf:image src="/InsWebApp/images/ws5/weaveTypeLogo.png" class="header-logo" style="height: 40px; width: auto;"></xf:image>
-                <xf:group class="header-progress"></xf:group>
-            </xf:group>
             
             <xf:group class="content-area">
                 <xf:group class="success-icon">
