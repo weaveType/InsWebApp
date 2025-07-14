@@ -361,30 +361,12 @@ scwin.onpageload = function () {
 
     // 초기 공고 목록 조회
     scwin.loadPostList();
-
-    // 검색 이벤트 바인딩
-    setTimeout(function () {
-        var searchInput = document.getElementById('searchInput');
-        if (searchInput) {
-            searchInput.addEventListener('keydown', function (e) {
-                if (e.keyCode === 13) {
-                    scwin.performSearch();
-                }
-            });
-        }
-    }, 100);
 };
-
-// ========================= 
-// 공고 목록 조회 기능
-// =========================
 
 /**
  * 공고 목록 조회
  */
 scwin.loadPostList = function () {
-    console.log("=== 공고 목록 조회 시작 ===");
-
     // 로딩 상태 표시
     scwin.showLoadingState();
 
@@ -839,6 +821,40 @@ scwin.slb_dev_mbti_onselected = function () {
     // 검색 함수 호출 (검색 함수가 있다면)
     // scwin.searchPosts();
     $c.sbm.execute($p, sbm_selectDevMbtiList);
+};
+
+scwin.sbm_selectDevMbtiList_submitdone = function (e) {
+    console.log("=== 공고 목록 조회 완료 ===");
+    console.log("응답 데이터:", e.responseJSON);
+
+    // 로딩 상태 숨김
+    scwin.hideLoadingState();
+
+    // error 수신시
+    var elData = e.responseJSON.elData;
+    var elHeader = e.responseJSON.elHeader;
+    dlt_postList.setJSON(elData.postVoList || []);
+    console.log("✅ 공고 목록 데이터 바인딩 완료 - 총 " + dlt_postList.getRowCount() + "개");
+
+    // 공고 수 업데이트
+    spn_jobCount.setLabel(elData.totalCount || 0);
+
+    // 페이지 네비게이터 업데이트
+    var totalPageCount = Math.ceil((elData.totalCount || 0) / dmp_postVo.get("pageSize"));
+    if (pgl_postList) {
+        pgl_postList.setCount(totalPageCount);
+    }
+
+    // 공고 카드 UI 동적 생성
+    scwin.renderJobCards();
+
+    // 데이터 확인 로그
+    for (var i = 0; i < Math.min(dlt_postList.getRowCount(), 3); i++) {
+        console.log("공고 " + (i + 1) + ":");
+        console.log("- ID:", dlt_postList.getCellData(i, "jobPostingId"));
+        console.log("- 제목:", dlt_postList.getCellData(i, "title"));
+        console.log("- 회사:", dlt_postList.getCellData(i, "companyName"));
+    }
 };
 ]]></script>
 	</head>
