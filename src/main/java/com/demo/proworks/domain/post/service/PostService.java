@@ -1,10 +1,10 @@
 package com.demo.proworks.domain.post.service;
 
 import java.util.List;
-import java.util.Map;
 
 import com.demo.proworks.domain.post.vo.PostMatchVo;
 import com.demo.proworks.domain.post.vo.PostVo;
+import com.demo.proworks.domain.post.vo.SendEmailVo;
 import com.demo.proworks.domain.post.vo.TechStackVo;
 
 /**
@@ -142,5 +142,5 @@ public interface PostService {
 	 * @return 회사 ID String
 	 * @throws Exception
 	 */
-	public void sendToEmails() throws Exception;
+	public void sendToEmails(SendEmailVo sendEmailVo) throws Exception;
 }

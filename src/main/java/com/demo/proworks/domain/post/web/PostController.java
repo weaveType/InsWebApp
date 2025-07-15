@@ -525,7 +525,7 @@ public class PostController {
 	@RequestMapping(value = "POS0001Send")
 	@ElDescription(sub = "이메일 일괄전송", desc = "이메일을 일괄전송 처리한다")
 	public void sendToEmails(SendEmailVo sendEmailVo) throws Exception {
-		postService.sendToEmails();
+		postService.sendToEmails(sendEmailVo);
 	}
 
 }
