@@ -21,7 +21,7 @@ import java.util.ArrayList;
  * @author system
  * @since 2025.01
  */
-@Service
+@Service("emailService")
 public class EmailServiceImpl implements EmailService {
 
     @Autowired
