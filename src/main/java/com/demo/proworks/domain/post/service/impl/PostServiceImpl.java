@@ -13,6 +13,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
 import com.demo.proworks.domain.post.service.PostService;
+import com.demo.proworks.domain.post.vo.JobApplicationVo;
 import com.demo.proworks.domain.post.vo.PostMatchVo;
 import com.demo.proworks.domain.post.vo.PostVo;
 import com.demo.proworks.domain.post.vo.TechStackVo;
@@ -356,6 +357,13 @@ public class PostServiceImpl implements PostService {
 		}
 	}
 
+	/**
+	 * 사용자 mbti, mbti 별 갯수 필터를 통해 회사 list를 정렬한다
+	 *
+	 * @param PostMatchVo = PostVo + 사용자 mbti, mbti 갯수
+	 * @return 회사 ID String
+	 * @throws Exception
+	 */
 	public List<PostVo> findPostsByMbti(PostMatchVo postMatchVo) throws Exception {
 		PostMatchVo vo = new PostMatchVo();
 		vo.setUserMbti(postMatchVo.getUserMbti()); // 로그인 사용자 MBTI
@@ -364,6 +372,13 @@ public class PostServiceImpl implements PostService {
 		return postDAO.findPostsByMbti(vo);
 	};
 
+	/**
+	 * 사용자 mbti, mbti 별 갯수 필터를 통해 회사 list의 갯수를 가져온다
+	 *
+	 * @param PostMatchVo = PostVo + 사용자 mbti, mbti 갯수
+	 * @return 회사 ID String
+	 * @throws Exception
+	 */
 	public long findPostsByMbtiCount(PostMatchVo postMatchVo) throws Exception {
 		return postDAO.findPostsByMbtiCount(postMatchVo);
 	};
@@ -396,6 +411,17 @@ public class PostServiceImpl implements PostService {
 		}
 
 		System.out.println("=== 이메일 일괄전송 서비스 완료 ===");
+	}
+
+	/**
+	 * 공고에 이력서 지원처리를 한다.
+	 *
+	 * @param sendEmailVo 합불여부, 메일 전송할 email, 메일 내용
+	 * @return 이메일 전송 실패 ID
+	 * @throws Exception
+	 */
+	public void insertJobApplication(JobApplicationVo jobApplicationVo) throws Exception {
+		postDAO.insertJobApplication(jobApplicationVo);
 	}
 
 }

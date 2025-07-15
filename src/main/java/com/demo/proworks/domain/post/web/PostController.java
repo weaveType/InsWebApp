@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.demo.proworks.cmmn.ProworksUserHeader;
 import com.demo.proworks.domain.post.service.PostService;
 import com.demo.proworks.domain.post.vo.PostVo;
 import com.demo.proworks.domain.post.vo.SendEmailVo;
@@ -540,8 +541,11 @@ public class PostController {
 	@RequestMapping(value = "POS0001JAPL")
 	@ElDescription(sub = "이력서 지원처리", desc = "공고에 이력서 지원 처리를 한다")
 	public void insertJobApplication(JobApplicationVo jobApplicationVo) throws Exception {
-	System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>> jobApplicaiton : " + jobApplicationVo.toString());
-//		postService.insertJobApplication(jobApplicationVo);
-
+		ProworksUserHeader userHeader = (ProworksUserHeader) ControllerContextUtil.getUserHeader();
+		int currentId = userHeader.getAccountId();
+		int userId = jobApplicationVo.getAccountId();
+		if (currentId == userId) {
+			postService.insertJobApplication(jobApplicationVo);
+		}
 	}
 }
