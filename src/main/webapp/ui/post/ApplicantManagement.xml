@@ -212,7 +212,7 @@
         }
     }
     dmp_applicantVo.set("jobPostingId", jobPostingId);
-    $c.sbm.execute(sbm_selectCompanyList);
+    $c.sbm.execute(sbm_applicantList);
 };
 
 

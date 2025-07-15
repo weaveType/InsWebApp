@@ -8,6 +8,8 @@ import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
 import com.demo.proworks.domain.user.service.UserService;
+import com.demo.proworks.domain.user.vo.ApplicantListVo;
+import com.demo.proworks.domain.user.vo.ApplicantVo;
 import com.demo.proworks.domain.user.vo.UserInfoVo;
 import com.demo.proworks.domain.user.vo.UserVo;
 import com.demo.proworks.common.enumType.DevMbti;
@@ -228,5 +230,16 @@ public class UserServiceImpl implements UserService {
 	 */
 	public UserInfoVo selectUserDetail(UserInfoVo userInfoVo) throws Exception {
 		return userDAO.selectUserDetail(userInfoVo);
+	}
+
+	/**
+	 * 공고에 이력서 지원처리를 한다.
+	 *
+	 * @param ApplicantVo 페이징 정보, 공고 ID
+	 * @return 등록된 행의 수
+	 * @throws Exception
+	 */
+	public ApplicantListVo selectUsersByjobPostingId(ApplicantVo applicantVo) throws Exception {
+		return userDAO.selectUsersByjobPostingId(applicantVo);
 	}
 }

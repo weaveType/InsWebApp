@@ -1021,8 +1021,6 @@ public class UserController {
 	@RequestMapping(value = "US0002List")
 	@ElDescription(sub = "공고에 지원한 유저 출력", desc = "공고에 지원한 유저를 출력한다")
 	public ApplicantListVo selectUsersByjobPostingId(ApplicantVo applicantVo) throws Exception {
-		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>> applicantVo : " + applicantVo.toString());
-		return null;
-//			selectUsersByjobPostingId(applicantVo);
-		}
+		return userService.selectUsersByjobPostingId(applicantVo);
+	}
 }

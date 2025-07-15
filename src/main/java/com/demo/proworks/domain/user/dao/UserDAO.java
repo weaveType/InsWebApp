@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.inswave.elfw.exception.ElException;
+import com.demo.proworks.domain.user.vo.ApplicantListVo;
+import com.demo.proworks.domain.user.vo.ApplicantVo;
 import com.demo.proworks.domain.user.vo.UserInfoVo;
 import com.demo.proworks.domain.user.vo.UserVo;
 import com.demo.proworks.common.enumType.DevMbti;
@@ -217,5 +219,16 @@ public class UserDAO extends com.demo.proworks.cmmn.dao.ProworksDefaultAbstractD
 
 	public UserInfoVo selectUserDetail(UserInfoVo vo) throws Exception {
 		return (UserInfoVo) selectByPk("com.demo.proworks.domain.user.selectUserDetail", vo);
+	}
+
+	/**
+	 * 공고에 이력서 지원처리를 한다.
+	 *
+	 * @param ApplicantVo 페이징 정보, 공고 ID
+	 * @return 등록된 행의 수
+	 * @throws Exception
+	 */
+	public ApplicantListVo selectUsersByjobPostingId(ApplicantVo vo) throws Exception {
+		return (ApplicantListVo) list("com.demo.proworks.domain.user.selectUsersByjobPostingId", vo);
 	}
 }

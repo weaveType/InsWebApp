@@ -246,4 +246,8 @@ SELECT	/* QueryID : com.demo.proworks.domain.user.getDevMbti */
         LEFT JOIN users_info ui ON u.user_id = ui.user_id  
         WHERE u.user_id = #{accountId}
 </select>
+<select id="selectUsersByjobPostingId" resultType="com.demo.proworks.domain.user.vo.ApplicantListVo" parameterType="com.demo.proworks.domain.user.vo.ApplicantVo">
+SELECT * 
+  FROM
+</select>
 </mapper>
