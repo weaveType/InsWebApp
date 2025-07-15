@@ -74,11 +74,6 @@
                 if (!file) return;
                 
                 // 파일 유효성 검사
-                if (!file.name.endsWith('.java')) {
-                    alert('Java 파일(.java)만 업로드 가능합니다.');
-                    event.target.value = '';
-                    return;
-                }
                 
                 // 파일 크기 검사 (50KB)
                 if (file.size > 50 * 1024) {
@@ -414,6 +409,9 @@
                 
                 // 신뢰도 표시
                 $('.score-confidence').text(Math.round(confidenceScore * 100) + '%');
+                
+                // 결과 언어 표시
+                $('.result-language').text('Detected Language: ' + (data.language || 'Unknown'));
                 
                 console.log('결과 표시 완료:', typeCode, typeInfo.name);
             };
@@ -822,44 +820,44 @@
                 </xf:group>
                 
                 <xf:group class="info-box">
-                    <w2:textbox class="info-text" label="💡 Java 파일만 업로드 가능하며, 파일당 최대 50KB까지 지원됩니다." tagname="p"></w2:textbox>
+                    <w2:textbox class="info-text" label="💡 다양한 언어 파일 업로드 가능, 파일당 최대 50KB" tagname="p"></w2:textbox>
                 </xf:group>
                 
                 <xf:group class="file-upload-grid">
                     <!-- Model 파일 업로드 -->
                     <xf:group class="file-card model-card" ev:onclick="scwin.handleCardClick('model')">
                         <w2:textbox class="upload-icon" label="📁" tagname="span"></w2:textbox>
-                        <w2:textbox class="card-title" label="Model (Entity)" tagname="div"></w2:textbox>
-                        <w2:textbox class="card-description" label="엔티티, DTO, VO 등의 데이터 모델 클래스" tagname="div"></w2:textbox>
+                        <w2:textbox class="card-title" label="Data Code (e.g., Model/Entity)" tagname="div"></w2:textbox>
+                        <w2:textbox class="card-description" label="데이터 구조나 모델 관련 코드" tagname="div"></w2:textbox>
                         <w2:textbox class="file-status" label="파일을 선택해주세요" tagname="div"></w2:textbox>
-                        <input type="file" id="modelFileInput" class="file-input-hidden" accept=".java" />
+                        <input type="file" id="modelFileInput" class="file-input-hidden" />
                     </xf:group>
                     
                     <!-- Controller 파일 업로드 -->
                     <xf:group class="file-card controller-card" ev:onclick="scwin.handleCardClick('controller')">
                         <w2:textbox class="upload-icon" label="📁" tagname="span"></w2:textbox>
-                        <w2:textbox class="card-title" label="Controller" tagname="div"></w2:textbox>
-                        <w2:textbox class="card-description" label="REST API 엔드포인트를 정의하는 컨트롤러" tagname="div"></w2:textbox>
+                        <w2:textbox class="card-title" label="Control Code (e.g., Controller/API)" tagname="div"></w2:textbox>
+                        <w2:textbox class="card-description" label="제어 로직이나 API 처리 코드" tagname="div"></w2:textbox>
                         <w2:textbox class="file-status" label="파일을 선택해주세요" tagname="div"></w2:textbox>
-                        <input type="file" id="controllerFileInput" class="file-input-hidden" accept=".java" />
+                        <input type="file" id="controllerFileInput" class="file-input-hidden" />
                     </xf:group>
                     
                     <!-- Service 파일 업로드 -->
                     <xf:group class="file-card service-card" ev:onclick="scwin.handleCardClick('service')">
                         <w2:textbox class="upload-icon" label="📁" tagname="span"></w2:textbox>
-                        <w2:textbox class="card-title" label="Service" tagname="div"></w2:textbox>
-                        <w2:textbox class="card-description" label="비즈니스 로직을 처리하는 서비스 클래스" tagname="div"></w2:textbox>
+                        <w2:textbox class="card-title" label="Logic Code (e.g., Service/Business)" tagname="div"></w2:textbox>
+                        <w2:textbox class="card-description" label="비즈니스 로직 처리 코드" tagname="div"></w2:textbox>
                         <w2:textbox class="file-status" label="파일을 선택해주세요" tagname="div"></w2:textbox>
-                        <input type="file" id="serviceFileInput" class="file-input-hidden" accept=".java" />
+                        <input type="file" id="serviceFileInput" class="file-input-hidden" />
                     </xf:group>
                     
                     <!-- Repository 파일 업로드 -->
                     <xf:group class="file-card repository-card" ev:onclick="scwin.handleCardClick('repository')">
                         <w2:textbox class="upload-icon" label="📁" tagname="span"></w2:textbox>
-                        <w2:textbox class="card-title" label="Repository or Mapper" tagname="div"></w2:textbox>
-                        <w2:textbox class="card-description" label="데이터 액세스를 담당하는 Repository/Mapper" tagname="div"></w2:textbox>
+                        <w2:textbox class="card-title" label="Access Code (e.g., Repository/DAO)" tagname="div"></w2:textbox>
+                        <w2:textbox class="card-description" label="데이터 액세스나 저장소 관련 코드" tagname="div"></w2:textbox>
                         <w2:textbox class="file-status" label="파일을 선택해주세요" tagname="div"></w2:textbox>
-                        <input type="file" id="repositoryFileInput" class="file-input-hidden" accept=".java" />
+                        <input type="file" id="repositoryFileInput" class="file-input-hidden" />
                     </xf:group>
                 </xf:group>
                 
@@ -881,6 +879,7 @@
                         <w2:textbox class="result-type-code" label="AT" tagname="div"></w2:textbox>
                         <w2:textbox class="result-type-name" label="협업 아키텍트" tagname="div"></w2:textbox>
                         <w2:textbox class="result-type-desc" label="팀과 함께 견고한 시스템을 설계하고 구축하는 개발자" tagname="div"></w2:textbox>
+                        <w2:textbox class="result-language" label="Detected Language: Unknown" tagname="div" style="font-size: 16px; color: #666; margin-bottom: 16px;"></w2:textbox>
                     </xf:group>
                     
                     <xf:group class="score-section">
