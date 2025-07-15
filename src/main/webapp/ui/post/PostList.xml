@@ -456,7 +456,7 @@ scwin.createJobCard = function (jobData, index) {
     card.className = 'job-card';
     card.setAttribute('data-job-id', jobData.jobPostingId);
     card.setAttribute('data-index', index);
-    card.onclick = function () { scwin.openJobDetail(jobData.jobPostingId); };
+    card.onclick = function () { scwin.openPostDetail(jobData.jobPostingId); };
 
     // 기술스택 태그 생성
     var techTags = '';
@@ -575,7 +575,7 @@ scwin.showEmptyState = function () {
 /**
  * 공고 상세보기
  */
-scwin.openJobDetail = function (jobPostingId) {
+scwin.openPostDetail = function (jobPostingId) {
     console.log("=== 공고 상세보기 시작 ===");
     console.log("클릭된 공고 ID:", jobPostingId);
 
