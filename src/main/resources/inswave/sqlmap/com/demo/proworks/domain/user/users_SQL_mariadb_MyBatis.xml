@@ -261,11 +261,11 @@ SELECT
 FROM 
     users u
 JOIN 
-    users_info ui ON u.user_id = ui.user_id  -- user_id로 User와 UserInfo 테이블을 조인
+    users_info ui ON u.user_id = ui.user_id
 LEFT JOIN 
-    users_mbti_types umt ON u.user_id = umt.user_id  -- user_id로 User와 UserType 테이블을 조인
+    users_mbti_types umt ON u.user_id = umt.user_id
 JOIN 
-    job_applications ja ON u.user_id = ja.user_id  -- user_id로 JobApplications 테이블을 조인
+    job_applications ja ON u.user_id = ja.user_id
 
       WHERE ja.job_posting_id = #{jobPostingId}
         
