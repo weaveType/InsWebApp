@@ -192,7 +192,7 @@
 				</w2:dataMap>
 			</w2:dataCollection>
 			<xf:submission id="sbm_applicantList" action="/InsWebApp/US0002List.pwkjson" method="post" mediatype="application/json" ref='data:json,{"id":"dmp_applicantVo","key":"applicantVo"}'
-				target='data:json,{"id":"dlt_applicantVoList","key":"applicantListVo"}' encoding="UTF-8" instance="" replace="" errorHandler="" customHandler="" mode="asynchronous" processMsg="지원자 목록을 조회중입니다." ev:submit=""
+				target='data:json,{"id":"dlt_applicantVoList","key":"elData.applicantDetailVo"}' encoding="UTF-8" instance="" replace="" errorHandler="" customHandler="" mode="asynchronous" processMsg="지원자 목록을 조회중입니다." ev:submit=""
 				ev:submitdone="scwin.sbm_applicantList_submitdone" ev:submiterror="" abortTrigger="">
 			</xf:submission>
 		</xf:model>
