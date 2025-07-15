@@ -532,36 +532,42 @@ scwin.grd_postList_oncellclick = function(row, col) {
 	console.log("✅ 공고 선택됨 - ID: " + postData.jobPostingId + ", 제목: " + postData.title);
 	
 	// 공고 상세 페이지로 이동
-	scwin.goToPostDetail(postData.jobPostingId);
+	scwin.openPostDetail(postData.jobPostingId);
 };
 
 /**
- * 공고 상세 페이지로 이동
+ * 공고 상세보기 페이지로 이동 (문제시 여기 수정)
  */
-scwin.goToPostDetail = function(jobPostingId) {
-	console.log("=== 공고 상세 페이지로 이동 ===");
-	console.log("공고 ID:", jobPostingId);
-	
-	if (!jobPostingId) {
-		$c.win.alert("공고 ID를 찾을 수 없습니다.");
-		return;
-	}
-	
-	try {
-		// PostDetailCompany.xml로 이동하면서 jobPostingId 파라미터 전달
-		var params = {
-			jobPostingId: jobPostingId
-		};
-		
-		if ($p.parent() && $p.parent().pf_main) {
-			$p.parent().pf_main.setSrc("../post/PostDetailCompany.xml", { dataObject: params });
-		} else {
-			$p.url("../post/PostDetailCompany.xml?jobPostingId=" + encodeURIComponent(jobPostingId));
-		}
-	} catch (e) {
-		console.error("공고 상세 페이지 이동 중 오류:", e);
-		$c.win.alert("페이지 이동 중 오류가 발생했습니다.");
-	}
+scwin.openPostDetail = function (jobPostingId) {
+    console.log("=== 공고 상세보기 시작 ===");
+    console.log("클릭된 공고 ID:", jobPostingId);
+
+    if (!jobPostingId || jobPostingId.trim() === "") {
+        console.error("공고 ID가 없습니다.");
+        alert("선택된 공고의 정보를 찾을 수 없습니다.");
+        return;
+    }
+
+    try {
+        // 웹스퀘어 환경에서 pageFrame 방식으로 파라미터 전달
+        if ($p.parent() && $p.parent().pf_main) {
+            console.log("pageFrame을 통한 이동:", jobPostingId);
+            $p.parent().pf_main.setSrc("ui/post/PostDetail.xml", {
+                dataObject: {
+                    jobPostingId: jobPostingId
+                }
+            });
+        } else {
+            // 대안 방법: URL 방식
+            console.log("URL 방식으로 이동:", jobPostingId);
+            var detailUrl = "../post/PostDetail.xml?jobPostingId=" + encodeURIComponent(jobPostingId);
+            $p.url(detailUrl);
+        }
+        console.log("✅ 페이지 이동 요청 완료");
+    } catch (error) {
+        console.error("❌ 페이지 이동 중 오류:", error);
+        alert("페이지 이동 중 오류가 발생했습니다: " + error.message);
+    }
 };
 
 /**
