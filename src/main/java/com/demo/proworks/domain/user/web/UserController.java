@@ -522,10 +522,18 @@ public class UserController {
 
 			// 저장 디렉토리 설정
 			String uploadDir = request.getSession().getServletContext().getRealPath("/images/profile/");
+			System.out.println("===== 업로드 디렉토리 경로 상세 정보 =====");
+			System.out.println("getRealPath(\"/images/profile/\"): " + uploadDir);
+			System.out.println("ServletContext 경로: " + request.getSession().getServletContext().getContextPath());
+			System.out.println("작업 디렉토리: " + System.getProperty("user.dir"));
+			System.out.println("==========================================");
+			
 			File uploadDirectory = new File(uploadDir);
 			if (!uploadDirectory.exists()) {
 				uploadDirectory.mkdirs();
 				System.out.println("업로드 디렉토리 생성: " + uploadDir);
+			} else {
+				System.out.println("업로드 디렉토리 이미 존재함: " + uploadDir);
 			}
 
 			// 파일 저장
@@ -636,7 +644,7 @@ public class UserController {
 			if (rootNode.has("profileImageName")) {
 				String profileImageName = rootNode.get("profileImageName").asText();
 				if (profileImageName != null && !profileImageName.trim().isEmpty()) {
-					userVo.setProfileImageName(profileImageName);
+				userVo.setProfileImageName(profileImageName);
 					System.out.println("프로필 이미지 업데이트: " + profileImageName);
 				}
 			}

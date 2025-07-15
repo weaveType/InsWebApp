@@ -12,14 +12,16 @@
             TYPE_CODE,
             development_style_score,
             collaboration_score,
-            confidence_score
+            confidence_score,
+            language
         ) VALUES (
             #{typeId},
             #{analysisResult},
             #{typeCode},
             #{developmentStyleScore},
             #{collaborationScore},
-            #{confidenceScore}
+            #{confidenceScore},
+            #{language}
         )
         ]]>
     </insert>

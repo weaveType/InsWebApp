@@ -38,6 +38,9 @@ public class CodeAnalysisResultVo extends com.demo.proworks.cmmn.ProworksCommVO 
     @ElDtoField(logicalName = "생성시간", physicalName = "createdAt", type = "Date", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
     private Date createdAt;
 
+    @ElDtoField(logicalName = "언어", physicalName = "language", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private String language;
+
     @ElVoField(physicalName = "analysisId")
     public Long getAnalysisId(){
         return this.analysisId;
@@ -118,6 +121,16 @@ public class CodeAnalysisResultVo extends com.demo.proworks.cmmn.ProworksCommVO 
         this.createdAt = createdAt;
     }
 
+    @ElVoField(physicalName = "language")
+    public String getLanguage(){
+        return this.language;
+    }
+
+    @ElVoField(physicalName = "language")
+    public void setLanguage(String language){
+        this.language = language;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -130,6 +143,7 @@ public class CodeAnalysisResultVo extends com.demo.proworks.cmmn.ProworksCommVO 
         sb.append("collaborationScore").append("=").append(collaborationScore).append(",");
         sb.append("confidenceScore").append("=").append(confidenceScore);
         sb.append("createdAt").append("=").append(createdAt);
+        sb.append("language").append("=").append(language).append(",");
         sb.append("]");
         return sb.toString();
     }
