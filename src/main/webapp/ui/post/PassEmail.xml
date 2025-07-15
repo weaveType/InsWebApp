@@ -103,23 +103,6 @@
                 white-space: nowrap;
             }
             
-            .date-input {
-                height: 44px;
-                padding: 0 12px;
-                border: 2px solid #e5e7eb;
-                border-radius: 8px;
-                font-size: 14px;
-                color: #333;
-                background-color: #ffffff;
-                transition: all 0.2s ease;
-            }
-            
-            .date-input:focus {
-                outline: none;
-                border-color: #4CAF50;
-                box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
-            }
-            
             .date-apply-btn {
                 height: 44px;
                 padding: 0 16px;
@@ -308,11 +291,11 @@ scwin.btn_close_onclick = function (e) {
                 </xf:group>
                 
                 <xf:group class="date-group">
-                    <w2:textbox class="date-label" label="면접 날짜:"></w2:textbox>
-                    <w2:inputCalendar class="date-input" id="calPassDate" calendarValueType="yearMonthDate"></w2:inputCalendar>
-                    <w2:button class="date-apply-btn" label="날짜 적용" ev:onclick="scwin.applyDateToPass"></w2:button>
+                	<w2:textbox class="date-label" label="면접 날짜:"></w2:textbox>
+                	<w2:inputCalendar class="date-input" id="calPassDate" calendarValueType="yearMonthDate"></w2:inputCalendar>
+                	<w2:button class="date-apply-btn" label="날짜 적용" ev:onclick="scwin.applyDateToPass"></w2:button>
                 </xf:group>
-                
+
                 <xf:group class="checkbox-group">
                     <xf:select appearance="full" selectedindex="-1">
                         <xf:choices>
