@@ -77,12 +77,9 @@ public class ProworksSessionDataAdapter extends SessionDataAdapter {
 			switch (roleId) {
 			case 1:
 				userHeader.setRole("USER");
-				try {
-					DevMbti devMbti = userService.selectDevMbti(userId);
-					userHeader.setMbti(devMbti.getCode());
-				} catch (Exception e) {
-					throw new AdapterException("MBTI 조회 실패", e);
-				}
+
+				DevMbti devMbti = userService.selectDevMbti(userId);
+				userHeader.setMbti(devMbti == null ? "ZZZZ" : devMbti.getCode());
 				break;
 			case 2:
 				userHeader.setRole("COMPANY");

@@ -596,11 +596,11 @@
         ]]></style>
 
         <script lazy="false" type="text/javascript"><![CDATA[
-scwin.onpageload = function() {
+scwin.onpageload = function () {
     console.log("=== PostDetail 페이지 로드 ===");
-    
+
     var jobPostingId = null;
-    
+
     // 1. dataObject에서 파라미터 추출 시도 (pageFrame.setSrc로 전달된 경우)
     try {
         if ($p.getParameter && $p.getParameter("dataObject")) {
@@ -613,13 +613,13 @@ scwin.onpageload = function() {
     } catch (e) {
         console.log("dataObject 추출 실패:", e);
     }
-    
+
     // 2. URL 쿼리스트링에서 파라미터 추출 시도 (URL 방식으로 전달된 경우)
     // if (!jobPostingId) {
     //     jobPostingId = $c.util.getParameter("jobPostingId");
     //     console.log("URL에서 jobPostingId 추출:", jobPostingId);
     // }
-    
+
     // 3. 직접 쿼리스트링 파싱 시도
     if (!jobPostingId) {
         try {
@@ -630,7 +630,7 @@ scwin.onpageload = function() {
             console.log("URLSearchParams 파싱 실패:", e);
         }
     }
-    
+
     // 4. window.location.href에서 직접 파싱 시도
     if (!jobPostingId) {
         try {
@@ -644,9 +644,9 @@ scwin.onpageload = function() {
             console.log("location.href 파싱 실패:", e);
         }
     }
-    
+
     console.log("최종 추출된 jobPostingId:", jobPostingId);
-    
+
     if (jobPostingId && jobPostingId.trim() !== "") {
         // 파라미터 설정하고 서버에서 실제 데이터 조회
         dmp_postParam.set("jobPostingId", jobPostingId);
@@ -662,7 +662,7 @@ scwin.onpageload = function() {
 /**
  * 공고 상세 조회 완료 콜백
  */
-scwin.sbm_selectPostDetail_submitdone = function(e) {
+scwin.sbm_selectPostDetail_submitdone = function (e) {
     console.log("=== 공고 상세 조회 완료 ===");
     console.log("응답 데이터:", e.responseJSON);
 
@@ -670,7 +670,7 @@ scwin.sbm_selectPostDetail_submitdone = function(e) {
     var elHeader = e.responseJSON.elHeader;
 
     // 에러 체크
-    if(elHeader == null || elHeader == "" || elHeader == "undefined" || elHeader.resSuc == false) {
+    if (elHeader == null || elHeader == "" || elHeader == "undefined" || elHeader.resSuc == false) {
         console.error("공고 상세 조회 에러:", elHeader);
         var errorMsg = "공고를 불러올 수 없습니다.";
         if (elHeader && elHeader.resMsg) {
@@ -679,7 +679,7 @@ scwin.sbm_selectPostDetail_submitdone = function(e) {
         alert(errorMsg);
 
         // 에러 시 목록으로 돌아가기
-        setTimeout(function() {
+        setTimeout(function () {
             scwin.goBackToList();
         }, 1000);
         return false;
@@ -690,7 +690,7 @@ scwin.sbm_selectPostDetail_submitdone = function(e) {
         console.error("조회된 데이터가 없습니다.");
         alert("해당 공고 정보를 찾을 수 없습니다.\n공고가 삭제되었거나 존재하지 않을 수 있습니다.");
 
-        setTimeout(function() {
+        setTimeout(function () {
             scwin.goBackToList();
         }, 1000);
         return false;
@@ -707,7 +707,7 @@ scwin.sbm_selectPostDetail_submitdone = function(e) {
         console.warn("비활성화된 공고입니다.");
         alert("이 공고는 현재 모집이 중단되었습니다.");
 
-        setTimeout(function() {
+        setTimeout(function () {
             scwin.goBackToList();
         }, 1000);
         return false;
@@ -734,7 +734,7 @@ scwin.sbm_selectPostDetail_submitdone = function(e) {
 /**
  * UI 업데이트 (실제 데이터로)
  */
-scwin.updateUI = function() {
+scwin.updateUI = function () {
     console.log("=== UI 업데이트 시작 ===");
 
     // 메타 정보 업데이트
@@ -755,7 +755,7 @@ scwin.updateUI = function() {
 /**
  * 메타 정보 업데이트
  */
-scwin.updateJobMeta = function() {
+scwin.updateJobMeta = function () {
     var companyName = dmp_postDetail.get("companyName") || "정보없음";
     var experienceLevel = scwin.getExperienceLevelText(dmp_postDetail.get("experienceLevel"));
     var location = dmp_postDetail.get("location") || "정보없음";
@@ -775,7 +775,7 @@ scwin.updateJobMeta = function() {
 /**
  * 기술스택 태그 동적 생성
  */
-scwin.updateTechStackTags = function() {
+scwin.updateTechStackTags = function () {
     var techStackJson = dmp_postDetail.get("selectedTechStackNames");
     var tagsContainer = document.querySelector('.tech-tags');
 
@@ -802,7 +802,7 @@ scwin.updateTechStackTags = function() {
 /**
  * 개발자 선호 유형 태그 동적 생성
  */
-scwin.updateDeveloperTypeTags = function() {
+scwin.updateDeveloperTypeTags = function () {
     var developerTypesJson = dmp_postDetail.get("preferredDeveloperTypes");
 
     if (developerTypesJson) {
@@ -830,7 +830,7 @@ scwin.updateDeveloperTypeTags = function() {
 /**
  * 기타 정보 태그 업데이트
  */
-scwin.updateInfoTags = function() {
+scwin.updateInfoTags = function () {
     var experienceLevel = scwin.getExperienceLevelText(dmp_postDetail.get("experienceLevel"));
     var location = dmp_postDetail.get("location") || "미정";
     var workType = scwin.getWorkTypeText(dmp_postDetail.get("workType"));
@@ -852,7 +852,7 @@ scwin.updateInfoTags = function() {
 /**
  * 목록으로 돌아가기
  */
-scwin.goBackToList = function() {
+scwin.goBackToList = function () {
     try {
         if ($p.parent() && $p.parent().pf_main) {
             $p.parent().pf_main.setSrc("PostList.xml");
@@ -866,23 +866,31 @@ scwin.goBackToList = function() {
 };
 
 // 뒤로가기 버튼 클릭
-scwin.btnBack_onclick = function(e) {
+scwin.btnBack_onclick = function (e) {
     scwin.goBackToList();
 };
 
 // 지원하기 버튼 클릭
-scwin.btnApply_onclick = function(e) {
+scwin.btnApply_onclick = function (e) {
     var jobPostingId = dmp_postDetail.get("jobPostingId");
     var title = dmp_postDetail.get("title");
+    var accountId = null;
+
 
     if (confirm(title + " 공고에 지원하시겠습니까?")) {
-        // TODO: 실제 지원 페이지로 이동
-        alert("지원서 작성 페이지로 이동합니다.\n공고 ID: " + jobPostingId);
+        var userInfoCookie = JSON.parse(WebSquare.cookie.getCookie("userInfo"));
+
+        if (userInfoCookie) {
+            var userInfo = JSON.parse(userInfoCookie);
+            
+        }
+
+
     }
 };
 
 // 북마크 버튼 클릭
-scwin.btnBookmark_onclick = function(e) {
+scwin.btnBookmark_onclick = function (e) {
     var jobPostingId = dmp_postDetail.get("jobPostingId");
 
     // TODO: 실제 북마크 서버 요청
@@ -898,7 +906,7 @@ scwin.btnBookmark_onclick = function(e) {
 };
 
 // 공유하기
-scwin.btnShare_onclick = function(e) {
+scwin.btnShare_onclick = function (e) {
     var title = dmp_postDetail.get("title") || "채용공고";
     var jobPostingId = dmp_postDetail.get("jobPostingId");
 
@@ -910,9 +918,9 @@ scwin.btnShare_onclick = function(e) {
         });
     } else {
         // 공유 API 미지원 시 클립보드 복사
-        navigator.clipboard.writeText(window.location.href).then(function() {
+        navigator.clipboard.writeText(window.location.href).then(function () {
             alert("링크가 클립보드에 복사되었습니다.");
-        }).catch(function() {
+        }).catch(function () {
             // 클립보드 복사 실패 시 직접 표시
             prompt("아래 링크를 복사하세요:", window.location.href);
         });
@@ -922,7 +930,7 @@ scwin.btnShare_onclick = function(e) {
 /**
  * 공고 삭제 완료 콜백
  */
-scwin.sbm_deletePost_submitdone = function(e) {
+scwin.sbm_deletePost_submitdone = function (e) {
     console.log("=== 공고 삭제 응답 수신 ===");
     console.log("응답 데이터:", e.responseJSON);
 
@@ -930,7 +938,7 @@ scwin.sbm_deletePost_submitdone = function(e) {
     var elHeader = e.responseJSON.elHeader;
 
     // 에러 체크
-    if(elHeader == null || elHeader == "" || elHeader == "undefined" || elHeader.resSuc == false) {
+    if (elHeader == null || elHeader == "" || elHeader == "undefined" || elHeader.resSuc == false) {
         console.error("공고 삭제 에러:", elHeader);
         var errorMsg = "공고를 삭제할 수 없습니다.";
         if (elHeader && elHeader.resMsg) {
@@ -942,9 +950,9 @@ scwin.sbm_deletePost_submitdone = function(e) {
 
     console.log("✅ 공고 삭제 성공");
     alert("공고가 성공적으로 삭제되었습니다.");
-    
+
     // 삭제 후 목록으로 이동
-    setTimeout(function() {
+    setTimeout(function () {
         scwin.goBackToList();
     }, 500);
 };
@@ -956,8 +964,8 @@ scwin.sbm_deletePost_submitdone = function(e) {
 /**
  * 경력수준 한글 변환
  */
-scwin.getExperienceLevelText = function(experienceLevel) {
-    switch(experienceLevel) {
+scwin.getExperienceLevelText = function (experienceLevel) {
+    switch (experienceLevel) {
         case 'any': return '경력무관';
         case 'junior': return '신입·1-3년';
         case 'senior': return '시니어·3년+';
@@ -968,8 +976,8 @@ scwin.getExperienceLevelText = function(experienceLevel) {
 /**
  * 근무형태 한글 변환
  */
-scwin.getWorkTypeText = function(workType) {
-    switch(workType) {
+scwin.getWorkTypeText = function (workType) {
+    switch (workType) {
         case 'remote': return '원격근무';
         case 'onsite': return '출근근무';
         case 'hybrid': return '하이브리드';
@@ -980,8 +988,8 @@ scwin.getWorkTypeText = function(workType) {
 /**
  * 급여범위 한글 변환
  */
-scwin.getSalaryRangeText = function(salaryRange) {
-    switch(salaryRange) {
+scwin.getSalaryRangeText = function (salaryRange) {
+    switch (salaryRange) {
         case 'under25': return '~2,500만원';
         case '25to35': return '2,500~3,500만원';
         case '35to50': return '3,500~5,000만원';
@@ -993,7 +1001,7 @@ scwin.getSalaryRangeText = function(salaryRange) {
 /**
  * 쿠키에서 사용자 정보 추출
  */
-scwin.getUserInfoFromCookie = function() {
+scwin.getUserInfoFromCookie = function () {
     try {
         var userInfoCookieStr = WebSquare.cookie.getCookie("userInfo");
         if (userInfoCookieStr && userInfoCookieStr.trim() !== "") {
@@ -1010,34 +1018,34 @@ scwin.getUserInfoFromCookie = function() {
 /**
  * 현재 사용자가 공고 작성자인지 확인
  */
-scwin.checkUserPermissionAndUpdateUI = function() {
+scwin.checkUserPermissionAndUpdateUI = function () {
     console.log("=== 사용자 권한 확인 시작 ===");
-    
+
     var userInfo = scwin.getUserInfoFromCookie();
     if (!userInfo) {
         console.log("비로그인 사용자 - 일반 UI 표시");
         scwin.showGeneralUserUI();
         return;
     }
-    
+
     console.log("로그인 사용자 정보:", userInfo);
     console.log("사용자 역할:", userInfo.role);
     console.log("사용자 회사 ID:", userInfo.companyId);
-    
+
     // COMPANY 역할이 아닌 경우 일반 사용자 UI
     if (userInfo.role !== "COMPANY") {
         console.log("일반 사용자(USER) - 일반 UI 표시");
         scwin.showGeneralUserUI();
         return;
     }
-    
+
     // 공고의 회사 ID 가져오기
     var postCompanyId = dmp_postDetail.get("companyId");
     console.log("공고 회사 ID:", postCompanyId);
-    
+
     // 회사 ID 타입 변환 후 비교
     var userCompanyId = userInfo.companyId;
-    
+
     // 문자열/숫자 타입이 다를 수 있으므로 문자열로 변환하여 비교
     if (String(userCompanyId) === String(postCompanyId)) {
         console.log("✅ 본인 공고 확인됨 - 기업 관리 UI 표시");
@@ -1048,20 +1056,20 @@ scwin.checkUserPermissionAndUpdateUI = function() {
         console.log("공고 회사 ID:", postCompanyId, "(타입:", typeof postCompanyId, ")");
         scwin.showGeneralUserUI();
     }
-    
+
     console.log("=== 사용자 권한 확인 완료 ===");
 };
 
 /**
  * 일반 사용자 UI 표시 (지원하기, 북마크)
  */
-scwin.showGeneralUserUI = function() {
+scwin.showGeneralUserUI = function () {
     console.log("일반 사용자 UI 적용");
-    
+
     // 일반 사용자 버튼 표시
     btnApply.show();
     btnBookmark.show();
-    
+
     // 기업 관리 버튼 숨김
     btnEdit.hide();
     btnDelete.hide();
@@ -1070,27 +1078,27 @@ scwin.showGeneralUserUI = function() {
 /**
  * 기업 소유자 UI 표시 (수정하기, 삭제하기)
  */
-scwin.showCompanyOwnerUI = function() {
+scwin.showCompanyOwnerUI = function () {
     console.log("기업 소유자 UI 적용");
-    
+
     // 일반 사용자 버튼 숨김
     btnApply.hide();
     btnBookmark.hide();
-    
+
     // 기업 관리 버튼 표시
     btnEdit.show();
     btnDelete.show();
 };
 
 // 수정하기 버튼 클릭
-scwin.btnEdit_onclick = function(e) {
+scwin.btnEdit_onclick = function (e) {
     var jobPostingId = dmp_postDetail.get("jobPostingId");
     var title = dmp_postDetail.get("title");
-    
+
     if (confirm(title + " 공고를 수정하시겠습니까?")) {
         // TODO: 수정 페이지로 이동
         console.log("공고 수정 페이지로 이동:", jobPostingId);
-        
+
         try {
             // 수정 페이지로 파라미터와 함께 이동
             if ($p.parent() && $p.parent().pf_main) {
@@ -1111,21 +1119,21 @@ scwin.btnEdit_onclick = function(e) {
 };
 
 // 삭제하기 버튼 클릭
-scwin.btnDelete_onclick = function(e) {
+scwin.btnDelete_onclick = function (e) {
     var jobPostingId = dmp_postDetail.get("jobPostingId");
     var title = dmp_postDetail.get("title");
-    
+
     if (confirm(title + " 공고를 정말 삭제하시겠습니까?\n삭제된 공고는 복구할 수 없습니다.")) {
         console.log("공고 삭제 요청:", jobPostingId);
-        
+
         // TODO: 삭제 Submission 실행
         try {
             // 삭제 파라미터 설정
             // dmp_postParam에 jobPostingId 설정 (이미 있음)
-            
+
             // 삭제 submission 실행 (submission을 추가해야 함)
             $c.sbm.execute($p, sbm_deletePost);
-            
+
         } catch (error) {
             console.error("공고 삭제 오류:", error);
             alert("공고 삭제 중 오류가 발생했습니다.");
