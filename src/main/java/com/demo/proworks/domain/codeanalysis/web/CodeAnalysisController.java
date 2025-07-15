@@ -106,6 +106,7 @@ public class CodeAnalysisController {
             returnMap.put("collaborationScore", result.getCollaborationScore());
             returnMap.put("confidenceScore", result.getConfidenceScore());
             returnMap.put("createdAt", result.getCreatedAt());
+            returnMap.put("language", result.getLanguage());
             
             return returnMap;
             

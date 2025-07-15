@@ -20,6 +20,8 @@ import org.json.JSONArray;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
 /**
  * @subject : 코드 분석 서비스 구현체
@@ -86,8 +88,11 @@ public class CodeAnalysisServiceImpl implements CodeAnalysisService {
                 throw new ElException("ERROR.BIZ.002", new String[]{"분석할 코드가 없습니다. 하나 이상의 파일을 업로드하세요."});
             }
             
+            String detectedLanguage = detectLanguage(codeContent.toString());
+            AppLog.debug("Detected language: " + detectedLanguage);
+
             // 분석 프롬프트 생성
-            String analysisPrompt = buildAnalysisPrompt() + "\n\n" + codeContent.toString();
+            String analysisPrompt = buildAnalysisPrompt(detectedLanguage) + "\n\n" + codeContent.toString();
             AppLog.debug("프롬프트 길이: " + analysisPrompt.length() + " 문자");
             
             // REST API 호출
@@ -115,6 +120,7 @@ public class CodeAnalysisServiceImpl implements CodeAnalysisService {
             resultVo.setCollaborationScore(parsedResult.getInt("collaborationScore"));
             resultVo.setConfidenceScore(parsedResult.getDouble("confidenceScore"));
             resultVo.setCreatedAt(new Date());
+            resultVo.setLanguage(detectedLanguage);
             
             AppLog.debug("결과 VO 생성 완료 - 타입: " + resultVo.getTypeCode());
             
@@ -453,12 +459,12 @@ public class CodeAnalysisServiceImpl implements CodeAnalysisService {
     /**
      * 상세한 분석 프롬프트 생성
      */
-    private String buildAnalysisPrompt() {
+    private String buildAnalysisPrompt(String language) {
         StringBuilder prompt = new StringBuilder();
         
         // 역할 및 목적 정의
         prompt.append("당신은 Developer Personality Analysis Expert입니다.\n");
-        prompt.append("Java 코드를 분석하여 개발자의 2차원 weaveType을 판단하는 전문가입니다.\n\n");
+        prompt.append("\" + language + \" 코드를 분석하여 개발자의 2차원 weaveType을 판단하는 전문가입니다.\n\n");
         
         prompt.append("** 목적 **\n");
         prompt.append("코딩 패턴, 구조적 사고, 협업 성향을 분석하여 2글자 Developer MBTI 코드(AI, AT, BI, BT)를 도출합니다.\n\n");
@@ -645,5 +651,13 @@ public class CodeAnalysisServiceImpl implements CodeAnalysisService {
         prompt.append("- 간결하고 집중적인 출력 유지\n");
         
         return prompt.toString();
+    }
+
+    private String detectLanguage(String code) {
+        if (code.contains("import java.")) return "Java";
+        if (code.contains("function ") || code.contains("console.log")) return "JavaScript";
+        if (code.contains("def ") || code.contains("print(")) return "Python";
+        // Add more detections as needed
+        return "Unknown";
     }
 } 
