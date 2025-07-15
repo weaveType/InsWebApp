@@ -992,7 +992,7 @@ public class UserController {
 	/**
 	 * 일반회원을 단건 조회 처리 한다.
 	 *
-	 * @param request HttpServletRequest 요청 객체
+	 * @param UserInfoVo userInfoVo 유저 상세페이지에서 사용할 값
 	 * @return 단건 조회 결과
 	 * @throws Exception
 	 */
@@ -1000,9 +1000,7 @@ public class UserController {
 	@RequestMapping(value = "US0002UpdView")
 	@ElDescription(sub = "일반회원 갱신 폼을 위한 조회", desc = "일반회원 상세보기 페이지의 조회를 담당한다.")
 	public UserInfoVo selectUserDetail(UserInfoVo userInfoVo) throws Exception {
-
 		UserInfoVo selectUserVo = userService.selectUserDetail(userInfoVo);
-		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> : " + selectUserVo.toString());
 		return selectUserVo;
 	}
 
