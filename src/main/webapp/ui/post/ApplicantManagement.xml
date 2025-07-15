@@ -206,7 +206,7 @@ scwin.pass_btn_onclick = function (e) {
     var options = {
         id: "mail_popup",
         type: "wframePopup",
-        width: "430px",
+        width: "600px",
         height: "530px",
         modal: true,
         resizable: true,
