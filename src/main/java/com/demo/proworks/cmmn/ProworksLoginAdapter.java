@@ -10,6 +10,7 @@ import com.demo.proworks.domain.user.service.UserService;
 import com.demo.proworks.domain.user.vo.UserVo;
 import com.inswave.elfw.exception.ElException;
 import com.inswave.elfw.log.AppLog;
+import com.inswave.elfw.login.DefaultLoginAdapter;
 import com.inswave.elfw.login.LoginAdapter;
 import com.inswave.elfw.login.LoginException;
 import com.inswave.elfw.login.LoginInfo;
@@ -109,7 +110,7 @@ public class ProworksLoginAdapter extends LoginAdapter {
 	 * @throws LoginException
 	 */
 	@Override
-	public LoginInfo logout(HttpServletRequest request, String id, Object... params) throws LoginException {
+	public LoginInfo logout(HttpServletRequest request, String email, Object... params) throws LoginException {
 		LoginInfo info = new LoginInfo();
 		try {
 			// 1. 로그아웃 처리로직 추가

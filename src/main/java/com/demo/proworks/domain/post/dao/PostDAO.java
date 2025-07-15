@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.stereotype.Repository;
 
 import com.inswave.elfw.exception.ElException;
+import com.demo.proworks.domain.post.vo.JobApplicationVo;
 import com.demo.proworks.domain.post.vo.PostMatchVo;
 import com.demo.proworks.domain.post.vo.PostVo;
 import com.demo.proworks.domain.post.vo.TechStackVo;
@@ -160,7 +161,27 @@ public class PostDAO extends com.demo.proworks.cmmn.dao.ProworksDefaultAbstractD
 		return (List<PostVo>) list("com.demo.proworks.domain.post.findPostsByMbti", postMatchVo);
 	}
 
+
+
 	public long findPostsByMbtiCount(PostMatchVo postMatchVo) throws ElException {
 		return (long) selectByPk("com.demo.proworks.domain.post.findPostsByMbtiCount", postMatchVo);
+	}
+
+	/**
+	 * 공고에 이력서 지원처리를 한다.
+	 *
+	 * @param sendEmailVo 합불여부, 메일 전송할 email, 메일 내용
+	 * @return 이메일 전송 실패 ID
+	 * @throws Exception
+	 */
+	/**
+	 * 이력서 지원 정보를 등록한다.
+	 *
+	 * @param jobApplicationVo 이력서 지원 정보
+	 * @return 등록된 행의 수
+	 * @throws ElException
+	 */
+	public int insertJobApplication(JobApplicationVo jobApplicationVo) throws ElException {
+		return insert("com.demo.proworks.domain.post.insertJobApplication", jobApplicationVo);
 	}
 }
