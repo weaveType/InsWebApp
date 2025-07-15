@@ -589,7 +589,7 @@ scwin.openJobDetail = function (jobPostingId) {
         // 웹스퀘어 환경에서 pageFrame 방식으로 파라미터 전달
         if ($p.parent() && $p.parent().pf_main) {
             console.log("pageFrame을 통한 이동:", jobPostingId);
-            $p.parent().pf_main.setSrc("ui/posting/PostDetail.xml", {
+            $p.parent().pf_main.setSrc("ui/post/PostDetail.xml", {
                 dataObject: {
                     jobPostingId: jobPostingId
                 }
@@ -694,18 +694,18 @@ scwin.filter_tag_onclick = function (tagName) {
     scwin.loadPostList();
 };
 
-// 햄버거 메뉴 토글
-scwin.toggleSideMenu = function () {
-    var sideMenu = document.getElementById('sideMenu');
-    var overlay = document.getElementById('sideMenuOverlay');
+// // 햄버거 메뉴 토글
+// scwin.toggleSideMenu = function () {
+//     var sideMenu = document.getElementById('sideMenu');
+//     var overlay = document.getElementById('sideMenuOverlay');
 
-    if (sideMenu && sideMenu.classList.contains('open')) {
-        scwin.closeSideMenu();
-    } else if (sideMenu && overlay) {
-        sideMenu.classList.add('open');
-        overlay.classList.add('open');
-    }
-};
+//     if (sideMenu && sideMenu.classList.contains('open')) {
+//         scwin.closeSideMenu();
+//     } else if (sideMenu && overlay) {
+//         sideMenu.classList.add('open');
+//         overlay.classList.add('open');
+//     }
+// };
 
 scwin.closeSideMenu = function () {
     var sideMenu = document.getElementById('sideMenu');
