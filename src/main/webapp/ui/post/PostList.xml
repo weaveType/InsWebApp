@@ -847,6 +847,10 @@ scwin.sbm_selectDevMbtiList_submitdone = function (e) {
         console.log("- 회사:", dlt_postList.getCellData(i, "companyName"));
     }
 };
+
+scwin.sbm_applicantList_submitdone = function (e) {
+
+};
 ]]></script>
 	</head>
 

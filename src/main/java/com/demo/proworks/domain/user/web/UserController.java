@@ -12,6 +12,8 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import com.demo.proworks.domain.user.vo.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
@@ -23,10 +25,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.demo.proworks.domain.user.service.UserService;
-import com.demo.proworks.domain.user.vo.UserVo;
-import com.demo.proworks.domain.user.vo.LoginVo;
-import com.demo.proworks.domain.user.vo.UserInfoVo;
-import com.demo.proworks.domain.user.vo.UserListVo;
 import com.demo.proworks.common.vo.EmailVo;
 
 import com.inswave.elfw.annotation.ElDescription;
@@ -527,7 +525,7 @@ public class UserController {
 			System.out.println("ServletContext 경로: " + request.getSession().getServletContext().getContextPath());
 			System.out.println("작업 디렉토리: " + System.getProperty("user.dir"));
 			System.out.println("==========================================");
-			
+
 			File uploadDirectory = new File(uploadDir);
 			if (!uploadDirectory.exists()) {
 				uploadDirectory.mkdirs();
@@ -644,7 +642,7 @@ public class UserController {
 			if (rootNode.has("profileImageName")) {
 				String profileImageName = rootNode.get("profileImageName").asText();
 				if (profileImageName != null && !profileImageName.trim().isEmpty()) {
-				userVo.setProfileImageName(profileImageName);
+					userVo.setProfileImageName(profileImageName);
 					System.out.println("프로필 이미지 업데이트: " + profileImageName);
 				}
 			}
@@ -1012,4 +1010,19 @@ public class UserController {
 		return selectUserVo;
 	}
 
+	/**
+	 * 공고에 이력서 지원처리를 한다.
+	 *
+	 * @param ApplicantVo 페이징 정보, 공고 ID
+	 * @return 등록된 행의 수
+	 * @throws Exception
+	 */
+	@ElService(key = "US0002List")
+	@RequestMapping(value = "US0002List")
+	@ElDescription(sub = "공고에 지원한 유저 출력", desc = "공고에 지원한 유저를 출력한다")
+	public ApplicantListVo selectUsersByjobPostingId(ApplicantVo applicantVo) throws Exception {
+		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>> applicantVo : " + applicantVo.toString());
+		return null;
+//			selectUsersByjobPostingId(applicantVo);
+		}
 }

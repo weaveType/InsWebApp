@@ -168,136 +168,51 @@
 		</style>
 		<xf:model>
 			<w2:dataCollection baseNode="map">
-				<w2:dataList baseNode="list" repeatNode="map" id="applicant_list" saveRemovedData="true">
+				<w2:dataList baseNode="list" repeatNode="map" id="dlt_applicantVoList" saveRemovedData="true">
 					<w2:columnInfo>
 						<w2:column dataType="text" name="체크박스" id="chk"></w2:column>
-						<w2:column dataType="text" name="이름" id="username"></w2:column>
-						<w2:column dataType="text" name="경력" id="total_experience"></w2:column>
+						<w2:column dataType="text" name="이름" id="name"></w2:column>
+						<w2:column dataType="text" name="경력" id="career"></w2:column>
 						<w2:column dataType="text" name="포지션" id="position"></w2:column>
-						<w2:column dataType="text" name="기술스택" id="tech_stack"></w2:column>
-						<w2:column dataType="text" name="mbti" id="mbti"></w2:column>
-						<w2:column dataType="text" name="이력서" id="profile"></w2:column>
-						<w2:column dataType="text" name="상태" id="status"></w2:column>
+						<w2:column dataType="text" name="기술스택" id="techStack"></w2:column>
+						<w2:column dataType="text" name="mbti" id="typeCode"></w2:column>
+						<w2:column dataType="text" name="이력서" id="resumeFileName"></w2:column>
+						<w2:column dataType="text" name="상태" id="applicationStatus"></w2:column>
+						<w2:column dataType="text" name="이메일" id="email"></w2:column>
+						<w2:column dataType="text" name="유저 ID" id="accountId"></w2:column>
 					</w2:columnInfo>
-					<w2:data use="true">
-						<w2:row>
-							<username><![CDATA[김지훈]]></username>
-							<total_experience><![CDATA[신입]]></total_experience>
-							<position><![CDATA[backend]]></position>
-							<tech_stack><![CDATA[springboot, spring, redis, rabbitmq]]></tech_stack>
-							<mbti><![CDATA[entj]]></mbti>
-							<profile><![CDATA[이력서1]]></profile>
-							<status><![CDATA[진행중]]></status>
-						</w2:row>
-						<w2:row>
-							<username><![CDATA[박수진]]></username>
-							<total_experience><![CDATA[2년]]></total_experience>
-							<position><![CDATA[fullstack]]></position>
-							<tech_stack><![CDATA[react, springboot, js]]></tech_stack>
-							<mbti><![CDATA[infp]]></mbti>
-							<profile><![CDATA[이력서2]]></profile>
-							<status><![CDATA[합격]]></status>
-						</w2:row>
-						<w2:row>
-							<username><![CDATA[이민호]]></username>
-							<total_experience><![CDATA[신입]]></total_experience>
-							<position><![CDATA[backend]]></position>
-							<tech_stack><![CDATA[django, postgresql, redis]]></tech_stack>
-							<mbti><![CDATA[enfp]]></mbti>
-							<profile><![CDATA[이력서1]]></profile>
-							<status><![CDATA[진행중]]></status>
-						</w2:row>
-						<w2:row>
-							<username><![CDATA[정수연]]></username>
-							<total_experience><![CDATA[1년]]></total_experience>
-							<position><![CDATA[frontend]]></position>
-							<tech_stack><![CDATA[react, typescript, redux]]></tech_stack>
-							<mbti><![CDATA[isfj]]></mbti>
-							<profile><![CDATA[이력서1]]></profile>
-							<status><![CDATA[서류검토]]></status>
-						</w2:row>
-						<w2:row>
-							<username><![CDATA[최도윤]]></username>
-							<total_experience><![CDATA[신입]]></total_experience>
-							<position><![CDATA[fullstack]]></position>
-							<tech_stack><![CDATA[vue, nodejs, mongodb]]></tech_stack>
-							<mbti><![CDATA[entp]]></mbti>
-							<profile><![CDATA[이력서2]]></profile>
-							<status><![CDATA[면접대기]]></status>
-						</w2:row>
-						<w2:row>
-							<username><![CDATA[김서아]]></username>
-							<total_experience><![CDATA[3년]]></total_experience>
-							<position><![CDATA[backend]]></position>
-							<tech_stack><![CDATA[springboot, jpa, mysql]]></tech_stack>
-							<mbti><![CDATA[intj]]></mbti>
-							<profile><![CDATA[이력서3]]></profile>
-							<status><![CDATA[합격]]></status>
-						</w2:row>
-						<w2:row>
-							<username><![CDATA[박준혁]]></username>
-							<total_experience><![CDATA[신입]]></total_experience>
-							<position><![CDATA[backend]]></position>
-							<tech_stack><![CDATA[fastapi, sqlalchemy, redis]]></tech_stack>
-							<mbti><![CDATA[estp]]></mbti>
-							<profile><![CDATA[이력서1]]></profile>
-							<status><![CDATA[진행중]]></status>
-						</w2:row>
-						<w2:row>
-							<username><![CDATA[이지우]]></username>
-							<total_experience><![CDATA[2년]]></total_experience>
-							<position><![CDATA[fullstack]]></position>
-							<tech_stack><![CDATA[angular, nestjs, postgresql]]></tech_stack>
-							<mbti><![CDATA[isfp]]></mbti>
-							<profile><![CDATA[이력서2]]></profile>
-							<status><![CDATA[불합격]]></status>
-						</w2:row>
-						<w2:row>
-							<username><![CDATA[윤채영]]></username>
-							<total_experience><![CDATA[신입]]></total_experience>
-							<position><![CDATA[frontend]]></position>
-							<tech_stack><![CDATA[react, next.js, tailwind]]></tech_stack>
-							<mbti><![CDATA[esfj]]></mbti>
-							<profile><![CDATA[이력서1]]></profile>
-							<status><![CDATA[서류검토]]></status>
-						</w2:row>
-						<w2:row>
-							<username><![CDATA[장민석]]></username>
-							<total_experience><![CDATA[4년]]></total_experience>
-							<position><![CDATA[backend]]></position>
-							<tech_stack><![CDATA[spring, kafka, elasticsearch]]></tech_stack>
-							<mbti><![CDATA[entj]]></mbti>
-							<profile><![CDATA[이력서4]]></profile>
-							<status><![CDATA[합격]]></status>
-						</w2:row>
-						<w2:row>
-							<username><![CDATA[한소영]]></username>
-							<total_experience><![CDATA[신입]]></total_experience>
-							<position><![CDATA[fullstack]]></position>
-							<tech_stack><![CDATA[svelte, express, sqlite]]></tech_stack>
-							<mbti><![CDATA[infp]]></mbti>
-							<profile><![CDATA[이력서1]]></profile>
-							<status><![CDATA[면접대기]]></status>
-						</w2:row>
-					</w2:data>
+					<w2:data use="false"></w2:data>
 				</w2:dataList>
+				<w2:dataMap baseNode="map" id="dmp_applicantVo">
+					<w2:keyInfo>
+						<w2:key dataType="text" name="페이지_번호" id="pageIndex" defaultValue="1"></w2:key>
+						<w2:key dataType="text" name="페이지_건수" id="pageSize" defaultValue="10"></w2:key>
+						<w2:key dataType="number" name="공고_id" id="jobPostingId"></w2:key>
+					</w2:keyInfo>
+				</w2:dataMap>
 			</w2:dataCollection>
-			<xf:submission id="sbm_applicant_list" action="" method="post" mediatype="application/json" ref="data:json,applicant_list"
-				target="" encoding="UTF-8" instance="" replace="" errorHandler="" customHandler="" mode="asynchronous" processMsg="" ev:submit=""
-				ev:submitdone="" ev:submiterror="" abortTrigger="">
+			<xf:submission id="sbm_applicantList" action="/InsWebApp/US0002List.pwkjson" method="post" mediatype="application/json" ref='data:json,{"id":"dmp_applicantVo","key":"applicantVo"}'
+				target='data:json,{"id":"dlt_applicantVoList","key":"applicantListVo"}' encoding="UTF-8" instance="" replace="" errorHandler="" customHandler="" mode="asynchronous" processMsg="지원자 목록을 조회중입니다." ev:submit=""
+				ev:submitdone="scwin.sbm_applicantList_submitdone" ev:submiterror="" abortTrigger="">
 			</xf:submission>
 		</xf:model>
 		<script lazy="false" type="text/javascript"><![CDATA[scwin.onpageload = function() {
-    // 필터 변경 이벤트 리스너 추가
-    mbtiFilter.addEventListener("onviewchange", function() {
-        applyFilters();
-    });
-    techStackFilter.addEventListener("onviewchange", function() {
-        applyFilters();
-    });
-    statusFilter.addEventListener("onviewchange", function() {
-        applyFilters();
-    });
+    var jobPostingId = null;
+
+    if (!jobPostingId) {
+        try {
+            var href = window.location.href;
+            var match = href.match(/[?&]jobPostingId=([^&]*)/);
+            if (match && match[1]) {
+                jobPostingId = decodeURIComponent(match[1]);
+                console.log("location.href에서 jobPostingId 추출:", jobPostingId);
+            }
+        } catch (e) {
+            console.log("location.href 파싱 실패:", e);
+        }
+    }
+    dmp_applicantVo.set("jobPostingId", jobPostingId);
+    $c.sbm.execute(sbm_selectCompanyList);
 };
 
 
