@@ -8,6 +8,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
 import com.demo.proworks.domain.user.service.UserService;
+import com.demo.proworks.domain.user.vo.ApplicantDetailVo;
 import com.demo.proworks.domain.user.vo.ApplicantListVo;
 import com.demo.proworks.domain.user.vo.ApplicantVo;
 import com.demo.proworks.domain.user.vo.UserInfoVo;
@@ -239,7 +240,7 @@ public class UserServiceImpl implements UserService {
 	 * @return 등록된 행의 수
 	 * @throws Exception
 	 */
-	public ApplicantListVo selectUsersByjobPostingId(ApplicantVo applicantVo) throws Exception {
+	public List<ApplicantDetailVo> selectUsersByjobPostingId(ApplicantVo applicantVo) throws Exception {
 		return userDAO.selectUsersByjobPostingId(applicantVo);
 	}
 }

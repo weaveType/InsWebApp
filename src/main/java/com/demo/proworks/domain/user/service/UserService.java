@@ -3,6 +3,7 @@ package com.demo.proworks.domain.user.service;
 import java.util.List;
 
 import com.demo.proworks.common.enumType.DevMbti;
+import com.demo.proworks.domain.user.vo.ApplicantDetailVo;
 import com.demo.proworks.domain.user.vo.ApplicantListVo;
 import com.demo.proworks.domain.user.vo.ApplicantVo;
 import com.demo.proworks.domain.user.vo.UserInfoVo;
@@ -164,6 +165,6 @@ public interface UserService {
 	 * @return 등록된 행의 수
 	 * @throws Exception
 	 */
-	public ApplicantListVo selectUsersByjobPostingId(ApplicantVo applicantVo) throws Exception;
+	public List<ApplicantDetailVo> selectUsersByjobPostingId(ApplicantVo applicantVo) throws Exception;
 
 }

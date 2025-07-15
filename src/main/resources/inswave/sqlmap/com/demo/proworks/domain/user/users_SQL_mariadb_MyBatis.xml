@@ -246,21 +246,21 @@ SELECT	/* QueryID : com.demo.proworks.domain.user.getDevMbti */
         LEFT JOIN users_info ui ON u.user_id = ui.user_id  
         WHERE u.user_id = #{accountId}
 </select>
-<select id="selectUsersByjobPostingId" resultType="com.demo.proworks.domain.user.vo.ApplicantListVo" parameterType="com.demo.proworks.domain.user.vo.ApplicantVo">
-        SELECT 
-            ja.application_id,
-            ja.job_posting_id,
-            ja.user_id,
-            ja.status,
-            ja.applied_at,
-            u.name AS user_name,
-            u.email,
-            ui.career,
-            ui.current_position,
-            ui.year_salary,
-            umt.type_code AS mbti_type_code
+<select id="selectUsersByjobPostingId" resultType="com.demo.proworks.domain.user.vo.ApplicantDetailVo" parameterType="com.demo.proworks.domain.user.vo.ApplicantVo">
+<!-- jobPostingId로 지원자 목록을 조회한다. -->
+        SELECT /* QueryID : com.demo.proworks.domain.user.selectUsersByjobPostingId */
+            false AS chk,
+            u.name AS name,
+            ui.career AS career,
+            ui.current_position AS currentPosition,
+            NULL AS techStack,
+            umt.type_code AS typeCode,
+            ui.resume_file_name AS resumeFileName,
+            ja.application_status AS applicationStatus,
+            u.email AS email,
+            u.user_id AS accountId
             
-        FROM job_application ja
+        FROM job_applications ja
         INNER JOIN Users u ON ja.user_id = u.user_id
         LEFT JOIN users_info ui ON u.user_id = ui.user_id
         LEFT JOIN (
@@ -273,19 +273,10 @@ SELECT	/* QueryID : com.demo.proworks.domain.user.getDevMbti */
         
         WHERE ja.job_posting_id = #{jobPostingId}
         
-        <if test="status != null and status != ''">
-            AND ja.status = #{status}
-        </if>
-        
-        <if test="searchKeyword != null and searchKeyword != ''">
-            AND (u.name LIKE CONCAT('%', #{searchKeyword}, '%') 
-                 OR u.email LIKE CONCAT('%', #{searchKeyword}, '%'))
-        </if>
-        
         ORDER BY ja.applied_at DESC
         
         <if test="pageIndex != null and pageSize != null">
-            LIMIT #{pageSize} OFFSET #{offset}
+            LIMIT #{pageSize} OFFSET #{pageIndex}
         </if>
 </select>
 </mapper>

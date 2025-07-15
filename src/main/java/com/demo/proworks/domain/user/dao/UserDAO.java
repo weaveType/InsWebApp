@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.inswave.elfw.exception.ElException;
+import com.demo.proworks.domain.user.vo.ApplicantDetailVo;
 import com.demo.proworks.domain.user.vo.ApplicantListVo;
 import com.demo.proworks.domain.user.vo.ApplicantVo;
 import com.demo.proworks.domain.user.vo.UserInfoVo;
@@ -228,7 +229,7 @@ public class UserDAO extends com.demo.proworks.cmmn.dao.ProworksDefaultAbstractD
 	 * @return 등록된 행의 수
 	 * @throws Exception
 	 */
-	public ApplicantListVo selectUsersByjobPostingId(ApplicantVo vo) throws Exception {
-		return (ApplicantListVo) list("com.demo.proworks.domain.user.selectUsersByjobPostingId", vo);
+	public List<ApplicantDetailVo> selectUsersByjobPostingId(ApplicantVo vo) throws Exception {
+		return (List<ApplicantDetailVo>) list("com.demo.proworks.domain.user.selectUsersByjobPostingId", vo);
 	}
 }
