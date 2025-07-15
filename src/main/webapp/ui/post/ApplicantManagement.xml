@@ -179,52 +179,51 @@
             var match = href.match(/[?&]jobPostingId=([^&]*)/);
             if (match && match[1]) {
                 jobPostingId = decodeURIComponent(match[1]);
-                console.log("location.href에서 jobPostingId 추출:", jobPostingId);
             }
         } catch (e) {
             console.log("location.href 파싱 실패:", e);
         }
     } else {
-
+        // 비정상적 접근. 이전페이지로 이동
     }
     dmp_applicantVo.set("jobPostingId", jobPostingId);
     $c.sbm.execute(sbm_applicantList);
 };
 
 // 선택된 항목 수 업데이트
-scwin.updateSelectedCount = function() {
+scwin.updateSelectedCount = function () {
     var checkedRows = gridView.getCheckedIndex("chk");
     var count = checkedRows.length;
     selectedCount.setValue(count + "명 선택됨");
 };
 
 // 서브미션 완료 후 체크박스 이벤트 바인딩
-scwin.sbm_applicantList_submitdone = function(e) {
-   
+scwin.sbm_applicantList_submitdone = function (e) {
+
     // 초기 선택 수 표시
     scwin.updateSelectedCount();
 };
 
 
-scwin.pass_btn_onclick = function(e) {
-    // GridView에서 체크된 행의 데이터를 JSON으로 가져오기
+scwin.pass_btn_onclick = function (e) {
+
     var checkedData = gridView.getCheckedIndex("chk");
-    
+
     if (checkedData.length === 0) {
         $c.win.alert("선택된 지원자가 없습니다.");
         return;
     }
-    
-    // 이메일 목록 추출 (구현중)
-    var emailList = checkedData.map(function(item) {
-        return {
-            userId: item.user_id,
-            email: item.email,
-            name: item.name
+
+    // 이메일 추출
+    let extractedEmails = [];
+    var emailList = checkedData.map(function (rowIndex) {
+        let email = dlt_applicantVoList.getCellData(rowIndex, "email");
+
+        if (email) {
+            extractedEmails.push(email);
         };
     });
-    console.log(emailList);
-    // PassEmail 팝업 열기
+
     $c.win.openPopup("PassEmail.xml", {
         id: "pop_passEmail",
         type: "wframePopup",
@@ -238,76 +237,36 @@ scwin.pass_btn_onclick = function(e) {
 
 }
 
-// scwin.pass_btn_onclick = function (e) {
-//     var passEmailPopupData = {
-//         "type": "json",
-//         "name": "pass_email",
-//         "data": {
-//             "loginType": "main",
-//             "returnUrl": window.location.href
-//         }
-//     };
-
-//     // 팝업 생성 옵션 지정
-//     var options = {
-//         id: "mail_popup",
-//         type: "wframePopup",
-//         width: "600px",
-//         height: "650px",
-//         modal: true,
-//         resizable: true,
-//         center: true,
-//         popupName: "합격자 메일전송",
-//         closeAction: "scwin.closeLoginPopup",   
-//         dataObject: passEmailPopupData
-//     };
-
-//     // 팝업 생성
-//     $p.openPopup("PassEmail.xml", options);
-// };
-
 scwin.fail_btn_onclick = function (e) {
-    // GridView에서 체크된 행의 데이터를 JSON으로 가져오기
-    var checkedRows = dlt_applicantVoList.getCheckedJSON("chk");
-    
-    if (checkedRows.length === 0) {
-        $c.win.alert("메일을 보낼 지원자를 선택해주세요.");
+
+    var checkedData = gridView.getCheckedIndex("chk");
+
+    if (checkedData.length === 0) {
+        $c.win.alert("선택된 지원자가 없습니다.");
         return;
     }
 
-    // 선택된 사용자 정보 추출
-    var selectedUsers = [];
-    for (var i = 0; i < checkedRows.length; i++) {
-        selectedUsers.push({
-            userId: checkedRows[i].accountId,
-            email: checkedRows[i].email,
-            name: checkedRows[i].name,
-            position: checkedRows[i].currentPosition,
-            mbti: checkedRows[i].typeCode
-        });
-    }
+    // 이메일 추출
+    let extractedEmails = [];
+    var emailList = checkedData.map(function (rowIndex) {
+        let email = dlt_applicantVoList.getCellData(rowIndex, "email");
 
-    // 팝업 데이터 객체
-    var failEmailPopupData = {
-        selectedUsers: selectedUsers,  // 선택된 사용자 정보 배열
-        jobPostingId: dmp_applicantVo.get("jobPostingId"),  // 공고 ID
-        totalCount: selectedUsers.length  // 선택된 사용자 수
-    };
+        if (email) {
+            extractedEmails.push(email);
+        };
+    });
 
     // 팝업 생성 옵션
-    var options = {
+    $c.win.openPopup("FailEmail.xml", {
         id: "pop_failEmail",
         type: "wframePopup",
         width: "700px",
-        height: "600px",
-        modal: true,
-        resizable: true,
-        center: true,
-        popupName: "불합격자 메일 발송"
-    };
-
-    // 팝업 열기
-    $c.win.openPopup("/ui/post/FailEmail.xml", options, failEmailPopupData);
+        height: "650px",
+        popupName: "불합격 메일 보내기",
+        modal: true
+    }, {
+        selectedUsers: emailList  // 데이터 전달
+    });
 };
 ]]></script>
 	</head>
