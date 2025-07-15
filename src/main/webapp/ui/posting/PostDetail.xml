@@ -9,56 +9,68 @@
         <w2:buildDate/>
         <w2:MSA/>
         <xf:model>
-            <w2:dataCollection baseNode="map">
-                <!-- 공고 상세 조회용 파라미터 -->
-                <w2:dataMap baseNode="map" id="dmp_postParam" style="">
-                    <w2:keyInfo>
-                        <w2:key dataType="text" id="jobPostingId" name="공고_ID"></w2:key>
-                    </w2:keyInfo>
-                    <w2:data use="false"></w2:data>
-                </w2:dataMap>
-                
-                <!-- 공고 상세 정보 -->
-                <w2:dataMap baseNode="map" id="dmp_postDetail" style="">
-                    <w2:keyInfo>
-                        <w2:key dataType="text" id="jobPostingId" name="job_posting_id"></w2:key>
-                        <w2:key dataType="text" id="companyId" name="company_id"></w2:key>
-                        <w2:key dataType="text" id="title" name="title"></w2:key>
-                        <w2:key dataType="text" id="description" name="description"></w2:key>
-                        <w2:key dataType="text" id="requirements" name="requirements"></w2:key>
-                        <w2:key dataType="text" id="preferred" name="preferred"></w2:key>
-                        <w2:key dataType="text" id="benefits" name="benefits"></w2:key>
-                        <w2:key dataType="text" id="experienceLevel" name="experience_level"></w2:key>
-                        <w2:key dataType="text" id="salaryRange" name="salary_range"></w2:key>
-                        <w2:key dataType="text" id="location" name="location"></w2:key>
-                        <w2:key dataType="text" id="workType" name="work_type"></w2:key>
-                        <w2:key dataType="text" id="expiresAt" name="expires_at"></w2:key>
-                        <w2:key dataType="text" id="postedAt" name="posted_at"></w2:key>
-                        <w2:key dataType="text" id="status" name="status"></w2:key>
-                        <w2:key dataType="text" id="companyName" name="company_name"></w2:key>
-                        <w2:key dataType="text" id="industry" name="industry"></w2:key>
-                        <w2:key dataType="text" id="empCount" name="emp_count"></w2:key>
-                        <w2:key dataType="text" id="selectedTechStackNames" name="selected_tech_stack_names"></w2:key>
-                        <w2:key dataType="text" id="preferredDeveloperTypes" name="preferred_developer_types"></w2:key>
-                    </w2:keyInfo>
-                    <w2:data use="false"></w2:data>
-                </w2:dataMap>
-            </w2:dataCollection>
-            <w2:workflowCollection/>
+        	<w2:dataCollection baseNode="map">
+        		<!-- 공고 상세 조회용 파라미터 -->
+        		<w2:dataMap baseNode="map" id="dmp_postParam" style="">
+        			<w2:keyInfo>
+        				<w2:key dataType="text" id="jobPostingId" name="공고_ID"></w2:key>
+        			</w2:keyInfo>
+        			<w2:data use="false"></w2:data>
+        		</w2:dataMap>
 
-            <!-- 공고 상세 조회 Submission -->
-            <xf:submission id="sbm_selectPostDetail" ref='data:json,{"id":"dmp_postParam","key":"postVo"}'
-                target='data:json,{"id":"dmp_postDetail","key":"elData"}' action="/InsWebApp/POS0001Detail.pwkjson" method="post"
-                mediatype="application/json" encoding="UTF-8" instance="" replace="" errorHandler="" customHandler="" mode="asynchronous"
-                processMsg="공고 상세정보를 조회중입니다." ev:submit="" ev:submitdone="scwin.sbm_selectPostDetail_submitdone" ev:submiterror="" abortTrigger="">
-            </xf:submission>
-            
-            <!-- 공고 삭제 Submission -->
-            <xf:submission id="sbm_deletePost" ref='data:json,{"id":"dmp_postParam","key":"postVo"}'
-                target="" action="/InsWebApp/POS0001Del.pwkjson" method="post"
-                mediatype="application/json" encoding="UTF-8" instance="" replace="" errorHandler="" customHandler="" mode="asynchronous"
-                processMsg="공고를 삭제중입니다." ev:submit="" ev:submitdone="scwin.sbm_deletePost_submitdone" ev:submiterror="" abortTrigger="">
-            </xf:submission>
+        		<!-- 공고 상세 정보 -->
+        		<w2:dataMap baseNode="map" id="dmp_postDetail" style="">
+        			<w2:keyInfo>
+        				<w2:key dataType="text" id="jobPostingId" name="job_posting_id"></w2:key>
+        				<w2:key dataType="text" id="companyId" name="company_id"></w2:key>
+        				<w2:key dataType="text" id="title" name="title"></w2:key>
+        				<w2:key dataType="text" id="description" name="description"></w2:key>
+        				<w2:key dataType="text" id="requirements" name="requirements"></w2:key>
+        				<w2:key dataType="text" id="preferred" name="preferred"></w2:key>
+        				<w2:key dataType="text" id="benefits" name="benefits"></w2:key>
+        				<w2:key dataType="text" id="experienceLevel" name="experience_level"></w2:key>
+        				<w2:key dataType="text" id="salaryRange" name="salary_range"></w2:key>
+        				<w2:key dataType="text" id="location" name="location"></w2:key>
+        				<w2:key dataType="text" id="workType" name="work_type"></w2:key>
+        				<w2:key dataType="text" id="expiresAt" name="expires_at"></w2:key>
+        				<w2:key dataType="text" id="postedAt" name="posted_at"></w2:key>
+        				<w2:key dataType="text" id="status" name="status"></w2:key>
+        				<w2:key dataType="text" id="companyName" name="company_name"></w2:key>
+        				<w2:key dataType="text" id="industry" name="industry"></w2:key>
+        				<w2:key dataType="text" id="empCount" name="emp_count"></w2:key>
+        				<w2:key dataType="text" id="selectedTechStackNames" name="selected_tech_stack_names"></w2:key>
+        				<w2:key dataType="text" id="preferredDeveloperTypes" name="preferred_developer_types"></w2:key>
+        			</w2:keyInfo>
+        			<w2:data use="false"></w2:data>
+        		</w2:dataMap>
+        		<w2:dataMap baseNode="map" id="dmp_jobApplicationVo">
+        			<w2:keyInfo>
+        				<w2:key dataType="number" name="공고 ID" id="jobPostingId"></w2:key>
+        				<w2:key dataType="number" name="지원자 ID" id="accountId"></w2:key>
+        			</w2:keyInfo>
+        		</w2:dataMap>
+        	</w2:dataCollection>
+        	<w2:workflowCollection />
+
+        	<!-- 공고 상세 조회 Submission -->
+        	<xf:submission id="sbm_selectPostDetail" ref='data:json,{"id":"dmp_postParam","key":"postVo"}'
+        		target='data:json,{"id":"dmp_postDetail","key":"elData"}' action="/InsWebApp/POS0001Detail.pwkjson" method="post"
+        		mediatype="application/json" encoding="UTF-8" instance="" replace="" errorHandler="" customHandler="" mode="asynchronous"
+        		processMsg="공고 상세정보를 조회중입니다." ev:submit="" ev:submitdone="scwin.sbm_selectPostDetail_submitdone" ev:submiterror=""
+        		abortTrigger="">
+        	</xf:submission>
+
+        	<!-- 공고 삭제 Submission -->
+        	<xf:submission id="sbm_deletePost" ref='data:json,{"id":"dmp_postParam","key":"postVo"}' target=""
+        		action="/InsWebApp/POS0001Del.pwkjson" method="post" mediatype="application/json" encoding="UTF-8" instance="" replace=""
+        		errorHandler="" customHandler="" mode="asynchronous" processMsg="공고를 삭제중입니다." ev:submit=""
+        		ev:submitdone="scwin.sbm_deletePost_submitdone" ev:submiterror="" abortTrigger="">
+        	</xf:submission>
+        	<xf:submission id="sbm_insertJobApplication" action="/InsWebApp/POS0001JAPL.pwkjson" method="post" mediatype="application/json"
+        		ref='data:json,{"id":"dmp_jobApplicationVo","key":"jobApplicationVo"}' target="" encoding="UTF-8" instance="" replace=""
+        		errorHandler="" customHandler="" mode="asynchronous" processMsg="이력서 지원중.." ev:submit="" ev:submitdone="" ev:submiterror=""
+        		abortTrigger="">
+        	</xf:submission>
         </xf:model>
         <w2:layoutInfo/>
         <w2:publicInfo method=""/>
@@ -872,20 +884,22 @@ scwin.btnBack_onclick = function (e) {
 
 // 지원하기 버튼 클릭
 scwin.btnApply_onclick = function (e) {
-    var jobPostingId = dmp_postDetail.get("jobPostingId");
     var title = dmp_postDetail.get("title");
-    var accountId = null;
-
 
     if (confirm(title + " 공고에 지원하시겠습니까?")) {
-        var userInfoCookie = JSON.parse(WebSquare.cookie.getCookie("userInfo"));
-
+        var userInfoCookie = WebSquare.cookie.getCookie("userInfo");
         if (userInfoCookie) {
+            var jobPostingId = dmp_postDetail.get("jobPostingId");
             var userInfo = JSON.parse(userInfoCookie);
-            
+            var accountId = userInfo.accountId;
+            console.log(accountId);
+            dmp_jobApplicationVo.set("jobPostingId", jobPostingId);
+            dmp_jobApplicationVo.set("accountId", accountId);
+            $c.sbm.execute($p, sbm_insertJobApplication);
         }
-
-
+        else{
+            alert("일반 회원으로 로그인 후 이용해주세요.");
+        }
     }
 };
 

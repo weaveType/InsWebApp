@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.demo.proworks.domain.post.service.PostService;
 import com.demo.proworks.domain.post.vo.PostVo;
 import com.demo.proworks.domain.post.vo.SendEmailVo;
+import com.demo.proworks.domain.post.vo.JobApplicationVo;
 import com.demo.proworks.domain.post.vo.PostListVo;
 import com.demo.proworks.domain.post.vo.PostMatchVo;
 import com.demo.proworks.domain.post.vo.TechStackVo;
@@ -528,4 +529,19 @@ public class PostController {
 		postService.sendToEmails(sendEmailVo);
 	}
 
+	/**
+	 * 공고에 이력서 지원처리를 한다.
+	 *
+	 * @param sendEmailVo 합불여부, 메일 전송할 email, 메일 내용
+	 * @return 이메일 전송 실패 ID
+	 * @throws Exception
+	 */
+	@ElService(key = "POS0001JAPL")
+	@RequestMapping(value = "POS0001JAPL")
+	@ElDescription(sub = "이력서 지원처리", desc = "공고에 이력서 지원 처리를 한다")
+	public void insertJobApplication(JobApplicationVo jobApplicationVo) throws Exception {
+	System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>> jobApplicaiton : " + jobApplicationVo.toString());
+//		postService.insertJobApplication(jobApplicationVo);
+
+	}
 }
