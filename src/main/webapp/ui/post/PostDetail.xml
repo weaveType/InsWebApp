@@ -1087,6 +1087,7 @@ scwin.showGeneralUserUI = function () {
     // 기업 관리 버튼 숨김
     btnEdit.hide();
     btnDelete.hide();
+    btnApplicantDetails.hide();
 };
 
 /**
@@ -1102,6 +1103,7 @@ scwin.showCompanyOwnerUI = function () {
     // 기업 관리 버튼 표시
     btnEdit.show();
     btnDelete.show();
+    btnApplicantDetails.show();
 };
 
 // 수정하기 버튼 클릭
