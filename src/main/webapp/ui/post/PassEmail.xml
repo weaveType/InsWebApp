@@ -7,36 +7,8 @@
         <w2:buildDate/>
         <w2:MSA/>
         <xf:model>
-            <w2:dataCollection baseNode="map">
-                <w2:dataList id="dlt_selectedUsers" baseNode="list" repeatNode="map" saveRemovedData="true">
-                    <w2:columnInfo>
-                        <w2:column id="userId" name="사용자ID" dataType="text" />
-                        <w2:column id="email" name="이메일" dataType="text" />
-                        <w2:column id="name" name="이름" dataType="text" />
-                        <w2:column id="position" name="포지션" dataType="text" />
-                        <w2:column id="mbti" name="MBTI" dataType="text" />
-                    </w2:columnInfo>
-                </w2:dataList>
-                <w2:dataMap id="dmp_emailData" baseNode="map">
-                    <w2:keyInfo>
-                        <w2:key id="emailSubject" name="메일제목" dataType="text" />
-                        <w2:key id="emailContent" name="메일내용" dataType="text" />
-                        <w2:key id="recipients" name="수신자목록" dataType="array" />
-                        <w2:key id="jobPostingId" name="공고ID" dataType="number" />
-                        <w2:key id="emailType" name="메일타입" dataType="text" defaultValue="PASS" />
-                    </w2:keyInfo>
-                </w2:dataMap>
-            </w2:dataCollection>
-            <xf:submission id="sbm_sendPassEmail" 
-                ref='data:json,{"id":"dmp_emailData","key":"emailData"}'
-                target='data:json,{"id":"dmp_emailData","key":"elHeader"}'
-                action="/api/email/sendBulkEmail" 
-                method="post" 
-                mediatype="application/json" 
-                mode="asynchronous"
-                processMsg="메일을 발송 중입니다..."
-                ev:submitdone="scwin.sbm_sendPassEmail_submitdone">
-            </xf:submission>
+            <w2:dataCollection baseNode="map"/>
+            <w2:workflowCollection/>
         </xf:model>
         <w2:layoutInfo/>
         <w2:publicInfo method=""/>
@@ -254,52 +226,20 @@
         
         <script lazy="false" type="text/javascript"><![CDATA[
 scwin.onpageload = function() {
-    // 부모창에서 전달받은 데이터 가져오기
-    var param = $c.data.getParameter();
-    console.log("전달받은 데이터:", param);
-    
-    if (param && param.selectedUsers) {
-        // DataList에 선택된 사용자 정보 설정
-        dlt_selectedUsers.setJSON(param.selectedUsers);
-        
-        // 수신자 수 표시
-        var recipientCount = param.totalCount || param.selectedUsers.length;
-        scwin.updateRecipientInfo(recipientCount);
-        
-        // 공고 ID 저장
-        if (param.jobPostingId) {
-            dmp_emailData.set("jobPostingId", param.jobPostingId);
-        }
-    }
-    
     // 기본 템플릿 설정
     scwin.setDefaultTemplates();
 };
 
-// 수신자 정보 업데이트
-scwin.updateRecipientInfo = function(count) {
-    var infoText = "총 " + count + "명의 지원자에게 합격 메일을 발송합니다.";
-    // 정보 표시용 텍스트박스가 있다면 업데이트
-    if (typeof txt_recipientInfo !== 'undefined') {
-        txt_recipientInfo.setValue(infoText);
-    }
-};
-
 // 기본 이메일 템플릿 설정
 scwin.setDefaultTemplates = function() {
-    var passTemplate = "안녕하세요 {{이름}}님,\n\n" +
+    var passTemplate = "안녕하세요 {{이용자}}님,\n\n" +
                     "서류심사 결과를 안내드립니다.\n\n" +
                     "축하드립니다! 서류심사에 통과하셨습니다.\n" +
                     "면접은 {{날짜}}에 진행할 예정입니다.\n" + 
-                    "아래 링크를 클릭하여 원하는 시간대로 면접을 예약해 주세요.\n\n" +
-                    "[면접 예약 링크]\n\n" +
+                    "아래 링크를 클릭하여 원하는 시간대로 면접을 예약해 주세요.\n" +
                     "감사합니다.\n" +
                     "인사팀 드림";
-    
-    // 메일 제목 설정                
-    dmp_emailData.set("emailSubject", "[합격 안내] 서류 심사 결과 안내드립니다.");
-    
-    // 메일 내용 설정
+                    
     txtPassTemplate.setValue(passTemplate);
 };
 
@@ -311,95 +251,39 @@ scwin.applyDateToPass = function() {
         var year = selectedDate.substring(0, 4);
         var month = selectedDate.substring(4, 6);
         var day = selectedDate.substring(6, 8);
-        var formattedDate = year + "년 " + month + "월 " + day + "일";
+        var formattedDate = year + "년" + month + "월" + day + "일";
 
         var template = txtPassTemplate.getValue();
         var updatedTemplate = template.replace(/\{\{날짜\}\}/g, formattedDate);
         txtPassTemplate.setValue(updatedTemplate);
     } else {
-        $c.win.alert("날짜를 선택해주세요.");
+        alert("날짜를 선택해주세요.");
     }
+};
+
+// 팝업 닫기
+scwin.closePopup = function() {
+    $p.closePopup();
 };
 
 // 템플릿 초기화
 scwin.resetTemplates = function() {
     scwin.setDefaultTemplates();
     calPassDate.setValue("");
+    calFailDate.setValue("");
 };
 
-// 팝업 닫기
 scwin.btn_close_onclick = function (e) {
-    $c.win.closePopup();
+    $p.closePopup();
 };
 
-// 메일 발송
 scwin.btn_sendEmail_onclick = function (e) {
-    // 유효성 검사
-    var emailContent = txtPassTemplate.getValue();
-    if (!emailContent || emailContent.trim() === "") {
-        $c.win.alert("메일 내용을 입력해주세요.");
-        return;
-    }
-    
-    // 날짜가 선택되지 않았거나 {{날짜}} 태그가 남아있는지 확인
-    if (emailContent.indexOf("{{날짜}}") > -1) {
-        $c.win.alert("면접 날짜를 선택하고 '날짜 적용' 버튼을 클릭해주세요.");
-        return;
-    }
-    
-    // 선택된 사용자 정보 가져오기
-    var recipients = dlt_selectedUsers.getAllJSON();
-    if (!recipients || recipients.length === 0) {
-        $c.win.alert("수신자가 없습니다.");
-        return;
-    }
-    
-    // 이메일 데이터 준비
-    dmp_emailData.set("emailContent", emailContent);
-    dmp_emailData.set("recipients", recipients);
-    
-    // 발송 확인
-    var confirmMsg = recipients.length + "명의 지원자에게 합격 메일을 발송하시겠습니까?";
-    $c.win.confirm(confirmMsg, function(result) {
-        if (result) {
-            // 서버로 메일 발송 요청
-            $c.sbm.execute(sbm_sendPassEmail);
-        }
-    });
-};
 
-// 메일 발송 완료 콜백
-scwin.sbm_sendPassEmail_submitdone = function(e) {
-    var result = e.responseJSON;
-    
-    if (result && result.elHeader) {
-        if (result.elHeader.resSuc === true || result.elHeader.resCode === "S") {
-            $c.win.alert("메일이 성공적으로 발송되었습니다.", function() {
-                // 팝업 닫기
-                $c.win.closePopup();
-                
-                // 부모창에 콜백이 있으면 호출 (목록 새로고침 등)
-                if ($p.parent() && $p.parent().scwin && $p.parent().scwin.passEmailCallback) {
-                    $p.parent().scwin.passEmailCallback();
-                }
-            });
-        } else {
-            var errorMsg = result.elHeader.resMsg || "메일 발송에 실패했습니다.";
-            $c.win.alert("오류: " + errorMsg);
-        }
-    } else {
-        $c.win.alert("서버 응답 오류가 발생했습니다.");
-    }
 };
 ]]></script>
     </head>
     <body ev:onpageload="scwin.onpageload">
         <xf:group class="main-container">
-            <!-- 수신자 정보 표시 영역 -->
-            <xf:group style="background-color: #e8f5e8; padding: 12px 16px; border-radius: 8px; margin-bottom: 20px; text-align: center;">
-                <w2:textbox id="txt_recipientInfo" label="수신자 정보를 로딩 중입니다..." style="color: #2e7d32; font-weight: 600;" />
-            </xf:group>
-            
             <!-- 합격자 메일 템플릿 섹션 -->
             <xf:group class="template-section">
                 <w2:textbox class="section-title" label="✅ 합격자 메일 템플릿"></w2:textbox>
@@ -418,7 +302,7 @@ scwin.sbm_sendPassEmail_submitdone = function(e) {
                     <xf:select appearance="full" selectedindex="-1">
                         <xf:choices>
                             <xf:item>
-                                <xf:label><![CDATA[이메일 발송 확인]]></xf:label>
+                                <xf:label><![CDATA[이메일 발송]]></xf:label>
                                 <xf:value><![CDATA[1]]></xf:value>
                             </xf:item>
                         </xf:choices>
@@ -429,7 +313,7 @@ scwin.sbm_sendPassEmail_submitdone = function(e) {
             <!-- 버튼 영역 -->
             <xf:group class="button-container">
                 <w2:button class="btn-secondary" label="템플릿 초기화" ev:onclick="scwin.resetTemplates"></w2:button>
-                <w2:button class="btn-primary" label="메일 발송" id="btn_sendEmail" ev:onclick="scwin.btn_sendEmail_onclick"></w2:button>
+                <w2:button class="btn-primary" label="확인" id="btn_sendEmail" ev:onclick="scwin.btn_sendEmail_onclick"></w2:button>
                 <w2:button class="btn-close" label="닫기" ev:onclick="scwin.btn_close_onclick"></w2:button>
             </xf:group>
         </xf:group>

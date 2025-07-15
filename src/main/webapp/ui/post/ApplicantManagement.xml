@@ -200,16 +200,7 @@ scwin.updateSelectedCount = function() {
 
 // 서브미션 완료 후 체크박스 이벤트 바인딩
 scwin.sbm_applicantList_submitdone = function(e) {
-    // GridView의 체크박스 변경 이벤트 설정
-    gridView.bind("oncheckboxclick", function(e) {
-        scwin.updateSelectedCount();
-    });
-    
-    // 헤더 체크박스 클릭 이벤트 설정
-    gridView.bind("onheadercheckboxclick", function(e) {
-        scwin.updateSelectedCount();
-    });
-    
+   
     // 초기 선택 수 표시
     scwin.updateSelectedCount();
 };
@@ -217,10 +208,7 @@ scwin.sbm_applicantList_submitdone = function(e) {
 
 scwin.pass_btn_onclick = function(e) {
     // GridView에서 체크된 행의 데이터를 JSON으로 가져오기
-    var checkedData = grd_applicantList.getCheckedJSON();
-    
-    // 또는 체크된 인덱스만 가져오기
-    // var checkedIndexes = grd_applicantList.getCheckedIndex(",");
+    var checkedData = gridView.getCheckedIndex("chk");
     
     if (checkedData.length === 0) {
         $c.win.alert("선택된 지원자가 없습니다.");
@@ -530,29 +518,35 @@ scwin.fail_btn_onclick = function (e) {
 			<!-- 그리드 영역 -->
 			<xf:group style="display:flex; flex-direction:column; justify-content:center; align-items:center; padding:20px;">
 				<w2:gridView checkAllType="false" defaultCellHeight="20" id="gridView"
-					style="height:633px;width: 80%;overflow:hidden;box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);border:none;background:#ffffff;"
+					style="height:633px;width: 100%;overflow:hidden;box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);border:none;background:#ffffff;"
 					dataList="data:dlt_applicantVoList" readOnly="true" visibleRowNum="10" sortable="true" focusFlow="linear">
 					<w2:caption style="" id="caption2" value="this is a grid caption."></w2:caption>
 					<w2:header style="" id="header2">
 						<w2:row style="" id="row3">
-							<w2:column width="70" inputType="checkbox" style="height: 40px;" id="chk3" value="" displayMode="label" readOnly="false"></w2:column>
-							<w2:column width="150" inputType="text" style="" id="column10" value="이름" displayMode="label"></w2:column>
-							<w2:column width="150" inputType="text" style="" id="column9" value="경력" displayMode="label"></w2:column>
-							<w2:column width="150" inputType="text" style="" id="column8" value="포지션" displayMode="label"></w2:column>
-							<w2:column width="*" inputType="text" style="" id="column7" value="기술스택" displayMode="label"></w2:column>
-							<w2:column width="150" inputType="text" style="" id="column6" value="mbti" displayMode="label"></w2:column>
-							<w2:column width="150" inputType="text" style="" id="column5" value="이력서" displayMode="label"></w2:column>
-							<w2:column width="150" inputType="text" style="" id="column3" value="상태" displayMode="label"></w2:column>
+							<w2:column width="70" inputType="checkbox" style="height: 40px;" id="chk3" value="" displayMode="label"
+								readOnly="false">
+							</w2:column>
+							<w2:column width="183" inputType="text" style="height:40px;" id="column13" value="이메일" displayMode="label"></w2:column>
+							<w2:column width="122" inputType="text" style="height:40px;" id="column10" value="이름" displayMode="label"></w2:column>
+							<w2:column width="120" inputType="text" style="height:40px;" id="column9" value="경력" displayMode="label"></w2:column>
+							<w2:column width="132" inputType="text" style="height:40px;" id="column8" value="포지션" displayMode="label"></w2:column>
+							<w2:column width="216" inputType="text" style="height:40px;" id="column7" value="기술스택" displayMode="label"></w2:column>
+							<w2:column width="121" inputType="text" style="height:40px;" id="column6" value="mbti" displayMode="label"></w2:column>
+							<w2:column width="150" inputType="text" style="height:40px;" id="column5" value="이력서" displayMode="label"></w2:column>
+							<w2:column width="150" inputType="text" style="height:40px;" id="column3" value="상태" displayMode="label"></w2:column>
 						</w2:row>
 					</w2:header>
 					<w2:gBody style="" id="gBody2">
 						<w2:row style="" id="row4">
-							<w2:column width="70" inputType="checkbox" style="height:50px;" id="chk" value="" displayMode="label" readOnly="false"></w2:column>
-							<w2:column width="150" inputType="text" style="" id="name" value="" displayMode="label"></w2:column>
-							<w2:column width="150" inputType="text" style="" id="career" value="" displayMode="label"></w2:column>
-							<w2:column width="150" inputType="text" style="" id="currentPosition" value="" displayMode="label"></w2:column>
-							<w2:column width="*" inputType="text" style="" id="techStack" value="" displayMode="label"></w2:column>
-							<w2:column width="150" inputType="text" style="" id="typeCode" value="" displayMode="label"></w2:column>
+							<w2:column width="70" inputType="checkbox" style="height:50px;" id="chk" value="" displayMode="label"
+								readOnly="false">
+							</w2:column>
+							<w2:column width="183" inputType="text" style="" id="column14" value="" displayMode="label"></w2:column>
+							<w2:column width="122" inputType="text" style="" id="name" value="" displayMode="label"></w2:column>
+							<w2:column width="120" inputType="text" style="" id="career" value="" displayMode="label"></w2:column>
+							<w2:column width="132" inputType="text" style="" id="currentPosition" value="" displayMode="label"></w2:column>
+							<w2:column width="216" inputType="text" style="" id="techStack" value="" displayMode="label"></w2:column>
+							<w2:column width="121" inputType="text" style="" id="typeCode" value="" displayMode="label"></w2:column>
 							<w2:column width="150" inputType="text" style="" id="resumeFileName" value="" displayMode="label"></w2:column>
 							<w2:column width="150" inputType="text" style="" id="applicationStatus" value="" displayMode="label"></w2:column>
 						</w2:row>
