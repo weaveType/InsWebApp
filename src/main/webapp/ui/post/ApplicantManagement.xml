@@ -9,33 +9,7 @@
 		<w2:publicInfo method="" />
 		<link rel="stylesheet" type="text/css" href="../../cm/css/gridview-enhancement.css"></link>
 		<style>
-			.header-container {
-			display: flex;
-			justify-content: space-between;
-			align-items: center;
-			padding: 20px;
-			background-color: #f8f9fa;
-			border-bottom: 1px solid #e9ecef;
-			}
-			.header-left {
-			display: flex;
-			align-items: center;
-			font-size: 24px;
-			font-weight: bold;
-			color: #2c3e50;
-			}
-			.header-icon {
-			width: 30px;
-			height: 30px;
-			background-color: #3498db;
-			border-radius: 6px;
-			margin-right: 12px;
-			display: inline-block;
-			text-align: center;
-			line-height: 30px;
-			color: white;
-			font-weight: bold;
-			}
+			
 			.stats-info {
 			color: #6c757d;
 			font-size: 14px;
@@ -196,7 +170,7 @@
 				ev:submitdone="scwin.sbm_applicantList_submitdone" ev:submiterror="" abortTrigger="">
 			</xf:submission>
 		</xf:model>
-		<script lazy="false" type="text/javascript"><![CDATA[scwin.onpageload = function() {
+		<script lazy="false" type="text/javascript"><![CDATA[scwin.onpageload = function () {
     var jobPostingId = null;
 
     if (!jobPostingId) {
@@ -210,91 +184,68 @@
         } catch (e) {
             console.log("location.href 파싱 실패:", e);
         }
+    } else {
+
     }
     dmp_applicantVo.set("jobPostingId", jobPostingId);
     $c.sbm.execute(sbm_applicantList);
 };
 
 
-applyFilters = function() {
-    var mbtiValue = mbtiFilter.getValue();
-    var techStackValue = techStackFilter.getValue();
-    var statusValue = statusFilter.getValue();
-
-    applicant_list.unfilter(); // 기존 필터 초기화
-
-    var conditions = [];
-
-    // MBTI 필터
-    if (mbtiValue && mbtiValue.trim() !== "") {
-        conditions.push("mbti == '" + mbtiValue + "'");
-    }
-
-    // 기술스택 필터 (다중 선택)
-    if (techStackValue && techStackValue.trim() !== "") {
-        var techStackArray = techStackValue.split(' ');
-        var techStackConditions = [];
-        
-        for (var i = 0; i < techStackArray.length; i++) {
-            if (techStackArray[i].trim() !== "") {
-                techStackConditions.push("tech_stack.indexOf('" + techStackArray[i] + "') != -1");
-            }
-        }
-        
-        if (techStackConditions.length > 0) {
-            conditions.push("(" + techStackConditions.join(" || ") + ")");
-        }
-    }
-
-    // 상태 필터
-    if (statusValue && statusValue.trim() !== "") {
-        conditions.push("status == '" + statusValue + "'");
-    }
-
-    // 모든 조건을 AND로 결합하여 필터링
-    if (conditions.length > 0) {
-        applicant_list.filter(conditions.join(" && "));
-    }
-};
-
-pass_btn_onclick = function (e) {
-    // 팝업 옵션 설정
-    var options = {
-        id: 'email_popup',
-        type: 'browser',        // 또는 'window'
-        width: '800px',
-        height: '600px',
-        modal: true,
-        resizable: true,
-        center: true
-    };
-    
-    // 팝업 열기
-    $p.openPopup('pass_email.xml', options);
-};
-
-fail_btn_onclick = function (e) {
-    // 팝업 옵션 설정
-    var options = {
-        id: 'email_popup',
-        type: 'browser',        // 또는 'window'
-        width: '800px',
-        height: '600px',
-        modal: true,
-        resizable: true,
-        center: true
-    };
-    
-    // 팝업 열기
-    $p.openPopup('fail_email.xml', options);
-};
-
 scwin.pass_btn_onclick = function (e) {
-    $p.openPopup("PassEmail.xml");
+    var passEmailPopupData = {
+        "type": "json",
+        "name": "pass_email",
+        "data": {
+            "loginType": "main",
+            "returnUrl": window.location.href
+        }
+    };
+
+    // 팝업 생성 옵션 지정
+    var options = {
+        id: "mail_popup",
+        type: "wframePopup",
+        width: "430px",
+        height: "530px",
+        modal: true,
+        resizable: true,
+        center: true,
+        popupName: "합격자 메일전송",
+        closeAction: "scwin.closeLoginPopup",
+        dataObject: passEmailPopupData
+    };
+
+    // 팝업 생성
+    $p.openPopup("PassEmail.xml", options);
 };
 
 scwin.fail_btn_onclick = function (e) {
-    $p.openPopup("FailEmail.xml;");
+    var FailEmailPopupData = {
+        "type": "json",
+        "name": "fail_email",
+        "data": {
+            "loginType": "main",
+            "returnUrl": window.location.href
+        }
+    };
+
+    // 팝업 생성 옵션 지정
+    var options = {
+        id: "mail_popup",
+        type: "wframePopup",
+        width: "430px",
+        height: "530px",
+        modal: true,
+        resizable: true,
+        center: true,
+        popupName: "불합격자 메일전송",
+        closeAction: "scwin.closeLoginPopup",
+        dataObject: FailEmailPopupData
+    };
+
+    // 팝업 생성
+    $p.openPopup("FailEmail.xml;", options);
 };
 ]]></script>
 	</head>

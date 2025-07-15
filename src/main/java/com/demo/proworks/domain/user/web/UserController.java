@@ -1024,7 +1024,6 @@ public class UserController {
 		List<ApplicantDetailVo> detailList = userService.selectUsersByjobPostingId(applicantVo);
 		ApplicantListVo resultListVo = new ApplicantListVo();
 		resultListVo.setApplicantDetailVo(detailList);
-		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ApplicationListVo : " + resultListVo.toString());
 		return resultListVo;
 	}
 }

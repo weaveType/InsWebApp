@@ -23,13 +23,7 @@
                 margin: 0 auto;
                 font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             }
-            
-            /* 헤더 스타일 */
-            .page-header {
-                text-align: center;
-                margin-bottom: 40px;
-            }
-            
+        
             /* 템플릿 섹션 */
             .template-section {
                 background-color: #ffffff;
