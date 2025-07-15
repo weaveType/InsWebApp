@@ -523,25 +523,25 @@ scwin.fail_btn_onclick = function (e) {
 					<w2:caption style="" id="caption2" value="this is a grid caption."></w2:caption>
 					<w2:header style="" id="header2">
 						<w2:row style="" id="row3">
-							<w2:column width="70" inputType="checkbox" style="height: 40px;" id="chk3" value="" displayMode="label"
-								readOnly="false">
+							<w2:column width="70" inputType="checkbox" style="height: 40px;" readOnly="false" id="chk3" value="체크박스"
+								displayMode="label">
 							</w2:column>
-							<w2:column width="183" inputType="text" style="height:40px;" id="column13" value="이메일" displayMode="label"></w2:column>
 							<w2:column width="122" inputType="text" style="height:40px;" id="column10" value="이름" displayMode="label"></w2:column>
-							<w2:column width="120" inputType="text" style="height:40px;" id="column9" value="경력" displayMode="label"></w2:column>
+							<w2:column width="70" inputType="text" style="" id="column23" value="이메일" displayMode="label"></w2:column>
+                            <w2:column width="120" inputType="text" style="height:40px;" id="column9" value="경력" displayMode="label"></w2:column>
 							<w2:column width="132" inputType="text" style="height:40px;" id="column8" value="포지션" displayMode="label"></w2:column>
 							<w2:column width="216" inputType="text" style="height:40px;" id="column7" value="기술스택" displayMode="label"></w2:column>
 							<w2:column width="121" inputType="text" style="height:40px;" id="column6" value="mbti" displayMode="label"></w2:column>
 							<w2:column width="150" inputType="text" style="height:40px;" id="column5" value="이력서" displayMode="label"></w2:column>
 							<w2:column width="150" inputType="text" style="height:40px;" id="column3" value="상태" displayMode="label"></w2:column>
+							<w2:column width="70" inputType="text" style="" id="column24" value="유저 ID" displayMode="label"></w2:column>
 						</w2:row>
 					</w2:header>
 					<w2:gBody style="" id="gBody2">
 						<w2:row style="" id="row4">
-							<w2:column width="70" inputType="checkbox" style="height:50px;" id="chk" value="" displayMode="label"
-								readOnly="false">
+							<w2:column width="70" inputType="checkbox" style="height:50px;" readOnly="false" id="chk" value=""
+								displayMode="label">
 							</w2:column>
-							<w2:column width="183" inputType="text" style="" id="column14" value="" displayMode="label"></w2:column>
 							<w2:column width="122" inputType="text" style="" id="name" value="" displayMode="label"></w2:column>
 							<w2:column width="120" inputType="text" style="" id="career" value="" displayMode="label"></w2:column>
 							<w2:column width="132" inputType="text" style="" id="currentPosition" value="" displayMode="label"></w2:column>
@@ -549,12 +549,15 @@ scwin.fail_btn_onclick = function (e) {
 							<w2:column width="121" inputType="text" style="" id="typeCode" value="" displayMode="label"></w2:column>
 							<w2:column width="150" inputType="text" style="" id="resumeFileName" value="" displayMode="label"></w2:column>
 							<w2:column width="150" inputType="text" style="" id="applicationStatus" value="" displayMode="label"></w2:column>
+							<w2:column width="70" inputType="text" style="" id="email" value="" displayMode="label"></w2:column>
+							<w2:column width="70" inputType="text" style="" id="accountId" value="" displayMode="label"></w2:column>
 						</w2:row>
 					</w2:gBody>
 				</w2:gridView>
 				<xf:group class="pglbox" id="" meta_snippetCategory="06_그리드" meta_snippetKeyComponent="true" meta_snippetName="6_03 페이지리스트"
 					style="margin-top:20px;">
-					<w2:pageList class="pgl" displayButtonType="display" displayFormat="#" id="pageList1" pageSize="10" pagingType="0" style="">
+					<w2:pageList class="pgl" displayButtonType="display" displayFormat="#" id="pageList1" pageSize="10" pagingType="0"
+						style="">
 					</w2:pageList>
 				</xf:group>
 			</xf:group>
