@@ -247,36 +247,28 @@ SELECT	/* QueryID : com.demo.proworks.domain.user.getDevMbti */
         WHERE u.user_id = #{accountId}
 </select>
 <select id="selectUsersByjobPostingId" resultType="com.demo.proworks.domain.user.vo.ApplicantDetailVo" parameterType="com.demo.proworks.domain.user.vo.ApplicantVo">
-<!-- jobPostingId로 지원자 목록을 조회한다. -->
-        SELECT /* QueryID : com.demo.proworks.domain.user.selectUsersByjobPostingId */
-            false AS chk,
-            u.name AS name,
-            ui.career AS career,
-            ui.current_position AS currentPosition,
-            NULL AS techStack,
-            umt.type_code AS typeCode,
-            ui.resume_file_name AS resumeFileName,
-            ja.application_status AS applicationStatus,
-            u.email AS email,
-            u.user_id AS accountId
-            
-        FROM job_applications ja
-        INNER JOIN Users u ON ja.user_id = u.user_id
-        LEFT JOIN users_info ui ON u.user_id = ui.user_id
-        LEFT JOIN (
-            SELECT 
-                user_id,
-                type_code,
-                ROW_NUMBER() OVER (PARTITION BY user_id ORDER BY analyed_at DESC) AS rn
-            FROM users_mbti_types
-        ) umt ON u.user_id = umt.user_id AND umt.rn = 1
-        
-        WHERE ja.job_posting_id = #{jobPostingId}
+SELECT 
+    false AS chk,
+    u.name AS name,
+    ui.career AS career,
+    ui.current_position AS currentPosition,
+    NULL AS techStack,         -- techStack이 null로 지정되어 있음
+    umt.type_code AS typeCode,
+    ui.resume_file_name AS resumeFileName,
+    ja.application_status AS applicationStatus,
+    u.email AS email,
+    u.user_id AS accountId
+FROM 
+    users u
+JOIN 
+    users_info ui ON u.user_id = ui.user_id  -- user_id로 User와 UserInfo 테이블을 조인
+LEFT JOIN 
+    users_mbti_types umt ON u.user_id = umt.user_id  -- user_id로 User와 UserType 테이블을 조인
+JOIN 
+    job_applications ja ON u.user_id = ja.user_id  -- user_id로 JobApplications 테이블을 조인
+
+      WHERE ja.job_posting_id = #{jobPostingId}
         
         ORDER BY ja.applied_at DESC
-        
-        <if test="pageIndex != null and pageSize != null">
-            LIMIT #{pageSize} OFFSET #{pageIndex}
-        </if>
 </select>
 </mapper>
