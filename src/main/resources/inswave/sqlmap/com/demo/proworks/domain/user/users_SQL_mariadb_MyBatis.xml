@@ -246,4 +246,29 @@ SELECT	/* QueryID : com.demo.proworks.domain.user.getDevMbti */
         LEFT JOIN users_info ui ON u.user_id = ui.user_id  
         WHERE u.user_id = #{accountId}
 </select>
+<select id="selectUsersByjobPostingId" resultType="com.demo.proworks.domain.user.vo.ApplicantDetailVo" parameterType="com.demo.proworks.domain.user.vo.ApplicantVo">
+SELECT 
+    false AS chk,
+    u.name AS name,
+    ui.career AS career,
+    ui.current_position AS currentPosition,
+    NULL AS techStack,         -- techStack이 null로 지정되어 있음
+    umt.type_code AS typeCode,
+    ui.resume_file_name AS resumeFileName,
+    ja.application_status AS applicationStatus,
+    u.email AS email,
+    u.user_id AS accountId
+FROM 
+    users u
+JOIN 
+    users_info ui ON u.user_id = ui.user_id
+LEFT JOIN 
+    users_mbti_types umt ON u.user_id = umt.user_id
+JOIN 
+    job_applications ja ON u.user_id = ja.user_id
+
+      WHERE ja.job_posting_id = #{jobPostingId}
+        
+        ORDER BY ja.applied_at DESC
+</select>
 </mapper>

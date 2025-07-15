@@ -3,6 +3,9 @@ package com.demo.proworks.domain.user.service;
 import java.util.List;
 
 import com.demo.proworks.common.enumType.DevMbti;
+import com.demo.proworks.domain.user.vo.ApplicantDetailVo;
+import com.demo.proworks.domain.user.vo.ApplicantListVo;
+import com.demo.proworks.domain.user.vo.ApplicantVo;
 import com.demo.proworks.domain.user.vo.UserInfoVo;
 import com.demo.proworks.domain.user.vo.UserVo;
 
@@ -154,5 +157,14 @@ public interface UserService {
 	 * @throws Exception
 	 */
 	public UserInfoVo selectUserDetail(UserInfoVo userInfoVo) throws Exception;
+
+	/**
+	 * 공고에 이력서 지원처리를 한다.
+	 *
+	 * @param ApplicantVo 페이징 정보, 공고 ID
+	 * @return 등록된 행의 수
+	 * @throws Exception
+	 */
+	public List<ApplicantDetailVo> selectUsersByjobPostingId(ApplicantVo applicantVo) throws Exception;
 
 }

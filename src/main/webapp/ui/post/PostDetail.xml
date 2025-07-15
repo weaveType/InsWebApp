@@ -897,7 +897,7 @@ scwin.btnApply_onclick = function (e) {
             dmp_jobApplicationVo.set("accountId", accountId);
             $c.sbm.execute($p, sbm_insertJobApplication);
         }
-        else{
+        else {
             alert("일반 회원으로 로그인 후 이용해주세요.");
         }
     }
@@ -1163,7 +1163,9 @@ scwin.sbm_insertJobApplication_submitdone = function (e) {
 };
 
 scwin.btnApplicantDetails_onclick = function (e) {
-    $p.url("ApplicantManagement.xml");
+    var jobPostingId = dmp_postDetail.get("jobPostingId");
+    var detailUrl = "ApplicantManagement.xml?jobPostingId=" + encodeURIComponent(jobPostingId);
+    $p.url(detailUrl);
 };
 ]]></script>
     </head>
