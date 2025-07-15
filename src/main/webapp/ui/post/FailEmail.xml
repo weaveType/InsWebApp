@@ -217,7 +217,7 @@ scwin.resetTemplates = function() {
 };
 
 scwin.btn_close_onclick = function (e) {
-    window.close();
+    $p.closePopup();
 };
 
 scwin.close_btn_onclick = function (e) {

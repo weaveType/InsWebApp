@@ -293,7 +293,7 @@ scwin.close_btn_onclick = function (e) {
 };
 
 scwin.btn_close_onclick = function (e) {
-     window.close();
+    $p.closePopup();
 };
 ]]></script>
     </head>
