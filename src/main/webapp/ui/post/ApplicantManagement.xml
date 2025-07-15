@@ -207,12 +207,12 @@ scwin.pass_btn_onclick = function (e) {
         id: "mail_popup",
         type: "wframePopup",
         width: "600px",
-        height: "530px",
+        height: "650px",
         modal: true,
         resizable: true,
         center: true,
         popupName: "합격자 메일전송",
-        closeAction: "scwin.closeLoginPopup",
+        closeAction: "scwin.closeLoginPopup",   
         dataObject: passEmailPopupData
     };
 

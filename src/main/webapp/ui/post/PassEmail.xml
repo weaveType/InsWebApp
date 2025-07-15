@@ -66,7 +66,7 @@
             /* 텍스트 영역 스타일 */
             .form-textarea {
                 width: 100%;
-                min-height: 280px;
+                min-height: 240px;
                 padding: 16px;
                 border: 2px solid #e5e7eb;
                 border-radius: 12px;
@@ -247,8 +247,14 @@ scwin.setDefaultTemplates = function() {
 scwin.applyDateToPass = function() {
     var selectedDate = calPassDate.getValue();
     if (selectedDate) {
+        // YYYYMMDD 형식을 YYYY년MM월DD일 형식으로 변환
+        var year = selectedDate.substring(0, 4);
+        var month = selectedDate.substring(4, 6);
+        var day = selectedDate.substring(6, 8);
+        var formattedDate = year + "년" + month + "월" + day + "일";
+
         var template = txtPassTemplate.getValue();
-        var updatedTemplate = template.replace(/\{\{날짜\}\}/g, selectedDate);
+        var updatedTemplate = template.replace(/\{\{날짜\}\}/g, formattedDate);
         txtPassTemplate.setValue(updatedTemplate);
     } else {
         alert("날짜를 선택해주세요.");
