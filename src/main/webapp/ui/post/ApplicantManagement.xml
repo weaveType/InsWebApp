@@ -191,61 +191,135 @@
     $c.sbm.execute(sbm_applicantList);
 };
 
-
-scwin.pass_btn_onclick = function (e) {
-    var passEmailPopupData = {
-        "type": "json",
-        "name": "pass_email",
-        "data": {
-            "loginType": "main",
-            "returnUrl": window.location.href
-        }
-    };
-
-    // 팝업 생성 옵션 지정
-    var options = {
-        id: "mail_popup",
-        type: "wframePopup",
-        width: "600px",
-        height: "650px",
-        modal: true,
-        resizable: true,
-        center: true,
-        popupName: "합격자 메일전송",
-        closeAction: "scwin.closeLoginPopup",   
-        dataObject: passEmailPopupData
-    };
-
-    // 팝업 생성
-    $p.openPopup("PassEmail.xml", options);
+// 선택된 항목 수 업데이트
+scwin.updateSelectedCount = function() {
+    var checkedRows = gridView.getCheckedIndex("chk");
+    var count = checkedRows.length;
+    selectedCount.setValue(count + "명 선택됨");
 };
 
+// 서브미션 완료 후 체크박스 이벤트 바인딩
+scwin.sbm_applicantList_submitdone = function(e) {
+    // GridView의 체크박스 변경 이벤트 설정
+    gridView.bind("oncheckboxclick", function(e) {
+        scwin.updateSelectedCount();
+    });
+    
+    // 헤더 체크박스 클릭 이벤트 설정
+    gridView.bind("onheadercheckboxclick", function(e) {
+        scwin.updateSelectedCount();
+    });
+    
+    // 초기 선택 수 표시
+    scwin.updateSelectedCount();
+};
+
+
+scwin.pass_btn_onclick = function(e) {
+    // GridView에서 체크된 행의 데이터를 JSON으로 가져오기
+    var checkedData = grd_applicantList.getCheckedJSON();
+    
+    // 또는 체크된 인덱스만 가져오기
+    // var checkedIndexes = grd_applicantList.getCheckedIndex(",");
+    
+    if (checkedData.length === 0) {
+        $c.win.alert("선택된 지원자가 없습니다.");
+        return;
+    }
+    
+    // 이메일 목록 추출
+    var emailList = checkedData.map(function(item) {
+        return {
+            userId: item.user_id,
+            email: item.email,
+            name: item.name
+        };
+    });
+    
+    // PassEmail 팝업 열기
+    $c.win.openPopup("/ui/post/PassEmail.xml", {
+        id: "pop_passEmail",
+        type: "wframePopup",
+        width: "700px",
+        height: "500px",
+        popupName: "합격 메일 보내기",
+        modal: true
+    }, {
+        selectedUsers: emailList  // 데이터 전달
+    });
+
+}
+
+// scwin.pass_btn_onclick = function (e) {
+//     var passEmailPopupData = {
+//         "type": "json",
+//         "name": "pass_email",
+//         "data": {
+//             "loginType": "main",
+//             "returnUrl": window.location.href
+//         }
+//     };
+
+//     // 팝업 생성 옵션 지정
+//     var options = {
+//         id: "mail_popup",
+//         type: "wframePopup",
+//         width: "600px",
+//         height: "650px",
+//         modal: true,
+//         resizable: true,
+//         center: true,
+//         popupName: "합격자 메일전송",
+//         closeAction: "scwin.closeLoginPopup",   
+//         dataObject: passEmailPopupData
+//     };
+
+//     // 팝업 생성
+//     $p.openPopup("PassEmail.xml", options);
+// };
+
 scwin.fail_btn_onclick = function (e) {
-    var FailEmailPopupData = {
-        "type": "json",
-        "name": "fail_email",
-        "data": {
-            "loginType": "main",
-            "returnUrl": window.location.href
-        }
+    // GridView에서 체크된 행의 데이터를 JSON으로 가져오기
+    var checkedRows = dlt_applicantVoList.getCheckedJSON("chk");
+    
+    if (checkedRows.length === 0) {
+        $c.win.alert("메일을 보낼 지원자를 선택해주세요.");
+        return;
+    }
+
+    // 선택된 사용자 정보 추출
+    var selectedUsers = [];
+    for (var i = 0; i < checkedRows.length; i++) {
+        selectedUsers.push({
+            userId: checkedRows[i].accountId,
+            email: checkedRows[i].email,
+            name: checkedRows[i].name,
+            position: checkedRows[i].currentPosition,
+            mbti: checkedRows[i].typeCode
+        });
+    }
+
+    // 팝업 데이터 객체
+    var failEmailPopupData = {
+        selectedUsers: selectedUsers,  // 선택된 사용자 정보 배열
+        jobPostingId: dmp_applicantVo.get("jobPostingId"),  // 공고 ID
+        totalCount: selectedUsers.length  // 선택된 사용자 수
     };
 
-    // 팝업 생성 옵션 지정
+    // 팝업 생성 옵션
     var options = {
-        id: "mail_popup",
+        id: "pop_failEmail",
         type: "wframePopup",
-        width: "430px",
-        height: "530px",
+        width: "700px",
+        height: "600px",
         modal: true,
         resizable: true,
         center: true,
-        popupName: "불합격자 메일전송",
-        closeAction: "scwin.closeLoginPopup",
-        dataObject: FailEmailPopupData
+        popupName: "불합격자 메일 발송"
     };
 
-    // 팝업 생성
-    $p.openPopup("FailEmail.xml;", options);
+    // 팝업 열기
+    $c.win.openPopup("/ui/post/FailEmail.xml", options, failEmailPopupData);
 };
 ]]></script>
 	</head>
@@ -457,7 +531,7 @@ scwin.fail_btn_onclick = function (e) {
 			<xf:group style="display:flex; flex-direction:column; justify-content:center; align-items:center; padding:20px;">
 				<w2:gridView checkAllType="false" defaultCellHeight="20" id="gridView"
 					style="height:633px;width: 80%;overflow:hidden;box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);border:none;background:#ffffff;"
-					dataList="data:dlt_applicantVoList" readOnly="true">
+					dataList="data:dlt_applicantVoList" readOnly="true" visibleRowNum="10" sortable="true" focusFlow="linear">
 					<w2:caption style="" id="caption2" value="this is a grid caption."></w2:caption>
 					<w2:header style="" id="header2">
 						<w2:row style="" id="row3">
