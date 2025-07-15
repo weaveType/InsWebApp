@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 import javax.annotation.Resource;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +16,9 @@ import com.demo.proworks.domain.post.service.PostService;
 import com.demo.proworks.domain.post.vo.PostMatchVo;
 import com.demo.proworks.domain.post.vo.PostVo;
 import com.demo.proworks.domain.post.vo.TechStackVo;
+import com.demo.proworks.domain.post.vo.SendEmailVo;
 import com.demo.proworks.domain.post.dao.PostDAO;
+import com.demo.proworks.common.service.EmailService;
 
 /**
  * @subject : 공고정보 관련 처리를 담당하는 ServiceImpl
@@ -35,6 +39,9 @@ public class PostServiceImpl implements PostService {
 
 	@Resource(name = "messageSource")
 	private MessageSource messageSource;
+
+	@Resource(name = "emailService")
+	private EmailService emailService;
 
 	/**
 	 * 공고정보 목록을 조회합니다.
@@ -349,17 +356,46 @@ public class PostServiceImpl implements PostService {
 		}
 	}
 
-
 	public List<PostVo> findPostsByMbti(PostMatchVo postMatchVo) throws Exception {
 		PostMatchVo vo = new PostMatchVo();
 		vo.setUserMbti(postMatchVo.getUserMbti()); // 로그인 사용자 MBTI
-		vo.setMbtiMatchFilter(postMatchVo.getMbtiMatchFilter()); // 몇개의 mbti가 일치하여야 하는지.. 
-		vo.setLimit(20);        // 20건만
+		vo.setMbtiMatchFilter(postMatchVo.getMbtiMatchFilter()); // 몇개의 mbti가 일치하여야 하는지..
+		vo.setLimit(20); // 20건만
 		return postDAO.findPostsByMbti(vo);
 	};
 
-	public long findPostsByMbtiCount(PostMatchVo postMatchVo) throws Exception{
-	return postDAO.findPostsByMbtiCount(postMatchVo);
+	public long findPostsByMbtiCount(PostMatchVo postMatchVo) throws Exception {
+		return postDAO.findPostsByMbtiCount(postMatchVo);
 	};
-	
+
+	/**
+	 * 이메일을 일괄전송 처리한다
+	 *
+	 * @process 1. Controller에서 전달받은 이메일 정보를 확인한다. 2. EmailService를 통해 비동기로 이메일을 일괄
+	 *          전송한다. 3. 전송 결과를 로깅한다.
+	 * 
+	 * @throws Exception
+	 */
+	@Override
+	public void sendToEmails(SendEmailVo sendEmailVo) throws Exception {
+		if (sendEmailVo == null) {
+			throw new Exception("이메일 전송 정보가 없습니다.");
+		}
+
+		try {
+			// 비동기로 이메일 일괄 전송
+			CompletableFuture<Integer> future = emailService.sendBulkEmailsAsync(sendEmailVo);
+
+			// 전송 결과 확인 (선택사항 - 비동기이므로 대기하지 않아도 됨)
+			Integer successCount = future.get();
+			System.out.println("✅ 이메일 전송 완료: " + successCount + "건 성공");
+
+		} catch (Exception e) {
+			System.err.println("❌ 이메일 전송 중 오류: " + e.getMessage());
+			throw new Exception("이메일 전송에 실패했습니다: " + e.getMessage());
+		}
+
+		System.out.println("=== 이메일 일괄전송 서비스 완료 ===");
+	}
+
 }
