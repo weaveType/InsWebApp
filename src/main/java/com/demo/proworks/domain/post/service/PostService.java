@@ -135,5 +135,12 @@ public interface PostService {
 	 */
 	public long findPostsByMbtiCount(PostMatchVo postMatchVo) throws Exception;
 
-	public List<Integer> sendToEmails() throws Exception;
+	/**
+	 * 사용자 mbti, mbti 별 갯수 필터를 통해 회사 list의 갯수를 가져온다
+	 *
+	 * @param PostMatchVo = PostVo + 사용자 mbti, mbti 갯수
+	 * @return 회사 ID String
+	 * @throws Exception
+	 */
+	public void sendToEmails() throws Exception;
 }

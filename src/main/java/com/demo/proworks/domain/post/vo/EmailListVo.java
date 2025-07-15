@@ -6,8 +6,8 @@ import com.inswave.elfw.annotation.ElVoField;
 import com.fasterxml.jackson.annotation.JsonFilter;
 
 @JsonFilter("elExcludeFilter")
-@ElDto(FldYn = "", delimeterYn = "", logicalName = "")
-public class EmailListVo {
+@ElDto(FldYn = "", delimeterYn = "", logicalName = "공고정보")
+public class EmailListVo extends com.demo.proworks.cmmn.ProworksCommVO {
     private static final long serialVersionUID = 1L;
 
     public EmailListVo(){

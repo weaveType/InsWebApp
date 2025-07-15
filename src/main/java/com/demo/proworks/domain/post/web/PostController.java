@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.demo.proworks.domain.post.service.PostService;
 import com.demo.proworks.domain.post.vo.PostVo;
+import com.demo.proworks.domain.post.vo.SendEmailVo;
 import com.demo.proworks.domain.post.vo.PostListVo;
 import com.demo.proworks.domain.post.vo.PostMatchVo;
 import com.demo.proworks.domain.post.vo.TechStackVo;
@@ -516,14 +517,15 @@ public class PostController {
 	/**
 	 * 이메일을 일괄전송 처리한다
 	 *
+	 * @param sendEmailVo 합불여부, 메일 전송할 email, 메일 내용
 	 * @return 이메일 전송 실패 ID
 	 * @throws Exception
 	 */
 	@ElService(key = "POS0001Send")
 	@RequestMapping(value = "POS0001Send")
 	@ElDescription(sub = "이메일 일괄전송", desc = "이메일을 일괄전송 처리한다")
-	public List<Integer> sendToEmails() throws Exception {
-		return postService.sendToEmails();
+	public void sendToEmails(SendEmailVo sendEmailVo) throws Exception {
+		postService.sendToEmails();
 	}
 
 }
