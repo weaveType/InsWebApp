@@ -534,7 +534,7 @@ public class PostController {
 	 * 공고에 이력서 지원처리를 한다.
 	 *
 	 * @param sendEmailVo 합불여부, 메일 전송할 email, 메일 내용
-	 * @return 이메일 전송 실패 ID
+	 * @return 등록된 행의 수
 	 * @throws Exception
 	 */
 	@ElService(key = "POS0001JAPL")

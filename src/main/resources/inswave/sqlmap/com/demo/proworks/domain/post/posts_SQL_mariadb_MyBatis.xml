@@ -259,4 +259,22 @@ WHERE p.status = 'active'
     AND (c.is_deleted IS NULL OR c.is_deleted = 0)
     AND IFNULL(compat.match_cnt, 0) >= CAST(#{mbtiMatchFilter} AS UNSIGNED);
 </select>
+<select id="insertJobApplication" resultType="int" parameterType="com.demo.proworks.domain.post.vo.JobApplicationVo">
+<!-- 공고에 이력서를 제출 및 지원한다 --> 
+     INSERT INTO job_applications (
+         job_posting_id,
+         user_id,
+         resume_file_name,
+         application_status
+     )
+     SELECT
+         #{jobPostingId},
+         #{accountId},
+         ui.resume_file_name,
+         '서류검토' -- 기본값 설정
+     FROM
+         users_info ui
+     WHERE
+         ui.user_id = #{accountId}
+</select>
 </mapper>

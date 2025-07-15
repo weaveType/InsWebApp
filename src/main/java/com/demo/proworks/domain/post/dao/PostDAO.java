@@ -174,7 +174,14 @@ public class PostDAO extends com.demo.proworks.cmmn.dao.ProworksDefaultAbstractD
 	 * @return 이메일 전송 실패 ID
 	 * @throws Exception
 	 */
-	public void insertJobApplication(JobApplicationVo jobApplicationVo) throws Exception {
-		insertJobApplication(jobApplicationVo);
+	/**
+	 * 이력서 지원 정보를 등록한다.
+	 *
+	 * @param jobApplicationVo 이력서 지원 정보
+	 * @return 등록된 행의 수
+	 * @throws ElException
+	 */
+	public int insertJobApplication(JobApplicationVo jobApplicationVo) throws ElException {
+		return insert("com.demo.proworks.domain.post.insertJobApplication", jobApplicationVo);
 	}
 }
