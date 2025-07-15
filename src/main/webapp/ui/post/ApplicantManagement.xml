@@ -173,7 +173,7 @@
 						<w2:column dataType="text" name="체크박스" id="chk"></w2:column>
 						<w2:column dataType="text" name="이름" id="name"></w2:column>
 						<w2:column dataType="text" name="경력" id="career"></w2:column>
-						<w2:column dataType="text" name="포지션" id="position"></w2:column>
+						<w2:column dataType="text" name="포지션" id="currentPosition"></w2:column>
 						<w2:column dataType="text" name="기술스택" id="techStack"></w2:column>
 						<w2:column dataType="text" name="mbti" id="typeCode"></w2:column>
 						<w2:column dataType="text" name="이력서" id="resumeFileName"></w2:column>
@@ -506,7 +506,7 @@ scwin.fail_btn_onclick = function (e) {
 			<xf:group style="display:flex; flex-direction:column; justify-content:center; align-items:center; padding:20px;">
 				<w2:gridView checkAllType="false" defaultCellHeight="20" id="gridView"
 					style="height:633px;width: 80%;overflow:hidden;box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);border:none;background:#ffffff;"
-					dataList="data:applicant_list" readOnly="true">
+					dataList="data:dlt_applicantVoList" readOnly="true">
 					<w2:caption style="" id="caption2" value="this is a grid caption."></w2:caption>
 					<w2:header style="" id="header2">
 						<w2:row style="" id="row3">
@@ -523,13 +523,13 @@ scwin.fail_btn_onclick = function (e) {
 					<w2:gBody style="" id="gBody2">
 						<w2:row style="" id="row4">
 							<w2:column width="70" inputType="checkbox" style="height:50px;" id="chk" value="" displayMode="label" readOnly="false"></w2:column>
-							<w2:column width="150" inputType="text" style="" id="username" value="" displayMode="label"></w2:column>
-							<w2:column width="150" inputType="text" style="" id="total_experience" value="" displayMode="label"></w2:column>
-							<w2:column width="150" inputType="text" style="" id="position" value="" displayMode="label"></w2:column>
-							<w2:column width="*" inputType="text" style="" id="tech_stack" value="" displayMode="label"></w2:column>
-							<w2:column width="150" inputType="text" style="" id="mbti" value="" displayMode="label"></w2:column>
-							<w2:column width="150" inputType="text" style="" id="profile" value="" displayMode="label"></w2:column>
-							<w2:column width="150" inputType="text" style="" id="status" value="" displayMode="label"></w2:column>
+							<w2:column width="150" inputType="text" style="" id="name" value="" displayMode="label"></w2:column>
+							<w2:column width="150" inputType="text" style="" id="career" value="" displayMode="label"></w2:column>
+							<w2:column width="150" inputType="text" style="" id="currentPosition" value="" displayMode="label"></w2:column>
+							<w2:column width="*" inputType="text" style="" id="techStack" value="" displayMode="label"></w2:column>
+							<w2:column width="150" inputType="text" style="" id="typeCode" value="" displayMode="label"></w2:column>
+							<w2:column width="150" inputType="text" style="" id="resumeFileName" value="" displayMode="label"></w2:column>
+							<w2:column width="150" inputType="text" style="" id="applicationStatus" value="" displayMode="label"></w2:column>
 						</w2:row>
 					</w2:gBody>
 				</w2:gridView>
