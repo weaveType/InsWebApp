@@ -22,20 +22,20 @@ public class UserInfoVo extends com.demo.proworks.cmmn.ProworksCommVO {
     @ElDtoField(logicalName = "경력수준", physicalName = "career", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
     private String career;
 
-    @ElDtoField(logicalName = "지역", physicalName = "preferred_locations", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
-    private String preferred_locations;
+    @ElDtoField(logicalName = "지역", physicalName = "preferredLocations", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private String preferredLocations;
 
-    @ElDtoField(logicalName = "직무분야", physicalName = "current_position", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
-    private String current_position;
+    @ElDtoField(logicalName = "직무분야", physicalName = "currentPosition", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private String currentPosition;
 
-    @ElDtoField(logicalName = "희망연봉", physicalName = "year_salary", type = "int", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
-    private int year_salary;
+    @ElDtoField(logicalName = "희망연봉", physicalName = "yearSalary", type = "int", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private int yearSalary;
 
-    @ElDtoField(logicalName = "MBTI완료여부", physicalName = "is_mbti_checked", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
-    private String is_mbti_checked;
+    @ElDtoField(logicalName = "MBTI완료여부", physicalName = "isMbtiChecked", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private String isMbtiChecked;
 
-    @ElDtoField(logicalName = "코드분석완료여부", physicalName = "is_code_checked", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
-    private String is_code_checked;
+    @ElDtoField(logicalName = "코드분석완료여부", physicalName = "isCodeChecked", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private String isCodeChecked;
 
     @ElVoField(physicalName = "accountId")
     public int getAccountId(){
@@ -69,58 +69,58 @@ public class UserInfoVo extends com.demo.proworks.cmmn.ProworksCommVO {
         this.career = career;
     }
 
-    @ElVoField(physicalName = "preferred_locations")
-    public String getPreferred_locations(){
-        String ret = this.preferred_locations;
+    @ElVoField(physicalName = "preferredLocations")
+    public String getPreferredLocations(){
+        String ret = this.preferredLocations;
         return ret;
     }
 
-    @ElVoField(physicalName = "preferred_locations")
-    public void setPreferred_locations(String preferred_locations){
-        this.preferred_locations = preferred_locations;
+    @ElVoField(physicalName = "preferredLocations")
+    public void setPreferredLocations(String preferredLocations){
+        this.preferredLocations = preferredLocations;
     }
 
-    @ElVoField(physicalName = "current_position")
-    public String getCurrent_position(){
-        String ret = this.current_position;
+    @ElVoField(physicalName = "currentPosition")
+    public String getCurrentPosition(){
+        String ret = this.currentPosition;
         return ret;
     }
 
-    @ElVoField(physicalName = "current_position")
-    public void setCurrent_position(String current_position){
-        this.current_position = current_position;
+    @ElVoField(physicalName = "currentPosition")
+    public void setCurrentPosition(String currentPosition){
+        this.currentPosition = currentPosition;
     }
 
-    @ElVoField(physicalName = "year_salary")
-    public int getYear_salary(){
-        return year_salary;
+    @ElVoField(physicalName = "yearSalary")
+    public int getYearSalary(){
+        return yearSalary;
     }
 
-    @ElVoField(physicalName = "year_salary")
-    public void setYear_salary(int year_salary){
-        this.year_salary = year_salary;
+    @ElVoField(physicalName = "yearSalary")
+    public void setYearSalary(int yearSalary){
+        this.yearSalary = yearSalary;
     }
 
-    @ElVoField(physicalName = "is_mbti_checked")
-    public String getIs_mbti_checked(){
-        String ret = this.is_mbti_checked;
+    @ElVoField(physicalName = "isMbtiChecked")
+    public String getIsMbtiChecked(){
+        String ret = this.isMbtiChecked;
         return ret;
     }
 
-    @ElVoField(physicalName = "is_mbti_checked")
-    public void setIs_mbti_checked(String is_mbti_checked){
-        this.is_mbti_checked = is_mbti_checked;
+    @ElVoField(physicalName = "isMbtiChecked")
+    public void setIsMbtiChecked(String isMbtiChecked){
+        this.isMbtiChecked = isMbtiChecked;
     }
 
-    @ElVoField(physicalName = "is_code_checked")
-    public String getIs_code_checked(){
-        String ret = this.is_code_checked;
+    @ElVoField(physicalName = "isCodeChecked")
+    public String getIsCodeChecked(){
+        String ret = this.isCodeChecked;
         return ret;
     }
 
-    @ElVoField(physicalName = "is_code_checked")
-    public void setIs_code_checked(String is_code_checked){
-        this.is_code_checked = is_code_checked;
+    @ElVoField(physicalName = "isCodeChecked")
+    public void setIsCodeChecked(String isCodeChecked){
+        this.isCodeChecked = isCodeChecked;
     }
 
     @Override
@@ -130,11 +130,11 @@ public class UserInfoVo extends com.demo.proworks.cmmn.ProworksCommVO {
         sb.append("accountId").append("=").append(accountId).append(",");
         sb.append("name").append("=").append(name).append(",");
         sb.append("career").append("=").append(career).append(",");
-        sb.append("preferred_locations").append("=").append(preferred_locations).append(",");
-        sb.append("current_position").append("=").append(current_position).append(",");
-        sb.append("year_salary").append("=").append(year_salary).append(",");
-        sb.append("is_mbti_checked").append("=").append(is_mbti_checked).append(",");
-        sb.append("is_code_checked").append("=").append(is_code_checked);
+        sb.append("preferredLocations").append("=").append(preferredLocations).append(",");
+        sb.append("currentPosition").append("=").append(currentPosition).append(",");
+        sb.append("yearSalary").append("=").append(yearSalary).append(",");
+        sb.append("isMbtiChecked").append("=").append(isMbtiChecked).append(",");
+        sb.append("isCodeChecked").append("=").append(isCodeChecked);
         sb.append("]");
         return sb.toString();
 

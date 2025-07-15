@@ -1,10 +1,11 @@
 package com.demo.proworks.domain.post.service;
 
 import java.util.List;
-import java.util.Map;
 
+import com.demo.proworks.domain.post.vo.JobApplicationVo;
 import com.demo.proworks.domain.post.vo.PostMatchVo;
 import com.demo.proworks.domain.post.vo.PostVo;
+import com.demo.proworks.domain.post.vo.SendEmailVo;
 import com.demo.proworks.domain.post.vo.TechStackVo;
 
 /**
@@ -120,7 +121,7 @@ public interface PostService {
 	/**
 	 * 사용자 mbti, mbti 별 갯수 필터를 통해 회사 list를 정렬한다
 	 *
-	 * @param PostMatchVo = PostVo + 사용자 mbti, mbti 갯수 
+	 * @param PostMatchVo = PostVo + 사용자 mbti, mbti 갯수
 	 * @return 회사 ID String
 	 * @throws Exception
 	 */
@@ -129,9 +130,28 @@ public interface PostService {
 	/**
 	 * 사용자 mbti, mbti 별 갯수 필터를 통해 회사 list의 갯수를 가져온다
 	 *
-	 * @param PostMatchVo = PostVo + 사용자 mbti, mbti 갯수 
+	 * @param PostMatchVo = PostVo + 사용자 mbti, mbti 갯수
 	 * @return 회사 ID String
 	 * @throws Exception
 	 */
 	public long findPostsByMbtiCount(PostMatchVo postMatchVo) throws Exception;
+
+	/**
+	 * 사용자 mbti, mbti 별 갯수 필터를 통해 회사 list의 갯수를 가져온다
+	 *
+	 * @param PostMatchVo = PostVo + 사용자 mbti, mbti 갯수
+	 * @return 회사 ID String
+	 * @throws Exception
+	 */
+	public void sendToEmails(SendEmailVo sendEmailVo) throws Exception;
+
+	/**
+	 * 공고에 이력서 지원처리를 한다.
+	 *
+	 * @param sendEmailVo 합불여부, 메일 전송할 email, 메일 내용
+	 * @return 등록된 행의 수
+	 * @throws Exception
+	 */
+	public int insertJobApplication(JobApplicationVo jobApplicationVo) throws Exception;
+
 }

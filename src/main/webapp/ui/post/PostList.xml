@@ -50,7 +50,7 @@
 						<w2:key dataType="text" name="페이지_번호" id="pageIndex" defaultValue="1"></w2:key>
 						<w2:key defaultValue="20" dataType="text" name="페이지_건수" id="pageSize"></w2:key>
 						<w2:key defaultValue="0" dataType="text" name="MBTI_매칭_필터" id="mbtiMatchFilter"></w2:key>
-						<w2:key defaultValue="AAAA" dataType="text" name="유저_MBTI" id="userMbti"></w2:key>
+						<w2:key defaultValue="ZZZZ" dataType="text" name="유저_MBTI" id="userMbti"></w2:key>
 					</w2:keyInfo>
 				</w2:dataMap>
 			</w2:dataCollection>
@@ -859,12 +859,13 @@ scwin.sbm_selectDevMbtiList_submitdone = function (e) {
 				<!-- 메인 필터 드롭다운 -->
 
 				<!-- 필터 태그들 -->
-				<xf:group class="header-container" style="">
+				<xf:group class="header-container" style="margin-top: 20px;margin-bottom: 20px;">
 					<xf:group class="header-left">
 						<xf:group class="main-filters" style="margin-bottom: 0;">
-							<xf:select1 id="slb_dev_mbti" chooseOption="" style="width: 148px;height: 21px;" submenuSize="auto" allOption=""
-								disabled="false" direction="auto" appearance="minimal" disabledClass="w2selectbox_disabled" chooseOptionLabel="모든 MBTI" ref=""
-								ev:onselected="scwin.slb_dev_mbti_onselected">
+							<xf:select1 id="slb_dev_mbti" chooseOption=""
+								style="padding: 8px 12px; font-size: 14px; border: 1px solid #ccc; border-radius: 8px; background-color: #f8f8f8; width: 180px; height: auto;"
+								submenuSize="auto" allOption="" disabled="false" direction="auto" appearance="minimal" disabledClass="w2selectbox_disabled"
+								chooseOptionLabel="모든 MBTI" ref="" ev:onselected="scwin.slb_dev_mbti_onselected">
 								<xf:choices>
 									<xf:item>
 										<xf:label><![CDATA[모든 MBTI]]></xf:label>
@@ -888,6 +889,7 @@ scwin.sbm_selectDevMbtiList_submitdone = function (e) {
 									</xf:item>
 								</xf:choices>
 							</xf:select1>
+							<w2:autoComplete editType="select" id="atc_tech_stack" style="margin-left: 10px;padding: 8px 12px; font-size: 14px; border: 1px solid #ccc; border-radius: 8px; background-color: #f8f8f8; width: 180px; height: 35px;" submenuSize="auto" search="start"></w2:autoComplete>
 						</xf:group>
 					</xf:group>
 					<xf:group class="header-right">
