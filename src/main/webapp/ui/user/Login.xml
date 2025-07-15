@@ -241,12 +241,11 @@ scwin.inp_userId_onkeypress = function (e) {
     }
 };
 
-scwin.inp_userPw_onkeypress = function (e) {
+scwin.inp_userPw_onkeydown = function (e) {
     if (e.keyCode === 13) { // Enter key
         scwin.btn_login_onclick();
     }
-};
-]]></script>
+};]]></script>
     </head>
     <body ev:onpageload="scwin.onpageload">
         <xf:group class="login-container">
@@ -267,7 +266,7 @@ scwin.inp_userPw_onkeypress = function (e) {
                 <w2:textbox class="form-label" label="비밀번호"></w2:textbox>
                 <xf:group class="password-group">
                     <xf:secret class="form-input" id="inp_userPw" placeholder="비밀번호를 입력하세요" 
-                        ev:onkeypress="scwin.inp_userPw_onkeypress" ref="data:dmp_loginVo.password"></xf:secret>
+                        ref="data:dmp_loginVo.password" ev:onkeydown="scwin.inp_userPw_onkeydown"></xf:secret>
                 </xf:group>
             </xf:group>
             

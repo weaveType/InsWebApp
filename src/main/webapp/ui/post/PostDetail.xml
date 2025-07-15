@@ -68,7 +68,7 @@
         	</xf:submission>
         	<xf:submission id="sbm_insertJobApplication" action="/InsWebApp/POS0001JAPL.pwkjson" method="post" mediatype="application/json"
         		ref='data:json,{"id":"dmp_jobApplicationVo","key":"jobApplicationVo"}' target="" encoding="UTF-8" instance="" replace=""
-        		errorHandler="" customHandler="" mode="asynchronous" processMsg="이력서 지원중.." ev:submit="" ev:submitdone="" ev:submiterror=""
+        		errorHandler="" customHandler="" mode="asynchronous" processMsg="이력서 지원중.." ev:submit="" ev:submitdone="scwin.sbm_insertJobApplication_submitdone" ev:submiterror=""
         		abortTrigger="">
         	</xf:submission>
         </xf:model>
@@ -1087,6 +1087,7 @@ scwin.showGeneralUserUI = function () {
     // 기업 관리 버튼 숨김
     btnEdit.hide();
     btnDelete.hide();
+    btnApplicantDetails.hide();
 };
 
 /**
@@ -1102,6 +1103,7 @@ scwin.showCompanyOwnerUI = function () {
     // 기업 관리 버튼 표시
     btnEdit.show();
     btnDelete.show();
+    btnApplicantDetails.show();
 };
 
 // 수정하기 버튼 클릭
@@ -1154,6 +1156,15 @@ scwin.btnDelete_onclick = function (e) {
         }
     }
 };
+
+scwin.sbm_insertJobApplication_submitdone = function (e) {
+    // 공고지원 후 추가기능
+
+};
+
+scwin.btnApplicantDetails_onclick = function (e) {
+    $p.url("ApplicantManagement.xml");
+};
 ]]></script>
     </head>
 
@@ -1187,21 +1198,26 @@ scwin.btnDelete_onclick = function (e) {
                         <w2:textbox class="job-title" ref="data:dmp_postDetail.title"></w2:textbox>
 
                         <xf:group class="job-actions">
-                            <!-- 일반 사용자용 버튼들 -->
-                            <xf:trigger class="btn-apply" id="btnApply" type="button" ev:onclick="scwin.btnApply_onclick">
-                                <xf:label>지원하기</xf:label>
-                            </xf:trigger>
-                            <xf:trigger class="btn-bookmark" id="btnBookmark" type="button" ev:onclick="scwin.btnBookmark_onclick">
-                                <xf:label>🤍 북마크</xf:label>
-                            </xf:trigger>
-                            
-                            <!-- 기업 사용자용 버튼들 (작성자 본인만) -->
-                            <xf:trigger class="btn-edit" id="btnEdit" type="button" ev:onclick="scwin.btnEdit_onclick" style="display:none;">
-                                <xf:label>수정하기</xf:label>
-                            </xf:trigger>
-                            <xf:trigger class="btn-delete" id="btnDelete" type="button" ev:onclick="scwin.btnDelete_onclick" style="display:none;">
-                                <xf:label>삭제하기</xf:label>
-                            </xf:trigger>
+                        	<!-- 일반 사용자용 버튼들 -->
+                        	<xf:trigger class="btn-apply" id="btnApply" type="button" ev:onclick="scwin.btnApply_onclick">
+                        		<xf:label>지원하기</xf:label>
+                        	</xf:trigger>
+                        	<xf:trigger class="btn-bookmark" id="btnBookmark" type="button" ev:onclick="scwin.btnBookmark_onclick">
+                        		<xf:label>🤍 북마크</xf:label>
+                        	</xf:trigger>
+
+                        	<!-- 기업 사용자용 버튼들 (작성자 본인만) -->
+                        	<xf:trigger class="btn-edit" id="btnEdit" type="button" ev:onclick="scwin.btnEdit_onclick"
+                        		style="display:none;">
+                        		<xf:label>수정하기</xf:label>
+                        	</xf:trigger>
+                        	<xf:trigger class="btn-delete" id="btnDelete" type="button" ev:onclick="scwin.btnDelete_onclick"
+                        		style="display:none;">
+                        		<xf:label>삭제하기</xf:label>
+                        	</xf:trigger>
+                        	<xf:trigger class="btn-applicant_details" id="btnApplicantDetails" type="button" style="" ev:onclick="scwin.btnApplicantDetails_onclick">
+                        		<xf:label>지원자 보기</xf:label>
+                        	</xf:trigger>
                         </xf:group>
                     </section>
 
