@@ -68,7 +68,7 @@
         	</xf:submission>
         	<xf:submission id="sbm_insertJobApplication" action="/InsWebApp/POS0001JAPL.pwkjson" method="post" mediatype="application/json"
         		ref='data:json,{"id":"dmp_jobApplicationVo","key":"jobApplicationVo"}' target="" encoding="UTF-8" instance="" replace=""
-        		errorHandler="" customHandler="" mode="asynchronous" processMsg="이력서 지원중.." ev:submit="" ev:submitdone="" ev:submiterror=""
+        		errorHandler="" customHandler="" mode="asynchronous" processMsg="이력서 지원중.." ev:submit="" ev:submitdone="scwin.sbm_insertJobApplication_submitdone" ev:submiterror=""
         		abortTrigger="">
         	</xf:submission>
         </xf:model>
@@ -1153,6 +1153,11 @@ scwin.btnDelete_onclick = function (e) {
             alert("공고 삭제 중 오류가 발생했습니다.");
         }
     }
+};
+
+scwin.sbm_insertJobApplication_submitdone = function (e) {
+    // 공고지원 후 추가기능
+
 };
 ]]></script>
     </head>
