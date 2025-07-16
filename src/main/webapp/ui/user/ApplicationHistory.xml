@@ -92,127 +92,13 @@
         <w2:publicInfo method=""/>
         
         <style type="text/css"><![CDATA[
-            /* 기본 설정 */
-            * {
-                box-sizing: border-box;
-            }
 
             .main-wrap {
                 width: 100%;
                 background-color: #ffffff;
                 font-family: "Malgun Gothic", "맑은 고딕", sans-serif;
             }
-
-            /* 헤더 스타일 */
-            .header {
-                width: 100%;
-                height: 70px;
-                background-color: #ffffff;
-                border-bottom: 1px solid #e0e0e0;
-                position: relative;
-                padding: 0 min(30px, 4vw);
-            }
-
-            .header-left {
-                float: left;
-                padding-top: 18px;
-                display: flex;
-                align-items: center;
-                gap: 15px;
-            }
-
-            .nav-menu {
-                display: inline-block;
-                vertical-align: middle;
-            }
-
-            .nav-link {
-                font-size: 14px;
-                color: #333;
-                text-decoration: none;
-                cursor: pointer;
-                margin-right: 20px;
-                vertical-align: middle;
-                transition: color 0.2s ease;
-            }
-
-            .nav-link:hover {
-                color: #007bff;
-            }
-
-            .header-right {
-                float: right;
-                padding-top: 18px;
-            }
-
-            .search-container {
-                display: inline-block;
-                background-color: #f5f5f5;
-                border-radius: 20px;
-                padding: 6px 15px;
-                margin-right: 10px;
-                vertical-align: middle;
-            }
-
-            .search-input {
-                border: none;
-                background: transparent;
-                width: 150px;
-                outline: none;
-                font-size: 13px;
-                height: 24px;
-                vertical-align: middle;
-            }
-
-            .search-btn {
-                border: none;
-                background: none;
-                cursor: pointer;
-                margin-left: 8px;
-                font-size: 14px;
-                vertical-align: middle;
-            }
-
-            .btn-login {
-                background-color: #fff;
-                border: 1px solid #ddd;
-                padding: 6px 12px;
-                border-radius: 4px;
-                cursor: pointer;
-                font-size: 12px;
-                margin-right: 8px;
-                height: 32px;
-                vertical-align: middle;
-                transition: background-color 0.2s ease;
-            }
-
-            .btn-login:hover {
-                background-color: #f8f9fa;
-            }
-
-            .btn-enterprise {
-                background-color: #333;
-                color: #fff;
-                border: none;
-                padding: 6px 12px;
-                border-radius: 4px;
-                cursor: pointer;
-                font-size: 12px;
-                height: 32px;
-                vertical-align: middle;
-                transition: background-color 0.2s ease;
-            }
-
-            .btn-enterprise:hover {
-                background-color: #555;
-            }
-
-            .clearfix::after {
-                content: "";
-                display: table;
-                clear: both;
-            }
-
+            
             /* 메인 레이아웃 */
             .main-container {
                 display: flex;
@@ -220,94 +106,6 @@
                 max-width: 1400px;
                 margin: 0 auto;
                 background-color: #f8f9fa;
-            }
-
-            /* 사이드바 */
-            .sidebar {
-                width: 280px;
-                background-color: #ffffff;
-                border-right: 1px solid #e0e0e0;
-                padding: min(30px, 4vw);
-                flex-shrink: 0;
-            }
-
-            .sidebar-title {
-                font-size: clamp(18px, 3vw, 20px);
-                font-weight: bold;
-                color: #333;
-                margin-bottom: 30px;
-            }
-
-            .sidebar-menu {
-                list-style: none;
-                padding: 0;
-                margin: 0;
-            }
-
-            .menu-category {
-                margin-bottom: 30px;
-            }
-
-            .menu-category-title {
-                font-size: clamp(14px, 2vw, 16px);
-                font-weight: 600;
-                color: #666;
-                margin-bottom: 15px;
-                padding-bottom: 8px;
-                border-bottom: 1px solid #f0f0f0;
-                display: flex;
-                align-items: center;
-                gap: 8px;
-            }
-
-            .menu-item {
-                display: block;
-                padding: 12px 16px;
-                margin-bottom: 4px;
-                color: #333;
-                text-decoration: none;
-                border-radius: 8px;
-                transition: all 0.2s ease;
-                cursor: pointer;
-                font-size: clamp(13px, 1.8vw, 14px);
-                position: relative;
-            }
-
-            .menu-item:hover {
-                background-color: #f8f9fa;
-                color: #007bff;
-            }
-
-            .menu-item.active {
-                background-color: #e3f2fd;
-                color: #1976d2;
-                font-weight: 600;
-            }
-
-            .menu-item.incomplete {
-                color: #dc3545;
-            }
-
-            .menu-item.incomplete::after {
-                content: "미완료";
-                position: absolute;
-                right: 12px;
-                top: 50%;
-                transform: translateY(-50%);
-                font-size: 10px;
-                background-color: #dc3545;
-                color: white;
-                padding: 2px 6px;
-                border-radius: 8px;
-            }
-
-            .new-badge {
-                background-color: #ff4757;
-                color: white;
-                font-size: 10px;
-                padding: 2px 6px;
-                border-radius: 8px;
-                margin-left: 8px;
             }
 
             /* 메인 콘텐츠 */
@@ -1004,69 +802,11 @@ scwin.refreshData = function() {
     </head>
     
     <body ev:onpageload="scwin.onpageload">
-        <w2:wframe src="../common/Header.xml" id="headerFrame" />
         <xf:group class="main-wrap">
 
             <!-- 메인 컨테이너 -->
             <xf:group class="main-container">
                 <!-- 사이드바 -->
-                <aside class="sidebar">
-                    <w2:textbox class="sidebar-title" label="MY JOBDA"></w2:textbox>
-                    
-                    <div class="sidebar-menu">
-                        <!-- 잡대해 섹션 -->
-                        <div class="menu-category">
-                            <w2:textbox class="menu-category-title" label="잡대해">
-                                <w2:span class="new-badge" label="NEW"></w2:span>
-                            </w2:textbox>
-                            <w2:anchor class="menu-item" ev:onclick="scwin.sidebarMenu_onclick('matching_home')">
-                                <xf:label><![CDATA[매칭 홈]]></xf:label>
-                            </w2:anchor>
-                            <w2:anchor class="menu-item" ev:onclick="scwin.sidebarMenu_onclick('matching_inquiry')">
-                                <xf:label><![CDATA[매칭 현황]]></xf:label>
-                            </w2:anchor>
-                            <w2:anchor class="menu-item incomplete" ev:onclick="scwin.sidebarMenu_onclick('matching_profile')">
-                                <xf:label><![CDATA[매칭 프로필]]></xf:label>
-                            </w2:anchor>
-                            <w2:anchor class="menu-item incomplete" ev:onclick="scwin.sidebarMenu_onclick('matching_settings')">
-                                <xf:label><![CDATA[매칭 설정]]></xf:label>
-                            </w2:anchor>
-                        </div>
-
-                        <!-- 내 정보 섹션 -->
-                        <div class="menu-category">
-                            <w2:textbox class="menu-category-title" label="내 정보"></w2:textbox>
-                            <w2:anchor class="menu-item" ev:onclick="scwin.sidebarMenu_onclick('profile')">
-                                <xf:label><![CDATA[프로필]]></xf:label>
-                            </w2:anchor>
-                            <w2:anchor class="menu-item" ev:onclick="scwin.sidebarMenu_onclick('login_connection')">
-                                <xf:label><![CDATA[로그인 연결]]></xf:label>
-                            </w2:anchor>
-                        </div>
-
-                        <!-- 취업활동 관리 섹션 -->
-                        <div class="menu-category">
-                            <w2:textbox class="menu-category-title" label="취업활동 관리"></w2:textbox>
-                            <w2:anchor class="menu-item active" ev:onclick="scwin.sidebarMenu_onclick('application_history')">
-                                <xf:label><![CDATA[지원현황]]></xf:label>
-                            </w2:anchor>
-                            <w2:anchor class="menu-item" ev:onclick="scwin.sidebarMenu_onclick('interest_company')">
-                                <xf:label><![CDATA[관심기업]]></xf:label>
-                            </w2:anchor>
-                            <w2:anchor class="menu-item" ev:onclick="scwin.sidebarMenu_onclick('bookmark')">
-                                <xf:label><![CDATA[북마크]]></xf:label>
-                            </w2:anchor>
-                        </div>
-
-                        <!-- 계정 관리 섹션 -->
-                        <div class="menu-category">
-                            <w2:textbox class="menu-category-title" label="계정 관리"></w2:textbox>
-                            <w2:anchor class="menu-item" ev:onclick="scwin.sidebarMenu_onclick('notification_management')">
-                                <xf:label><![CDATA[알림 관리]]></xf:label>
-                            </w2:anchor>
-                        </div>
-                    </div>
-                </aside>
 
                 <!-- 메인 콘텐츠 -->
                 <main class="main-content">
