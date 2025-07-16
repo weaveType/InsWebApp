@@ -13,7 +13,7 @@
 		<property name="host" value="smtp.gmail.com" />
 		<property name="port" value="587" />
 		<property name="username" value="inswave03@gmail.com" />
-		<property name="password" value="inswave03!@#$" />
+		<property name="password" value="tambwxfrfwptssci" />
 		<!-- 보안연결 TLS과 관련된 설정 -->
 		<property name="javaMailProperties">
 			<props>
