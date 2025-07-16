@@ -19,6 +19,9 @@ public class SendEmailInfoListVo extends com.demo.proworks.cmmn.ProworksCommVO {
     @ElDtoField(logicalName = "이름", physicalName = "name", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
     private String name;
 
+    @ElDtoField(logicalName = "유저 ID", physicalName = "accountId", type = "int", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private int accountId;
+
     @ElVoField(physicalName = "email")
     public String getEmail(){
         String ret = this.email;
@@ -41,12 +44,23 @@ public class SendEmailInfoListVo extends com.demo.proworks.cmmn.ProworksCommVO {
         this.name = name;
     }
 
+    @ElVoField(physicalName = "accountId")
+    public int getAccountId(){
+        return accountId;
+    }
+
+    @ElVoField(physicalName = "accountId")
+    public void setAccountId(int accountId){
+        this.accountId = accountId;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("EmailListVo [");
+        sb.append("SendEmailInfoListVo [");
         sb.append("email").append("=").append(email).append(",");
-        sb.append("name").append("=").append(name);
+        sb.append("name").append("=").append(name).append(",");
+        sb.append("accountId").append("=").append(accountId);
         sb.append("]");
         return sb.toString();
 

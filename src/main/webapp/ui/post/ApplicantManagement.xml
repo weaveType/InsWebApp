@@ -214,20 +214,13 @@ scwin.pass_btn_onclick = function (e) {
         return;
     }
 
-    // 이메일 및 이름추출
-    let extractedEmails = [];
-    let extractedNames = [];
+    // 선택된 지원자들의 정보 추출
     var emailInfoList = checkedData.map(function (rowIndex) {
-        let email = dlt_applicantVoList.getCellData(rowIndex, "email");
-        let name = dlt_applicantVoList.getCellData(rowIndex, "name");
-
-        if (email) {
-            extractedEmails.push(email);
+        return {
+            email: dlt_applicantVoList.getCellData(rowIndex, "email"),
+            name: dlt_applicantVoList.getCellData(rowIndex, "name"),
+            accountId: dlt_applicantVoList.getCellData(rowIndex, "accountId")
         };
-
-        if (name) {
-            extractedNames.push(name);
-        }
     });
 
     $c.win.openPopup("PassEmail.xml", {
@@ -252,20 +245,13 @@ scwin.fail_btn_onclick = function (e) {
         return;
     }
 
-    // 이메일 및 이름추출
-    let extractedEmails = [];
-    let extractedNames = [];
+    // 선택된 지원자들의 정보 추출
     var emailInfoList = checkedData.map(function (rowIndex) {
-        let email = dlt_applicantVoList.getCellData(rowIndex, "email");
-        let name = dlt_applicantVoList.getCellData(rowIndex, "name");
-
-        if (email) {
-            extractedEmails.push(email);
+        return {
+            email: dlt_applicantVoList.getCellData(rowIndex, "email"),
+            name: dlt_applicantVoList.getCellData(rowIndex, "name"),
+            accountId: dlt_applicantVoList.getCellData(rowIndex, "accountId")
         };
-
-        if (name) {
-            extractedNames.push(name);
-        }
     });
 
     // 팝업 생성 옵션
