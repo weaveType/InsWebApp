@@ -3,6 +3,8 @@ package com.demo.proworks.common.service.impl;
 import com.demo.proworks.common.service.EmailService;
 import com.demo.proworks.domain.post.vo.SendEmailVo;
 import com.demo.proworks.domain.post.vo.SendEmailInfoListVo;
+import com.demo.proworks.domain.post.dao.PostDAO;
+import com.demo.proworks.domain.post.vo.JobApplicationVo;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
@@ -11,6 +13,9 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.concurrent.CompletableFuture;
+
+import javax.annotation.Resource;
+
 import java.util.List;
 import java.util.ArrayList;
 
@@ -26,6 +31,9 @@ public class EmailServiceImpl implements EmailService {
 
     @Autowired
     private JavaMailSender javaMailSender;
+
+    @Resource(name = "postDAO")
+    private PostDAO postDAO;
 
     /**
      * 단일 이메일을 비동기로 전송합니다.
@@ -116,6 +124,23 @@ public class EmailServiceImpl implements EmailService {
         
         System.out.println("=== 일괄 이메일 전송 완료 ===");
         System.out.println("성공: " + successCount + "/" + futures.size());
+
+        // 이메일 전송 후 job_applications 상태 업데이트
+        String applicationStatus = isPassed ? "서류합격" : "불합격";
+        for (SendEmailInfoListVo emailVo : emailList) {
+            if (emailVo != null) {
+                JobApplicationVo jobApplicationVo = new JobApplicationVo();
+                jobApplicationVo.setAccountId(emailVo.getAccountId());
+                jobApplicationVo.setApplicationStatus(applicationStatus);
+                try {
+                    postDAO.updateApplicationStatus(jobApplicationVo);
+                    System.out.println("✅ " + emailVo.getAccountId() + "님의 상태가 " + applicationStatus + "으로 업데이트되었습니다.");
+                } catch (Exception e) {
+                    System.err.println("❌ " + emailVo.getAccountId() + "님의 상태 업데이트 실패: " + e.getMessage());
+                    e.printStackTrace();
+                }
+            }
+        }
         
         return CompletableFuture.completedFuture(successCount);
     }

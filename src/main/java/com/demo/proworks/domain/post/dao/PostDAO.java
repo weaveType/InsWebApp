@@ -184,4 +184,15 @@ public class PostDAO extends com.demo.proworks.cmmn.dao.ProworksDefaultAbstractD
 	public int insertJobApplication(JobApplicationVo jobApplicationVo) throws ElException {
 		return insert("com.demo.proworks.domain.post.insertJobApplication", jobApplicationVo);
 	}
+
+	/**
+	 * 지원자의 상태를 갱신한다.
+	 *
+	 * @param jobApplicationVo 지원자 정보 (accountId, applicationStatus)
+	 * @return 갱신된 행의 수
+	 * @throws ElException
+	 */
+	public int updateApplicationStatus(JobApplicationVo jobApplicationVo) throws ElException {
+		return update("com.demo.proworks.domain.post.updateApplicationStatus", jobApplicationVo);
+	}
 }
