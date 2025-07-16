@@ -7,14 +7,17 @@ import com.fasterxml.jackson.annotation.JsonFilter;
 
 @JsonFilter("elExcludeFilter")
 @ElDto(FldYn = "", delimeterYn = "", logicalName = "공고정보")
-public class EmailListVo extends com.demo.proworks.cmmn.ProworksCommVO {
+public class SendEmailInfoListVo extends com.demo.proworks.cmmn.ProworksCommVO {
     private static final long serialVersionUID = 1L;
 
-    public EmailListVo(){
+    public SendEmailInfoListVo(){
     }
 
     @ElDtoField(logicalName = "이메일", physicalName = "email", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
     private String email;
+
+    @ElDtoField(logicalName = "이름", physicalName = "name", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private String name;
 
     @ElVoField(physicalName = "email")
     public String getEmail(){
@@ -27,11 +30,23 @@ public class EmailListVo extends com.demo.proworks.cmmn.ProworksCommVO {
         this.email = email;
     }
 
+    @ElVoField(physicalName = "name")
+    public String getName(){
+        String ret = this.name;
+        return ret;
+    }
+
+    @ElVoField(physicalName = "name")
+    public void setName(String name){
+        this.name = name;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("EmailListVo [");
-        sb.append("email").append("=").append(email);
+        sb.append("email").append("=").append(email).append(",");
+        sb.append("name").append("=").append(name);
         sb.append("]");
         return sb.toString();
 

@@ -13,8 +13,8 @@ public class SendEmailVo extends com.demo.proworks.cmmn.ProworksCommVO {
     public SendEmailVo(){
     }
 
-    @ElDtoField(logicalName = "이메일 리스트", physicalName = "emailListVo", type = "", typeKind = "List", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
-    private java.util.List<com.demo.proworks.domain.post.vo.EmailListVo> emailListVo;
+    @ElDtoField(logicalName = "공고정보", physicalName = "sendEmailInfoListVo", type = "", typeKind = "List", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private java.util.List<com.demo.proworks.domain.post.vo.SendEmailInfoListVo> sendEmailInfoListVo;
 
     @ElDtoField(logicalName = "합불여부", physicalName = "isPassed", type = "boolean", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
     private boolean isPassed;
@@ -22,14 +22,14 @@ public class SendEmailVo extends com.demo.proworks.cmmn.ProworksCommVO {
     @ElDtoField(logicalName = "메일 내용", physicalName = "emailContent", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
     private String emailContent;
 
-    @ElVoField(physicalName = "emailListVo")
-    public java.util.List<com.demo.proworks.domain.post.vo.EmailListVo> getEmailListVo(){
-        return emailListVo;
+    @ElVoField(physicalName = "sendEmailInfoListVo")
+    public java.util.List<com.demo.proworks.domain.post.vo.SendEmailInfoListVo> getSendEmailInfoListVo(){
+        return sendEmailInfoListVo;
     }
 
-    @ElVoField(physicalName = "emailListVo")
-    public void setEmailListVo(java.util.List<com.demo.proworks.domain.post.vo.EmailListVo> emailListVo){
-        this.emailListVo = emailListVo;
+    @ElVoField(physicalName = "sendEmailInfoListVo")
+    public void setSendEmailInfoListVo(java.util.List<com.demo.proworks.domain.post.vo.SendEmailInfoListVo> sendEmailInfoListVo){
+        this.sendEmailInfoListVo = sendEmailInfoListVo;
     }
 
     @ElVoField(physicalName = "isPassed")
@@ -57,7 +57,7 @@ public class SendEmailVo extends com.demo.proworks.cmmn.ProworksCommVO {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("SendEmailVo [");
-        sb.append("emailListVo").append("=").append(emailListVo).append(",");
+        sb.append("sendEmailInfoListVo").append("=").append(sendEmailInfoListVo).append(",");
         sb.append("isPassed").append("=").append(isPassed).append(",");
         sb.append("emailContent").append("=").append(emailContent);
         sb.append("]");
@@ -71,8 +71,8 @@ public class SendEmailVo extends com.demo.proworks.cmmn.ProworksCommVO {
 
     @Override
     public void _xStreamEnc() {
-        for( int i=0 ; emailListVo != null && i < emailListVo.size() ; i++ ) {
-            com.demo.proworks.domain.post.vo.EmailListVo vo = (com.demo.proworks.domain.post.vo.EmailListVo)emailListVo.get(i);
+        for( int i=0 ; sendEmailInfoListVo != null && i < sendEmailInfoListVo.size() ; i++ ) {
+            com.demo.proworks.domain.post.vo.SendEmailInfoListVo vo = (com.demo.proworks.domain.post.vo.SendEmailInfoListVo)sendEmailInfoListVo.get(i);
             vo._xStreamEnc();	 
         }
     }
@@ -80,8 +80,8 @@ public class SendEmailVo extends com.demo.proworks.cmmn.ProworksCommVO {
 
     @Override
     public void _xStreamDec() {
-        for( int i=0 ; emailListVo != null && i < emailListVo.size() ; i++ ) {
-            com.demo.proworks.domain.post.vo.EmailListVo vo = (com.demo.proworks.domain.post.vo.EmailListVo)emailListVo.get(i);
+        for( int i=0 ; sendEmailInfoListVo != null && i < sendEmailInfoListVo.size() ; i++ ) {
+            com.demo.proworks.domain.post.vo.SendEmailInfoListVo vo = (com.demo.proworks.domain.post.vo.SendEmailInfoListVo)sendEmailInfoListVo.get(i);
             vo._xStreamDec();	 
         }
     }

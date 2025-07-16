@@ -47,7 +47,7 @@ public class EmailServiceImpl implements EmailService {
             message.setTo(to);
             message.setSubject(subject);
             message.setText(content);
-            // message.setFrom("your-smtp-username@example.com"); // 실제 발신자 이메일 설정 필요
+            message.setFrom("inswave03@gmail.com"); // 실제 발신자 이메일 설정 필요
             
             javaMailSender.send(message);
             

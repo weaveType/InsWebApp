@@ -214,14 +214,20 @@ scwin.pass_btn_onclick = function (e) {
         return;
     }
 
-    // 이메일 추출
+    // 이메일 및 이름추출
     let extractedEmails = [];
-    var emailList = checkedData.map(function (rowIndex) {
+    let extractedNames = [];
+    var emailInfoList = checkedData.map(function (rowIndex) {
         let email = dlt_applicantVoList.getCellData(rowIndex, "email");
+        let name = dlt_applicantVoList.getCellData(rowIndex, "name");
 
         if (email) {
             extractedEmails.push(email);
         };
+
+        if (name) {
+            extractedNames.push(name);
+        }
     });
 
     $c.win.openPopup("PassEmail.xml", {
@@ -232,7 +238,7 @@ scwin.pass_btn_onclick = function (e) {
         popupName: "합격 메일 보내기",
         modal: true
     }, {
-        selectedUsers: emailList  // 데이터 전달
+        selectedUsers: emailInfoList  // 데이터 전달
     });
 
 }
@@ -246,14 +252,20 @@ scwin.fail_btn_onclick = function (e) {
         return;
     }
 
-    // 이메일 추출
+    // 이메일 및 이름추출
     let extractedEmails = [];
-    var emailList = checkedData.map(function (rowIndex) {
+    let extractedNames = [];
+    var emailInfoList = checkedData.map(function (rowIndex) {
         let email = dlt_applicantVoList.getCellData(rowIndex, "email");
+        let name = dlt_applicantVoList.getCellData(rowIndex, "name");
 
         if (email) {
             extractedEmails.push(email);
         };
+
+        if (name) {
+            extractedNames.push(name);
+        }
     });
 
     // 팝업 생성 옵션
@@ -265,7 +277,7 @@ scwin.fail_btn_onclick = function (e) {
         popupName: "불합격 메일 보내기",
         modal: true
     }, {
-        selectedUsers: emailList  // 데이터 전달
+        selectedUsers: emailInfoList  // 데이터 전달
     });
 };
 ]]></script>

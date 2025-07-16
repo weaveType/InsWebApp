@@ -517,20 +517,6 @@ public class PostController {
 	}
 
 	/**
-	 * 이메일을 일괄전송 처리한다
-	 *
-	 * @param sendEmailVo 합불여부, 메일 전송할 email, 메일 내용
-	 * @return 이메일 전송 실패 ID
-	 * @throws Exception
-	 */
-	@ElService(key = "POS0001Send")
-	@RequestMapping(value = "POS0001Send")
-	@ElDescription(sub = "이메일 일괄전송", desc = "이메일을 일괄전송 처리한다")
-	public void sendToEmails(SendEmailVo sendEmailVo) throws Exception {
-		postService.sendToEmails(sendEmailVo);
-	}
-
-	/**
 	 * 공고에 이력서 지원처리를 한다.
 	 *
 	 * @param sendEmailVo 합불여부, 메일 전송할 email, 메일 내용
@@ -547,5 +533,19 @@ public class PostController {
 		if (currentId == userId) {
 			postService.insertJobApplication(jobApplicationVo);
 		}
+	}
+
+	/**
+	 * 이메일을 일괄전송 처리한다
+	 *
+	 * @param sendEmailVo 합불여부, 메일 전송할 email, 메일 내용
+	 * @return 이메일 전송 실패 ID
+	 * @throws Exception
+	 */
+	@ElService(key = "POS0001Send")
+	@RequestMapping(value = "POS0001Send")
+	@ElDescription(sub = "이메일 일괄전송", desc = "이메일을 일괄전송 처리한다")
+	public void sendToEmails(SendEmailVo sendEmailVo) throws Exception {
+		postService.sendToEmails(sendEmailVo);
 	}
 }
