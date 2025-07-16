@@ -32,7 +32,7 @@
                 mediatype="application/json"
                 encoding="UTF-8"
                 mode="asynchronous"
-                processMsg="합격 메일을 발송 중입니다."
+                processMsg=""
                 ev:submitdone="scwin.sbm_sendPassEmail_submitdone"
                 ev:submiterror="">
             </xf:submission>
@@ -273,7 +273,7 @@ scwin.onpageload = function () {
 
 // 기본 이메일 템플릿 설정
 scwin.setDefaultTemplates = function () {
-    var passTemplate = "안녕하세요 {{이용자}}님,\n\n" +
+    var passTemplate =
         "서류심사 결과를 안내드립니다.\n\n" +
         "축하드립니다! 서류심사에 통과하셨습니다.\n" +
         "면접은 {{날짜}}에 진행할 예정입니다.\n" +

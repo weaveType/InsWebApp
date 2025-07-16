@@ -16,6 +16,9 @@ public class ApplicantListVo extends com.demo.proworks.cmmn.ProworksCommVO {
     @ElDtoField(logicalName = "일반회원", physicalName = "applicantDetailVo", type = "", typeKind = "List", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
     private java.util.List<com.demo.proworks.domain.user.vo.ApplicantDetailVo> applicantDetailVo;
 
+    @ElDtoField(logicalName = "회사명", physicalName = "name", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private String name;
+
     @ElVoField(physicalName = "applicantDetailVo")
     public java.util.List<com.demo.proworks.domain.user.vo.ApplicantDetailVo> getApplicantDetailVo(){
         return applicantDetailVo;
@@ -26,11 +29,23 @@ public class ApplicantListVo extends com.demo.proworks.cmmn.ProworksCommVO {
         this.applicantDetailVo = applicantDetailVo;
     }
 
+    @ElVoField(physicalName = "name")
+    public String getName(){
+        String ret = this.name;
+        return ret;
+    }
+
+    @ElVoField(physicalName = "name")
+    public void setName(String name){
+        this.name = name;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("ApplicantListVo [");
-        sb.append("applicantDetailVo").append("=").append(applicantDetailVo);
+        sb.append("applicantDetailVo").append("=").append(applicantDetailVo).append(",");
+        sb.append("name").append("=").append(name);
         sb.append("]");
         return sb.toString();
 

@@ -167,7 +167,7 @@
 			</w2:dataCollection>
 			<xf:submission id="sbm_applicantList" action="/InsWebApp/US0002List.pwkjson" method="post" mediatype="application/json" ref='data:json,{"id":"dmp_applicantVo","key":"applicantVo"}'
 				target='data:json,{"id":"dlt_applicantVoList","key":"elData.applicantDetailVo"}' encoding="UTF-8" instance="" replace="" errorHandler="" customHandler="" mode="asynchronous" processMsg="지원자 목록을 조회중입니다." ev:submit=""
-				ev:submitdone="scwin.sbm_applicantList_submitdone" ev:submiterror="" abortTrigger="">
+				ev:submitdone="" ev:submiterror="" abortTrigger="">
 			</xf:submission>
 		</xf:model>
 		<script lazy="false" type="text/javascript"><![CDATA[scwin.onpageload = function () {
@@ -189,21 +189,6 @@
     dmp_applicantVo.set("jobPostingId", jobPostingId);
     $c.sbm.execute(sbm_applicantList);
 };
-
-// 선택된 항목 수 업데이트
-scwin.updateSelectedCount = function () {
-    var checkedRows = gridView.getCheckedIndex("chk");
-    var count = checkedRows.length;
-    selectedCount.setValue(count + "명 선택됨");
-};
-
-// 서브미션 완료 후 체크박스 이벤트 바인딩
-scwin.sbm_applicantList_submitdone = function (e) {
-
-    // 초기 선택 수 표시
-    scwin.updateSelectedCount();
-};
-
 
 scwin.pass_btn_onclick = function (e) {
 

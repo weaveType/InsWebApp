@@ -277,4 +277,13 @@ WHERE p.status = 'active'
      WHERE
          ui.user_id = #{accountId}
 </select>
+
+    <update id="updateApplicationStatus" parameterType="com.demo.proworks.domain.post.vo.JobApplicationVo">
+        <!-- 지원자의 상태를 갱신한다. -->
+        UPDATE job_applications /* QueryID : com.demo.proworks.domain.post.updateApplicationStatus */
+        SET
+            application_status = #{applicationStatus}
+        WHERE
+            user_id = #{accountId}
+    </update>
 </mapper>
