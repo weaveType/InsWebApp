@@ -170,18 +170,21 @@ public class SurveyController {
             String jsonData = getJsonDataFromRequest(request);
             JsonNode jsonNode = objectMapper.readTree(jsonData);
             
-            Long typeId = null;
-            if (jsonNode.has("typeId")) {
-                typeId = jsonNode.get("typeId").asLong();
+            Long userId = null;
+            if (jsonNode.has("userId")) {
+                userId = jsonNode.get("userId").asLong();
+            } else if (jsonNode.has("typeId")) {
+                // 하위 호환성을 위해 typeId를 userId로 사용
+                userId = jsonNode.get("typeId").asLong();
             }
             
-            AppLog.debug("MBTI 타입 조회 - 타입ID: " + typeId);
+            AppLog.debug("MBTI 타입 조회 - 사용자ID: " + userId);
             
-            MbtiCalculationResultVo result = surveyService.getUserMbtiType(typeId);
+            MbtiCalculationResultVo result = surveyService.getUserMbtiType(userId);
             
             if (result == null) {
                 returnMap.put("hasResult", false);
-                AppLog.debug("MBTI 타입 정보가 없습니다 - 타입ID: " + typeId);
+                AppLog.debug("MBTI 타입 정보가 없습니다 - 사용자ID: " + userId);
             } else {
                 returnMap.put("hasResult", true);
                 returnMap.put("typeId", result.getTypeId());

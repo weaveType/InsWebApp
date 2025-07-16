@@ -34,8 +34,8 @@ public class SurveyServiceImpl implements SurveyService {
     private static final double WEIGHT_BA_CODE = 0.4;
     private static final double WEIGHT_RI_SURVEY = 0.75;
     private static final double WEIGHT_RI_CODE = 0.25;
-    private static final double WEIGHT_ST_SURVEY = 1.0;
-    private static final double WEIGHT_ST_CODE = 0.0;
+    private static final double WEIGHT_ST_SURVEY = 0.7;
+    private static final double WEIGHT_ST_CODE = 0.3;
     private static final double WEIGHT_DF_SURVEY = 1.0;
     private static final double WEIGHT_DF_CODE = 0.0;
     
@@ -93,13 +93,43 @@ public class SurveyServiceImpl implements SurveyService {
             AppLog.debug("설문 응답 저장 완료");
             
             // 2. 설문 점수 계산 (축별로 계산)
-            Map<String, Double> surveyScores = calculateSurveyScores(submitVo.getAnswers());
+            Map<String, Double> surveyScores;
+            try {
+                if (submitVo.getAnswers() == null || submitVo.getAnswers().isEmpty()) {
+                    AppLog.warn("설문 응답이 비어있습니다. 기본값으로 진행합니다.");
+                    surveyScores = new HashMap<>();
+                    surveyScores.put("B_A", 50.0);
+                    surveyScores.put("R_I", 50.0);
+                    surveyScores.put("S_T", 50.0);
+                    surveyScores.put("D_F", 50.0);
+                } else {
+                    surveyScores = calculateSurveyScores(submitVo.getAnswers());
+                    if (surveyScores == null) {
+                        surveyScores = new HashMap<>();
+                        surveyScores.put("B_A", 50.0);
+                        surveyScores.put("R_I", 50.0);
+                        surveyScores.put("S_T", 50.0);
+                        surveyScores.put("D_F", 50.0);
+                    }
+                }
+            } catch (Exception ex) {
+                AppLog.error("설문 점수 계산 중 오류", ex);
+                surveyScores = new HashMap<>();
+                surveyScores.put("B_A", 50.0);
+                surveyScores.put("R_I", 50.0);
+                surveyScores.put("S_T", 50.0);
+                surveyScores.put("D_F", 50.0);
+            }
             AppLog.debug("설문 점수 계산 완료: " + surveyScores);
             
             // 3. 코드 분석 점수 조회
             Map<String, Object> codeScores;
             try {
                 codeScores = surveyDAO.selectCodeAnalysisScores(submitVo.getTypeId());
+                if (codeScores == null) {
+                    codeScores = new HashMap<>();
+                    AppLog.debug("코드 분석 데이터가 없습니다. 설문만으로 진행합니다.");
+                }
             } catch (Exception ex) {
                 AppLog.error("코드 분석 점수 조회 중 오류", ex);
                 // 코드 분석이 없어도 설문만으로 진행 가능
@@ -108,7 +138,8 @@ public class SurveyServiceImpl implements SurveyService {
             AppLog.debug("코드 분석 점수 조회 완료: " + codeScores);
             
             // 4. 가중치 적용하여 최종 점수 계산
-            MbtiCalculationResultVo result = calculateFinalMbtiType(submitVo.getTypeId(), surveyScores, codeScores);
+            Long userId = submitVo.getUserId() != null ? Long.parseLong(submitVo.getUserId()) : 1L; // 기본값 1
+            MbtiCalculationResultVo result = calculateFinalMbtiType(submitVo.getTypeId(), surveyScores, codeScores, userId);
             
             // 5. 결과 저장
             try {
@@ -128,10 +159,10 @@ public class SurveyServiceImpl implements SurveyService {
     }
     
     @Override
-    public MbtiCalculationResultVo getUserMbtiType(Long typeId) {
-        AppLog.debug("사용자 MBTI 타입 조회 - 타입ID: " + typeId);
+    public MbtiCalculationResultVo getUserMbtiType(Long userId) {
+        AppLog.debug("사용자 MBTI 타입 조회 - 사용자ID: " + userId);
         try {
-            return surveyDAO.selectMbtiType(typeId);
+            return surveyDAO.selectMbtiType(userId);
         } catch (Exception e) {
             AppLog.error("MBTI 타입 조회 중 오류 발생", e);
             throw new RuntimeException("MBTI 타입 조회 중 오류가 발생했습니다: " + e.getMessage());
@@ -160,6 +191,12 @@ public class SurveyServiceImpl implements SurveyService {
         Map<String, Double> scores = new HashMap<>();
         Map<String, Integer> counts = new HashMap<>();
         Map<String, Integer> totals = new HashMap<>();
+        
+        // null 체크
+        if (answers == null) {
+            AppLog.warn("설문 응답이 null입니다.");
+            answers = new java.util.ArrayList<>();
+        }
         
         // 축별 초기화
         for (String axis : new String[]{"B_A", "R_I", "S_T", "D_F"}) {
@@ -212,14 +249,33 @@ public class SurveyServiceImpl implements SurveyService {
      * @param codeScores 코드 분석 점수
      * @return MBTI 계산 결과
      */
-    private MbtiCalculationResultVo calculateFinalMbtiType(Long typeId, Map<String, Double> surveyScores, Map<String, Object> codeScores) {
+    private MbtiCalculationResultVo calculateFinalMbtiType(Long typeId, Map<String, Double> surveyScores, Map<String, Object> codeScores, Long userId) {
         MbtiCalculationResultVo result = new MbtiCalculationResultVo();
         result.setTypeId(typeId);
+        result.setUserId(userId);
+        
+        // null 체크 - 데이터가 없는 경우 기본값 사용
+        if (codeScores == null) {
+            codeScores = new HashMap<>();
+            AppLog.debug("코드 분석 점수가 null입니다. 빈 맵으로 초기화합니다.");
+        }
+        if (surveyScores == null) {
+            surveyScores = new HashMap<>();
+            AppLog.debug("설문 점수가 null입니다. 빈 맵으로 초기화합니다.");
+        }
+        
+        AppLog.debug("코드 분석 점수 맵 내용: " + codeScores);
+        AppLog.debug("설문 점수 맵 내용: " + surveyScores);
+        
+        // 안전한 double 값 추출을 위한 헬퍼 메서드 사용
+        double codeStyleScore = safeDoubleFromMap(codeScores, "development_style_score", 50.0);
+        double codeCollabScore = safeDoubleFromMap(codeScores, "collaboration_score", 50.0);
+        
+        AppLog.debug("추출된 코드 분석 점수 - 스타일: " + codeStyleScore + ", 협업: " + codeCollabScore);
         
         // B/A 축 계산 (Architect가 높으면 A, Builder가 높으면 B)
         double surveyBA = surveyScores.getOrDefault("B_A", 50.0);
-        double codeArchitect = codeScores.get("ARCHITECT_SCORE") != null ? ((Number) codeScores.get("ARCHITECT_SCORE")).doubleValue() : 50.0;
-        double finalBA = (surveyBA * WEIGHT_BA_SURVEY) + (codeArchitect * WEIGHT_BA_CODE);
+        double finalBA = (surveyBA * WEIGHT_BA_SURVEY) + (codeStyleScore * WEIGHT_BA_CODE);
         result.setABScore(finalBA);
         
         // R/I 축 계산 (설문만 사용 - 코드 분석에서는 R/I 구분 불가)
@@ -229,13 +285,15 @@ public class SurveyServiceImpl implements SurveyService {
         
         // S/T 축 계산 (Solo가 높으면 S, Team이 높으면 T)
         double surveyST = surveyScores.getOrDefault("S_T", 50.0);
-        double finalST = surveyST * WEIGHT_ST_SURVEY; // 설문만 사용
+        double finalST = (surveyST * WEIGHT_ST_SURVEY) + (codeCollabScore * WEIGHT_ST_CODE);
         result.setSTScore(finalST);
         
         // D/F 축 계산 (설문만 사용)
         double surveyDF = surveyScores.getOrDefault("D_F", 50.0);
         double finalDF = surveyDF * WEIGHT_DF_SURVEY; // 설문만 사용
         result.setDFScore(finalDF);
+        
+        AppLog.debug("최종 계산 점수 - BA: " + finalBA + ", RI: " + finalRI + ", ST: " + finalST + ", DF: " + finalDF);
         
         // 타입 코드 결정 (50점 기준으로 분류)
         StringBuilder typeCode = new StringBuilder();
@@ -248,7 +306,44 @@ public class SurveyServiceImpl implements SurveyService {
         result.setTypeName(TYPE_NAMES.getOrDefault(typeCode.toString(), "알 수 없는 유형"));
         result.setTypeDescription(generateTypeDescription(typeCode.toString()));
         
+        AppLog.debug("최종 결정된 타입: " + typeCode.toString());
+        
         return result;
+    }
+    
+    /**
+     * Map에서 안전하게 double 값을 추출하는 헬퍼 메서드
+     * 
+     * @param map 대상 맵
+     * @param key 키
+     * @param defaultValue 기본값
+     * @return double 값
+     */
+    private double safeDoubleFromMap(Map<String, Object> map, String key, double defaultValue) {
+        if (map == null || key == null) {
+            AppLog.debug("맵 또는 키가 null입니다. 기본값을 반환합니다: " + defaultValue);
+            return defaultValue;
+        }
+        
+        Object value = map.get(key);
+        if (value == null) {
+            AppLog.debug("키 '" + key + "'에 대한 값이 null입니다. 기본값을 반환합니다: " + defaultValue);
+            return defaultValue;
+        }
+        
+        try {
+            if (value instanceof Number) {
+                return ((Number) value).doubleValue();
+            } else if (value instanceof String) {
+                return Double.parseDouble((String) value);
+            } else {
+                AppLog.warn("키 '" + key + "'의 값이 예상치 못한 타입입니다: " + value.getClass().getSimpleName() + ", 값: " + value);
+                return defaultValue;
+            }
+        } catch (Exception e) {
+            AppLog.error("키 '" + key + "'의 값을 double로 변환하는 중 오류 발생: " + value, e);
+            return defaultValue;
+        }
     }
     
     /**

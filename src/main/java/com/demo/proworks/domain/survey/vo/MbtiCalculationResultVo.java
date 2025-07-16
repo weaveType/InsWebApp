@@ -37,6 +37,9 @@ public class MbtiCalculationResultVo extends com.demo.proworks.cmmn.ProworksComm
     @ElDtoField(logicalName = "타입 설명", physicalName = "typeDescription", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "타입 상세 설명", attr = "")
     private String typeDescription;
 
+    @ElDtoField(logicalName = "사용자 ID", physicalName = "userId", type = "Long", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "사용자 ID", attr = "")
+    private Long userId;
+
     @ElVoField(physicalName = "typeId")
     public Long getTypeId(){
         return typeId;
@@ -120,6 +123,16 @@ public class MbtiCalculationResultVo extends com.demo.proworks.cmmn.ProworksComm
         this.typeDescription = typeDescription;
     }
 
+    @ElVoField(physicalName = "userId")
+    public Long getUserId(){
+        return userId;
+    }
+
+    @ElVoField(physicalName = "userId")
+    public void setUserId(Long userId){
+        this.userId = userId;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -131,7 +144,8 @@ public class MbtiCalculationResultVo extends com.demo.proworks.cmmn.ProworksComm
         sb.append("sTScore").append("=").append(sTScore).append(",");
         sb.append("dFScore").append("=").append(dFScore).append(",");
         sb.append("typeName").append("=").append(typeName).append(",");
-        sb.append("typeDescription").append("=").append(typeDescription);
+        sb.append("typeDescription").append("=").append(typeDescription).append(",");
+        sb.append("userId").append("=").append(userId);
         sb.append("]");
         return sb.toString();
 

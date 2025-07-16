@@ -19,20 +19,24 @@
     
     <!-- 설문 응답 저장 -->
     <insert id="insertSurveyResponse" parameterType="com.demo.proworks.domain.survey.vo.SurveyResponseVo">
+        <!-- response_id를 미리 생성 -->
+        <selectKey keyProperty="responseId" resultType="Long" order="BEFORE">
+            SELECT COALESCE(MAX(response_id), 0) + 1 FROM survey_responses
+        </selectKey>
+        
         INSERT INTO survey_responses (
+            response_id,
             type_id,
             responses,
             create_at,
             update_at
         ) VALUES (
+            #{responseId},
             #{typeId},
             #{responses},
             NOW(),
             NOW()
         )
-        <selectKey keyProperty="responseId" resultType="Long" order="AFTER">
-            SELECT LAST_INSERT_ID()
-        </selectKey>
     </insert>
     
     <!-- 사용자의 최신 설문 응답 조회 -->
@@ -52,21 +56,23 @@
     <!-- MBTI 타입 정보 저장/업데이트 -->
     <update id="upsertMbtiType" parameterType="com.demo.proworks.domain.survey.vo.MbtiCalculationResultVo">
         INSERT INTO users_mbti_types (
-            type_id,
             type_code,
             A_Bscore,
             R_Iscore,
             S_Tscore,
             D_Fscore,
-            analyed_at
+            analyed_at,
+            user_id,
+            is_mbti_checked
         ) VALUES (
-            #{typeId},
             #{typeCode},
             #{aBScore},
             #{rIScore},
             #{sTScore},
             #{dFScore},
-            NOW()
+            NOW(),
+            COALESCE(#{userId}, 1),
+            1
         )
         ON DUPLICATE KEY UPDATE
             type_code = VALUES(type_code),
@@ -74,7 +80,8 @@
             R_Iscore = VALUES(R_Iscore),
             S_Tscore = VALUES(S_Tscore),
             D_Fscore = VALUES(D_Fscore),
-            analyed_at = NOW()
+            analyed_at = NOW(),
+            is_mbti_checked = 1
     </update>
     
     <!-- 사용자의 MBTI 타입 조회 -->
@@ -85,25 +92,23 @@
             A_Bscore AS aBScore,
             R_Iscore AS rIScore,
             S_Tscore AS sTScore,
-            D_Fscore AS dFScore
+            D_Fscore AS dFScore,
+            user_id AS userId
         FROM users_mbti_types
-        WHERE type_id = #{typeId}
+        WHERE user_id = #{userId}
+        ORDER BY analyed_at DESC
+        LIMIT 1
     </select>
     
     <!-- 코드 분석 결과로 MBTI 점수 조회 -->
     <select id="selectCodeAnalysisScores" parameterType="Long" resultType="hashmap">
         SELECT 
-            ARCHITECT_SCORE,
-            BUILDER_SCORE,
-            INDIVIDUAL_SCORE,
-            TEAM_SCORE
-        FROM code_analysis_result
-        WHERE USER_ID = (
-            SELECT user_id 
-            FROM users_mbti_types 
-            WHERE type_id = #{typeId}
-        )
-        ORDER BY CREATED_AT DESC
+            COALESCE(development_style_score, 0) AS development_style_score,
+            COALESCE(collaboration_score, 0) AS collaboration_score,
+            COALESCE(confidence_score, 0.0) AS confidence_score
+        FROM code_analyses
+        WHERE type_id = #{typeId}
+        ORDER BY created_at DESC
         LIMIT 1
     </select>
     

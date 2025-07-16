@@ -36,7 +36,7 @@ public interface SurveyService {
      * @param typeId 타입 ID
      * @return MBTI 타입 정보
      */
-    MbtiCalculationResultVo getUserMbtiType(Long typeId);
+    MbtiCalculationResultVo getUserMbtiType(Long userId);
     
     /**
      * 설문 완료 여부 확인
