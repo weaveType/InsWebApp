@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.demo.proworks.domain.survey">
+
+    <!-- 활성화된 설문 질문 목록 조회 -->
+    <select id="selectActiveQuestions" resultType="com.demo.proworks.domain.survey.vo.SurveyQuestionVo">
+        SELECT 
+            question_id AS questionId,
+            response_id AS responseId,
+            axis,
+            question_text AS questionText,
+            options,
+            is_active AS isActive
+        FROM survey_questions
+        WHERE is_active = 1
+        ORDER BY axis, question_id
+    </select>
+    
+    <!-- 설문 응답 저장 -->
+    <insert id="insertSurveyResponse" parameterType="com.demo.proworks.domain.survey.vo.SurveyResponseVo">
+        INSERT INTO survey_responses (
+            type_id,
+            responses,
+            create_at,
+            update_at
+        ) VALUES (
+            #{typeId},
+            #{responses},
+            NOW(),
+            NOW()
+        )
+        <selectKey keyProperty="responseId" resultType="Long" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+    </insert>
+    
+    <!-- 사용자의 최신 설문 응답 조회 -->
+    <select id="selectLatestResponse" parameterType="Long" resultType="com.demo.proworks.domain.survey.vo.SurveyResponseVo">
+        SELECT 
+            response_id AS responseId,
+            type_id AS typeId,
+            responses,
+            create_at AS createAt,
+            update_at AS updateAt
+        FROM survey_responses
+        WHERE type_id = #{typeId}
+        ORDER BY create_at DESC
+        LIMIT 1
+    </select>
+    
+    <!-- MBTI 타입 정보 저장/업데이트 -->
+    <update id="upsertMbtiType" parameterType="com.demo.proworks.domain.survey.vo.MbtiCalculationResultVo">
+        INSERT INTO users_mbti_types (
+            type_id,
+            type_code,
+            A_Bscore,
+            R_Iscore,
+            S_Tscore,
+            D_Fscore,
+            analyed_at
+        ) VALUES (
+            #{typeId},
+            #{typeCode},
+            #{aBScore},
+            #{rIScore},
+            #{sTScore},
+            #{dFScore},
+            NOW()
+        )
+        ON DUPLICATE KEY UPDATE
+            type_code = VALUES(type_code),
+            A_Bscore = VALUES(A_Bscore),
+            R_Iscore = VALUES(R_Iscore),
+            S_Tscore = VALUES(S_Tscore),
+            D_Fscore = VALUES(D_Fscore),
+            analyed_at = NOW()
+    </update>
+    
+    <!-- 사용자의 MBTI 타입 조회 -->
+    <select id="selectMbtiType" parameterType="Long" resultType="com.demo.proworks.domain.survey.vo.MbtiCalculationResultVo">
+        SELECT 
+            type_id AS typeId,
+            type_code AS typeCode,
+            A_Bscore AS aBScore,
+            R_Iscore AS rIScore,
+            S_Tscore AS sTScore,
+            D_Fscore AS dFScore
+        FROM users_mbti_types
+        WHERE type_id = #{typeId}
+    </select>
+    
+    <!-- 코드 분석 결과로 MBTI 점수 조회 -->
+    <select id="selectCodeAnalysisScores" parameterType="Long" resultType="hashmap">
+        SELECT 
+            ARCHITECT_SCORE,
+            BUILDER_SCORE,
+            INDIVIDUAL_SCORE,
+            TEAM_SCORE
+        FROM code_analysis_result
+        WHERE USER_ID = (
+            SELECT user_id 
+            FROM users_mbti_types 
+            WHERE type_id = #{typeId}
+        )
+        ORDER BY CREATED_AT DESC
+        LIMIT 1
+    </select>
+    
+</mapper>

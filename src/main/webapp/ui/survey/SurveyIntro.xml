@@ -1,31 +1,86 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<html xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:ev="http://www.w3.org/2001/xml-events"
-    xmlns:w2="http://www.inswave.com/websquare" 
-    xmlns:xf="http://www.w3.org/2002/xforms">
-    
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
     <head meta_screenName="weaveType 개발자 유형 검사">
         <w2:type>COMPONENT</w2:type>
-        <w2:buildDate/>
-        <w2:MSA/>
+        <w2:buildDate />
+        <w2:MSA />
         <xf:model>
             <w2:dataCollection baseNode="map">
-                <w2:dataMap baseNode="map" id="dma_survey_intro">
+                <w2:dataMap baseNode="map" id="dma_userInfo">
                     <w2:keyInfo>
-                        <w2:key id="isReady" name="준비상태" dataType="text" value="true"></w2:key>
+                        <w2:key id="typeId" name="타입ID" dataType="number" value="1"></w2:key>
+                        <w2:key id="userId" name="사용자ID" dataType="text"></w2:key>
+                    </w2:keyInfo>
+                </w2:dataMap>
+                <w2:dataMap baseNode="map" id="dma_checkCompleted">
+                    <w2:keyInfo>
+                        <w2:key id="isCompleted" name="완료여부" dataType="boolean"></w2:key>
                     </w2:keyInfo>
                 </w2:dataMap>
             </w2:dataCollection>
+            <w2:submission id="sbm_checkCompleted" ref="data:json,dma_userInfo"
+                target="data:json,dma_checkCompleted" action="SV0001Check" method="post" mediatype="application/json"
+                encoding="UTF-8" instance="" replace="" errorHandler="" customHandler="" mode="asynchronous" processMsg="" ev:submitdone="scwin.sbm_checkCompleted_callback"
+                ev:submiterror="" abortTrigger="">
+            </w2:submission>
         </xf:model>
-        <w2:layoutInfo/>
-        <w2:publicInfo method=""/>
-        
+        <w2:layoutInfo />
+        <w2:publicInfo method="" />
         <script type="text/javascript"><![CDATA[
             scwin.onpageload = function() {
-                console.log("설문조사 안내 페이지 로드됨");
-                
-                // 로딩 애니메이션 시작
-                setTimeout(function() {
+                console.log("SurveyIntro.xml: Page loaded.");
+
+                // Check if WebSquare.cookie is available
+                if (typeof WebSquare !== 'undefined' && WebSquare.cookie) {
+                    console.log("WebSquare.cookie is available.");
+                    var userInfoCookie = WebSquare.cookie.getCookie("userInfo");
+                    console.log("SurveyIntro.xml: userInfoCookie raw: ", userInfoCookie);
+
+                    var userInfo = null;
+                    if (userInfoCookie) {
+                        try {
+                            userInfo = JSON.parse(userInfoCookie);
+                            console.log("SurveyIntro.xml: userInfo parsed: ", userInfo);
+                        } catch (e) {
+                            console.error("SurveyIntro.xml: Error parsing userInfo cookie:", e);
+                        }
+                    }
+
+                    if (userInfo && userInfo.userId) { 
+                        dma_userInfo.set("userId", userInfo.userId);
+                        console.log("SurveyIntro.xml: User info found, userId:", userInfo.userId);
+                        // typeId는 백엔드에서 userId로 조회해야 함. 여기서는 임시로 1로 설정.
+                        dma_userInfo.set("typeId", 1); 
+                        $c.sbm.execute(sbm_checkCompleted);
+                    } else {
+                        console.log("SurveyIntro.xml: User info or typeId not found in cookie. Using temporary typeId.");
+                        // Fallback for testing or if user info is not in cookie
+                        var loadingElement = document.querySelector('.loading-animation');
+                        if(loadingElement) loadingElement.style.display = 'none';
+                        alert("테스트를 위해 임시 typeId를 사용합니다. 실제 사용자 정보가 없습니다.");
+                        dma_userInfo.set("typeId", 1); // Temporary value for testing
+                        $c.sbm.execute(sbm_checkCompleted);
+                    }
+                } else {
+                    console.error("SurveyIntro.xml: WebSquare.cookie is not available. Using temporary typeId.");
+                    // Fallback if WebSquare.cookie is not available
+                    var loadingElement = document.querySelector('.loading-animation');
+                    if(loadingElement) loadingElement.style.display = 'none';
+                    alert("WebSquare.cookie를 찾을 수 없습니다. 테스트를 위해 임시 typeId를 사용합니다.");
+                    dma_userInfo.set("typeId", 1); // Temporary value for testing
+                    $c.sbm.execute(sbm_checkCompleted);
+                }
+            };
+
+            // 설문 완료 여부 확인 콜백
+            scwin.sbm_checkCompleted_callback = function(e) {
+                var result = e.originalResponse.isCompleted;
+                console.log("SurveyIntro.xml: Survey completion status:", result);
+
+                if (result === true) {
+                    alert("이미 설문 검사를 완료했습니다. 결과 페이지로 이동합니다.");
+                    var typeId = dma_userInfo.get("typeId");
+                    $p.url({ "url": "SurveyResult.xml", "data": { "typeId": typeId } });
+                } else {
                     var loadingElement = document.querySelector('.loading-animation');
                     var contentElement = document.querySelector('.intro-content');
                     
@@ -33,25 +88,26 @@
                         loadingElement.style.display = 'none';
                         contentElement.classList.add('show');
                     }
-                }, 2000); // 2초 후 로딩 완료
+                }
             };
             
             // 설문조사 시작 버튼 클릭
             scwin.btn_start_survey_onclick = function() {
-                console.log("설문조사 시작");
-                $p.url("SurveyTest.xml");
+                console.log("SurveyIntro.xml: Starting survey.");
+                var typeId = dma_userInfo.get("typeId");
+                $p.url({ "url": "SurveyTest.xml", "data": { "typeId": typeId } });
             };
             
             // 나중에 하기 버튼 클릭  
             scwin.btn_later_onclick = function() {
-                console.log("나중에 하기 선택");
-                // 메인 페이지나 이전 페이지로 이동
+                console.log("SurveyIntro.xml: Later button clicked.");
                 alert("나중에 마이페이지에서 언제든 진행하실 수 있습니다.");
-                // $p.url("Main.xml"); // 메인 페이지로 이동
+                // Example: $p.url("main.xml");
             };
         ]]></script>
         
         <style type="text/css"><![CDATA[
+            /* 스타일은 기존과 동일하게 유지 */
             .main-container {
                 background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
                 min-height: 100vh;
@@ -364,7 +420,7 @@
                 <!-- 로딩 애니메이션 -->
                 <xf:group class="loading-animation">
                     <xf:group class="spinner"></xf:group>
-                    <w2:textbox class="loading-text" label="하나씩 차근차근 주어진 과제를 응시해 주세요." tagname="div"></w2:textbox>
+                    <w2:textbox class="loading-text" label="사용자 정보를 확인하는 중입니다..." tagname="div"></w2:textbox>
                 </xf:group>
                 
                 <!-- 메인 콘텐츠 -->
