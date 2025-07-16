@@ -27,5 +27,5 @@ public interface EmailService {
      * @param sendEmailVo 이메일 전송 정보
      * @return CompletableFuture<Integer> 성공한 이메일 전송 개수
      */
-    CompletableFuture<Integer> sendBulkEmailsAsync(SendEmailVo sendEmailVo);
+    CompletableFuture<Integer> sendToEmails(SendEmailVo sendEmailVo);
 }

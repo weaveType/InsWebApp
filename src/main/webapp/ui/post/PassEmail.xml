@@ -348,12 +348,6 @@ scwin.btn_sendEmail_onclick = function (e) {
         return;
     }
 
-    // 디버깅: DataList 데이터 확인
-    console.log("=== 전송 전 DataList 데이터 확인 ===");
-    console.log("DataList 행 수:", dlt_sendEmailInfoListVo.getRowCount());
-    console.log("DataList 전체 데이터:", dlt_sendEmailInfoListVo.getAllJSON());
-    console.log("DataList 첫 번째 행:", dlt_sendEmailInfoListVo.getRowJSON(0));
-
     // 이메일 내용을 DataMap에 설정
     dma_sendEmailVo.set("emailContent", emailContent);
 
@@ -362,18 +356,11 @@ scwin.btn_sendEmail_onclick = function (e) {
 
     // DataList 데이터를 DataMap에 설정
     dma_sendEmailVo.set("sendEmailInfoListVo", dlt_sendEmailInfoListVo.getAllJSON());
-
-    // 디버깅: DataMap 데이터 확인
-    console.log("=== 전송 전 DataMap 데이터 확인 ===");
-    console.log("DataMap 전체 데이터:", dma_sendEmailVo.getJSON());
     
-
     // 확인 창 표시
     var promise = $c.win.confirm("선택된 " + dlt_sendEmailInfoListVo.getRowCount() + "명에게 합격 메일을 발송하시겠습니까?");
     promise.then(function (result) {
         if (result) {
-            // submission 실행
-            console.log("=== Submission 실행 ===");
             $c.sbm.execute(sbm_sendPassEmail);
         }
     });

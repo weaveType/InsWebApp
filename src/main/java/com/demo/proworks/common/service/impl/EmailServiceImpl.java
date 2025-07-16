@@ -70,10 +70,9 @@ public class EmailServiceImpl implements EmailService {
      */
     @Async("emailTaskExecutor")
     @Override
-    public CompletableFuture<Integer> sendBulkEmailsAsync(SendEmailVo sendEmailVo) {
+    public CompletableFuture<Integer> sendToEmails(SendEmailVo sendEmailVo) {
         System.out.println("=== 일괄 이메일 전송 시작 ===");
         System.out.println("sendEmailVo : " + sendEmailVo.toString());
-        System.out.println("getSendEmailInfoListVo : " + sendEmailVo.getSendEmailInfoListVo());
         if (sendEmailVo == null) {
             System.err.println("❌ SendEmailVo가 null입니다.");
             return CompletableFuture.completedFuture(0);
