@@ -39,16 +39,11 @@
             flex-shrink: 0;
         }
 
-        .main-container {
-            display: flex;
-        }
-
         .sidebar-title {
             font-size: clamp(18px, 3vw, 20px);
             font-weight: bold;
             color: #333;
             margin-bottom: 30px;
-            margin-left: 0px; /* 제목 좌측 여백 제거 */
         }
 
         .sidebar-menu {
@@ -122,115 +117,6 @@
             margin-left: 8px;
         }
 
-        /* 메인 콘텐츠 */
-        .main-content {
-            flex: 1;
-            padding: min(30px, 4vw);
-            overflow-y: auto;
-        }
-
-        /* 사용자 프로필 헤더 */
-        .profile-header {
-            background-color: white;
-            border-radius: 12px;
-            padding: min(30px, 4vw);
-            margin-bottom: 24px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-
-        .profile-info {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            flex: 1;
-            min-width: 0;
-        }
-
-        .profile-avatar {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            background: #f0f0f0; /* 이미지 로딩 전 배경색 */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            overflow: hidden; /* 이미지가 원형 영역을 벗어나지 않도록 */
-        }
-
-        .profile-career {
-            margin: 4px 0 8px 0;
-        }
-
-        .profile-details h2 {
-            font-size: clamp(20px, 3.5vw, 24px);
-            font-weight: bold;
-            color: #333;
-            margin: 0 0 4px 0; /* 하단 마진 줄임 */
-        }
-
-        .status-badge {
-            background-color: #28a745;
-            color: white;
-            padding: 4px 8px;
-            border-radius: 12px;
-            font-size: clamp(11px, 1.5vw, 12px);
-            font-weight: 500;
-        }
-
-        /* 매칭 토글 */
-        .matching-toggle {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            flex-shrink: 0;
-        }
-
-        .toggle-label {
-            font-size: clamp(14px, 2vw, 16px);
-            font-weight: 600;
-            color: #333;
-        }
-
-        .toggle-switch {
-            position: relative;
-            width: 60px;
-            height: 30px;
-            background-color: #28a745;
-            border-radius: 15px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        .toggle-switch.off {
-            background-color: #ccc;
-        }
-
-        .toggle-switch::after {
-            content: '';
-            position: absolute;
-            top: 3px;
-            left: 3px;
-            width: 24px;
-            height: 24px;
-            background-color: white;
-            border-radius: 50%;
-            transition: transform 0.3s ease;
-        }
-
-        .toggle-switch.off::after {
-            transform: translateX(0);
-        }
-
-        .toggle-switch:not(.off)::after {
-            transform: translateX(30px);
-        }
-        
         /* 반응형 디자인 */
         @media (max-width: 1024px) {
             .main-container {
@@ -326,15 +212,15 @@ scwin.btn_userUpdate_onclick = function (e) {
 				<!-- 사이드바 -->
 				<aside class="sidebar">
 					<w2:textbox label="내 정보" class="menu-category-title"></w2:textbox>
-					<w2:anchor id="menu_profile" class="menu-item active incomplete" ev:onclick="scwin.menu_profile_onclick">
-						<xf:label><![CDATA[프로필]]></xf:label>
-					</w2:anchor>
-					<w2:anchor id="menu_history" class="menu-item" ev:onclick="scwin.menu_history_onclick">
-						<xf:label><![CDATA[지원현황]]></xf:label>
-					</w2:anchor>
-					<w2:anchor id="menu_interest" class="menu-item">
-						<xf:label><![CDATA[관심기업]]></xf:label>
-					</w2:anchor>
+					<xf:group id="menu_profile" class="menu-item active incomplete" ev:onclick="scwin.menu_profile_onclick">
+						<w2:textbox label="프로필" style="background:transparent; border:none; pointer-events: none;"></w2:textbox>
+					</xf:group>
+					<xf:group id="menu_history" class="menu-item" ev:onclick="scwin.menu_history_onclick">
+						<w2:textbox label="지원현황" style="background:transparent; border:none; pointer-events: none;"></w2:textbox>
+					</xf:group>
+					<xf:group id="menu_interest" class="menu-item" ev:onclick="scwin.menu_interest_onclick">
+						<w2:textbox label="관심기업" style="background:transparent; border:none; pointer-events: none;"></w2:textbox>
+					</xf:group>
 				</aside>
 
 				<!-- 메인 콘텐츠 -->
