@@ -237,11 +237,11 @@ SELECT	/* QueryID : com.demo.proworks.domain.user.getDevMbti */
             u.user_id as accountId,
             u.name,
             ui.career as career,
-            ui.current_position as current_position,
-            ui.year_salary year_salary,
-            ui.is_mbti_checked is_mbti_checked,
-            ui.is_code_checked is_code_checked,
-            ui.preferred_locations
+            ui.current_position as currentPosition,
+            ui.year_salary as yearSalary,
+            ui.is_mbti_checked as isMbtiChecked,
+            ui.is_code_checked as isCodeChecked,
+            ui.preferred_locations as preferredLocations
         FROM Users u
         LEFT JOIN users_info ui ON u.user_id = ui.user_id  
         WHERE u.user_id = #{accountId}

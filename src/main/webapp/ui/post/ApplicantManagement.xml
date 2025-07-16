@@ -263,155 +263,6 @@ scwin.fail_btn_onclick = function (e) {
 				<xf:group class="control-bar"
 					style="display:flex;justify-content:space-between;align-items:center;max-width:1100px;width:94.92%;padding:0 min(30px, 4vw);">
 					<xf:group style="display:flex; align-items:center; gap:10px;">
-						<w2:selectbox id="mbtiFilter" style="width: 120px;height: 32px;" submenuSize="auto" appearance="minimal" direction="auto"
-							chooseOption="true" chooseOptionLabel="MBTI 필터">
-							<w2:choices>
-								<w2:item>
-									<w2:label><![CDATA[ENTJ]]></w2:label>
-									<w2:value><![CDATA[entj]]></w2:value>
-								</w2:item>
-								<w2:item>
-									<w2:label><![CDATA[INFP]]></w2:label>
-									<w2:value><![CDATA[infp]]></w2:value>
-								</w2:item>
-								<w2:item>
-									<w2:label><![CDATA[ENFP]]></w2:label>
-									<w2:value><![CDATA[enfp]]></w2:value>
-								</w2:item>
-								<w2:item>
-									<w2:label><![CDATA[ISFJ]]></w2:label>
-									<w2:value><![CDATA[isfj]]></w2:value>
-								</w2:item>
-								<w2:item>
-									<w2:label><![CDATA[ENTP]]></w2:label>
-									<w2:value><![CDATA[entp]]></w2:value>
-								</w2:item>
-								<w2:item>
-									<w2:label><![CDATA[INTJ]]></w2:label>
-									<w2:value><![CDATA[intj]]></w2:value>
-								</w2:item>
-								<w2:item>
-									<w2:label><![CDATA[ESTP]]></w2:label>
-									<w2:value><![CDATA[estp]]></w2:value>
-								</w2:item>
-								<w2:item>
-									<w2:label><![CDATA[ISFP]]></w2:label>
-									<w2:value><![CDATA[isfp]]></w2:value>
-								</w2:item>
-								<w2:item>
-									<w2:label><![CDATA[ESFJ]]></w2:label>
-									<w2:value><![CDATA[esfj]]></w2:value>
-								</w2:item>
-							</w2:choices>
-						</w2:selectbox>
-
-						<!-- 기술스택 필터를 MultiSelect로 변경 -->
-						<w2:multiselect id="techStackFilter" style="width: 200px;height: 32px;" separator=" " appearance="minimal">
-							<w2:item>
-								<w2:label><![CDATA[Spring Boot]]></w2:label>
-								<w2:value><![CDATA[springboot]]></w2:value>
-							</w2:item>
-							<w2:item>
-								<w2:label><![CDATA[Spring]]></w2:label>
-								<w2:value><![CDATA[spring]]></w2:value>
-							</w2:item>
-							<w2:item>
-								<w2:label><![CDATA[React]]></w2:label>
-								<w2:value><![CDATA[react]]></w2:value>
-							</w2:item>
-							<w2:item>
-								<w2:label><![CDATA[Django]]></w2:label>
-								<w2:value><![CDATA[django]]></w2:value>
-							</w2:item>
-							<w2:item>
-								<w2:label><![CDATA[Vue]]></w2:label>
-								<w2:value><![CDATA[vue]]></w2:value>
-							</w2:item>
-							<w2:item>
-								<w2:label><![CDATA[JavaScript]]></w2:label>
-								<w2:value><![CDATA[js]]></w2:value>
-							</w2:item>
-							<w2:item>
-								<w2:label><![CDATA[TypeScript]]></w2:label>
-								<w2:value><![CDATA[typescript]]></w2:value>
-							</w2:item>
-							<w2:item>
-								<w2:label><![CDATA[Node.js]]></w2:label>
-								<w2:value><![CDATA[nodejs]]></w2:value>
-							</w2:item>
-							<w2:item>
-								<w2:label><![CDATA[Angular]]></w2:label>
-								<w2:value><![CDATA[angular]]></w2:value>
-							</w2:item>
-							<w2:item>
-								<w2:label><![CDATA[Next.js]]></w2:label>
-								<w2:value><![CDATA[next.js]]></w2:value>
-							</w2:item>
-							<w2:item>
-								<w2:label><![CDATA[Svelte]]></w2:label>
-								<w2:value><![CDATA[svelte]]></w2:value>
-							</w2:item>
-							<w2:item>
-								<w2:label><![CDATA[Redis]]></w2:label>
-								<w2:value><![CDATA[redis]]></w2:value>
-							</w2:item>
-							<w2:item>
-								<w2:label><![CDATA[PostgreSQL]]></w2:label>
-								<w2:value><![CDATA[postgresql]]></w2:value>
-							</w2:item>
-							<w2:item>
-								<w2:label><![CDATA[MySQL]]></w2:label>
-								<w2:value><![CDATA[mysql]]></w2:value>
-							</w2:item>
-							<w2:item>
-								<w2:label><![CDATA[MongoDB]]></w2:label>
-								<w2:value><![CDATA[mongodb]]></w2:value>
-							</w2:item>
-							<w2:item>
-								<w2:label><![CDATA[SQLite]]></w2:label>
-								<w2:value><![CDATA[sqlite]]></w2:value>
-							</w2:item>
-							<w2:item>
-								<w2:label><![CDATA[FastAPI]]></w2:label>
-								<w2:value><![CDATA[fastapi]]></w2:value>
-							</w2:item>
-							<w2:item>
-								<w2:label><![CDATA[NestJS]]></w2:label>
-								<w2:value><![CDATA[nestjs]]></w2:value>
-							</w2:item>
-							<w2:item>
-								<w2:label><![CDATA[Express]]></w2:label>
-								<w2:value><![CDATA[express]]></w2:value>
-							</w2:item>
-							<w2:item>
-								<w2:label><![CDATA[JPA]]></w2:label>
-								<w2:value><![CDATA[jpa]]></w2:value>
-							</w2:item>
-							<w2:item>
-								<w2:label><![CDATA[SQLAlchemy]]></w2:label>
-								<w2:value><![CDATA[sqlalchemy]]></w2:value>
-							</w2:item>
-							<w2:item>
-								<w2:label><![CDATA[Redux]]></w2:label>
-								<w2:value><![CDATA[redux]]></w2:value>
-							</w2:item>
-							<w2:item>
-								<w2:label><![CDATA[Tailwind]]></w2:label>
-								<w2:value><![CDATA[tailwind]]></w2:value>
-							</w2:item>
-							<w2:item>
-								<w2:label><![CDATA[RabbitMQ]]></w2:label>
-								<w2:value><![CDATA[rabbitmq]]></w2:value>
-							</w2:item>
-							<w2:item>
-								<w2:label><![CDATA[Kafka]]></w2:label>
-								<w2:value><![CDATA[kafka]]></w2:value>
-							</w2:item>
-							<w2:item>
-								<w2:label><![CDATA[Elasticsearch]]></w2:label>
-								<w2:value><![CDATA[elasticsearch]]></w2:value>
-							</w2:item>
-						</w2:multiselect>
 
 						<!-- 상태 필터 추가 -->
 						<w2:selectbox id="statusFilter" style="width: 130px;height: 32px;" submenuSize="auto" appearance="minimal"
@@ -422,16 +273,8 @@ scwin.fail_btn_onclick = function (e) {
 									<w2:value><![CDATA[서류검토]]></w2:value>
 								</w2:item>
 								<w2:item>
-									<w2:label><![CDATA[면접대기]]></w2:label>
-									<w2:value><![CDATA[면접대기]]></w2:value>
-								</w2:item>
-								<w2:item>
-									<w2:label><![CDATA[진행중]]></w2:label>
-									<w2:value><![CDATA[진행중]]></w2:value>
-								</w2:item>
-								<w2:item>
-									<w2:label><![CDATA[합격]]></w2:label>
-									<w2:value><![CDATA[합격]]></w2:value>
+									<w2:label><![CDATA[서류합격]]></w2:label>
+									<w2:value><![CDATA[서류합격]]></w2:value>
 								</w2:item>
 								<w2:item>
 									<w2:label><![CDATA[불합격]]></w2:label>
@@ -439,18 +282,18 @@ scwin.fail_btn_onclick = function (e) {
 								</w2:item>
 							</w2:choices>
 						</w2:selectbox>
-
-						<w2:textbox id="selectedCount" label="4명 선택됨" style="color:#6c757d; font-size:14px; border:none; background:transparent;" />
 					</xf:group>
 
 					<xf:group class="button-group" style="display:flex; align-items:center; gap:10px;">
+
 						<xf:trigger class="btn-approve"
 							style="background-color:#28a745; color:white; border:none; padding:8px 16px; border-radius:4px; margin-right:10px;" type="button"
 							id="pass_btn" ev:onclick="scwin.pass_btn_onclick">
 							<xf:label><![CDATA[✓ 일괄 합격]]></xf:label>
 						</xf:trigger>
 						<xf:trigger class="btn-reject"
-							style="background-color:#dc3545; color:white; border:none; padding:8px 16px; border-radius:4px;" type="button" id="fail_btn" ev:onclick="scwin.fail_btn_onclick">
+							style="background-color:#dc3545; color:white; border:none; padding:8px 16px; border-radius:4px;" type="button" id="fail_btn"
+							ev:onclick="scwin.fail_btn_onclick">
 							<xf:label><![CDATA[✗ 일괄 불합격]]></xf:label>
 						</xf:trigger>
 					</xf:group>
