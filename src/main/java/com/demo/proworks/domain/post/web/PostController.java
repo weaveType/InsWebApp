@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.demo.proworks.cmmn.ProworksUserHeader;
 import com.demo.proworks.domain.post.service.PostService;
 import com.demo.proworks.domain.post.vo.PostVo;
+import com.demo.proworks.domain.post.vo.SendEmailInfoListVo;
 import com.demo.proworks.domain.post.vo.SendEmailVo;
 import com.demo.proworks.domain.post.vo.JobApplicationVo;
 import com.demo.proworks.domain.post.vo.PostListVo;
@@ -536,7 +537,7 @@ public class PostController {
 	}
 
 	/**
-	 * 이메일을 일괄전송 처리한다
+	 * 지원자에게 이메일을 일괄전송 처리한다
 	 *
 	 * @param sendEmailVo 합불여부, 메일 전송할 email, 메일 내용
 	 * @return 이메일 전송 실패 ID

@@ -1,0 +1,9 @@
+{
+   "charset": "UTF-8",
+   "reqMethod": "POST",
+   "serviceURL": "http://localhost:9093/InsWebApp/POS0001Send.pwkjson",
+   "contentType": "application/json",
+   "requestContent": "{\n   \"sendEmailVo\": {\n      \"isPassed\": \"SampleValue_0\",\n      \"emailContent\": \"SampleValue_1\"\n   },\n   \"dma_sendEmailVo\": {\n      \"isPassed\": \"SampleValue_0\",\n      \"emailContent\": \"SampleValue_1\"\n   },\n   \"sendEmailInfoListVo\": [\n      {\n         \"accountId\": \"data_0_2\",\n         \"name\": \"data_0_1\",\n         \"email\": \"data_0_0\"\n      },\n      {\n         \"accountId\": \"data_1_2\",\n         \"name\": \"data_1_1\",\n         \"email\": \"data_1_0\"\n      }\n   ],\n   \"dlt_sendEmailInfoListVo\": [\n      {\n         \"accountId\": \"data_0_2\",\n         \"name\": \"data_0_1\",\n         \"email\": \"data_0_0\"\n      },\n      {\n         \"accountId\": \"data_1_2\",\n         \"name\": \"data_1_1\",\n         \"email\": \"data_1_0\"\n      }\n   ]\n}",
+   "responseContent": "{\"elHeader\":{\"reqUrl\":\"/InsWebApp/POS0001Send.pwkjson\",\"traceId\":\"2025071610422220700030859\",\"serviceKey\":\"POS0001Send\",\"bArgResolveParsing\":false,\"resSuc\":false,\"resMsg\":\"세션이 존재하지 않습니다.\",\"resCode\":\"ERROR.LOGIN.004\",\"validateSuc\":false,\"saveTokenKey\":false,\"removeTokenKey\":false,\"locale\":\"ko\",\"language\":\"ko\",\"startTime\":0,\"svcTimeOut\":0,\"inOutDataEnc\":true,\"dbDataEnc\":false,\"gTraceId\":\"2025071610422220700030859\",\"fieldApplyAttr\":true,\"simurate\":false,\"deferredSvc\":false,\"centerCutSvc\":false}}",
+   "sendTime": "2025-07-16 10:42:22"
+}

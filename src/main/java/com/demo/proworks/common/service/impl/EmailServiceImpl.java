@@ -72,7 +72,8 @@ public class EmailServiceImpl implements EmailService {
     @Override
     public CompletableFuture<Integer> sendBulkEmailsAsync(SendEmailVo sendEmailVo) {
         System.out.println("=== 일괄 이메일 전송 시작 ===");
-        
+        System.out.println("sendEmailVo : " + sendEmailVo.toString());
+        System.out.println("getSendEmailInfoListVo : " + sendEmailVo.getSendEmailInfoListVo());
         if (sendEmailVo == null) {
             System.err.println("❌ SendEmailVo가 null입니다.");
             return CompletableFuture.completedFuture(0);
@@ -85,8 +86,7 @@ public class EmailServiceImpl implements EmailService {
         }
 
         String emailContent = sendEmailVo.getEmailContent();
-        boolean isPassed = sendEmailVo.isIsPassed();
-        
+        boolean isPassed = sendEmailVo.getIsPassed().equals("Y") ? true : false;
         // 합격/불합격에 따른 제목 설정
         String subject = isPassed ? "[합격] 채용 결과 안내" : "[불합격] 채용 결과 안내";
         
