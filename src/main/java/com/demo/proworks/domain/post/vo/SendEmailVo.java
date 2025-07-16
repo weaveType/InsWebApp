@@ -16,8 +16,8 @@ public class SendEmailVo extends com.demo.proworks.cmmn.ProworksCommVO {
     @ElDtoField(logicalName = "공고정보", physicalName = "sendEmailInfoListVo", type = "", typeKind = "List", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
     private java.util.List<com.demo.proworks.domain.post.vo.SendEmailInfoListVo> sendEmailInfoListVo;
 
-    @ElDtoField(logicalName = "합불여부", physicalName = "isPassed", type = "boolean", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
-    private boolean isPassed;
+    @ElDtoField(logicalName = "합불여부", physicalName = "isPassed", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private String isPassed;
 
     @ElDtoField(logicalName = "메일 내용", physicalName = "emailContent", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
     private String emailContent;
@@ -33,12 +33,13 @@ public class SendEmailVo extends com.demo.proworks.cmmn.ProworksCommVO {
     }
 
     @ElVoField(physicalName = "isPassed")
-    public boolean isIsPassed(){
-        return isPassed;
+    public String getIsPassed(){
+        String ret = this.isPassed;
+        return ret;
     }
 
     @ElVoField(physicalName = "isPassed")
-    public void setIsPassed(boolean isPassed){
+    public void setIsPassed(String isPassed){
         this.isPassed = isPassed;
     }
 

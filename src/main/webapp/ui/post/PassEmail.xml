@@ -23,6 +23,18 @@
             	</w2:dataList>
             </w2:dataCollection>
             <w2:workflowCollection/>
+            <xf:submission id="sbm_sendPassEmail" 
+                ref='data:json,["dma_sendEmailVo","dlt_sendEmailInfoListVo",{"id":"dma_sendEmailVo","key":"sendEmailVo"},{"id":"dlt_sendEmailInfoListVo","key":"emailInfoList"}]'
+                target=""
+                action="/InsWebApp/POS0001Send.pwkjson"
+                method="post"
+                mediatype="application/json"
+                encoding="UTF-8"
+                mode="asynchronous"
+                processMsg="합격 메일을 발송 중입니다."
+                ev:submitdone="scwin.sbm_sendPassEmail_submitdone"
+                ev:submiterror="">
+            </xf:submission>
         </xf:model>
         <w2:layoutInfo/>
         <w2:publicInfo method=""/>
@@ -242,7 +254,21 @@
 scwin.onpageload = function() {
     // 기본 템플릿 설정
     scwin.setDefaultTemplates();
-    console.log($c.data.getParameter("selectedUsers"));
+    
+    // 전달받은 데이터 확인 및 설정
+    var selectedUsers = $c.data.getParameter("selectedUsers");
+    console.log("전달받은 데이터:", selectedUsers);
+    
+    if (selectedUsers && selectedUsers.length > 0) {
+        // DataList에 전달받은 사용자 데이터 설정
+        dlt_sendEmailInfoListVo.setJSON( selectedUsers );
+        
+        // 합격 여부를 'Y'로 설정
+        dma_sendEmailVo.set("isPassed", "Y");
+    } else {
+        console.warn("전달받은 사용자 데이터가 없습니다.");
+        $c.win.alert("전달받은 사용자 데이터가 없습니다.");
+    }
 };
 
 // 기본 이메일 템플릿 설정
@@ -292,8 +318,47 @@ scwin.btn_close_onclick = function (e) {
     $p.closePopup();
 };
 
-scwin.btn_sendEmail_onclick = function (e) {
+// 합격 메일 발송 완료 콜백
+scwin.sbm_sendPassEmail_submitdone = function(e) {
+    // error 수신시
+    var elHeader = e.responseJSON.elHeader;
+    if (elHeader == null || elHeader == "" || elHeader == "undefined" || elHeader.resSuc == false) {
+        $c.win.alert(`에러코드: ${elHeader.resCode}\n에러메시지: ${elHeader.resMsg}`);
+        return false;
+    } else {
+        // 성공 메시지 출력
+        $c.win.alert("합격 메일이 성공적으로 발송되었습니다.");
+        
+        // 팝업 닫기
+        $p.closePopup();
+    }
+};
 
+scwin.btn_sendEmail_onclick = function (e) {
+    // 이메일 내용 유효성 검사
+    var emailContent = txtPassTemplate.getValue();
+    if (!emailContent || emailContent.trim() === "") {
+        $c.win.alert("이메일 내용을 입력해주세요.");
+        return;
+    }
+    
+    // DataList 데이터 확인
+    if (dlt_sendEmailInfoListVo.getRowCount() === 0) {
+        $c.win.alert("발송할 대상자가 없습니다.");
+        return;
+    }
+    
+    // 이메일 내용을 DataMap에 설정
+    dma_sendEmailVo.set("emailContent", emailContent);
+    
+    // 확인 창 표시
+    var promise = $c.win.confirm("선택된 " + dlt_sendEmailInfoListVo.getRowCount() + "명에게 합격 메일을 발송하시겠습니까?");
+    promise.then(function(result) {
+        if (result) {
+            // submission 실행
+            $c.sbm.execute(sbm_sendPassEmail);
+        }
+    });
 };
 ]]></script>
     </head>
