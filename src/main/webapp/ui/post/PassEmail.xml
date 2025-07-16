@@ -7,8 +7,35 @@
         <w2:buildDate/>
         <w2:MSA/>
         <xf:model>
-            <w2:dataCollection baseNode="map"/>
+            <w2:dataCollection baseNode="map">
+            	<w2:dataMap baseNode="map" id="dma_sendEmailVo">
+            		<w2:keyInfo>
+            			<w2:key dataType="text" name="합불여부" id="isPassed"></w2:key>
+            			<w2:key dataType="text" name="메일 내용" id="emailContent"></w2:key>
+            			<w2:key dataType="text" name="이메일 정보 리스트" id="sendEmailInfoListVo"></w2:key>
+            		</w2:keyInfo>
+            	</w2:dataMap>
+            	<w2:dataList baseNode="list" repeatNode="map" id="dlt_sendEmailInfoListVo" saveRemovedData="true">
+            		<w2:columnInfo>
+            			<w2:column dataType="text" name="이메일" id="email"></w2:column>
+            			<w2:column dataType="text" name="이름" id="name"></w2:column>
+            			<w2:column dataType="text" name="유저 ID" id="accountId"></w2:column>
+            		</w2:columnInfo>
+            	</w2:dataList>
+            </w2:dataCollection>
             <w2:workflowCollection/>
+            <xf:submission id="sbm_sendPassEmail" 
+                ref='data:json,[{"id":"dma_sendEmailVo","key":"sendEmailVo"}]'
+                target=""
+                action="/InsWebApp/POS0001Send.pwkjson"
+                method="post"
+                mediatype="application/json"
+                encoding="UTF-8"
+                mode="asynchronous"
+                processMsg="합격 메일을 발송 중입니다."
+                ev:submitdone="scwin.sbm_sendPassEmail_submitdone"
+                ev:submiterror="">
+            </xf:submission>
         </xf:model>
         <w2:layoutInfo/>
         <w2:publicInfo method=""/>
@@ -18,18 +45,11 @@
             .main-container {
                 background-color: #ffffff;
                 min-height: 100vh;
-                padding: 40px 20px;
-                max-width: 500px;
-                margin: 0 auto;
+                padding: 0 20px 40px 20px;
+                width: 100%;
                 font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             }
-            
-            /* 헤더 스타일 */
-            .page-header {
-                text-align: center;
-                margin-bottom: 40px;
-            }
-            
+        
             /* 템플릿 섹션 */
             .template-section {
                 background-color: #ffffff;
@@ -73,7 +93,7 @@
             /* 텍스트 영역 스타일 */
             .form-textarea {
                 width: 100%;
-                min-height: 280px;
+                min-height: 240px;
                 padding: 16px;
                 border: 2px solid #e5e7eb;
                 border-radius: 12px;
@@ -100,6 +120,7 @@
                 gap: 12px;
                 flex-wrap: wrap;
                 margin-bottom: 20px;
+                justify-content: center;
             }
             
             .date-label {
@@ -109,25 +130,8 @@
                 white-space: nowrap;
             }
             
-            .date-input {
-                height: 44px;
-                padding: 0 12px;
-                border: 2px solid #e5e7eb;
-                border-radius: 8px;
-                font-size: 14px;
-                color: #333;
-                background-color: #ffffff;
-                transition: all 0.2s ease;
-            }
-            
-            .date-input:focus {
-                outline: none;
-                border-color: #4CAF50;
-                box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
-            }
-            
             .date-apply-btn {
-                height: 44px;
+                height: 30px;
                 padding: 0 16px;
                 border: none;
                 border-radius: 8px;
@@ -248,30 +252,50 @@
         ]]></style>
         
         <script lazy="false" type="text/javascript"><![CDATA[
-scwin.onpageload = function() {
+scwin.onpageload = function () {
     // 기본 템플릿 설정
     scwin.setDefaultTemplates();
+
+    // 전달받은 데이터 확인 및 설정
+    var selectedUsers = $c.data.getParameter("selectedUsers");
+    console.log("전달받은 데이터:", selectedUsers);
+
+    if (selectedUsers && selectedUsers.length > 0) {
+        // DataList에 전달받은 사용자 데이터 설정
+        dlt_sendEmailInfoListVo.setJSON(selectedUsers);
+        console.log(dlt_sendEmailInfoListVo.getAllJSON());
+
+    } else {
+        console.warn("전달받은 사용자 데이터가 없습니다.");
+        $c.win.alert("전달받은 사용자 데이터가 없습니다.");
+    }
 };
 
 // 기본 이메일 템플릿 설정
-scwin.setDefaultTemplates = function() {
+scwin.setDefaultTemplates = function () {
     var passTemplate = "안녕하세요 {{이용자}}님,\n\n" +
-                    "서류심사 결과를 안내드립니다.\n\n" +
-                    "축하드립니다! 서류심사에 통과하셨습니다.\n" +
-                    "면접은 {{날짜}}에 진행할 예정입니다.\n" + 
-                    "아래 링크를 클릭하여 원하는 시간대로 면접을 예약해 주세요.\n" +
-                    "감사합니다.\n" +
-                    "인사팀 드림";
-                    
+        "서류심사 결과를 안내드립니다.\n\n" +
+        "축하드립니다! 서류심사에 통과하셨습니다.\n" +
+        "면접은 {{날짜}}에 진행할 예정입니다.\n" +
+        "아래 링크를 클릭하여 원하는 시간대로 면접을 예약해 주세요.\n" +
+        "감사합니다.\n" +
+        "인사팀 드림";
+
     txtPassTemplate.setValue(passTemplate);
 };
 
 // 합격자 템플릿에 날짜 적용
-scwin.applyDateToPass = function() {
+scwin.applyDateToPass = function () {
     var selectedDate = calPassDate.getValue();
     if (selectedDate) {
+
+        var year = selectedDate.substring(0, 4);
+        var month = selectedDate.substring(4, 6);
+        var day = selectedDate.substring(6, 8);
+        var formattedDate = year + "년" + month + "월" + day + "일";
+
         var template = txtPassTemplate.getValue();
-        var updatedTemplate = template.replace(/\{\{날짜\}\}/g, selectedDate);
+        var updatedTemplate = template.replace(/\{\{날짜\}\}/g, formattedDate);
         txtPassTemplate.setValue(updatedTemplate);
     } else {
         alert("날짜를 선택해주세요.");
@@ -279,27 +303,67 @@ scwin.applyDateToPass = function() {
 };
 
 // 팝업 닫기
-scwin.closePopup = function() {
+scwin.closePopup = function () {
     $p.closePopup();
 };
 
 // 템플릿 초기화
-scwin.resetTemplates = function() {
+scwin.resetTemplates = function () {
     scwin.setDefaultTemplates();
     calPassDate.setValue("");
     calFailDate.setValue("");
 };
 
-scwin.closepop= function (e) {
-    return true;
-};
-
-scwin.close_btn_onclick = function (e) {
-   
-};
-
 scwin.btn_close_onclick = function (e) {
-     window.close();
+    $p.closePopup();
+};
+
+// 합격 메일 발송 완료 콜백
+scwin.sbm_sendPassEmail_submitdone = function (e) {
+    // error 수신시
+    var elHeader = e.responseJSON.elHeader;
+    if (elHeader == null || elHeader == "" || elHeader == "undefined" || elHeader.resSuc == false) {
+        $c.win.alert(`에러코드: ${elHeader.resCode}\n에러메시지: ${elHeader.resMsg}`);
+        return false;
+    } else {
+        // 성공 메시지 출력
+        $c.win.alert("합격 메일이 성공적으로 발송되었습니다.");
+
+        // 팝업 닫기
+        $p.closePopup();
+    }
+};
+
+scwin.btn_sendEmail_onclick = function (e) {
+    // 이메일 내용 유효성 검사
+    var emailContent = txtPassTemplate.getValue();
+    if (!emailContent || emailContent.trim() === "") {
+        $c.win.alert("이메일 내용을 입력해주세요.");
+        return;
+    }
+
+    // DataList 데이터 확인
+    if (dlt_sendEmailInfoListVo.getRowCount() === 0) {
+        $c.win.alert("발송할 대상자가 없습니다.");
+        return;
+    }
+
+    // 이메일 내용을 DataMap에 설정
+    dma_sendEmailVo.set("emailContent", emailContent);
+
+    // 합격 여부를 'Y'로 설정
+    dma_sendEmailVo.set("isPassed", "Y");
+
+    // DataList 데이터를 DataMap에 설정
+    dma_sendEmailVo.set("sendEmailInfoListVo", dlt_sendEmailInfoListVo.getAllJSON());
+    
+    // 확인 창 표시
+    var promise = $c.win.confirm("선택된 " + dlt_sendEmailInfoListVo.getRowCount() + "명에게 합격 메일을 발송하시겠습니까?");
+    promise.then(function (result) {
+        if (result) {
+            $c.sbm.execute(sbm_sendPassEmail);
+        }
+    });
 };
 ]]></script>
     </head>
@@ -314,11 +378,11 @@ scwin.btn_close_onclick = function (e) {
                 </xf:group>
                 
                 <xf:group class="date-group">
-                    <w2:textbox class="date-label" label="면접 날짜:"></w2:textbox>
-                    <w2:inputCalendar class="date-input" id="calPassDate" calendarValueType="yearMonthDate"></w2:inputCalendar>
-                    <w2:button class="date-apply-btn" label="날짜 적용" ev:onclick="scwin.applyDateToPass"></w2:button>
+                	<w2:textbox class="date-label" label="면접 날짜:"></w2:textbox>
+                	<w2:inputCalendar class="date-input" id="calPassDate" calendarValueType="yearMonthDate"></w2:inputCalendar>
+                	<w2:button class="date-apply-btn" label="날짜 적용" ev:onclick="scwin.applyDateToPass"></w2:button>
                 </xf:group>
-                
+
                 <xf:group class="checkbox-group">
                     <xf:select appearance="full" selectedindex="-1">
                         <xf:choices>
@@ -334,7 +398,7 @@ scwin.btn_close_onclick = function (e) {
             <!-- 버튼 영역 -->
             <xf:group class="button-container">
                 <w2:button class="btn-secondary" label="템플릿 초기화" ev:onclick="scwin.resetTemplates"></w2:button>
-                <w2:button class="btn-primary" label="확인" ev:onclick="scwin.close_btn_onclick"></w2:button>
+                <w2:button class="btn-primary" label="확인" id="btn_sendEmail" ev:onclick="scwin.btn_sendEmail_onclick"></w2:button>
                 <w2:button class="btn-close" label="닫기" ev:onclick="scwin.btn_close_onclick"></w2:button>
             </xf:group>
         </xf:group>

@@ -2,7 +2,7 @@ package com.demo.proworks.common.service.impl;
 
 import com.demo.proworks.common.service.EmailService;
 import com.demo.proworks.domain.post.vo.SendEmailVo;
-import com.demo.proworks.domain.post.vo.EmailListVo;
+import com.demo.proworks.domain.post.vo.SendEmailInfoListVo;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
@@ -47,7 +47,7 @@ public class EmailServiceImpl implements EmailService {
             message.setTo(to);
             message.setSubject(subject);
             message.setText(content);
-            // message.setFrom("your-smtp-username@example.com"); // 실제 발신자 이메일 설정 필요
+            message.setFrom("inswave03@gmail.com"); // 실제 발신자 이메일
             
             javaMailSender.send(message);
             
@@ -70,23 +70,22 @@ public class EmailServiceImpl implements EmailService {
      */
     @Async("emailTaskExecutor")
     @Override
-    public CompletableFuture<Integer> sendBulkEmailsAsync(SendEmailVo sendEmailVo) {
+    public CompletableFuture<Integer> sendToEmails(SendEmailVo sendEmailVo) {
         System.out.println("=== 일괄 이메일 전송 시작 ===");
-        
+        System.out.println("sendEmailVo : " + sendEmailVo.toString());
         if (sendEmailVo == null) {
             System.err.println("❌ SendEmailVo가 null입니다.");
             return CompletableFuture.completedFuture(0);
         }
 
-        List<EmailListVo> emailList = sendEmailVo.getEmailListVo();
+        List<SendEmailInfoListVo> emailList = sendEmailVo.getSendEmailInfoListVo();
         if (emailList == null || emailList.isEmpty()) {
             System.err.println("❌ 전송할 이메일 목록이 비어있습니다.");
             return CompletableFuture.completedFuture(0);
         }
 
         String emailContent = sendEmailVo.getEmailContent();
-        boolean isPassed = sendEmailVo.isIsPassed();
-        
+        boolean isPassed = sendEmailVo.getIsPassed().equals("Y") ? true : false;
         // 합격/불합격에 따른 제목 설정
         String subject = isPassed ? "[합격] 채용 결과 안내" : "[불합격] 채용 결과 안내";
         
@@ -98,7 +97,7 @@ public class EmailServiceImpl implements EmailService {
         List<CompletableFuture<Boolean>> futures = new ArrayList<>();
 
         // 각 이메일을 비동기로 전송
-        for (EmailListVo emailVo : emailList) {
+        for (SendEmailInfoListVo emailVo : emailList) {
             if (emailVo != null && emailVo.getEmail() != null && !emailVo.getEmail().trim().isEmpty()) {
                 CompletableFuture<Boolean> future = sendEmailAsync(emailVo.getEmail(), subject, emailContent);
                 futures.add(future);
