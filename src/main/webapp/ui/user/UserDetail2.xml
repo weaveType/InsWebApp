@@ -39,6 +39,10 @@
             flex-shrink: 0;
         }
 
+        .main-container {
+            display: flex;
+        }
+
         .sidebar-title {
             font-size: clamp(18px, 3vw, 20px);
             font-weight: bold;
@@ -68,7 +72,8 @@
         }
 
         .menu-item {
-            display: block;
+            display: flex;
+            align-items: center;
             padding: 12px 16px 12px 8px;
             margin-bottom: 4px;
             color: #333;
@@ -260,26 +265,41 @@
         }
         ]]></style>
 
-		<script lazy="false" type="text/javascript"><![CDATA[scwin.onpageload = function () {
-    var userInfoStr = WebSquare.cookie.getCookie("userInfo");
-    var userInfo = JSON.parse(userInfoStr);
-    dma_userInfoVo.set("accountId", userInfo.accountId);
-    console.log(dma_userInfoVo);
-
-    // 서버 통신
-    $c.sbm.execute($p, sbm_userDetail);
+		<script lazy="false" type="text/javascript"><![CDATA[
+scwin.onpageload = function () {
+    try {
+        var userInfoStr = WebSquare.cookie.getCookie("userInfo");
+        if (userInfoStr) {
+            var userInfo = JSON.parse(userInfoStr);
+            if (userInfo && userInfo.accountId) {
+                dma_userInfoVo.set("accountId", userInfo.accountId);
+                // 서버 통신
+                $c.sbm.execute($p, sbm_userDetail);
+            } else {
+                console.error("유효하지 않은 사용자 정보 쿠키입니다.");
+            }
+        } else {
+            console.log("로그인 상태가 아닙니다.");
+            // 필요 시 로그인 페이지로 리디렉션 또는 다른 처리
+        }
+    } catch (e) {
+        console.error("페이지 로드 중 오류 발생:", e);
+    }
 };
 
-// 사이드바 메뉴 클릭
-scwin.sidebarMenu_onclick = function (menuId) {
-    switch (menuId) {
-        case 'profile':
-            $p.url("ProfileEditStep1.xml");
-            break;
-        case 'application_history':
-            $p.url("ApplicationHistory.xml");
-            break;
-    }
+// 프로필 메뉴 클릭 이벤트
+scwin.menu_profile_onclick = function() {
+    contentFrame.setSrc('UserDetail3.xml');
+};
+
+// 지원현황 메뉴 클릭 이벤트
+scwin.menu_history_onclick = function() {
+    contentFrame.setSrc('ApplicationHistory2.xml');
+};
+
+// 관심기업 메뉴 클릭 이벤트
+scwin.menu_interest_onclick = function() {
+    alert("관심기업 페이지는 준비중입니다.");
 };
 
 // MBTI 검사 시작
@@ -305,25 +325,20 @@ scwin.btn_userUpdate_onclick = function (e) {
 			<xf:group class="main-container">
 				<!-- 사이드바 -->
 				<aside class="sidebar">
-					<xf:group class="sidebar-menu">
-						<!-- 내 정보 섹션 -->
-						<xf:group class="menu-category">
-							<w2:textbox class="menu-category-title" label="내 정보"></w2:textbox>
-							<w2:anchor class="menu-item active incomplete" ev:onclick="scwin.sidebarMenu_onclick('matching_profile')">
-								<xf:label><![CDATA[프로필]]></xf:label>
-							</w2:anchor>
-							<w2:anchor class="menu-item" ev:onclick="scwin.sidebarMenu_onclick('application_history')">
-								<xf:label><![CDATA[지원현황]]></xf:label>
-							</w2:anchor>
-							<w2:anchor class="menu-item" ev:onclick="scwin.sidebarMenu_onclick('interest_company')">
-								<xf:label><![CDATA[관심기업]]></xf:label>
-							</w2:anchor>
-						</xf:group>
-					</xf:group>
+					<w2:textbox label="내 정보" class="menu-category-title"></w2:textbox>
+					<w2:anchor id="menu_profile" class="menu-item active incomplete" ev:onclick="scwin.menu_profile_onclick">
+						<xf:label><![CDATA[프로필]]></xf:label>
+					</w2:anchor>
+					<w2:anchor id="menu_history" class="menu-item" ev:onclick="scwin.menu_history_onclick">
+						<xf:label><![CDATA[지원현황]]></xf:label>
+					</w2:anchor>
+					<w2:anchor id="menu_interest" class="menu-item">
+						<xf:label><![CDATA[관심기업]]></xf:label>
+					</w2:anchor>
 				</aside>
 
 				<!-- 메인 콘텐츠 -->
-				<w2:pageFrame style="width:969px;height:271px;" id="" src="/InsWebApp/ui/user/UserDetail3.xml"></w2:pageFrame>
+				<w2:pageFrame style="width:969px;height:271px;" id="contentFrame" src="/InsWebApp/ui/user/UserDetail3.xml"></w2:pageFrame>
 			</xf:group>
 		</xf:group>
 	</body>
