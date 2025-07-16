@@ -95,7 +95,7 @@ scwin.weaveTypeLogo_onclick = function () {
 };
 
 scwin.menu1_onclick = function () {
-    alert("매칭 페이지로 이동합니다.");
+    $p.url("../user/CodeAnalysisMain.xml");
 };
 
 scwin.menu2_onclick = function () {
@@ -161,7 +161,6 @@ scwin.txb_login_onclick = function () {
                 align-items: center;
                 gap: 15px;
             }
-
 
 
             /* 사이드 메뉴 */
@@ -266,15 +265,6 @@ scwin.txb_login_onclick = function () {
 
             /* 모바일 반응형 */
             @media (max-width: 768px) {
-                .header {
-                    height: 60px;
-                    padding: 0 15px;
-                }
-                
-                .header-left, .header-right {
-                    padding-top: 13px;
-                }
-                
                 .nav-menu xf:image {
                     width: 100px !important;
                     height: 28px !important;
@@ -306,12 +296,12 @@ scwin.txb_login_onclick = function () {
 				<xf:group class="header-container">
 					<xf:group class="header-left" style="">
 						<xf:group class="nav-menu" style="">
-							<xf:image src="/InsWebApp/images/ws5/codefit_logo.png" style="width:150px;height:50px; cursor: pointer;" id="codeFITLogo" class="logo"
-								ev:onclick="scwin.weaveTypeLogo_onclick">
+							<xf:image src="/InsWebApp/images/ws5/codefit_logo.png" style="width:150px;height:50px; cursor: pointer;" id="codeFITLogo"
+								class="logo" ev:onclick="scwin.weaveTypeLogo_onclick">
 							</xf:image>
 							<w2:anchor class="nav-link" id="anchor1" ev:onclick="scwin.menu1_onclick" outerDiv="false"
 								style="margin-left: 20px;font-size: 16px;">
-								<xf:label><![CDATA[매칭]]></xf:label>
+								<xf:label><![CDATA[코드분석]]></xf:label>
 							</w2:anchor>
 							<w2:anchor class="nav-link" id="anchor2" ev:onclick="scwin.menu2_onclick" outerDiv="false" style="font-size: 16px;">
 								<xf:label><![CDATA[mbti검사]]></xf:label>
@@ -325,7 +315,8 @@ scwin.txb_login_onclick = function () {
 						<xf:trigger class="btn-login" id="btnLogin" ev:onclick="scwin.btnLogin_onclick" type="button">
 							<xf:label><![CDATA[로그인/회원가입]]></xf:label>
 						</xf:trigger>
-						<w2:textbox id="txb_login" label="" style="width:150px;height:32px;text-align:left;font-size: 16px;cursor:pointer;color:#666666;text-decoration:underline;border:none;background:transparent;line-height:32px;="
+						<w2:textbox id="txb_login" label=""
+							style="width:auto;height:32px;text-align:left;margin-right: 10px;font-size: 16px;cursor:pointer;color:#666666;text-decoration:underline;border:none;background:transparent;line-height:32px;"
 							ev:onclick="scwin.txb_login_onclick" title="클릭하여 로그아웃"></w2:textbox>
 						<xf:trigger class="btn-login" id="btnLogout" ev:onclick="scwin.logout_onclick" type="button" style="display:none;">
 							<xf:label><![CDATA[로그아웃]]></xf:label>
@@ -347,9 +338,6 @@ scwin.txb_login_onclick = function () {
 
 				<div class="side-menu-section">
 					<w2:textbox class="side-menu-section-title" label="매칭 서비스"></w2:textbox>
-					<w2:anchor class="side-menu-item" ev:onclick="scwin.menu1_onclick">
-						<xf:label><![CDATA[매칭]]></xf:label>
-					</w2:anchor>
 					<w2:anchor class="side-menu-item" ev:onclick="scwin.menu2_onclick">
 						<xf:label><![CDATA[MBTI 검사]]></xf:label>
 					</w2:anchor>

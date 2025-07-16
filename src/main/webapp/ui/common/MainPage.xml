@@ -444,12 +444,6 @@ scwin.refreshCompanyList = function () {
                 line-height: 1.4;
             }
 
-            .gift-icon {
-                font-size: clamp(24px, 4vw, 32px);
-                margin-top: 10px;
-                display: block;
-            }
-
             /* 섹션 공통 - 반응형 패딩 */
             .section {
                 padding: min(60px, 8vw) min(50px, 4vw);
@@ -793,15 +787,6 @@ scwin.refreshCompanyList = function () {
 
             /* 모바일 반응형 */
             @media (max-width: 768px) {
-                .header {
-                    height: 60px;
-                    padding: 0 15px;
-                }
-                
-                .header-left, .header-right {
-                    padding-top: 13px;
-                }
-                
                 .nav-menu xf:image {
                     width: 100px !important;
                     height: 28px !important;
@@ -929,19 +914,6 @@ scwin.refreshCompanyList = function () {
                 margin-bottom: 15px;
             }
 
-            .matching-status-title {
-                font-size: 16px;
-                font-weight: bold;
-                color: #333;
-            }
-
-            .matching-settings-link {
-                font-size: 12px;
-                color: #007bff;
-                text-decoration: none;
-                cursor: pointer;
-            }
-
             .profile-progress {
                 display: flex;
                 justify-content: space-between;
@@ -1046,50 +1018,8 @@ scwin.refreshCompanyList = function () {
         ]]></style>
 	</head>
 	<body ev:onpageload="scwin.onpageload">
-        <w2:wframe src="Header.xml" id="headerFrame" />
+		<w2:wframe src="Header.xml" id="headerFrame" />
 		<xf:group class="main-wrap">
-			<!-- 사이드 메뉴 오버레이 -->
-			<xf:group class="side-menu-overlay" id="sideMenuOverlay" ev:onclick="scwin.closeSideMenu()"></xf:group>
-
-			<!-- 사이드 메뉴 -->
-			<nav class="side-menu" id="sideMenu">
-				<w2:textbox class="side-menu-title" label="메뉴"></w2:textbox>
-
-				<xf:group class="side-menu-section">
-					<w2:anchor class="side-menu-item" ev:onclick="scwin.menu2_onclick">
-						<xf:label><![CDATA[������ MBTI 검사]]></xf:label>
-					</w2:anchor>
-					<w2:anchor class="side-menu-item" ev:onclick="scwin.menu3_onclick">
-						<xf:label><![CDATA[������ 기업 둘러보기]]></xf:label>
-					</w2:anchor>
-				</xf:group>
-
-				<xf:group class="side-menu-section">
-					<w2:textbox class="side-menu-section-title" label="개인 서비스"></w2:textbox>
-					<w2:anchor class="side-menu-item" ev:onclick="scwin.goToUserDetail()">
-						<xf:label><![CDATA[������ 내 정보]]></xf:label>
-					</w2:anchor>
-					<w2:anchor class="side-menu-item">
-						<xf:label><![CDATA[������ 지원현황]]></xf:label>
-					</w2:anchor>
-					<w2:anchor class="side-menu-item">
-						<xf:label><![CDATA[❤️ 관심기업]]></xf:label>
-					</w2:anchor>
-					<w2:anchor class="side-menu-item">
-						<xf:label><![CDATA[������ 북마크]]></xf:label>
-					</w2:anchor>
-				</xf:group>
-
-				<xf:group class="side-menu-section">
-					<w2:textbox class="side-menu-section-title" label="기업 서비스"></w2:textbox>
-					<w2:anchor class="side-menu-item" ev:onclick="scwin.btnEnterprise_onclick">
-						<xf:label><![CDATA[������ 채용관리 대시보드]]></xf:label>
-					</w2:anchor>
-					<w2:anchor class="side-menu-item" ev:onclick="scwin.goToCompanyRegister()">
-						<xf:label><![CDATA[������ 기업 등록]]></xf:label>
-					</w2:anchor>
-				</xf:group>
-			</nav>
 
 			<!-- 메인 히어로 섹션 -->
 			<xf:group class="hero-section" tagname="section">
@@ -1116,17 +1046,17 @@ scwin.refreshCompanyList = function () {
 							</xf:trigger>
 							<xf:group class="gift-area">
 								<w2:textbox class="gift-text" label="매칭 퀘스트 완료하고"></w2:textbox>
-								<w2:textbox class="gift-text-bold" label="합격자 이력서 받아가세요!"></w2:textbox>
-								<w2:textbox class="gift-icon" label="🎁"></w2:textbox>
+								<w2:textbox class="gift-text-bold" label="원하는 기업에 지원하세요!"></w2:textbox>
 							</xf:group>
 						</xf:group>
-						
+
 						<!-- 로그인 상태 - 프로필 영역 -->
 						<xf:group class="profile-area" id="grp_profile_area" style="display:none;">
 							<!-- 사용자 정보 헤더 -->
 							<xf:group class="profile-header">
 								<xf:group class="profile-avatar">
-									<xf:image src="/InsWebApp/images/ws5/default_user.png" style="width:60px;height:60px;border-radius:50%;" id="img_user_avatar"></xf:image>
+									<xf:image src="/InsWebApp/images/ws5/default_user.png" style="width:60px;height:60px;border-radius:50%;"
+										id="img_user_avatar"></xf:image>
 								</xf:group>
 								<xf:group class="profile-info">
 									<w2:textbox class="profile-name" id="txb_user_name"></w2:textbox>
@@ -1135,21 +1065,13 @@ scwin.refreshCompanyList = function () {
 									</xf:group>
 								</xf:group>
 							</xf:group>
-							
+
 							<!-- 프로필 완성도 -->
 							<xf:group class="profile-completion">
 								<w2:textbox class="completion-text" label="필수 조건을 입력하여 매칭 프로필 완성도를 높이세요!"></w2:textbox>
 							</xf:group>
-							
-							<!-- 매칭 상태 -->
+
 							<xf:group class="matching-status-section">
-								<xf:group class="matching-status-header">
-									<w2:textbox class="matching-status-title" label="매칭 상태"></w2:textbox>
-									<w2:anchor class="matching-settings-link" ev:onclick="scwin.goToMatchingSettings">
-										<xf:label><![CDATA[매칭 검사 설정 >]]></xf:label>
-									</w2:anchor>
-								</xf:group>
-								
 								<!-- 프로필 완성도 바 -->
 								<xf:group class="profile-progress">
 									<w2:textbox class="progress-label" label="매칭 프로필 완성도"></w2:textbox>
@@ -1159,7 +1081,7 @@ scwin.refreshCompanyList = function () {
 									<xf:group class="progress-fill" style="width:10%;"></xf:group>
 								</xf:group>
 							</xf:group>
-							
+
 							<!-- 통계 영역 -->
 							<xf:group class="stats-section">
 								<xf:group class="stats-item">
