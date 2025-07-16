@@ -9,7 +9,7 @@
 	<bean id="antPathMater" class="org.springframework.util.AntPathMatcher" />
 
 	<!-- GMAIL mail 설정 -->
-	<bean id="mailSender2" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
 		<property name="host" value="smtp.gmail.com" />
 		<property name="port" value="587" />
 		<property name="username" value="inswave03@gmail.com" />
@@ -21,8 +21,6 @@
 				<prop key="mail.smtp.starttls.enable">true</prop>
 				<prop key="mail.smtp.ssl.trust">smtp.gmail.com</prop>
 				<prop key="mail.smtp.ssl.protocols">TLSv1.2</prop>
-				<prop key="mail.smtp.socketFactory.class">javax.net.ssl.SSLSocketFactory</prop>
-				<prop key="mail.smtp.socketFactory.fallback">false</prop>
 			</props>
 		</property>
 	</bean>
