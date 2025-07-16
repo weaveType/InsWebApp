@@ -39,6 +39,14 @@
         )
     </insert>
     
+    <!-- 설문 응답의 type_id 업데이트 -->
+    <update id="updateSurveyResponseTypeId" parameterType="com.demo.proworks.domain.survey.vo.SurveyResponseVo">
+        UPDATE survey_responses 
+        SET type_id = #{typeId},
+            update_at = NOW()
+        WHERE response_id = #{responseId}
+    </update>
+    
     <!-- 사용자의 최신 설문 응답 조회 -->
     <select id="selectLatestResponse" parameterType="Long" resultType="com.demo.proworks.domain.survey.vo.SurveyResponseVo">
         SELECT 
@@ -71,7 +79,7 @@
             #{sTScore},
             #{dFScore},
             NOW(),
-            COALESCE(#{userId}, 1),
+            #{userId},
             1
         )
         ON DUPLICATE KEY UPDATE

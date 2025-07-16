@@ -40,6 +40,17 @@ public class SurveyDAO extends com.demo.proworks.cmmn.dao.ProworksDefaultAbstrac
     }
     
     /**
+     * 설문 응답의 type_id 업데이트
+     * 
+     * @param responseVo 설문 응답 정보 (response_id와 type_id 포함)
+     * @return 업데이트된 행 수
+     * @throws ElException
+     */
+    public int updateSurveyResponseTypeId(SurveyResponseVo responseVo) throws ElException {
+        return update("com.demo.proworks.domain.survey.updateSurveyResponseTypeId", responseVo);
+    }
+    
+    /**
      * 사용자의 최신 설문 응답 조회
      * 
      * @param typeId 타입 ID
