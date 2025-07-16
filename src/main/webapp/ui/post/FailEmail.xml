@@ -7,8 +7,27 @@
         <w2:buildDate/>
         <w2:MSA/>
         <xf:model>
-            <w2:dataCollection baseNode="map"/>
-            <w2:workflowCollection/>
+        	<w2:dataCollection baseNode="map">
+        		<w2:dataList baseNode="list" repeatNode="map" id="dlt_sendEmailInfoListVo" saveRemovedData="true">
+        			<w2:columnInfo>
+        				<w2:column dataType="text" name="이메일" id="email"></w2:column>
+        				<w2:column dataType="text" name="이름" id="name"></w2:column>
+        				<w2:column dataType="text" name="유저 ID" id="accountId"></w2:column>
+        			</w2:columnInfo>
+        		</w2:dataList>
+        		<w2:dataMap baseNode="map" id="dma_sendEmailVo">
+        			<w2:keyInfo>
+        				<w2:key dataType="text" name="합불여부" id="isPassed"></w2:key>
+        				<w2:key dataType="text" name="메일 내용" id="emailContent"></w2:key>
+        				<w2:key dataType="text" name="이메일 정보 리스트" id="sendEmailInfoListVo"></w2:key>
+        			</w2:keyInfo>
+        		</w2:dataMap>
+        	</w2:dataCollection>
+        	<w2:workflowCollection />
+        	<xf:submission id="sbm_sendFailEmail" action="/InsWebApp/POS0001Send.pwkjson" method="post" mediatype="application/json"
+        		ref='data:json,[{"id":"dma_sendEmailVo","key":"sendEmailVo"}]' target="" encoding="UTF-8" instance="" replace="" errorHandler=""
+        		customHandler="" mode="asynchronous" processMsg="" ev:submit="" ev:submitdone="" ev:submiterror="" abortTrigger="">
+        	</xf:submission>
         </xf:model>
         <w2:layoutInfo/>
         <w2:publicInfo method=""/>
@@ -193,35 +212,78 @@
         ]]></style>
         
         <script lazy="false" type="text/javascript"><![CDATA[
-scwin.onpageload = function() {
+scwin.onpageload = function () {
+    // 기본 템플릿 설정
     scwin.setDefaultTemplates();
+
+    // 전달받은 데이터 확인 및 설정
+    var selectedUsers = $c.data.getParameter("selectedUsers");
+    console.log("전달받은 데이터:", selectedUsers);
+
+    if (selectedUsers && selectedUsers.length > 0) {
+        // DataList에 전달받은 사용자 데이터 설정
+        dlt_sendEmailInfoListVo.setJSON(selectedUsers);
+        console.log(dlt_sendEmailInfoListVo.getAllJSON());
+
+    } else {
+        console.warn("전달받은 사용자 데이터가 없습니다.");
+        $c.win.alert("전달받은 사용자 데이터가 없습니다.");
+    }
 };
 
 // 이메일 템플릿 설정
-scwin.setDefaultTemplates = function() {
-    var failTemplate = "안녕하세요 {{이용자}}님,\n\n" +
-                    "서류심사 결과를 안내드립니다.\n\n" +
-                    "아쉽게도 이번 서류심사에서는 인연이 닿지 않았습니다.\n" +
-                    "향후 다른 기회가 있을 때 다시 도전해 주시기 바랍니다.\n\n" +
-                    "좋은 하루 되세요.\n" +
-                    "인사팀 드림";
-    
+scwin.setDefaultTemplates = function () {
+    var failTemplate =
+        "서류심사 결과를 안내드립니다.\n\n" +
+        "아쉽게도 이번 서류심사에서는 인연이 닿지 않았습니다.\n" +
+        "향후 다른 기회가 있을 때 다시 도전해 주시기 바랍니다.\n\n" +
+        "좋은 하루 되세요.\n" +
+        "인사팀 드림";
+
     txtFailTemplate.setValue(failTemplate);
 };
 
 // 템플릿 초기화
-scwin.resetTemplates = function() {
+scwin.resetTemplates = function () {
     scwin.setDefaultTemplates();
     calPassDate.setValue("");
     calFailDate.setValue("");
 };
 
 scwin.btn_close_onclick = function (e) {
-    window.close();
+    $p.closePopup();
 };
 
 scwin.close_btn_onclick = function (e) {
+    // 이메일 내용 유효성 검사
+    var emailContent = txtFailTemplate.getValue();
+    if (!emailContent || emailContent.trim() === "") {
+        $c.win.alert("이메일 내용을 입력해주세요.");
+        return;
+    }
 
+    // DataList 데이터 확인
+    if (dlt_sendEmailInfoListVo.getRowCount() === 0) {
+        $c.win.alert("발송할 대상자가 없습니다.");
+        return;
+    }
+
+    // 이메일 내용을 DataMap에 설정
+    dma_sendEmailVo.set("emailContent", emailContent);
+
+    // 합격 여부를 'N'로 설정
+    dma_sendEmailVo.set("isPassed", "N");
+
+    // DataList 데이터를 DataMap에 설정
+    dma_sendEmailVo.set("sendEmailInfoListVo", dlt_sendEmailInfoListVo.getAllJSON());
+    
+    // 확인 창 표시
+    var promise = $c.win.confirm("선택된 " + dlt_sendEmailInfoListVo.getRowCount() + "명에게 합격 메일을 발송하시겠습니까?");
+    promise.then(function (result) {
+        if (result) {
+            $c.sbm.execute(sbm_sendFailEmail);
+        }
+    });
 };
 ]]></script>
     </head>
@@ -250,7 +312,7 @@ scwin.close_btn_onclick = function (e) {
             <!-- 버튼 영역 -->
             <xf:group class="button-container">
                 <w2:button class="btn-secondary" label="템플릿 초기화" ev:onclick="scwin.resetTemplates"></w2:button>
-                <w2:button class="btn-primary" label="확인" ev:onclick="scwin.close_btn_onclick"></w2:button>
+                <w2:button class="btn-primary" label="확인" ev:onclick="scwin.close_btn_onclick" id="btn_sendEmail"></w2:button>
                 <w2:button class="btn-close" label="닫기" ev:onclick="scwin.btn_close_onclick"></w2:button>
             </xf:group>
         </xf:group>

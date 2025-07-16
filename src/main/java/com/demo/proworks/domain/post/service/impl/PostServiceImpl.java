@@ -399,7 +399,7 @@ public class PostServiceImpl implements PostService {
 
 		try {
 			// 비동기로 이메일 일괄 전송
-			CompletableFuture<Integer> future = emailService.sendBulkEmailsAsync(sendEmailVo);
+			CompletableFuture<Integer> future = emailService.sendToEmails(sendEmailVo);
 
 			// 전송 결과 확인 (선택사항 - 비동기이므로 대기하지 않아도 됨)
 			Integer successCount = future.get();

@@ -113,14 +113,21 @@ public class ProworksLoginAdapter extends LoginAdapter {
 	public LoginInfo logout(HttpServletRequest request, String email, Object... params) throws LoginException {
 		LoginInfo info = new LoginInfo();
 		try {
-			// 1. 로그아웃 처리로직 추가
+			// 1. 세션 무효화
+			if (request.getSession(false) != null) {
+				request.getSession(false).invalidate();
+				AppLog.debug("[Logout] 세션이 성공적으로 무효화되었습니다.");
+			} else {
+				AppLog.debug("[Logout] 활성화된 세션이 없습니다.");
+			}
 
 			// 2. 로그아웃 성공 설정
 			info.setSuc(true);
 			AppLog.debug("[Logout] Proworks Logout 성공.....");
 
 		} catch (Exception e) {
-			throw new LoginException(e);
+			AppLog.error("[Logout] 로그아웃 중 오류 발생", e);
+			throw new LoginException("EL.ERROR.LOGOUT.0001", e);
 		}
 		return info;
 	}

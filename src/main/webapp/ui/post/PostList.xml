@@ -496,7 +496,7 @@ scwin.createJobCard = function (jobData, index) {
         '<xf:group class="job-content">' +
         '<xf:group class="job-header">' +
         '<xf:group class="job-title">' + (jobData.title || '제목없음') + '</xf:group>' +
-        '<button class="bookmark-btn" onclick="scwin.toggleBookmark(event, \'' + jobData.jobPostingId + '\')">������</button>' +
+        '<button class="bookmark-btn" onclick="scwin.toggleBookmark(event, \'' + jobData.jobPostingId + '\')"></button>' +
         '</xf:group>' +
         '<xf:group class="job-company" onclick="scwin.viewCompany(event, \'' + jobData.companyId + '\')">' +
         (jobData.companyName || '회사명 정보없음') +
@@ -506,15 +506,15 @@ scwin.createJobCard = function (jobData, index) {
         '</xf:group>' +
         '<xf:group class="job-meta">' +
         '<xf:group class="job-meta-item">' +
-        '<span class="job-meta-icon">������</span>' +
+        '<span class="job-meta-icon"></span>' +
         '<span>' + (jobData.location || '지역정보없음') + '</span>' +
         '</xf:group>' +
         '<xf:group class="job-meta-item">' +
-        '<span class="job-meta-icon">������</span>' +
+        '<span class="job-meta-icon"></span>' +
         '<span>' + scwin.getExperienceLevelText(jobData.experienceLevel) + '</span>' +
         '</xf:group>' +
         '<xf:group class="job-meta-item">' +
-        '<span class="job-meta-icon">������</span>' +
+        '<span class="job-meta-icon"></span>' +
         '<span>' + scwin.getWorkTypeText(jobData.workType) + '</span>' +
         '</xf:group>' +
         '</xf:group>' +
@@ -786,7 +786,7 @@ scwin.slb_dev_mbti_onselected = function () {
     // 쿠키에서 userMbti 가져오기
     var userInfoCookie = WebSquare.cookie.getCookie("userInfo");
     if (!userInfoCookie) {
-        console.error("로그인 후 사용가능한 기능입니다.");
+         alert("로그인 후 사용가능한 기능입니다.");
         return; // 함수 종료
     }
 
@@ -799,13 +799,14 @@ scwin.slb_dev_mbti_onselected = function () {
     }
 
     // userInfo.mbti가 존재하는지 확인
-    if (!userInfo || !userInfo.mbti) {
-        console.error("mbti 및 성향검사 후 진행 가능합니다.");
+    if (userInfo.mbti === 'ZZZZ') {
+        alert("mbti 및 성향검사 후 진행 가능합니다.");
+        return; // 함수 종료
+    } else if (userInfo.role === 'COMPANY') {
+        alert("기업회원은 사용 불가능한 기능입니다.");
         return; // 함수 종료
     }
 
-    // 여기까지 오면 로그인도 되어있고 MBTI도 있는 상태
-    // 선택된 값 가져오기
     var selectedValue = slb_dev_mbti.getValue();
 
     // DataMap에 값 설정
