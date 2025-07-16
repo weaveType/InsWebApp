@@ -219,6 +219,8 @@ public class UserDAO extends com.demo.proworks.cmmn.dao.ProworksDefaultAbstractD
 	}
 
 	public UserInfoVo selectUserDetail(UserInfoVo vo) throws Exception {
+	UserInfoVo test = (UserInfoVo) selectByPk("com.demo.proworks.domain.user.selectUserDetail", vo);
+	System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> test : " + test.toString());
 		return (UserInfoVo) selectByPk("com.demo.proworks.domain.user.selectUserDetail", vo);
 	}
 
