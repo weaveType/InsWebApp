@@ -228,6 +228,18 @@
 scwin.onpageload = function() {
     // 기본 템플릿 설정
     scwin.setDefaultTemplates();
+
+    // 팝업으로 전달된 데이터 확인
+    var popupParams = $p.getPopupParam();
+    if (popupParams && popupParams.selectedUsers) {
+        console.log("PassEmail.xml에서 수신한 selectedUsers:", popupParams.selectedUsers);
+        // 여기에 selectedUsers 데이터를 활용하는 로직을 추가할 수 있습니다.
+        // 예: 이메일 주소를 텍스트 영역에 표시
+        // var emails = popupParams.selectedUsers.map(user => user.email).join(", ");
+        // txtPassTemplate.setValue("수신자: " + emails + "\n\n" + txtPassTemplate.getValue());
+    } else {
+        console.log("PassEmail.xml: selectedUsers 데이터를 수신하지 못했습니다.");
+    }
 };
 
 // 기본 이메일 템플릿 설정
