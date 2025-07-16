@@ -82,6 +82,23 @@ public class UserController {
 	}
 
 	/**
+	 * 로그아웃을 처리한다.
+	 * 
+	 * @param logoutVo 로그인 정보 LogoutVo
+	 * @param request 요청 정보 HttpServletRequest
+	 * @throws Exception
+	 */
+	@ElService(key = "USLogout")
+	@RequestMapping(value = "USLogout")
+	@ElDescription(sub = "로그아웃", desc = "로그아웃을 처리한다.")
+	public void logout(HttpServletRequest request) throws Exception {
+
+//		LoginInfo info = loginProcess.logout(request, email, password);
+
+//		AppLog.debug("- Login 정보 : " + info.toString());
+	}
+
+	/**
 	 * 일반회원 목록을 조회합니다.
 	 *
 	 * @param userVo 일반회원
