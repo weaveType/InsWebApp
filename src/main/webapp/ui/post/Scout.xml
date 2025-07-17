@@ -192,7 +192,7 @@
             		</w2:keyInfo>
             	</w2:dataMap>
             </w2:dataCollection>
-            <xf:submission id="sbm_selctScoutVo" action="/InsWebApp/US0003List.pwkjson" method="post" mediatype="application/json" ref='data:json,{"id":"dmp_scoutVo","key":"scoutVo"}'
+            <xf:submission id="sbm_selectScoutVo" action="/InsWebApp/US0003List.pwkjson" method="post" mediatype="application/json" ref='data:json,{"id":"dmp_scoutVo","key":"scoutVo"}'
                 target='data:json,{"dlt_scoutListVo", "key":"elData.dlt_scoutListVo"}' encoding="UTF-8" instance="" replace="" errorHandler="" customHandler="" mode="asynchronous" processMsg="매칭 유저 불러오는중.." ev:submit=""
                 ev:submitdone="scwin.sbm_scoutVo_submitdone" ev:submiterror="" abortTrigger="">
             </xf:submission>
@@ -204,24 +204,26 @@
 
 // 파라미터로 postId 받기
 scwin.getJobPostingId = function(){
-    var jobPostingId = null;
+    var jobPostingId = scwin.getUrlParameter("jobPostingId");
 
     if (!jobPostingId) {
-        try {
-            var href = window.location.href;
-            var match = href.match(/[?&]jobPostingId=([^&]*)/);
-            if (match && match[1]) {
-                jobPostingId = decodeURIComponent(match[1]);
-            }
-        } catch (e) {
-            console.log("location.href 파싱 실패:", e);
-        }
-    } else {
-        // 비정상적 접근. 이전페이지로 이동
+        alert("잘못된 접근입니다. jobPostingId가 없습니다.");
+        $p.back();  // 또는 다른 URL로 리다이렉트
+        return;
     }
-    dmp_selctScoutVo.set("jobPostingId", jobPostingId);
-    $c.sbm.execute(sbm_selctScoutVo);
-}
+
+    dmp_scoutVo.set("jobPostingId", jobPostingId);
+    $c.sbm.execute(sbm_selectScoutVo);
+};
+
+// URL 파라미터 추출
+scwin.getUrlParameter = function(name) {
+    const regex = new RegExp("[?&]" + name + "=([^&#]*)");
+    const results = regex.exec(window.location.href);
+    return results ? decodeURIComponent(results[1]) : null;
+};
+
+
 
 // 쿠키에서 사용자 가져오기
 scwin.getUserInfoByCookie = function () {

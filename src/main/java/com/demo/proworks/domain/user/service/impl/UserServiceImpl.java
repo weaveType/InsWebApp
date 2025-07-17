@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.demo.proworks.domain.user.service.UserService;
 import com.demo.proworks.domain.user.vo.ApplicantDetailVo;
 import com.demo.proworks.domain.user.vo.ApplicantVo;
+import com.demo.proworks.domain.user.vo.ScoutDetailVo;
 import com.demo.proworks.domain.user.vo.ScoutListVo;
 import com.demo.proworks.domain.user.vo.ScoutVo;
 import com.demo.proworks.domain.user.vo.UserInfoVo;
@@ -253,9 +254,10 @@ public class UserServiceImpl implements UserService {
 	 * @throws Exception
 	 */
 	public ScoutListVo getScoutUsersByPostId(ScoutVo scoutVo) throws Exception {
-		List<ScoutListVo> detailList = userDAO.getScoutUsersByPostId(scoutVo);
+		List<ScoutDetailVo> detailList = userDAO.getScoutUsersByPostId(scoutVo);
+		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> detailList : "  + detailList);
 		ScoutListVo scoutListVo = new ScoutListVo();
-
+		
 		return scoutListVo;
 	}
 }

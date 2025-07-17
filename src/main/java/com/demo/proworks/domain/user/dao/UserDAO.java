@@ -11,6 +11,7 @@ import com.inswave.elfw.exception.ElException;
 import com.demo.proworks.domain.user.vo.ApplicantDetailVo;
 import com.demo.proworks.domain.user.vo.ApplicantListVo;
 import com.demo.proworks.domain.user.vo.ApplicantVo;
+import com.demo.proworks.domain.user.vo.ScoutDetailVo;
 import com.demo.proworks.domain.user.vo.ScoutListVo;
 import com.demo.proworks.domain.user.vo.ScoutVo;
 import com.demo.proworks.domain.user.vo.UserInfoVo;
@@ -236,6 +237,15 @@ public class UserDAO extends com.demo.proworks.cmmn.dao.ProworksDefaultAbstractD
 		return (List<ApplicantDetailVo>) list("com.demo.proworks.domain.user.selectUsersByjobPostingId", vo);
 	}
 
-	public List<ScoutListVo> getScoutUsersByPostId(ScoutVo vo) throws Exception {
-		return (List<ScoutListVo>) list("com.demo.proworks.domain.user.getScoutUsersByPostId", vo);
+	/**
+	 * 기업의 매칭유저 검색을 조회한다.
+	 *
+	 * @param ScoutVo 페이징 정보, 공고 ID
+	 * @return ScoutListVo 유저 목록
+	 * @throws Exception
+	 */
+
+	public List<ScoutDetailVo> getScoutUsersByPostId(ScoutVo vo) throws Exception {
+		return (List<ScoutDetailVo>) list("com.demo.proworks.domain.user.getScoutUsersByPostId", vo);
+	}
 }
