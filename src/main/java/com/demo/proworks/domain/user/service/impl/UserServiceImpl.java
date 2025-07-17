@@ -275,5 +275,4 @@ public class UserServiceImpl implements UserService {
 		scoutListVo.setScoutDetailVo(detailList);
 		return scoutListVo;
 	}
-	}
 }
