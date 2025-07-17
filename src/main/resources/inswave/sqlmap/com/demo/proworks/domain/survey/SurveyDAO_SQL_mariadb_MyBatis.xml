@@ -112,7 +112,7 @@
     <select id="selectCodeAnalysisScores" parameterType="Long" resultType="hashmap">
         SELECT 
             COALESCE(development_style_score, 0) AS development_style_score,
-            COALESCE(collaboration_score, 0) AS collaboration_score,
+            COALESCE(developer_preference_score, 0) AS developer_preference_score,
             COALESCE(confidence_score, 0.0) AS confidence_score
         FROM code_analyses
         WHERE type_id = #{typeId}

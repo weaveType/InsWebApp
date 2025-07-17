@@ -11,7 +11,7 @@
             analysis_result,
             TYPE_CODE,
             development_style_score,
-            collaboration_score,
+            developer_preference_score,
             confidence_score,
             language
         ) VALUES (
@@ -19,7 +19,7 @@
             #{analysisResult},
             #{typeCode},
             #{developmentStyleScore},
-            #{collaborationScore},
+            #{developerPreferenceScore},
             #{confidenceScore},
             #{language}
         )
@@ -35,7 +35,7 @@
             analysis_result AS analysisResult,
             TYPE_CODE AS typeCode,
             development_style_score AS developmentStyleScore,
-            collaboration_score AS collaborationScore,
+            developer_preference_score AS developerPreferenceScore,
             confidence_score AS confidenceScore,
             created_at AS createdAt
         FROM code_analyses
@@ -52,7 +52,7 @@
             analysis_result = #{analysisResult},
             TYPE_CODE = #{typeCode},
             development_style_score = #{developmentStyleScore},
-            collaboration_score = #{collaborationScore},
+            developer_preference_score = #{developerPreferenceScore},
             confidence_score = #{confidenceScore}
         WHERE analysis_id = #{analysisId}
         ]]>
@@ -75,7 +75,7 @@
             analysis_result AS analysisResult,
             TYPE_CODE AS typeCode,
             development_style_score AS developmentStyleScore,
-            collaboration_score AS collaborationScore,
+            developer_preference_score AS developerPreferenceScore,
             confidence_score AS confidenceScore,
             created_at AS createdAt
         FROM code_analyses

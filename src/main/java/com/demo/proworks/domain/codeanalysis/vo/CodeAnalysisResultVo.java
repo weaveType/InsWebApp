@@ -29,8 +29,8 @@ public class CodeAnalysisResultVo extends com.demo.proworks.cmmn.ProworksCommVO 
     @ElDtoField(logicalName = "개발스타일점수", physicalName = "developmentStyleScore", type = "Integer", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
     private Integer developmentStyleScore;
 
-    @ElDtoField(logicalName = "협업성향점수", physicalName = "collaborationScore", type = "Integer", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
-    private Integer collaborationScore;
+    @ElDtoField(logicalName = "개발자선호도점수", physicalName = "developerPreferenceScore", type = "Integer", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private Integer developerPreferenceScore;
 
     @ElDtoField(logicalName = "신뢰도", physicalName = "confidenceScore", type = "Double", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
     private Double confidenceScore;
@@ -91,14 +91,14 @@ public class CodeAnalysisResultVo extends com.demo.proworks.cmmn.ProworksCommVO 
         this.developmentStyleScore = developmentStyleScore;
     }
 
-    @ElVoField(physicalName = "collaborationScore")
-    public Integer getCollaborationScore(){
-        return this.collaborationScore;
+    @ElVoField(physicalName = "developerPreferenceScore")
+    public Integer getDeveloperPreferenceScore(){
+        return this.developerPreferenceScore;
     }
 
-    @ElVoField(physicalName = "collaborationScore")
-    public void setCollaborationScore(Integer collaborationScore){
-        this.collaborationScore = collaborationScore;
+    @ElVoField(physicalName = "developerPreferenceScore")
+    public void setDeveloperPreferenceScore(Integer developerPreferenceScore){
+        this.developerPreferenceScore = developerPreferenceScore;
     }
 
     @ElVoField(physicalName = "confidenceScore")
@@ -140,7 +140,7 @@ public class CodeAnalysisResultVo extends com.demo.proworks.cmmn.ProworksCommVO 
         sb.append("analysisResult").append("=").append(analysisResult).append(",");
         sb.append("typeCode").append("=").append(typeCode).append(",");
         sb.append("developmentStyleScore").append("=").append(developmentStyleScore).append(",");
-        sb.append("collaborationScore").append("=").append(collaborationScore).append(",");
+        sb.append("developerPreferenceScore").append("=").append(developerPreferenceScore).append(",");
         sb.append("confidenceScore").append("=").append(confidenceScore);
         sb.append("createdAt").append("=").append(createdAt);
         sb.append("language").append("=").append(language).append(",");
