@@ -322,9 +322,6 @@ createCompanyList = function () {
 
 /* 회사 카드 클릭 이벤트 핸들러 */
 scwin.onCompanyCardClick = function (companyData) {
-    // 회사 상세 정보 팝업 또는 페이지 이동
-    console.log("선택된 회사:", companyData);
-
     $c.win.alert(companyData.name + " 해당 기업의 공고등록 페이지로 이동합니다.\n(userId: " + companyData.userId + ")");
 };
 

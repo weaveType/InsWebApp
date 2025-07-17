@@ -374,14 +374,14 @@
             // 분석 결과 표시
             scwin.displayAnalysisResult = function(data) {
                 var typeDefinitions = {
-                    'AI': { name: '창의적 아키텍트', desc: '혁신적 설계를 통해 독창적인 시스템을 구축하는 개발자' },
-                    'AT': { name: '협업 아키텍트', desc: '팀과 함께 견고한 시스템을 설계하고 구축하는 개발자' },
-                    'BI': { name: '실용적 빌더', desc: '빠르고 효율적인 개발을 통해 실용적인 솔루션을 만드는 개발자' },
-                    'BT': { name: '팀워크 빌더', desc: '팀과 함께 빠르게 실용적인 솔루션을 개발하는 개발자' }
+                    'AI': { name: '혁신적 아키텍트', desc: '새로운 기술을 활용하여 체계적인 시스템을 구축하는 개발자' },
+                    'AR': { name: '개선형 아키텍트', desc: '기존 코드를 체계적으로 개선하고 최적화하는 개발자' },
+                    'BI': { name: '혁신적 빌더', desc: '새로운 기술로 빠르고 실용적인 솔루션을 만드는 개발자' },
+                    'BR': { name: '실용적 빌더', desc: '기존 방식을 개선하여 효율적인 솔루션을 구축하는 개발자' }
                 };
                 
-                var typeCode = data.typeCode || 'AT';
-                var typeInfo = typeDefinitions[typeCode] || typeDefinitions['AT'];
+                var typeCode = data.typeCode || 'AR';
+                var typeInfo = typeDefinitions[typeCode] || typeDefinitions['AR'];
                 
                 // 업로드 섹션 숨기기
                 $('.upload-section').hide();
@@ -396,16 +396,16 @@
                 
                 // 새로운 통합 점수 체계 적용
                 var devStyleScore = data.developmentStyleScore || 0;
-                var collabScore = data.collaborationScore || 0;
+                var devPrefScore = data.developerPreferenceScore || 0;
                 var confidenceScore = data.confidenceScore || 0;
                 
                 // 개발 스타일 점수 표시 (-50~+50 → 절댓값으로 표시)
                 $('.score-development-style').text(Math.abs(devStyleScore) + '점');
                 $('.development-style-type').text(devStyleScore > 0 ? 'Architect 우세' : 'Builder 우세');
                 
-                // 협업 성향 점수 표시 (-50~+50 → 절댓값으로 표시)  
-                $('.score-collaboration').text(Math.abs(collabScore) + '점');
-                $('.collaboration-type').text(collabScore > 0 ? 'Individual 우세' : 'Team 우세');
+                // 개발자 선호도 점수 표시 (-50~+50 → 절댓값으로 표시)  
+                $('.score-developer-preference').text(Math.abs(devPrefScore) + '점');
+                $('.developer-preference-type').text(devPrefScore > 0 ? 'Refactor 우세' : 'Innovator 우세');
                 
                 // 신뢰도 표시
                 $('.score-confidence').text(Math.round(confidenceScore * 100) + '%');
@@ -715,13 +715,13 @@
                 margin-bottom: 8px;
             }
             
-            .score-development-style, .score-collaboration {
+            .score-development-style, .score-developer-preference {
                 font-size: 24px;
                 font-weight: bold;
                 color: #007bff;
             }
             
-            .development-style-type, .collaboration-type {
+            .development-style-type, .developer-preference-type {
                 font-size: 12px;
                 color: #666;
                 margin-top: 4px;
@@ -876,9 +876,9 @@
                     </xf:group>
                     
                     <xf:group class="result-card">
-                        <w2:textbox class="result-type-code" label="AT" tagname="div"></w2:textbox>
-                        <w2:textbox class="result-type-name" label="협업 아키텍트" tagname="div"></w2:textbox>
-                        <w2:textbox class="result-type-desc" label="팀과 함께 견고한 시스템을 설계하고 구축하는 개발자" tagname="div"></w2:textbox>
+                        <w2:textbox class="result-type-code" label="AR" tagname="div"></w2:textbox>
+                        <w2:textbox class="result-type-name" label="개선형 아키텍트" tagname="div"></w2:textbox>
+                        <w2:textbox class="result-type-desc" label="기존 코드를 체계적으로 개선하고 최적화하는 개발자" tagname="div"></w2:textbox>
                         <w2:textbox class="result-language" label="Detected Language: Unknown" tagname="div" style="font-size: 16px; color: #666; margin-bottom: 16px;"></w2:textbox>
                     </xf:group>
                     
@@ -893,9 +893,9 @@
                             </xf:group>
                             
                             <xf:group class="score-item">
-                                <w2:textbox class="score-label" label="협업 성향" tagname="div"></w2:textbox>
-                                <w2:textbox class="score-collaboration" label="0점" tagname="div"></w2:textbox>
-                                <w2:textbox class="collaboration-type" label="분석 중..." tagname="div" style="font-size: 12px; color: #666; margin-top: 4px;"></w2:textbox>
+                                <w2:textbox class="score-label" label="개발자 선호도" tagname="div"></w2:textbox>
+                                <w2:textbox class="score-developer-preference" label="0점" tagname="div"></w2:textbox>
+                                <w2:textbox class="developer-preference-type" label="분석 중..." tagname="div" style="font-size: 12px; color: #666; margin-top: 4px;"></w2:textbox>
                             </xf:group>
                         </xf:group>
                         
