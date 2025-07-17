@@ -193,7 +193,7 @@
             	</w2:dataMap>
             </w2:dataCollection>
             <xf:submission id="sbm_selectScoutVo" action="/InsWebApp/US0003List.pwkjson" method="post" mediatype="application/json" ref='data:json,{"id":"dmp_scoutVo","key":"scoutVo"}'
-                target='data:json,{"dlt_scoutListVo", "key":"elData.scoutDetailVo"}' encoding="UTF-8" instance="" replace="" errorHandler="" customHandler="" mode="asynchronous" processMsg="매칭 유저 불러오는중.." ev:submit=""
+                target='data:json,[{"id":"dlt_scoutListVo","key":"elData.scoutDetailVo"}]' encoding="UTF-8" instance="" replace="" errorHandler="" customHandler="" mode="asynchronous" processMsg="매칭 유저 불러오는중.." ev:submit=""
                 ev:submitdone="scwin.sbm_scoutVo_submitdone" ev:submiterror="" abortTrigger="">
             </xf:submission>
         </xf:model>
@@ -464,7 +464,7 @@ scwin.sbm_scoutVo_submitdone = function (e) {
             		meta_snippetName="6_03 페이지리스트">
 
             	</xf:group>
-            	<w2:gridView checkAllType="false" dataList="data:dlt_applicantVoList" defaultCellHeight="20" focusFlow="linear"
+            	<w2:gridView checkAllType="false" dataList="data:dlt_scoutListVo" defaultCellHeight="20" focusFlow="linear"
             		id="gridView1" readOnly="true" sortable="true"
             		style="height:633px;width: 100%;overflow:hidden;box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);border:none;background:#ffffff;"
             		visibleRowNum="10">
