@@ -271,4 +271,8 @@ JOIN
         
         ORDER BY ja.applied_at DESC
 </select>
+<select id="getScoutUsersByPostId" resultType="com.demo.proworks.domain.user.vo.ScoutListVo" parameterType="com.demo.proworks.domain.user.vo.ScoutVo">
+SELECT * 
+  FROM
+</select>
 </mapper>

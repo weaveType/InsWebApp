@@ -1055,4 +1055,18 @@ public class UserController {
 		resultListVo.setApplicantDetailVo(detailList);
 		return resultListVo;
 	}
+
+	 /**
+	 * 기업의 매칭유저 검색을 조회한다.
+	 *
+	 * @param ScoutVo 페이징 정보, 공고 ID
+	 * @return ScoutListVo 유저 목록
+	 * @throws Exception
+	 */
+	@ElService(key = "US0003List")
+	@RequestMapping(value = "US0003List")
+	@ElDescription(sub = "공고에 지원한 유저 출력", desc = "공고에 지원한 유저를 출력한다")
+	public ScoutListVo getScoutUsersByPostId(ScoutVo scoutVo) throws Exception {
+		return userService.getScoutUsersByPostId(scoutVo);
+	}
 }

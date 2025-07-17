@@ -1036,7 +1036,7 @@ scwin.showGeneralUserUI = function () {
  * 기업 소유자 UI 표시 (수정하기, 삭제하기)
  */
 scwin.showCompanyOwnerUI = function () {
-    console.log("기업 소유자 UI 적용");
+    console.log("기업 소유자 UI 적용"); 
 
     // 일반 사용자 버튼 숨김
     btnApply.hide();
