@@ -419,33 +419,73 @@
                 var typeDescEl = document.querySelector('.result-type-desc');
                 if (typeDescEl) typeDescEl.textContent = typeInfo.desc;
                 
-                // 점수 표시
+                // 점수 표시 (0점 기준 -50~+50, 부호 포함)
                 if (result.scores) {
                     var scores = result.scores;
                     
+                    // B/A 축 (+: Architect, -: Builder)
                     var scoreAbEl = document.querySelector('.score-ab');
-                    if (scoreAbEl) scoreAbEl.textContent = Math.abs(scores['A_B'] || 0) + '점';
+                    var abScore = scores['A_B'] || 0;
+                    if (scoreAbEl) scoreAbEl.textContent = (abScore >= 0 ? '+' : '') + Math.round(abScore) + '점';
                     
                     var abTypeEl = document.querySelector('.ab-type');
-                    if (abTypeEl) abTypeEl.textContent = (scores['A_B'] || 0) > 0 ? 'Architect 우세' : 'Builder 우세';
+                    if (abTypeEl) {
+                        if (abScore >= 0) {
+                            abTypeEl.textContent = 'Architect 성향 (' + Math.round(abScore) + ')';
+                            abTypeEl.style.color = '#2563eb';
+                        } else {
+                            abTypeEl.textContent = 'Builder 성향 (' + Math.round(abScore) + ')';
+                            abTypeEl.style.color = '#dc2626';
+                        }
+                    }
                     
+                    // R/I 축 (+: Innovate, -: Refactor)
                     var scoreRiEl = document.querySelector('.score-ri');
-                    if (scoreRiEl) scoreRiEl.textContent = Math.abs(scores['R_I'] || 0) + '점';
+                    var riScore = scores['R_I'] || 0;
+                    if (scoreRiEl) scoreRiEl.textContent = (riScore >= 0 ? '+' : '') + Math.round(riScore) + '점';
                     
                     var riTypeEl = document.querySelector('.ri-type');
-                    if (riTypeEl) riTypeEl.textContent = (scores['R_I'] || 0) > 0 ? 'Innovate 우세' : 'Refactor 우세';
+                    if (riTypeEl) {
+                        if (riScore >= 0) {
+                            riTypeEl.textContent = 'Innovate 성향 (' + Math.round(riScore) + ')';
+                            riTypeEl.style.color = '#2563eb';
+                        } else {
+                            riTypeEl.textContent = 'Refactor 성향 (' + Math.round(riScore) + ')';
+                            riTypeEl.style.color = '#dc2626';
+                        }
+                    }
                     
+                    // S/T 축 (+: Team, -: Solo)
                     var scoreStEl = document.querySelector('.score-st');
-                    if (scoreStEl) scoreStEl.textContent = Math.abs(scores['S_T'] || 0) + '점';
+                    var stScore = scores['S_T'] || 0;
+                    if (scoreStEl) scoreStEl.textContent = (stScore >= 0 ? '+' : '') + Math.round(stScore) + '점';
                     
                     var stTypeEl = document.querySelector('.st-type');
-                    if (stTypeEl) stTypeEl.textContent = (scores['S_T'] || 0) > 0 ? 'Team 우세' : 'Solo 우세';
+                    if (stTypeEl) {
+                        if (stScore >= 0) {
+                            stTypeEl.textContent = 'Team 성향 (' + Math.round(stScore) + ')';
+                            stTypeEl.style.color = '#2563eb';
+                        } else {
+                            stTypeEl.textContent = 'Solo 성향 (' + Math.round(stScore) + ')';
+                            stTypeEl.style.color = '#dc2626';
+                        }
+                    }
                     
+                    // D/F 축 (+: Feature, -: Debug)
                     var scoreDfEl = document.querySelector('.score-df');
-                    if (scoreDfEl) scoreDfEl.textContent = Math.abs(scores['D_F'] || 0) + '점';
+                    var dfScore = scores['D_F'] || 0;
+                    if (scoreDfEl) scoreDfEl.textContent = (dfScore >= 0 ? '+' : '') + Math.round(dfScore) + '점';
                     
                     var dfTypeEl = document.querySelector('.df-type');
-                    if (dfTypeEl) dfTypeEl.textContent = (scores['D_F'] || 0) > 0 ? 'Feature 우세' : 'Debug 우세';
+                    if (dfTypeEl) {
+                        if (dfScore >= 0) {
+                            dfTypeEl.textContent = 'Feature 성향 (' + Math.round(dfScore) + ')';
+                            dfTypeEl.style.color = '#2563eb';
+                        } else {
+                            dfTypeEl.textContent = 'Debug 성향 (' + Math.round(dfScore) + ')';
+                            dfTypeEl.style.color = '#dc2626';
+                        }
+                    }
                 }
                 
                 console.log('설문 결과 표시 완료:', typeCode, typeInfo.name);
