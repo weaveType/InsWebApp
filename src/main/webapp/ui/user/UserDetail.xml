@@ -576,8 +576,7 @@ scwin.menu_history_onclick = function() {
 
 // 매칭제안 메뉴 클릭 이벤트
 scwin.menu_interest_onclick = function() {
-    contentFrame.setSrc();
-}
+    contentFrame.setSrc('MatchingProposal.xml');
 };
 
 // MBTI 검사 시작
@@ -612,7 +611,6 @@ scwin.btn_userUpdate_onclick = function (e) {
 					</xf:group>
 					<xf:group id="menu_interest" class="menu-item" ev:onclick="scwin.menu_interest_onclick">
 						<w2:textbox label="매칭제안" style="background:transparent; border:none; pointer-events: none;"></w2:textbox>
-					</xf:group>
 					</xf:group>
 				</aside>
 
