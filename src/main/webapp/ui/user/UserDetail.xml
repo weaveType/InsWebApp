@@ -617,7 +617,7 @@ scwin.btn_userUpdate_onclick = function (e) {
 				<!-- 메인 콘텐츠 -->
 				<xf:group class="main-content">
 					<w2:pageFrame id="contentFrame" src="/InsWebApp/ui/user/UserDetailMain.xml" style="width: 100%; height: 100%;"></w2:pageFrame>
-				</xf:group>
+						</xf:group>
 			</xf:group>
 		</xf:group>
 	</body>

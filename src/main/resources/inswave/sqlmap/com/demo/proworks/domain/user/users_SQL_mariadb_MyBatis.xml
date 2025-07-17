@@ -133,7 +133,7 @@
 	<select id="checkEmailDuplicateCount" parameterType="java.lang.String" resultType="java.lang.Long">
 		<!-- 이메일 중복 확인을 위한 개수 조회 -->
 		SELECT COUNT(*) /* QueryID : com.demo.proworks.domain.user.checkEmailDuplicateCount */
-		FROM USERS
+		FROM USERS 
 		WHERE EMAIL = #{email}
 		AND IS_DELETED = 0
 	</select>
