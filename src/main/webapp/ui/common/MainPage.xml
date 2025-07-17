@@ -123,14 +123,14 @@ scwin.smb_selectMatchingChecked_submitdone = function(e) {
         // txb_code_status.setValue("미완료");
     }
 
-    // 프로필 완성도 업데이트 (예시)
+    // 프로필 완성도 업데이트
     var completeCount = 0;
-    if (isMbtiChecked === "Y") completeCount++;
-    if (isCodeChecked === "Y") completeCount++;
+    if (isMbtiChecked) completeCount++;
+    if (isCodeChecked) completeCount++;
     var totalTasks = 2; // MBTI, 코드분석
     var completionPercentage = (completeCount / totalTasks) * 100;
     txb_profile_complete.setValue(completionPercentage + "%");
-    grp_profile_area.querySelector(".progress-fill").style.width = completionPercentage + "%";
+    document.querySelector(".progress-fill").style.width = completionPercentage + "%";
 };
 
 // 로그인 관련 팝업 호출 함수들

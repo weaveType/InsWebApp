@@ -15,16 +15,14 @@ import java.util.Date;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.demo.proworks.domain.user.service.UserService;
 import com.demo.proworks.domain.user.vo.UserVo;
 import com.demo.proworks.domain.user.vo.LoginVo;
+import com.demo.proworks.domain.user.vo.MatchingCheckedVo;
 import com.demo.proworks.domain.user.vo.UserInfoVo;
 import com.demo.proworks.domain.user.vo.UserListVo;
 import com.demo.proworks.domain.user.vo.ApplicantVo;
@@ -32,8 +30,6 @@ import com.demo.proworks.domain.user.vo.ApplicantListVo;
 import com.demo.proworks.domain.user.vo.ApplicantDetailVo;
 import com.demo.proworks.domain.user.vo.ScoutVo;
 import com.demo.proworks.domain.user.vo.ScoutListVo;
-import com.demo.proworks.domain.user.vo.ScoutDetailVo;
-import com.demo.proworks.common.vo.EmailVo;
 import com.demo.proworks.cmmn.ProworksUserHeader;
 import com.inswave.elfw.util.ControllerContextUtil;
 
@@ -43,7 +39,6 @@ import com.inswave.elfw.annotation.ElValidator;
 import com.inswave.elfw.log.AppLog;
 import com.inswave.elfw.login.LoginInfo;
 import com.inswave.elfw.login.LoginProcessor;
-import org.springframework.web.bind.annotation.RequestMethod;
 import java.util.HashMap;
 import java.util.Map;
 import com.fasterxml.jackson.databind.ObjectMapper;
