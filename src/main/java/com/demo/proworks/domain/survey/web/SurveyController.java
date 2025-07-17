@@ -1,5 +1,6 @@
 package com.demo.proworks.domain.survey.web;
 
+import com.demo.proworks.cmmn.ProworksUserHeader;
 import com.demo.proworks.domain.survey.service.SurveyService;
 import com.demo.proworks.domain.survey.vo.*;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -116,48 +117,64 @@ public class SurveyController {
             Long actualUserId = null;
             AppLog.debug("=== 사용자 정보 가져오기 시도 시작 ===");
             
-            // 방법1: ControllerContextUtil.getUserHeader() 시도 (안전한 방식)
+            // 방법1: ControllerContextUtil.getUserHeader() 시도 (SessionCheckController 방식)
             try {
-                Object headerObj = ControllerContextUtil.getUserHeader();
-                if (headerObj != null) {
-                    AppLog.debug("방법1 성공 - UserHeader 획득, 타입: " + headerObj.getClass().getName());
-                    // 안전한 방식으로 사용자 정보 추출 시도
-                    if (headerObj instanceof UserHeader) {
-                        UserHeader userHeader = (UserHeader) headerObj;
-                        AppLog.debug("표준 UserHeader 사용 가능");
-                        // UserHeader에서는 일반적으로 직접적인 사용자 ID 접근이 어려우므로 다른 방법 사용
+                ProworksUserHeader userHeader = (ProworksUserHeader) ControllerContextUtil.getUserHeader();
+                if (userHeader != null) {
+                    AppLog.debug("방법1 성공 - ProworksUserHeader 획득");
+                    AppLog.debug("사용자 정보 - userId: " + userHeader.getUserId() + ", accountId: " + userHeader.getAccountId());
+                    
+                    // accountId가 실제 DB의 숫자 user_id
+                    if (userHeader.getAccountId() > 0) {
+                        actualUserId = (long) userHeader.getAccountId();
+                        AppLog.debug("방법1 성공 - accountId 사용: " + actualUserId);
+                    } else {
+                        AppLog.debug("방법1 실패 - accountId가 유효하지 않음: " + userHeader.getAccountId());
                     }
                 } else {
-                    AppLog.debug("방법1 실패 - UserHeader가 null");
+                    AppLog.debug("방법1 실패 - ProworksUserHeader가 null");
                 }
+            } catch (ClassCastException e) {
+                AppLog.warn("방법1 실패 - ProworksUserHeader 캐스팅 실패: " + e.getMessage());
             } catch (Exception e) {
                 AppLog.warn("방법1 실패 - UserHeader 처리 중 오류: " + e.getMessage());
             }
             
-            // 방법 2: HttpSession에서 직접 가져오기
+            // 방법 2: HttpSession에서 userHeader 객체 가져오기
             if (actualUserId == null) {
                 try {
                     HttpSession session = request.getSession(false);
                     if (session != null) {
                         AppLog.debug("방법2 시도 - HttpSession 존재, ID: " + session.getId());
                         
-                        Integer sessionUserId = (Integer) session.getAttribute("userId");
-                        if (sessionUserId != null) {
-                            actualUserId = sessionUserId.longValue();
-                            AppLog.debug("방법2 성공 - HttpSession userId: " + actualUserId);
-                        } else {
-                            AppLog.debug("방법2 실패 - session.getAttribute(\"userId\")가 null");
-                        }
-                        
-                        // 세션의 모든 속성 확인
+                        // 다양한 세션 속성에서 사용자 ID 찾기
+                        AppLog.debug("=== 세션 속성 전체 탐색 ===");
                         java.util.Enumeration<String> attributeNames = session.getAttributeNames();
-                        AppLog.debug("=== 세션 속성 목록 ===");
                         while (attributeNames.hasMoreElements()) {
                             String attrName = attributeNames.nextElement();
                             Object attrValue = session.getAttribute(attrName);
                             AppLog.debug("세션 속성: " + attrName + " = " + attrValue);
                         }
-                        AppLog.debug("======================");
+                        
+                        // 방법2a: userId 직접 조회
+                        Integer sessionUserId = (Integer) session.getAttribute("userId");
+                        if (sessionUserId != null) {
+                            actualUserId = sessionUserId.longValue();
+                            AppLog.debug("방법2a 성공 - HttpSession userId: " + actualUserId);
+                        } else {
+                            // 방법2b: userHeader에서 accountId 가져오기
+                            try {
+                                ProworksUserHeader sessionUserHeader = (ProworksUserHeader) session.getAttribute("userHeader");
+                                if (sessionUserHeader != null && sessionUserHeader.getAccountId() > 0) {
+                                    actualUserId = (long) sessionUserHeader.getAccountId();
+                                    AppLog.debug("방법2b 성공 - HttpSession userHeader.accountId: " + actualUserId);
+                                } else {
+                                    AppLog.debug("방법2b 실패 - userHeader null이거나 accountId 없음");
+                                }
+                            } catch (ClassCastException e) {
+                                AppLog.debug("방법2b 실패 - userHeader 캐스팅 실패: " + e.getMessage());
+                            }
+                        }
                     } else {
                         AppLog.warn("방법2 실패 - HttpSession이 null");
                     }
@@ -166,35 +183,56 @@ public class SurveyController {
                 }
             }
             
-            // 방법 3: 쿠키에서 직접 파싱
+            // 방법 3: 쿠키에서 직접 파싱 (안전한 방식)
             if (actualUserId == null) {
                 try {
                     javax.servlet.http.Cookie[] cookies = request.getCookies();
                     if (cookies != null) {
                         for (javax.servlet.http.Cookie cookie : cookies) {
                             if ("userInfo".equals(cookie.getName())) {
-                                String userInfoJson = java.net.URLDecoder.decode(cookie.getValue(), "UTF-8");
-                                AppLog.debug("방법3 시도 - 쿠키에서 userInfo: " + userInfoJson);
-                                
-                                ObjectMapper cookieMapper = new ObjectMapper();
-                                JsonNode userInfoNode = cookieMapper.readTree(userInfoJson);
-                                if (userInfoNode.has("accountId")) {
-                                    actualUserId = userInfoNode.get("accountId").asLong();
-                                    AppLog.debug("방법3 성공 - 쿠키에서 accountId: " + actualUserId);
+                                try {
+                                    // URL 디코딩 시도 (강력한 방식)
+                                    String userInfoJson = cookie.getValue();
+                                    AppLog.debug("방법3 시도 - 원본 쿠키 값: " + userInfoJson);
+                                    
+                                    // URL 인코딩된 데이터 강제 디코딩
+                                    if (userInfoJson.startsWith("%7B")) {
+                                        // %7B는 {를 의미 - 확실히 URL 인코딩됨
+                                        userInfoJson = java.net.URLDecoder.decode(userInfoJson, "UTF-8");
+                                        AppLog.debug("방법3 - URL 디코딩 성공: " + userInfoJson);
+                                    }
+                                    
+                                    ObjectMapper cookieMapper = new ObjectMapper();
+                                    JsonNode userInfoNode = cookieMapper.readTree(userInfoJson);
+                                    if (userInfoNode.has("accountId")) {
+                                        actualUserId = userInfoNode.get("accountId").asLong();
+                                        AppLog.debug("방법3 성공 - 쿠키에서 accountId: " + actualUserId);
+                                    } else {
+                                        AppLog.debug("방법3 실패 - 쿠키에 accountId 없음");
+                                        AppLog.debug("쿠키 JSON 구조: " + userInfoNode.toString());
+                                    }
+                                } catch (Exception parseEx) {
+                                    AppLog.warn("방법3 실패 - JSON 파싱 오류: " + parseEx.getMessage());
+                                    AppLog.warn("파싱 실패한 JSON: " + cookie.getValue());
                                 }
                                 break;
                             }
                         }
+                    } else {
+                        AppLog.debug("방법3 실패 - 쿠키가 없음");
                     }
                 } catch (Exception e) {
-                    AppLog.warn("방법3 실패 - 쿠키 파싱 오류: " + e.getMessage());
+                    AppLog.warn("방법3 실패 - 쿠키 처리 오류: " + e.getMessage());
                 }
             }
             
-            // 기본값 설정
+            // 사용자 인증 확인
             if (actualUserId == null) {
-                actualUserId = 9L; // 마지막 수단으로 기본값 사용
-                AppLog.warn("모든 방법 실패 - 기본값 9 사용");
+                AppLog.error("사용자 정보를 가져올 수 없습니다. 로그인이 필요합니다.");
+                returnMap.put("success", false);
+                returnMap.put("message", "로그인이 필요합니다. 사용자 정보를 확인할 수 없습니다.");
+                returnMap.put("errorCode", "AUTH_REQUIRED");
+                return returnMap;
             }
             
             AppLog.debug("=== 최종 사용자 ID: " + actualUserId + " ===");
