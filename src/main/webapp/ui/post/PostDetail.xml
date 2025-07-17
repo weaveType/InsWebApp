@@ -534,7 +534,7 @@
                     gap: 10px;
                 }
 
-                .btn-apply, .btn-bookmark {
+                .btn-apply {
                     width: 100%;
                     justify-content: center;
                     padding: 15px;
@@ -1024,12 +1024,12 @@ scwin.showGeneralUserUI = function () {
 
     // 일반 사용자 버튼 표시
     btnApply.show();
-    btnBookmark.show();
 
     // 기업 관리 버튼 숨김
     btnEdit.hide();
     btnDelete.hide();
     btnApplicantDetails.hide();
+    btnScout.hide();
 };
 
 /**
@@ -1040,12 +1040,12 @@ scwin.showCompanyOwnerUI = function () {
 
     // 일반 사용자 버튼 숨김
     btnApply.hide();
-    btnBookmark.hide();
 
     // 기업 관리 버튼 표시
     btnEdit.show();
     btnDelete.show();
     btnApplicantDetails.show();
+    btnScout.show();
 };
 
 // 수정하기 버튼 클릭

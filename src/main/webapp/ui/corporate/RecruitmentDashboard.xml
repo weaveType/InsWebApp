@@ -211,84 +211,6 @@
                 margin-top: 40px;
             }
             
-            .action-card {
-                flex: 1;
-                background: white;
-                border-radius: 16px;
-                padding: 36px 28px;
-                text-align: center;
-                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-                border: 1px solid #e3e6ea;
-                cursor: pointer;
-                transition: all 0.3s ease;
-            }
-            
-            .action-card:hover {
-                transform: translateY(-5px);
-                box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
-                border-color: #4e7cff;
-            }
-            
-            .action-icon {
-                width: 80px;
-                height: 80px;
-                margin: 0 auto 24px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-size: 40px;
-                border-radius: 50%;
-                background: linear-gradient(135deg, #e3f2fd, #bbdefb);
-            }
-            
-            .action-card:nth-child(1) .action-icon {
-                background: linear-gradient(135deg, #e3f2fd, #bbdefb);
-            }
-            
-            .action-card:nth-child(2) .action-icon {
-                background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
-            }
-            
-            .action-card:nth-child(3) .action-icon {
-                background: linear-gradient(135deg, #fff3e0, #ffe0b2);
-            }
-            
-            .action-card:nth-child(4) .action-icon {
-                background: linear-gradient(135deg, #f3e5f5, #e1bee7);
-            }
-            
-            .action-title {
-                font-size: 20px;
-                font-weight: 600;
-                color: #1a2332;
-                margin-bottom: 12px;
-            }
-            
-            .action-desc {
-                font-size: 14px;
-                color: #64748b;
-                margin-bottom: 24px;
-                line-height: 1.6;
-            }
-            
-            .btn-secondary {
-                background: #f1f5f9;
-                color: #475569;
-                border: none;
-                padding: 10px 24px;
-                border-radius: 8px;
-                font-size: 14px;
-                font-weight: 600;
-                cursor: pointer;
-                transition: all 0.3s ease;
-            }
-            
-            .btn-secondary:hover {
-                background: #e2e8f0;
-                transform: translateY(-1px);
-            }
-            
-            
             /* 공고 관리 그리드 스타일 */
             .gvwbox {
                 background: #f8f9fa;
@@ -862,182 +784,131 @@ scwin.formatDate = function(dateString) {
     <body ev:onpageload="scwin.onpageload">
         <w2:wframe src="../common/Header.xml" id="headerFrame" />
         <xf:group class="sub_contents" id="">
-            <!-- 헤더 섹션 -->
-            <xf:group class="dashboard-header" id="">
-            	<xf:group class="titbox" id="" meta_snippetCategory="02_타이틀" meta_snippetKeyComponent="true"
-            		meta_snippetName="2_02 서브타이틀(h3)" style="">
-            		<w2:textbox class="" id="" label="서브타이틀" style="" tagname="h3"></w2:textbox>
-            		<xf:group class="rt" id="" style="">
-            			<xf:trigger class="btn_cm " id="btn_update_company" style="" type="button" ev:onclick="scwin.btn_update_company_onclick">
-            				<xf:label><![CDATA[기업 수정]]></xf:label>
-            			</xf:trigger>
-            			<xf:trigger class="btn_cm " id="btn_delete_company" style="" type="button" ev:onclick="scwin.btn_delete_company_onclick">
-            				<xf:label><![CDATA[탈퇴]]></xf:label>
-            			</xf:trigger>
-            		</xf:group>
-            	</xf:group>
-            	<w2:textbox id="" label="채용관리 대시보드" class="main-title"></w2:textbox>
-            	<w2:textbox id="" label="우리 회사의 채용현황을 한눈에 확인하세요" class="sub-title"></w2:textbox>
-            </xf:group>
+        	<!-- 헤더 섹션 -->
+        	<xf:group class="dashboard-header" id="">
+        		<w2:textbox id="" label="채용관리 대시보드" class="main-title"></w2:textbox>
+        		<w2:textbox id="" label="우리 회사의 채용현황을 한눈에 확인하세요" class="sub-title"></w2:textbox>
+        	</xf:group>
 
-            <!-- 통계 카드 섹션 -->
-            <xf:group class="stats-container" id="">
-                <!-- 총 지원자 -->
-                <xf:group class="stat-card" id="">
-                    <xf:group class="stat-icon blue" id="">
-                        <w2:span label="👥"></w2:span>
-                    </xf:group>
-                    <w2:textbox id="tbx_totalApplicants" label="0" class="stat-value"></w2:textbox>
-                    <w2:textbox id="" label="총 지원자" class="stat-label"></w2:textbox>
-                </xf:group>
-                
-                <!-- 활성 공고 -->
-                <xf:group class="stat-card" id="">
-                    <xf:group class="stat-icon green" id="">
-                        <w2:span label="📋"></w2:span>
-                    </xf:group>
-                    <w2:textbox id="tbx_activeJobs" label="0" class="stat-value"></w2:textbox>
-                    <w2:textbox id="" label="활성 공고" class="stat-label"></w2:textbox>
-                </xf:group>
-                
-                <!-- 면접 대기 -->
-                <xf:group class="stat-card" id="">
-                    <xf:group class="stat-icon orange" id="">
-                        <w2:span label="⏰"></w2:span>
-                    </xf:group>
-                    <w2:textbox id="tbx_pendingInterview" label="0" class="stat-value"></w2:textbox>
-                    <w2:textbox id="" label="면접 대기" class="stat-label"></w2:textbox>
-                </xf:group>
-                
-                <!-- 최종 합격 -->
-                <xf:group class="stat-card" id="">
-                    <xf:group class="stat-icon purple" id="">
-                        <w2:span label="✅"></w2:span>
-                    </xf:group>
-                    <w2:textbox id="tbx_finalAccepted" label="0" class="stat-value"></w2:textbox>
-                    <w2:textbox id="" label="최종 합격" class="stat-label"></w2:textbox>
-                </xf:group>
-            </xf:group>
-            
-            <!-- 채용공고 관리 섹션 -->
-            <xf:group class="recruitment-section" id="">
-                <xf:group class="section-header" id="">
-                    <w2:textbox id="" label="채용공고 관리" class="section-title"></w2:textbox>
-                    <xf:group class="rt" id="" style="">
-                    	<xf:trigger id="btn_newJob" type="button" class="btn-primary" ev:onclick="scwin.btn_newJob_onclick">
-                    		<xf:label><![CDATA[➕ 새 공고 작성]]></xf:label>
-                    	</xf:trigger>
-                    </xf:group>
-                </xf:group>
-                <w2:textbox id="" label="현재 진행 중인 채용공고를 관리하고 새로운 공고를 작성할 수 있습니다." 
-                    style="color:#64748b;font-size:14px;"></w2:textbox>
-                
-                <!-- 공고 관리 버튼 영역 -->
-                <xf:group class="titbox" id="" style="margin-top: 20px;">
-                	<xf:group class="count" id="">
-                		<w2:span id="" label="총" style=""></w2:span>
-                		<w2:span class="num" id="spn_listCnt" label="0" ref="" style=""></w2:span>
-                		<w2:span id="" label="건" style=""></w2:span>
-                	</xf:group>
-                	<xf:group class="rt" id="" style="">
-                		<xf:trigger class="btn_cm edit" id="btn_refresh" style="" type="button" ev:onclick="scwin.btn_refresh_onclick">
-                			<xf:label><![CDATA[새로고침]]></xf:label>
-                		</xf:trigger>
-                		<xf:trigger class="btn_cm del" id="btn_delete" style="" type="button" ev:onclick="scwin.btn_delete_onclick">
-                			<xf:label><![CDATA[삭제]]></xf:label>
-                		</xf:trigger>
-                	</xf:group>
-                </xf:group>
-                
-                <!-- 공고 목록 GridView -->
-                <xf:group adaptiveThreshold="" class="gvwbox" id="" style="margin-top: 15px;">
-                	<w2:gridView autoFit="allColumn" checkReadOnlyOnPasteEnable="" class="gvw" dataList="data:dlt_postVoList"
-                		defaultCellHeight="26" focusMode="row" id="grd_postList" scrollByColumn="false" scrollByColumnAdaptive="false" style="height: 300px;"
-                		visibleRowNum="10" ev:oncellclick="scwin.grd_postList_oncellclick" readOnly="true">
-                		<w2:caption style="" id="caption1" value="📋 채용공고 목록 (행을 클릭하여 공고를 선택한 후 수정/삭제 가능)"></w2:caption>
-                		<w2:header style="" id="header1">
-                			<w2:row style="" id="row1">
-                				<w2:column width="80" inputType="text" style="" id="column1" value="공고ID" displayMode="label"></w2:column>
-                				<w2:column width="250" inputType="text" style="" id="column2" value="제목" displayMode="label"></w2:column>
-                				<w2:column width="200" inputType="text" style="" id="column3" value="설명" displayMode="label"></w2:column>
-                				<w2:column width="100" inputType="text" style="" id="column4" value="지역" displayMode="label"></w2:column>
-                				<w2:column width="100" inputType="text" style="" id="column5" value="근무형태" displayMode="label"></w2:column>
-                				<w2:column width="80" inputType="text" style="" id="column6" value="상태" displayMode="label"></w2:column>
-                				<w2:column width="100" inputType="text" style="" id="column7" value="등록일" displayMode="label"></w2:column>
-                			</w2:row>
-                		</w2:header>
-                		<w2:gBody style="" id="gBody1">
-                			<w2:row style="" id="row2">
-                				<w2:column width="80" inputType="text" style="" id="jobPostingId" value="" displayMode="label"></w2:column>
-                				<w2:column width="250" inputType="text" style="" id="title" value="" displayMode="label"></w2:column>
-                				<w2:column width="200" inputType="text" style="" id="description" value="" displayMode="label"></w2:column>
-                				<w2:column width="100" inputType="text" style="" id="location" value="" displayMode="label"></w2:column>
-                				<w2:column width="100" inputType="text" style="" id="workType" value="" displayMode="label"></w2:column>
-                				<w2:column width="80" inputType="text" style="" id="status" value="" displayMode="label"></w2:column>
-                				<w2:column width="100" inputType="text" style="" id="postedAt" value="" displayMode="label"></w2:column>
-                			</w2:row>
-                		</w2:gBody>
-                	</w2:gridView>
-                </xf:group>
-                
-                <!-- 페이징 -->
-                <xf:group class="pglbox" id="" style="margin-top: 15px;">
-                	<w2:pageList class="pgl" displayButtonType="display" displayFormat="#" id="pgl_postList" pageSize="5" pagingType="0"
-                		style="" ev:onclick="scwin.pgl_postList_onclick">
-                	</w2:pageList>
-                </xf:group>
-            </xf:group>
-            
-            <!-- Quick Actions 영역 -->
-            <xf:group class="quick-actions" id="">
-                <!-- 새 공고 작성 카드 -->
-                <xf:group class="action-card" id="grp_quickNewJob" ev:onclick="scwin.btn_newJob_onclick">
-                    <xf:group class="action-icon" id="">
-                        <w2:span label="📝"></w2:span>
-                    </xf:group>
-                    <w2:textbox id="" label="새 공고 작성" class="action-title"></w2:textbox>
-                    <w2:textbox id="" label="새로운 채용공고를 작성하고 게시하세요" class="action-desc"></w2:textbox>
-                    <xf:trigger id="btn_create_posting" type="button" class="btn-secondary" ev:onclick="scwin.btn_newJob_onclick">
-                        <xf:label><![CDATA[공고 작성하기]]></xf:label>
-                    </xf:trigger>
-                </xf:group>
-                
-                <!-- 공고 관리 카드 -->
-                <xf:group class="action-card" id="grp_quickManagement" ev:onclick="scwin.grp_quickManagement_onclick">
-                    <xf:group class="action-icon" id="">
-                        <w2:span label="📋"></w2:span>
-                    </xf:group>
-                    <w2:textbox id="" label="공고 관리" class="action-title"></w2:textbox>
-                    <w2:textbox id="" label="등록된 공고를 수정하거나 삭제할 수 있습니다" class="action-desc"></w2:textbox>
-                    <xf:trigger id="btn_manage_posting" type="button" class="btn-secondary" ev:onclick="scwin.btn_refresh_onclick">
-                        <xf:label><![CDATA[목록 새로고침]]></xf:label>
-                    </xf:trigger>
-                </xf:group>
-                
-                <!-- 채용 통계 카드 -->
-                <xf:group class="action-card" id="grp_quickAnalytics" ev:onclick="scwin.grp_quickAnalytics_onclick">
-                    <xf:group class="action-icon" id="">
-                        <w2:span label="📊"></w2:span>
-                    </xf:group>
-                    <w2:textbox id="" label="채용 통계" class="action-title"></w2:textbox>
-                    <w2:textbox id="" label="채용 현황과 성과를 분석해보세요" class="action-desc"></w2:textbox>
-                    <xf:trigger id="btn_recruitment_statistics" type="button" class="btn-secondary" ev:onclick="scwin.grp_quickAnalytics_onclick">
-                        <xf:label><![CDATA[통계 보기]]></xf:label>
-                    </xf:trigger>
-                </xf:group>
-                
-                <!-- 인재 스카우트 카드 -->
-                <xf:group class="action-card" id="grp_quickScout" ev:onclick="scwin.grp_quickScout_onclick">
-                    <xf:group class="action-icon" id="">
-                        <w2:span label="🔍"></w2:span>
-                    </xf:group>
-                    <w2:textbox id="" label="인재 스카우트" class="action-title"></w2:textbox>
-                    <w2:textbox id="" label="우수한 인재를 발굴하고 스카우트하세요" class="action-desc"></w2:textbox>
-                    <xf:trigger id="" type="button" class="btn-secondary">
-                        <xf:label><![CDATA[스카우트 하기]]></xf:label>
-                    </xf:trigger>
-                </xf:group>
-            </xf:group>
+        	<!-- 통계 카드 섹션 -->
+        	<xf:group class="stats-container" id="">
+        		<!-- 총 지원자 -->
+        		<xf:group class="stat-card" id="">
+        			<xf:group class="stat-icon blue" id="">
+        				<w2:span label="👥"></w2:span>
+        			</xf:group>
+        			<w2:textbox id="tbx_totalApplicants" label="0" class="stat-value"></w2:textbox>
+        			<w2:textbox id="" label="총 지원자" class="stat-label"></w2:textbox>
+        		</xf:group>
+
+        		<!-- 활성 공고 -->
+        		<xf:group class="stat-card" id="">
+        			<xf:group class="stat-icon green" id="">
+        				<w2:span label="📋"></w2:span>
+        			</xf:group>
+        			<w2:textbox id="tbx_activeJobs" label="0" class="stat-value"></w2:textbox>
+        			<w2:textbox id="" label="활성 공고" class="stat-label"></w2:textbox>
+        		</xf:group>
+
+        		<!-- 면접 대기 -->
+        		<xf:group class="stat-card" id="">
+        			<xf:group class="stat-icon orange" id="">
+        				<w2:span label="⏰"></w2:span>
+        			</xf:group>
+        			<w2:textbox id="tbx_pendingInterview" label="0" class="stat-value"></w2:textbox>
+        			<w2:textbox id="" label="면접 대기" class="stat-label"></w2:textbox>
+        		</xf:group>
+
+        		<!-- 최종 합격 -->
+        		<xf:group class="stat-card" id="">
+        			<xf:group class="stat-icon purple" id="">
+        				<w2:span label="✅"></w2:span>
+        			</xf:group>
+        			<w2:textbox id="tbx_finalAccepted" label="0" class="stat-value"></w2:textbox>
+        			<w2:textbox id="" label="최종 합격" class="stat-label"></w2:textbox>
+        		</xf:group>
+        	</xf:group>
+
+        	<!-- 채용공고 관리 섹션 -->
+        	<xf:group class="recruitment-section" id="">
+        		<xf:group class="section-header" id="">
+        			<w2:textbox id="" label="채용공고 관리" class="section-title"></w2:textbox>
+        			<xf:group class="rt" id="" style="">
+        				<xf:trigger id="btn_newJob" type="button" class="btn-primary" ev:onclick="scwin.btn_newJob_onclick">
+        					<xf:label><![CDATA[➕ 새 공고 작성]]></xf:label>
+        				</xf:trigger>
+        			</xf:group>
+        		</xf:group>
+        		<w2:textbox id="" label="현재 진행 중인 채용공고를 관리하고 새로운 공고를 작성할 수 있습니다." style="color:#64748b;font-size:14px;"></w2:textbox>
+
+        		<!-- 공고 관리 버튼 영역 -->
+        		<xf:group class="titbox" id="" style="margin-top: 20px;">
+        			<xf:group class="count" id="">
+        				<w2:span id="" label="총" style=""></w2:span>
+        				<w2:span class="num" id="spn_listCnt" label="0" ref="" style=""></w2:span>
+        				<w2:span id="" label="건" style=""></w2:span>
+        			</xf:group>
+        			<xf:group class="rt" id="" style="">
+        				<xf:trigger class="btn_cm edit" id="btn_refresh" style="" type="button" ev:onclick="scwin.btn_refresh_onclick">
+        					<xf:label><![CDATA[새로고침]]></xf:label>
+        				</xf:trigger>
+        				<xf:trigger class="btn_cm del" id="btn_delete" style="" type="button" ev:onclick="scwin.btn_delete_onclick">
+        					<xf:label><![CDATA[삭제]]></xf:label>
+        				</xf:trigger>
+        			</xf:group>
+        		</xf:group>
+
+        		<!-- 공고 목록 GridView -->
+        		<xf:group adaptiveThreshold="" class="gvwbox" id="" style="margin-top: 15px;">
+        			<w2:gridView autoFit="allColumn" checkReadOnlyOnPasteEnable="" class="gvw" dataList="data:dlt_postVoList"
+        				defaultCellHeight="26" focusMode="row" id="grd_postList" scrollByColumn="false" scrollByColumnAdaptive="false"
+        				style="height: 300px;" visibleRowNum="10" ev:oncellclick="scwin.grd_postList_oncellclick" readOnly="true">
+        				<w2:caption style="" id="caption1" value="📋 채용공고 목록 (행을 클릭하여 공고를 선택한 후 수정/삭제 가능)"></w2:caption>
+        				<w2:header style="" id="header1">
+        					<w2:row style="" id="row1">
+        						<w2:column width="80" inputType="text" style="" id="column1" value="공고ID" displayMode="label"></w2:column>
+        						<w2:column width="250" inputType="text" style="" id="column2" value="제목" displayMode="label"></w2:column>
+        						<w2:column width="200" inputType="text" style="" id="column3" value="설명" displayMode="label"></w2:column>
+        						<w2:column width="100" inputType="text" style="" id="column4" value="지역" displayMode="label"></w2:column>
+        						<w2:column width="100" inputType="text" style="" id="column5" value="근무형태" displayMode="label"></w2:column>
+        						<w2:column width="80" inputType="text" style="" id="column6" value="상태" displayMode="label"></w2:column>
+        						<w2:column width="100" inputType="text" style="" id="column7" value="등록일" displayMode="label"></w2:column>
+        					</w2:row>
+        				</w2:header>
+        				<w2:gBody style="" id="gBody1">
+        					<w2:row style="" id="row2">
+        						<w2:column width="80" inputType="text" style="" id="jobPostingId" value="" displayMode="label"></w2:column>
+        						<w2:column width="250" inputType="text" style="" id="title" value="" displayMode="label"></w2:column>
+        						<w2:column width="200" inputType="text" style="" id="description" value="" displayMode="label"></w2:column>
+        						<w2:column width="100" inputType="text" style="" id="location" value="" displayMode="label"></w2:column>
+        						<w2:column width="100" inputType="text" style="" id="workType" value="" displayMode="label"></w2:column>
+        						<w2:column width="80" inputType="text" style="" id="status" value="" displayMode="label"></w2:column>
+        						<w2:column width="100" inputType="text" style="" id="postedAt" value="" displayMode="label"></w2:column>
+        					</w2:row>
+        				</w2:gBody>
+        			</w2:gridView>
+        		</xf:group>
+
+        		<!-- 페이징 -->
+        		<xf:group class="pglbox" id="" style="margin-top: 15px;">
+        			<w2:pageList class="pgl" displayButtonType="display" displayFormat="#" id="pgl_postList" pageSize="5" pagingType="0"
+        				style="" ev:onclick="scwin.pgl_postList_onclick">
+        			</w2:pageList>
+        		</xf:group>
+        	</xf:group>
+
+        	<!-- Quick Actions 영역 -->
+        	<xf:group class="titbox" id="" meta_snippetCategory="02_타이틀" meta_snippetKeyComponent="true" meta_snippetName="2_02 서브타이틀(h3)"
+        		style="">
+        		<xf:group class="rt" id="" style="">
+        			<xf:trigger class="btn_cm " ev:onclick="scwin.btn_update_company_onclick" id="trigger3" style="" type="button">
+        				<xf:label><![CDATA[기업 수정]]></xf:label>
+        			</xf:trigger>
+        			<xf:trigger class="btn_cm " ev:onclick="scwin.btn_delete_company_onclick" id="trigger4" style="" type="button">
+        				<xf:label><![CDATA[탈퇴]]></xf:label>
+        			</xf:trigger>
+        		</xf:group>
+        	</xf:group>
         </xf:group>
     </body>
 </html>
