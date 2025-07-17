@@ -17,6 +17,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.annotation.Resource;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -232,6 +233,16 @@ public class SurveyController {
                 returnMap.put("success", false);
                 returnMap.put("message", "로그인이 필요합니다. 사용자 정보를 확인할 수 없습니다.");
                 returnMap.put("errorCode", "AUTH_REQUIRED");
+                return returnMap;
+            }
+            
+            // 사용자 권한 확인 (기업 사용자 접근 차단)
+            String userRole = getUserRoleFromCookie(request);
+            if ("COMPANY".equals(userRole)) {
+                AppLog.error("기업 사용자의 MBTI 테스트 접근 차단: " + actualUserId);
+                returnMap.put("success", false);
+                returnMap.put("message", "죄송합니다. 개발자 유형 검사는 개인 사용자만 이용 가능합니다.");
+                returnMap.put("errorCode", "ACCESS_DENIED");
                 return returnMap;
             }
             
@@ -460,5 +471,49 @@ public class SurveyController {
         }
         
         return jsonData.toString();
+    }
+    
+    /**
+     * HttpServletRequest의 쿠키에서 사용자 role 정보를 가져옵니다.
+     * 
+     * @param request HttpServletRequest
+     * @return 사용자 role (예: "COMPANY", "USER") 또는 null
+     */
+    private String getUserRoleFromCookie(HttpServletRequest request) {
+        try {
+            Cookie[] cookies = request.getCookies();
+            if (cookies != null) {
+                for (Cookie cookie : cookies) {
+                    if ("userInfo".equals(cookie.getName())) {
+                        try {
+                            String userInfoJson = cookie.getValue();
+                            
+                            // URL 디코딩이 필요한지 확인
+                            if (userInfoJson.contains("%7B")) {
+                                userInfoJson = java.net.URLDecoder.decode(userInfoJson, "UTF-8");
+                            }
+                            
+                            ObjectMapper mapper = new ObjectMapper();
+                            JsonNode userInfoNode = mapper.readTree(userInfoJson);
+                            
+                            if (userInfoNode.has("role")) {
+                                String role = userInfoNode.get("role").asText();
+                                AppLog.debug("쿠키에서 가져온 사용자 role: " + role);
+                                return role;
+                            } else {
+                                AppLog.debug("쿠키에 role 정보가 없습니다.");
+                            }
+                        } catch (Exception parseEx) {
+                            AppLog.warn("쿠키에서 role 파싱 중 오류: " + parseEx.getMessage());
+                        }
+                        break;
+                    }
+                }
+            }
+        } catch (Exception e) {
+            AppLog.warn("쿠키에서 role 정보 가져오는 중 오류: " + e.getMessage());
+        }
+        
+        return null; // role 정보를 찾을 수 없음
     }
 }
