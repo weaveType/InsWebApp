@@ -1056,11 +1056,11 @@ public class UserController {
 		return resultListVo;
 	}
 
-	 /**
+	/**
 	 * 기업의 매칭유저 검색을 조회한다.
 	 *
-	 * @param ScoutVo 페이징 정보, 공고 ID
-	 * @return ScoutListVo 유저 목록
+	 * @param ApplicantVo 페이징 정보, 공고 ID
+	 * @return 등록된 행의 수
 	 * @throws Exception
 	 */
 	@ElService(key = "US0003List")
