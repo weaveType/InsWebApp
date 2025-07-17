@@ -106,7 +106,7 @@ scwin.menu1_onclick = function () {
 };
 
 scwin.menu2_onclick = function () {
-    $p.url("../mbti/MbtiTest.xml");
+    $p.url("../survey/SurveyMbti.xml");
 };
 
 scwin.menu3_onclick = function () {
