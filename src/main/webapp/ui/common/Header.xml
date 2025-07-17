@@ -60,7 +60,7 @@ scwin.onpageload = function () {
 // 로그아웃
 scwin.logout_onclick = function () {
     // 로그아웃 요청
-
+    $c.win.logout();
     // 쿠키 삭제
     WebSquare.cookie.delCookie("userInfo");
 
