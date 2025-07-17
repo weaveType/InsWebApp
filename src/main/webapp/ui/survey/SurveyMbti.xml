@@ -1,79 +1,62 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<html xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:ev="http://www.w3.org/2001/xml-events"
-    xmlns:w2="http://www.inswave.com/websquare" 
-    xmlns:xf="http://www.w3.org/2002/xforms">
-    
-    <head meta_screenName="weaveType 설문 분석">
-        <w2:type>COMPONENT</w2:type>
-        <w2:buildDate/>
-        <w2:MSA/>
-        <xf:model>
-            <w2:dataCollection baseNode="map">
-                <!-- 설문 질문 조회 결과 -->
-                <w2:dataMap baseNode="map" id="dma_questionsResult">
-                    <w2:keyInfo>
-                        <w2:key id="questions" name="질문그룹" dataType="text" value=""></w2:key>
-                        <w2:key id="totalCount" name="총질문수" dataType="number" value="0"></w2:key>
-                    </w2:keyInfo>
-                </w2:dataMap>
-                
-                <!-- 설문 응답 제출 데이터 -->
-                <w2:dataMap baseNode="map" id="dma_surveySubmit">
-                    <w2:keyInfo>
-                        <w2:key id="userId" name="사용자ID" dataType="text" value="TEST_USER"></w2:key>
-                        <w2:key id="typeId" name="타입ID" dataType="number" value="1"></w2:key>
-                        <w2:key id="answers" name="응답목록" dataType="text" value=""></w2:key>
-                    </w2:keyInfo>
-                </w2:dataMap>
-                
-                <!-- 분석 결과 데이터 -->
-                <w2:dataMap baseNode="map" id="dma_analysisResult">
-                    <w2:keyInfo>
-                        <w2:key id="typeId" name="타입ID" dataType="number" value="0"></w2:key>
-                        <w2:key id="typeCode" name="유형코드" dataType="text" value=""></w2:key>
-                        <w2:key id="typeName" name="유형명" dataType="text" value=""></w2:key>
-                        <w2:key id="typeDescription" name="유형설명" dataType="text" value=""></w2:key>
-                        <w2:key id="scores" name="점수정보" dataType="text" value=""></w2:key>
-                    </w2:keyInfo>
-                </w2:dataMap>
-            </w2:dataCollection>
-            
-            <w2:workflowCollection></w2:workflowCollection>
-            
-            <!-- 설문 질문 조회 -->
-            <xf:submission id="sbm_getQuestions" 
-                ref="" 
-                target='data:json,{"id":"dma_questionsResult"}' 
-                action="/InsWebApp/SV0001Questions.pwkjson" 
-                method="post"
-                mediatype="application/json" 
-                encoding="UTF-8" 
-                mode="asynchronous"
-                processMsg="설문 질문을 불러오는 중입니다..." 
-                ev:submitdone="scwin.sbm_getQuestions_submitdone" 
-                ev:submiterror="scwin.sbm_getQuestions_submiterror">
-            </xf:submission>
-            
-            <!-- 설문 응답 제출 -->
-            <xf:submission id="sbm_submitSurvey" 
-                ref='data:json,{"id":"dma_surveySubmit"}' 
-                target='data:json,{"id":"dma_analysisResult"}' 
-                action="/InsWebApp/SV0001Submit.pwkjson" 
-                method="post"
-                mediatype="application/json" 
-                encoding="UTF-8" 
-                mode="asynchronous"
-                processMsg="설문을 분석하는 중입니다..." 
-                ev:submitdone="scwin.sbm_submitSurvey_submitdone" 
-                ev:submiterror="scwin.sbm_submitSurvey_submiterror">
-            </xf:submission>
-        </xf:model>
-        
-        <w2:layoutInfo/>
-        <w2:publicInfo method=""/>
-        
-        <script type="text/javascript"><![CDATA[
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare"
+	xmlns:xf="http://www.w3.org/2002/xforms">
+
+	<head meta_screenName="weaveType 설문 분석">
+		<w2:type>COMPONENT</w2:type>
+		<w2:buildDate />
+		<w2:MSA />
+		<xf:model>
+			<w2:dataCollection baseNode="map">
+				<!-- 설문 질문 조회 결과 -->
+				<w2:dataMap baseNode="map" id="dma_questionsResult">
+					<w2:keyInfo>
+						<w2:key id="questions" name="질문그룹" dataType="text" value=""></w2:key>
+						<w2:key id="totalCount" name="총질문수" dataType="number" value="0"></w2:key>
+					</w2:keyInfo>
+				</w2:dataMap>
+
+				<!-- 설문 응답 제출 데이터 -->
+				<w2:dataMap baseNode="map" id="dma_surveySubmit">
+					<w2:keyInfo>
+						<w2:key id="userId" name="사용자ID" dataType="text" value="TEST_USER"></w2:key>
+						<w2:key id="typeId" name="타입ID" dataType="number" value="1"></w2:key>
+						<w2:key id="answers" name="응답목록" dataType="text" value=""></w2:key>
+					</w2:keyInfo>
+				</w2:dataMap>
+
+				<!-- 분석 결과 데이터 -->
+				<w2:dataMap baseNode="map" id="dma_analysisResult">
+					<w2:keyInfo>
+						<w2:key id="typeId" name="타입ID" dataType="number" value="0"></w2:key>
+						<w2:key id="typeCode" name="유형코드" dataType="text" value=""></w2:key>
+						<w2:key id="typeName" name="유형명" dataType="text" value=""></w2:key>
+						<w2:key id="typeDescription" name="유형설명" dataType="text" value=""></w2:key>
+						<w2:key id="scores" name="점수정보" dataType="text" value=""></w2:key>
+					</w2:keyInfo>
+				</w2:dataMap>
+			</w2:dataCollection>
+
+			<w2:workflowCollection></w2:workflowCollection>
+
+			<!-- 설문 질문 조회 -->
+			<xf:submission id="sbm_getQuestions" ref="" target='data:json,{"id":"dma_questionsResult"}'
+				action="/InsWebApp/SV0001Questions.pwkjson" method="post" mediatype="application/json" encoding="UTF-8" mode="asynchronous"
+				processMsg="설문 질문을 불러오는 중입니다..." ev:submitdone="scwin.sbm_getQuestions_submitdone" ev:submiterror="scwin.sbm_getQuestions_submiterror">
+			</xf:submission>
+
+			<!-- 설문 응답 제출 -->
+			<xf:submission id="sbm_submitSurvey" ref='data:json,{"id":"dma_surveySubmit"}'
+				target='data:json,{"id":"dma_analysisResult"}' action="/InsWebApp/SV0001Submit.pwkjson" method="post" mediatype="application/json"
+				encoding="UTF-8" mode="asynchronous" processMsg="설문을 분석하는 중입니다..." ev:submitdone="scwin.sbm_submitSurvey_submitdone"
+				ev:submiterror="scwin.sbm_submitSurvey_submiterror">
+			</xf:submission>
+		</xf:model>
+
+		<w2:layoutInfo />
+		<w2:publicInfo method="" />
+
+		<script type="text/javascript"><![CDATA[
             // 설문 질문 데이터 저장소 (JavaScript 객체로 관리)
             scwin.surveyQuestions = {};
             scwin.userAnswers = {};
@@ -501,8 +484,8 @@
             
 
         ]]></script>
-        
-        <style type="text/css"><![CDATA[
+
+		<style type="text/css"><![CDATA[
             .main-container {
                 background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
                 min-height: 100vh;
@@ -780,6 +763,10 @@
                 margin: 0 auto 40px auto;
                 max-width: 500px;
                 box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
             }
             
             .result-type-code {
@@ -801,6 +788,12 @@
                 font-size: 16px;
                 color: #666;
                 line-height: 1.6;
+            }
+            
+            .mbti-result-image {
+                display: block;
+                margin: 10px auto;
+                max-width: 300px;
             }
             
             .score-section {
@@ -970,111 +963,110 @@
                 }
             }
         ]]></style>
-    </head>
-    
-    <body ev:onpageload="scwin.onpageload">
-        <w2:wframe src="../common/Header.xml" id="headerFrame" />
-        
-        <xf:group class="main-container">
-            <xf:group class="content-area">
-                
-                <!-- 설문 섹션 -->
-                <xf:group class="survey-section">
-                    <xf:group class="page-header">
-                        <w2:textbox class="main-title" label="개발자 성향 설문조사" tagname="h1"></w2:textbox>
-                        <w2:textbox class="sub-title" label="당신의 개발 스타일과 선호도를 알아보세요" tagname="p"></w2:textbox>
-                    </xf:group>
-                    
-                    <!-- 진행률 섹션 -->
-                    <xf:group class="progress-section">
-                        <xf:group class="progress-header">
-                            <w2:textbox class="progress-title" label="진행률" tagname="div"></w2:textbox>
-                            <w2:textbox class="progress-text" label="0 / 20 완료 (0%)" tagname="div"></w2:textbox>
-                        </xf:group>
-                        
-                        <xf:group class="progress-bar">
-                            <w2:textbox class="progress-fill" label="" tagname="div" style="width: 0%;"></w2:textbox>
-                        </xf:group>
-                        
-                        <xf:group class="progress-nav">
-                            <w2:textbox class="progress-axis" label="Builder vs Architect" tagname="div"></w2:textbox>
-                            <w2:textbox class="progress-axis" label="Refactor vs Innovate" tagname="div"></w2:textbox>
-                            <w2:textbox class="progress-axis" label="Solo vs Team" tagname="div"></w2:textbox>
-                            <w2:textbox class="progress-axis" label="Debug vs Feature" tagname="div"></w2:textbox>
-                        </xf:group>
-                    </xf:group>
-                    
-                    <!-- 설문 문항 컨테이너 -->
-                    <xf:group class="question-container"></xf:group>
-                    
-                    <!-- 제출 버튼 -->
-                    <xf:group class="submit-section">
-                        <xf:trigger class="btn-submit disabled" ev:onclick="scwin.btn_submit_onclick" style="disabled: true;">
-                            <xf:label>분석 시작</xf:label>
-                        </xf:trigger>
-                    </xf:group>
-                </xf:group>
-                
-                <!-- 결과 섹션 -->
-                <xf:group class="result-section">
-                    <xf:group class="result-header">
-                        <w2:textbox class="result-title" label="설문 분석 결과" tagname="h1"></w2:textbox>
-                        <w2:textbox class="result-subtitle" label="당신의 codeFIT은..." tagname="p"></w2:textbox>
-                    </xf:group>
-                    <img id="mbtiResultImage" src="" alt="MBTI Result Image" style="width: 100%; max-width: 400px; margin: 20px auto; display: block;"/>
-                    
-                    <xf:group class="result-card">
-                        <w2:textbox class="result-type-code" label="ARTF" tagname="div"></w2:textbox>
-                        <w2:textbox class="result-type-name" label="구조적 팀 빌더" tagname="div"></w2:textbox>
-                        <w2:textbox class="result-type-desc" label="검증된 기술로 팀과 함께 견고한 기능을 구축하는 개발자" tagname="div"></w2:textbox>
-                    </xf:group>
-                    
-                    <xf:group class="score-section">
-                        <w2:textbox class="score-title" label="상세 점수" tagname="div"></w2:textbox>
-                        
-                        <xf:group class="score-grid">
-                            <xf:group class="score-item">
-                                <w2:textbox class="score-label" label="Builder ↔ Architect" tagname="div"></w2:textbox>
-                                <w2:textbox class="score-ab" label="0점" tagname="div"></w2:textbox>
-                                <w2:textbox class="ab-type" label="분석 중..." tagname="div"></w2:textbox>
-                            </xf:group>
-                            
-                            <xf:group class="score-item">
-                                <w2:textbox class="score-label" label="Refactor ↔ Innovate" tagname="div"></w2:textbox>
-                                <w2:textbox class="score-ri" label="0점" tagname="div"></w2:textbox>
-                                <w2:textbox class="ri-type" label="분석 중..." tagname="div"></w2:textbox>
-                            </xf:group>
-                            
-                            <xf:group class="score-item">
-                                <w2:textbox class="score-label" label="Solo ↔ Team" tagname="div"></w2:textbox>
-                                <w2:textbox class="score-st" label="0점" tagname="div"></w2:textbox>
-                                <w2:textbox class="st-type" label="분석 중..." tagname="div"></w2:textbox>
-                            </xf:group>
-                            
-                            <xf:group class="score-item">
-                                <w2:textbox class="score-label" label="Debug ↔ Feature" tagname="div"></w2:textbox>
-                                <w2:textbox class="score-df" label="0점" tagname="div"></w2:textbox>
-                                <w2:textbox class="df-type" label="분석 중..." tagname="div"></w2:textbox>
-                            </xf:group>
-                        </xf:group>
-                        
-                        <xf:group class="confidence-section">
-                            <w2:textbox class="confidence-label" label="분석 신뢰도" tagname="div"></w2:textbox>
-                            <w2:textbox class="score-confidence" label="0%" tagname="div"></w2:textbox>
-                        </xf:group>
-                    </xf:group>
-                    
-                    <xf:group class="result-buttons">
-                        <xf:trigger class="btn-restart" ev:onclick="scwin.btn_restart_onclick">
-                            <xf:label>다시하기</xf:label>
-                        </xf:trigger>
-                        <xf:trigger class="btn-profile" ev:onclick="scwin.goToUserDetail">
-                            <xf:label>프로필로 이동</xf:label>
-                        </xf:trigger>
-                    </xf:group>
-                </xf:group>
-                
-            </xf:group>
-        </xf:group>
-    </body>
+	</head>
+
+	<body ev:onpageload="scwin.onpageload">
+		<w2:wframe src="../common/Header.xml" id="headerFrame" />
+
+		<xf:group class="main-container">
+			<xf:group class="content-area">
+
+				<!-- 설문 섹션 -->
+				<xf:group class="survey-section">
+					<xf:group class="page-header">
+						<w2:textbox class="main-title" label="개발자 성향 설문조사" tagname="h1"></w2:textbox>
+						<w2:textbox class="sub-title" label="당신의 개발 스타일과 선호도를 알아보세요" tagname="p"></w2:textbox>
+					</xf:group>
+
+					<!-- 진행률 섹션 -->
+					<xf:group class="progress-section">
+						<xf:group class="progress-header">
+							<w2:textbox class="progress-title" label="진행률" tagname="div"></w2:textbox>
+							<w2:textbox class="progress-text" label="0 / 20 완료 (0%)" tagname="div"></w2:textbox>
+						</xf:group>
+
+						<xf:group class="progress-bar">
+							<w2:textbox class="progress-fill" label="" tagname="div" style="width: 0%;"></w2:textbox>
+						</xf:group>
+
+						<xf:group class="progress-nav">
+							<w2:textbox class="progress-axis" label="Builder vs Architect" tagname="div"></w2:textbox>
+							<w2:textbox class="progress-axis" label="Refactor vs Innovate" tagname="div"></w2:textbox>
+							<w2:textbox class="progress-axis" label="Solo vs Team" tagname="div"></w2:textbox>
+							<w2:textbox class="progress-axis" label="Debug vs Feature" tagname="div"></w2:textbox>
+						</xf:group>
+					</xf:group>
+
+					<!-- 설문 문항 컨테이너 -->
+					<xf:group class="question-container"></xf:group>
+
+					<!-- 제출 버튼 -->
+					<xf:group class="submit-section">
+						<xf:trigger class="btn-submit  disabled" ev:onclick="scwin.btn_submit_onclick" style="disabled: true;">
+							<xf:label>분석 시작</xf:label>
+						</xf:trigger>
+					</xf:group>
+				</xf:group>
+
+				<!-- 결과 섹션 -->
+				<xf:group class="result-section">
+					<xf:group class="result-header">
+						<w2:textbox class="result-title" label="설문 분석 결과" tagname="h1"></w2:textbox>
+						<w2:textbox class="result-subtitle" label="당신의 codeFIT은..." tagname="p"></w2:textbox>
+					</xf:group>
+					<xf:group class="result-card">
+						<img id="mbtiResultImage" src="" alt="MBTI Result Image" class="mbti-result-image" />
+						<w2:textbox class="result-type-code" label="ARTF" tagname="div"></w2:textbox>
+						<w2:textbox class="result-type-name" label="구조적 팀 빌더" tagname="div"></w2:textbox>
+						<w2:textbox class="result-type-desc" label="검증된 기술로 팀과 함께 견고한 기능을 구축하는 개발자" tagname="div"></w2:textbox>
+					</xf:group>
+
+					<xf:group class="score-section">
+						<w2:textbox class="score-title" label="상세 점수" tagname="div"></w2:textbox>
+
+						<xf:group class="score-grid">
+							<xf:group class="score-item">
+								<w2:textbox class="score-label" label="Builder ↔ Architect" tagname="div"></w2:textbox>
+								<w2:textbox class="score-ab" label="0점" tagname="div"></w2:textbox>
+								<w2:textbox class="ab-type" label="분석 중..." tagname="div"></w2:textbox>
+							</xf:group>
+
+							<xf:group class="score-item">
+								<w2:textbox class="score-label" label="Refactor ↔ Innovate" tagname="div"></w2:textbox>
+								<w2:textbox class="score-ri" label="0점" tagname="div"></w2:textbox>
+								<w2:textbox class="ri-type" label="분석 중..." tagname="div"></w2:textbox>
+							</xf:group>
+
+							<xf:group class="score-item">
+								<w2:textbox class="score-label" label="Solo ↔ Team" tagname="div"></w2:textbox>
+								<w2:textbox class="score-st" label="0점" tagname="div"></w2:textbox>
+								<w2:textbox class="st-type" label="분석 중..." tagname="div"></w2:textbox>
+							</xf:group>
+
+							<xf:group class="score-item">
+								<w2:textbox class="score-label" label="Debug ↔ Feature" tagname="div"></w2:textbox>
+								<w2:textbox class="score-df" label="0점" tagname="div"></w2:textbox>
+								<w2:textbox class="df-type" label="분석 중..." tagname="div"></w2:textbox>
+							</xf:group>
+						</xf:group>
+
+						<xf:group class="confidence-section">
+							<w2:textbox class="confidence-label" label="분석 신뢰도" tagname="div"></w2:textbox>
+							<w2:textbox class="score-confidence" label="0%" tagname="div"></w2:textbox>
+						</xf:group>
+					</xf:group>
+
+					<xf:group class="result-buttons">
+						<xf:trigger class="btn-restart" ev:onclick="scwin.btn_restart_onclick">
+							<xf:label>다시하기</xf:label>
+						</xf:trigger>
+						<xf:trigger class="btn-profile" ev:onclick="scwin.goToUserDetail">
+							<xf:label>프로필로 이동</xf:label>
+						</xf:trigger>
+					</xf:group>
+				</xf:group>
+
+			</xf:group>
+		</xf:group>
+	</body>
 </html>
