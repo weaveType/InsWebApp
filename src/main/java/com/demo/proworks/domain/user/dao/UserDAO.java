@@ -11,6 +11,7 @@ import com.inswave.elfw.exception.ElException;
 import com.demo.proworks.domain.user.vo.ApplicantDetailVo;
 import com.demo.proworks.domain.user.vo.ApplicantListVo;
 import com.demo.proworks.domain.user.vo.ApplicantVo;
+import com.demo.proworks.domain.user.vo.MatchingCheckedVo;
 import com.demo.proworks.domain.user.vo.ScoutDetailVo;
 import com.demo.proworks.domain.user.vo.ScoutListVo;
 import com.demo.proworks.domain.user.vo.ScoutVo;
@@ -258,5 +259,17 @@ public class UserDAO extends com.demo.proworks.cmmn.dao.ProworksDefaultAbstractD
 
 	public List<ScoutDetailVo> getScoutUsersByPostId(ScoutVo vo) throws Exception {
 		return (List<ScoutDetailVo>) list("com.demo.proworks.domain.user.getScoutUsersByPostId", vo);
+	}
+	
+	
+	/**
+	 * 유저의 성향검사 및 코드검사 여부를 가져온다.
+	 *
+	 * @param MatchingCheckedVo 유저 ID
+	 * @return 유저의 성향검사 및 코드검사 여부
+	 * @throws Exception
+	 */
+	public MatchingCheckedVo selectMatchingChecked(MatchingCheckedVo vo) throws Exception {
+		return (MatchingCheckedVo) selectByPk("com.demo.proworks.domain.user.selectMatchingChecked", vo);
 	}
 }

@@ -24,6 +24,13 @@
 						<w2:column dataType="text" id="logoFileName" name="로고파일명"></w2:column>
 					</w2:columnInfo>
 				</w2:dataList>
+				<w2:dataMap baseNode="map" id="dmp_matchingCheckedVo">
+					<w2:keyInfo>
+						<w2:key dataType="text" name="사용자 계정 ID" id="accountId"></w2:key>
+						<w2:key dataType="text" name="성향분석 체크여부" id="isMbtiChecked"></w2:key>
+						<w2:key dataType="text" name="코드분석 진행여부" id="isCodeChecked"></w2:key>
+					</w2:keyInfo>
+				</w2:dataMap>
 			</w2:dataCollection>
 
 			<w2:workflowCollection></w2:workflowCollection>
@@ -32,7 +39,10 @@
 			<xf:submission id="sbm_selectCompanyList" action="/InsWebApp/CP0003List.pwkjson" method="post" mediatype="application/json"
 				ref='data:json,{"id":"dmp_corporateSearchVo","key":"corporateSearchVo"}'
 				target='data:json,{"id":"dlt_company_list","key":"elData.corporateMainVo"}' mode="asynchronous" encoding="UTF-8"
-				processMsg="참여 기업 목록을 조회 중입니다." ev:submitdone="scwin.sbm_selectCompanyList_submitdone"
+				processMsg="참여 기업 목록을 조회 중입니다." ev:submitdone="scwin.sbm_selectCompanyList_submitdone" ev:submiterror="">
+			</xf:submission>
+			<xf:submission id="smb_selectMatchingChecked" action="/InsWebApp/US0001Match.pwkjson" method="post" mediatype="application/json" ref='data:json,{"id":"dmp_matchingCheckedVo","key":"matchingCheckedVo"}' target='data:json,{"id":"dmp_matchingCheckedVo","key":"elData"}'
+				encoding="UTF-8" mode="asynchronous" processMsg="매칭 정보 조회 중..." ev:submitdone="scwin.smb_selectMatchingChecked_submitdone"
 				ev:submiterror="">
 			</xf:submission>
 		</xf:model>
@@ -40,10 +50,11 @@
 		<w2:publicInfo method="" />
 		<script type="text/javascript"><![CDATA[// 페이지 로드 시 팝업 닫기 액션 함수들 정의
 scwin.onpageload = function () {
+    
     // 로그인 상태 확인 및 UI 업데이트
     scwin.updateLoginArea();
 
-    // 페이지 완전 로드 후 회사 목록 조회 (약간의 지연)
+    // 페이지 완전 로드 후 회사 목록 조회
     scwin.loadCompanyList();
 };
 
@@ -68,11 +79,58 @@ scwin.updateLoginArea = function () {
         // 사용자 정보 업데이트
         txb_user_name.setValue(userInfo.name + "님");
 
+        // 성향분석 및 코드분석 여부
+        dmp_matchingCheckedVo.set("accountId", userInfo.accountId);
+        $c.sbm.execute(smb_selectMatchingChecked);
+
     } else {
         // 비로그인 상태 - 로그인 영역 표시
         grp_login_area.show();
         grp_profile_area.hide();
     }
+};
+
+scwin.smb_selectMatchingChecked_submitdone = function(e) {
+    var elHeader = e.responseJSON.elHeader;
+    if (elHeader && elHeader.resSuc === false) {
+        console.error("매칭 정보 조회 실패:", elHeader.resMsg);
+        return;
+    }
+
+    var isMbtiChecked = dmp_matchingCheckedVo.get("isMbtiChecked");
+    var isCodeChecked = dmp_matchingCheckedVo.get("isCodeChecked");
+
+    console.log("isMbtiChecked:", isMbtiChecked);
+    console.log("isCodeChecked:", isCodeChecked);
+
+    // 여기에 isMbtiChecked와 isCodeChecked 값에 따라 UI를 업데이트하는 로직을 추가합니다.
+    // 예: 특정 아이콘의 표시 여부, 텍스트 변경 등
+    // 예시: 성향분석 완료 여부에 따라 카드 2의 스타일 변경
+    if (isMbtiChecked) {
+        card2.addClass("completed"); // 'completed' 클래스 추가 (CSS에서 정의 필요)
+        // txb_mbti_status.setValue("완료");
+    } else {
+        card2.removeClass("completed");
+        // txb_mbti_status.setValue("미완료");
+    }
+
+    // 예시: 코드분석 완료 여부에 따라 카드 3의 스타일 변경
+    if (isCodeChecked) {
+        card3.addClass("completed");
+        // txb_code_status.setValue("완료");
+    } else {
+        card3.removeClass("completed");
+        // txb_code_status.setValue("미완료");
+    }
+
+    // 프로필 완성도 업데이트
+    var completeCount = 0;
+    if (isMbtiChecked) completeCount++;
+    if (isCodeChecked) completeCount++;
+    var totalTasks = 2; // MBTI, 코드분석
+    var completionPercentage = (completeCount / totalTasks) * 100;
+    txb_profile_complete.setValue(completionPercentage + "%");
+    document.querySelector(".progress-fill").style.width = completionPercentage + "%";
 };
 
 // 로그인 관련 팝업 호출 함수들
@@ -1063,17 +1121,14 @@ scwin.refreshCompanyList = function () {
 						</xf:group>
 						<w2:textbox class="card-title" label="튜토리얼"></w2:textbox>
 					</xf:group>
-
-					<!-- 카드 2: 자소서 업체검토 -->
-
-
-					<!-- 카드 3: MBTI 검사 -->
+					<!-- 카드 2: 성향 검사 -->
 					<xf:group class="card card-blue" id="card2" ev:onclick="scwin.card2_onclick">
 						<xf:group class="card-icon card-icon-blue">
 							<xf:image src="/InsWebApp/images/ws5/main/mbti_check.png" style="width: 150px;height: 150px;" id=""></xf:image>
 						</xf:group>
 						<w2:textbox class="card-title" label="개발자 성향분석"></w2:textbox>
 					</xf:group>
+                    <!-- 카드 3: 코드 분석 -->
 					<xf:group class="card card-orange" id="card3" ev:onclick="scwin.card3_onclick">
 						<xf:group class="card-icon card-icon-orange">
 							<xf:image src="/InsWebApp/images/ws5/main/code_check.png" style="width: 150px;height: 150px;" id=""></xf:image>

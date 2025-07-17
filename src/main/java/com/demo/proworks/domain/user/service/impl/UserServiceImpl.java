@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.demo.proworks.domain.user.service.UserService;
 import com.demo.proworks.domain.user.vo.ApplicantDetailVo;
 import com.demo.proworks.domain.user.vo.ApplicantVo;
+import com.demo.proworks.domain.user.vo.MatchingCheckedVo;
 import com.demo.proworks.domain.user.vo.ScoutDetailVo;
 import com.demo.proworks.domain.user.vo.ScoutListVo;
 import com.demo.proworks.domain.user.vo.ScoutVo;
@@ -274,5 +275,16 @@ public class UserServiceImpl implements UserService {
 		ScoutListVo scoutListVo = new ScoutListVo();
 		scoutListVo.setScoutDetailVo(detailList);
 		return scoutListVo;
+	}
+
+	/**
+	 * 유저의 성향검사 및 코드검사 여부를 가져온다.
+	 *
+	 * @param MatchingCheckedVo 유저 ID
+	 * @return 유저의 성향검사 및 코드검사 여부
+	 * @throws Exception
+	 */
+	public MatchingCheckedVo selectMatchingChecked(MatchingCheckedVo matchingCheckedVo) throws Exception {
+		return userDAO.selectMatchingChecked(matchingCheckedVo);
 	}
 }
