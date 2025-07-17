@@ -10,6 +10,9 @@ import org.springframework.stereotype.Service;
 import com.demo.proworks.domain.user.service.UserService;
 import com.demo.proworks.domain.user.vo.ApplicantDetailVo;
 import com.demo.proworks.domain.user.vo.ApplicantVo;
+import com.demo.proworks.domain.user.vo.ScoutDetailVo;
+import com.demo.proworks.domain.user.vo.ScoutListVo;
+import com.demo.proworks.domain.user.vo.ScoutVo;
 import com.demo.proworks.domain.user.vo.UserInfoVo;
 import com.demo.proworks.domain.user.vo.UserVo;
 import com.demo.proworks.common.enumType.DevMbti;
@@ -257,5 +260,20 @@ public class UserServiceImpl implements UserService {
 			return true;
 		}
 		return false;
+	}
+
+	/**
+	 * 기업의 매칭유저 검색을 조회한다.
+	 *
+	 * @param ScoutVo 페이징 정보, 공고 ID
+	 * @return ScoutListVo 유저 목록
+	 * @throws Exception
+	 */
+	public ScoutListVo getScoutUsersByPostId(ScoutVo scoutVo) throws Exception {
+		List<ScoutDetailVo> detailList = userDAO.getScoutUsersByPostId(scoutVo);
+		ScoutListVo scoutListVo = new ScoutListVo();
+		scoutListVo.setScoutDetailVo(detailList);
+		return scoutListVo;
+	}
 	}
 }

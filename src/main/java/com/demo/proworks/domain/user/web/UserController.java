@@ -86,6 +86,35 @@ public class UserController {
 	}
 
 	/**
+	 * 로그아웃을 처리한다.
+	 * 
+	 * @param request 요청 정보 HttpServletRequest
+	 * @throws Exception
+	 */
+	@ElService(key = "USLogout")
+	@RequestMapping(value = "USLogout")
+	@ElDescription(sub = "로그아웃", desc = "로그아웃을 처리한다.")
+	public void logout(HttpServletRequest request) throws Exception {
+
+		// ProWorks5 프레임워크의 로그아웃 프로세스 호출
+		LoginInfo info = loginProcess.processLogout(request, null);
+
+		// HTTP 세션 무효화
+		HttpSession session = request.getSession(false);
+
+		if (session != null) {
+			// 세션에 저장된 사용자 정보 로깅 (디버깅용)
+			AppLog.debug("- 로그아웃 사용자 ID: " + session.getAttribute("userId"));
+			AppLog.debug("- 로그아웃 사용자 이메일: " + session.getAttribute("userEmail"));
+
+			// 세션 무효화
+			session.invalidate();
+		}
+
+		AppLog.debug("- 로그아웃 완료: " + info.toString());
+	}
+
+	/**
 	 * 일반회원 목록을 조회합니다.
 	 *
 	 * @param userVo 일반회원
@@ -1265,5 +1294,34 @@ public class UserController {
 		UserInfoVo selectUserVo = userService.selectUserDetail(userInfoVo);
 		return selectUserVo;
 	}
-	
+	/**
+	 * 공고에 이력서 지원처리를 한다.
+	 *
+	 * @param ApplicantVo 페이징 정보, 공고 ID
+	 * @return 등록된 행의 수
+	 * @throws Exception
+	 */
+	@ElService(key = "US0002List")
+	@RequestMapping(value = "US0002List")
+	@ElDescription(sub = "공고에 지원한 유저 출력", desc = "공고에 지원한 유저를 출력한다")
+	public ApplicantListVo selectUsersByjobPostingId(ApplicantVo applicantVo) throws Exception {
+		List<ApplicantDetailVo> detailList = userService.selectUsersByjobPostingId(applicantVo);
+		ApplicantListVo resultListVo = new ApplicantListVo();
+		resultListVo.setApplicantDetailVo(detailList);
+		return resultListVo;
+	}
+
+	/**
+	 * 기업의 매칭유저 검색을 조회한다.
+	 *
+	 * @param ApplicantVo 페이징 정보, 공고 ID
+	 * @return 등록된 행의 수
+	 * @throws Exception
+	 */
+	@ElService(key = "US0003List")
+	@RequestMapping(value = "US0003List")
+	@ElDescription(sub = "공고에 지원한 유저 출력", desc = "공고에 지원한 유저를 출력한다")
+	public ScoutListVo getScoutUsersByPostId(ScoutVo scoutVo) throws Exception {
+		return userService.getScoutUsersByPostId(scoutVo);
+	}
 }

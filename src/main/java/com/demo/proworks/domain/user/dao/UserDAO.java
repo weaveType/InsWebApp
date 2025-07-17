@@ -11,6 +11,9 @@ import com.inswave.elfw.exception.ElException;
 import com.demo.proworks.domain.user.vo.ApplicantDetailVo;
 import com.demo.proworks.domain.user.vo.ApplicantListVo;
 import com.demo.proworks.domain.user.vo.ApplicantVo;
+import com.demo.proworks.domain.user.vo.ScoutDetailVo;
+import com.demo.proworks.domain.user.vo.ScoutListVo;
+import com.demo.proworks.domain.user.vo.ScoutVo;
 import com.demo.proworks.domain.user.vo.UserInfoVo;
 import com.demo.proworks.domain.user.vo.UserVo;
 import com.demo.proworks.common.enumType.DevMbti;
@@ -230,8 +233,7 @@ public class UserDAO extends com.demo.proworks.cmmn.dao.ProworksDefaultAbstractD
 	}
 
 	public UserInfoVo selectUserDetail(UserInfoVo vo) throws Exception {
-	UserInfoVo test = (UserInfoVo) selectByPk("com.demo.proworks.domain.user.selectUserDetail", vo);
-	System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> test : " + test.toString());
+		UserInfoVo test = (UserInfoVo) selectByPk("com.demo.proworks.domain.user.selectUserDetail", vo);
 		return (UserInfoVo) selectByPk("com.demo.proworks.domain.user.selectUserDetail", vo);
 	}
 
@@ -244,5 +246,17 @@ public class UserDAO extends com.demo.proworks.cmmn.dao.ProworksDefaultAbstractD
 	 */
 	public List<ApplicantDetailVo> selectUsersByjobPostingId(ApplicantVo vo) throws Exception {
 		return (List<ApplicantDetailVo>) list("com.demo.proworks.domain.user.selectUsersByjobPostingId", vo);
+	}
+
+	/**
+	 * 기업의 매칭유저 검색을 조회한다.
+	 *
+	 * @param ScoutVo 페이징 정보, 공고 ID
+	 * @return ScoutListVo 유저 목록
+	 * @throws Exception
+	 */
+
+	public List<ScoutDetailVo> getScoutUsersByPostId(ScoutVo vo) throws Exception {
+		return (List<ScoutDetailVo>) list("com.demo.proworks.domain.user.getScoutUsersByPostId", vo);
 	}
 }

@@ -199,19 +199,10 @@ scwin.sbm_login_submitdone = function (e) {
     const resultObj = e.responseJSON;
     const elHeader = resultObj.elHeader;
     const userHeader = resultObj.userHeader;
-    console.log()
     if (elHeader && elHeader.resSuc == true) {
         WebSquare.cookie.setCookie("userInfo", JSON.stringify(userHeader));
-        console.log(JSON.stringify(userHeader));
-        var role = userHeader.role;
-        if (role === "USER") {
-            $p.url("../common/MainPage.xml");
-            $p.closePopup();
-
-        } else if (role === "COMPANY") {
-            $p.url("../corporate/RecruitmentDashboard.xml");
-            $p.closePopup();
-        }
+        $p.closePopup();
+        $c.win.reload();
     }
 }
 
@@ -243,7 +234,7 @@ scwin.inp_userPw_onkeydown = function (e) {
     }
 };]]></script>
     </head>
-    <body ev:onpageload="scwin.onpageload">
+    <body ev:onpageload="scwin.onpageload" style="margin: 0; padding: 0;">
         <xf:group class="login-container">
             <!-- 로그인 헤더 -->
             <xf:group class="login-header">

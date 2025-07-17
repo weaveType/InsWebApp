@@ -10,37 +10,6 @@
         <w2:publicInfo method=""/>
         <link rel="stylesheet" type="text/css" href="/cm/css/gridview-enhancement.css"/>
         <style>
-            .header-container {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                padding: 20px;
-                background-color: #f8f9fa;
-                border-bottom: 1px solid #e9ecef;
-            }
-            .header-left {
-                display: flex;
-                align-items: center;
-                font-size: 24px;
-                font-weight: bold;
-                color: #2c3e50;
-            }
-            .header-icon {
-                width: 30px;
-                height: 30px;
-                background-color: #3498db;
-                border-radius: 6px;
-                margin-right: 12px;
-                display: inline-block;
-                text-align: center;
-                line-height: 30px;
-                color: white;
-                font-weight: bold;
-            }
-            .stats-info {
-                color: #6c757d;
-                font-size: 14px;
-            }
             .filter-container {
                 display: flex;
                 justify-content: space-between;
@@ -201,236 +170,110 @@
         </style>
         <xf:model>
             <w2:dataCollection baseNode="map">
-                <w2:dataList baseNode="list" repeatNode="map" id="developer_list" saveRemovedData="true">
-                    <w2:columnInfo>
-                        <w2:column dataType="text" name="체크박스" id="chk"></w2:column>
-                        <w2:column dataType="text" name="이름" id="username"></w2:column>
-                        <w2:column dataType="text" name="경력" id="total_experience"></w2:column>
-                        <w2:column dataType="text" name="포지션" id="position"></w2:column>
-                        <w2:column dataType="text" name="기술스택" id="tech_stack"></w2:column>
-                        <w2:column dataType="text" name="mbti" id="mbti"></w2:column>
-                        <w2:column dataType="text" name="관심도" id="interest_level"></w2:column>
-                        <w2:column dataType="text" name="상태" id="status"></w2:column>
-                        <w2:column dataType="text" name="이메일" id="email"></w2:column>
-                        <w2:column dataType="text" name="연락처" id="phone"></w2:column>
-                        <w2:column dataType="text" name="포트폴리오" id="portfolio"></w2:column>
-                    </w2:columnInfo>
-                    <w2:data use="true">
-                        <w2:row>
-                            <username><![CDATA[김개발]]></username>
-                            <total_experience><![CDATA[3년]]></total_experience>
-                            <position><![CDATA[backend]]></position>
-                            <tech_stack><![CDATA[java, springboot, mysql, redis]]></tech_stack>
-                            <mbti><![CDATA[ENTJ]]></mbti>
-                            <interest_level><![CDATA[높음]]></interest_level>
-                            <status><![CDATA[구직중]]></status>
-                            <email><![CDATA[kim.dev@email.com]]></email>
-                            <phone><![CDATA[010-1234-5678]]></phone>
-                            <portfolio><![CDATA[https://github.com/kimdev]]></portfolio>
-                        </w2:row>
-                        <w2:row>
-                            <username><![CDATA[박프론트]]></username>
-                            <total_experience><![CDATA[2년]]></total_experience>
-                            <position><![CDATA[frontend]]></position>
-                            <tech_stack><![CDATA[react, typescript, next.js, tailwind]]></tech_stack>
-                            <mbti><![CDATA[INFP]]></mbti>
-                            <interest_level><![CDATA[중간]]></interest_level>
-                            <status><![CDATA[관심있음]]></status>
-                            <email><![CDATA[park.front@email.com]]></email>
-                            <phone><![CDATA[010-2345-6789]]></phone>
-                            <portfolio><![CDATA[https://portfolio.parkfront.dev]]></portfolio>
-                        </w2:row>
-                        <w2:row>
-                            <username><![CDATA[이풀스택]]></username>
-                            <total_experience><![CDATA[5년]]></total_experience>
-                            <position><![CDATA[fullstack]]></position>
-                            <tech_stack><![CDATA[node.js, react, postgresql, docker]]></tech_stack>
-                            <mbti><![CDATA[ENFP]]></mbti>
-                            <interest_level><![CDATA[높음]]></interest_level>
-                            <status><![CDATA[구직중]]></status>
-                            <email><![CDATA[lee.fullstack@email.com]]></email>
-                            <phone><![CDATA[010-3456-7890]]></phone>
-                            <portfolio><![CDATA[https://leefull.dev]]></portfolio>
-                        </w2:row>
-                        <w2:row>
-                            <username><![CDATA[정모바일]]></username>
-                            <total_experience><![CDATA[4년]]></total_experience>
-                            <position><![CDATA[mobile]]></position>
-                            <tech_stack><![CDATA[flutter, dart, firebase, kotlin]]></tech_stack>
-                            <mbti><![CDATA[ISFJ]]></mbti>
-                            <interest_level><![CDATA[중간]]></interest_level>
-                            <status><![CDATA[연락받음]]></status>
-                            <email><![CDATA[jung.mobile@email.com]]></email>
-                            <phone><![CDATA[010-4567-8901]]></phone>
-                            <portfolio><![CDATA[https://play.google.com/jungapps]]></portfolio>
-                        </w2:row>
-                        <w2:row>
-                            <username><![CDATA[최데이터]]></username>
-                            <total_experience><![CDATA[6년]]></total_experience>
-                            <position><![CDATA[data]]></position>
-                            <tech_stack><![CDATA[python, pandas, tensorflow, aws]]></tech_stack>
-                            <mbti><![CDATA[INTJ]]></mbti>
-                            <interest_level><![CDATA[높음]]></interest_level>
-                            <status><![CDATA[구직중]]></status>
-                            <email><![CDATA[choi.data@email.com]]></email>
-                            <phone><![CDATA[010-5678-9012]]></phone>
-                            <portfolio><![CDATA[https://kaggle.com/choidata]]></portfolio>
-                        </w2:row>
-                        <w2:row>
-                            <username><![CDATA[강데브옵스]]></username>
-                            <total_experience><![CDATA[7년]]></total_experience>
-                            <position><![CDATA[devops]]></position>
-                            <tech_stack><![CDATA[kubernetes, docker, jenkins, terraform]]></tech_stack>
-                            <mbti><![CDATA[ESTP]]></mbti>
-                            <interest_level><![CDATA[중간]]></interest_level>
-                            <status><![CDATA[관심있음]]></status>
-                            <email><![CDATA[kang.devops@email.com]]></email>
-                            <phone><![CDATA[010-6789-0123]]></phone>
-                            <portfolio><![CDATA[https://github.com/kangdevops]]></portfolio>
-                        </w2:row>
-                        <w2:row>
-                            <username><![CDATA[조보안]]></username>
-                            <total_experience><![CDATA[8년]]></total_experience>
-                            <position><![CDATA[security]]></position>
-                            <tech_stack><![CDATA[kali linux, wireshark, metasploit, python]]></tech_stack>
-                            <mbti><![CDATA[ISFP]]></mbti>
-                            <interest_level><![CDATA[낮음]]></interest_level>
-                            <status><![CDATA[연락받음]]></status>
-                            <email><![CDATA[jo.security@email.com]]></email>
-                            <phone><![CDATA[010-7890-1234]]></phone>
-                            <portfolio><![CDATA[https://security.jodev.net]]></portfolio>
-                        </w2:row>
-                        <w2:row>
-                            <username><![CDATA[윤인공지능]]></username>
-                            <total_experience><![CDATA[3년]]></total_experience>
-                            <position><![CDATA[ai]]></position>
-                            <tech_stack><![CDATA[pytorch, opencv, bert, gpt]]></tech_stack>
-                            <mbti><![CDATA[ESFJ]]></mbti>
-                            <interest_level><![CDATA[높음]]></interest_level>
-                            <status><![CDATA[구직중]]></status>
-                            <email><![CDATA[yoon.ai@email.com]]></email>
-                            <phone><![CDATA[010-8901-2345]]></phone>
-                            <portfolio><![CDATA[https://ai.yoondev.com]]></portfolio>
-                        </w2:row>
-                    </w2:data>
-                </w2:dataList>
+            	<w2:dataList baseNode="list" repeatNode="map" id="dlt_scoutListVo" saveRemovedData="true">
+            		<w2:columnInfo>
+            			<w2:column dataType="text" name="체크박스" id="chk"></w2:column>
+            			<w2:column dataType="text" name="이름" id="name"></w2:column>
+            			<w2:column dataType="text" name="경력" id="career"></w2:column>
+            			<w2:column dataType="text" name="포지션" id="currentPosition"></w2:column>
+            			<w2:column dataType="text" name="기술스택" id="techStack"></w2:column>
+            			<w2:column dataType="text" name="mbti" id="typeCode"></w2:column>
+            			<w2:column dataType="text" name="이력서" id="resumeFileName"></w2:column>
+            			<w2:column dataType="text" name="상태" id="applicationStatus"></w2:column>
+            			<w2:column dataType="text" name="이메일" id="email"></w2:column>
+            			<w2:column dataType="text" name="유저 ID" id="accountId"></w2:column>
+            		</w2:columnInfo>
+            	</w2:dataList>
+            	<w2:dataMap baseNode="map" id="dmp_scoutVo">
+            		<w2:keyInfo>
+            			<w2:key dataType="text" name="페이지_번호" id="pageIndex" defaultValue="1"></w2:key>
+            			<w2:key dataType="text" name="페이지_건수" id="pageSize" defaultValue="10"></w2:key>
+            			<w2:key dataType="text" name="공고_id" id="jobPostingId"></w2:key>
+            		</w2:keyInfo>
+            	</w2:dataMap>
             </w2:dataCollection>
-            <xf:submission id="sbm_developer_list" action="" method="post" mediatype="application/json" ref="data:json,developer_list"
-                target="" encoding="UTF-8" instance="" replace="" errorHandler="" customHandler="" mode="asynchronous" processMsg="" ev:submit=""
-                ev:submitdone="" ev:submiterror="" abortTrigger="">
+            <xf:submission id="sbm_selectScoutVo" action="/InsWebApp/US0003List.pwkjson" method="post" mediatype="application/json" ref='data:json,{"id":"dmp_scoutVo","key":"scoutVo"}'
+                target='data:json,[{"id":"dlt_scoutListVo","key":"elData.scoutDetailVo"}]' encoding="UTF-8" instance="" replace="" errorHandler="" customHandler="" mode="asynchronous" processMsg="매칭 유저 불러오는중.." ev:submit=""
+                ev:submitdone="scwin.sbm_scoutVo_submitdone" ev:submiterror="" abortTrigger="">
             </xf:submission>
         </xf:model>
-        <script lazy="false" type="text/javascript"><![CDATA[
-scwin.onpageload = function() {
-    scwin.updateTotalCount();
+        <script lazy="false" type="text/javascript"><![CDATA[scwin.onpageload = function () {
+    // 회사 아이디로 유저 불러오기
+    scwin.getJobPostingId();
 };
 
-// 총 개발자 수 업데이트
-scwin.updateTotalCount = function() {
-    var totalCount = developer_list.getTotalRow();
-    totalCount_txt.setValue("총 " + totalCount + "명의 개발자");
+// 파라미터로 postId 받기
+scwin.getJobPostingId = function(){
+    var jobPostingId = scwin.getUrlParameter("jobPostingId");
+
+    if (!jobPostingId) {
+        alert("잘못된 접근입니다. jobPostingId가 없습니다.");
+        $p.back();  // 또는 다른 URL로 리다이렉트
+        return;
+    }
+
+    dmp_scoutVo.set("jobPostingId", jobPostingId);
+    $c.sbm.execute(sbm_selectScoutVo);
 };
 
-// 선택된 개발자 수 업데이트 (안전한 방법)
-scwin.updateSelectedCount = function() {
-    try {
-        var checkedCount = 0;
-        var totalRows = developer_list.getTotalRow();
-        
-        // 각 행을 순회하면서 체크 상태 확인
-        for (var i = 0; i < totalRows; i++) {
-            var isChecked = developer_list.getCellData(i, "chk");
-            if (isChecked === "Y" || isChecked === true || isChecked === "true") {
-                checkedCount++;
-            }
+// URL 파라미터 추출
+scwin.getUrlParameter = function(name) {
+    const regex = new RegExp("[?&]" + name + "=([^&#]*)");
+    const results = regex.exec(window.location.href);
+    return results ? decodeURIComponent(results[1]) : null;
+};
+
+
+
+// 쿠키에서 사용자 가져오기
+scwin.getUserInfoByCookie = function () {
+    var userInfoCookie = WebSquare.cookie.getCookie("userInfo");
+    var userInfo = null;
+
+    if (userInfoCookie) {
+        try {
+            userInfo = JSON.parse(userInfoCookie);
+            console.log(userInfo);
+        } catch (e) {
+            console.error("사용자 정보 파싱 오류:", e);
         }
-        
-        selectedCount.setValue(checkedCount + "명 선택됨");
-    } catch (e) {
-        console.error("선택 개수 업데이트 오류:", e);
-        selectedCount.setValue("0명 선택됨");
     }
+    return userInfo;
+}
+
+
+// 총 개발자 수
+scwin.updateTotalCount = function () {
+
 };
 
-// 일괄 스카웃 제안 (안전한 방법)
-scwin.scoutSelected = function() {
-    try {
-        // var selectedDevelopers = [];
-        // var totalRows = developer_list.getTotalRow();
-        
-        // // 각 행을 순회하면서 체크된 행 찾기
-        // for (var i = 0; i < totalRows; i++) {
-        //     var isChecked = developer_list.getCellData(i, "chk");
-        //     if (isChecked === "Y" || isChecked === true || isChecked === "true") {
-        //         var rowData = developer_list.getRowJSON(i);
-        //         selectedDevelopers.push(rowData);
-        //     }
-        // }
-        
-        // if (selectedDevelopers.length === 0) {
-        //     alert("스카웃할 개발자를 선택해주세요.");
-        //     return;
-        // }
-        
-        // var names = [];
-        // for (var j = 0; j < selectedDevelopers.length; j++) {
-        //     names.push(selectedDevelopers[j].username);
-        // }
-        
-        // var nameList = names.join(", ");
-        // scwin.openScoutModal(nameList, "multiple");
-        scwin.openScoutModal();
-        
-    } catch (e) {
-        console.error("스카웃 선택 오류:", e);
-        alert("선택된 개발자 정보를 가져오는 중 오류가 발생했습니다.");
-    }
+// 일괄 스카웃 제안
+scwin.scoutSelected = function () {
+
 };
 
-// 스카웃 모달 열기
-scwin.openScoutModal = function(targetName, targetEmail) {
-    var options = {
-        id: 'scout_popup',
-        type: 'browser',
-        width: '600px',
-        height: '500px',
-        modal: true,
-        resizable: true,
-        center: true
-    };
-    
-    // 스카웃 메시지 팝업 열기
-    $p.openPopup('ScoutMessage.xml', options);
-};
-
-// 그리드 체크박스 변경 이벤트
-scwin.gridView_oncheck = function(info) {
+// 그리드 체크박스 변경
+scwin.gridView_oncheck = function (info) {
     scwin.updateSelectedCount();
 };
 
 // 그리드 전체 체크박스 변경 이벤트  
-scwin.gridView_oncheckall = function(info) {
+scwin.gridView_oncheckall = function (info) {
     scwin.updateSelectedCount();
 };
 
-// 기술스택 필터 변경
-scwin.techStackFilter_onchange = function() {
-    scwin.applyFilters();
-};
-
 // 경력 필터 변경
-scwin.experienceFilter_onchange = function() {
+scwin.experienceFilter_onchange = function () {
     scwin.applyFilters();
 };
 
 // 포지션 필터 변경
-scwin.positionFilter_onchange = function() {
+scwin.positionFilter_onchange = function () {
     scwin.applyFilters();
 };
 
-// 검색 실행
-scwin.searchBox_onenter = function() {
-    scwin.applyFilters();
+scwin.sbm_scoutVo_submitdone = function (e) {
+
 };
 ]]></script>
     </head>
@@ -621,7 +464,7 @@ scwin.searchBox_onenter = function() {
             		meta_snippetName="6_03 페이지리스트">
 
             	</xf:group>
-            	<w2:gridView checkAllType="false" dataList="data:dlt_applicantVoList" defaultCellHeight="20" focusFlow="linear"
+            	<w2:gridView checkAllType="false" dataList="data:dlt_scoutListVo" defaultCellHeight="20" focusFlow="linear"
             		id="gridView1" readOnly="true" sortable="true"
             		style="height:633px;width: 100%;overflow:hidden;box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);border:none;background:#ffffff;"
             		visibleRowNum="10">

@@ -564,22 +564,20 @@ scwin.sbm_userDetail_submiterror = function(e){
     alert("사용자 정보를 불러오는데 실패했습니다.");
 };
 
-// 사이드바 메뉴 클릭
-scwin.sidebarMenu_onclick = function (menuId) {
-    switch (menuId) {
-        case 'matching_inquiry':
-            alert("매칭 현황 페이지로 이동합니다.");
-            break;
-        case 'matching_profile':
-            // 현재 페이지이므로 아무것도 하지 않음
-            break;
-        case 'profile':
-            $p.url("ProfileEditStep1.xml");
-            break;
-        case 'application_history':
-            $p.url("ApplicationHistory.xml");
-            break;
-    }
+// 프로필 메뉴 클릭 이벤트
+scwin.menu_profile_onclick = function() {
+    contentFrame.setSrc('UserDetailMain.xml');
+};
+
+// 지원현황 메뉴 클릭 이벤트
+scwin.menu_history_onclick = function() {
+    contentFrame.setSrc('ApplicationHistory.xml');
+};
+
+// 매칭제안 메뉴 클릭 이벤트
+scwin.menu_interest_onclick = function() {
+    contentFrame.setSrc();
+}
 };
 
 // MBTI 검사 시작
@@ -605,126 +603,23 @@ scwin.btn_userUpdate_onclick = function (e) {
 			<xf:group class="main-container">
 				<!-- 사이드바 -->
 				<aside class="sidebar">
-					<w2:textbox class="sidebar-title" label="MY JOBDA"></w2:textbox>
-
-					<xf:group class="sidebar-menu">
-						<xf:group class="menu-category">
-							<w2:textbox class="menu-category-title" label="메인">
-								<w2:span class="new-badge" label="NEW"></w2:span>
-							</w2:textbox>
-							<w2:anchor class="menu-item" ev:onclick="scwin.sidebarMenu_onclick('matching_home')">
-								<xf:label><![CDATA[기업 둘러보기]]></xf:label>
-							</w2:anchor>
-							<w2:anchor class="menu-item" ev:onclick="scwin.sidebarMenu_onclick('matching_inquiry')">
-								<xf:label><![CDATA[매칭 현황]]></xf:label>
-							</w2:anchor>
-						</xf:group>
-
-						<!-- 내 정보 섹션 -->
-						<xf:group class="menu-category">
-							<w2:textbox class="menu-category-title" label="내 정보"></w2:textbox>
-							<w2:anchor class="menu-item active incomplete" ev:onclick="scwin.sidebarMenu_onclick('matching_profile')">
-								<xf:label><![CDATA[프로필]]></xf:label>
-							</w2:anchor>
-							<w2:anchor class="menu-item" ev:onclick="scwin.sidebarMenu_onclick('application_history')">
-								<xf:label><![CDATA[지원현황]]></xf:label>
-							</w2:anchor>
-							<w2:anchor class="menu-item" ev:onclick="scwin.sidebarMenu_onclick('interest_company')">
-								<xf:label><![CDATA[관심기업]]></xf:label>
-							</w2:anchor>
-						</xf:group>
+					<w2:textbox label="내 정보" class="menu-category-title"></w2:textbox>
+					<xf:group id="menu_profile" class="menu-item active incomplete" ev:onclick="scwin.menu_profile_onclick">
+						<w2:textbox label="프로필" style="background:transparent; border:none; pointer-events: none;"></w2:textbox>
+					</xf:group>
+					<xf:group id="menu_history" class="menu-item" ev:onclick="scwin.menu_history_onclick">
+						<w2:textbox label="지원현황" style="background:transparent; border:none; pointer-events: none;"></w2:textbox>
+					</xf:group>
+					<xf:group id="menu_interest" class="menu-item" ev:onclick="scwin.menu_interest_onclick">
+						<w2:textbox label="매칭제안" style="background:transparent; border:none; pointer-events: none;"></w2:textbox>
+					</xf:group>
 					</xf:group>
 				</aside>
 
 				<!-- 메인 콘텐츠 -->
-				<main class="main-content">
-					<!-- 개인정보 카드 -->
-					<section class="info-grid">
-						<xf:group class="profile-info" style="">
-							<xf:group class="profile-avatar">
-								<xf:image src="/InsWebApp/images/ws5/default_user.png" style="width: 80px;height: 80px;" id=""></xf:image>
-							</xf:group>
-							<xf:group class="profile-details">
-								<w2:textbox ref="data:dma_userInfoVo.name"
-									style="font-size: 20px; font-weight: bold; color: #666; margin: 4px 0 8px 0;">
-								</w2:textbox>
-								<xf:group class="profile-career">
-									<w2:textbox ref="data:dma_userInfoVo.career" style="font-size: 14px; color: #666; margin: 4px 0 8px 0;">
-									</w2:textbox>
-								</xf:group>
-							</xf:group>
-						</xf:group>
-						<xf:group class="info-card" ev:onclick="scwin.editInfo_onclick('profile')">
-							<xf:group class="info-card-header">
-								<w2:textbox class="info-card-title" label="개인정보"></w2:textbox>
-								<w2:textbox class="info-card-edit" label="✏️"
-									style="color:#007bff;    font-size:clamp(18px,3vw,18px);    font-weight:700;    border:1px solid #ccc;    border-radius:12px;    aspect-ratio:1/1;    width: clamp(36px, 4vw, 56px);    display:flex;    align-items:center;    justify-content:center;    cursor:pointer;    text-decoration:none;"
-									id="btn_userUpdate" ev:onclick="scwin.btn_userUpdate_onclick">
-								</w2:textbox>
-							</xf:group>
-
-							<xf:group class="info-content-grid">
-								<!-- 지역·직무 -->
-								<xf:group class="info-item">
-									<w2:textbox class="info-item-label" label="직무"></w2:textbox>
-									<w2:textbox class="info-item-value" ref="data:dma_userInfoVo.currentPosition"></w2:textbox>
-								</xf:group>
-
-								<!-- 근무 지역 -->
-								<xf:group class="info-item">
-									<w2:textbox class="info-item-label" label="근무 지역"></w2:textbox>
-									<w2:textbox class="info-item-value" ref="data:dma_userInfoVo.preferredLocations"></w2:textbox>
-								</xf:group>
-
-								<!-- 연봉 -->
-								<xf:group class="info-item">
-									<w2:textbox class="info-item-label" label="희망 연봉"></w2:textbox>
-									<w2:textbox class="info-item-value" ref="data:dma_userInfoVo.yearSalary"></w2:textbox>
-								</xf:group>
-
-								<!-- 경력 수준 -->
-								<xf:group class="info-item">
-									<w2:textbox class="info-item-label" label="경력 수준"></w2:textbox>
-									<w2:textbox class="info-item-value" ref="data:dma_userInfoVo.career"></w2:textbox>
-								</xf:group>
-							</xf:group>
-						</xf:group>
-					</section>
-
-					<!-- 매칭에 필요한 정보 섹션 -->
-					<section class="section">
-						<w2:textbox class="section-title" label="매칭에 필요한 정보를 입력해주세요."></w2:textbox>
-
-						<xf:group class="action-cards">
-							<!-- MBTI 성격 검사 카드 -->
-							<xf:group id="mbti_card" class="action-card incomplete" ev:onclick="scwin.startMbti_onclick()">
-								<xf:group class="incomplete-badge">미완료</xf:group>
-								<xf:group class="action-card-icon" style="">
-									<xf:image src="/InsWebApp/images/ws5/main/mbti_check.png" style="width:100%;height:100%;" id=""></xf:image>
-								</xf:group>
-								<w2:textbox class="action-card-title" label="mbti 성격 검사"></w2:textbox>
-								<w2:textbox class="action-card-subtitle" label="ex : 8가지 성향을 4개의 성향을 알아 낼 수 있습니다"></w2:textbox>
-								<xf:trigger class="action-card-button" type="button">
-									<xf:label><![CDATA[시작하기]]></xf:label>
-								</xf:trigger>
-							</xf:group>
-
-							<!-- 코드분석 카드 -->
-							<xf:group id="code_card" class="action-card incomplete" ev:onclick="scwin.startCodeAnalysis_onclick()">
-								<xf:group class="incomplete-badge">미완료</xf:group>
-
-								<xf:group class="action-card-icon" style="">
-									<xf:image src="/InsWebApp/images/ws5/main/code_check.png" style="width:100%;height:100%;" id=""></xf:image>
-								</xf:group>
-								<w2:textbox class="action-card-title" label="코드분석"></w2:textbox>
-								<w2:textbox class="action-card-subtitle" label="ex : 8가지 성향을 4개의 성향을 알아 낼 수 있습니다"></w2:textbox>
-								<xf:trigger class="action-card-button" type="button">
-									<xf:label><![CDATA[분석하기]]></xf:label>
-								</xf:trigger>
-							</xf:group>
-						</xf:group>
-					</section>
-				</main>
+				<xf:group class="main-content">
+					<w2:pageFrame id="contentFrame" src="/InsWebApp/ui/user/UserDetailMain.xml" style="width: 100%; height: 100%;"></w2:pageFrame>
+				</xf:group>
 			</xf:group>
 		</xf:group>
 	</body>

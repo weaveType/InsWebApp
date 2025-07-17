@@ -6,6 +6,8 @@ import com.demo.proworks.common.enumType.DevMbti;
 import com.demo.proworks.domain.user.vo.ApplicantDetailVo;
 import com.demo.proworks.domain.user.vo.ApplicantListVo;
 import com.demo.proworks.domain.user.vo.ApplicantVo;
+import com.demo.proworks.domain.user.vo.ScoutListVo;
+import com.demo.proworks.domain.user.vo.ScoutVo;
 import com.demo.proworks.domain.user.vo.UserInfoVo;
 import com.demo.proworks.domain.user.vo.UserVo;
 
@@ -177,5 +179,14 @@ public interface UserService {
 	 * @throws Exception
 	 */
 	public List<ApplicantDetailVo> selectUsersByjobPostingId(ApplicantVo applicantVo) throws Exception;
+
+	/**
+	 * 기업의 매칭유저 검색을 조회한다.
+	 *
+	 * @param ScoutVo 페이징 정보, 공고 ID
+	 * @return ScoutListVo 유저 목록
+	 * @throws Exception
+	 */
+	public ScoutListVo getScoutUsersByPostId(ScoutVo scoutVo) throws Exception;
 
 }

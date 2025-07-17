@@ -116,7 +116,7 @@ scwin.card1_onclick = function () {
 
 scwin.card2_onclick = function () {
     // 로그인 유저가 아닐경우, 로그인 페이지로 이동
-    $p.url("../mbti/MbtiTest.xml");
+    $p.url("../survey/SurveyMbti.xml");
 };
 
 scwin.card3_onclick = function () {
@@ -1072,7 +1072,7 @@ scwin.refreshCompanyList = function () {
 						<xf:group class="card-icon card-icon-blue">
 							<xf:image src="/InsWebApp/images/ws5/main/mbti_check.png" style="width: 150px;height: 150px;" id=""></xf:image>
 						</xf:group>
-						<w2:textbox class="card-title" label="mbti검사"></w2:textbox>
+						<w2:textbox class="card-title" label="개발자 성향분석"></w2:textbox>
 					</xf:group>
 					<xf:group class="card card-orange" id="card3" ev:onclick="scwin.card3_onclick">
 						<xf:group class="card-icon card-icon-orange">
