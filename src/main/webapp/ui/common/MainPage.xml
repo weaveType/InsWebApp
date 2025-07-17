@@ -41,7 +41,7 @@
 				target='data:json,{"id":"dlt_company_list","key":"elData.corporateMainVo"}' mode="asynchronous" encoding="UTF-8"
 				processMsg="참여 기업 목록을 조회 중입니다." ev:submitdone="scwin.sbm_selectCompanyList_submitdone" ev:submiterror="">
 			</xf:submission>
-			<xf:submission id="smb_selectMatchingChecked" action="/InsWebApp/US0001Match.pwkjson" method="post" mediatype="application/json" ref='data:json,{"id":"dmp_matchingCheckedVo","key":"matchingCheckedVo"}' target='data:json,{"id":"dmp_matchingChecked","key":"elData.matchingChecked"}'
+			<xf:submission id="smb_selectMatchingChecked" action="/InsWebApp/US0001Match.pwkjson" method="post" mediatype="application/json" ref='data:json,{"id":"dmp_matchingCheckedVo","key":"matchingCheckedVo"}' target='data:json,{"id":"dmp_matchingCheckedVo","key":"elData"}'
 				encoding="UTF-8" mode="asynchronous" processMsg="매칭 정보 조회 중..." ev:submitdone="scwin.smb_selectMatchingChecked_submitdone"
 				ev:submiterror="">
 			</xf:submission>
@@ -97,8 +97,8 @@ scwin.smb_selectMatchingChecked_submitdone = function(e) {
         return;
     }
 
-    var isMbtiChecked = dmp_matchingChecked.get("isMbtiChecked");
-    var isCodeChecked = dmp_matchingChecked.get("isCodeChecked");
+    var isMbtiChecked = dmp_matchingCheckedVo.get("isMbtiChecked");
+    var isCodeChecked = dmp_matchingCheckedVo.get("isCodeChecked");
 
     console.log("isMbtiChecked:", isMbtiChecked);
     console.log("isCodeChecked:", isCodeChecked);
@@ -106,7 +106,7 @@ scwin.smb_selectMatchingChecked_submitdone = function(e) {
     // 여기에 isMbtiChecked와 isCodeChecked 값에 따라 UI를 업데이트하는 로직을 추가합니다.
     // 예: 특정 아이콘의 표시 여부, 텍스트 변경 등
     // 예시: 성향분석 완료 여부에 따라 카드 2의 스타일 변경
-    if (isMbtiChecked === "Y") {
+    if (isMbtiChecked) {
         card2.addClass("completed"); // 'completed' 클래스 추가 (CSS에서 정의 필요)
         // txb_mbti_status.setValue("완료");
     } else {
@@ -115,7 +115,7 @@ scwin.smb_selectMatchingChecked_submitdone = function(e) {
     }
 
     // 예시: 코드분석 완료 여부에 따라 카드 3의 스타일 변경
-    if (isCodeChecked === "Y") {
+    if (isCodeChecked) {
         card3.addClass("completed");
         // txb_code_status.setValue("완료");
     } else {

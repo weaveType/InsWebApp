@@ -1081,7 +1081,6 @@ public class UserController {
 	@RequestMapping(value = "US0001Match")
 	@ElDescription(sub = "해당 유저의 성향검사 및 코드검사 여부 확인", desc = "해당 유저의 성향검사 및 코드검사 여부를 가져온다")
 	public MatchingCheckedVo selectMatchingChecked(MatchingCheckedVo matchingCheckedVo) throws Exception {
-		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> matchingCheckedVo : " + matchingCheckedVo.toString());
 		return userService.selectMatchingChecked(matchingCheckedVo);
 	}
 }
