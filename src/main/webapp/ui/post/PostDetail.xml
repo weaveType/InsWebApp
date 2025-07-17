@@ -257,26 +257,6 @@
                 background-color: #2a5bd6;
             }
 
-            .btn-bookmark {
-                background-color: white;
-                color: #767676;
-                border: 1px solid #e1e5e9;
-                padding: 12px 16px;
-                border-radius: 25px;
-                font-size: clamp(12px, 1.8vw, 14px);
-                cursor: pointer;
-                display: flex;
-                align-items: center;
-                gap: 8px;
-                white-space: nowrap;
-                transition: all 0.2s ease;
-            }
-
-            .btn-bookmark:hover {
-                background-color: #f8f9fa;
-                border-color: #c8d0d7;
-            }
-
             /* 기업 사용자용 버튼 스타일 */
             .btn-edit {
                 background-color: #28a745;
@@ -903,44 +883,6 @@ scwin.btnApply_onclick = function (e) {
     }
 };
 
-// 북마크 버튼 클릭
-scwin.btnBookmark_onclick = function (e) {
-    var jobPostingId = dmp_postDetail.get("jobPostingId");
-
-    // TODO: 실제 북마크 서버 요청
-    alert("북마크에 추가되었습니다.\n공고 ID: " + jobPostingId);
-
-    // 버튼 텍스트 변경
-    var btnElement = e.target;
-    if (btnElement.textContent.includes('������')) {
-        btnElement.textContent = '❤️ 북마크됨';
-    } else {
-        btnElement.textContent = '������ 북마크';
-    }
-};
-
-// 공유하기
-scwin.btnShare_onclick = function (e) {
-    var title = dmp_postDetail.get("title") || "채용공고";
-    var jobPostingId = dmp_postDetail.get("jobPostingId");
-
-    if (navigator.share) {
-        navigator.share({
-            title: title,
-            text: title + " - 채용공고",
-            url: window.location.href
-        });
-    } else {
-        // 공유 API 미지원 시 클립보드 복사
-        navigator.clipboard.writeText(window.location.href).then(function () {
-            alert("링크가 클립보드에 복사되었습니다.");
-        }).catch(function () {
-            // 클립보드 복사 실패 시 직접 표시
-            prompt("아래 링크를 복사하세요:", window.location.href);
-        });
-    }
-};
-
 /**
  * 공고 삭제 완료 콜백
  */
@@ -1167,6 +1109,13 @@ scwin.btnApplicantDetails_onclick = function (e) {
     var detailUrl = "ApplicantManagement.xml?jobPostingId=" + encodeURIComponent(jobPostingId);
     $p.url(detailUrl);
 };
+
+scwin.btnScout_onclick = function (e) {
+    var jobPostingId = dmp_postDetail.get("jobPostingId");
+    var detailUrl = "Scout.xml?jobPostingId=" + encodeURIComponent(jobPostingId);
+    $p.url(detailUrl);
+
+};
 ]]></script>
     </head>
 
@@ -1204,9 +1153,6 @@ scwin.btnApplicantDetails_onclick = function (e) {
                         	<xf:trigger class="btn-apply" id="btnApply" type="button" ev:onclick="scwin.btnApply_onclick">
                         		<xf:label>지원하기</xf:label>
                         	</xf:trigger>
-                        	<xf:trigger class="btn-bookmark" id="btnBookmark" type="button" ev:onclick="scwin.btnBookmark_onclick">
-                        		<xf:label>🤍 북마크</xf:label>
-                        	</xf:trigger>
 
                         	<!-- 기업 사용자용 버튼들 (작성자 본인만) -->
                         	<xf:trigger class="btn-edit" id="btnEdit" type="button" ev:onclick="scwin.btnEdit_onclick"
@@ -1217,8 +1163,13 @@ scwin.btnApplicantDetails_onclick = function (e) {
                         		style="display:none;">
                         		<xf:label>삭제하기</xf:label>
                         	</xf:trigger>
-                        	<xf:trigger class="btn-applicant_details" id="btnApplicantDetails" type="button" style="" ev:onclick="scwin.btnApplicantDetails_onclick">
+                        	<xf:trigger class="btn-applicant_details" id="btnApplicantDetails" type="button" style=""
+                        		ev:onclick="scwin.btnApplicantDetails_onclick">
                         		<xf:label>지원자 보기</xf:label>
+                        	</xf:trigger>
+                        	<xf:trigger class="btn-scout" id="btnScout" style=""
+                        		type="button" ev:onclick="scwin.btnScout_onclick">
+                        		<xf:label>매칭 제안하기</xf:label>
                         	</xf:trigger>
                         </xf:group>
                     </section>
