@@ -153,5 +153,4 @@ public interface PostService {
 	 * @throws Exception
 	 */
 	public int insertJobApplication(JobApplicationVo jobApplicationVo) throws Exception;
-
 }

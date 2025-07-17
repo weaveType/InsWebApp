@@ -84,7 +84,6 @@ public class UserController {
 	/**
 	 * 로그아웃을 처리한다.
 	 * 
-	 * @param logoutVo 로그인 정보 LogoutVo
 	 * @param request 요청 정보 HttpServletRequest
 	 * @throws Exception
 	 */
@@ -93,9 +92,22 @@ public class UserController {
 	@ElDescription(sub = "로그아웃", desc = "로그아웃을 처리한다.")
 	public void logout(HttpServletRequest request) throws Exception {
 
-//		LoginInfo info = loginProcess.logout(request, email, password);
+		// ProWorks5 프레임워크의 로그아웃 프로세스 호출
+		LoginInfo info = loginProcess.processLogout(request, null);
 
-//		AppLog.debug("- Login 정보 : " + info.toString());
+		// HTTP 세션 무효화
+		HttpSession session = request.getSession(false);
+
+		if (session != null) {
+			// 세션에 저장된 사용자 정보 로깅 (디버깅용)
+			AppLog.debug("- 로그아웃 사용자 ID: " + session.getAttribute("userId"));
+			AppLog.debug("- 로그아웃 사용자 이메일: " + session.getAttribute("userEmail"));
+
+			// 세션 무효화
+			session.invalidate();
+		}
+
+		AppLog.debug("- 로그아웃 완료: " + info.toString());
 	}
 
 	/**
@@ -1042,5 +1054,19 @@ public class UserController {
 		ApplicantListVo resultListVo = new ApplicantListVo();
 		resultListVo.setApplicantDetailVo(detailList);
 		return resultListVo;
+	}
+
+	 /**
+	 * 기업의 매칭유저 검색을 조회한다.
+	 *
+	 * @param ScoutVo 페이징 정보, 공고 ID
+	 * @return ScoutListVo 유저 목록
+	 * @throws Exception
+	 */
+	@ElService(key = "US0003List")
+	@RequestMapping(value = "US0003List")
+	@ElDescription(sub = "공고에 지원한 유저 출력", desc = "공고에 지원한 유저를 출력한다")
+	public ScoutListVo getScoutUsersByPostId(ScoutVo scoutVo) throws Exception {
+		return userService.getScoutUsersByPostId(scoutVo);
 	}
 }
