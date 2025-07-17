@@ -193,7 +193,7 @@
             	</w2:dataMap>
             </w2:dataCollection>
             <xf:submission id="sbm_selectScoutVo" action="/InsWebApp/US0003List.pwkjson" method="post" mediatype="application/json" ref='data:json,{"id":"dmp_scoutVo","key":"scoutVo"}'
-                target='data:json,{"dlt_scoutListVo", "key":"elData.dlt_scoutListVo"}' encoding="UTF-8" instance="" replace="" errorHandler="" customHandler="" mode="asynchronous" processMsg="매칭 유저 불러오는중.." ev:submit=""
+                target='data:json,{"dlt_scoutListVo", "key":"elData.scoutDetailVo"}' encoding="UTF-8" instance="" replace="" errorHandler="" customHandler="" mode="asynchronous" processMsg="매칭 유저 불러오는중.." ev:submit=""
                 ev:submitdone="scwin.sbm_scoutVo_submitdone" ev:submiterror="" abortTrigger="">
             </xf:submission>
         </xf:model>

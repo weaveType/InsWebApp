@@ -255,9 +255,8 @@ public class UserServiceImpl implements UserService {
 	 */
 	public ScoutListVo getScoutUsersByPostId(ScoutVo scoutVo) throws Exception {
 		List<ScoutDetailVo> detailList = userDAO.getScoutUsersByPostId(scoutVo);
-		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> detailList : "  + detailList);
 		ScoutListVo scoutListVo = new ScoutListVo();
-		
+		scoutListVo.setScoutDetailVo(detailList);
 		return scoutListVo;
 	}
 }
