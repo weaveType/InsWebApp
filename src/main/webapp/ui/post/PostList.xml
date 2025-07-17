@@ -894,7 +894,6 @@ scwin.sbm_applicantList_submitdone = function (e) {
 									</xf:item>
 								</xf:choices>
 							</xf:select1>
-							<w2:autoComplete editType="select" id="atc_tech_stack" style="margin-left: 10px;padding: 8px 12px; font-size: 14px; border: 1px solid #ccc; border-radius: 8px; background-color: #f8f8f8; width: 180px; height: 35px;" submenuSize="auto" search="start"></w2:autoComplete>
 						</xf:group>
 					</xf:group>
 					<xf:group class="header-right">

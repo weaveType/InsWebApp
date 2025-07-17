@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,13 +44,21 @@ public class SurveyServiceImpl implements SurveyService {
         AppLog.debug("ObjectMapper FilterProvider 설정 완료");
     }
     
+    // 설문 점수 계산 상수 (균등 배분 방식)
+    private static final int OPTION_COUNT = 7;           // 7지선다
+    private static final int CENTER_OPTION = 4;          // 중간값 (4번 = 0점)
+    private static final int TARGET_RANGE = 50;          // 목표 범위 (±50점)
+    private static final int QUESTIONS_PER_AXIS = 5;     // 축당 문제 수
+    private static final int MAX_DEVIATION = (OPTION_COUNT - 1) / 2; // 최대 편차 (3)
+    private static final double UNIT_SCORE = (double) TARGET_RANGE / (QUESTIONS_PER_AXIS * MAX_DEVIATION); // 3.333...
+    
     // 가중치 설정 (설문:코드분석)
     private static final double WEIGHT_BA_SURVEY = 0.6;
     private static final double WEIGHT_BA_CODE = 0.4;
     private static final double WEIGHT_RI_SURVEY = 0.75;
     private static final double WEIGHT_RI_CODE = 0.25;
-    private static final double WEIGHT_ST_SURVEY = 0.7;
-    private static final double WEIGHT_ST_CODE = 0.3;
+    private static final double WEIGHT_ST_SURVEY = 1.0;
+    private static final double WEIGHT_ST_CODE = 0.0;
     private static final double WEIGHT_DF_SURVEY = 1.0;
     private static final double WEIGHT_DF_CODE = 0.0;
     
@@ -123,33 +132,33 @@ public class SurveyServiceImpl implements SurveyService {
             }
             AppLog.debug("설문 응답 저장 완료");
             
-            // 2. 설문 점수 계산 (축별로 계산)
+            // 2. 설문 점수 계산 (축별로 계산, 0점 기준 -50~+50)
             Map<String, Double> surveyScores;
             try {
                 if (submitVo.getAnswers() == null || submitVo.getAnswers().isEmpty()) {
                     AppLog.warn("설문 응답이 비어있습니다. 기본값으로 진행합니다.");
                     surveyScores = new HashMap<>();
-                    surveyScores.put("B_A", 50.0);
-                    surveyScores.put("R_I", 50.0);
-                    surveyScores.put("S_T", 50.0);
-                    surveyScores.put("D_F", 50.0);
+                    surveyScores.put("B_A", 0.0);
+                    surveyScores.put("R_I", 0.0);
+                    surveyScores.put("S_T", 0.0);
+                    surveyScores.put("D_F", 0.0);
                 } else {
                     surveyScores = calculateSurveyScores(submitVo.getAnswers());
                     if (surveyScores == null) {
                         surveyScores = new HashMap<>();
-                        surveyScores.put("B_A", 50.0);
-                        surveyScores.put("R_I", 50.0);
-                        surveyScores.put("S_T", 50.0);
-                        surveyScores.put("D_F", 50.0);
+                        surveyScores.put("B_A", 0.0);
+                        surveyScores.put("R_I", 0.0);
+                        surveyScores.put("S_T", 0.0);
+                        surveyScores.put("D_F", 0.0);
                     }
                 }
             } catch (Exception ex) {
                 AppLog.error("설문 점수 계산 중 오류", ex);
                 surveyScores = new HashMap<>();
-                surveyScores.put("B_A", 50.0);
-                surveyScores.put("R_I", 50.0);
-                surveyScores.put("S_T", 50.0);
-                surveyScores.put("D_F", 50.0);
+                surveyScores.put("B_A", 0.0);
+                surveyScores.put("R_I", 0.0);
+                surveyScores.put("S_T", 0.0);
+                surveyScores.put("D_F", 0.0);
             }
             AppLog.debug("설문 점수 계산 완료: " + surveyScores);
             
@@ -251,71 +260,85 @@ public class SurveyServiceImpl implements SurveyService {
     }
     
     /**
-     * 설문 응답으로부터 축별 점수 계산
+     * 설문 응답으로부터 축별 점수 계산 (균등 배분 방식, 0점 기준 -50 ~ +50)
      * 
      * @param answers 질문별 응답 리스트
-     * @return 축별 점수 맵
+     * @return 축별 점수 맵 (+값: A/I/T/F, -값: B/R/S/D)
      */
     private Map<String, Double> calculateSurveyScores(List<QuestionAnswerVo> answers) {
         Map<String, Double> scores = new HashMap<>();
-        Map<String, Integer> counts = new HashMap<>();
-        Map<String, Integer> totals = new HashMap<>();
+        Map<String, List<Double>> axisScores = new HashMap<>();
         
         // null 체크
         if (answers == null) {
             AppLog.warn("설문 응답이 null입니다.");
-            answers = new java.util.ArrayList<>();
+            answers = new ArrayList<>();
         }
         
-        // 축별 초기화
+        // 축별 점수 리스트 초기화
         for (String axis : new String[]{"B_A", "R_I", "S_T", "D_F"}) {
-            counts.put(axis, 0);
-            totals.put(axis, 0);
+            axisScores.put(axis, new ArrayList<>());
         }
         
-        // 질문별 점수 집계
-        List<SurveyQuestionVo> questions;
-        try {
-            questions = surveyDAO.selectActiveQuestions();
-        } catch (Exception e) {
-            AppLog.error("설문 질문 조회 중 오류", e);
-            throw new RuntimeException("설문 질문 조회 중 오류: " + e.getMessage());
-        }
-        Map<Long, String> questionAxisMap = new HashMap<>();
+        AppLog.debug("균등 배분 설정: UNIT_SCORE = " + UNIT_SCORE + " (7지선다, ±" + TARGET_RANGE + "점)");
         
-        for (SurveyQuestionVo question : questions) {
-            questionAxisMap.put(question.getQuestionId(), question.getAxis());
-        }
-        
+        // 질문별 점수 계산 (완벽하게 균등한 간격)
         for (QuestionAnswerVo answer : answers) {
-            String axis = questionAxisMap.get(answer.getQuestionId());
-            if (axis != null) {
-                counts.put(axis, counts.get(axis) + 1);
-                totals.put(axis, totals.get(axis) + answer.getAnswerValue());
+            Long questionId = answer.getQuestionId();
+            int answerValue = answer.getAnswerValue();
+            
+            // 균등 배분 공식: (선택지 - 중간값) × 단위점수
+            double questionScore = (answerValue - CENTER_OPTION) * UNIT_SCORE;
+            
+            AppLog.debug("문제 " + questionId + ": 답변(" + answerValue + ") → 점수(" + questionScore + ")");
+            
+            // 축별 점수 배정 (방향성 설정 제거 - 모든 문제 동일하게 처리)
+            if (questionId >= 1 && questionId <= 5) {
+                // B_A 축
+                axisScores.get("B_A").add(questionScore);
+                AppLog.debug("  → B_A축: " + questionScore);
+                
+            } else if (questionId >= 6 && questionId <= 10) {
+                // R_I 축
+                axisScores.get("R_I").add(questionScore);
+                AppLog.debug("  → R_I축: " + questionScore);
+                
+            } else if (questionId >= 11 && questionId <= 15) {
+                // S_T 축
+                axisScores.get("S_T").add(questionScore);
+                AppLog.debug("  → S_T축: " + questionScore);
+                
+            } else if (questionId >= 16 && questionId <= 20) {
+                // D_F 축
+                axisScores.get("D_F").add(questionScore);
+                AppLog.debug("  → D_F축: " + questionScore);
             }
         }
         
-        // 축별 평균 점수 계산 (1-5 scale을 0-100으로 변환)
+        // 축별 점수 합계 계산 (5문제 합계)
         for (String axis : new String[]{"B_A", "R_I", "S_T", "D_F"}) {
-            if (counts.get(axis) > 0) {
-                double avgScore = (double) totals.get(axis) / counts.get(axis);
-                // 1-5 scale을 0-100으로 변환 (1=0, 3=50, 5=100)
-                double normalizedScore = (avgScore - 1) * 25;
-                scores.put(axis, normalizedScore);
+            List<Double> scoreList = axisScores.get(axis);
+            if (!scoreList.isEmpty()) {
+                double totalScore = scoreList.stream().mapToDouble(Double::doubleValue).sum();
+                scores.put(axis, totalScore);
+                AppLog.debug(axis + " 축 최종 점수: " + scoreList.size() + "문항 합계 = " + totalScore);
+                AppLog.debug("  세부점수: " + scoreList);
             } else {
-                scores.put(axis, 50.0); // 기본값
+                scores.put(axis, 0.0); // 기본값 (중립)
+                AppLog.debug(axis + " 축 응답 없음, 기본값 0.0 설정");
             }
         }
         
+        AppLog.debug("설문 점수 계산 완료 (균등배분): " + scores);
         return scores;
     }
     
     /**
-     * 가중치를 적용하여 최종 MBTI 타입 계산
+     * 가중치를 적용하여 최종 MBTI 타입 계산 (0점 기준)
      * 
      * @param typeId 타입 ID
-     * @param surveyScores 설문 점수
-     * @param codeScores 코드 분석 점수
+     * @param surveyScores 설문 점수 (-50~+50)
+     * @param codeScores 코드 분석 점수 (-50~+50)
      * @return MBTI 계산 결과
      */
     private MbtiCalculationResultVo calculateFinalMbtiType(Long typeId, Map<String, Double> surveyScores, Map<String, Object> codeScores, Long userId) {
@@ -336,40 +359,40 @@ public class SurveyServiceImpl implements SurveyService {
         AppLog.debug("코드 분석 점수 맵 내용: " + codeScores);
         AppLog.debug("설문 점수 맵 내용: " + surveyScores);
         
-        // 안전한 double 값 추출을 위한 헬퍼 메서드 사용
-        double codeStyleScore = safeDoubleFromMap(codeScores, "development_style_score", 50.0);
-        double codeCollabScore = safeDoubleFromMap(codeScores, "collaboration_score", 50.0);
+        // 안전한 double 값 추출을 위한 헬퍼 메서드 사용 (기본값 0.0)
+        double codeStyleScore = safeDoubleFromMap(codeScores, "development_style_score", 0.0);
+        double codeCollabScore = safeDoubleFromMap(codeScores, "collaboration_score", 0.0);
         
         AppLog.debug("추출된 코드 분석 점수 - 스타일: " + codeStyleScore + ", 협업: " + codeCollabScore);
         
-        // B/A 축 계산 (Architect가 높으면 A, Builder가 높으면 B)
-        double surveyBA = surveyScores.getOrDefault("B_A", 50.0);
+        // B/A 축 계산 (+값: Architect, -값: Builder)
+        double surveyBA = surveyScores.getOrDefault("B_A", 0.0);
         double finalBA = (surveyBA * WEIGHT_BA_SURVEY) + (codeStyleScore * WEIGHT_BA_CODE);
         result.setABScore(finalBA);
         
-        // R/I 축 계산 (설문만 사용 - 코드 분석에서는 R/I 구분 불가)
-        double surveyRI = surveyScores.getOrDefault("R_I", 50.0);
-        double finalRI = surveyRI * WEIGHT_RI_SURVEY; // 코드 분석 비중 0.25는 기본값 50 적용
+        // R/I 축 계산 (+값: Innovate, -값: Refactor)
+        double surveyRI = surveyScores.getOrDefault("R_I", 0.0);
+        double finalRI = (surveyRI * WEIGHT_RI_SURVEY) + (0.0 * WEIGHT_RI_CODE); // 코드 분석에서 R/I 구분 불가
         result.setRIScore(finalRI);
         
-        // S/T 축 계산 (Solo가 높으면 S, Team이 높으면 T)
-        double surveyST = surveyScores.getOrDefault("S_T", 50.0);
+        // S/T 축 계산 (+값: Team, -값: Solo)
+        double surveyST = surveyScores.getOrDefault("S_T", 0.0);
         double finalST = (surveyST * WEIGHT_ST_SURVEY) + (codeCollabScore * WEIGHT_ST_CODE);
         result.setSTScore(finalST);
         
-        // D/F 축 계산 (설문만 사용)
-        double surveyDF = surveyScores.getOrDefault("D_F", 50.0);
-        double finalDF = surveyDF * WEIGHT_DF_SURVEY; // 설문만 사용
+        // D/F 축 계산 (+값: Feature, -값: Debug)
+        double surveyDF = surveyScores.getOrDefault("D_F", 0.0);
+        double finalDF = (surveyDF * WEIGHT_DF_SURVEY) + (0.0 * WEIGHT_DF_CODE); // 코드 분석으로 D/F 구분 불가
         result.setDFScore(finalDF);
         
         AppLog.debug("최종 계산 점수 - BA: " + finalBA + ", RI: " + finalRI + ", ST: " + finalST + ", DF: " + finalDF);
         
-        // 타입 코드 결정 (50점 기준으로 분류)
+        // 타입 코드 결정 (0점 기준으로 분류)
         StringBuilder typeCode = new StringBuilder();
-        typeCode.append(finalBA >= 50 ? "A" : "B");
-        typeCode.append(finalRI >= 50 ? "R" : "I");
-        typeCode.append(finalST >= 50 ? "S" : "T");
-        typeCode.append(finalDF >= 50 ? "D" : "F");
+        typeCode.append(finalBA >= 0 ? "A" : "B");  // +: Architect, -: Builder
+        typeCode.append(finalRI >= 0 ? "I" : "R");  // +: Innovate, -: Refactor
+        typeCode.append(finalST >= 0 ? "T" : "S");  // +: Team, -: Solo
+        typeCode.append(finalDF >= 0 ? "F" : "D");  // +: Feature, -: Debug
         
         result.setTypeCode(typeCode.toString());
         result.setTypeName(TYPE_NAMES.getOrDefault(typeCode.toString(), "알 수 없는 유형"));
@@ -381,12 +404,12 @@ public class SurveyServiceImpl implements SurveyService {
     }
     
     /**
-     * Map에서 안전하게 double 값을 추출하는 헬퍼 메서드
+     * Map에서 안전하게 double 값을 추출하는 헬퍼 메서드 (0점 기준)
      * 
      * @param map 대상 맵
      * @param key 키
-     * @param defaultValue 기본값
-     * @return double 값
+     * @param defaultValue 기본값 (0.0 권장)
+     * @return double 값 (-50 ~ +50 범위)
      */
     private double safeDoubleFromMap(Map<String, Object> map, String key, double defaultValue) {
         if (map == null || key == null) {
@@ -401,14 +424,18 @@ public class SurveyServiceImpl implements SurveyService {
         }
         
         try {
+            double result;
             if (value instanceof Number) {
-                return ((Number) value).doubleValue();
+                result = ((Number) value).doubleValue();
             } else if (value instanceof String) {
-                return Double.parseDouble((String) value);
+                result = Double.parseDouble((String) value);
             } else {
                 AppLog.warn("키 '" + key + "'의 값이 예상치 못한 타입입니다: " + value.getClass().getSimpleName() + ", 값: " + value);
                 return defaultValue;
             }
+            
+            return result;
+            
         } catch (Exception e) {
             AppLog.error("키 '" + key + "'의 값을 double로 변환하는 중 오류 발생: " + value, e);
             return defaultValue;
