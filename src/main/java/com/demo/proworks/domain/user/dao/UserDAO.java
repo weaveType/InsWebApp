@@ -101,6 +101,17 @@ public class UserDAO extends com.demo.proworks.cmmn.dao.ProworksDefaultAbstractD
 	}
 
 	/**
+	 * 일반회원 비밀번호를 갱신한다.
+	 * 
+	 * @param UserVo 일반회원
+	 * @return 번호
+	 * @throws ElException
+	 */
+	public int updatePassword(UserVo vo) throws ElException {
+		return update("com.demo.proworks.domain.user.updatePassword", vo);
+	}
+
+	/**
 	 * 일반회원를 삭제한다.
 	 * 
 	 * @param UserVo 일반회원
