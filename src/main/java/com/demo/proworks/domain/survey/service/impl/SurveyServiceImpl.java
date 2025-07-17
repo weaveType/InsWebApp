@@ -156,13 +156,25 @@ public class SurveyServiceImpl implements SurveyService {
             // 3. 코드 분석 점수 조회
             Map<String, Object> codeScores;
             try {
-                // 사용자 ID를 Long으로 변환 (기본값 9 사용)
-                Long userIdLong = submitVo.getUserId() != null ? 
-                    Long.valueOf(submitVo.getUserId().hashCode() % 1000) : 9L;
-                codeScores = surveyDAO.selectCodeAnalysisScores(userIdLong);
-                if (codeScores == null) {
+                // 사용자 ID를 Long으로 변환
+                Long userIdLong = null;
+                if (submitVo.getUserId() != null && !submitVo.getUserId().trim().isEmpty()) {
+                    try {
+                        userIdLong = Long.parseLong(submitVo.getUserId());
+                    } catch (NumberFormatException e) {
+                        AppLog.warn("사용자 ID 변환 실패, 코드 분석 조회 스킵: " + submitVo.getUserId());
+                        userIdLong = null;
+                    }
+                }
+                if (userIdLong != null) {
+                    codeScores = surveyDAO.selectCodeAnalysisScores(userIdLong);
+                    if (codeScores == null) {
+                        codeScores = new HashMap<>();
+                        AppLog.debug("사용자 ID " + userIdLong + "의 코드 분석 데이터가 없습니다. 설문만으로 진행합니다.");
+                    }
+                } else {
                     codeScores = new HashMap<>();
-                    AppLog.debug("코드 분석 데이터가 없습니다. 설문만으로 진행합니다.");
+                    AppLog.debug("사용자 ID가 없어서 코드 분석을 생략하고 설문만으로 진행합니다.");
                 }
             } catch (Exception ex) {
                 AppLog.error("코드 분석 점수 조회 중 오류", ex);
@@ -178,12 +190,11 @@ public class SurveyServiceImpl implements SurveyService {
                     userId = Long.parseLong(submitVo.getUserId());
                     AppLog.debug("설정된 사용자 ID: " + userId);
                 } else {
-                    userId = 9L; // 실제 존재하는 사용자 ID로 기본값 설정
-                    AppLog.warn("사용자 ID가 없어서 기본값 9를 사용합니다.");
+                    throw new Exception("사용자 ID가 제공되지 않았습니다.");
                 }
             } catch (NumberFormatException e) {
-                userId = 9L; // 파싱 실패 시에도 기본값 9 사용
-                AppLog.warn("사용자 ID 파싱 실패, 기본값 9 사용: " + submitVo.getUserId());
+                AppLog.error("사용자 ID 파싱 실패: " + submitVo.getUserId());
+                throw new Exception("유효하지 않은 사용자 ID입니다: " + submitVo.getUserId());
             }
             
             MbtiCalculationResultVo result = calculateFinalMbtiType(submitVo.getTypeId(), surveyScores, codeScores, userId);

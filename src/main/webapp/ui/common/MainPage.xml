@@ -116,7 +116,7 @@ scwin.card1_onclick = function () {
 
 scwin.card2_onclick = function () {
     // 로그인 유저가 아닐경우, 로그인 페이지로 이동
-    $p.url("../mbti/MbtiTest.xml");
+    $p.url("../survey/SurveyMbti.xml");
 };
 
 scwin.card3_onclick = function () {
