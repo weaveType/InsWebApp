@@ -57,8 +57,8 @@ public class SurveyServiceImpl implements SurveyService {
     private static final double WEIGHT_BA_CODE = 0.4;
     private static final double WEIGHT_RI_SURVEY = 0.75;
     private static final double WEIGHT_RI_CODE = 0.25;
-    private static final double WEIGHT_ST_SURVEY = 0.7;
-    private static final double WEIGHT_ST_CODE = 0.3;
+    private static final double WEIGHT_ST_SURVEY = 1.0;
+    private static final double WEIGHT_ST_CODE = 0.0;
     private static final double WEIGHT_DF_SURVEY = 1.0;
     private static final double WEIGHT_DF_CODE = 0.0;
     
@@ -372,7 +372,7 @@ public class SurveyServiceImpl implements SurveyService {
         
         // R/I 축 계산 (+값: Innovate, -값: Refactor)
         double surveyRI = surveyScores.getOrDefault("R_I", 0.0);
-        double finalRI = surveyRI * WEIGHT_RI_SURVEY; // 설문만 사용 (코드 분석에서 R/I 구분 불가)
+        double finalRI = (surveyRI * WEIGHT_RI_SURVEY) + (0.0 * WEIGHT_RI_CODE); // 코드 분석에서 R/I 구분 불가
         result.setRIScore(finalRI);
         
         // S/T 축 계산 (+값: Team, -값: Solo)
@@ -382,7 +382,7 @@ public class SurveyServiceImpl implements SurveyService {
         
         // D/F 축 계산 (+값: Feature, -값: Debug)
         double surveyDF = surveyScores.getOrDefault("D_F", 0.0);
-        double finalDF = surveyDF * WEIGHT_DF_SURVEY; // 설문만 사용
+        double finalDF = (surveyDF * WEIGHT_DF_SURVEY) + (0.0 * WEIGHT_DF_CODE); // 코드 분석으로 D/F 구분 불가
         result.setDFScore(finalDF);
         
         AppLog.debug("최종 계산 점수 - BA: " + finalBA + ", RI: " + finalRI + ", ST: " + finalST + ", DF: " + finalDF);
