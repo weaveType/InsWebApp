@@ -14,6 +14,7 @@ import com.demo.proworks.domain.user.vo.UserInfoVo;
 import com.demo.proworks.domain.user.vo.UserVo;
 import com.demo.proworks.common.enumType.DevMbti;
 import com.demo.proworks.domain.user.dao.UserDAO;
+import org.mindrot.jbcrypt.BCrypt;
 
 /**
  * @subject : 일반회원 관련 처리를 담당하는 ServiceImpl
@@ -241,5 +242,20 @@ public class UserServiceImpl implements UserService {
 	 */
 	public List<ApplicantDetailVo> selectUsersByjobPostingId(ApplicantVo applicantVo) throws Exception {
 		return userDAO.selectUsersByjobPostingId(applicantVo);
+	}
+
+	@Override
+	public boolean updatePassword(int userId, String currentPassword, String newPassword) throws Exception {
+		UserVo userVo = new UserVo();
+		userVo.setUserId(userId);
+		UserVo currentUser = userDAO.selectUser(userVo);
+
+		if (currentUser != null && BCrypt.checkpw(currentPassword, currentUser.getPassword())) {
+			String hashedNewPassword = BCrypt.hashpw(newPassword, BCrypt.gensalt(12));
+			currentUser.setPassword(hashedNewPassword);
+			userDAO.updatePassword(currentUser);
+			return true;
+		}
+		return false;
 	}
 }

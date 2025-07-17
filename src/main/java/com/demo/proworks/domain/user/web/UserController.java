@@ -12,8 +12,6 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
-import com.demo.proworks.domain.user.vo.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
@@ -25,7 +23,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.demo.proworks.domain.user.service.UserService;
+import com.demo.proworks.domain.user.vo.UserVo;
+import com.demo.proworks.domain.user.vo.LoginVo;
+import com.demo.proworks.domain.user.vo.UserInfoVo;
+import com.demo.proworks.domain.user.vo.UserListVo;
 import com.demo.proworks.common.vo.EmailVo;
+import com.demo.proworks.cmmn.ProworksUserHeader;
+import com.inswave.elfw.util.ControllerContextUtil;
 
 import com.inswave.elfw.annotation.ElDescription;
 import com.inswave.elfw.annotation.ElService;
@@ -79,23 +83,6 @@ public class UserController {
 		LoginInfo info = loginProcess.processLogin(request, email, password);
 
 		AppLog.debug("- Login 정보 : " + info.toString());
-	}
-
-	/**
-	 * 로그아웃을 처리한다.
-	 * 
-	 * @param logoutVo 로그인 정보 LogoutVo
-	 * @param request 요청 정보 HttpServletRequest
-	 * @throws Exception
-	 */
-	@ElService(key = "USLogout")
-	@RequestMapping(value = "USLogout")
-	@ElDescription(sub = "로그아웃", desc = "로그아웃을 처리한다.")
-	public void logout(HttpServletRequest request) throws Exception {
-
-//		LoginInfo info = loginProcess.logout(request, email, password);
-
-//		AppLog.debug("- Login 정보 : " + info.toString());
 	}
 
 	/**
@@ -182,7 +169,7 @@ public class UserController {
 	/**
 	 * 이메일 중복 여부를 확인한다.
 	 *
-	 * @param emailVo 이메일 정보
+	 * @param request HttpServletRequest 요청 객체
 	 * @return 중복 확인 결과
 	 * @throws Exception
 	 */
@@ -190,7 +177,7 @@ public class UserController {
 	@RequestMapping(value = { "USCheckEmail", "USCheckEmail.pwkjson" }, method = { RequestMethod.GET,
 			RequestMethod.POST })
 	@ElDescription(sub = "이메일 중복 확인", desc = "회원가입 시 이메일 중복 여부를 확인한다.")
-	public EmailVo checkEmailDuplicate(HttpServletRequest request) throws Exception {
+	public Map<String, Object> checkEmailDuplicate(HttpServletRequest request) throws Exception {
 		String email = null;
 
 		try {
@@ -239,41 +226,44 @@ public class UserController {
 		System.out.println("=== ProWorks5 이메일 중복 확인 호출됨 ===");
 		System.out.println("입력 이메일: " + email);
 
-		// EmailVo에 결과를 설정하여 반환 (ProWorks5 표준 방식)
-		EmailVo result = new EmailVo();
+		// ProWorks5 표준 응답 구조에 맞게 elData 필드 사용
+		Map<String, Object> emailResult = new HashMap<>();
 
 		if (email == null || email.trim().isEmpty()) {
 			// 이메일이 비어있는 경우 - 오류로 처리
 			System.out.println("오류: 이메일이 비어있음");
-			result.setEmail("");
-			result.setRole("ERROR");
-			return result;
-		}
+			emailResult.put("email", "");
+			emailResult.put("role", "ERROR");
+		} else {
+			// 이메일 설정
+			emailResult.put("email", email);
 
-		// 이메일 설정
-		result.setEmail(email);
+			try {
+				boolean isDuplicate = userService.checkEmailDuplicate(email);
 
-		try {
-			boolean isDuplicate = userService.checkEmailDuplicate(email);
+				if (isDuplicate) {
+					// 중복된 이메일인 경우
+					System.out.println("결과: 이메일 중복");
+					emailResult.put("role", "DUPLICATE");
+				} else {
+					// 사용 가능한 이메일인 경우
+					System.out.println("결과: 이메일 사용 가능");
+					emailResult.put("role", "AVAILABLE");
+				}
 
-			if (isDuplicate) {
-				// 중복된 이메일인 경우
-				System.out.println("결과: 이메일 중복");
-				result.setRole("DUPLICATE");
-			} else {
-				// 사용 가능한 이메일인 경우
-				System.out.println("결과: 이메일 사용 가능");
-				result.setRole("AVAILABLE");
+			} catch (Exception e) {
+				// 오류 발생시
+				System.out.println("오류 발생: " + e.getMessage());
+				emailResult.put("role", "ERROR");
 			}
-
-		} catch (Exception e) {
-			System.out.println("서비스 호출 실패: " + e.getMessage());
-			e.printStackTrace();
-			result.setRole("ERROR");
 		}
 
-		System.out.println("최종 응답: " + result.toString());
-		return result;
+		// ProWorks5 표준 응답 구조로 변경
+		Map<String, Object> response = new HashMap<>();
+		response.put("elData", emailResult);
+
+		System.out.println("최종 응답: " + response);
+		return response;
 	}
 
 	/**
@@ -406,7 +396,14 @@ public class UserController {
 
 			// users_info 테이블에 기본 정보 저장
 			System.out.println("=== users_info 테이블에 기본 정보 저장 시작 ===");
-			UserVo userInfoVo = new UserVo();
+			
+			// 기존 사용자 정보 조회 (회원가입 플로우에서 입력한 정보 보존)
+			UserVo queryVo = new UserVo();
+			queryVo.setUserId(userId);
+			UserVo existingUserInfo = userService.selectUserInfoByUserId(queryVo);
+			
+			// 기존 데이터가 있으면 병합, 없으면 새로 생성
+			UserVo userInfoVo = existingUserInfo != null ? existingUserInfo : new UserVo();
 			userInfoVo.setUserId(userId);
 
 			// 생년월일 파싱 및 저장
@@ -439,10 +436,17 @@ public class UserController {
 			// 휴대폰번호는 현재 users_info에 필드가 없으므로 생략
 			// 향후 필요시 필드 추가 가능
 
-			// users_info 테이블에 기본 정보 저장
+			// users_info 테이블에 기본 정보 저장 (기존 데이터와 병합)
 			try {
 				userService.insertOrUpdateUserInfo(userInfoVo);
-				System.out.println("=== users_info 테이블에 기본 정보 저장 완료 ===");
+				System.out.println("=== users_info 테이블에 기본 정보 저장 완료 (기존 데이터 보존) ===");
+				
+				// 저장된 데이터 확인을 위한 로그
+				if (existingUserInfo != null) {
+					System.out.println("기존 연봉 정보 보존: " + existingUserInfo.getYearSalary());
+					System.out.println("기존 경력 정보 보존: " + existingUserInfo.getCareer());
+					System.out.println("기존 지역 정보 보존: " + existingUserInfo.getPreferredLocations());
+				}
 			} catch (Exception e) {
 				System.out.println("users_info 저장 오류: " + e.getMessage());
 				e.printStackTrace();
@@ -542,7 +546,7 @@ public class UserController {
 			System.out.println("ServletContext 경로: " + request.getSession().getServletContext().getContextPath());
 			System.out.println("작업 디렉토리: " + System.getProperty("user.dir"));
 			System.out.println("==========================================");
-
+			
 			File uploadDirectory = new File(uploadDir);
 			if (!uploadDirectory.exists()) {
 				uploadDirectory.mkdirs();
@@ -677,6 +681,243 @@ public class UserController {
 			e.printStackTrace();
 			result.put("success", false);
 			result.put("message", "서버 오류가 발생했습니다: " + e.getMessage());
+		}
+
+		return result;
+	}
+
+	/**
+	 * 사용자 정보를 전체적으로 수정한다.
+	 *
+	 * @param request 요청 정보 HttpServletRequest
+	 * @return 수정 결과
+	 * @throws Exception
+	 */
+	@ElService(key = "USUpdateUserInfo")
+	@RequestMapping(value = { "USUpdateUserInfo", "USUpdateUserInfo.pwkjson" }, method = RequestMethod.POST)
+	@ElDescription(sub = "사용자 정보 수정", desc = "개인정보 수정 페이지에서 사용자 정보를 전체적으로 수정한다.")
+	public Map<String, Object> updateUserInfo(HttpServletRequest request) throws Exception {
+		Map<String, Object> result = new HashMap<>();
+
+		try {
+			// JSON 문자열 읽기
+			BufferedReader reader = request.getReader();
+			StringBuilder sb = new StringBuilder();
+			String line;
+			while ((line = reader.readLine()) != null) {
+				sb.append(line);
+			}
+			String jsonString = sb.toString();
+
+			System.out.println("=== 사용자 정보 수정 요청 JSON ===");
+			System.out.println(jsonString);
+
+			if (jsonString == null || jsonString.trim().isEmpty()) {
+				result.put("result", "fail");
+				result.put("message", "요청 데이터가 비어있습니다.");
+				return result;
+			}
+
+			// JSON 파싱
+			ObjectMapper objectMapper = new ObjectMapper();
+			JsonNode rootNode = objectMapper.readTree(jsonString);
+
+			// 세션에서 사용자 ID 가져오기
+			ProworksUserHeader userHeader = null;
+			try {
+				userHeader = (ProworksUserHeader) ControllerContextUtil.getUserHeader();
+			} catch (Exception e) {
+				System.out.println("사용자 헤더 조회 중 오류: " + e.getMessage());
+			}
+			
+			if (userHeader == null) {
+				System.out.println("사용자 헤더를 찾을 수 없음");
+				result.put("result", "fail");
+				result.put("message", "로그인이 필요합니다.");
+				return result;
+			}
+
+			int userId = userHeader.getAccountId();
+			System.out.println("사용자 헤더에서 가져온 사용자 ID: " + userId);
+
+			// 기존 사용자 정보 조회
+			UserVo queryVo = new UserVo();
+			queryVo.setUserId(userId);
+			UserVo existingUserVo = userService.selectUser(queryVo);
+			
+			if (existingUserVo == null) {
+				result.put("result", "fail");
+				result.put("message", "사용자 정보를 찾을 수 없습니다.");
+				return result;
+			}
+
+			// 수정할 데이터 추출 (dma_userInfoVo 노드에서)
+			JsonNode userInfoNode = rootNode.has("dma_userInfoVo") ? rootNode.get("dma_userInfoVo") : rootNode;
+			
+			// users 테이블 정보 수정
+			if (userInfoNode.has("name")) {
+				String name = userInfoNode.get("name").asText();
+				if (name != null && !name.trim().isEmpty()) {
+					existingUserVo.setName(name);
+					userService.updateUser(existingUserVo);
+					System.out.println("이름 업데이트: " + name);
+				}
+			}
+
+			// users_info 테이블 정보 수정
+			UserVo userInfoVo = new UserVo();
+			userInfoVo.setUserId(userId);
+			
+			// 경력
+			if (userInfoNode.has("career")) {
+				String career = userInfoNode.get("career").asText();
+				if (career != null && !career.trim().isEmpty()) {
+					userInfoVo.setCareer(career);
+					System.out.println("경력 업데이트: " + career);
+				}
+			}
+			
+			// 직무분야
+			if (userInfoNode.has("currentPosition")) {
+				String currentPosition = userInfoNode.get("currentPosition").asText();
+				if (currentPosition != null && !currentPosition.trim().isEmpty()) {
+					userInfoVo.setCurrentPosition(currentPosition);
+					System.out.println("직무분야 업데이트: " + currentPosition);
+				}
+			}
+			
+			// 선호 지역
+			if (userInfoNode.has("preferredLocations")) {
+				String preferredLocations = userInfoNode.get("preferredLocations").asText();
+				if (preferredLocations != null && !preferredLocations.trim().isEmpty()) {
+					userInfoVo.setPreferredLocations(preferredLocations);
+					System.out.println("선호 지역 업데이트: " + preferredLocations);
+				}
+			}
+			
+			// 희망연봉
+			if (userInfoNode.has("yearSalary")) {
+				int yearSalary = userInfoNode.get("yearSalary").asInt();
+				userInfoVo.setYearSalary(yearSalary);
+				System.out.println("희망연봉 업데이트: " + yearSalary);
+			}
+			
+			// 자기소개
+			if (userInfoNode.has("bio")) {
+				String bio = userInfoNode.get("bio").asText();
+				if (bio != null) {
+					userInfoVo.setBio(bio);
+					System.out.println("자기소개 업데이트: " + bio);
+				}
+			}
+
+			// users_info 테이블 업데이트
+			userService.insertOrUpdateUserInfo(userInfoVo);
+
+			result.put("result", "success");
+			result.put("message", "사용자 정보가 성공적으로 수정되었습니다.");
+
+			System.out.println("=== 사용자 정보 수정 완료 ===");
+
+		} catch (Exception e) {
+			System.out.println("=== 사용자 정보 수정 실패 ===");
+			System.out.println("오류 메시지: " + e.getMessage());
+			e.printStackTrace();
+			result.put("result", "error");
+			result.put("message", "시스템 오류가 발생했습니다: " + e.getMessage());
+		}
+
+		return result;
+	}
+
+	/**
+	 * 사용자의 비밀번호를 변경한다.
+	 *
+	 * @param request HttpServletRequest 요청 객체
+	 * @return 변경 결과
+	 * @throws Exception
+	 */
+	@ElService(key = "USUpdatePassword")
+	@RequestMapping(value = { "USUpdatePassword", "USUpdatePassword.pwkjson" }, method = RequestMethod.POST)
+	@ElDescription(sub = "비밀번호 변경", desc = "사용자의 비밀번호를 변경한다.")
+	public Map<String, Object> updatePassword(HttpServletRequest request) throws Exception {
+		Map<String, Object> result = new HashMap<>();
+
+		try {
+			// JSON 문자열 읽기
+			BufferedReader reader = request.getReader();
+			StringBuilder sb = new StringBuilder();
+			String line;
+			while ((line = reader.readLine()) != null) {
+				sb.append(line);
+			}
+			String jsonString = sb.toString();
+
+			System.out.println("=== 비밀번호 변경 요청 JSON ===");
+			System.out.println(jsonString);
+
+			if (jsonString == null || jsonString.trim().isEmpty()) {
+				result.put("result", "fail");
+				result.put("message", "요청 데이터가 비어있습니다.");
+				return result;
+			}
+
+			// JSON 파싱
+			ObjectMapper objectMapper = new ObjectMapper();
+			JsonNode rootNode = objectMapper.readTree(jsonString);
+
+			// 세션에서 사용자 ID 가져오기
+			ProworksUserHeader userHeader = null;
+			try {
+				userHeader = (ProworksUserHeader) ControllerContextUtil.getUserHeader();
+			} catch (Exception e) {
+				System.out.println("사용자 헤더 조회 중 오류: " + e.getMessage());
+			}
+			
+			if (userHeader == null) {
+				System.out.println("사용자 헤더를 찾을 수 없음");
+				result.put("result", "fail");
+				result.put("message", "로그인이 필요합니다.");
+				return result;
+			}
+
+			int userId = userHeader.getAccountId();
+
+			// 비밀번호 데이터 추출
+			JsonNode passwordNode = rootNode.has("dma_passwordChangeVo") ? rootNode.get("dma_passwordChangeVo") : rootNode;
+			String currentPassword = passwordNode.has("currentPassword") ? passwordNode.get("currentPassword").asText() : null;
+			String newPassword = passwordNode.has("newPassword") ? passwordNode.get("newPassword").asText() : null;
+			String confirmPassword = passwordNode.has("confirmPassword") ? passwordNode.get("confirmPassword").asText() : null;
+
+			if (currentPassword == null || newPassword == null || confirmPassword == null) {
+				result.put("result", "fail");
+				result.put("message", "필수 정보가 누락되었습니다.");
+				return result;
+			}
+
+			if (!newPassword.equals(confirmPassword)) {
+				result.put("result", "fail");
+				result.put("message", "새 비밀번호가 일치하지 않습니다.");
+				return result;
+			}
+			
+			// 서비스 호출
+			boolean success = userService.updatePassword(userId, currentPassword, newPassword);
+
+			if (success) {
+				result.put("result", "success");
+				result.put("message", "비밀번호가 성공적으로 변경되었습니다.");
+			} else {
+				result.put("result", "fail");
+				result.put("message", "현재 비밀번호가 일치하지 않습니다.");
+			}
+
+		} catch (Exception e) {
+			System.out.println("=== 비밀번호 변경 실패 ===");
+			System.out.println("오류 메시지: " + e.getMessage());
+			e.printStackTrace();
+			result.put("result", "error");
+			result.put("message", "시스템 오류가 발생했습니다: " + e.getMessage());
 		}
 
 		return result;
@@ -984,16 +1225,14 @@ public class UserController {
 			UserVo userVo = existingUserVo != null ? existingUserVo : new UserVo();
 			userVo.setUserId(userId);
 
-			// career 필드에는 careerType을 저장 (신입/경력)
-			if (!careerType.trim().isEmpty()) {
-				userVo.setCareer(careerType);
-			} else if (!career.trim().isEmpty()) {
-				userVo.setCareer(career);
-			}
+			// career 필드 값 설정 - 프론트에서 보낸 값 그대로 사용
+			if (!career.trim().isEmpty()) {
+				userVo.setCareer(career); // 프론트에서 설정한 career 값을 그대로 사용
+			} 
 
-			// careerPeriod 저장
-			if (!careerPeriod.trim().isEmpty()) {
-				userVo.setCareerPeriod(careerPeriod);
+			// 자기소개 설정
+			if (!bio.trim().isEmpty()) {
+				userVo.setBio(bio);
 			}
 
 			// 사용자 정보 업데이트 (insertOrUpdateUserInfo 사용)
@@ -1026,21 +1265,5 @@ public class UserController {
 		UserInfoVo selectUserVo = userService.selectUserDetail(userInfoVo);
 		return selectUserVo;
 	}
-
-	/**
-	 * 공고에 이력서 지원처리를 한다.
-	 *
-	 * @param ApplicantVo 페이징 정보, 공고 ID
-	 * @return 등록된 행의 수
-	 * @throws Exception
-	 */
-	@ElService(key = "US0002List")
-	@RequestMapping(value = "US0002List")
-	@ElDescription(sub = "공고에 지원한 유저 출력", desc = "공고에 지원한 유저를 출력한다")
-	public ApplicantListVo selectUsersByjobPostingId(ApplicantVo applicantVo) throws Exception {
-		List<ApplicantDetailVo> detailList = userService.selectUsersByjobPostingId(applicantVo);
-		ApplicantListVo resultListVo = new ApplicantListVo();
-		resultListVo.setApplicantDetailVo(detailList);
-		return resultListVo;
-	}
+	
 }

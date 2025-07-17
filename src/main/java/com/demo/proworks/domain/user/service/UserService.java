@@ -159,6 +159,17 @@ public interface UserService {
 	public UserInfoVo selectUserDetail(UserInfoVo userInfoVo) throws Exception;
 
 	/**
+	 * 사용자의 비밀번호를 변경한다.
+	 *
+	 * @param userId          사용자 ID
+	 * @param currentPassword 현재 비밀번호
+	 * @param newPassword     새로운 비밀번호
+	 * @return 변경 성공 여부 (true: 성공, false: 실패)
+	 * @throws Exception
+	 */
+	public boolean updatePassword(int userId, String currentPassword, String newPassword) throws Exception;
+
+	/**
 	 * 공고에 이력서 지원처리를 한다.
 	 *
 	 * @param ApplicantVo 페이징 정보, 공고 ID
