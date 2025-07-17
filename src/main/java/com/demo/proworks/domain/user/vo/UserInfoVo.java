@@ -15,9 +15,6 @@ public class UserInfoVo extends com.demo.proworks.cmmn.ProworksCommVO {
 
     @ElDtoField(logicalName = "계정 ID", physicalName = "accountId", type = "int", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
     private int accountId;
-    
-    @ElDtoField(logicalName = "이메일", physicalName = "email", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
-    private String email;
 
     @ElDtoField(logicalName = "사용자명", physicalName = "name", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
     private String name;
@@ -33,12 +30,12 @@ public class UserInfoVo extends com.demo.proworks.cmmn.ProworksCommVO {
 
     @ElDtoField(logicalName = "희망연봉", physicalName = "yearSalary", type = "int", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
     private int yearSalary;
-    
-    @ElDtoField(logicalName = "자기소개", physicalName = "bio", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
-    private String bio;
-    
-    @ElDtoField(logicalName = "테스트완료여부", physicalName = "testChecked", type = "boolean", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
-    private boolean testChecked;
+
+    @ElDtoField(logicalName = "MBTI완료여부", physicalName = "isMbtiChecked", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private String isMbtiChecked;
+
+    @ElDtoField(logicalName = "코드분석완료여부", physicalName = "isCodeChecked", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private String isCodeChecked;
 
     @ElVoField(physicalName = "accountId")
     public int getAccountId(){
@@ -48,17 +45,6 @@ public class UserInfoVo extends com.demo.proworks.cmmn.ProworksCommVO {
     @ElVoField(physicalName = "accountId")
     public void setAccountId(int accountId){
         this.accountId = accountId;
-    }
-    
-    @ElVoField(physicalName = "email")
-    public String getEmail(){
-        String ret = this.email;
-        return ret;
-    }
-
-    @ElVoField(physicalName = "email")
-    public void setEmail(String email){
-        this.email = email;
     }
 
     @ElVoField(physicalName = "name")
@@ -114,26 +100,27 @@ public class UserInfoVo extends com.demo.proworks.cmmn.ProworksCommVO {
     public void setYearSalary(int yearSalary){
         this.yearSalary = yearSalary;
     }
-    
-    @ElVoField(physicalName = "bio")
-    public String getBio(){
-        String ret = this.bio;
+
+    @ElVoField(physicalName = "isMbtiChecked")
+    public String getIsMbtiChecked(){
+        String ret = this.isMbtiChecked;
         return ret;
     }
 
-    @ElVoField(physicalName = "bio")
-    public void setBio(String bio){
-        this.bio = bio;
-    }
-    
-    @ElVoField(physicalName = "testChecked")
-    public boolean getTestChecked(){
-        return testChecked;
+    @ElVoField(physicalName = "isMbtiChecked")
+    public void setIsMbtiChecked(String isMbtiChecked){
+        this.isMbtiChecked = isMbtiChecked;
     }
 
-    @ElVoField(physicalName = "testChecked")
-    public void setTestChecked(boolean testChecked){
-        this.testChecked = testChecked;
+    @ElVoField(physicalName = "isCodeChecked")
+    public String getIsCodeChecked(){
+        String ret = this.isCodeChecked;
+        return ret;
+    }
+
+    @ElVoField(physicalName = "isCodeChecked")
+    public void setIsCodeChecked(String isCodeChecked){
+        this.isCodeChecked = isCodeChecked;
     }
 
     @Override
@@ -141,16 +128,16 @@ public class UserInfoVo extends com.demo.proworks.cmmn.ProworksCommVO {
         StringBuilder sb = new StringBuilder();
         sb.append("UserInfoVo [");
         sb.append("accountId").append("=").append(accountId).append(",");
-        sb.append("email").append("=").append(email).append(",");
         sb.append("name").append("=").append(name).append(",");
         sb.append("career").append("=").append(career).append(",");
         sb.append("preferredLocations").append("=").append(preferredLocations).append(",");
         sb.append("currentPosition").append("=").append(currentPosition).append(",");
         sb.append("yearSalary").append("=").append(yearSalary).append(",");
-        sb.append("bio").append("=").append(bio).append(",");
-        sb.append("testChecked").append("=").append(testChecked);
+        sb.append("isMbtiChecked").append("=").append(isMbtiChecked).append(",");
+        sb.append("isCodeChecked").append("=").append(isCodeChecked);
         sb.append("]");
         return sb.toString();
+
     }
 
     public boolean isFixedLengthVo() {
@@ -165,5 +152,6 @@ public class UserInfoVo extends com.demo.proworks.cmmn.ProworksCommVO {
     @Override
     public void _xStreamDec() {
     }
+
 
 }
