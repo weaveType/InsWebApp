@@ -236,27 +236,27 @@ public class UserController {
 			emailResult.put("email", "");
 			emailResult.put("role", "ERROR");
 		} else {
-			// 이메일 설정
+		// 이메일 설정
 			emailResult.put("email", email);
 
-			try {
-				boolean isDuplicate = userService.checkEmailDuplicate(email);
+		try {
+			boolean isDuplicate = userService.checkEmailDuplicate(email);
 
-				if (isDuplicate) {
-					// 중복된 이메일인 경우
-					System.out.println("결과: 이메일 중복");
+			if (isDuplicate) {
+				// 중복된 이메일인 경우
+				System.out.println("결과: 이메일 중복");
 					emailResult.put("role", "DUPLICATE");
-				} else {
-					// 사용 가능한 이메일인 경우
-					System.out.println("결과: 이메일 사용 가능");
+			} else {
+				// 사용 가능한 이메일인 경우
+				System.out.println("결과: 이메일 사용 가능");
 					emailResult.put("role", "AVAILABLE");
-				}
+			}
 
-			} catch (Exception e) {
+		} catch (Exception e) {
 				// 오류 발생시
 				System.out.println("오류 발생: " + e.getMessage());
 				emailResult.put("role", "ERROR");
-			}
+		}
 		}
 
 		// ProWorks5 표준 응답 구조로 변경

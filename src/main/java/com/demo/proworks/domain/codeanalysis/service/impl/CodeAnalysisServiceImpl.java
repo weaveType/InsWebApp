@@ -117,7 +117,7 @@ public class CodeAnalysisServiceImpl implements CodeAnalysisService {
             resultVo.setTypeCode(typeCode);
             // 2차원 분석 결과를 새로운 통합 점수 필드에 매핑 (+-50 범위)
             resultVo.setDevelopmentStyleScore(parsedResult.getInt("developmentStyleScore"));
-            resultVo.setCollaborationScore(parsedResult.getInt("collaborationScore"));
+            resultVo.setDeveloperPreferenceScore(parsedResult.getInt("developerPreferenceScore"));
             resultVo.setConfidenceScore(parsedResult.getDouble("confidenceScore"));
             resultVo.setCreatedAt(new Date());
             resultVo.setLanguage(detectedLanguage);
@@ -172,77 +172,20 @@ public class CodeAnalysisServiceImpl implements CodeAnalysisService {
             generationConfig.put("maxOutputTokens", 1024);  // 토큰 수 대폭 감소
             generationConfig.put("responseMimeType", "application/json");
             
-            // 상세 응답 스키마
+            // 새로운 응답 스키마
             JSONObject responseSchema = new JSONObject();
             responseSchema.put("type", "object");
             JSONObject properties = new JSONObject();
             
+            properties.put("type_code", new JSONObject().put("type", "string").put("pattern", "^[AB][RI]$"));
+            properties.put("development_style_score", new JSONObject().put("type", "integer").put("minimum", -50).put("maximum", 50));
+            properties.put("developer_preference_score", new JSONObject().put("type", "integer").put("minimum", -50).put("maximum", 50));
+            properties.put("confidence_score", new JSONObject().put("type", "integer").put("minimum", 0).put("maximum", 100));
+            properties.put("comment", new JSONObject().put("type", "string"));
             properties.put("language", new JSONObject().put("type", "string"));
-            properties.put("dev_style", new JSONObject().put("type", "string").put("enum", new JSONArray().put("A").put("B")));
-            properties.put("dev_score", new JSONObject().put("type", "integer").put("minimum", 50).put("maximum", 100));
-            properties.put("collab_style", new JSONObject().put("type", "string").put("enum", new JSONArray().put("I").put("T")));
-            properties.put("collab_score", new JSONObject().put("type", "integer").put("minimum", 50).put("maximum", 100));
-            properties.put("type_code", new JSONObject().put("type", "string").put("pattern", "^[AB][IT]$"));
-            properties.put("confidence", new JSONObject().put("type", "number").put("minimum", 0).put("maximum", 1));
-            
-            // analysis_details 스키마 (상세 분석 결과)
-            JSONObject analysisDetails = new JSONObject();
-            analysisDetails.put("type", "object");
-            JSONObject detailsProperties = new JSONObject();
-            
-            // architect_indicators (A 타입인 경우)
-            JSONObject architectIndicators = new JSONObject();
-            architectIndicators.put("type", "object");
-            JSONObject architectProps = new JSONObject();
-            architectProps.put("abstraction_level", new JSONObject().put("type", "integer").put("minimum", 0).put("maximum", 100));
-            architectProps.put("design_patterns", new JSONObject().put("type", "integer").put("minimum", 0).put("maximum", 100));
-            architectProps.put("scalability_consideration", new JSONObject().put("type", "integer").put("minimum", 0).put("maximum", 100));
-            architectProps.put("architecture_complexity", new JSONObject().put("type", "integer").put("minimum", 0).put("maximum", 100));
-            architectIndicators.put("properties", architectProps);
-            
-            // builder_indicators (B 타입인 경우)
-            JSONObject builderIndicators = new JSONObject();
-            builderIndicators.put("type", "object");
-            JSONObject builderProps = new JSONObject();
-            builderProps.put("fast_implementation", new JSONObject().put("type", "integer").put("minimum", 0).put("maximum", 100));
-            builderProps.put("prototype_patterns", new JSONObject().put("type", "integer").put("minimum", 0).put("maximum", 100));
-            builderProps.put("simple_solutions", new JSONObject().put("type", "integer").put("minimum", 0).put("maximum", 100));
-            builderProps.put("hardcoding_frequency", new JSONObject().put("type", "integer").put("minimum", 0).put("maximum", 100));
-            builderIndicators.put("properties", builderProps);
-            
-            // team_indicators (T 타입인 경우)
-            JSONObject teamIndicators = new JSONObject();
-            teamIndicators.put("type", "object");
-            JSONObject teamProps = new JSONObject();
-            teamProps.put("collaborative_naming", new JSONObject().put("type", "integer").put("minimum", 0).put("maximum", 100));
-            teamProps.put("detailed_documentation", new JSONObject().put("type", "integer").put("minimum", 0).put("maximum", 100));
-            teamProps.put("small_commits", new JSONObject().put("type", "integer").put("minimum", 0).put("maximum", 100));
-            teamProps.put("interface_design", new JSONObject().put("type", "integer").put("minimum", 0).put("maximum", 100));
-            teamProps.put("code_review_patterns", new JSONObject().put("type", "integer").put("minimum", 0).put("maximum", 100));
-            teamIndicators.put("properties", teamProps);
-            
-            // individual_indicators (I 타입인 경우)
-            JSONObject individualIndicators = new JSONObject();
-            individualIndicators.put("type", "object");
-            JSONObject individualProps = new JSONObject();
-            individualProps.put("personal_naming_style", new JSONObject().put("type", "integer").put("minimum", 0).put("maximum", 100));
-            individualProps.put("independent_modules", new JSONObject().put("type", "integer").put("minimum", 0).put("maximum", 100));
-            individualProps.put("large_commits", new JSONObject().put("type", "integer").put("minimum", 0).put("maximum", 100));
-            individualProps.put("minimal_documentation", new JSONObject().put("type", "integer").put("minimum", 0).put("maximum", 100));
-            individualIndicators.put("properties", individualProps);
-            
-            // 우세한 타입에 따라 해당 지표들만 포함
-            detailsProperties.put("architect_indicators", architectIndicators);
-            detailsProperties.put("builder_indicators", builderIndicators);
-            detailsProperties.put("team_indicators", teamIndicators);
-            detailsProperties.put("individual_indicators", individualIndicators);
-            analysisDetails.put("properties", detailsProperties);
-            
-            properties.put("analysis_details", analysisDetails);
             
             responseSchema.put("properties", properties);
-            // analysis_details를 필수 필드에 추가
-            responseSchema.put("required", new JSONArray().put("language").put("dev_style").put("dev_score").put("collab_style").put("collab_score").put("type_code").put("confidence").put("analysis_details"));
+            responseSchema.put("required", new JSONArray().put("type_code").put("development_style_score").put("developer_preference_score").put("confidence_score").put("comment").put("language"));
             
             generationConfig.put("responseSchema", responseSchema);
             requestBody.put("generationConfig", generationConfig);
@@ -346,71 +289,38 @@ public class CodeAnalysisServiceImpl implements CodeAnalysisService {
                 throw new Exception("API 응답을 JSON으로 파싱할 수 없습니다: " + e.getMessage());
             }
             
-            // 필수 필드 검증
-            String[] requiredFields = {"dev_style", "dev_score", "collab_style", "collab_score", "type_code", "confidence", "analysis_details"};
+            // 필수 필드 검증 (새로운 형식에 맞게)
+            String[] requiredFields = {"type_code", "development_style_score", "developer_preference_score", "confidence_score"};
             for (String field : requiredFields) {
                 if (!analysisResult.has(field)) {
                     throw new Exception("응답에 필수 필드가 없습니다: " + field);
                 }
             }
             
-            // 새로운 데이터베이스 구조에 맞게 변환 (+-50 범위)
+            // 새로운 데이터베이스 구조에 맞게 변환 (이미 +-50 범위)
             JSONObject result = new JSONObject();
             
             // 타입 코드
             result.put("typeCode", analysisResult.getString("type_code"));
             
-            // 점수 추출
-            String devType = analysisResult.getString("dev_style");
-            int devScore = analysisResult.getInt("dev_score");
-            String collabType = analysisResult.getString("collab_style");
-            int collabScore = analysisResult.getInt("collab_score");
+            // 점수는 이미 -50~+50 범위로 제공됨
+            result.put("developmentStyleScore", analysisResult.getInt("development_style_score"));
+            result.put("developerPreferenceScore", analysisResult.getInt("developer_preference_score"));
             
-            // 새로운 통합 점수 계산 (+-50 범위)
-            // 개발 스타일 점수: A는 +, B는 -
-            int developmentStyleScore;
-            if ("A".equals(devType)) {
-                // A(Architect)가 우세: 점수를 -50~+50 범위의 + 값으로 변환
-                developmentStyleScore = (int) Math.round((devScore - 50) * 50.0 / 50.0);
-                developmentStyleScore = Math.max(1, Math.min(50, developmentStyleScore)); // 1~50 범위
-            } else {
-                // B(Builder)가 우세: 점수를 -50~+50 범위의 - 값으로 변환
-                developmentStyleScore = (int) Math.round((devScore - 50) * -50.0 / 50.0);
-                developmentStyleScore = Math.min(-1, Math.max(-50, developmentStyleScore)); // -50~-1 범위
-            }
+            // 신뢰도는 0-100 범위를 0.0-1.0으로 변환
+            double confidenceScore = analysisResult.getInt("confidence_score") / 100.0;
+            result.put("confidenceScore", Math.min(0.99, confidenceScore)); // 최대 0.99로 제한
             
-            // 협업 성향 점수: S는 +, T는 -
-            int collaborationScore_value;
-            if ("I".equals(collabType)) {
-                // I(Individual/Soloist)가 우세: 점수를 -50~+50 범위의 + 값으로 변환  
-                collaborationScore_value = (int) Math.round((collabScore - 50) * 50.0 / 50.0);
-                collaborationScore_value = Math.max(1, Math.min(50, collaborationScore_value)); // 1~50 범위
-            } else {
-                // T(Team)가 우세: 점수를 -50~+50 범위의 - 값으로 변환
-                collaborationScore_value = (int) Math.round((collabScore - 50) * -50.0 / 50.0);
-                collaborationScore_value = Math.min(-1, Math.max(-50, collaborationScore_value)); // -50~-1 범위
-            }
+            // 언어 정보
+            String language = analysisResult.optString("language", "java");
             
-            result.put("developmentStyleScore", developmentStyleScore);
-            result.put("collaborationScore", collaborationScore_value);
-            
-            // 신뢰도 사용 (Gemini에서 직접 계산)
-            double geminiConfidence = analysisResult.optDouble("confidence", 0.5);
-            result.put("confidenceScore", Math.min(0.99, geminiConfidence)); // 최대 0.99로 제한
-            
-            // 상세 분석 결과 저장
-            if (analysisResult.has("analysis_details")) {
-                result.put("analysisDetails", analysisResult.getJSONObject("analysis_details").toString());
-            }
-            
-            // 요약 정보 생성 (더 상세한 정보 포함)
-            String language = analysisResult.optString("language", "Java");
-            String summary = String.format("weaveType: %s (%s, 개발스타일: %s %d점, 협업선호: %s %d점, 신뢰도: %.1f%%)", 
+            // 요약 정보 생성
+            String comment = analysisResult.optString("comment", "코드 분석 완료");
+            String summary = String.format("weaveType: %s (%s, 신뢰도: %.0f%%) - %s", 
                 analysisResult.getString("type_code"), 
                 language,
-                devType, devScore,
-                collabType, collabScore,
-                geminiConfidence * 100);
+                confidenceScore * 100,
+                comment);
             result.put("summary", summary);
             
             // 전체 응답도 저장
@@ -457,198 +367,127 @@ public class CodeAnalysisServiceImpl implements CodeAnalysisService {
     }
     
     /**
-     * 상세한 분석 프롬프트 생성
+     * 새로운 분석 프롬프트 생성 (developer_preference_score 기반)
      */
     private String buildAnalysisPrompt(String language) {
         StringBuilder prompt = new StringBuilder();
         
-        // 역할 및 목적 정의
-        prompt.append("당신은 Developer Personality Analysis Expert입니다.\n");
-        prompt.append("\" + language + \" 코드를 분석하여 개발자의 2차원 weaveType을 판단하는 전문가입니다.\n\n");
-        
-        prompt.append("** 목적 **\n");
-        prompt.append("코딩 패턴, 구조적 사고, 협업 성향을 분석하여 2글자 Developer MBTI 코드(AI, AT, BI, BT)를 도출합니다.\n\n");
-        
-        // MBTI 차원 정의
-        prompt.append("** MBTI 차원 **\n");
-        prompt.append("1. 개발 스타일: A(Architect) vs B(Builder)\n");
-        prompt.append("2. 협업 선호: I(Individual) vs T(Team)\n\n");
-        
-        // 코드 검사 포커스
-        prompt.append("** 코드 검사 포커스 **\n");
-        prompt.append("- 코드 구조와 아키텍처 패턴\n");
-        prompt.append("- 변수, 함수, 클래스 명명 규칙\n");
-        prompt.append("- 주석 및 문서화 스타일\n");
-        prompt.append("- 에러 처리 및 예외 관리\n");
-        prompt.append("- 테스트 코드 존재 여부 및 품질\n");
-        prompt.append("- 사용된 라이브러리와 프레임워크\n");
-        prompt.append("- 코드 중복 및 리팩토링 흔적\n");
-        prompt.append("- 성능 최적화 시도\n");
-        prompt.append("- 신기술이나 패턴 도입\n\n");
-        
-        // A vs B 차원 상세 분석 기준
-        prompt.append("** A vs B 차원 분석 기준 **\n");
-        prompt.append("A(Architect) 지표들:\n");
-        prompt.append("1. 추상화 수준 (가중치 0.30):\n");
-        prompt.append("   - 인터페이스, 추상 클래스, 제네릭 사용\n");
-        prompt.append("   - 계산: (추상화_요소_수 / 전체_클래스_수) * 100\n");
-        prompt.append("   - 범위: 0-100점\n\n");
-        
-        prompt.append("2. 디자인 패턴 (가중치 0.25):\n");
-        prompt.append("   - Singleton, Factory, Observer, Strategy 패턴 사용\n");
-        prompt.append("   - 계산: (디자인_패턴_사용_수 / 전체_클래스_수) * 100\n");
-        prompt.append("   - 범위: 0-100점\n\n");
-        
-        prompt.append("3. 확장성 고려 (가중치 0.20):\n");
-        prompt.append("   - 설정 분리, 플러그인 구조, 확장 포인트\n");
-        prompt.append("   - 계산: (확장성_요소_수 / 전체_모듈_수) * 100\n");
-        prompt.append("   - 범위: 0-100점\n\n");
-        
-        prompt.append("4. 아키텍처 복잡성 (가중치 0.25):\n");
-        prompt.append("   - 계층 구조, 의존성 주입, 모듈 분리\n");
-        prompt.append("   - 계산: (아키텍처_레이어_수 + 모듈_분리_정도) * 10\n");
-        prompt.append("   - 범위: 0-100점\n\n");
-        
-        prompt.append("B(Builder) 지표들:\n");
-        prompt.append("1. 빠른 구현 (가중치 0.25):\n");
-        prompt.append("   - 단순하고 직접적인 구현, 빠른 프로토타입\n");
-        prompt.append("   - 계산: (구현된_기능_수 / 전체_코드_라인_수) * 1000\n");
-        prompt.append("   - 범위: 0-100점\n\n");
-        
-        prompt.append("2. 프로토타입 패턴 (가중치 0.20):\n");
-        prompt.append("   - TODO, FIXME, 임시 코드 빈도\n");
-        prompt.append("   - 계산: (임시_패턴_수 / 전체_라인_수) * 100\n");
-        prompt.append("   - 범위: 0-100점\n\n");
-        
-        prompt.append("3. 단순 해결책 (가중치 0.15):\n");
-        prompt.append("   - if-else 체인, 단순 루프, 직접 로직\n");
-        prompt.append("   - 계산: 100 - (복잡_패턴_사용 / 전체_패턴) * 100\n");
-        prompt.append("   - 범위: 0-100점\n\n");
-        
-        prompt.append("4. 하드코딩 빈도 (가중치 0.15):\n");
-        prompt.append("   - 매직 넘버, 문자열 리터럴, 직접 설정값\n");
-        prompt.append("   - 계산: (하드코딩_수 / 전체_값_참조) * 100\n");
-        prompt.append("   - 범위: 0-100점\n\n");
-        
-        // I vs T 차원 상세 분석 기준
-        prompt.append("** I vs T 차원 분석 기준 **\n");
-        prompt.append("I(Individual) 지표들:\n");
-        prompt.append("1. 개인적 명명 스타일 (가중치 0.20):\n");
-        prompt.append("   - 축약된 변수명, 개인적 축약어, 불명확한 명명\n");
-        prompt.append("   - 계산: (개인적_명명_수 / 전체_식별자_수) * 100\n");
-        prompt.append("   - 범위: 0-100점\n\n");
-        
-        prompt.append("2. 독립적 모듈 (가중치 0.25):\n");
-        prompt.append("   - 독립적이고 낮은 결합도의 모듈 설계\n");
-        prompt.append("   - 계산: 100 - (모듈간_의존성 / 전체_모듈) * 10\n");
-        prompt.append("   - 범위: 0-100점\n\n");
-        
-        prompt.append("3. 큰 커밋 (가중치 0.15):\n");
-        prompt.append("   - 대용량 단위 작업 패턴\n");
-        prompt.append("   - 계산: (큰_변경_패턴 / 전체_패턴) * 100\n");
-        prompt.append("   - 범위: 0-100점\n\n");
-        
-        prompt.append("4. 최소 문서화 (가중치 0.20):\n");
-        prompt.append("   - 간결한 주석, 자체 문서화 코드\n");
-        prompt.append("   - 계산: 100 - (주석_라인 / 코드_라인) * 100\n");
-        prompt.append("   - 범위: 0-100점\n\n");
-        
-        prompt.append("T(Team) 지표들:\n");
-        prompt.append("1. 협업적 명명 (가중치 0.25):\n");
-        prompt.append("   - 명확하고 직관적인 명명\n");
-        prompt.append("   - 계산: (명확한_명명_수 / 전체_식별자_수) * 100\n");
-        prompt.append("   - 범위: 0-100점\n\n");
-        
-        prompt.append("2. 상세 문서화 (가중치 0.30):\n");
-        prompt.append("   - 풍부한 주석과 문서화\n");
-        prompt.append("   - 계산: (주석_라인 / 코드_라인) * 100\n");
-        prompt.append("   - 범위: 0-100점\n\n");
-        
-        prompt.append("3. 작은 커밋 (가중치 0.15):\n");
-        prompt.append("   - 점진적이고 작은 단위 작업\n");
-        prompt.append("   - 계산: (작은_변경_패턴 / 전체_패턴) * 100\n");
-        prompt.append("   - 범위: 0-100점\n\n");
-        
-        prompt.append("4. 인터페이스 설계 (가중치 0.20):\n");
-        prompt.append("   - 인터페이스 중심 설계\n");
-        prompt.append("   - 계산: (인터페이스_정의 / 전체_클래스) * 100\n");
-        prompt.append("   - 범위: 0-100점\n\n");
-        
-        prompt.append("5. 코드 리뷰 패턴 (가중치 0.10):\n");
-        prompt.append("   - 리뷰 친화적 코드\n");
-        prompt.append("   - 계산: (리뷰_친화_패턴 / 전체_패턴) * 100\n");
-        prompt.append("   - 범위: 0-100점\n\n");
-        
-        // 점수 계산 방법론
-        prompt.append("** 점수 계산 방법론 **\n");
-        prompt.append("1단계: 각 지표 점수 계산 (0-100)\n");
-        prompt.append("2단계: 지표 가중치를 적용하여 A_total, B_total, I_total, T_total 계산\n");
-        prompt.append("3단계: 개발 스타일 = max(A_total, B_total)의 우세한 쪽\n");
-        prompt.append("4단계: 협업 선호 = max(I_total, T_total)의 우세한 쪽\n");
-        prompt.append("5단계: 차원별 신뢰도 = |우세_총점 - 상대_총점| / 100\n");
-        prompt.append("6단계: 전체 신뢰도 = 두 차원 신뢰도의 평균\n\n");
-        
-        // Java 특화 고려사항
-        prompt.append("** Java 특화 고려사항 **\n");
-        prompt.append("- OOP 패턴 및 인터페이스 사용\n");
-        prompt.append("- 패키지 계층구조\n");
-        prompt.append("- Builder 지표: Main 메소드 중심 코드, 최소 클래스\n");
-        prompt.append("- Architect 지표: 인터페이스, 추상 클래스, 디자인 패턴\n\n");
-        
-        // 분석 지시사항
-        prompt.append("** 분석 지시사항 **\n");
-        prompt.append("1. 전체 코드 구조와 아키텍처 이해\n");
-        prompt.append("2. 주요 함수와 클래스 식별\n");
-        prompt.append("3. 명명 규칙과 주석 검토\n");
-        prompt.append("4. 에러 처리와 테스트 코드 검사\n");
-        prompt.append("5. 라이브러리와 기술 스택 확인\n");
-        prompt.append("6. A_vs_B와 I_vs_T 지표 정량화\n");
-        prompt.append("7. 대조 점수를 계산하고 우세 타입 결정\n");
-        prompt.append("8. 신뢰도 값 계산\n");
-        prompt.append("9. 우세 점수만 반환\n");
-        prompt.append("10. 최종 2글자 MBTI 코드 생성\n");
-        prompt.append("11. 간소화된 JSON 결과 출력\n\n");
-        
-        // 출력 형식
-        prompt.append("** 출력 형식 **\n");
-        prompt.append("다음 JSON 형식으로만 응답하세요:\n");
+        // 새로운 프롬프트 JSON 구조를 문자열로 포함
         prompt.append("{\n");
-        prompt.append("  \"language\": \"Java Spring Boot\",\n");
-        prompt.append("  \"dev_style\": \"A\",\n");
-        prompt.append("  \"dev_score\": 78,\n");
-        prompt.append("  \"collab_style\": \"T\",\n");
-        prompt.append("  \"collab_score\": 72,\n");
-        prompt.append("  \"type_code\": \"AT\",\n");
-        prompt.append("  \"confidence\": 0.75,\n");
-        prompt.append("  \"analysis_details\": {\n");
-        prompt.append("    \"architect_indicators\": {\n");
-        prompt.append("      \"abstraction_level\": 85,\n");
-        prompt.append("      \"design_patterns\": 70,\n");
-        prompt.append("      \"scalability_consideration\": 75,\n");
-        prompt.append("      \"architecture_complexity\": 80\n");
+        prompt.append("  \"task\": \"developer_trait_analysis\",\n");
+        prompt.append("  \"description\": \"Analyze developer traits based on their code to determine their development style and preferences\",\n");
+        prompt.append("  \"note\": \"Please make sure to respond to this request strictly in the following JSON format. Do not say anything outside of the specified format.\",\n");
+        prompt.append("  \"trait_definitions\": {\n");
+        prompt.append("    \"development_style\": {\n");
+        prompt.append("      \"B\": {\n");
+        prompt.append("        \"name\": \"Builder\",\n");
+        prompt.append("        \"description\": \"Prefers quick implementation and practicality\",\n");
+        prompt.append("        \"indicators\": [\n");
+        prompt.append("          \"Simple, straightforward solutions\",\n");
+        prompt.append("          \"Minimal abstractions\",\n");
+        prompt.append("          \"Focus on working code over perfect architecture\",\n");
+        prompt.append("          \"Pragmatic approach to problem-solving\",\n");
+        prompt.append("          \"Direct implementation without over-engineering\"\n");
+        prompt.append("        ]\n");
+        prompt.append("      },\n");
+        prompt.append("      \"A\": {\n");
+        prompt.append("        \"name\": \"Architect\",\n");
+        prompt.append("        \"description\": \"Pursues systematic and perfect design\",\n");
+        prompt.append("        \"indicators\": [\n");
+        prompt.append("          \"Well-structured code with clear separation of concerns\",\n");
+        prompt.append("          \"Use of design patterns\",\n");
+        prompt.append("          \"Comprehensive error handling\",\n");
+        prompt.append("          \"Detailed documentation\",\n");
+        prompt.append("          \"Scalable and maintainable architecture\"\n");
+        prompt.append("        ]\n");
+        prompt.append("      }\n");
         prompt.append("    },\n");
-        prompt.append("    \"team_indicators\": {\n");
-        prompt.append("      \"collaborative_naming\": 80,\n");
-        prompt.append("      \"detailed_documentation\": 75,\n");
-        prompt.append("      \"small_commits\": 65,\n");
-        prompt.append("      \"interface_design\": 70,\n");
-        prompt.append("      \"code_review_patterns\": 60\n");
+        prompt.append("    \"developer_preference\": {\n");
+        prompt.append("      \"R\": {\n");
+        prompt.append("        \"name\": \"Refactor\",\n");
+        prompt.append("        \"description\": \"Prefers improving and optimizing existing code\",\n");
+        prompt.append("        \"indicators\": [\n");
+        prompt.append("          \"Code refactoring patterns\",\n");
+        prompt.append("          \"Performance optimizations\",\n");
+        prompt.append("          \"Code cleanup and simplification\",\n");
+        prompt.append("          \"Improving readability\",\n");
+        prompt.append("          \"Fixing technical debt\"\n");
+        prompt.append("        ]\n");
+        prompt.append("      },\n");
+        prompt.append("      \"I\": {\n");
+        prompt.append("        \"name\": \"Innovator\",\n");
+        prompt.append("        \"description\": \"Enjoys daring to explore new technologies\",\n");
+        prompt.append("        \"indicators\": [\n");
+        prompt.append("          \"Use of cutting-edge technologies\",\n");
+        prompt.append("          \"Experimental approaches\",\n");
+        prompt.append("          \"Integration of new libraries/frameworks\",\n");
+        prompt.append("          \"Creative problem-solving\",\n");
+        prompt.append("          \"Early adoption of new features\"\n");
+        prompt.append("        ]\n");
+        prompt.append("      }\n");
+        prompt.append("    }\n");
+        prompt.append("  },\n");
+        prompt.append("  \"analysis_instructions\": {\n");
+        prompt.append("    \"steps\": [\n");
+        prompt.append("      \"Examine code structure and organization\",\n");
+        prompt.append("      \"Identify design patterns and architectural choices\",\n");
+        prompt.append("      \"Analyze technology choices and dependencies\",\n");
+        prompt.append("      \"Evaluate code style and documentation\",\n");
+        prompt.append("      \"Assess problem-solving approaches\"\n");
+        prompt.append("    ],\n");
+        prompt.append("    \"scoring_guidelines\": {\n");
+        prompt.append("      \"development_style_score\": {\n");
+        prompt.append("        \"range\": [-50, 50],\n");
+        prompt.append("        \"interpretation\": {\n");
+        prompt.append("          \"-50 to -21\": \"Strong Builder (B) tendency\",\n");
+        prompt.append("          \"-20 to -1\": \"Moderate Builder (B) tendency\",\n");
+        prompt.append("          \"0\": \"Balanced between Builder and Architect\",\n");
+        prompt.append("          \"1 to 20\": \"Moderate Architect (A) tendency\",\n");
+        prompt.append("          \"21 to 50\": \"Strong Architect (A) tendency\"\n");
+        prompt.append("        }\n");
+        prompt.append("      },\n");
+        prompt.append("      \"developer_preference_score\": {\n");
+        prompt.append("        \"range\": [-50, 50],\n");
+        prompt.append("        \"interpretation\": {\n");
+        prompt.append("          \"-50 to -21\": \"Strong Innovator (I) tendency\",\n");
+        prompt.append("          \"-20 to -1\": \"Moderate Innovator (I) tendency\",\n");
+        prompt.append("          \"0\": \"Balanced between Refiner and Innovator\",\n");
+        prompt.append("          \"1 to 20\": \"Moderate Refiner (R) tendency\",\n");
+        prompt.append("          \"21 to 50\": \"Strong Refiner (R) tendency\"\n");
+        prompt.append("        }\n");
+        prompt.append("      },\n");
+        prompt.append("      \"confidence_score\": {\n");
+        prompt.append("        \"range\": [0, 100],\n");
+        prompt.append("        \"factors\": [\n");
+        prompt.append("          \"Amount of code analyzed\",\n");
+        prompt.append("          \"Variety of code patterns observed\",\n");
+        prompt.append("          \"Consistency of traits across different code sections\",\n");
+        prompt.append("          \"Clarity of trait indicators\"\n");
+        prompt.append("        ]\n");
+        prompt.append("      }\n");
+        prompt.append("    }\n");
+        prompt.append("  },\n");
+        prompt.append("  \"output_format\": {\n");
+        prompt.append("    \"analysis_result\": {\n");
+        prompt.append("      \"type_code\": \"string (BR, BI, AR, AI)\",\n");
+        prompt.append("      \"development_style_score\": \"integer (-50 to 50)\",\n");
+        prompt.append("      \"developer_preference_score\": \"integer (-50 to 50)\",\n");
+        prompt.append("      \"confidence_score\": \"integer (0 to 100)\",\n");
+        prompt.append("      \"comment\": \"string (Korean language preferred)\",\n");
+        prompt.append("      \"language\": \"string (java, python, javascript, etc.)\"\n");
         prompt.append("    }\n");
         prompt.append("  }\n");
         prompt.append("}\n\n");
         
-        // 주의사항
-        prompt.append("** 주의사항 **\n");
-        prompt.append("- 반드시 JSON 형식으로만 응답\n");
-        prompt.append("- dev_style은 A 또는 B만\n");
-        prompt.append("- collab_style은 I 또는 T만\n");
-        prompt.append("- 점수는 50-100 사이의 정수\n");
-        prompt.append("- type_code는 2글자 조합 (AI, AT, BI, BT)\n");
-        prompt.append("- confidence는 0-1 사이의 소수\n");
-        prompt.append("- 객관적이고 일관된 기준 적용\n");
-        prompt.append("- 패턴의 질을 양보다 우세시\n");
-        prompt.append("- 언어 규칙 존중\n");
-        prompt.append("- 간결하고 집중적인 출력 유지\n");
+        prompt.append("Based on the above analysis framework, analyze the provided " + language + " code and return ONLY a JSON response in this exact format:\n\n");
+        prompt.append("{\n");
+        prompt.append("  \"type_code\": \"BR\",\n");
+        prompt.append("  \"development_style_score\": -25,\n");
+        prompt.append("  \"developer_preference_score\": 15,\n");
+        prompt.append("  \"confidence_score\": 75,\n");
+        prompt.append("  \"comment\": \"실용적이고 빠른 구현을 선호하며, 기존 코드 개선에 집중하는 개발자\",\n");
+        prompt.append("  \"language\": \"java\"\n");
+        prompt.append("}\n\n");
         
         return prompt.toString();
     }

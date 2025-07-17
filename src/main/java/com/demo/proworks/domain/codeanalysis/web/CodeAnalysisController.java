@@ -103,7 +103,7 @@ public class CodeAnalysisController {
             returnMap.put("analysisResult", result.getAnalysisResult());
             returnMap.put("typeCode", result.getTypeCode());
             returnMap.put("developmentStyleScore", result.getDevelopmentStyleScore());
-            returnMap.put("collaborationScore", result.getCollaborationScore());
+            returnMap.put("developerPreferenceScore", result.getDeveloperPreferenceScore());
             returnMap.put("confidenceScore", result.getConfidenceScore());
             returnMap.put("createdAt", result.getCreatedAt());
             returnMap.put("language", result.getLanguage());
@@ -159,7 +159,7 @@ public class CodeAnalysisController {
                 returnMap.put("analysisResult", result.getAnalysisResult());
                 returnMap.put("typeCode", result.getTypeCode());
                 returnMap.put("developmentStyleScore", result.getDevelopmentStyleScore());
-                returnMap.put("collaborationScore", result.getCollaborationScore());
+                returnMap.put("developerPreferenceScore", result.getDeveloperPreferenceScore());
                 returnMap.put("confidenceScore", result.getConfidenceScore());
                 returnMap.put("createdAt", result.getCreatedAt());
             }
