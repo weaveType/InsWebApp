@@ -205,9 +205,9 @@ scwin.menu_history_onclick = function() {
     contentFrame.setSrc('ApplicationHistory.xml');
 };
 
-// 관심기업 메뉴 클릭 이벤트
+// 매칭제안 메뉴 클릭 이벤트
 scwin.menu_interest_onclick = function() {
-    alert("관심기업 페이지는 준비중입니다.");
+    contentFrame.setSrc();
 };
 
 // MBTI 검사 시작
@@ -241,7 +241,7 @@ scwin.btn_userUpdate_onclick = function (e) {
 						<w2:textbox label="지원현황" style="background:transparent; border:none; pointer-events: none;"></w2:textbox>
 					</xf:group>
 					<xf:group id="menu_interest" class="menu-item" ev:onclick="scwin.menu_interest_onclick">
-						<w2:textbox label="관심기업" style="background:transparent; border:none; pointer-events: none;"></w2:textbox>
+						<w2:textbox label="매칭제안" style="background:transparent; border:none; pointer-events: none;"></w2:textbox>
 					</xf:group>
 				</aside>
 

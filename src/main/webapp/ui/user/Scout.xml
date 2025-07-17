@@ -10,37 +10,6 @@
         <w2:publicInfo method=""/>
         <link rel="stylesheet" type="text/css" href="/cm/css/gridview-enhancement.css"/>
         <style>
-            .header-container {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                padding: 20px;
-                background-color: #f8f9fa;
-                border-bottom: 1px solid #e9ecef;
-            }
-            .header-left {
-                display: flex;
-                align-items: center;
-                font-size: 24px;
-                font-weight: bold;
-                color: #2c3e50;
-            }
-            .header-icon {
-                width: 30px;
-                height: 30px;
-                background-color: #3498db;
-                border-radius: 6px;
-                margin-right: 12px;
-                display: inline-block;
-                text-align: center;
-                line-height: 30px;
-                color: white;
-                font-weight: bold;
-            }
-            .stats-info {
-                color: #6c757d;
-                font-size: 14px;
-            }
             .filter-container {
                 display: flex;
                 justify-content: space-between;

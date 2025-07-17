@@ -18,21 +18,10 @@
 		</xf:model>
 		<w2:layoutInfo />
 		<w2:publicInfo method="" />
-		<script type="text/javascript"><![CDATA[// 헤더 UI 업데이트 함수
-scwin.updateHeaderUI = function () {
+		<script type="text/javascript"><![CDATA[scwin.updateHeaderUI = function () {
     // 쿠키에서 사용자 정보 읽어오기
-    var userInfoCookie = WebSquare.cookie.getCookie("userInfo");
-    var userInfo = null;
-    
-    if (userInfoCookie) {
-        try {
-            userInfo = JSON.parse(userInfoCookie);
-        } catch (e) {
-            console.error("사용자 정보 파싱 오류:", e);
-            userInfo = null;
-        }
-    }
-    
+    var userInfo = scwin.getUserInfoByCookie();
+
     if (userInfo == null) {
         // 비로그인 상태
         txb_login.hide();
@@ -47,6 +36,22 @@ scwin.updateHeaderUI = function () {
     }
 };
 
+
+scwin.getUserInfoByCookie = function() {
+    var userInfoCookie = WebSquare.cookie.getCookie("userInfo");
+    var userInfo = null;
+
+    if (userInfoCookie) {
+        try {
+            userInfo = JSON.parse(userInfoCookie);
+        } catch (e) {
+            console.error("사용자 정보 파싱 오류:", e);
+            userInfo = null;
+        }
+    }
+    return userInfo;
+}
+
 // 페이지 로드 시 초기 헤더 상태 설정
 scwin.onpageload = function () {
     scwin.updateHeaderUI();
@@ -55,12 +60,11 @@ scwin.onpageload = function () {
 // 로그아웃
 scwin.logout_onclick = function () {
     // 로그아웃 요청
-    
-    
+
     // 쿠키 삭제
     WebSquare.cookie.delCookie("userInfo");
 
-    
+
 
     scwin.updateHeaderUI();
     // 메인 페이지로 이동 (필요에 따라 변경)
@@ -96,7 +100,7 @@ scwin.btnLogin_onclick = function () {
     $p.openPopup("../user/Login.xml", options);
 };
 
-scwin.weaveTypeLogo_onclick = function () {
+scwin.codefit_Logo_onclick = function () {
     $p.url("/InsWebApp/ui/common/MainPage.xml");
 };
 
@@ -113,7 +117,14 @@ scwin.menu3_onclick = function () {
 };
 
 scwin.btnEnterprise_onclick = function () {
-    $p.url("../common/CompanyMain.xml");
+    var userInfo = scwin.getUserInfoByCookie();
+    if (userInfo === null) {
+        $p.url("../common/CompanyMain.xml");
+    } else if (userInfo.role === "USER") {
+        $p.url("../common/CompanyMain.xml");
+    } else if (userInfo.role === "COMPANY") {
+        $p.url("RecruitmentDashboard.xml");
+    }
 };
 
 // 내 정보 페이지로 이동
@@ -303,7 +314,7 @@ scwin.txb_login_onclick = function () {
 					<xf:group class="header-left" style="">
 						<xf:group class="nav-menu" style="">
 							<xf:image src="/InsWebApp/images/ws5/codefit_logo.png" style="width:150px;height:50px; cursor: pointer;" id="codeFITLogo"
-								class="logo" ev:onclick="scwin.weaveTypeLogo_onclick">
+								class="logo" ev:onclick="scwin.codefit_Logo_onclick">
 							</xf:image>
 							<w2:anchor class="nav-link" id="anchor1" ev:onclick="scwin.menu1_onclick" outerDiv="false"
 								style="margin-left: 20px;font-size: 16px;">
