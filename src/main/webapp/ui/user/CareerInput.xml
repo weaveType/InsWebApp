@@ -151,10 +151,17 @@
                 }
                 
                 // 데이터맵에 데이터 설정 (user_id는 백엔드에서 세션으로 처리)
-                dma_career.set("career", careerType + (careerType === "experienced" && dma_career.get("careerPeriod") ? " - " + dma_career.get("careerPeriod") : ""));
+                // 경력자인 경우 경력 기간을 career 필드에 직접 저장
+                if (careerType === "experienced") {
+                    dma_career.set("career", dma_career.get("careerPeriod"));
+                } else {
+                    dma_career.set("career", "신입");
+                }
                 
                 console.log("경력 데이터 전송:", {
-                    career: dma_career.get("career")
+                    career: dma_career.get("career"),
+                    careerType: dma_career.get("careerType"),
+                    careerPeriod: dma_career.get("careerPeriod")
                 });
                 
                 // 서버에 데이터 저장

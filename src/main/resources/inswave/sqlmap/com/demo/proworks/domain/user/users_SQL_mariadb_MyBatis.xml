@@ -70,6 +70,15 @@
 		WHERE USER_ID = #{userId}
 </update>
 
+	<update id="updatePassword" parameterType="com.demo.proworks.domain.user.vo.UserVo">
+		<!-- 일반회원 비밀번호를 갱신한다. -->
+		UPDATE USERS /* QueryID : com.demo.proworks.domain.user.updatePassword */
+		SET
+			PASSWORD = #{password},
+			UPDATED_AT = CURRENT_TIMESTAMP
+		WHERE USER_ID = #{userId}
+	</update>
+
 	<delete id="deleteUser" parameterType="com.demo.proworks.domain.user.vo.UserVo">
 		<!-- 일반회원를 삭제한다. -->
 
@@ -121,12 +130,12 @@
 
 	</select>
 
-	<select id="checkEmailDuplicateCount" parameterType="com.demo.proworks.domain.user.vo.UserVo" resultType="long">
-		<!-- 이메일 중복 여부를 확인한다. -->
-		SELECT /* QueryID : com.demo.proworks.domain.user.checkEmailDuplicateCount */ 
-		COUNT(*) 
-		FROM USERS 
+	<select id="checkEmailDuplicateCount" parameterType="java.lang.String" resultType="java.lang.Long">
+		<!-- 이메일 중복 확인을 위한 개수 조회 -->
+		SELECT COUNT(*) /* QueryID : com.demo.proworks.domain.user.checkEmailDuplicateCount */
+		FROM USERS
 		WHERE EMAIL = #{email}
+		AND IS_DELETED = 0
 	</select>
 
 	<select id="selectUserByEmail" parameterType="com.demo.proworks.domain.user.vo.UserVo"
@@ -218,7 +227,7 @@ SELECT	/* QueryID : com.demo.proworks.domain.user.getDevMbti */
 		<!-- users_info 테이블의 사용자 정보를 업데이트한다. -->
 		UPDATE USERS_INFO /* QueryID : com.demo.proworks.domain.user.updateUserInfo */
 		SET 
-		<if test="yearSalary != null">YEAR_SALARY = #{yearSalary},</if>
+		<if test="yearSalary != null and yearSalary > 0">YEAR_SALARY = #{yearSalary},</if>
 		<if test="career != null">CAREER = #{career},</if>
 		<if test="currentPosition != null">CURRENT_POSITION = #{currentPosition},</if>
 		<if test="preferredLocations != null">PREFERRED_LOCATIONS = #{preferredLocations},</if>
@@ -235,12 +244,13 @@ SELECT	/* QueryID : com.demo.proworks.domain.user.getDevMbti */
 <!-- user 상세보기 페이지에서 사용할 값을 불러온다. -->        
         SELECT /* QueryID : com.demo.proworks.domain.user.UserInfoVo */
             u.user_id as accountId,
+            u.email as email,
             u.name,
             ui.career as career,
             ui.current_position as currentPosition,
             ui.year_salary as yearSalary,
-            ui.is_mbti_checked as isMbtiChecked,
-            ui.is_code_checked as isCodeChecked,
+            ui.test_checked as testChecked,
+            ui.bio as bio,
             ui.preferred_locations as preferredLocations
         FROM Users u
         LEFT JOIN users_info ui ON u.user_id = ui.user_id  
