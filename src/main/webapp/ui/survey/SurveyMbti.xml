@@ -411,6 +411,13 @@
                 var typeCode = result.typeCode || 'ARTF';
                 var typeInfo = typeDefinitions[typeCode] || typeDefinitions['ARTF'];
                 
+                // 이미지 경로 설정
+                var imagePath = '/InsWebApp/images/ws5/mbti/png/' + typeCode + '.png';
+                var mbtiImageEl = document.querySelector('#mbtiResultImage');
+                if (mbtiImageEl) {
+                    mbtiImageEl.src = imagePath;
+                }
+                
                 // 설문 섹션 숨기기
                 var surveySection = document.querySelector('.survey-section');
                 if (surveySection) surveySection.style.display = 'none';
@@ -1012,8 +1019,9 @@
                 <xf:group class="result-section">
                     <xf:group class="result-header">
                         <w2:textbox class="result-title" label="설문 분석 결과" tagname="h1"></w2:textbox>
-                        <w2:textbox class="result-subtitle" label="당신의 weaveType은..." tagname="p"></w2:textbox>
+                        <w2:textbox class="result-subtitle" label="당신의 codeFIT은..." tagname="p"></w2:textbox>
                     </xf:group>
+                    <img id="mbtiResultImage" src="" alt="MBTI Result Image" style="width: 100%; max-width: 400px; margin: 20px auto; display: block;"/>
                     
                     <xf:group class="result-card">
                         <w2:textbox class="result-type-code" label="ARTF" tagname="div"></w2:textbox>
