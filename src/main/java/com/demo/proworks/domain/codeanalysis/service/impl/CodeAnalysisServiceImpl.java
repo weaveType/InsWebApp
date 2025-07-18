@@ -58,33 +58,33 @@ public class CodeAnalysisServiceImpl implements CodeAnalysisService {
             
             // 분석할 코드 준비
             StringBuilder codeContent = new StringBuilder();
-            codeContent.append("다음 Java 코드들을 분석해주세요:\n\n");
+            codeContent.append("다음 코드들을 분석해주세요:\n\n");
             
             if (requestVo.getModelFile() != null && !requestVo.getModelFile().isEmpty()) {
-                codeContent.append("=== Model/Entity 파일 (").append(requestVo.getModelFileName()).append(") ===\n");
+                codeContent.append("=== Data Code (").append(requestVo.getModelFileName()).append(") ===\n");
                 codeContent.append(requestVo.getModelFile()).append("\n\n");
-                AppLog.debug("Model 파일 추가됨: " + requestVo.getModelFileName());
+                AppLog.debug("Data Code 파일 추가됨: " + requestVo.getModelFileName());
             }
             
             if (requestVo.getControllerFile() != null && !requestVo.getControllerFile().isEmpty()) {
-                codeContent.append("=== Controller 파일 (").append(requestVo.getControllerFileName()).append(") ===\n");
+                codeContent.append("=== Frontend Code (").append(requestVo.getControllerFileName()).append(") ===\n");
                 codeContent.append(requestVo.getControllerFile()).append("\n\n");
-                AppLog.debug("Controller 파일 추가됨: " + requestVo.getControllerFileName());
+                AppLog.debug("Frontend Code 파일 추가됨: " + requestVo.getControllerFileName());
             }
             
             if (requestVo.getServiceFile() != null && !requestVo.getServiceFile().isEmpty()) {
-                codeContent.append("=== Service 파일 (").append(requestVo.getServiceFileName()).append(") ===\n");
+                codeContent.append("=== Backend Code (").append(requestVo.getServiceFileName()).append(") ===\n");
                 codeContent.append(requestVo.getServiceFile()).append("\n\n");
-                AppLog.debug("Service 파일 추가됨: " + requestVo.getServiceFileName());
+                AppLog.debug("Backend Code 파일 추가됨: " + requestVo.getServiceFileName());
             }
             
             if (requestVo.getRepositoryFile() != null && !requestVo.getRepositoryFile().isEmpty()) {
-                codeContent.append("=== Repository/DAO 파일 (").append(requestVo.getRepositoryFileName()).append(") ===\n");
+                codeContent.append("=== Utility Code (").append(requestVo.getRepositoryFileName()).append(") ===\n");
                 codeContent.append(requestVo.getRepositoryFile()).append("\n\n");
-                AppLog.debug("Repository 파일 추가됨: " + requestVo.getRepositoryFileName());
+                AppLog.debug("Utility Code 파일 추가됨: " + requestVo.getRepositoryFileName());
             }
             
-            if (codeContent.toString().equals("다음 Java 코드들을 분석해주세요:\n\n")) {
+            if (codeContent.toString().equals("다음 코드들을 분석해주세요:\n\n")) {
                 throw new ElException("ERROR.BIZ.002", new String[]{"분석할 코드가 없습니다. 하나 이상의 파일을 업로드하세요."});
             }
             
@@ -493,10 +493,74 @@ public class CodeAnalysisServiceImpl implements CodeAnalysisService {
     }
 
     private String detectLanguage(String code) {
-        if (code.contains("import java.")) return "Java";
-        if (code.contains("function ") || code.contains("console.log")) return "JavaScript";
-        if (code.contains("def ") || code.contains("print(")) return "Python";
-        // Add more detections as needed
+        // Java 감지
+        if (code.contains("import java.") || code.contains("public class") || code.contains("package ")) {
+            return "Java";
+        }
+        // JavaScript/TypeScript 감지
+        if (code.contains("function ") || code.contains("console.log") || code.contains("const ") || 
+            code.contains("let ") || code.contains("var ") || code.contains("export ") || code.contains("import ")) {
+            if (code.contains("interface ") || code.contains(": string") || code.contains(": number")) {
+                return "TypeScript";
+            }
+            return "JavaScript";
+        }
+        // Python 감지
+        if (code.contains("def ") || code.contains("import ") || code.contains("print(") || 
+            code.contains("class ") || code.contains("if __name__")) {
+            return "Python";
+        }
+        // C++ 감지
+        if (code.contains("#include") || code.contains("using namespace") || code.contains("std::")) {
+            return "C++";
+        }
+        // C# 감지
+        if (code.contains("using System") || code.contains("namespace ") || code.contains("public class")) {
+            return "C#";
+        }
+        // Go 감지
+        if (code.contains("package main") || code.contains("func ") || code.contains("import (")) {
+            return "Go";
+        }
+        // Rust 감지
+        if (code.contains("fn ") || code.contains("use ") || code.contains("struct ") || code.contains("impl ")) {
+            return "Rust";
+        }
+        // PHP 감지
+        if (code.contains("<?php") || code.contains("function ") || code.contains("$")) {
+            return "PHP";
+        }
+        // Ruby 감지
+        if (code.contains("def ") || code.contains("class ") || code.contains("require ") || code.contains("puts ")) {
+            return "Ruby";
+        }
+        // Swift 감지
+        if (code.contains("import Foundation") || code.contains("func ") || code.contains("var ") || code.contains("let ")) {
+            return "Swift";
+        }
+        // Kotlin 감지
+        if (code.contains("fun ") || code.contains("class ") || code.contains("package ") || code.contains("import ")) {
+            return "Kotlin";
+        }
+        // HTML/CSS 감지
+        if (code.contains("<html") || code.contains("<div") || code.contains("<!DOCTYPE")) {
+            return "HTML";
+        }
+        if (code.contains("body {") || code.contains(".class") || code.contains("#id")) {
+            return "CSS";
+        }
+        // SQL 감지
+        if (code.contains("SELECT ") || code.contains("CREATE TABLE") || code.contains("INSERT INTO")) {
+            return "SQL";
+        }
+        // JSON/XML 감지
+        if (code.trim().startsWith("{") && code.trim().endsWith("}")) {
+            return "JSON";
+        }
+        if (code.contains("<?xml") || code.contains("<root")) {
+            return "XML";
+        }
+        
         return "Unknown";
     }
 } 
