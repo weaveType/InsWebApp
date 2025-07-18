@@ -74,13 +74,13 @@
             color: #666;
             margin-bottom: 15px;
             padding-bottom: 8px;
-            padding-left: 5px; /* 카테고리 제목도 왼쪽으로 */
+            padding-left: 5px;
             border-bottom: 1px solid #f0f0f0;
         }
 
         .menu-item {
             display: block;
-            padding: 12px 16px 12px 8px; /* 좌측 패딩을 8px로 줄임 */
+            padding: 12px 16px 12px 8px;
             margin-bottom: 4px;
             color: #333;
             text-decoration: none;
@@ -321,74 +321,6 @@
             background: linear-gradient(135deg, #f8fff8, #e8f5e8);
         }
 
-        /* 액션 카드 */
-        .action-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-        }
-
-        .action-card {
-            border-radius: 12px;
-            padding: 30px;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .action-card.incomplete {
-            border: 2px solid #fc8181;
-        }
-
-        .action-card-icon {
-            width: 150px;
-            height: 150px;
-            border-radius: 16px;
-            margin: 0 auto 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 32px;
-        }
-
-        .action-card-title {
-            font-size: clamp(16px, 2.5vw, 18px);
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 8px;
-        }
-
-        .action-card-subtitle {
-            font-size: clamp(12px, 1.8vw, 14px);
-            color: #666;
-            margin-bottom: 16px;
-            line-height: 1.4;
-        }
-
-        .action-card-button {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 25px;
-            font-size: clamp(13px, 1.8vw, 14px);
-            font-weight: 600;
-            cursor: pointer;
-            transition: background-color 0.2s ease;
-        }
-
-        .action-card-button:hover {
-            background-color: #0056b3;
-        }
-
-        .action-card.incomplete .action-card-button {
-            background-color: #dc3545;
-        }
-
-        .action-card.incomplete .action-card-button:hover {
-            background-color: #c82333;
-        }
-
         .incomplete-badge {
             position: absolute;
             top: 15px;
@@ -411,17 +343,13 @@
                 width: 100%;
                 border-right: none;
                 border-bottom: 1px solid #e0e0e0;
-                padding: 15px 15px 15px 10px; /* 모바일에서도 좌측 패딩 줄임 */
+                padding: 15px 15px 15px 10px;
             }
 
             .sidebar-menu {
                 display: grid;
                 grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
                 gap: 20px;
-            }
-
-            .action-cards {
-                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             }
         }
 
@@ -463,10 +391,6 @@
                 gap: 15px;
             }
 
-            .action-cards {
-                grid-template-columns: 1fr;
-                gap: 15px;
-            }
 
             .sidebar-menu {
                 grid-template-columns: 1fr;
@@ -576,7 +500,7 @@ scwin.menu_history_onclick = function() {
 
 // 매칭제안 메뉴 클릭 이벤트
 scwin.menu_interest_onclick = function() {
-    contentFrame.setSrc('MatchingProposal.xml');
+    contentFrame.setSrc('UserMatchPage.xml');
 };
 
 // MBTI 검사 시작

@@ -31,6 +31,15 @@
 						<w2:key dataType="text" name="코드분석 진행여부" id="isCodeChecked"></w2:key>
 					</w2:keyInfo>
 				</w2:dataMap>
+				<w2:dataList baseNode="list" repeatNode="map" id="dlt_posting_list" saveRemovedData="true">
+					<w2:columnInfo>
+						<w2:column dataType="text" name="기업명" id="name"></w2:column>
+						<w2:column dataType="text" name="원하는 성향" id="preferredDeveloperTypes"></w2:column>
+						<w2:column dataType="text" name="지역" id="location"></w2:column>
+						<w2:column dataType="text" name="경력" id="experienceLevel"></w2:column>
+						<w2:column dataType="text" name="공고 ID" id="jobPostingId"></w2:column>
+					</w2:columnInfo>
+				</w2:dataList>
 			</w2:dataCollection>
 
 			<w2:workflowCollection></w2:workflowCollection>
@@ -41,20 +50,28 @@
 				target='data:json,{"id":"dlt_company_list","key":"elData.corporateMainVo"}' mode="asynchronous" encoding="UTF-8"
 				processMsg="참여 기업 목록을 조회 중입니다." ev:submitdone="scwin.sbm_selectCompanyList_submitdone" ev:submiterror="">
 			</xf:submission>
-			<xf:submission id="smb_selectMatchingChecked" action="/InsWebApp/US0001Match.pwkjson" method="post" mediatype="application/json" ref='data:json,{"id":"dmp_matchingCheckedVo","key":"matchingCheckedVo"}' target='data:json,{"id":"dmp_matchingCheckedVo","key":"elData"}'
-				encoding="UTF-8" mode="asynchronous" processMsg="매칭 정보 조회 중..." ev:submitdone="scwin.smb_selectMatchingChecked_submitdone"
-				ev:submiterror="">
+			<xf:submission id="smb_selectMatchingChecked" action="/InsWebApp/US0001Match.pwkjson" method="post" mediatype="application/json"
+				ref='data:json,{"id":"dmp_matchingCheckedVo","key":"matchingCheckedVo"}'
+				target='data:json,{"id":"dmp_matchingCheckedVo","key":"elData"}' encoding="UTF-8" mode="asynchronous" processMsg="매칭 정보 조회 중..."
+				ev:submitdone="scwin.smb_selectMatchingChecked_submitdone" ev:submiterror="">
+			</xf:submission>
+			<xf:submission id="sbm_selectPostingList" action="/InsWebApp/POS0003List.pwkjson" method="post" mediatype="application/json"
+				ref="" target='data:json,{"id":"dlt_posting_list","key":"mainPostingListVo.mainPostingVo"}' encoding="UTF-8" instance="" replace="" errorHandler="" customHandler="" mode="asynchronous" processMsg="" ev:submit=""
+				ev:submitdone="scwin.sbm_selectPostingList_submitdone" ev:submiterror="" abortTrigger="">
 			</xf:submission>
 		</xf:model>
 		<w2:layoutInfo />
 		<w2:publicInfo method="" />
 		<script type="text/javascript"><![CDATA[// 페이지 로드 시 팝업 닫기 액션 함수들 정의
 scwin.onpageload = function () {
-    
+
     // 로그인 상태 확인 및 UI 업데이트
     scwin.updateLoginArea();
 
-    // 페이지 완전 로드 후 회사 목록 조회
+    // 공고 목록 조회
+    $c.sbm.execute(sbm_selectPostingList);
+
+    // 회사 목록 조회
     scwin.loadCompanyList();
 };
 
@@ -90,7 +107,7 @@ scwin.updateLoginArea = function () {
     }
 };
 
-scwin.smb_selectMatchingChecked_submitdone = function(e) {
+scwin.smb_selectMatchingChecked_submitdone = function (e) {
     var elHeader = e.responseJSON.elHeader;
     if (elHeader && elHeader.resSuc === false) {
         console.error("매칭 정보 조회 실패:", elHeader.resMsg);
@@ -148,19 +165,27 @@ scwin.btnLogin_onclick = function () {
     // 팝업 생성 옵션 지정
     var options = {
         id: "login_popup",
-        type: "wframePopup",
+        type: "pageFramePopup",
         width: "450px",
         height: "550px",
         modal: true,
-        resizable: true,
-        center: true,
         popupName: "로그인/회원가입",
         closeAction: "scwin.login_popup_closeAction",
         dataObject: loginPopupData
     };
 
     // 팝업 생성
-    $p.openPopup("../user/Login.xml", options);
+    //$p.openPopup("../user/Login.xml", options);
+    $c.win.openPopup("../user/Login.xml", {
+        id: "login_popup",
+        type: "pageFramePopup",
+        width: "450px",
+        height: "550px",
+        modal: true,
+        popupName: "로그인/회원가입",
+        closeAction: "scwin.login_popup_closeAction",
+        dataObject: loginPopupData
+    });
 };
 
 scwin.ad_onclick = function (e) {
@@ -327,7 +352,28 @@ scwin.onCompanyCardClick = function (companyData) {
 
 scwin.refreshCompanyList = function () {
     scwin.loadCompanyList();
-};]]></script>
+};
+
+scwin.sbm_selectPostingList_submitdone = function (e) {
+    gen_position_card.removeAll();
+    var rowCount = dlt_posting_list.getRowCount();
+    for (var i = 0; i < rowCount; i++) {
+        gen_position_card.insertChild();
+        var name = dlt_posting_list.getCellData(i, "name");
+        var location = dlt_posting_list.getCellData(i, "location");
+        var experienceLevel = dlt_posting_list.getCellData(i, "experienceLevel");
+        var jobPostingId = dlt_posting_list.getCellData(i, "jobPostingId");
+
+        var txt_name = gen_position_card.getChild(i, "txt_name");
+        var txt_title = gen_position_card.getChild(i, "txt_title");
+        var txt_job_id = gen_position_card.getChild(i, "txt_job_id");
+
+        txt_name.setValue(name);
+        txt_title.setValue(location + " · " + experienceLevel);
+        txt_job_id.setValue(jobPostingId);
+    }
+};
+]]></script>
 		<style type="text/css"><![CDATA[
 
             /* 메인 히어로 섹션 - 완전 반응형 */
@@ -705,56 +751,6 @@ scwin.refreshCompanyList = function () {
                 border-radius: 4px;
             }
 
-            /* 회사 카드 로딩 애니메이션 */
-            .company-item.loading {
-                background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-                background-size: 200% 100%;
-                animation: loading 1.5s infinite;
-            }
-
-            @keyframes loading {
-                0% { background-position: 200% 0; }
-                100% { background-position: -200% 0; }
-            }
-
-            /* 회사 카드 특별 효과 */
-            .company-item::before {
-                content: '';
-                position: absolute;
-                top: 0;
-                left: -100%;
-                width: 100%;
-                height: 100%;
-                background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-                transition: left 0.5s;
-            }
-
-            .company-item:hover::before {
-                left: 100%;
-            }
-
-            /* 푸터 */
-            .footer {
-                background-color: #f8f8f8;
-                border-top: 1px solid #e0e0e0;
-                padding: min(40px, 5vw) min(50px, 4vw);
-            }
-
-            .footer-title {
-                font-size: clamp(18px, 3vw, 20px);
-                font-weight: bold;
-                color: #333;
-                margin-bottom: 20px;
-                display: block;
-            }
-
-            .footer-text {
-                font-size: clamp(10px, 1.5vw, 12px);
-                color: #666;
-                line-height: 1.8;
-                display: block;
-                margin-bottom: 5px;
-            }
 
             /* 태블릿 반응형 */
             @media (max-width: 1024px) {
@@ -1139,37 +1135,16 @@ scwin.refreshCompanyList = function () {
 			<xf:group class="section section-gray" tagname="section">
 				<w2:textbox class="section-title" label="로그인하고 내 조건에 맞는 포지션 추천받기"></w2:textbox>
 
-				<xf:group class="positions-container">
-					<!-- 포지션 카드 1 -->
-					<xf:group class="position-card" id="position1" ev:onclick="scwin.position_onclick">
-						<xf:group class="position-header position-header-dark">
-							<w2:textbox class="position-status" label="인기"></w2:textbox>
+				<w2:generator id="gen_position_card" class="positions-container">
+						<xf:group class="position-card" ev:onclick="scwin.position_onclick">
+							<xf:group class="position-header position-header-dark">
+								<w2:textbox class="position-status" label="인기"></w2:textbox>
+							</xf:group>
+							<w2:textbox class="position-company" id="txt_name"></w2:textbox>
+							<w2:textbox class="position-title" id="txt_title"></w2:textbox>
+							<w2:textbox class="position-status-text" id="txt_job_id"></w2:textbox>
 						</xf:group>
-						<w2:textbox class="position-company" label="(주)이디야"></w2:textbox>
-						<w2:textbox class="position-title" label="경력 · 경영관리 · HR · 서울(본사)"></w2:textbox>
-						<w2:textbox class="position-status-text" label="지원자관리"></w2:textbox>
-					</xf:group>
-
-					<!-- 포지션 카드 2 -->
-					<xf:group class="position-card" id="position2" ev:onclick="scwin.position_onclick">
-						<xf:group class="position-header position-header-dark">
-							<w2:textbox class="position-status" label="인기"></w2:textbox>
-						</xf:group>
-						<w2:textbox class="position-company" label="(주)이디야"></w2:textbox>
-						<w2:textbox class="position-title" label="경력 · 디자인 · 웹디자인 · 서울(본사)"></w2:textbox>
-						<w2:textbox class="position-status-text" label="공고작성"></w2:textbox>
-					</xf:group>
-
-					<!-- 포지션 카드 3 -->
-					<xf:group class="position-card" id="position3" ev:onclick="scwin.position_onclick">
-						<xf:group class="position-header position-header-blue">
-							<w2:textbox class="position-status" label="인기"></w2:textbox>
-						</xf:group>
-						<w2:textbox class="position-company" label="동아사이그룹"></w2:textbox>
-						<w2:textbox class="position-title" label="신입/경력 · 총무 · 총무/관리 · 수도권(전국)"></w2:textbox>
-						<w2:textbox class="position-status-text" label="채용리뷰"></w2:textbox>
-					</xf:group>
-				</xf:group>
+					</w2:generator>
 			</xf:group>
 
 			<!-- 매칭 참여 기업 섹션 -->

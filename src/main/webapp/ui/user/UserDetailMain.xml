@@ -57,7 +57,6 @@
             width: 80px;
             height: 80px;
             border-radius: 50%;
-            background: #f0f0f0; /* 이미지 로딩 전 배경색 */
             display: flex;
             align-items: center;
             justify-content: center;
@@ -77,60 +76,11 @@
         }
 
         .status-badge {
-            background-color: #28a745;
             color: white;
             padding: 4px 8px;
             border-radius: 12px;
             font-size: clamp(11px, 1.5vw, 12px);
             font-weight: 500;
-        }
-
-        /* 매칭 토글 */
-        .matching-toggle {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            flex-shrink: 0;
-        }
-
-        .toggle-label {
-            font-size: clamp(14px, 2vw, 16px);
-            font-weight: 600;
-            color: #333;
-        }
-
-        .toggle-switch {
-            position: relative;
-            width: 60px;
-            height: 30px;
-            background-color: #28a745;
-            border-radius: 15px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        .toggle-switch.off {
-            background-color: #ccc;
-        }
-
-        .toggle-switch::after {
-            content: '';
-            position: absolute;
-            top: 3px;
-            left: 3px;
-            width: 24px;
-            height: 24px;
-            background-color: white;
-            border-radius: 50%;
-            transition: transform 0.3s ease;
-        }
-
-        .toggle-switch.off::after {
-            transform: translateX(0);
-        }
-
-        .toggle-switch:not(.off)::after {
-            transform: translateX(30px);
         }
 
         /* 정보 카드 그리드 */
@@ -141,19 +91,17 @@
             margin-bottom: 32px;
         }
 
-.info-card {
-    width: 100%;
-    background-color: #fff;
-    border: 1px solid #e0e0e0;   /* ← 옅은 테두리로 구분감만 */
-    border-radius: 12px;
-    padding: 24px;
+        .info-card {
+            width: 100%;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 24px;
 
-    /* 그림자·움직임 제거 */
-    box-shadow: none;
-    transition: none;
-    cursor: default;             /* 선택적으로 pointer → default 변경 */
-}
-
+            /* 그림자·움직임 제거 */
+            box-shadow: none;
+            transition: none;
+            cursor: default;
+        }
 
         .info-card-header {
             display: flex;
@@ -196,7 +144,6 @@
 
         /* 섹션 */
         .section {
-            background-color: white;
             border-radius: 12px;
             padding: min(30px, 4vw);
             margin-bottom: 24px;

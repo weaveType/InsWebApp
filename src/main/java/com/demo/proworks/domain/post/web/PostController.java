@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,19 +13,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.demo.proworks.cmmn.ProworksUserHeader;
 import com.demo.proworks.domain.post.service.PostService;
 import com.demo.proworks.domain.post.vo.PostVo;
-import com.demo.proworks.domain.post.vo.SendEmailInfoListVo;
 import com.demo.proworks.domain.post.vo.SendEmailVo;
 import com.demo.proworks.domain.post.vo.JobApplicationVo;
 import com.demo.proworks.domain.post.vo.PostListVo;
 import com.demo.proworks.domain.post.vo.PostMatchVo;
 import com.demo.proworks.domain.post.vo.TechStackVo;
-import com.demo.proworks.domain.post.vo.TechStackListVo;
-
+import com.demo.proworks.domain.post.vo.MainPostingListVo;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.inswave.elfw.annotation.ElDescription;
 import com.inswave.elfw.annotation.ElService;
 import com.inswave.elfw.annotation.ElValidator;
-import com.inswave.elfw.core.UserHeader;
 import com.inswave.elfw.util.ControllerContextUtil;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -548,5 +544,18 @@ public class PostController {
 	@ElDescription(sub = "이메일 일괄전송", desc = "이메일을 일괄전송 처리한다")
 	public void sendToEmails(SendEmailVo sendEmailVo) throws Exception {
 		postService.sendToEmails(sendEmailVo);
+	}
+
+	/**
+	 * 메인 페이지에서 출력할 공고목록을 조회한다".
+	 *
+	 * @return 기술스택 목록 조회 결과
+	 * @throws Exception
+	 */
+	@ElService(key = "POS0003List")
+	@RequestMapping(value = "POS0003List")
+	@ElDescription(sub = "메인 페이지 공고목록 조회", desc = "메인 페이지에서 출력할 공고목록을 조회한다")
+	public MainPostingListVo selectPostingList() throws Exception {
+		return postService.selectPostingList();
 	}
 }

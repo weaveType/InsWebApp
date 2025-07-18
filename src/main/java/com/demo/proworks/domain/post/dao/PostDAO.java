@@ -7,6 +7,8 @@ import org.springframework.stereotype.Repository;
 
 import com.inswave.elfw.exception.ElException;
 import com.demo.proworks.domain.post.vo.JobApplicationVo;
+import com.demo.proworks.domain.post.vo.MainPostingListVo;
+import com.demo.proworks.domain.post.vo.MainPostingVo;
 import com.demo.proworks.domain.post.vo.PostMatchVo;
 import com.demo.proworks.domain.post.vo.PostVo;
 import com.demo.proworks.domain.post.vo.TechStackVo;
@@ -161,8 +163,6 @@ public class PostDAO extends com.demo.proworks.cmmn.dao.ProworksDefaultAbstractD
 		return (List<PostVo>) list("com.demo.proworks.domain.post.findPostsByMbti", postMatchVo);
 	}
 
-
-
 	public long findPostsByMbtiCount(PostMatchVo postMatchVo) throws ElException {
 		return (long) selectByPk("com.demo.proworks.domain.post.findPostsByMbtiCount", postMatchVo);
 	}
@@ -194,5 +194,15 @@ public class PostDAO extends com.demo.proworks.cmmn.dao.ProworksDefaultAbstractD
 	 */
 	public int updateApplicationStatus(JobApplicationVo jobApplicationVo) throws ElException {
 		return update("com.demo.proworks.domain.post.updateApplicationStatus", jobApplicationVo);
+	}
+
+	/**
+	 * 메인 페이지에서 출력할 공고목록을 조회한다.
+	 *
+	 * @return 기술스택 목록 조회 결과
+	 * @throws Exception
+	 */
+	public List<MainPostingVo> selectPostingList() throws Exception {
+		return (List<MainPostingVo>) list("com.demo.proworks.domain.post.selectPostingList");
 	}
 }
