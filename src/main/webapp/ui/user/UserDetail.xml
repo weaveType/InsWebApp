@@ -19,6 +19,8 @@
 						<w2:key id="email" name="이메일" dataType="text"></w2:key>
 						<w2:key id="bio" name="자기소개" dataType="text"></w2:key>
 						<w2:key id="testChecked" name="테스트완료여부" dataType="boolean"></w2:key>
+						<w2:key id="isMbtiChecked" name="MBTI검사완료여부" dataType="number"></w2:key>
+						<w2:key id="isCodeChecked" name="코드분석완료여부" dataType="number"></w2:key>
 					</w2:keyInfo>
 				</w2:dataMap>
 			</w2:dataCollection>
@@ -448,12 +450,13 @@ scwin.updateCardStatus = function(e) {
         
         // 서버 응답이 elData 키를 포함할 수도 있고 아닐 수도 있음
         var data = res.elData || res;
-        console.log("서버에서 받은 데이터:", data);
         
         // dataMap에 값 매핑
         if (data) {
             dma_userInfoVo.setJSON(data);
-            console.log("dma_userInfoVo 데이터 설정 완료:", dma_userInfoVo.getJSON());
+
+            // UserDetailMain.xml 로드 및 데이터 전달 (pageFrame의 src를 설정하여 로드)
+            contentFrame.setSrc('UserDetailMain.xml', { dataObject: dma_userInfoVo.getJSON() });
         }
 
         // MBTI/코드분석 카드 상태 업데이트
@@ -490,7 +493,7 @@ scwin.sbm_userDetail_submiterror = function(e){
 
 // 프로필 메뉴 클릭 이벤트
 scwin.menu_profile_onclick = function() {
-    contentFrame.setSrc('UserDetailMain.xml');
+    // UserDetailMain.xml은 이미 sbm_userDetail_submitdone에서 로드되므로, 여기서는 별도 처리 없음
 };
 
 // 지원현황 메뉴 클릭 이벤트
