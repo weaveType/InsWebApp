@@ -369,15 +369,40 @@ scwin.sbm_selectPostingList_submitdone = function (e) {
         var name = dlt_posting_list.getCellData(i, "name");
         var location = dlt_posting_list.getCellData(i, "location");
         var experienceLevel = dlt_posting_list.getCellData(i, "experienceLevel");
-        var preferredDeveloperTypes = dlt_posting_list.getCellData(i, "preferredDeveloperTypes");
+        var preferredDeveloperTypesRaw = dlt_posting_list.getCellData(i, "preferredDeveloperTypes");
 
         var txt_name = gen_position_card.getChild(i, "txt_name");
         var txt_title = gen_position_card.getChild(i, "txt_title");
-        var txt_job_id = gen_position_card.getChild(i, "txt_job_id");
 
         txt_name.setValue(name);
         txt_title.setValue(location + " · " + experienceLevel);
-        txt_job_id.setValue(preferredDeveloperTypes);
+
+        // Helper function to escape HTML special characters
+        function escapeHtml(text) {
+            var div = document.createElement('div');
+            div.appendChild(document.createTextNode(text));
+            return div.innerHTML;
+        }
+
+        // 태그 처리 로직
+        try {
+            var preferredDeveloperTypes = JSON.parse(preferredDeveloperTypesRaw || '[]');
+            for (var j = 1; j <= 4; j++) {
+                var tag = gen_position_card.getChild(i, "tag" + j);
+                if (j <= preferredDeveloperTypes.length) {
+                    tag.setValue(escapeHtml(preferredDeveloperTypes[j - 1])); // Apply escaping here
+                    tag.show();
+                } else {
+                    tag.hide();
+                }
+            }
+        } catch (err) {
+            console.error("preferredDeveloperTypes 파싱 오류: ", preferredDeveloperTypesRaw, err);
+            // 파싱 실패 시 모든 태그 숨김
+            for (var j = 1; j <= 4; j++) {
+                gen_position_card.getChild(i, "tag" + j).hide();
+            }
+        }
     }
 };
 ]]></script>
@@ -980,6 +1005,25 @@ scwin.sbm_selectPostingList_submitdone = function (e) {
                 color: #666;
             }
 
+            /* 개발자 성향 태그 스타일 */
+            .dev-type-tag-container {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 5px;
+                margin-top: 10px;
+            }
+
+            .dev-type-tag {
+                background-color: #e0f7fa; /* Light cyan background */
+                color: #00796b; /* Dark cyan text */
+                padding: 5px 10px;
+                border-radius: 15px;
+                font-size: 12px;
+                font-weight: 500;
+                white-space: nowrap;
+                border: 1px solid #b2ebf2;
+            }
+
             /* 작은 모바일 */
             @media (max-width: 480px) {
                 .company-row {
@@ -1147,7 +1191,12 @@ scwin.sbm_selectPostingList_submitdone = function (e) {
 							<xf:group class="position-header position-header-dark"></xf:group>
 							<w2:textbox class="position-company" id="txt_name"></w2:textbox>
 							<w2:textbox class="position-title" id="txt_title"></w2:textbox>
-							<w2:textbox class="position-status-text" id="txt_job_id"></w2:textbox>
+							<xf:group id="grp_tags_container" class="dev-type-tag-container">
+								<w2:textbox id="tag1" class="dev-type-tag" style="display:none;"></w2:textbox>
+								<w2:textbox id="tag2" class="dev-type-tag" style="display:none;"></w2:textbox>
+								<w2:textbox id="tag3" class="dev-type-tag" style="display:none;"></w2:textbox>
+								<w2:textbox id="tag4" class="dev-type-tag" style="display:none;"></w2:textbox>
+							</xf:group>
 							<xf:trigger
 								style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: transparent; border: none;"
 								type="button" id="btn_card_overlay" ev:onclick="scwin.handlePositionCardClick">
