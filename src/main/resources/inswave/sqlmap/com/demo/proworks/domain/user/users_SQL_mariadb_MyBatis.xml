@@ -310,7 +310,7 @@ LIMIT #{pageSize} OFFSET #{pageIndex}
 <select id="selectMatchingChecked" parameterType="com.demo.proworks.domain.user.vo.MatchingCheckedVo" resultType="com.demo.proworks.domain.user.vo.MatchingCheckedVo">
 SELECT is_mbti_checked as isMbtiChecked,
 		is_code_checked as isCodeChecked
-  FROM users_info
+  FROM users_mbti_types
   where user_id = #{accountId}
 </select>
 </mapper>
