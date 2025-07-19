@@ -40,10 +40,7 @@
         				<w2:key dataType="text" id="empCount" name="emp_count"></w2:key>
         				<w2:key dataType="text" id="selectedTechStackNames" name="selected_tech_stack_names"></w2:key>
         				<w2:key dataType="text" id="preferredDeveloperTypes" name="preferred_developer_types"></w2:key>
-<<<<<<< HEAD
         				<w2:key dataType="text" id="jobImageFileName" name="job_image_file_name"></w2:key>
-=======
->>>>>>> c517f1efca5ef626bf2d1cc0b42b90efb5a6f760
         			</w2:keyInfo>
         			<w2:data use="false"></w2:data>
         		</w2:dataMap>
@@ -733,12 +730,11 @@ scwin.sbm_selectPostDetail_submitdone = function (e) {
 scwin.updateUI = function () {
     console.log("=== UI 업데이트 시작 ===");
 
-<<<<<<< HEAD
+
     // 메인 이미지 업데이트
     scwin.updateMainImage();
 
-=======
->>>>>>> c517f1efca5ef626bf2d1cc0b42b90efb5a6f760
+
     // 메타 정보 업데이트
     scwin.updateJobMeta();
 
@@ -755,7 +751,6 @@ scwin.updateUI = function () {
 };
 
 /**
-<<<<<<< HEAD
  * 메인 이미지 업데이트
  */
 scwin.updateMainImage = function () {
@@ -786,8 +781,6 @@ scwin.updateMainImage = function () {
 };
 
 /**
-=======
->>>>>>> c517f1efca5ef626bf2d1cc0b42b90efb5a6f760
  * 메타 정보 업데이트
  */
 scwin.updateJobMeta = function () {
@@ -1174,13 +1167,8 @@ scwin.btnScout_onclick = function (e) {
                     <!-- 회사 이미지 갤러리 -->
                     <section class="company-images">
                         <xf:group class="image-gallery">
-<<<<<<< HEAD
                             <xf:group class="main-image" id="main-image-container">
                                 <!-- 이미지 또는 회사명이 JavaScript로 동적 설정됩니다 -->
-=======
-                            <xf:group class="main-image">
-                                <w2:textbox ref="data:dmp_postDetail.companyName"></w2:textbox>
->>>>>>> c517f1efca5ef626bf2d1cc0b42b90efb5a6f760
                             </xf:group>
                             <xf:group class="sub-image">
                                 <w2:textbox label="채용 진행중"></w2:textbox>

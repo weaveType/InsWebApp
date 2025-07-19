@@ -58,7 +58,6 @@ public class PostVo extends com.demo.proworks.cmmn.ProworksCommVO {
     @ElDtoField(logicalName = "사용자_MBTI", physicalName = "userMbti", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
     private String userMbti;
 
-<<<<<<< HEAD
     @ElDtoField(logicalName = "company_name", physicalName = "companyName", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
     private String companyName;
 
@@ -71,8 +70,6 @@ public class PostVo extends com.demo.proworks.cmmn.ProworksCommVO {
     @ElDtoField(logicalName = "job_image_file_name", physicalName = "jobImageFileName", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
     private String jobImageFileName;
 
-=======
->>>>>>> c517f1efca5ef626bf2d1cc0b42b90efb5a6f760
     @ElVoField(physicalName = "jobPostingId")
     public String getJobPostingId(){
         String ret = this.jobPostingId;
@@ -238,7 +235,6 @@ public class PostVo extends com.demo.proworks.cmmn.ProworksCommVO {
         this.userMbti = userMbti;
     }
 
-<<<<<<< HEAD
     @ElVoField(physicalName = "companyName")
     public String getCompanyName(){
         String ret = this.companyName;
@@ -283,8 +279,6 @@ public class PostVo extends com.demo.proworks.cmmn.ProworksCommVO {
         this.jobImageFileName = jobImageFileName;
     }
 
-=======
->>>>>>> c517f1efca5ef626bf2d1cc0b42b90efb5a6f760
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -303,15 +297,11 @@ public class PostVo extends com.demo.proworks.cmmn.ProworksCommVO {
         sb.append("postedAt").append("=").append(postedAt).append(",");
         sb.append("status").append("=").append(status).append(",");
         sb.append("mbtiMatchFilter").append("=").append(mbtiMatchFilter).append(",");
-<<<<<<< HEAD
         sb.append("userMbti").append("=").append(userMbti).append(",");
         sb.append("companyName").append("=").append(companyName).append(",");
         sb.append("industry").append("=").append(industry).append(",");
         sb.append("empCount").append("=").append(empCount).append(",");
         sb.append("jobImageFileName").append("=").append(jobImageFileName);
-=======
-        sb.append("userMbti").append("=").append(userMbti);
->>>>>>> c517f1efca5ef626bf2d1cc0b42b90efb5a6f760
         sb.append("]");
         return sb.toString();
 

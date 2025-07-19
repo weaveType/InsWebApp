@@ -6,10 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.annotation.Resource;
-<<<<<<< HEAD
 import javax.servlet.http.HttpServletRequest;
-=======
->>>>>>> c517f1efca5ef626bf2d1cc0b42b90efb5a6f760
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,29 +14,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.demo.proworks.cmmn.ProworksUserHeader;
 import com.demo.proworks.domain.post.service.PostService;
 import com.demo.proworks.domain.post.vo.PostVo;
-<<<<<<< HEAD
 import com.demo.proworks.domain.post.vo.SendEmailInfoListVo;
-=======
->>>>>>> c517f1efca5ef626bf2d1cc0b42b90efb5a6f760
 import com.demo.proworks.domain.post.vo.SendEmailVo;
 import com.demo.proworks.domain.post.vo.JobApplicationVo;
 import com.demo.proworks.domain.post.vo.PostListVo;
 import com.demo.proworks.domain.post.vo.PostMatchVo;
 import com.demo.proworks.domain.post.vo.TechStackVo;
-<<<<<<< HEAD
 import com.demo.proworks.domain.post.vo.TechStackListVo;
-
-=======
 import com.demo.proworks.domain.post.vo.MainPostingListVo;
->>>>>>> c517f1efca5ef626bf2d1cc0b42b90efb5a6f760
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.inswave.elfw.annotation.ElDescription;
 import com.inswave.elfw.annotation.ElService;
 import com.inswave.elfw.annotation.ElValidator;
-<<<<<<< HEAD
 import com.inswave.elfw.core.UserHeader;
-=======
->>>>>>> c517f1efca5ef626bf2d1cc0b42b90efb5a6f760
 import com.inswave.elfw.util.ControllerContextUtil;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -74,11 +61,7 @@ public class PostController {
 	}
 
 	/**
-<<<<<<< HEAD
 	 * 공고정보 목록을 조회합니다. (일반 사용자용 - 모든 공고 조회)
-=======
-	 * 공고정보 목록을 조회합니다.
->>>>>>> c517f1efca5ef626bf2d1cc0b42b90efb5a6f760
 	 *
 	 * @param postVo 공고정보
 	 * @return 목록조회 결과
@@ -86,7 +69,6 @@ public class PostController {
 	 */
 	@ElService(key = "POS0001List")
 	@RequestMapping(value = "POS0001List")
-<<<<<<< HEAD
 	@ElDescription(sub = "공고정보 목록조회", desc = "모든 공고정보 목록 조회를 한다.")
 	public Map<String, Object> selectListPost(PostVo postVo) throws Exception {
 
@@ -130,11 +112,6 @@ public class PostController {
 
 		System.out.println("=== 기업 회원용 공고 목록 조회 ===");
 
-=======
-	@ElDescription(sub = "공고정보 목록조회", desc = "공고정보 목록 조회를 한다.")
-	public Map<String, Object> selectListPost(PostVo postVo) throws Exception {
-
->>>>>>> c517f1efca5ef626bf2d1cc0b42b90efb5a6f760
 		// 현재 사용자의 Company ID로 필터링
 		String currentCompanyId = postVo.getCompanyId();
 
@@ -145,21 +122,14 @@ public class PostController {
 		List<PostVo> postList = postService.selectListPost(postVo);
 		long totCnt = postService.selectListCountPost(postVo);
 
-<<<<<<< HEAD
 		System.out.println("조회된 공고 수: " + postList.size());
 		System.out.println("전체 공고 수: " + totCnt);
 
-=======
->>>>>>> c517f1efca5ef626bf2d1cc0b42b90efb5a6f760
 		PostListVo retPostList = new PostListVo();
 		retPostList.setPostVoList(postList);
 		retPostList.setTotalCount(totCnt);
 		Map<String, Object> response = new HashMap<>();
-<<<<<<< HEAD
 		response.put("elData", retPostList);
-=======
-		response.put("elData", retPostList); // PostListVo 객체를 "elData" 키 아래에 넣습니다.
->>>>>>> c517f1efca5ef626bf2d1cc0b42b90efb5a6f760
 		return response;
 	}
 
@@ -622,8 +592,6 @@ public class PostController {
 	public void sendToEmails(SendEmailVo sendEmailVo) throws Exception {
 		postService.sendToEmails(sendEmailVo);
 	}
-<<<<<<< HEAD
-=======
 
 	/**
 	 * 메인 페이지에서 출력할 공고목록을 조회한다".
@@ -637,5 +605,4 @@ public class PostController {
 	public MainPostingListVo selectPostingList() throws Exception {
 		return postService.selectPostingList();
 	}
->>>>>>> c517f1efca5ef626bf2d1cc0b42b90efb5a6f760
 }

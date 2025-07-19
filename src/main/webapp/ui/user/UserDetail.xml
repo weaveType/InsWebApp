@@ -19,11 +19,8 @@
 						<w2:key id="email" name="이메일" dataType="text"></w2:key>
 						<w2:key id="bio" name="자기소개" dataType="text"></w2:key>
 						<w2:key id="testChecked" name="테스트완료여부" dataType="boolean"></w2:key>
-<<<<<<< HEAD
-=======
 						<w2:key id="isMbtiChecked" name="MBTI검사완료여부" dataType="number"></w2:key>
 						<w2:key id="isCodeChecked" name="코드분석완료여부" dataType="number"></w2:key>
->>>>>>> c517f1efca5ef626bf2d1cc0b42b90efb5a6f760
 					</w2:keyInfo>
 				</w2:dataMap>
 			</w2:dataCollection>
@@ -550,21 +547,14 @@ scwin.updateCardStatus = function(e) {
         
         // 서버 응답이 elData 키를 포함할 수도 있고 아닐 수도 있음
         var data = res.elData || res;
-<<<<<<< HEAD
-        console.log("서버에서 받은 데이터:", data);
-=======
->>>>>>> c517f1efca5ef626bf2d1cc0b42b90efb5a6f760
+
         
         // dataMap에 값 매핑
         if (data) {
             dma_userInfoVo.setJSON(data);
-<<<<<<< HEAD
-            console.log("dma_userInfoVo 데이터 설정 완료:", dma_userInfoVo.getJSON());
-=======
 
             // UserDetailMain.xml 로드 및 데이터 전달 (pageFrame의 src를 설정하여 로드)
             contentFrame.setSrc('UserDetailMain.xml', { dataObject: dma_userInfoVo.getJSON() });
->>>>>>> c517f1efca5ef626bf2d1cc0b42b90efb5a6f760
         }
 
         // MBTI/코드분석 카드 상태 업데이트
@@ -611,11 +601,7 @@ scwin.menu_history_onclick = function() {
 
 // 매칭제안 메뉴 클릭 이벤트
 scwin.menu_interest_onclick = function() {
-<<<<<<< HEAD
-    contentFrame.setSrc('MatchingProposal.xml');
-=======
     contentFrame.setSrc('UserMatchPage.xml');
->>>>>>> c517f1efca5ef626bf2d1cc0b42b90efb5a6f760
 };
 
 // MBTI 검사 시작
