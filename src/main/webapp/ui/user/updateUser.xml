@@ -247,6 +247,55 @@
                     width: 100%;
                 }
             }
+
+            /* 개발자 성향 태그 컨테이너 */
+            .dev-type-tag-container {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 5px;
+                margin-top: 10px;
+            }
+
+            /* 개별 태그 래퍼 */
+            .dev-type-tag-wrapper {
+                display: flex;
+                align-items: center;
+                background-color: #e0f7fa; /* Light cyan background */
+                color: #00796b; /* Dark cyan text */
+                padding: 5px 10px;
+                border-radius: 15px;
+                font-size: 12px;
+                font-weight: 500;
+                white-space: nowrap;
+                border: 1px solid #b2ebf2;
+            }
+
+            /* 태그 텍스트 */
+            .dev-type-tag {
+                background-color: transparent;
+                color: inherit;
+                padding: 0;
+                border: none;
+                font-size: inherit;
+                font-weight: inherit;
+                white-space: nowrap;
+            }
+
+            /* 삭제 버튼 */
+            .remove-tag-btn {
+                background-color: transparent;
+                border: none;
+                color: #00796b;
+                font-size: 12px;
+                font-weight: bold;
+                cursor: pointer;
+                margin-left: 5px;
+                padding: 0 3px;
+            }
+
+            .remove-tag-btn:hover {
+                color: #d32f2f;
+            }
         ]]></style>
         
         <script lazy="false" type="text/javascript"><![CDATA[
@@ -514,74 +563,6 @@ scwin.sbm_selectTechStackList_submiterror = function (e) {
     console.error("기술스택 목록 조회 오류:", e);
 };
 
-// 선택된 기술스택 UI 채우기
-scwin.populateSelectedTechStacks = function () {
-    // 사용자 정보와 기술스택 옵션이 모두 로드되었는지 확인
-    if (!scwin.initialTechStackString || dlt_techStackOptions.getRowCount() === 0) {
-        console.log("populateSelectedTechStacks: 데이터 준비 안됨. 재시도.");
-        return;
-    }
-
-    console.log("populateSelectedTechStacks: 기술스택 UI 채우기 시작");
-
-    // dlt_selectTechStacks 초기화
-    dlt_selectTechStacks.removeAll();
-
-    var techStackIds = scwin.initialTechStackString.split(",").map(function(item) { return item.trim(); });
-
-    techStackIds.forEach(function (techStackId) {
-        if (techStackId) {
-            const selectedIndex = dlt_techStackOptions.getMatchedIndex("techStackId", techStackId);
-            if (selectedIndex !== -1) {
-                const techStackName = dlt_techStackOptions.getCellData(selectedIndex, "techStackName");
-                const newRowIndex = dlt_selectTechStacks.insertRow();
-                dlt_selectTechStacks.setCellData(newRowIndex, "techStackId", techStackId);
-                dlt_selectTechStacks.setCellData(newRowIndex, "techStackName", techStackName);
-            } else {
-                console.warn("populateSelectedTechStacks: 일치하는 기술스택 ID를 찾을 수 없습니다:", techStackId);
-            }
-        }
-    });
-
-    console.log("populateSelectedTechStacks: 기술스택 UI 채우기 완료. dlt_selectTechStacks:", dlt_selectTechStacks.getAllJSON());
-};
-
-// 기술스택 AutoComplete 선택 완료 이벤트
-
-// 선택된 기술스택 UI 채우기
-scwin.populateSelectedTechStacks = function () {
-    // 사용자 정보와 기술스택 옵션이 모두 로드되었는지 확인
-    if (!scwin.initialTechStackString || dlt_techStackOptions.getRowCount() === 0) {
-        console.log("populateSelectedTechStacks: 데이터 준비 안됨. 재시도.");
-        return;
-    }
-
-    console.log("populateSelectedTechStacks: 기술스택 UI 채우기 시작");
-
-    // dlt_selectTechStacks 초기화
-    dlt_selectTechStacks.removeAll();
-
-    var techStackIds = scwin.initialTechStackString.split(",").map(function(item) { return item.trim(); });
-
-    techStackIds.forEach(function (techStackId) {
-        if (techStackId) {
-            const selectedIndex = dlt_techStackOptions.getMatchedIndex("techStackId", techStackId);
-            if (selectedIndex !== -1) {
-                const techStackName = dlt_techStackOptions.getCellData(selectedIndex, "techStackName");
-                const newRowIndex = dlt_selectTechStacks.insertRow();
-                dlt_selectTechStacks.setCellData(newRowIndex, "techStackId", techStackId);
-                dlt_selectTechStacks.setCellData(newRowIndex, "techStackName", techStackName);
-            } else {
-                console.warn("populateSelectedTechStacks: 일치하는 기술스택 ID를 찾을 수 없습니다:", techStackId);
-            }
-        }
-    });
-
-    console.log("populateSelectedTechStacks: 기술스택 UI 채우기 완료. dlt_selectTechStacks:", dlt_selectTechStacks.getAllJSON());
-};
-
-// 기술스택 AutoComplete 선택 완료 이벤트
-
 scwin.ac_techStack_onselected = function (e) {
 
     const selectedValue = ac_techStack.getValue();
@@ -600,16 +581,61 @@ scwin.ac_techStack_onselected = function (e) {
     const dupIndex = dlt_selectTechStacks.getMatchedIndex("techStackId", techStackId);
     if (dupIndex > 0) {
         console.log(`[중복] techStackId=${techStackId} 는 이미 DataList 에 존재합니다.`);
-        
-        console.log("추가못한 로그 :", dlt_selectTechStacks.getAllJSON());
+        alert("이미 추가된 기술 스택입니다.");
         return;
     }
 
     // (2) DataList 에 행 추가
     const newRowIndex = dlt_selectTechStacks.insertRow();
-    dlt_selectTechStacks.setCell
     dlt_selectTechStacks.setCellData(newRowIndex, "techStackId", techStackId);
     dlt_selectTechStacks.setCellData(newRowIndex, "techStackName", techStackName);
+
+    // (3) generator 에 반영
+    scwin.renderSelectedTechStacks();
+
+    // autoComplete 초기화
+    ac_techStack.setValue("");
+};
+
+// dlt_selectTechStacks 의 내용을 기반으로 generator 를 다시 그리는 함수
+scwin.renderSelectedTechStacks = function() {
+    gen_selectedTechStacks.removeAll(); // 기존 항목 모두 제거
+    var rowCount = dlt_selectTechStacks.getRowCount();
+    for (var i = 0; i < rowCount; i++) {
+        gen_selectedTechStacks.insertChild();
+        var techStackName = dlt_selectTechStacks.getCellData(i, "techStackName");
+        var txb_techStackName = gen_selectedTechStacks.getChild(i, "txb_techStackName");
+        txb_techStackName.setValue(techStackName);
+    }
+};
+
+// 페이지 로드 시 또는 사용자 정보 로드 후 기존 기술스택을 UI에 채우는 함수
+scwin.populateSelectedTechStacks = function() {
+    if (scwin.initialTechStackString && dlt_techStackOptions.getRowCount() > 0) {
+        var techStackIds = scwin.initialTechStackString.split(",").map(id => id.trim());
+        
+        dlt_selectTechStacks.removeAll(); // 기존 데이터 초기화
+
+        techStackIds.forEach(function(id) {
+            var matchedIndex = dlt_techStackOptions.getMatchedIndex("techStackId", id);
+            if (matchedIndex > -1) {
+                var techStackName = dlt_techStackOptions.getCellData(matchedIndex, "techStackName");
+                var newRowIndex = dlt_selectTechStacks.insertRow();
+                dlt_selectTechStacks.setCellData(newRowIndex, "techStackId", id);
+                dlt_selectTechStacks.setCellData(newRowIndex, "techStackName", techStackName);
+            }
+        });
+        scwin.renderSelectedTechStacks(); // UI 업데이트
+    }
+};
+
+// 기술스택 삭제 함수
+scwin.removeTechStack = function(e) {
+    var index = e.currentTarget.getGeneratedIndex(); // 클릭된 버튼의 generator 인덱스
+    if (typeof index === 'number' && index > -1) {
+        dlt_selectTechStacks.deleteRow(index);
+        scwin.renderSelectedTechStacks(); // UI 업데이트
+    }
 };]]></script>
     </head>
     
@@ -695,7 +721,7 @@ scwin.ac_techStack_onselected = function (e) {
             				</xf:itemset>
             			</xf:choices>
             		</xf:select1>
-            		<xf:group class="form-group" style="">
+            		<xf:group class="form-group">
             			<w2:textbox class="form-label" label="기술스택"></w2:textbox>
 
             			<w2:autoComplete id="ac_techStack" 
@@ -719,6 +745,16 @@ scwin.ac_techStack_onselected = function (e) {
             					</w2:itemset>
             				</w2:choices>
             			</w2:autoComplete>
+            			
+            			<!-- 선택된 기술스택을 표시할 generator -->
+            			<w2:generator id="gen_selectedTechStacks" class="dev-type-tag-container" style="margin-top: 10px;">
+            				<xf:group class="dev-type-tag-wrapper">
+            					<w2:textbox id="txb_techStackName" class="dev-type-tag" style="margin-right: 5px;"></w2:textbox>
+            					<xf:trigger type="button" class="remove-tag-btn" ev:onclick="scwin.removeTechStack">
+            						<xf:label><![CDATA[x]]></xf:label>
+            					</xf:trigger>
+            				</xf:group>
+            			</w2:generator>
             		</xf:group>
             	</xf:group>
 
