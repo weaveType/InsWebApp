@@ -31,6 +31,7 @@
             <if test="expiresAt               != null"> , EXPIRES_AT                </if>
             <if test="postedAt                != null"> , POSTED_AT                 </if>
             <if test="status                   != null"> , STATUS                    </if>
+            <if test="jobImageFileName        != null"> , JOB_IMAGE_FILE_NAME       </if>
         )
         VALUES  
         ( 
@@ -45,6 +46,7 @@
             <if test="expiresAt               != null"> , #{expiresAt}                </if>
             <if test="postedAt                != null"> , #{postedAt}                 </if>
             <if test="status                   != null"> , #{status}                    </if>
+            <if test="jobImageFileName        != null"> , #{jobImageFileName}          </if>
  
         )          
     </insert>	
@@ -108,6 +110,7 @@
                p.EXPIRES_AT as expiresAt, 
                p.POSTED_AT as postedAt, 
                p.STATUS as status,
+               p.JOB_IMAGE_FILE_NAME as jobImageFileName,
                u.name as companyName,
                c.industry as industry,
                c.emp_count as empCount		       
