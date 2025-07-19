@@ -16,15 +16,14 @@
 						<w2:key id="preferredLocations" name="지역" dataType="text"></w2:key>
 						<w2:key id="currentPosition" name="직무분야" dataType="text"></w2:key>
 						<w2:key id="yearSalary" name="희망연봉" dataType="number"></w2:key>
-						<w2:key id="isMbtiChecked" name="MBTI완료여부" dataType="text"></w2:key>
-						<w2:key id="isCodeChecked" name="코드분석완료여부" dataType="text"></w2:key>
+						<w2:key id="email" name="이메일" dataType="text"></w2:key>
+						<w2:key id="bio" name="자기소개" dataType="text"></w2:key>
+						<w2:key id="testChecked" name="테스트완료여부" dataType="boolean"></w2:key>
+						<w2:key id="isMbtiChecked" name="MBTI검사완료여부" dataType="number"></w2:key>
+						<w2:key id="isCodeChecked" name="코드분석완료여부" dataType="number"></w2:key>
 					</w2:keyInfo>
 				</w2:dataMap>
 			</w2:dataCollection>
-			<xf:submission id="sbm_userDetail" action="/InsWebApp/US0002UpdView.pwkjson" method="post" mediatype="application/json"
-				ref='data:json,{"id":"dma_userInfoVo", "key":"userInfoVo"}' target='data:json,{"id":"dma_userInfoVo", "key":"elData"}' encoding="UTF-8" instance="" replace="" errorHandler=""
-				customHandler="" mode="asynchronous" processMsg="유저 정보 조회중" ev:submit="" ev:submitdone="scwin.updateCardStatus" ev:submiterror="" abortTrigger="">
-			</xf:submission>
 		</xf:model>
 		<w2:layoutInfo />
 		<w2:publicInfo method="" />
@@ -244,6 +243,22 @@
             font-weight: bold;
         }
 
+        .completed-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background-color: #28a745;
+            color: white;
+            font-size: 10px;
+            padding: 4px 8px;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+
+        .hidden-button {
+            visibility: hidden;
+        }
+
         /* 반응형 디자인 */
         @media (max-width: 1024px) {
             .action-cards {
@@ -290,47 +305,92 @@
         }
         ]]></style>
 
-		<script lazy="false" type="text/javascript"><![CDATA[scwin.onpageload = function () {
-    var userInfoStr = WebSquare.cookie.getCookie("userInfo");
-    var userInfo = JSON.parse(userInfoStr);
-    dma_userInfoVo.set("accountId", userInfo.accountId);
-    console.log(dma_userInfoVo);
+		<script lazy="false" type="text/javascript"><![CDATA[
+scwin.onpageload = function () {
+    // 부모 페이지의 dma_userInfoVo 데이터맵 참조
+    var parentUserInfoVo = $p.parent().dma_userInfoVo;
 
-    // 서버 통신
-    $c.sbm.execute($p, sbm_userDetail);
-};
-
-// 사이드바 메뉴 클릭
-scwin.sidebarMenu_onclick = function (menuId) {
-    switch (menuId) {
-        case 'matching_inquiry':
-            alert("매칭 현황 페이지로 이동합니다.");
-            break;
-        case 'matching_profile':
-            // 현재 페이지이므로 아무것도 하지 않음
-            break;
-        case 'profile':
-            $p.url("ProfileEditStep1.xml");
-            break;
-        case 'application_history':
-            $p.url("ApplicationHistory.xml");
-            break;
+    // 부모의 dma_userInfoVo 데이터를 자식 페이지의 dma_userInfoVo에 복사
+    if (parentUserInfoVo) {
+        dma_userInfoVo.setJSON(parentUserInfoVo.getJSON());
+        // MBTI/코드분석 카드 상태 업데이트
+        scwin.updateCardStatus(dma_userInfoVo);
     }
 };
 
-// MBTI 검사 시작
-scwin.startMbti_onclick = function () {
-    alert("MBTI 성격 검사를 시작합니다.");
+// 사용자 정보 조회 완료 처리
+scwin.updateCardStatus = function (userInfoData) {
+    try {
+        let isMbtiDone = userInfoData.get("isMbtiChecked") == 1;
+        let isCodeDone = userInfoData.get("isCodeChecked") == 1;
+
+        // 둘 다 완료되었을 경우
+        if (isMbtiDone && isCodeDone) {
+            action_cards_group.hide();
+            section_title.setLabel("당신의 성향은...");
+            result_section.show();
+
+            var mbtiType = scwin.getUserInfoByCookie().mbti;
+            if (mbtiType) {
+                const imageUrl = "/InsWebApp/images/ws5/mbti/png/" + mbtiType + ".png";
+                result_image.setSrc(imageUrl);
+                result_mbti_type.setLabel(mbtiType);
+            }
+        } else {
+            action_cards_group.show();
+            result_section.hide();
+            section_title.show();
+            section_title.setLabel("매칭에 필요한 정보를 입력해주세요.");
+
+            // MBTI 카드 상태 업데이트
+            if (mbti_card) {
+                if (isMbtiDone) {
+                    mbti_card.removeClass("incomplete").addClass("completed");
+                    mbti_badge.setLabel("완료");
+                    mbti_badge.removeClass("incomplete-badge").addClass("completed-badge");
+                    mbti_button.addClass("hidden-button");
+                } else {
+                    mbti_card.removeClass("completed").addClass("incomplete");
+                    mbti_badge.setLabel("미완료");
+                    mbti_badge.removeClass("completed-badge").addClass("incomplete-badge");
+                    mbti_button.removeClass("hidden-button");
+                }
+            }
+
+            // 코드분석 카드 상태 업데이트
+            if (code_card) {
+                if (isCodeDone) {
+                    code_card.removeClass("incomplete").addClass("completed");
+                    code_badge.setLabel("완료");
+                    code_badge.removeClass("incomplete-badge").addClass("completed-badge");
+                    code_button.addClass("hidden-button");
+                } else {
+                    code_card.removeClass("completed").addClass("incomplete");
+                    code_badge.setLabel("미완료");
+                    code_badge.removeClass("completed-badge").addClass("incomplete-badge");
+                    code_button.removeClass("hidden-button");
+                }
+            }
+        }
+    } catch (err) {
+        console.error("UserDetailMain.xml - updateCardStatus 오류:", err);
+    }
 };
 
-// 코드분석 시작
-scwin.startCodeAnalysis_onclick = function () {
-    alert("코드분석을 시작합니다.");
-};
+scwin.getUserInfoByCookie = function () {
+    var userInfoCookie = WebSquare.cookie.getCookie("userInfo");
+    var userInfo = null;
 
-scwin.btn_userUpdate_onclick = function (e) {
-    $p.url("updateUser.xml");
-};
+    if (userInfoCookie) {
+        try {
+            userInfo = JSON.parse(userInfoCookie);
+        } catch (e) {
+            console.error("사용자 정보 파싱 오류:", e);
+            userInfo = null;
+        }
+    }
+    return userInfo;
+}
 ]]></script>
 	</head>
 
@@ -397,35 +457,38 @@ scwin.btn_userUpdate_onclick = function (e) {
 
 					<!-- 매칭에 필요한 정보 섹션 -->
 					<section class="section">
-						<w2:textbox class="section-title" label="매칭에 필요한 정보를 입력해주세요."></w2:textbox>
+						<w2:textbox id="section_title" class="section-title" label="매칭에 필요한 정보를 입력해주세요."></w2:textbox>
 
-						<xf:group class="action-cards">
+						<xf:group id="action_cards_group" class="action-cards">
 							<!-- MBTI 성격 검사 카드 -->
 							<xf:group id="mbti_card" class="action-card incomplete" ev:onclick="scwin.startMbti_onclick()">
-								<xf:group class="incomplete-badge">미완료</xf:group>
+								<w2:textbox id="mbti_badge" class="incomplete-badge" label="미완료"></w2:textbox>
 								<xf:group class="action-card-icon" style="">
-									<xf:image src="/InsWebApp/images/ws5/main/mbti_check.png" style="width:100%;height:100%;" id=""></xf:image>
+									<xf:image src="/InsWebApp/images/ws5/main/mbti_check.png" style="width:100%;height:100%;" id="mbti_image"></xf:image>
 								</xf:group>
 								<w2:textbox class="action-card-title" label="mbti 성격 검사"></w2:textbox>
 								<w2:textbox class="action-card-subtitle" label="ex : 8가지 성향을 4개의 성향을 알아 낼 수 있습니다"></w2:textbox>
-								<xf:trigger class="action-card-button" type="button">
+								<xf:trigger id="mbti_button" class="action-card-button" type="button">
 									<xf:label><![CDATA[시작하기]]></xf:label>
 								</xf:trigger>
 							</xf:group>
 
 							<!-- 코드분석 카드 -->
 							<xf:group id="code_card" class="action-card incomplete" ev:onclick="scwin.startCodeAnalysis_onclick()">
-								<xf:group class="incomplete-badge">미완료</xf:group>
-
+								<w2:textbox id="code_badge" class="incomplete-badge" label="미완료"></w2:textbox>
 								<xf:group class="action-card-icon" style="">
 									<xf:image src="/InsWebApp/images/ws5/main/code_check.png" style="width:100%;height:100%;" id=""></xf:image>
 								</xf:group>
 								<w2:textbox class="action-card-title" label="코드분석"></w2:textbox>
 								<w2:textbox class="action-card-subtitle" label="ex : 8가지 성향을 4개의 성향을 알아 낼 수 있습니다"></w2:textbox>
-								<xf:trigger class="action-card-button" type="button">
+								<xf:trigger id="code_button" class="action-card-button" type="button">
 									<xf:label><![CDATA[분석하기]]></xf:label>
 								</xf:trigger>
 							</xf:group>
+						</xf:group>
+						<xf:group id="result_section" style="display:none; text-align: center; padding: 20px;">
+							<w2:textbox id="result_mbti_type" style="font-size: 28px; font-weight: bold; margin-top: 20px; color: #007bff;"></w2:textbox>
+							<xf:image id="result_image" src="" style="max-width: 400px; width: 100%; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin-top: 20px;"></xf:image>
 						</xf:group>
 					</section>
 				</main>
