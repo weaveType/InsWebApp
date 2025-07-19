@@ -261,8 +261,7 @@ public class UserDAO extends com.demo.proworks.cmmn.dao.ProworksDefaultAbstractD
 	public List<ScoutDetailVo> getScoutUsersByPostId(ScoutVo vo) throws Exception {
 		return (List<ScoutDetailVo>) list("com.demo.proworks.domain.user.getScoutUsersByPostId", vo);
 	}
-	
-	
+
 	/**
 	 * 유저의 성향검사 및 코드검사 여부를 가져온다.
 	 *
@@ -349,5 +348,42 @@ public class UserDAO extends com.demo.proworks.cmmn.dao.ProworksDefaultAbstractD
 	 */
 	public int deleteApplicationHistory(ApplicationHistoryVo vo) throws Exception {
 		return (Integer) delete("com.demo.proworks.domain.user.deleteApplicationHistory", vo);
+	}
+
+	/**
+	 * 기술스택 매핑 정보를 삭제한다.
+	 *
+	 * @param vo userId 만 채워진 UserVo
+	 * @return 삭제된 행 수
+	 * @throws Exception
+	 */
+	public int deleteUserTechStacks(UserVo vo) throws Exception {
+		return (Integer) delete("com.demo.proworks.domain.user.deleteUserTechStacks", vo);
+	}
+
+	/**
+	 * 
+	 * 기술스택 매핑 정보를 일괄 저장한다.
+	 * 
+	 * ※ `param` 구성 
+	 *	└ userId : Long / Integer 
+	 *	└ techStackIdList : List<Long> (예:[36, 7, 14])
+	 * 
+	 * @param param 매핑 파라미터
+	 * @return 삽입된 행 수
+	 * @throws Exception
+	 */
+	public int insertUserTechStacks(UserVo vo) throws Exception {
+		return (Integer) insert("com.demo.proworks.domain.user.insertUserTechStacks", vo);
+	}
+
+	/*
+	 * 사용자-기술스택 매핑 개수를 구한다.
+	 *
+	 * @param vo userId 필수
+	 * @return 매핑 행 수
+	 */
+	public int countUserTechStacks(UserVo vo) throws Exception {
+		return (Integer) selectByPk("com.demo.proworks.domain.user.countUserTechStacks", vo);
 	}
 }

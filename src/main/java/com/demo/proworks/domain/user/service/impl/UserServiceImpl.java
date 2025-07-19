@@ -1,6 +1,8 @@
 package com.demo.proworks.domain.user.service.impl;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 
@@ -198,11 +200,25 @@ public class UserServiceImpl implements UserService {
 
 		if (existingInfo != null) {
 			// 기존 데이터가 있으면 업데이트
-			return userDAO.updateUserInfo(userVo);
+			userDAO.updateUserInfo(userVo);
 		} else {
 			// 기존 데이터가 없으면 신규 삽입
-			return userDAO.insertUserInfo(userVo);
+			userDAO.insertUserInfo(userVo);
 		}
+
+		if (userVo.getTechStackVo().size() != 0) {
+
+			// ① 현재 매핑 개수 조회
+			int curCnt = userDAO.countUserTechStacks(userVo);
+
+			if (curCnt != 0) { // 기존의 값이 있다면 삭제
+				userDAO.deleteUserTechStacks(userVo);
+			}
+
+			// 추가
+			userDAO.insertUserTechStacks(userVo);
+		}
+		return 1;
 	}
 
 	/**
@@ -296,7 +312,8 @@ public class UserServiceImpl implements UserService {
 	 * @return 지원현황 목록
 	 * @throws Exception
 	 */
-	public List<ApplicationHistoryVo> selectApplicationHistoryList(ApplicationHistoryVo applicationHistoryVo) throws Exception {
+	public List<ApplicationHistoryVo> selectApplicationHistoryList(ApplicationHistoryVo applicationHistoryVo)
+			throws Exception {
 		return userDAO.selectApplicationHistoryList(applicationHistoryVo);
 	}
 
@@ -307,7 +324,8 @@ public class UserServiceImpl implements UserService {
 	 * @return 지원현황 통계 목록
 	 * @throws Exception
 	 */
-	public List<ApplicationHistoryVo> selectApplicationHistoryStats(ApplicationHistoryVo applicationHistoryVo) throws Exception {
+	public List<ApplicationHistoryVo> selectApplicationHistoryStats(ApplicationHistoryVo applicationHistoryVo)
+			throws Exception {
 		return userDAO.selectApplicationHistoryStats(applicationHistoryVo);
 	}
 
@@ -329,7 +347,8 @@ public class UserServiceImpl implements UserService {
 	 * @return 지원현황 상세정보
 	 * @throws Exception
 	 */
-	public ApplicationHistoryVo selectApplicationHistoryDetail(ApplicationHistoryVo applicationHistoryVo) throws Exception {
+	public ApplicationHistoryVo selectApplicationHistoryDetail(ApplicationHistoryVo applicationHistoryVo)
+			throws Exception {
 		return userDAO.selectApplicationHistoryDetail(applicationHistoryVo);
 	}
 

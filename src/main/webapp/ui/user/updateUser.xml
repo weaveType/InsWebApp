@@ -357,6 +357,13 @@ scwin.sbm_userDetail_submitdone = function (e) {
     try {
         console.log("사용자 정보 로드 완료:", dma_userInfoVo.getJSON());
 
+        // 초기 기술스택 문자열 저장
+        scwin.initialTechStackString = dma_userInfoVo.get("techStack");
+        console.log("초기 기술스택 문자열:", scwin.initialTechStackString);
+
+        // 선택된 기술스택 UI 채우기 시도
+        scwin.populateSelectedTechStacks();
+
         // 데이터 로드 완료 후 필드가 비어있는 경우 처리
         if (!dma_userInfoVo.get("currentPosition")) {
             console.log("직무분야 정보가 없습니다.");
@@ -403,6 +410,15 @@ scwin.btn_save_onclick = function (e) {
 
         // 서버에 저장 요청
         if (confirm("변경사항을 저장하시겠습니까?")) {
+            // dlt_selectTechStacks 에 있는 기술스택 ID들을 콤마로 구분된 문자열로 변환
+            var selectedTechStackIds = [];
+            for (var i = 0; i < dlt_selectTechStacks.getRowCount(); i++) {
+                selectedTechStackIds.push(dlt_selectTechStacks.getCellData(i, "techStackId"));
+            }
+            dma_userInfoVo.set("techStack", selectedTechStackIds.join(","));
+
+            console.log("전송될 기술스택 값 (dma_userInfoVo.techStack):", dma_userInfoVo.get("techStack"));
+
             $c.sbm.execute($p, sbm_updateUser);
         }
     } catch (e) {
@@ -488,13 +504,83 @@ scwin.sbm_updatePassword_submiterror = function (e) {
 // 기술스택 목록 조회 완료
 scwin.sbm_selectTechStackList_submitdone = function (e) {
     console.log("기술스택 목록 로드 완료:", dlt_techStackOptions.getAllJSON());
+    // 선택된 기술스택 UI 채우기 시도
+    scwin.populateSelectedTechStacks();
 };
 
 // 기술스택 목록 조회 오류
 scwin.sbm_selectTechStackList_submiterror = function (e) {
     alert("기술스택 목록을 불러오는데 실패했습니다.");
     console.error("기술스택 목록 조회 오류:", e);
-};// 기술스택 AutoComplete 선택 완료 이벤트
+};
+
+// 선택된 기술스택 UI 채우기
+scwin.populateSelectedTechStacks = function () {
+    // 사용자 정보와 기술스택 옵션이 모두 로드되었는지 확인
+    if (!scwin.initialTechStackString || dlt_techStackOptions.getRowCount() === 0) {
+        console.log("populateSelectedTechStacks: 데이터 준비 안됨. 재시도.");
+        return;
+    }
+
+    console.log("populateSelectedTechStacks: 기술스택 UI 채우기 시작");
+
+    // dlt_selectTechStacks 초기화
+    dlt_selectTechStacks.removeAll();
+
+    var techStackIds = scwin.initialTechStackString.split(",").map(function(item) { return item.trim(); });
+
+    techStackIds.forEach(function (techStackId) {
+        if (techStackId) {
+            const selectedIndex = dlt_techStackOptions.getMatchedIndex("techStackId", techStackId);
+            if (selectedIndex !== -1) {
+                const techStackName = dlt_techStackOptions.getCellData(selectedIndex, "techStackName");
+                const newRowIndex = dlt_selectTechStacks.insertRow();
+                dlt_selectTechStacks.setCellData(newRowIndex, "techStackId", techStackId);
+                dlt_selectTechStacks.setCellData(newRowIndex, "techStackName", techStackName);
+            } else {
+                console.warn("populateSelectedTechStacks: 일치하는 기술스택 ID를 찾을 수 없습니다:", techStackId);
+            }
+        }
+    });
+
+    console.log("populateSelectedTechStacks: 기술스택 UI 채우기 완료. dlt_selectTechStacks:", dlt_selectTechStacks.getAllJSON());
+};
+
+// 기술스택 AutoComplete 선택 완료 이벤트
+
+// 선택된 기술스택 UI 채우기
+scwin.populateSelectedTechStacks = function () {
+    // 사용자 정보와 기술스택 옵션이 모두 로드되었는지 확인
+    if (!scwin.initialTechStackString || dlt_techStackOptions.getRowCount() === 0) {
+        console.log("populateSelectedTechStacks: 데이터 준비 안됨. 재시도.");
+        return;
+    }
+
+    console.log("populateSelectedTechStacks: 기술스택 UI 채우기 시작");
+
+    // dlt_selectTechStacks 초기화
+    dlt_selectTechStacks.removeAll();
+
+    var techStackIds = scwin.initialTechStackString.split(",").map(function(item) { return item.trim(); });
+
+    techStackIds.forEach(function (techStackId) {
+        if (techStackId) {
+            const selectedIndex = dlt_techStackOptions.getMatchedIndex("techStackId", techStackId);
+            if (selectedIndex !== -1) {
+                const techStackName = dlt_techStackOptions.getCellData(selectedIndex, "techStackName");
+                const newRowIndex = dlt_selectTechStacks.insertRow();
+                dlt_selectTechStacks.setCellData(newRowIndex, "techStackId", techStackId);
+                dlt_selectTechStacks.setCellData(newRowIndex, "techStackName", techStackName);
+            } else {
+                console.warn("populateSelectedTechStacks: 일치하는 기술스택 ID를 찾을 수 없습니다:", techStackId);
+            }
+        }
+    });
+
+    console.log("populateSelectedTechStacks: 기술스택 UI 채우기 완료. dlt_selectTechStacks:", dlt_selectTechStacks.getAllJSON());
+};
+
+// 기술스택 AutoComplete 선택 완료 이벤트
 
 scwin.ac_techStack_onselected = function (e) {
 

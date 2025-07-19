@@ -85,6 +85,9 @@ public class UserVo extends com.demo.proworks.cmmn.ProworksCommVO {
     @ElDtoField(logicalName = "role_name", physicalName = "roleName", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
     private String roleName;
 
+    @ElDtoField(logicalName = "기술스택", physicalName = "techStackVo", type = "", typeKind = "List", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private java.util.List<com.demo.proworks.domain.user.vo.TechStackVo> techStackVo;
+
     @ElVoField(physicalName = "userId")
     public int getUserId(){
         return userId;
@@ -345,6 +348,16 @@ public class UserVo extends com.demo.proworks.cmmn.ProworksCommVO {
         this.roleName = roleName;
     }
 
+    @ElVoField(physicalName = "techStackVo")
+    public java.util.List<com.demo.proworks.domain.user.vo.TechStackVo> getTechStackVo(){
+        return techStackVo;
+    }
+
+    @ElVoField(physicalName = "techStackVo")
+    public void setTechStackVo(java.util.List<com.demo.proworks.domain.user.vo.TechStackVo> techStackVo){
+        this.techStackVo = techStackVo;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -372,7 +385,8 @@ public class UserVo extends com.demo.proworks.cmmn.ProworksCommVO {
         sb.append("preferredLocations").append("=").append(preferredLocations).append(",");
         sb.append("salaryRange").append("=").append(salaryRange).append(",");
         sb.append("careerPeriod").append("=").append(careerPeriod).append(",");
-        sb.append("roleName").append("=").append(roleName);
+        sb.append("roleName").append("=").append(roleName).append(",");
+        sb.append("techStackVo").append("=").append(techStackVo);
         sb.append("]");
         return sb.toString();
 
@@ -384,11 +398,19 @@ public class UserVo extends com.demo.proworks.cmmn.ProworksCommVO {
 
     @Override
     public void _xStreamEnc() {
+        for( int i=0 ; techStackVo != null && i < techStackVo.size() ; i++ ) {
+            com.demo.proworks.domain.user.vo.TechStackVo vo = (com.demo.proworks.domain.user.vo.TechStackVo)techStackVo.get(i);
+            vo._xStreamEnc();	 
+        }
     }
 
 
     @Override
     public void _xStreamDec() {
+        for( int i=0 ; techStackVo != null && i < techStackVo.size() ; i++ ) {
+            com.demo.proworks.domain.user.vo.TechStackVo vo = (com.demo.proworks.domain.user.vo.TechStackVo)techStackVo.get(i);
+            vo._xStreamDec();	 
+        }
     }
 
 

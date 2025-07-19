@@ -322,4 +322,24 @@
 		FROM users_mbti_types
 		where user_id = #{accountId}
 	</select>
+<select id="countUserTechStacks" parameterType="com.demo.proworks.domain.user.vo.UserVo" resultType="int">
+    SELECT COUNT(*)
+      FROM users_tech_stack_relation
+     WHERE user_id = #{userId}
+</select>
+<select id="deleteUserTechStacks" parameterType="com.demo.proworks.domain.user.vo.UserVo">
+    DELETE FROM users_tech_stack_relation
+    WHERE user_id = #{userId}
+</select>
+<select id="insertUserTechStacks" parameterType="com.demo.proworks.domain.user.vo.UserVo">
+    INSERT INTO users_tech_stack_relation (user_id, tech_stack_id)
+    VALUES
+    <foreach collection="techStackVo" 
+             item="ts"                  
+             separator=",">
+        (#{userId}, #{ts.techStackId})  
+    </foreach>
+
+    ON DUPLICATE KEY UPDATE tech_stack_id = tech_stack_id
+</select>
 </mapper>
