@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper      
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"      
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--
+	@subject     : 공고정보 관련 처리를 담당하는 Sql Mapper
+	@description : 공고정보 관련 처리를 담당하는 Sql Mapper
+	@author      : Inswave
+	@since       : 2025/07/03
+	@modification
+	===========================================================
+	DATE              AUTHOR             DESC
+	===========================================================
+	2025/07/03              Inswave             최초 생성
+ -->
+<mapper namespace="com.demo.proworks.domain.post">
+    <insert id="insertPost" parameterType="com.demo.proworks.domain.post.vo.PostVo" useGeneratedKeys="true" keyProperty="jobPostingId">
+    	<!-- 공고정보를 등록한다. -->	
+    		
+        INSERT INTO POSTS   /* QueryID : com.demo.proworks.domain.post.insertPost */
+        ( 
+            COMPANY_ID
+            <if test="title                    != null"> , TITLE                     </if>
+            <if test="description              != null"> , DESCRIPTION               </if>
+            <if test="experienceLevel         != null"> , EXPERIENCE_LEVEL          </if>
+            <if test="salaryRange             != null"> , SALARY_RANGE              </if>
+            <if test="location                 != null"> , LOCATION                  </if>
+            <if test="workType                != null"> , WORK_TYPE                 </if>
+            <if test="preferredDeveloperTypes!= null"> , PREFERRED_DEVELOPER_TYPES </if>
+            <if test="expiresAt               != null"> , EXPIRES_AT                </if>
+            <if test="postedAt                != null"> , POSTED_AT                 </if>
+            <if test="status                   != null"> , STATUS                    </if>
+        )
+        VALUES  
+        ( 
+            #{companyId}
+            <if test="title                    != null"> , #{title}                     </if>
+            <if test="description              != null"> , #{description}               </if>
+            <if test="experienceLevel         != null"> , #{experienceLevel}          </if>
+            <if test="salaryRange             != null"> , #{salaryRange}              </if>
+            <if test="location                 != null"> , #{location}                  </if>
+            <if test="workType                != null"> , #{workType}                 </if>
+            <if test="preferredDeveloperTypes!= null"> , #{preferredDeveloperTypes} </if>
+            <if test="expiresAt               != null"> , #{expiresAt}                </if>
+            <if test="postedAt                != null"> , #{postedAt}                 </if>
+            <if test="status                   != null"> , #{status}                    </if>
+ 
+        )          
+    </insert>	
+	
+    <update id="updatePost" parameterType="com.demo.proworks.domain.post.vo.PostVo">
+    	<!-- 공고정보를 갱신한다. -->
+    	
+        UPDATE POSTS    /* QueryID : com.demo.proworks.domain.post.updatePost */      
+      	  SET  
+                JOB_POSTING_ID            = #{jobPostingId}           
+        	                       
+            <if test="companyId               != null"> , COMPANY_ID                = #{companyId}                </if>
+            <if test="title                    != null"> , TITLE                     = #{title}                     </if>
+            <if test="description              != null"> , DESCRIPTION               = #{description}               </if>
+            <if test="experienceLevel         != null"> , EXPERIENCE_LEVEL          = #{experienceLevel}          </if>
+            <if test="salaryRange             != null"> , SALARY_RANGE              = #{salaryRange}              </if>
+            <if test="location                 != null"> , LOCATION                  = #{location}                  </if>
+            <if test="workType                != null"> , WORK_TYPE                 = #{workType}                 </if>
+            <if test="preferredDeveloperTypes!= null"> , PREFERRED_DEVELOPER_TYPES = #{preferredDeveloperTypes} </if>
+            <if test="expiresAt               != null"> , EXPIRES_AT                = #{expiresAt}                </if>
+            <if test="postedAt                != null"> , POSTED_AT                 = #{postedAt}                 </if>
+            <if test="status                   != null"> , STATUS                    = #{status}                    </if>
+                 
+        WHERE   
+                JOB_POSTING_ID            = #{jobPostingId}           
+    </update>
+	
+    <update id="deletePost" parameterType="com.demo.proworks.domain.post.vo.PostVo">
+    	<!-- 공고정보를 소프트 삭제한다. (is_deleted = 1로 설정) -->
+    	
+        UPDATE POSTS   /* QueryID : com.demo.proworks.domain.post.deletePost */ 
+        SET IS_DELETED = 1
+        WHERE   
+                JOB_POSTING_ID            = #{jobPostingId}           
+        
+    </update>
+	
+    <select id="selectPost" parameterType="com.demo.proworks.domain.post.vo.PostVo" resultType="com.demo.proworks.domain.post.vo.PostVo">
+    	<!-- 공고정보를 상세 조회한다. (소프트 삭제된 공고 제외) -->	
+        SELECT     /* QueryID : com.demo.proworks.domain.post.selectPost */
+            JOB_POSTING_ID as jobPostingId, COMPANY_ID as companyId, TITLE as title, DESCRIPTION as description, EXPERIENCE_LEVEL as experienceLevel, SALARY_RANGE as salaryRange, LOCATION as location, WORK_TYPE as workType, PREFERRED_DEVELOPER_TYPES as preferredDeveloperTypes, EXPIRES_AT as expiresAt, POSTED_AT as postedAt, STATUS as status
+        FROM POSTS 
+        WHERE 
+                JOB_POSTING_ID            = #{jobPostingId}
+        AND (IS_DELETED IS NULL OR IS_DELETED = 0)
+			
+    </select>
+	
+    <select id="selectListPost" parameterType="com.demo.proworks.domain.post.vo.PostVo" resultType="com.demo.proworks.domain.post.vo.PostVo">
+    	<!-- 공고정보 목록을 조회한다. (회사명 포함, 소프트 삭제된 공고 제외) -->
+           SELECT    /* QueryID : com.demo.proworks.domain.post.selectListPost */
+               p.JOB_POSTING_ID as jobPostingId, 
+               p.COMPANY_ID as companyId, 
+               p.TITLE as title, 
+               p.DESCRIPTION as description, 
+               p.EXPERIENCE_LEVEL as experienceLevel, 
+               p.SALARY_RANGE as salaryRange, 
+               p.LOCATION as location, 
+               p.WORK_TYPE as workType, 
+               p.PREFERRED_DEVELOPER_TYPES as preferredDeveloperTypes, 
+               p.EXPIRES_AT as expiresAt, 
+               p.POSTED_AT as postedAt, 
+               p.STATUS as status,
+               u.name as companyName,
+               c.industry as industry,
+               c.emp_count as empCount		       
+           FROM POSTS p
+           INNER JOIN companys c ON p.company_id = c.company_id
+           INNER JOIN users u ON c.user_id = u.user_id
+           WHERE  1=1
+           AND (p.IS_DELETED IS NULL OR p.IS_DELETED = 0)
+           AND (c.is_deleted IS NULL OR c.is_deleted = 0)
+           <if test="companyId != null and companyId != ''">
+           AND p.COMPANY_ID = #{companyId}
+           </if>
+           ORDER BY p.POSTED_AT DESC
+    </select>
+	
+    <select id="selectListCountPost" parameterType="com.demo.proworks.domain.post.vo.PostVo" resultType="long">
+    <!-- 공고정보 목록의 카운트를 조회한다. (회사명 포함, 소프트 삭제된 공고 제외) -->
+    
+         SELECT    /* QueryID : com.demo.proworks.domain.post.selectListCountPost */
+             COUNT(*) totcnt  		                  
+         FROM POSTS p
+         INNER JOIN companys c ON p.company_id = c.company_id
+         INNER JOIN users u ON c.user_id = u.user_id
+         WHERE  1=1
+         AND (p.IS_DELETED IS NULL OR p.IS_DELETED = 0)
+         AND (c.is_deleted IS NULL OR c.is_deleted = 0)
+         <if test="companyId != null and companyId != ''">
+         AND p.COMPANY_ID = #{companyId}
+         </if>
+
+    </select>
+
+    <!-- 기술스택 관련 쿼리 -->
+    <select id="selectListTechStack" resultType="com.demo.proworks.domain.post.vo.TechStackVo">
+        <!-- 기술스택 목록을 조회한다. -->
+        SELECT  /* QueryID : com.demo.proworks.domain.post.selectListTechStack */
+            tech_stack_id as techStackId,
+            tech_stack_name as techStackName
+        FROM tech_stack
+        ORDER BY tech_stack_name
+    </select>
+
+    <!-- 공고-기술스택 관계 저장 -->
+    <insert id="insertCompanyTechStackRelation" parameterType="map">
+        <!-- 공고별 기술스택 관계를 저장한다. -->
+        INSERT INTO company_tech_stack_relation  /* QueryID : com.demo.proworks.domain.post.insertCompanyTechStackRelation */
+        (
+            job_posting_id,
+            tech_stack_id
+        )
+        VALUES
+        (
+            #{jobPostingId},
+            #{techStackId}
+        )
+    </insert>
+
+    <!-- 공고-기술스택 관계 삭제 (공고 삭제 시 사용) -->
+    <delete id="deleteCompanyTechStackRelationByJobId" parameterType="String">
+        <!-- 특정 공고의 기술스택 관계를 삭제한다. -->
+        DELETE FROM company_tech_stack_relation  /* QueryID : com.demo.proworks.domain.post.deleteCompanyTechStackRelationByJobId */
+        WHERE job_posting_id = #{jobPostingId}
+    </delete>
+
+    <!-- 공고별 선택된 기술스택 조회 -->
+    <select id="selectTechStacksByJobId" parameterType="String" resultType="com.demo.proworks.domain.post.vo.TechStackVo">
+        <!-- 특정 공고의 기술스택 목록을 조회한다. -->
+        SELECT  /* QueryID : com.demo.proworks.domain.post.selectTechStacksByJobId */
+            ts.tech_stack_id as techStackId,
+            ts.tech_stack_name as techStackName
+        FROM tech_stack ts
+        INNER JOIN company_tech_stack_relation ctsr ON ts.tech_stack_id = ctsr.tech_stack_id
+        WHERE ctsr.job_posting_id = #{jobPostingId}
+        ORDER BY ts.tech_stack_name
+    </select>
+
+    <!-- 공고별 선택된 기술스택 조회 (PostService 인터페이스 호환용) -->
+    <select id="selectTechStacksByPostId" parameterType="String" resultType="com.demo.proworks.domain.post.vo.TechStackVo">
+        <!-- 특정 공고의 기술스택 목록을 조회한다. (PostService 호환) -->
+        SELECT  /* QueryID : com.demo.proworks.domain.post.selectTechStacksByPostId */
+            ts.tech_stack_id as techStackId,
+            ts.tech_stack_name as techStackName
+        FROM tech_stack ts
+        INNER JOIN company_tech_stack_relation ctsr ON ts.tech_stack_id = ctsr.tech_stack_id
+        WHERE ctsr.job_posting_id = #{jobPostingId}
+        ORDER BY ts.tech_stack_name
+    </select>
+
+    <!-- 사용자 ID로 회사 ID 조회 -->
+    <select id="selectCompanyIdByUserId" parameterType="String" resultType="String">
+        <!-- 사용자 ID로 해당 사용자의 회사 ID를 조회한다. -->
+        SELECT  /* QueryID : com.demo.proworks.domain.post.selectCompanyIdByUserId */
+            company_id
+        FROM companys
+        WHERE user_id = #{userId}
+        AND (is_deleted IS NULL OR is_deleted = 0)
+        LIMIT 1
+    </select>
+<select id="findPostsByMbti"
+        parameterType="com.demo.proworks.domain.post.vo.PostMatchVo"
+        resultType="com.demo.proworks.domain.post.vo.PostVo">
+<!-- 더 안전한 MBTI 호환성 쿼리 -->
+SELECT /* QueryID : com.demo.proworks.domain.post.findPostsByMbti */
+    p.job_posting_id as jobPostingId,
+    p.company_id as companyId,
+    p.title as title,
+    p.description as description,
+    p.experience_level as experienceLevel,
+    p.salary_range as salaryRange,
+    p.location as location,
+    p.work_type as workType,
+    p.preferred_developer_types as preferredDeveloperTypes,
+    p.expires_at as expiresAt,
+    p.posted_at as postedAt,
+    p.status as status,
+    u.name as companyName,
+    c.industry as industry,
+    c.emp_count as empCount,
+    IFNULL(MAX(compat.match_cnt), 0) as bestMatchCount
+FROM posts p
+INNER JOIN companys c ON p.company_id = c.company_id
+INNER JOIN users u ON c.user_id = u.user_id
+LEFT JOIN JSON_TABLE(
+    p.preferred_developer_types,
+    "$[*]" COLUMNS(mbti CHAR(4) PATH "$")
+) jt ON JSON_VALID(p.preferred_developer_types) AND jt.mbti IS NOT NULL
+LEFT JOIN mbti_compat compat ON compat.code1 = #{userMbti}
+    AND compat.code2 = jt.mbti
+WHERE p.status = 'active'
+    AND p.expires_at > NOW()
+    AND (p.is_deleted IS NULL OR p.is_deleted = 0)
+    AND (c.is_deleted IS NULL OR c.is_deleted = 0)
+GROUP BY p.job_posting_id, p.company_id, p.title, p.description,
+    p.experience_level, p.salary_range, p.location, p.work_type,
+    p.preferred_developer_types, p.expires_at, p.posted_at, p.status,
+    u.name, c.industry, c.emp_count
+<if test="mbtiMatchFilter != null and mbtiMatchFilter != '' and mbtiMatchFilter != '0'">
+HAVING IFNULL(MAX(compat.match_cnt), 0) >= CAST(#{mbtiMatchFilter} AS UNSIGNED)
+</if>
+ORDER BY bestMatchCount DESC, p.posted_at DESC
+<if test="limit != null and limit > 0">
+LIMIT #{limit}
+</if>
+</select>
+<select id="findPostsByMbtiCount" resultType="long" parameterType="com.demo.proworks.domain.post.vo.PostMatchVo">
+<!-- mbti가 일치하는 갯수의 count 를 가져온다 -->
+SELECT COUNT(DISTINCT p.job_posting_id) as totalCount
+FROM posts p
+INNER JOIN companys c ON p.company_id = c.company_id
+LEFT JOIN JSON_TABLE(
+    p.preferred_developer_types, 
+    "$[*]" COLUMNS(mbti CHAR(4) PATH "$")
+) jt ON JSON_VALID(p.preferred_developer_types) AND jt.mbti IS NOT NULL
+LEFT JOIN mbti_compat compat ON compat.code1 = #{userMbti} AND compat.code2 = jt.mbti
+WHERE p.status = 'active'
+    AND p.expires_at > NOW()
+    AND (p.is_deleted IS NULL OR p.is_deleted = 0)
+    AND (c.is_deleted IS NULL OR c.is_deleted = 0)
+    AND IFNULL(compat.match_cnt, 0) >= CAST(#{mbtiMatchFilter} AS UNSIGNED);
+</select>
+<select id="insertJobApplication" resultType="int" parameterType="com.demo.proworks.domain.post.vo.JobApplicationVo">
+<!-- 공고에 이력서를 제출 및 지원한다 --> 
+     INSERT INTO job_applications (
+         job_posting_id,
+         user_id,
+         resume_file_name,
+         application_status
+     )
+     SELECT
+         #{jobPostingId},
+         #{accountId},
+         ui.resume_file_name,
+         '서류검토' -- 기본값 설정
+     FROM
+         users_info ui
+     WHERE
+         ui.user_id = #{accountId}
+</select>
+
+    <update id="updateApplicationStatus" parameterType="com.demo.proworks.domain.post.vo.JobApplicationVo">
+        <!-- 지원자의 상태를 갱신한다. -->
+        UPDATE job_applications /* QueryID : com.demo.proworks.domain.post.updateApplicationStatus */
+        SET
+            application_status = #{applicationStatus}
+        WHERE
+            user_id = #{accountId}
+    </update>
+</mapper>

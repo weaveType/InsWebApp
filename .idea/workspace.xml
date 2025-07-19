@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="eda647e9-ade0-46d0-a222-af2cb6947326" name="Changes" comment="">
+<<<<<<< HEAD
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.settings/meta/screenNames.dat" beforeDir="false" afterPath="$PROJECT_DIR$/.settings/meta/screenNames.dat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/websquare/config.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/websquare/config.js" afterDir="false" />
+=======
+      <change beforePath="$PROJECT_DIR$/.classpath" beforeDir="false" afterPath="$PROJECT_DIR$/.classpath" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.settings/meta/screenNames.dat" beforeDir="false" afterPath="$PROJECT_DIR$/.settings/meta/screenNames.dat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.settings/org.eclipse.core.resources.prefs" beforeDir="false" afterPath="$PROJECT_DIR$/.settings/org.eclipse.core.resources.prefs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/demo/proworks/cmmn/ProworksLoginAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/demo/proworks/cmmn/ProworksLoginAdapter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/demo/proworks/cmmn/ProworksSessionDataAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/demo/proworks/cmmn/ProworksSessionDataAdapter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/demo/proworks/cmmn/ProworksUserHeader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/demo/proworks/cmmn/ProworksUserHeader.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/demo/proworks/domain/corporate/dao/CorporateDAO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/demo/proworks/domain/corporate/service/CorporateService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/demo/proworks/domain/corporate/service/impl/CorporateServiceImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/demo/proworks/domain/corporate/vo/CorporateListVo.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/demo/proworks/domain/corporate/vo/CorporateVo.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/demo/proworks/domain/corporate/web/CorporateController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/demo/proworks/domain/user/dao/UserDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/demo/proworks/domain/user/dao/UserDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/demo/proworks/domain/user/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/demo/proworks/domain/user/service/UserService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/demo/proworks/domain/user/service/impl/UserServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/demo/proworks/domain/user/service/impl/UserServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/demo/proworks/domain/user/vo/UserListVo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/demo/proworks/domain/user/vo/UserListVo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/demo/proworks/domain/user/vo/UserVo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/demo/proworks/domain/user/vo/UserVo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/demo/proworks/domain/user/web/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/demo/proworks/domain/user/web/UserController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/demo/proworks/emp/vo/LoginVo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/demo/proworks/emp/vo/LoginVo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/inswave/sqlmap/com/demo/proworks/domain/corporate/companys_SQL_mariadb_MyBatis.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/inswave/sqlmap/com/demo/proworks/domain/user/users_SQL_mariadb_MyBatis.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/inswave/sqlmap/com/demo/proworks/domain/user/users_SQL_mariadb_MyBatis.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/ui/common/CompanyMain.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/ui/common/CompanyMain.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/ui/common/weaveTypeMain.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/ui/common/weaveTypeMain.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/ui/corporate/Corporate.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/ui/corporate/CorporateList.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/ui/corporate/CreateCompany.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/ui/corporate/CreateCompany.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/ui/corporate/RecruitmentDashboard.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/ui/corporate/RecruitmentDashboard.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/ui/user/User.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/ui/user/User.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/ui/user/UserList.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/ui/user/UserList.xml" afterDir="false" />
+>>>>>>> 0e0164eb28172538ba048815b365b2055dd52f07
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="KubernetesApiPersistence">{}</component>
+  <component name="KubernetesApiProvider">{
+  &quot;isMigrated&quot;: true
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 5
+}</component>
+  <component name="ProjectId" id="2zFpuixKSw1NAXxjDjdjmXqgcGM" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;feat/corporate&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/InswaveToolSP1/workspace/InsWebApp&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settings.project.maven.runner&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="eda647e9-ade0-46d0-a222-af2cb6947326" name="Changes" comment="" />
+      <created>1751336899960</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1751336899960</updated>
+      <workItem from="1751336901371" duration="25000" />
+      <workItem from="1751336929650" duration="92000" />
+      <workItem from="1751337025906" duration="15000" />
+      <workItem from="1751337063853" duration="62000" />
+      <workItem from="1751337134783" duration="11000" />
+      <workItem from="1751337172939" duration="322000" />
+      <workItem from="1751337538993" duration="108000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>

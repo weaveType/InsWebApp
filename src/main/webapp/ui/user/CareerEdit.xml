@@ -1,0 +1,524 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ev="http://www.w3.org/2001/xml-events"
+    xmlns:w2="http://www.inswave.com/websquare" 
+    xmlns:xf="http://www.w3.org/2002/xforms">
+    
+    <head meta_screenName="경력을 입력주세요">
+        <w2:type>COMPONENT</w2:type>
+        <w2:buildDate/>
+        <w2:MSA/>
+        <xf:model>
+            <w2:dataCollection baseNode="map">
+                <w2:dataMap baseNode="map" id="dma_career">
+                    <w2:keyInfo>
+                        <w2:key id="careerType" name="경력유형" dataType="text"></w2:key>
+                        <w2:key id="careerDescription" name="경력설명" dataType="text"></w2:key>
+                    </w2:keyInfo>
+                </w2:dataMap>
+            </w2:dataCollection>
+        </xf:model>
+        <w2:layoutInfo/>
+        <w2:publicInfo method=""/>
+        
+        <style type="text/css"><![CDATA[
+            /* 전체 컨테이너 스타일 */
+            .main-container {
+                background-color: #ffffff;
+                min-height: 100vh;
+                font-family: "Malgun Gothic", "맑은 고딕", sans-serif;
+                display: flex;
+                flex-direction: column;
+            }
+            
+            /* 헤더 스타일 */
+            .header {
+                width: 100%;
+                height: 70px;
+                background-color: #ffffff;
+                border-bottom: 1px solid #e0e0e0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                position: relative;
+            }
+            
+            .header-logo {
+                font-size: 24px;
+                font-weight: bold;
+                color: #333;
+                letter-spacing: 2px;
+            }
+            
+            .header-progress {
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                height: 4px;
+                background: linear-gradient(90deg, #00c851 0%, #00c851 25%, #e0e0e0 25%, #e0e0e0 100%);
+                width: 100%;
+            }
+            
+            /* 메인 콘텐츠 영역 */
+            .content-area {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                padding: 40px 20px;
+                text-align: center;
+            }
+            
+            /* 아이콘 스타일 */
+            .icon-container {
+                width: 80px;
+                height: 80px;
+                background: linear-gradient(135deg, #2196F3, #1976D2);
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-bottom: 30px;
+                box-shadow: 0 4px 20px rgba(33, 150, 243, 0.3);
+            }
+            
+            .icon {
+                font-size: 40px;
+                color: white;
+            }
+            
+            /* 제목 스타일 */
+            .main-title {
+                font-size: 28px;
+                font-weight: bold;
+                color: #333;
+                margin-bottom: 20px;
+                line-height: 1.4;
+            }
+            
+            .sub-title {
+                font-size: 16px;
+                color: #666;
+                margin-bottom: 40px;
+                line-height: 1.5;
+            }
+            
+            /* 경력 입력 섹션 */
+            .career-section {
+                width: 100%;
+                max-width: 600px;
+                margin-bottom: 30px;
+            }
+            
+            .career-prompt {
+                background-color: #f8f9fa;
+                border: 2px solid #e9ecef;
+                border-radius: 12px;
+                padding: 24px;
+                margin-bottom: 30px;
+                text-align: left;
+            }
+            
+            .career-prompt-text {
+                font-size: 18px;
+                color: #333;
+                font-weight: 500;
+                margin-bottom: 20px;
+            }
+            
+            /* 추천 응답 버튼들 */
+            .suggestion-buttons {
+                display: flex;
+                flex-direction: column;
+                gap: 12px;
+                margin-bottom: 20px;
+            }
+            
+            .suggestion-btn {
+                background-color: #ffffff;
+                border: 2px solid #e0e0e0;
+                border-radius: 8px;
+                padding: 16px 20px;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                text-align: left;
+                font-size: 15px;
+                color: #333;
+                line-height: 1.4;
+            }
+            
+            .suggestion-btn:hover {
+                border-color: #2196F3;
+                background-color: #e3f2fd;
+                transform: translateY(-1px);
+            }
+            
+            .suggestion-btn.selected {
+                border-color: #2196F3;
+                background-color: #2196F3;
+                color: white;
+            }
+            
+            /* 경력 상세 입력 */
+            .career-detail {
+                margin-top: 30px;
+                display: none;
+            }
+            
+            .career-detail.show {
+                display: block;
+            }
+            
+            .career-textarea {
+                width: 100%;
+                min-height: 120px;
+                padding: 16px;
+                border: 2px solid #e0e0e0;
+                border-radius: 12px;
+                font-size: 15px;
+                font-family: inherit;
+                resize: vertical;
+                transition: border-color 0.3s ease;
+            }
+            
+            .career-textarea:focus {
+                outline: none;
+                border-color: #2196F3;
+                box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
+            }
+            
+            .char-count {
+                text-align: right;
+                font-size: 14px;
+                color: #666;
+                margin-top: 8px;
+            }
+            
+            /* 안내 메시지 */
+            .info-message {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+                font-size: 14px;
+                color: #2196F3;
+                margin-bottom: 40px;
+                padding: 12px 20px;
+                background-color: #e3f2fd;
+                border-radius: 8px;
+                max-width: 600px;
+            }
+            
+            .info-icon {
+                font-size: 16px;
+            }
+            
+            /* 버튼 영역 */
+            .button-area {
+                display: flex;
+                gap: 16px;
+                width: 100%;
+                max-width: 500px;
+            }
+            
+            .btn-back {
+                flex: 1;
+                background-color: #ffffff;
+                color: #666;
+                border: 2px solid #e0e0e0;
+                padding: 16px 32px;
+                border-radius: 12px;
+                font-size: 16px;
+                font-weight: 600;
+                cursor: pointer;
+                transition: all 0.3s ease;
+            }
+            
+            .btn-back:hover {
+                border-color: #bbb;
+                background-color: #f5f5f5;
+            }
+            
+            .btn-next {
+                flex: 2;
+                background-color: #e0e0e0;
+                color: #999;
+                border: none;
+                padding: 16px 32px;
+                border-radius: 12px;
+                font-size: 16px;
+                font-weight: 600;
+                cursor: not-allowed;
+                transition: all 0.3s ease;
+            }
+            
+            .btn-next.active {
+                background-color: #00c851;
+                color: white;
+                cursor: pointer;
+                box-shadow: 0 4px 12px rgba(0, 200, 81, 0.3);
+            }
+            
+            .btn-next.active:hover {
+                background-color: #00a844;
+                transform: translateY(-1px);
+                box-shadow: 0 6px 16px rgba(0, 200, 81, 0.4);
+            }
+            
+            /* 반응형 디자인 */
+            @media (max-width: 768px) {
+                .content-area {
+                    padding: 20px 16px;
+                }
+                
+                .main-title {
+                    font-size: 24px;
+                    margin-bottom: 16px;
+                }
+                
+                .sub-title {
+                    font-size: 14px;
+                    margin-bottom: 30px;
+                }
+                
+                .career-prompt {
+                    padding: 20px;
+                }
+                
+                .career-prompt-text {
+                    font-size: 16px;
+                }
+                
+                .suggestion-btn {
+                    padding: 14px 16px;
+                    font-size: 14px;
+                }
+                
+                .button-area {
+                    flex-direction: column;
+                }
+                
+                .btn-back, .btn-next {
+                    padding: 14px 24px;
+                }
+            }
+            
+            @media (max-width: 480px) {
+                .icon-container {
+                    width: 60px;
+                    height: 60px;
+                    margin-bottom: 20px;
+                }
+                
+                .icon {
+                    font-size: 30px;
+                }
+                
+                .main-title {
+                    font-size: 20px;
+                    margin-bottom: 12px;
+                }
+                
+                .career-prompt {
+                    padding: 16px;
+                }
+                
+                .suggestion-btn {
+                    padding: 12px 14px;
+                    font-size: 13px;
+                }
+            }
+        ]]></style>
+        
+        <script lazy="false" type="text/javascript"><![CDATA[
+scwin.onpageload = function() {
+    // 초기화
+    dma_career.set("careerType", "");
+    dma_career.set("careerDescription", "");
+    scwin.updateNextButton();
+};
+
+// 추천 응답 선택
+scwin.selectSuggestion = function(type, description) {
+    // 기존 선택 제거
+    var allButtons = document.querySelectorAll('.suggestion-btn');
+    allButtons.forEach(function(btn) {
+        btn.classList.remove('selected');
+    });
+    
+    // 새 선택 추가
+    var clickedElement = event.target.closest('.suggestion-btn');
+    if (clickedElement) {
+        clickedElement.classList.add('selected');
+    }
+    
+    dma_career.set("careerType", type);
+    dma_career.set("careerDescription", description);
+    
+    // 상세 입력 영역 표시/숨김
+    var detailSection = document.querySelector('.career-detail');
+    var textarea = document.querySelector('.career-textarea');
+    
+    if (type === 'experienced') {
+        detailSection.classList.add('show');
+        textarea.value = description;
+        textarea.focus();
+    } else {
+        detailSection.classList.remove('show');
+        textarea.value = '';
+    }
+    
+    scwin.updateNextButton();
+};
+
+// 텍스트 입력 처리
+scwin.onTextInput = function() {
+    var textarea = document.querySelector('.career-textarea');
+    var text = textarea.value;
+    var charCount = text.length;
+    
+    // 글자 수 업데이트
+    var charCountElement = document.querySelector('.char-count');
+    charCountElement.textContent = charCount + ' / 500';
+    
+    // 500자 제한
+    if (charCount > 500) {
+        textarea.value = text.substring(0, 500);
+        charCountElement.textContent = '500 / 500';
+    }
+    
+    // 데이터 업데이트
+    dma_career.set("careerDescription", textarea.value);
+    scwin.updateNextButton();
+};
+
+// 다음 버튼 상태 업데이트
+scwin.updateNextButton = function() {
+    var nextBtn = document.querySelector('.btn-next');
+    var careerType = dma_career.get("careerType");
+    var careerDescription = dma_career.get("careerDescription");
+    
+    var isValid = false;
+    
+    if (careerType === 'new') {
+        isValid = true;
+    } else if (careerType === 'experienced' && careerDescription && careerDescription.trim() !== '') {
+        isValid = true;
+    }
+    
+    if (isValid) {
+        nextBtn.classList.add('active');
+        nextBtn.disabled = false;
+    } else {
+        nextBtn.classList.remove('active');
+        nextBtn.disabled = true;
+    }
+};
+
+// 이전 버튼 클릭
+scwin.goBack = function() {
+    if (confirm("이전 단계로 돌아가시겠습니까?")) {
+        location.href = '/websquare/websquare.html?w2xPath=/ui/user/userDetail.xml';
+    }
+};
+
+// 다음 버튼 클릭
+scwin.goNext = function() {
+    var careerType = dma_career.get("careerType");
+    var careerDescription = dma_career.get("careerDescription");
+    
+    if (!careerType || careerType === "") {
+        alert("경력 정보를 선택해주세요.");
+        return;
+    }
+    
+    if (careerType === 'experienced' && (!careerDescription || careerDescription.trim() === '')) {
+        alert("경력 상세 내용을 입력해주세요.");
+        return;
+    }
+    
+    // 사용자 정보 업데이트
+    console.log("경력 유형:", careerType);
+    console.log("경력 설명:", careerDescription);
+    alert("경력 정보가 업데이트되었습니다!");
+    
+    // 마이페이지로 돌아가기
+    location.href = '/websquare/websquare.html?w2xPath=/ui/user/userDetail.xml';
+};
+]]></script>
+    </head>
+    
+    <body ev:onpageload="scwin.onpageload">
+        <xf:group class="main-container">
+            <!-- 헤더 -->
+            <xf:group class="header">
+                <w2:textbox class="header-logo" label="JOBDA"></w2:textbox>
+                <xf:group class="header-progress"></xf:group>
+            </xf:group>
+            
+            <!-- 메인 콘텐츠 -->
+            <xf:group class="content-area">
+                <!-- 아이콘 -->
+                <xf:group class="icon-container">
+                    <w2:textbox class="icon" label="📝"></w2:textbox>
+                </xf:group>
+                
+                <!-- 제목 -->
+                <w2:textbox class="main-title" label="경력을 입력주세요."></w2:textbox>
+                <w2:textbox class="sub-title" label="1분만에 모든 경력을 훓어올려요.&#10;경력을 입력한 회원은 6.7배 더 많은 매칭 제안을 받아요."></w2:textbox>
+                
+                <!-- 경력 입력 섹션 -->
+                <xf:group class="career-section">
+                    <!-- 질문 프롬프트 -->
+                    <xf:group class="career-prompt">
+                        <w2:textbox class="career-prompt-text" 
+                                    label="아직 신입이거나 첫 직대를 통해 취업준비 하고 있어요."></w2:textbox>
+                        
+                        <!-- 추천 응답들 -->
+                        <xf:group class="suggestion-buttons">
+                            <xf:group class="suggestion-btn" ev:onclick="scwin.selectSuggestion('new', '신입 개발자로 취업을 준비하고 있습니다.')">
+                                <w2:textbox label="• 네, IT 도구 사용법을 익혀 가고 있습니다. 프로젝트 경험은 거의 없지만 적극적으로 도전할 준비가 되어 있어요."></w2:textbox>
+                            </xf:group>
+                            <xf:group class="suggestion-btn" ev:onclick="scwin.selectSuggestion('new', '신입이지만 부분적 경험이 있습니다.')">
+                                <w2:textbox label="• 스타트업, 공개팀 활용한 기업 업무를 한적이 있습니다, 아직 정식 경력이라고 할 정도는 아니지만 좋았어요."></w2:textbox>
+                            </xf:group>
+                            <xf:group class="suggestion-btn" ev:onclick="scwin.selectSuggestion('experienced', '')">
+                                <w2:textbox label="• 경력이 있어요, 사내 분위기 등 오랜 업계 꿈 국지적화로 수정해요. 초권들을 허와요."></w2:textbox>
+                            </xf:group>
+                        </xf:group>
+                        
+                        <!-- 커스텀 답변 섹션 (경력이 있는 경우) -->
+                        <xf:group class="career-detail">
+                            <xf:group class="suggestion-btn" style="background-color: #e3f2fd; border-color: #2196F3;">
+                                <w2:textbox label="(예시)&#10;• 스타트업에서 일하는 경력이 6개월 있었어요.&#10;• 공기업에서 인턴 경험이 3개월 있고요.&#10;• 서비스 연결을 4여개 하고 있어요.&#10;• SI 특성 업을 6개월을 홀어다요.&#10;• 직접받은 것이 좋아해요.&#10;• JAVA 기능을 하루도 사용하는 것이 좋아해요.&#10;• 현범으로는 과타워 삶아이 청의이 좋아해요."></w2:textbox>
+                            </xf:group>
+                            
+                            <xf:textarea class="career-textarea" 
+                                         placeholder="경력을 자세히 설명해주세요..."
+                                         ev:oninput="scwin.onTextInput()">
+                            </xf:textarea>
+                            <w2:textbox class="char-count" label="0 / 500"></w2:textbox>
+                        </xf:group>
+                    </xf:group>
+                </xf:group>
+                
+                <!-- 안내 메시지 -->
+                <xf:group class="info-message">
+                    <w2:textbox class="info-icon" label="🔊"></w2:textbox>
+                    <w2:textbox label="정확한 선호도와 경력범위로 매칭정확도를 높여보세요."></w2:textbox>
+                </xf:group>
+                
+                <!-- 버튼 영역 -->
+                <xf:group class="button-area">
+                    <xf:trigger class="btn-back" type="button" ev:onclick="scwin.goBack">
+                        <xf:label><![CDATA[이전]]></xf:label>
+                    </xf:trigger>
+                    <xf:trigger class="btn-next" type="button" ev:onclick="scwin.goNext">
+                        <xf:label><![CDATA[다음]]></xf:label>
+                    </xf:trigger>
+                </xf:group>
+            </xf:group>
+        </xf:group>
+    </body>
+</html>

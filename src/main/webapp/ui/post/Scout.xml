@@ -1,0 +1,511 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ev="http://www.w3.org/2001/xml-events"
+    xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
+    <head meta_screenName="개발자 스카웃">
+        <w2:type>COMPONENT</w2:type>
+        <w2:buildDate/>
+        <w2:MSA/>
+        <w2:layoutInfo/>
+        <w2:publicInfo method=""/>
+        <link rel="stylesheet" type="text/css" href="/cm/css/gridview-enhancement.css"/>
+        <style>
+            .filter-container {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 15px 20px;
+                background-color: #ffffff;
+                border-bottom: 1px solid #e9ecef;
+                gap: 15px;
+            }
+            .filter-group {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+            .filter-label {
+                font-weight: 500;
+                color: #333;
+                min-width: 60px;
+            }
+            .control-bar {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 15px 20px;
+                background-color: #ffffff;
+                border-bottom: 1px solid #e9ecef;
+            }
+            .selected-count {
+                color: #6c757d;
+                font-size: 14px;
+            }
+            .button-group {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+            .btn-scout-all {
+                background-color: #28a745;
+                color: white;
+                border: none;
+                padding: 8px 16px;
+                border-radius: 4px;
+                cursor: pointer;
+            }
+            .btn-reset {
+                background-color: #6c757d;
+                color: white;
+                border: none;
+                padding: 8px 16px;
+                border-radius: 4px;
+                cursor: pointer;
+            }
+            .skill-tag {
+                display: inline-block;
+                background-color: #e3f2fd;
+                color: #1976d2;
+                padding: 2px 8px;
+                margin: 2px;
+                border-radius: 12px;
+                font-size: 12px;
+                border: 1px solid #bbdefb;
+            }
+            .mbti-badge {
+                background-color: #9c27b0;
+                color: white;
+                padding: 4px 8px;
+                border-radius: 4px;
+                font-size: 12px;
+                font-weight: bold;
+            }
+            .interest-level {
+                color: #ff9800;
+                font-weight: bold;
+            }
+            .status-available {
+                background-color: #28a745;
+                color: white;
+                padding: 4px 8px;
+                border-radius: 4px;
+                font-size: 12px;
+                font-weight: bold;
+            }
+            .status-interested {
+                background-color: #17a2b8;
+                color: white;
+                padding: 4px 8px;
+                border-radius: 4px;
+                font-size: 12px;
+                font-weight: bold;
+            }
+            .status-contacted {
+                background-color: #ffc107;
+                color: #212529;
+                padding: 4px 8px;
+                border-radius: 4px;
+                font-size: 12px;
+                font-weight: bold;
+            }
+
+            /* 스카웃 메시지 모달 스타일 */
+            .scout-modal {
+                display: none;
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background-color: white;
+                border-radius: 8px;
+                padding: 30px;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+                width: 500px;
+                z-index: 1000;
+            }
+            .scout-modal-overlay {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 999;
+            }
+            .scout-modal h3 {
+                margin-top: 0;
+                color: #333;
+                border-bottom: 2px solid #007bff;
+                padding-bottom: 10px;
+            }
+            .scout-modal input, .scout-modal textarea {
+                width: 100%;
+                margin: 8px 0;
+                padding: 12px;
+                border-radius: 4px;
+                border: 1px solid #ddd;
+                box-sizing: border-box;
+            }
+            .scout-modal textarea {
+                height: 150px;
+                resize: vertical;
+            }
+            .scout-modal button {
+                padding: 10px 20px;
+                margin: 5px;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                font-weight: 500;
+            }
+            .scout-modal .btn-send {
+                background-color: #007bff;
+                color: white;
+            }
+            .scout-modal .btn-cancel {
+                background-color: #6c757d;
+                color: white;
+            }
+        </style>
+        <xf:model>
+            <w2:dataCollection baseNode="map">
+            	<w2:dataList baseNode="list" repeatNode="map" id="dlt_scoutListVo" saveRemovedData="true">
+            		<w2:columnInfo>
+            			<w2:column dataType="text" name="체크박스" id="chk"></w2:column>
+            			<w2:column dataType="text" name="이름" id="name"></w2:column>
+            			<w2:column dataType="text" name="경력" id="career"></w2:column>
+            			<w2:column dataType="text" name="포지션" id="currentPosition"></w2:column>
+            			<w2:column dataType="text" name="기술스택" id="techStack"></w2:column>
+            			<w2:column dataType="text" name="mbti" id="typeCode"></w2:column>
+            			<w2:column dataType="text" name="이력서" id="resumeFileName"></w2:column>
+            			<w2:column dataType="text" name="상태" id="applicationStatus"></w2:column>
+            			<w2:column dataType="text" name="이메일" id="email"></w2:column>
+            			<w2:column dataType="text" name="유저 ID" id="accountId"></w2:column>
+            		</w2:columnInfo>
+            	</w2:dataList>
+            	<w2:dataMap baseNode="map" id="dmp_scoutVo">
+            		<w2:keyInfo>
+            			<w2:key dataType="text" name="페이지_번호" id="pageIndex" defaultValue="1"></w2:key>
+            			<w2:key dataType="text" name="페이지_건수" id="pageSize" defaultValue="10"></w2:key>
+            			<w2:key dataType="text" name="공고_id" id="jobPostingId"></w2:key>
+            		</w2:keyInfo>
+            	</w2:dataMap>
+            </w2:dataCollection>
+            <xf:submission id="sbm_selectScoutVo" action="/InsWebApp/US0003List.pwkjson" method="post" mediatype="application/json" ref='data:json,{"id":"dmp_scoutVo","key":"scoutVo"}'
+                target='data:json,[{"id":"dlt_scoutListVo","key":"elData.scoutDetailVo"}]' encoding="UTF-8" instance="" replace="" errorHandler="" customHandler="" mode="asynchronous" processMsg="매칭 유저 불러오는중.." ev:submit=""
+                ev:submitdone="scwin.sbm_scoutVo_submitdone" ev:submiterror="" abortTrigger="">
+            </xf:submission>
+        </xf:model>
+        <script lazy="false" type="text/javascript"><![CDATA[scwin.onpageload = function () {
+    // 회사 아이디로 유저 불러오기
+    scwin.getJobPostingId();
+};
+
+// 파라미터로 postId 받기
+scwin.getJobPostingId = function(){
+    var jobPostingId = scwin.getUrlParameter("jobPostingId");
+
+    if (!jobPostingId) {
+        alert("잘못된 접근입니다. jobPostingId가 없습니다.");
+        $p.back();  // 또는 다른 URL로 리다이렉트
+        return;
+    }
+
+    dmp_scoutVo.set("jobPostingId", jobPostingId);
+    $c.sbm.execute(sbm_selectScoutVo);
+};
+
+// URL 파라미터 추출
+scwin.getUrlParameter = function(name) {
+    const regex = new RegExp("[?&]" + name + "=([^&#]*)");
+    const results = regex.exec(window.location.href);
+    return results ? decodeURIComponent(results[1]) : null;
+};
+
+
+
+// 쿠키에서 사용자 가져오기
+scwin.getUserInfoByCookie = function () {
+    var userInfoCookie = WebSquare.cookie.getCookie("userInfo");
+    var userInfo = null;
+
+    if (userInfoCookie) {
+        try {
+            userInfo = JSON.parse(userInfoCookie);
+            console.log(userInfo);
+        } catch (e) {
+            console.error("사용자 정보 파싱 오류:", e);
+        }
+    }
+    return userInfo;
+}
+
+
+// 총 개발자 수
+scwin.updateTotalCount = function () {
+
+};
+
+// 일괄 스카웃 제안
+scwin.scoutSelected = function () {
+
+};
+
+// 그리드 체크박스 변경
+scwin.gridView_oncheck = function (info) {
+    scwin.updateSelectedCount();
+};
+
+// 그리드 전체 체크박스 변경 이벤트  
+scwin.gridView_oncheckall = function (info) {
+    scwin.updateSelectedCount();
+};
+
+// 경력 필터 변경
+scwin.experienceFilter_onchange = function () {
+    scwin.applyFilters();
+};
+
+// 포지션 필터 변경
+scwin.positionFilter_onchange = function () {
+    scwin.applyFilters();
+};
+
+scwin.sbm_scoutVo_submitdone = function (e) {
+
+};
+]]></script>
+    </head>
+    <body ev:onpageload="scwin.onpageload">
+        <w2:wframe src="../common/Header.xml" id="headerFrame" />
+        <xf:group class="sub_contents" style="background-color:#f8f9fa;">
+
+            <!-- 헤더 영역 -->
+            <xf:group class="header-container"
+            	style="display:flex; justify-content:space-between; align-items:center; padding:20px; background-color:#f8f9fa; border-bottom:1px solid #e9ecef;">
+            	<xf:group class="header-left" style="display:flex; align-items:center;">
+            		<w2:span
+            			style="width:30px; height:30px; background-color:#007bff; border-radius:6px; margin-right:12px; display:inline-block; text-align:center; line-height:30px; color:white; font-weight:bold;">
+            			🎯
+            		</w2:span>
+            		<w2:textbox id="" label="개발자 스카웃"
+            			style="font-size:24px; font-weight:bold; color:#2c3e50; border:none; background:transparent;" />
+            	</xf:group>
+            	<w2:textbox id="totalCount_txt" label="총 8명의 개발자"
+            		style="color:#6c757d; font-size:14px; border:none; background:transparent;" />
+            	
+            </xf:group>
+
+            <!-- 필터링 영역 -->
+            <xf:group class="filter-container">
+                <xf:group class="filter-group">
+                	<xf:group class="filter-group" style="">
+                		<w2:textbox class="filter-label" label="MBTI: " style="border:none; background:transparent;"></w2:textbox>
+                		<xf:checkcombobox allOption="" chooseOption="" displayMode="label" id="checkcombobox2"
+                			style="width:200px;height:32px;" submenuSize="auto" ref="">
+                			<xf:choices>
+                				<xf:item>
+                					<xf:label><![CDATA[abcd]]></xf:label>
+                					<xf:value><![CDATA[1]]></xf:value>
+                				</xf:item>
+                				<xf:item>
+                					<xf:label><![CDATA[bacc]]></xf:label>
+                					<xf:value><![CDATA[2]]></xf:value>
+                				</xf:item>
+                				<xf:item>
+                					<xf:label><![CDATA[abds]]></xf:label>
+                					<xf:value><![CDATA[3]]></xf:value>
+                				</xf:item>
+                				<xf:item>
+                					<xf:label><![CDATA[fesd]]></xf:label>
+                					<xf:value><![CDATA[4]]></xf:value>
+                				</xf:item>
+                				<xf:item>
+                					<xf:label><![CDATA[fegh]]></xf:label>
+                					<xf:value><![CDATA[5]]></xf:value>
+                				</xf:item>
+                				<xf:item>
+                					<xf:label><![CDATA[awsf]]></xf:label>
+                					<xf:value><![CDATA[6]]></xf:value>
+                				</xf:item>
+                			</xf:choices>
+                		</xf:checkcombobox>
+                	</xf:group>
+                	<w2:textbox class="filter-label" label="기술스택:" style="border:none; background:transparent;"></w2:textbox>
+                	<xf:checkcombobox id="techStackFilter" chooseOption="전체" displayMode="label" style="width:200px;height:32px;"
+                		submenuSize="auto" allOption="전체" ev:onchange="scwin.techStackFilter_onchange">
+                		<xf:choices>
+                			<xf:item>
+                				<xf:label><![CDATA[Java]]></xf:label>
+                				<xf:value><![CDATA[java]]></xf:value>
+                			</xf:item>
+                			<xf:item>
+                				<xf:label><![CDATA[Spring Boot]]></xf:label>
+                				<xf:value><![CDATA[springboot]]></xf:value>
+                			</xf:item>
+                			<xf:item>
+                				<xf:label><![CDATA[React]]></xf:label>
+                				<xf:value><![CDATA[react]]></xf:value>
+                			</xf:item>
+                			<xf:item>
+                				<xf:label><![CDATA[Node.js]]></xf:label>
+                				<xf:value><![CDATA[nodejs]]></xf:value>
+                			</xf:item>
+                			<xf:item>
+                				<xf:label><![CDATA[Python]]></xf:label>
+                				<xf:value><![CDATA[python]]></xf:value>
+                			</xf:item>
+                			<xf:item>
+                				<xf:label><![CDATA[Docker]]></xf:label>
+                				<xf:value><![CDATA[docker]]></xf:value>
+                			</xf:item>
+                		</xf:choices>
+                	</xf:checkcombobox>
+                </xf:group>
+
+                <xf:group class="filter-group">
+                    <w2:textbox class="filter-label" label="경력:" style="border:none; background:transparent;"></w2:textbox>
+                    <xf:select1 id="experienceFilter" chooseOption="전체" appearance="minimal" 
+                        style="width:120px;height:32px;" ev:onchange="scwin.experienceFilter_onchange">
+                        <xf:choices>
+                            <xf:item>
+                                <xf:label><![CDATA[신입]]></xf:label>
+                                <xf:value><![CDATA[신입]]></xf:value>
+                            </xf:item>
+                            <xf:item>
+                                <xf:label><![CDATA[1-3년]]></xf:label>
+                                <xf:value><![CDATA[1-3년]]></xf:value>
+                            </xf:item>
+                            <xf:item>
+                                <xf:label><![CDATA[4-6년]]></xf:label>
+                                <xf:value><![CDATA[4-6년]]></xf:value>
+                            </xf:item>
+                            <xf:item>
+                                <xf:label><![CDATA[7년이상]]></xf:label>
+                                <xf:value><![CDATA[7년이상]]></xf:value>
+                            </xf:item>
+                        </xf:choices>
+                    </xf:select1>
+                </xf:group>
+
+                <xf:group class="filter-group">
+                    <w2:textbox class="filter-label" label="포지션:" style="border:none; background:transparent;"></w2:textbox>
+                    <xf:select1 id="positionFilter" chooseOption="전체" appearance="minimal" 
+                        style="width:120px;height:32px;" ev:onchange="scwin.positionFilter_onchange">
+                        <xf:choices>
+                            <xf:item>
+                                <xf:label><![CDATA[Backend]]></xf:label>
+                                <xf:value><![CDATA[backend]]></xf:value>
+                            </xf:item>
+                            <xf:item>
+                                <xf:label><![CDATA[Frontend]]></xf:label>
+                                <xf:value><![CDATA[frontend]]></xf:value>
+                            </xf:item>
+                            <xf:item>
+                                <xf:label><![CDATA[Fullstack]]></xf:label>
+                                <xf:value><![CDATA[fullstack]]></xf:value>
+                            </xf:item>
+                            <xf:item>
+                                <xf:label><![CDATA[Mobile]]></xf:label>
+                                <xf:value><![CDATA[mobile]]></xf:value>
+                            </xf:item>
+                            <xf:item>
+                                <xf:label><![CDATA[Data]]></xf:label>
+                                <xf:value><![CDATA[data]]></xf:value>
+                            </xf:item>
+                            <xf:item>
+                                <xf:label><![CDATA[DevOps]]></xf:label>
+                                <xf:value><![CDATA[devops]]></xf:value>
+                            </xf:item>
+                            <xf:item>
+                                <xf:label><![CDATA[Security]]></xf:label>
+                                <xf:value><![CDATA[security]]></xf:value>
+                            </xf:item>
+                            <xf:item>
+                                <xf:label><![CDATA[AI]]></xf:label>
+                                <xf:value><![CDATA[ai]]></xf:value>
+                            </xf:item>
+                        </xf:choices>
+                    </xf:select1>
+                </xf:group>
+
+                <xf:group class="filter-group">
+                    <w2:textbox class="filter-label" label="검색:" style="border:none; background:transparent;"></w2:textbox>
+                    <w2:searchBox id="searchBox" placeholder="개발자 이름 검색" 
+                        style="width:200px;height:32px;" ev:onenter="scwin.searchBox_onenter">
+                    </w2:searchBox>
+                </xf:group>
+
+                <xf:group class="filter-group">
+                    <xf:trigger class="btn-reset" type="button" ev:onclick="scwin.resetFilters"
+                        style="background-color:#6c757d; color:white; border:none; padding:8px 16px; border-radius:4px;">
+                        <xf:label><![CDATA[필터 초기화]]></xf:label>
+                    </xf:trigger>
+                </xf:group>
+            </xf:group>
+
+            <!-- 컨트롤 바 -->
+            <xf:group class="control-bar"
+                style="display:flex; justify-content:space-between; align-items:center; padding:15px 20px; background-color:#ffffff; border-bottom:1px solid #e9ecef;">
+                <w2:textbox id="selectedCount" label="0명 선택됨" style="color:#6c757d; font-size:14px; border:none; background:transparent;" />
+                <xf:group class="button-group" style="display:flex; align-items:center; gap:10px;">
+                    <xf:trigger class="btn-scout-all"
+                        style="background-color:#28a745; color:white; border:none; padding:8px 16px; border-radius:4px; margin-right:10px;"
+                        type="button" id="scout_all_btn" ev:onclick="scwin.scoutSelected">
+                        <xf:label><![CDATA[🎯 일괄 스카웃 제안]]></xf:label>
+                    </xf:trigger>
+                </xf:group>
+            </xf:group>
+
+            <!-- 그리드 영역 -->
+            <xf:group style="">
+            	<xf:group class="pglbox" id="" meta_snippetCategory="06_그리드" meta_snippetKeyComponent="true"
+            		meta_snippetName="6_03 페이지리스트">
+
+            	</xf:group>
+            	<w2:gridView checkAllType="false" dataList="data:dlt_scoutListVo" defaultCellHeight="20" focusFlow="linear"
+            		id="gridView1" readOnly="true" sortable="true"
+            		style="height:633px;width: 100%;overflow:hidden;box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);border:none;background:#ffffff;"
+            		visibleRowNum="10">
+            		<w2:caption id="caption2" style="" value="this is a grid caption."></w2:caption>
+            		<w2:header id="header2" style="">
+            			<w2:row id="row3" style="">
+            				<w2:column displayMode="label" id="chk3" inputType="checkbox" readOnly="false" style="height: 40px;"
+            					value="체크박스" width="70">
+            				</w2:column>
+            				<w2:column displayMode="label" id="column24" inputType="text" style="" value="ID" width="70"></w2:column>
+            				<w2:column displayMode="label" id="column10" inputType="text" style="height:40px;" value="이름" width="70"></w2:column>
+            				<w2:column displayMode="label" id="column23" inputType="text" style="" value="이메일" width="250"></w2:column>
+            				<w2:column displayMode="label" id="column9" inputType="text" style="height:40px;" value="경력" width="80"></w2:column>
+            				<w2:column displayMode="label" id="column8" inputType="text" style="height:40px;" value="포지션" width="150"></w2:column>
+            				<w2:column displayMode="label" id="column5" inputType="text" style="height:40px;" value="이력서" width="150"></w2:column>
+            				<w2:column displayMode="label" id="column6" inputType="text" style="height:40px;" value="mbti" width="80"></w2:column>
+            				<w2:column displayMode="label" id="column7" inputType="text" style="height:40px;" value="기술스택" width="*"></w2:column>
+            				<w2:column displayMode="label" id="column3" inputType="text" style="height:40px;" value="상태" width="100"></w2:column>
+            			</w2:row>
+            		</w2:header>
+            		<w2:gBody id="gBody2" style="">
+            			<w2:row id="row4" style="">
+            				<w2:column displayMode="label" id="chk" inputType="checkbox" readOnly="false" style="height:50px;" value=""
+            					width="70">
+            				</w2:column>
+            				<w2:column displayMode="label" id="accountId" inputType="text" style="" value="" width="70"></w2:column>
+            				<w2:column displayMode="label" id="name" inputType="text" style="" value="" width="100"></w2:column>
+            				<w2:column displayMode="label" id="email" inputType="text" style="" value="" width="100"></w2:column>
+            				<w2:column displayMode="label" id="career" inputType="text" style="" value="" width="80"></w2:column>
+            				<w2:column displayMode="label" id="currentPosition" inputType="text" style="" value="" width="100"></w2:column>
+            				<w2:column displayMode="label" id="resumeFileName" inputType="text" style="" value="" width="*"></w2:column>
+            				<w2:column displayMode="label" id="typeCode" inputType="text" style="" value="" width="80"></w2:column>
+            				<w2:column displayMode="label" id="techStack" inputType="text" style="" value="" width="*"></w2:column>
+            				<w2:column displayMode="label" id="applicationStatus" inputType="text" style="" value="" width="100"></w2:column>
+            			</w2:row>
+            		</w2:gBody>
+            	</w2:gridView>
+            	<w2:pageList class="pgl" displayButtonType="display" displayFormat="#" id="pageList1" pageSize="10" pagingType="0"
+            		style="">
+            	</w2:pageList>
+            </xf:group>
+        </xf:group>
+    </body>
+</html>

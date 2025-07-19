@@ -1,0 +1,9 @@
+{
+   "charset": "UTF-8",
+   "reqMethod": "POST",
+   "serviceURL": "http://localhost:9093/InsWebApp/CP0001List.pwkjson",
+   "contentType": "application/json",
+   "requestContent": "{\"corporateVo\": {\n   \"pageIndex\": \"SampleValue_0\",\n   \"pageSize\": \"SampleValue_1\",\n   \"totalPageCount\": \"SampleValue_2\"\n}}",
+   "responseContent": "{\"elHeader\":{\"reqUrl\":\"/InsWebApp/CP0001List.pwkjson\",\"traceId\":\"2025070518053230200027033\",\"bArgResolveParsing\":false,\"resSuc\":false,\"resMsg\":\"입력데이터 처리과정에 문제가 발생하였습니다.\",\"resCode\":\"ERROR.SYS.013\",\"validateSuc\":false,\"saveTokenKey\":false,\"removeTokenKey\":false,\"locale\":\"ko\",\"language\":\"ko\",\"startTime\":0,\"svcTimeOut\":0,\"inOutDataEnc\":true,\"dbDataEnc\":false,\"gTraceId\":\"2025070518053230200027033\",\"fieldApplyAttr\":true,\"simurate\":false,\"deferredSvc\":false,\"centerCutSvc\":false}}",
+   "sendTime": "2025-07-05 18:05:32"
+}

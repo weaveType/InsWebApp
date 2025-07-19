@@ -1,0 +1,316 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper      
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"      
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--
+	@subject : 일반회원 관련 처리를 담당하는 Sql Mapper
+	@description : 일반회원 관련 처리를 담당하는 Sql Mapper
+	@author : Inswave
+	@since : 2025/07/03
+	@modification
+	===========================================================
+	DATE AUTHOR DESC
+	===========================================================
+	2025/07/03 Inswave 최초 생성
+	2025/01/10 이미지 기준 데이터베이스 구조로 수정
+-->
+<mapper namespace="com.demo.proworks.domain.user">
+	<insert id="insertUser" parameterType="com.demo.proworks.domain.user.vo.UserVo" useGeneratedKeys="true" keyProperty="userId">
+<!-- 일반회원를 등록한다. -->
+
+		INSERT INTO USERS /* QueryID : com.demo.proworks.domain.user.insertUser */
+		(
+		EMAIL
+		<if test="password     != null"> , PASSWORD      </if>
+		<if test="roleId     != null"> , ROLE_ID     </if>
+		<if test="name         != null"> , NAME          </if>
+		<if test="emailConsent != null"> , IS_EMAIL_CONSENT </if>
+		<if test="createdAt    != null"> , CREATED_AT    </if>
+		<if test="updatedAt    != null"> , UPDATED_AT    </if>
+		)
+		VALUES
+		(
+		#{email}
+		<if test="password     != null"> , #{password}      </if>
+		<if test="roleId     != null"> , #{roleId}     </if>
+		<if test="name         != null"> , #{name}          </if>
+		<if test="emailConsent != null"> , #{emailConsent} </if>
+		<if test="createdAt    != null"> , #{createdAt}    </if>
+		<if test="updatedAt    != null"> , #{updatedAt}    </if>
+		)
+</insert>
+
+	<insert id="registerUser" parameterType="com.demo.proworks.domain.user.vo.UserVo" useGeneratedKeys="true" keyProperty="userId">
+<!-- 일반 사용자 회원가입을 처리한다. (기본 정보만 users 테이블에 저장) -->
+
+		INSERT INTO USERS /* QueryID : com.demo.proworks.domain.user.registerUser */
+		(
+		EMAIL, PASSWORD, ROLE_ID, NAME, IS_EMAIL_CONSENT
+		)
+		VALUES
+		(
+		#{email}, #{password}, #{roleId}, #{name}, #{emailConsent}
+		)
+</insert>
+
+	<update id="updateUser" parameterType="com.demo.proworks.domain.user.vo.UserVo">
+<!-- 일반회원를 갱신한다. -->
+
+		UPDATE USERS /* QueryID : com.demo.proworks.domain.user.updateUser */
+		SET
+		USER_ID = #{userId}
+		<if test="email        != null"> , EMAIL = #{email}         </if>
+		<if test="password     != null"> , PASSWORD = #{password}      </if>
+		<if test="roleId     != null"> , ROLE_ID = #{roleId}     </if>
+		<if test="name         != null"> , NAME = #{name}          </if>
+		<if test="emailConsent != null"> , IS_EMAIL_CONSENT = #{emailConsent} </if>
+		<if test="createdAt    != null"> , CREATED_AT = #{createdAt}    </if>
+		<if test="updatedAt    != null"> , UPDATED_AT = #{updatedAt}    </if>
+		WHERE USER_ID = #{userId}
+</update>
+
+	<update id="updatePassword" parameterType="com.demo.proworks.domain.user.vo.UserVo">
+		<!-- 일반회원 비밀번호를 갱신한다. -->
+		UPDATE USERS /* QueryID : com.demo.proworks.domain.user.updatePassword */
+		SET
+			PASSWORD = #{password},
+			UPDATED_AT = CURRENT_TIMESTAMP
+		WHERE USER_ID = #{userId}
+	</update>
+
+	<delete id="deleteUser" parameterType="com.demo.proworks.domain.user.vo.UserVo">
+		<!-- 일반회원를 삭제한다. -->
+
+		DELETE FROM USERS /* QueryID : com.demo.proworks.domain.user.deleteUser */
+		WHERE
+		USER_ID = #{userId}
+	</delete>
+
+	<select id="selectUser" parameterType="com.demo.proworks.domain.user.vo.UserVo" resultType="com.demo.proworks.domain.user.vo.UserVo">
+<!-- 일반회원를 상세 조회한다. -->
+		SELECT /* QueryID : com.demo.proworks.domain.user.selectUser */
+		USER_ID as userId, 
+		EMAIL as email, 
+		PASSWORD as password, 
+		ROLE_ID as roleId, 
+		NAME as name, 
+		IS_EMAIL_CONSENT as emailConsent, 
+		CREATED_AT as createdAt, 
+		UPDATED_AT as updatedAt 
+		FROM USERS 
+		WHERE USER_ID = #{userId}
+</select>
+
+	<select id="selectListUser" parameterType="com.demo.proworks.domain.user.vo.UserVo"
+		resultType="com.demo.proworks.domain.user.vo.UserVo">
+<!-- 일반회원 목록을 조회한다. -->
+		SELECT /* QueryID : com.demo.proworks.domain.user.selectListUser */ 
+		USER_ID as userId, 
+		EMAIL as email, 
+		PASSWORD as password,
+		ROLE_ID as roleId, 
+		NAME as name, 
+		IS_EMAIL_CONSENT as emailConsent, 
+		CREATED_AT as createdAt,
+		UPDATED_AT as updatedAt 
+		FROM USERS
+		WHERE 1=1
+		/* 여기에 추가 조건이 있으면 작성 */
+		LIMIT #{pageIndex}, #{pageSize}
+</select>
+
+	<select id="selectListCountUser" parameterType="com.demo.proworks.domain.user.vo.UserVo" resultType="long">
+		<!-- 일반회원 목록의 카운트를 조회한다. -->
+
+		SELECT /* QueryID : com.demo.proworks.domain.user.selectListCountUser */
+		COUNT(*) totcnt
+		FROM USERS
+		WHERE 1=1
+
+	</select>
+
+	<select id="checkEmailDuplicateCount" parameterType="java.lang.String" resultType="java.lang.Long">
+		<!-- 이메일 중복 확인을 위한 개수 조회 -->
+		SELECT COUNT(*) /* QueryID : com.demo.proworks.domain.user.checkEmailDuplicateCount */
+		FROM USERS 
+		WHERE EMAIL = #{email}
+		AND IS_DELETED = 0
+	</select>
+
+	<select id="selectUserByEmail" parameterType="com.demo.proworks.domain.user.vo.UserVo"
+		resultType="com.demo.proworks.domain.user.vo.UserVo">
+<!-- 이메일로 상세조회 한다. -->
+SELECT 
+    USER_ID AS userId, 
+    EMAIL AS email, 
+    PASSWORD AS password, 
+    ROLE_ID AS roleId, 
+    NAME AS name, 
+    IS_EMAIL_CONSENT AS emailConsent, 
+    CREATED_AT AS createdAt, 
+    UPDATED_AT AS updatedAt 
+FROM USERS
+WHERE EMAIL = #{email}
+</select>
+
+<select id="selectDevMbti" parameterType="int" resultType="com.demo.proworks.common.enumType.DevMbti">
+<!-- userId로 개발자 Mbti를 가져온다 -->
+SELECT	/* QueryID : com.demo.proworks.domain.user.getDevMbti */  
+    type_code       AS typeCode
+	FROM users_mbti_types 
+    WHERE user_id = #{userId}
+</select>
+
+	<update id="updateProfileImage" parameterType="java.util.Map">
+		<!-- 사용자의 프로필 이미지를 업데이트한다. -->
+		UPDATE USERS_INFO /* QueryID : com.demo.proworks.domain.user.updateProfileImage */
+		SET PROFILE_IMAGE_NAME = #{profileImageName},
+		    UPDATED_AT = CURRENT_TIMESTAMP
+		WHERE USER_ID = #{userId}
+	</update>
+
+	<!-- users_info 테이블 관련 쿼리들 -->
+	<select id="selectUserInfoByUserId" parameterType="com.demo.proworks.domain.user.vo.UserVo" resultType="com.demo.proworks.domain.user.vo.UserVo">
+		<!-- 사용자 ID로 users_info 테이블의 정보를 조회한다. -->
+		SELECT /* QueryID : com.demo.proworks.domain.user.selectUserInfoByUserId */
+		USER_ID as userId,
+		YEAR_SALARY as yearSalary,
+		CAREER as career,
+		CURRENT_POSITION as currentPosition,
+		PREFERRED_LOCATIONS as preferredLocations,
+		BIO as bio,
+		RESUME_FILE_NAME as resumeFileName,
+		TEST_CHECKED as testChecked,
+		GENDER as gender,
+		BIRTHDATE as birthDate,
+		PROFILE_IMAGE_NAME as profileImageName,
+		CREATED_AT as createdAt,
+		UPDATED_AT as updatedAt
+		FROM USERS_INFO
+		WHERE USER_ID = #{userId}
+	</select>
+
+	<insert id="insertUserInfo" parameterType="com.demo.proworks.domain.user.vo.UserVo">
+		<!-- users_info 테이블에 새로운 사용자 정보를 삽입한다. -->
+		INSERT INTO USERS_INFO /* QueryID : com.demo.proworks.domain.user.insertUserInfo */
+		(
+		USER_ID,
+		YEAR_SALARY,
+		CAREER,
+		CURRENT_POSITION,
+		PREFERRED_LOCATIONS,
+		BIO,
+		RESUME_FILE_NAME,
+		TEST_CHECKED,
+		GENDER,
+		BIRTHDATE,
+		PROFILE_IMAGE_NAME
+		)
+		VALUES
+		(
+		#{userId},
+		#{yearSalary},
+		#{career},
+		#{currentPosition},
+		#{preferredLocations},
+		#{bio},
+		#{resumeFileName},
+		#{testChecked},
+		#{gender},
+		#{birthDate},
+		#{profileImageName}
+		)
+	</insert>
+
+	<update id="updateUserInfo" parameterType="com.demo.proworks.domain.user.vo.UserVo">
+		<!-- users_info 테이블의 사용자 정보를 업데이트한다. -->
+		UPDATE USERS_INFO /* QueryID : com.demo.proworks.domain.user.updateUserInfo */
+		SET 
+		<if test="yearSalary != null and yearSalary > 0">YEAR_SALARY = #{yearSalary},</if>
+		<if test="career != null">CAREER = #{career},</if>
+		<if test="currentPosition != null">CURRENT_POSITION = #{currentPosition},</if>
+		<if test="preferredLocations != null">PREFERRED_LOCATIONS = #{preferredLocations},</if>
+		<if test="bio != null">BIO = #{bio},</if>
+		<if test="resumeFileName != null">RESUME_FILE_NAME = #{resumeFileName},</if>
+		<if test="testChecked != null">TEST_CHECKED = #{testChecked},</if>
+		<if test="gender != null">GENDER = #{gender},</if>
+		<if test="birthDate != null">BIRTHDATE = #{birthDate},</if>
+		<if test="profileImageName != null">PROFILE_IMAGE_NAME = #{profileImageName},</if>
+		UPDATED_AT = CURRENT_TIMESTAMP
+		WHERE USER_ID = #{userId}
+	</update>
+<select id="selectUserDetail" parameterType="com.demo.proworks.domain.user.vo.UserInfoVo" resultType="com.demo.proworks.domain.user.vo.UserInfoVo">
+<!-- user 상세보기 페이지에서 사용할 값을 불러온다. -->        
+        SELECT /* QueryID : com.demo.proworks.domain.user.UserInfoVo */
+            u.user_id as accountId,
+            u.email as email,
+            u.name,
+            ui.career as career,
+            ui.current_position as currentPosition,
+            ui.year_salary as yearSalary,
+            ui.test_checked as testChecked,
+            ui.bio as bio,
+            ui.preferred_locations as preferredLocations
+        FROM Users u
+        LEFT JOIN users_info ui ON u.user_id = ui.user_id  
+        WHERE u.user_id = #{accountId}
+</select>
+<select id="selectUsersByjobPostingId" resultType="com.demo.proworks.domain.user.vo.ApplicantDetailVo" parameterType="com.demo.proworks.domain.user.vo.ApplicantVo">
+SELECT 
+    false AS chk,
+    u.name AS name,
+    ui.career AS career,
+    ui.current_position AS currentPosition,
+    NULL AS techStack,         -- techStack이 null로 지정되어 있음
+    umt.type_code AS typeCode,
+    ui.resume_file_name AS resumeFileName,
+    ja.application_status AS applicationStatus,
+    u.email AS email,
+    u.user_id AS accountId
+FROM 
+    users u
+JOIN 
+    users_info ui ON u.user_id = ui.user_id
+LEFT JOIN 
+    users_mbti_types umt ON u.user_id = umt.user_id
+JOIN 
+    job_applications ja ON u.user_id = ja.user_id
+
+      WHERE ja.job_posting_id = #{jobPostingId}
+        
+        ORDER BY ja.applied_at DESC
+</select>
+<select id="getScoutUsersByPostId" resultType="com.demo.proworks.domain.user.vo.ScoutDetailVo" parameterType="com.demo.proworks.domain.user.vo.ScoutVo">
+SELECT
+    false AS chk,
+    u.name AS name,
+    ui.career AS career,
+    ui.current_position AS currentPosition,
+    '' AS techStack,  -- tech_stacks 테이블이 없으므로 빈 문자열
+    umt.type_code AS typeCode,
+    ui.resume_file_name AS resumeFileName,
+    NULL AS applicationStatus,  -- job_applications 테이블이 없으므로 NULL
+    u.email AS email,
+    u.user_id AS userId
+FROM
+    users u
+LEFT JOIN
+    users_info ui ON u.user_id = ui.user_id
+LEFT JOIN
+    users_mbti_types umt ON u.user_id = umt.user_id
+WHERE 1=1
+    -- jobPostingId 관련 조건 제거 (job_applications 테이블이 없음)
+GROUP BY
+    u.user_id, u.name, ui.career, ui.current_position, umt.type_code, ui.resume_file_name, u.email
+ORDER BY
+    u.user_id
+LIMIT #{pageSize} OFFSET #{pageIndex}
+</select>
+<select id="selectMatchingChecked" parameterType="com.demo.proworks.domain.user.vo.MatchingCheckedVo" resultType="com.demo.proworks.domain.user.vo.MatchingCheckedVo">
+SELECT is_mbti_checked as isMbtiChecked,
+		is_code_checked as isCodeChecked
+  FROM users_info
+  where user_id = #{accountId}
+</select>
+</mapper>

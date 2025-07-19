@@ -1,0 +1,15 @@
+eclipse.preferences.version=1
+encoding//src/main=UTF-8
+encoding//src/main/java=UTF-8
+encoding//src/main/resources/inswave/message/message-common_en.properties=UTF-8
+encoding//src/main/resources/inswave/message/message-common_ko.properties=UTF-8
+encoding//src/main/resources/inswave/properties/elfw.properties=UTF-8
+encoding//src/main/webapp=UTF-8
+encoding//src/main/webapp/ui/common/CompanyMain.xml=UTF-8
+encoding//src/main/webapp/ui/common/Header.xml=UTF-8
+encoding//src/main/webapp/ui/common/MainPage.xml=UTF-8
+encoding//src/main/webapp/ui/corporate/CorporateUpdate.xml=UTF-8
+encoding//src/main/webapp/ui/corporate/test1.xml=UTF-8
+encoding//src/main/webapp/ui/post/PostCreate.xml=UTF-8
+encoding//src/main/webapp/ui/user/Login.xml=UTF-8
+encoding/install=UTF-8

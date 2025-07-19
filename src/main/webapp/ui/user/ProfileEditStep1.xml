@@ -1,0 +1,491 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ev="http://www.w3.org/2001/xml-events"
+    xmlns:w2="http://www.inswave.com/websquare" 
+    xmlns:xf="http://www.w3.org/2002/xforms">
+    
+    <head meta_screenName="매칭 프로필 사진">
+        <w2:type>COMPONENT</w2:type>
+        <w2:buildDate/>
+        <w2:MSA/>
+        <xf:model>
+            <w2:dataCollection baseNode="map">
+                <w2:dataMap baseNode="map" id="dma_profile">
+                    <w2:keyInfo>
+                        <w2:key id="profileImage" name="프로필이미지" dataType="text"></w2:key>
+                        <w2:key id="introduction" name="간단소개" dataType="text"></w2:key>
+                    </w2:keyInfo>
+                </w2:dataMap>
+            </w2:dataCollection>
+        </xf:model>
+        <w2:layoutInfo/>
+        <w2:publicInfo method=""/>
+        
+        <style type="text/css"><![CDATA[
+            /* 전체 컨테이너 스타일 */
+            .main-container {
+                background-color: #ffffff;
+                min-height: 100vh;
+                font-family: "Malgun Gothic", "맑은 고딕", sans-serif;
+                display: flex;
+                flex-direction: column;
+            }
+            
+            /* 헤더 스타일 */
+            .header {
+                width: 100%;
+                height: 70px;
+                background-color: #ffffff;
+                border-bottom: 1px solid #e0e0e0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                position: relative;
+            }
+            
+            .header-logo {
+                font-size: 24px;
+                font-weight: bold;
+                color: #333;
+                letter-spacing: 2px;
+            }
+            
+            .header-progress {
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                height: 4px;
+                background: linear-gradient(90deg, #00c851 0%, #00c851 25%, #e0e0e0 25%, #e0e0e0 100%);
+                width: 100%;
+            }
+            
+            /* 메인 콘텐츠 영역 */
+            .content-area {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                padding: 40px 20px;
+                text-align: center;
+            }
+            
+            /* 단계 표시 */
+            .step-indicator {
+                font-size: 14px;
+                color: #666;
+                margin-bottom: 20px;
+                font-weight: 500;
+            }
+            
+            /* 제목 스타일 */
+            .main-title {
+                font-size: 28px;
+                font-weight: bold;
+                color: #333;
+                margin-bottom: 15px;
+                line-height: 1.4;
+            }
+            
+            .sub-title {
+                font-size: 16px;
+                color: #666;
+                margin-bottom: 40px;
+                line-height: 1.5;
+            }
+            
+            /* 프로필 사진 업로드 영역 */
+            .profile-upload-section {
+                margin-bottom: 40px;
+            }
+            
+            .profile-upload-area {
+                width: 120px;
+                height: 120px;
+                border: 3px dashed #00c851;
+                border-radius: 50%;
+                background-color: #f8fff9;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                margin: 0 auto 20px;
+                position: relative;
+                overflow: hidden;
+            }
+            
+            .profile-upload-area:hover {
+                border-color: #00a844;
+                background-color: #e8f5e8;
+                transform: scale(1.05);
+            }
+            
+            .upload-icon {
+                font-size: 40px;
+                color: #00c851;
+            }
+            
+            .profile-preview {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                border-radius: 50%;
+            }
+            
+            .upload-text {
+                font-size: 14px;
+                color: #666;
+                margin-bottom: 5px;
+            }
+            
+            .upload-hint {
+                font-size: 12px;
+                color: #999;
+            }
+            
+            /* 간단 소개 입력 영역 */
+            .introduction-section {
+                width: 100%;
+                max-width: 500px;
+                margin-bottom: 40px;
+            }
+            
+            .introduction-label {
+                font-size: 18px;
+                font-weight: 600;
+                color: #333;
+                margin-bottom: 15px;
+                text-align: left;
+            }
+            
+            .introduction-textarea {
+                width: 100%;
+                min-height: 120px;
+                padding: 16px;
+                border: 2px solid #e0e0e0;
+                border-radius: 12px;
+                font-size: 15px;
+                font-family: inherit;
+                resize: vertical;
+                transition: border-color 0.3s ease;
+                background-color: #ffffff;
+            }
+            
+            .introduction-textarea:focus {
+                outline: none;
+                border-color: #00c851;
+                box-shadow: 0 0 0 3px rgba(0, 200, 81, 0.1);
+            }
+            
+            .char-count {
+                text-align: right;
+                font-size: 14px;
+                color: #666;
+                margin-top: 8px;
+            }
+            
+            .char-count.over-limit {
+                color: #f44336;
+            }
+            
+            /* 입력 힌트 */
+            .input-hints {
+                background-color: #f8f9fa;
+                border-radius: 12px;
+                padding: 20px;
+                margin-bottom: 30px;
+                text-align: left;
+                max-width: 500px;
+            }
+            
+            .hints-title {
+                font-size: 16px;
+                font-weight: 600;
+                color: #333;
+                margin-bottom: 12px;
+            }
+            
+            .hints-list {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+            }
+            
+            .hints-list li {
+                font-size: 14px;
+                color: #666;
+                margin-bottom: 8px;
+                padding-left: 16px;
+                position: relative;
+            }
+            
+            .hints-list li::before {
+                content: "•";
+                color: #00c851;
+                font-weight: bold;
+                position: absolute;
+                left: 0;
+            }
+            
+            /* 버튼 영역 */
+            .button-area {
+                display: flex;
+                gap: 16px;
+                width: 100%;
+                max-width: 500px;
+            }
+            
+            .btn-back {
+                flex: 1;
+                background-color: #ffffff;
+                color: #666;
+                border: 2px solid #e0e0e0;
+                padding: 16px 32px;
+                border-radius: 12px;
+                font-size: 16px;
+                font-weight: 600;
+                cursor: pointer;
+                transition: all 0.3s ease;
+            }
+            
+            .btn-back:hover {
+                border-color: #bbb;
+                background-color: #f5f5f5;
+            }
+            
+            .btn-next {
+                flex: 2;
+                background-color: #e0e0e0;
+                color: #999;
+                border: none;
+                padding: 16px 32px;
+                border-radius: 12px;
+                font-size: 16px;
+                font-weight: 600;
+                cursor: not-allowed;
+                transition: all 0.3s ease;
+            }
+            
+            .btn-next.active {
+                background-color: #00c851;
+                color: white;
+                cursor: pointer;
+                box-shadow: 0 4px 12px rgba(0, 200, 81, 0.3);
+            }
+            
+            .btn-next.active:hover {
+                background-color: #00a844;
+                transform: translateY(-1px);
+                box-shadow: 0 6px 16px rgba(0, 200, 81, 0.4);
+            }
+            
+            /* 숨겨진 파일 입력 */
+            .hidden-file-input {
+                display: none;
+            }
+            
+            /* 반응형 디자인 */
+            @media (max-width: 768px) {
+                .content-area {
+                    padding: 20px 16px;
+                }
+                
+                .main-title {
+                    font-size: 24px;
+                    margin-bottom: 12px;
+                }
+                
+                .sub-title {
+                    font-size: 14px;
+                    margin-bottom: 30px;
+                }
+                
+                .profile-upload-area {
+                    width: 100px;
+                    height: 100px;
+                }
+                
+                .upload-icon {
+                    font-size: 32px;
+                }
+                
+                .button-area {
+                    flex-direction: column;
+                }
+                
+                .btn-back, .btn-next {
+                    padding: 14px 24px;
+                }
+            }
+            
+            @media (max-width: 480px) {
+                .main-title {
+                    font-size: 20px;
+                    margin-bottom: 10px;
+                }
+                
+                .profile-upload-area {
+                    width: 80px;
+                    height: 80px;
+                }
+                
+                .upload-icon {
+                    font-size: 28px;
+                }
+                
+                .introduction-textarea {
+                    min-height: 100px;
+                    padding: 12px;
+                    font-size: 14px;
+                }
+            }
+        ]]></style>
+        
+        <script lazy="false" type="text/javascript"><![CDATA[
+scwin.onpageload = function() {
+    // 초기화
+    dma_profile.set("profileImage", "");
+    dma_profile.set("introduction", "");
+    scwin.updateNextButton();
+};
+
+// 프로필 이미지 업로드 클릭
+scwin.uploadProfileImage = function() {
+    // 간단한 시뮬레이션 - 실제로는 파일 업로드 구현 필요
+    if (confirm("프로필 사진을 업로드하시겠습니까?")) {
+        var uploadArea = document.querySelector('.profile-upload-area');
+        uploadArea.innerHTML = '<div class="upload-icon">✓</div>';
+        uploadArea.style.backgroundColor = '#e8f5e8';
+        uploadArea.style.borderColor = '#00c851';
+        
+        dma_profile.set("profileImage", "uploaded");
+        scwin.updateNextButton();
+    }
+};
+
+// 소개글 입력 처리
+scwin.onIntroductionInput = function() {
+    var textarea = document.querySelector('.introduction-textarea');
+    var text = textarea.value;
+    var charCount = text.length;
+    
+    // 글자 수 업데이트
+    var charCountElement = document.querySelector('.char-count');
+    charCountElement.textContent = charCount + ' / 300';
+    
+    // 300자 제한
+    if (charCount > 300) {
+        textarea.value = text.substring(0, 300);
+        charCountElement.textContent = '300 / 300';
+        charCountElement.classList.add('over-limit');
+    } else {
+        charCountElement.classList.remove('over-limit');
+    }
+    
+    // 데이터 업데이트
+    dma_profile.set("introduction", textarea.value);
+    scwin.updateNextButton();
+};
+
+// 다음 버튼 상태 업데이트
+scwin.updateNextButton = function() {
+    var nextBtn = document.querySelector('.btn-next');
+    var introduction = dma_profile.get("introduction");
+    
+    // 간단 소개가 10자 이상이면 활성화 (프로필 사진은 선택사항)
+    if (introduction && introduction.trim().length >= 10) {
+        nextBtn.classList.add('active');
+        nextBtn.disabled = false;
+    } else {
+        nextBtn.classList.remove('active');
+        nextBtn.disabled = true;
+    }
+};
+
+// 이전 버튼 클릭
+scwin.goBack = function() {
+    if (confirm("이전 페이지로 돌아가시겠습니까? 입력하신 내용이 사라질 수 있습니다.")) {
+        $p.url("UserDetail.xml");
+    }
+};
+
+// 다음 버튼 클릭
+scwin.goNext = function() {
+    var introduction = dma_profile.get("introduction");
+    
+    if (!introduction || introduction.trim().length < 10) {
+        alert("간단 소개를 10자 이상 입력해주세요.");
+        return;
+    }
+    
+    // 사용자 정보 업데이트
+    console.log("프로필 이미지:", dma_profile.get("profileImage"));
+    console.log("간단 소개:", introduction);
+    alert("프로필 정보가 업데이트되었습니다!");
+    
+    // 마이페이지로 돌아가기
+    $p.url("UserDetail.xml");
+};
+]]></script>
+    </head>
+    
+    <body ev:onpageload="scwin.onpageload">
+        <xf:group class="main-container">
+            <!-- 헤더 -->
+            <xf:group class="header">
+                <w2:textbox class="header-logo" label="JOBDA"></w2:textbox>
+                <xf:group class="header-progress"></xf:group>
+            </xf:group>
+            
+            <!-- 메인 콘텐츠 -->
+            <xf:group class="content-area">
+                <!-- 단계 표시 -->
+                <w2:textbox class="step-indicator" label="가이드 보기"></w2:textbox>
+                
+                <!-- 제목 -->
+                <w2:textbox class="main-title" label="매칭 프로필 사진"></w2:textbox>
+                <w2:textbox class="sub-title" label="안녕하세요! 공정한 수자, 김소이입니다."></w2:textbox>
+                
+                <!-- 프로필 사진 업로드 -->
+                <xf:group class="profile-upload-section">
+                    <xf:group class="profile-upload-area" ev:onclick="scwin.uploadProfileImage()">
+                        <w2:textbox class="upload-icon" label="📷"></w2:textbox>
+                    </xf:group>
+                    <w2:textbox class="upload-text" label="프로필 사진 추가하기"></w2:textbox>
+                    <w2:textbox class="upload-hint" label="선택사항"></w2:textbox>
+                </xf:group>
+                
+                <!-- 간단 소개 입력 -->
+                <xf:group class="introduction-section">
+                    <w2:textbox class="introduction-label" label="간단 소개글"></w2:textbox>
+                    <xf:textarea class="introduction-textarea" 
+                                 placeholder="안녕하세요 김지훈입니다.&#10;&#10;업체나 많은 애너지로 주변을 집입하고 만드는 개발자입니다.&#10;이번 일이 해결 방법을 찾아요 도전해요기업을 가지려고 합니다.&#10;함께하는 담당 참목은 언이 매료되요."
+                                 ev:oninput="scwin.onIntroductionInput()">
+                    </xf:textarea>
+                    <w2:textbox class="char-count" label="0 / 300"></w2:textbox>
+                </xf:group>
+                
+                <!-- 입력 힌트 -->
+                <xf:group class="input-hints">
+                    <w2:textbox class="hints-title" label="입력 힌트"></w2:textbox>
+                    <ul class="hints-list">
+                        <li>개발자로서의 특징이나 마무를 집중해 적어보세요.</li>
+                        <li>이번 일이 해결 방법을 찾아요 도전해보, 도전을 기지려요.</li>
+                        <li>합께하는 담당 객실은 언이 홍래요.</li>
+                    </ul>
+                </xf:group>
+                
+                <!-- 버튼 영역 -->
+                <xf:group class="button-area">
+                    <xf:trigger class="btn-back" type="button" ev:onclick="scwin.goBack">
+                        <xf:label><![CDATA[이전]]></xf:label>
+                    </xf:trigger>
+                    <xf:trigger class="btn-next" type="button" ev:onclick="scwin.goNext">
+                        <xf:label><![CDATA[다음]]></xf:label>
+                    </xf:trigger>
+                </xf:group>
+            </xf:group>
+        </xf:group>
+    </body>
+</html>

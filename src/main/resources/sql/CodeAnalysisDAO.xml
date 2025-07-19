@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.demo.proworks.domain.codeanalysis.dao.CodeAnalysisDAO">
+
+    <!-- 코드 분석 결과 삽입 (AUTO_INCREMENT 방식) -->
+    <insert id="insertCodeAnalysisResult" parameterType="com.demo.proworks.domain.codeanalysis.vo.CodeAnalysisResultVo" useGeneratedKeys="true" keyProperty="codeAnalysisId">
+        INSERT INTO CODE_ANALYSIS_RESULT (
+            USER_ID,
+            PROGRAMMING_LANGUAGE,
+            ANALYSIS_RESULT,
+            TYPE_CODE,
+            CLEAN_SCORE,
+            STRUCTURE_SCORE,
+            TESTABLE_SCORE,
+            MAINTAINABLE_SCORE,
+            CONFIDENCE_SCORE
+        ) VALUES (
+            #{userId},
+            #{programmingLanguage},
+            #{analysisResult},
+            #{typeCode},
+            #{cleanScore},
+            #{structureScore},
+            #{testableScore},
+            #{maintainableScore},
+            #{confidenceScore}
+        )
+    </insert>
+
+    <!-- 사용자의 최신 코드 분석 결과 조회 -->
+    <select id="selectLatestCodeAnalysisResult" parameterType="String" resultType="com.demo.proworks.domain.codeanalysis.vo.CodeAnalysisResultVo">
+        SELECT 
+            CODE_ANALYSIS_ID as codeAnalysisId,
+            USER_ID as userId,
+            PROGRAMMING_LANGUAGE as programmingLanguage,
+            ANALYSIS_RESULT as analysisResult,
+            TYPE_CODE as typeCode,
+            CLEAN_SCORE as cleanScore,
+            STRUCTURE_SCORE as structureScore,
+            TESTABLE_SCORE as testableScore,
+            MAINTAINABLE_SCORE as maintainableScore,
+            CONFIDENCE_SCORE as confidenceScore,
+            CREATED_AT as createdAt
+        FROM CODE_ANALYSIS_RESULT 
+        WHERE USER_ID = #{userId} 
+        ORDER BY CREATED_AT DESC 
+        LIMIT 1
+    </select>
+
+    <!-- 코드 분석 결과 업데이트 -->
+    <update id="updateCodeAnalysisResult" parameterType="com.demo.proworks.domain.codeanalysis.vo.CodeAnalysisResultVo">
+        UPDATE CODE_ANALYSIS_RESULT 
+        SET 
+            PROGRAMMING_LANGUAGE = #{programmingLanguage},
+            ANALYSIS_RESULT = #{analysisResult},
+            TYPE_CODE = #{typeCode},
+            CLEAN_SCORE = #{cleanScore},
+            STRUCTURE_SCORE = #{structureScore},
+            TESTABLE_SCORE = #{testableScore},
+            MAINTAINABLE_SCORE = #{maintainableScore},
+            CONFIDENCE_SCORE = #{confidenceScore}
+        WHERE CODE_ANALYSIS_ID = #{codeAnalysisId}
+    </update>
+
+    <!-- 코드 분석 결과 삭제 -->
+    <delete id="deleteCodeAnalysisResult" parameterType="Long">
+        DELETE FROM CODE_ANALYSIS_RESULT 
+        WHERE CODE_ANALYSIS_ID = #{codeAnalysisId}
+    </delete>
+
+</mapper> 

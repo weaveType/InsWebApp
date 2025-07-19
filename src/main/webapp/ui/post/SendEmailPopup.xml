@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare"
+	xmlns:xf="http://www.w3.org/2002/xforms">
+	<head meta_screenName="이메일 전송 팝업">
+		<w2:type>COMPONENT</w2:type>
+		<w2:buildDate />
+		<w2:MSA />
+		<w2:layoutInfo />
+		<w2:publicInfo method="" />
+		<xf:model>
+			<w2:dataCollection baseNode="map">
+				<w2:dataMap baseNode="map" id="dmp_sendEmail">
+					<w2:keyInfo>
+						<w2:key dataType="text" name="이메일_내용" id="emailContent"></w2:key>
+						<w2:key dataType="text" name="합격_여부" id="isPassed"></w2:key>
+						<w2:key dataType="text" name="제목" id="subject"></w2:key>
+						<w2:key dataType="json" name="선택된_사용자" id="emailList"></w2:key>
+					</w2:keyInfo>
+				</w2:dataMap>
+			</w2:dataCollection>
+			<xf:submission id="sbm_sendEmail" action="/InsWebApp/sendEmail.pwkjson" method="post" mediatype="application/json"
+				ref='data:json,{"id":"dmp_sendEmail","key":"sendEmailVo"}' encoding="UTF-8" instance="" replace="" errorHandler=""
+				customHandler="" mode="asynchronous" processMsg="이메일을 전송중입니다." ev:submitdone="scwin.sbm_sendEmail_submitdone"
+				ev:submiterror="scwin.sbm_sendEmail_submiterror" abortTrigger="">
+			</xf:submission>
+		</xf:model>
+		<script lazy="false" type="text/javascript"><![CDATA[
+			scwin.onpageload = function () {
+				var popupParams = $c.win.getPopupParam();
+				var isPassed = popupParams.isPassed;
+				var selectedUsers = popupParams.selectedUsers;
+
+				dmp_sendEmail.set("isPassed", isPassed ? "Y" : "N");
+				dmp_sendEmail.set("emailList", JSON.stringify(selectedUsers));
+				dmp_sendEmail.set("subject", isPassed ? "[합격] 채용 결과 안내" : "[불합격] 채용 결과 안내");
+
+				// 팝업 제목 설정
+				$c.win.setPopupName(isPassed ? "합격 메일 보내기" : "불합격 메일 보내기");
+			};
+
+			scwin.sendEmail = function () {
+				dmp_sendEmail.set("emailContent", emailContent.getValue());
+				$c.sbm.execute(sbm_sendEmail);
+			};
+
+			scwin.sbm_sendEmail_submitdone = function (e) {
+				var result = e.responseJSON;
+				if (result.resultCode === "success") {
+					$c.win.alert(result.message);
+					$c.win.closePopup();
+				} else {
+					$c.win.alert(result.message);
+				}
+			};
+
+			scwin.sbm_sendEmail_submiterror = function (e) {
+				$c.win.alert("이메일 전송 중 오류가 발생했습니다.");
+			};
+
+			scwin.closePopup = function () {
+				$c.win.closePopup();
+			};
+		]]></script>
+	</head>
+	<body>
+		<xf:group style="padding:20px;">
+			<w2:textbox id="" label="이메일 전송 팝업" style="font-size:20px; font-weight:bold; margin-bottom:20px;"></w2:textbox>
+			<xf:group style="border:1px solid #e0e0e0; padding:15px; border-radius:5px;">
+				<w2:textbox id="" label="이메일 내용을 여기에 작성하세요." style="margin-bottom:10px;"></w2:textbox>
+				<w2:textarea id="emailContent" style="width:100%; height:200px;"></w2:textarea>
+				<xf:group style="display:flex; justify-content:flex-end; margin-top:15px;">
+					<xf:trigger type="button" style="background-color:#007bff; color:white; padding:8px 15px; border-radius:5px; margin-right:10px;" ev:onclick="scwin.sendEmail">
+						<xf:label><![CDATA[전송]]></xf:label>
+					</xf:trigger>
+					<xf:trigger type="button" style="background-color:#6c757d; color:white; padding:8px 15px; border-radius:5px;" ev:onclick="scwin.closePopup">
+						<xf:label><![CDATA[닫기]]></xf:label>
+					</xf:trigger>
+				</xf:group>
+			</xf:group>
+		</xf:group>
+	</body>
+</html>
