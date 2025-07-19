@@ -248,7 +248,7 @@
                 }
             }
 
-            /* 개발자 성향 태그 컨테이너 */
+            /* 개발자 기술스택 태그 컨테이너 */
             .dev-type-tag-container {
                 display: flex;
                 flex-wrap: wrap;
@@ -631,7 +631,7 @@ scwin.populateSelectedTechStacks = function() {
 
 // 기술스택 삭제 함수
 scwin.removeTechStack = function(e) {
-    var index = e.currentTarget.getGeneratedIndex(); // 클릭된 버튼의 generator 인덱스
+    var index = e.info.idx; // 클릭된 버튼의 generator 인덱스
     if (typeof index === 'number' && index > -1) {
         dlt_selectTechStacks.deleteRow(index);
         scwin.renderSelectedTechStacks(); // UI 업데이트
@@ -721,7 +721,7 @@ scwin.removeTechStack = function(e) {
             				</xf:itemset>
             			</xf:choices>
             		</xf:select1>
-            		<xf:group class="form-group">
+            		<xf:group class="form-group" style="margin-top: 30px;">
             			<w2:textbox class="form-label" label="기술스택"></w2:textbox>
 
             			<w2:autoComplete id="ac_techStack" 
