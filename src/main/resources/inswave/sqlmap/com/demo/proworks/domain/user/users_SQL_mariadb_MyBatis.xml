@@ -43,7 +43,6 @@
 
 	<insert id="registerUser" parameterType="com.demo.proworks.domain.user.vo.UserVo" useGeneratedKeys="true" keyProperty="userId">
 		<!-- 일반 사용자 회원가입을 처리한다. (기본 정보만 users 테이블에 저장) -->
-
 		INSERT INTO USERS /* QueryID : com.demo.proworks.domain.user.registerUser */
 		(
 		EMAIL, PASSWORD, ROLE_ID, NAME, IS_EMAIL_CONSENT

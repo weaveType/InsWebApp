@@ -31,6 +31,7 @@
 						<w2:key dataType="text" name="코드분석 진행여부" id="isCodeChecked"></w2:key>
 					</w2:keyInfo>
 				</w2:dataMap>
+
 				<w2:dataList baseNode="list" repeatNode="map" id="dlt_posting_list" saveRemovedData="true">
 					<w2:columnInfo>
 						<w2:column dataType="text" name="기업명" id="name"></w2:column>
@@ -40,6 +41,7 @@
 						<w2:column dataType="text" name="공고 ID" id="jobPostingId"></w2:column>
 					</w2:columnInfo>
 				</w2:dataList>
+
 			</w2:dataCollection>
 
 			<w2:workflowCollection></w2:workflowCollection>
@@ -50,6 +52,7 @@
 				target='data:json,{"id":"dlt_company_list","key":"elData.corporateMainVo"}' mode="asynchronous" encoding="UTF-8"
 				processMsg="참여 기업 목록을 조회 중입니다." ev:submitdone="scwin.sbm_selectCompanyList_submitdone" ev:submiterror="">
 			</xf:submission>
+
 			<xf:submission id="smb_selectMatchingChecked" action="/InsWebApp/US0001Match.pwkjson" method="post" mediatype="application/json"
 				ref='data:json,{"id":"dmp_matchingCheckedVo","key":"matchingCheckedVo"}'
 				target='data:json,{"id":"dmp_matchingCheckedVo","key":"elData"}' encoding="UTF-8" mode="asynchronous" processMsg="매칭 정보 조회 중..."
@@ -58,315 +61,13 @@
 			<xf:submission id="sbm_selectPostingList" action="/InsWebApp/POS0003List.pwkjson" method="post" mediatype="application/json"
 				ref="" target='data:json,{"id":"dlt_posting_list","key":"mainPostingListVo.mainPostingVo"}' encoding="UTF-8" instance="" replace="" errorHandler="" customHandler="" mode="asynchronous" processMsg="" ev:submit=""
 				ev:submitdone="scwin.sbm_selectPostingList_submitdone" ev:submiterror="" abortTrigger="">
+
 			</xf:submission>
 		</xf:model>
 		<w2:layoutInfo />
 		<w2:publicInfo method="" />
-		<script type="text/javascript"><![CDATA[// 페이지 로드 시 팝업 닫기 액션 함수들 정의
-scwin.onpageload = function () {
-
-    // 로그인 상태 확인 및 UI 업데이트
-    scwin.updateLoginArea();
-
-    // 공고 목록 조회
-    $c.sbm.execute(sbm_selectPostingList);
-
-    // 회사 목록 조회
-    scwin.loadCompanyList();
-};
-
-// 로그인 영역 업데이트
-scwin.updateLoginArea = function () {
-    var userInfoCookie = WebSquare.cookie.getCookie("userInfo");
-    var userInfo = null;
-    if (userInfoCookie) {
-        try {
-            userInfo = JSON.parse(userInfoCookie);
-        } catch (e) {
-            console.error("사용자 정보 파싱 오류:", e);
-            userInfo = null;
-        }
-    }
-
-    if (userInfo != null) {
-        // 로그인 상태 - 프로필 영역 표시
-        grp_login_area.hide();
-        grp_profile_area.show();
-
-        // 사용자 정보 업데이트
-        txb_user_name.setValue(userInfo.name + "님");
-
-        // 성향분석 및 코드분석 여부
-        dmp_matchingCheckedVo.set("accountId", userInfo.accountId);
-        $c.sbm.execute(smb_selectMatchingChecked);
-
-    } else {
-        // 비로그인 상태 - 로그인 영역 표시
-        grp_login_area.show();
-        grp_profile_area.hide();
-    }
-};
-
-scwin.smb_selectMatchingChecked_submitdone = function (e) {
-    var elHeader = e.responseJSON.elHeader;
-    if (elHeader && elHeader.resSuc === false) {
-        console.error("매칭 정보 조회 실패:", elHeader.resMsg);
-        return;
-    }
-
-    var isMbtiChecked = dmp_matchingCheckedVo.get("isMbtiChecked");
-    var isCodeChecked = dmp_matchingCheckedVo.get("isCodeChecked");
-
-    console.log("isMbtiChecked:", isMbtiChecked);
-    console.log("isCodeChecked:", isCodeChecked);
-
-    // 여기에 isMbtiChecked와 isCodeChecked 값에 따라 UI를 업데이트하는 로직을 추가합니다.
-    // 예: 특정 아이콘의 표시 여부, 텍스트 변경 등
-    // 예시: 성향분석 완료 여부에 따라 카드 2의 스타일 변경
-    if (isMbtiChecked) {
-        card2.addClass("completed"); // 'completed' 클래스 추가 (CSS에서 정의 필요)
-        // txb_mbti_status.setValue("완료");
-    } else {
-        card2.removeClass("completed");
-        // txb_mbti_status.setValue("미완료");
-    }
-
-    // 예시: 코드분석 완료 여부에 따라 카드 3의 스타일 변경
-    if (isCodeChecked) {
-        card3.addClass("completed");
-        // txb_code_status.setValue("완료");
-    } else {
-        card3.removeClass("completed");
-        // txb_code_status.setValue("미완료");
-    }
-
-    // 프로필 완성도 업데이트
-    var completeCount = 0;
-    if (isMbtiChecked) completeCount++;
-    if (isCodeChecked) completeCount++;
-    var totalTasks = 2; // MBTI, 코드분석
-    var completionPercentage = (completeCount / totalTasks) * 100;
-    txb_profile_complete.setValue(completionPercentage + "%");
-    document.querySelector(".progress-fill").style.width = completionPercentage + "%";
-};
-
-// 로그인 관련 팝업 호출 함수들
-scwin.btnLogin_onclick = function () {
-
-    // 로그인 팝업에 전달할 데이터
-    var loginPopupData = {
-        "type": "json",
-        "name": "login_param",
-        "data": {
-            "loginType": "main",
-            "returnUrl": window.location.href
-        }
-    };
-    // 팝업 생성 옵션 지정
-    var options = {
-        id: "login_popup",
-        type: "pageFramePopup",
-        width: "450px",
-        height: "550px",
-        modal: true,
-        popupName: "로그인/회원가입",
-        closeAction: "scwin.login_popup_closeAction",
-        dataObject: loginPopupData
-    };
-
-    // 팝업 생성
-    //$p.openPopup("../user/Login.xml", options);
-    $c.win.openPopup("../user/Login.xml", {
-        id: "login_popup",
-        type: "pageFramePopup",
-        width: "450px",
-        height: "550px",
-        modal: true,
-        popupName: "로그인/회원가입",
-        closeAction: "scwin.login_popup_closeAction",
-        dataObject: loginPopupData
-    });
-};
-
-scwin.ad_onclick = function (e) {
-    // 광고 클릭 이벤트
-};
-
-// 카드 클릭 이벤트
-scwin.card1_onclick = function () {
-    alert("튜토리얼 페이지로 이동합니다.");
-};
-
-scwin.card2_onclick = function () {
-    // 로그인 유저가 아닐경우, 로그인 페이지로 이동
-    $p.url("../survey/SurveyMbti.xml");
-};
-
-scwin.card3_onclick = function () {
-    // 로그인 유저가 아닐경우, 로그인 페이지로 이동
-    $p.url("../user/CodeAnalysisMain.xml");
-
-};
-
-scwin.handlePositionCardClick = function() {
-    var index = this.getGeneratedIndex();
-    if (typeof index === 'number' && index >= 0) {
-        var jobPostingId = dlt_posting_list.getCellData(index, "jobPostingId");
-        var url = "../post/PostDetail.xml?jobPostingId=" + encodeURIComponent(jobPostingId);
-        $p.url(url);
-    } else {
-        console.error("유효한 인덱스를 가져올 수 없습니다.");
-    }
-};
-
-/**
- * 회사 목록 조회
- */
-scwin.loadCompanyList = function () {
-    // role_id=2 (COMPANY) 사용자들 조회
-    dmp_corporateSearchVo.set("roleId", 2);
-    dmp_corporateSearchVo.set("pageIndex", 1);
-    dmp_corporateSearchVo.set("pageSize", 12);
-
-    // 서버 통신 실행
-    $c.sbm.execute(sbm_selectCompanyList);
-};
-
-/**
- * 회사 목록 조회 성공 콜백
- */
-scwin.sbm_selectCompanyList_submitdone = function (e) {
-    // 응답 데이터 확인
-    var elHeader = e.responseJSON.elHeader;
-
-    if (elHeader && elHeader.resSuc === false) {
-        $c.win.alert(`에러코드: ${elHeader.resCode}\n에러메시지: ${elHeader.resMsg}`);
-        return false;
-    }
-
-    // 총 회사 수 업데이트
-    var totalCount = e.responseJSON.elData.totalCount;
-
-    // txt_company_count 컴포넌트 찾기 및 업데이트
-    try {
-        if (txt_company_count && txt_company_count.setLabel) {
-            txt_company_count.setLabel(`참여 기업: ${totalCount}개`);
-        } else {
-            console.warn('txt_company_count 컴포넌트를 찾을 수 없습니다.');
-        }
-    } catch (error) {
-        console.error('회사 수 업데이트 오류:', error);
-    }
-
-    // 동적으로 회사 목록 생성 (약간의 지연 후 실행)
-    createCompanyList();
-};
-
-createCompanyList = function () {
-    // WebSquare 컴포넌트 객체 가져오기
-    var containerComponent = gen_company_card;
-    if (!containerComponent) {
-        console.error('회사 목록 컨테이너 컴포넌트를 찾을 수 없습니다.');
-        return;
-    }
-
-    // 기존 내용 제거
-    gen_company_card.removeAll();
-
-    // DataList에서 데이터 가져오기
-    var rowCount = dlt_company_list.getRowCount();
-
-    if (rowCount === 0) {
-        // 제너레이터 내부에 메시지 표시 (필요시)
-        // gen_company_card.insertChild(); // 빈 항목 추가
-        // var msgTxt = gen_company_card.getChild(0, "txt_no_company"); // 템플릿에 txt_no_company 추가 필요
-        // if(msgTxt) msgTxt.setValue("등록된 기업이 없습니다.");
-        console.log("등록된 기업이 없습니다.");
-        return;
-    }
-
-    // 로고 경로 및 기본 이미지 설정
-    var logoBase = '/InsWebApp/images/company/'; // 실제 로고가 저장된 폴더
-    var defaultLogo = '/InsWebApp/images/ws5/default_company.png';   // 기본 이미지
-
-    for (var i = 0; i < rowCount; i++) {
-        gen_company_card.insertChild();
-
-        // 회사 데이터 가져오기
-        var companyData = {
-            userId: dlt_company_list.getCellData(i, 'userId'),
-            name: dlt_company_list.getCellData(i, 'name') || '회사명 없음',
-            logoFileName: dlt_company_list.getCellData(i, 'logoFileName')
-        };
-
-        var img_company_logo = gen_company_card.getChild(i, "img_company_logo");
-        var txt_company_name = gen_company_card.getChild(i, "txt_company_name");
-
-        // 이미지 설정
-        var hasLogo = companyData.logoFileName && companyData.logoFileName.trim() !== '';
-        var imgSrc = hasLogo ? logoBase + encodeURIComponent(companyData.logoFileName) : defaultLogo;
-        img_company_logo.setSrc(imgSrc);
-        // onerror 처리는 WebSquare image 컴포넌트의 속성으로 처리하거나, 직접 DOM 접근이 필요할 수 있습니다.
-        // 현재 WebSquare image 컴포넌트의 onerror 속성 지원 여부를 확인해야 합니다.
-        // 임시로, 이미지 로드 실패 시 기본 이미지로 대체하는 로직은 WebSquare 컴포넌트 자체의 기능에 의존합니다.
-
-        // 회사명 설정
-        txt_company_name.setValue(companyData.name);
-
-        // 호버 효과는 CSS로 처리하는 것이 좋습니다.
-        // 클릭 이벤트는 generator 내부의 trigger 컴포넌트에서 처리됩니다.
-    }
-};
-
-scwin.refreshCompanyList = function () {
-    scwin.loadCompanyList();
-};
-
-scwin.sbm_selectPostingList_submitdone = function (e) {
-    gen_position_card.removeAll();
-    var rowCount = dlt_posting_list.getRowCount();
-    for (var i = 0; i < rowCount; i++) {
-        gen_position_card.insertChild();
-        var name = dlt_posting_list.getCellData(i, "name");
-        var location = dlt_posting_list.getCellData(i, "location");
-        var experienceLevel = dlt_posting_list.getCellData(i, "experienceLevel");
-        var preferredDeveloperTypesRaw = dlt_posting_list.getCellData(i, "preferredDeveloperTypes");
-
-        var txt_name = gen_position_card.getChild(i, "txt_name");
-        var txt_title = gen_position_card.getChild(i, "txt_title");
-
-        txt_name.setValue(name);
-        txt_title.setValue(location + " · " + experienceLevel);
-
-        // Helper function to escape HTML special characters
-        function escapeHtml(text) {
-            var div = document.createElement('div');
-            div.appendChild(document.createTextNode(text));
-            return div.innerHTML;
-        }
-
-        // 태그 처리 로직
-        try {
-            var preferredDeveloperTypes = JSON.parse(preferredDeveloperTypesRaw || '[]');
-            for (var j = 1; j <= 4; j++) {
-                var tag = gen_position_card.getChild(i, "tag" + j);
-                if (j <= preferredDeveloperTypes.length) {
-                    tag.setValue(escapeHtml(preferredDeveloperTypes[j - 1])); // Apply escaping here
-                    tag.show();
-                } else {
-                    tag.hide();
-                }
-            }
-        } catch (err) {
-            console.error("preferredDeveloperTypes 파싱 오류: ", preferredDeveloperTypesRaw, err);
-            // 파싱 실패 시 모든 태그 숨김
-            for (var j = 1; j <= 4; j++) {
-                gen_position_card.getChild(i, "tag" + j).hide();
-            }
-        }
-    }
-};
-]]></script>
+		<script type="text/javascript"><![CDATA[ ]]></script>
+>>>>>>> c517f1efca5ef626bf2d1cc0b42b90efb5a6f760
 		<style type="text/css"><![CDATA[
 
             /* 메인 히어로 섹션 - 완전 반응형 */
@@ -689,9 +390,11 @@ scwin.sbm_selectPostingList_submitdone = function (e) {
             /* 회사 목록 - 반응형 그리드 */
             .companies-container {
                 margin-top: 30px;
+
                 display: grid;
                 grid-template-columns: repeat(4, 1fr);
                 gap: 20px;
+
                 max-width: 1000px;
                 margin-left: auto;
                 margin-right: auto;
@@ -741,6 +444,8 @@ scwin.sbm_selectPostingList_submitdone = function (e) {
             }
 
 
+
+
             /* 태블릿 반응형 */
             @media (max-width: 1024px) {
                 .header {
@@ -776,9 +481,11 @@ scwin.sbm_selectPostingList_submitdone = function (e) {
                     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
                 }
 
+
                 .companies-container {
                     grid-template-columns: repeat(2, 1fr);
                 }
+
             }
 
             /* 모바일 반응형 */
@@ -823,8 +530,10 @@ scwin.sbm_selectPostingList_submitdone = function (e) {
                     gap: 15px;
                 }
 
+
                 .companies-container {
                     grid-template-columns: 1fr;
+
                 }
 
                 .section {
@@ -965,6 +674,7 @@ scwin.sbm_selectPostingList_submitdone = function (e) {
                 color: #666;
             }
 
+
             /* 개발자 성향 태그 스타일 */
             .dev-type-tag-container {
                 display: flex;
@@ -983,6 +693,7 @@ scwin.sbm_selectPostingList_submitdone = function (e) {
                 white-space: nowrap;
                 border: 1px solid #b2ebf2;
             }
+
 
             /* 작은 모바일 */
             @media (max-width: 480px) {
@@ -1146,6 +857,7 @@ scwin.sbm_selectPostingList_submitdone = function (e) {
 			<xf:group class="section section-gray" tagname="section">
 				<w2:textbox class="section-title" label="로그인하고 내 조건에 맞는 포지션 추천받기"></w2:textbox>
 
+
 				<w2:generator id="gen_position_card" class="positions-container">
 						<xf:group class="position-card" style="position: relative;">
 							<xf:group class="position-header position-header-dark"></xf:group>
@@ -1164,12 +876,14 @@ scwin.sbm_selectPostingList_submitdone = function (e) {
 							</xf:trigger>
 						</xf:group>
 					</w2:generator>
+
 			</xf:group>
 
 			<!-- 매칭 참여 기업 섹션 -->
 			<xf:group class="section section-white" tagname="section">
 				<w2:textbox class="section-title" label="매칭 참여 기업"></w2:textbox>
 				<w2:textbox class="section-subtitle" id="txt_company_count" label="참여 기업: 0개"></w2:textbox>
+
 
 				<w2:generator id="gen_company_card" class="companies-container">
 					<xf:group class="company-item" style="cursor: pointer;">
@@ -1180,6 +894,7 @@ scwin.sbm_selectPostingList_submitdone = function (e) {
 						<xf:trigger style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: transparent; border: none;" type="button" id="btn_company_card_overlay" ev:onclick="scwin.handleCompanyCardClick"></xf:trigger>
 					</xf:group>
 				</w2:generator>
+
 			</xf:group>
 		</xf:group>
 	</body>

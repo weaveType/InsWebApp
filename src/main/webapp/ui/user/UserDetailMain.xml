@@ -90,6 +90,7 @@
             margin-bottom: 32px;
         }
 
+
         .info-card {
             width: 100%;
             border: 1px solid #e0e0e0;
@@ -304,7 +305,6 @@
             }
         }
         ]]></style>
-
 		<script lazy="false" type="text/javascript"><![CDATA[
 scwin.onpageload = function () {
     // 부모 페이지의 dma_userInfoVo 데이터맵 참조
@@ -401,7 +401,6 @@ scwin.getUserInfoByCookie = function () {
     }
     return userInfo;
 }
-
 scwin.btn_userUpdate_onclick = function (e) {
     $p.url("updateUser.xml");
 };
