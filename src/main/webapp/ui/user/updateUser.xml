@@ -489,6 +489,42 @@ scwin.sbm_selectTechStackList_submiterror = function(e) {
     alert("기술스택 목록을 불러오는데 실패했습니다.");
     console.error("기술스택 목록 조회 오류:", e);
 };
+
+// 기술스택 AutoComplete 변경 이벤트
+scwin.ac_techStack_onchange = function(e) {
+    console.log("기술스택 변경됨:", e);
+    var selectedValue = ac_techStack.getValue();
+    console.log("선택된 기술스택 ID:", selectedValue);
+    
+    // 선택된 기술스택의 이름 가져오기
+    if (selectedValue) {
+        var selectedIndex = dlt_techStackOptions.getMatchedIndex("techStackId", selectedValue);
+        if (selectedIndex >= 0) {
+            var techStackName = dlt_techStackOptions.getCellData(selectedIndex, "techStackName");
+            console.log("선택된 기술스택 이름:", techStackName);
+        }
+    }
+};
+
+// 기술스택 AutoComplete 선택 완료 이벤트
+scwin.ac_techStack_onselected = function(e) {
+    console.log("기술스택 선택 완료:", e);
+    var selectedValue = ac_techStack.getValue();
+    console.log("최종 선택된 기술스택 ID:", selectedValue);
+    
+    // 선택된 기술스택 정보 확인
+    if (selectedValue) {
+        var selectedIndex = dlt_techStackOptions.getMatchedIndex("techStackId", selectedValue);
+        if (selectedIndex >= 0) {
+            var techStackId = dlt_techStackOptions.getCellData(selectedIndex, "techStackId");
+            var techStackName = dlt_techStackOptions.getCellData(selectedIndex, "techStackName");
+            console.log("선택 완료 - ID:", techStackId, "이름:", techStackName);
+            
+            // 사용자 데이터에 기술스택 ID 저장
+            dma_userInfoVo.set("techStack", techStackId);
+        }
+    }
+};
 ]]></script>
     </head>
     
@@ -577,10 +613,26 @@ scwin.sbm_selectTechStackList_submiterror = function(e) {
             		<xf:group class="form-group" style="">
             			<w2:textbox class="form-label" label="기술스택"></w2:textbox>
 
-            			<w2:autoComplete id="ac_techStack" editType="select" style="width: 100%; height: 36px;" submenuSize="auto" search="start" 
+            			<w2:autoComplete id="ac_techStack" 
+            				editType="select" 
+            				style="width: 100%; height: 36px;" 
+            				submenuSize="auto" 
+            				search="start" 
+            				searchTarget="label"
+            				caseSensitive="false"
+            				allowEmptySubmission="false"
+            				placeholder="기술스택을 입력하거나 선택하세요"
             				ref="data:dma_userInfoVo.techStack" 
-            				chooseOption="true" chooseOptionLabel="선택하세요" 
-            				dataList="dlt_techStackOptions" dataValueField="techStackId" dataTextField="techStackName">
+            				chooseOption="true" 
+            				chooseOptionLabel="기술스택을 선택하세요"
+            				ev:onchange="scwin.ac_techStack_onchange"
+            				ev:onselected="scwin.ac_techStack_onselected">
+            				<w2:choices>
+            					<w2:itemset nodeset="data:dlt_techStackOptions">
+            						<w2:label ref="techStackName"></w2:label>
+            						<w2:value ref="techStackId"></w2:value>
+            					</w2:itemset>
+            				</w2:choices>
             			</w2:autoComplete>
             		</xf:group>
             	</xf:group>
