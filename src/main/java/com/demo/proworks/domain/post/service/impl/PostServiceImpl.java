@@ -16,6 +16,11 @@ import com.demo.proworks.domain.post.vo.JobApplicationVo;
 import com.demo.proworks.domain.post.vo.PostMatchVo;
 import com.demo.proworks.domain.post.vo.PostVo;
 import com.demo.proworks.domain.post.vo.TechStackVo;
+<<<<<<< HEAD
+=======
+import com.demo.proworks.domain.post.vo.MainPostingListVo;
+import com.demo.proworks.domain.post.vo.MainPostingVo;
+>>>>>>> c517f1efca5ef626bf2d1cc0b42b90efb5a6f760
 import com.demo.proworks.domain.post.vo.SendEmailVo;
 import com.demo.proworks.domain.post.dao.PostDAO;
 import com.demo.proworks.common.service.EmailService;
@@ -423,4 +428,21 @@ public class PostServiceImpl implements PostService {
 		return postDAO.insertJobApplication(jobApplicationVo);
 	}
 
+<<<<<<< HEAD
+=======
+	/**
+	 * 메인 페이지에서 출력할 공고목록을 조회한다.
+	 *
+	 * @return 기술스택 목록 조회 결과
+	 * @throws Exception
+	 */
+	public MainPostingListVo selectPostingList() throws Exception {
+		List<MainPostingVo> resultList = postDAO.selectPostingList();
+		MainPostingListVo resultVo = new MainPostingListVo();
+		resultVo.setMainPostingVo(resultList);
+		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> resultList" + resultList);
+		return resultVo;
+	}
+
+>>>>>>> c517f1efca5ef626bf2d1cc0b42b90efb5a6f760
 }

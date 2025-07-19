@@ -2400,6 +2400,7 @@ scwin.btn_create_posting_onclick = function (e) {
                 var userInfoCookie = JSON.parse(userInfoCookieStr);
                 console.log("파싱된 userInfo:", userInfoCookie);
                 
+<<<<<<< HEAD
                 // companyId 우선 확인
                 if (userInfoCookie && userInfoCookie.companyId) {
                     companyId = userInfoCookie.companyId;
@@ -2421,6 +2422,45 @@ scwin.btn_create_posting_onclick = function (e) {
             alert("회사 정보를 확인할 수 없습니다.\n다시 로그인해주세요.");
             $p.url("../user/Login.xml");
             return;
+=======
+                if (userInfoCookie && userInfoCookie.companyId) {
+                    companyId = userInfoCookie.companyId;
+                    console.log("쿠키에서 추출한 companyId:", companyId);
+                } else if (userInfoCookie && userInfoCookie.accountId) {
+                    // companyId가 없으면 accountId를 사용 (fallback)
+                    companyId = userInfoCookie.accountId;
+                    console.log("companyId가 없어서 accountId를 사용:", companyId);
+                } else {
+                    console.warn("쿠키에 companyId와 accountId가 모두 없습니다:", userInfoCookie);
+                }
+            } else {
+                console.warn("userInfo 쿠키가 비어있거나 없습니다");
+            }
+        } catch (cookieError) {
+            console.error("쿠키 파싱 중 오류:", cookieError);
+        }
+        
+        // 쿠키에서 가져오지 못한 경우 다른 방법 시도
+        if (!companyId) {
+            try {
+                // ProWorks5 UserHeader에서 가져오기 시도
+                var userHeader = $c.data.getParameter("userHeader");
+                if (userHeader && userHeader.companyId) {
+                    companyId = userHeader.companyId;
+                    console.log("UserHeader에서 추출한 companyId:", companyId);
+                } else {
+                    console.warn("UserHeader에 companyId가 없습니다");
+                }
+            } catch (headerError) {
+                console.error("UserHeader 접근 중 오류:", headerError);
+            }
+        }
+        
+        // 여전히 없으면 기본값으로 하드코딩 (임시)
+        if (!companyId) {
+            console.warn("모든 방법으로 companyId를 가져오지 못했습니다. 기본값 1을 사용합니다.");
+            companyId = 1; // 임시로 하드코딩된 값 사용
+>>>>>>> c517f1efca5ef626bf2d1cc0b42b90efb5a6f760
         }
         
         // 데이터 설정
