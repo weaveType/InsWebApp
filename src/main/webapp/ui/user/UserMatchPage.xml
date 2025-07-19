@@ -1,26 +1,886 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <html xmlns="http://www.w3.org/1999/xhtml"
     xmlns:ev="http://www.w3.org/2001/xml-events"
-    xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
-    <head>
+    xmlns:w2="http://www.inswave.com/websquare" 
+    xmlns:xf="http://www.w3.org/2002/xforms">
+    
+    <head meta_screenName="매칭제안">
         <w2:type>COMPONENT</w2:type>
         <w2:buildDate/>
         <w2:MSA/>
         <xf:model>
-            <w2:dataCollection baseNode="map"/>
-            <w2:workflowCollection/>
+            <w2:dataCollection baseNode="map">
+                <w2:dataList baseNode="list" repeatNode="map" id="dlt_matchOffers" saveRemovedData="true">
+                    <w2:columnInfo>
+                        <w2:column id="company" name="회사명" dataType="text"></w2:column>
+                        <w2:column id="jobTitle" name="공고제목" dataType="text"></w2:column>
+                        <w2:column id="position" name="포지션" dataType="text"></w2:column>
+                        <w2:column id="location" name="근무지역" dataType="text"></w2:column>
+                        <w2:column id="salary" name="연봉" dataType="text"></w2:column>
+                        <w2:column id="experience" name="경력" dataType="text"></w2:column>
+                        <w2:column id="matchDate" name="매칭일자" dataType="text"></w2:column>
+                        <w2:column id="status" name="상태" dataType="text"></w2:column>
+                        <w2:column id="logo" name="로고" dataType="text"></w2:column>
+                        <w2:column id="postId" name="공고ID" dataType="text"></w2:column>
+                        <w2:column id="companyId" name="회사ID" dataType="text"></w2:column>
+                    </w2:columnInfo>
+                    <w2:data use="true">
+                        <w2:row>
+                            <company><![CDATA[㈜네이버]]></company>
+                            <jobTitle><![CDATA[백엔드 개발자 모집]]></jobTitle>
+                            <position><![CDATA[백엔드 개발자]]></position>
+                            <location><![CDATA[판교]]></location>
+                            <salary><![CDATA[6000~8000만원]]></salary>
+                            <experience><![CDATA[3~5년]]></experience>
+                            <matchDate><![CDATA[2024-01-25]]></matchDate>
+                            <status><![CDATA[NEW]]></status>
+                            <logo><![CDATA[🟢]]></logo>
+                            <postId><![CDATA[POST001]]></postId>
+                            <companyId><![CDATA[COMP001]]></companyId>
+                        </w2:row>
+                        <w2:row>
+                            <company><![CDATA[카카오]]></company>
+                            <jobTitle><![CDATA[풀스택 개발자 급구]]></jobTitle>
+                            <position><![CDATA[풀스택 개발자]]></position>
+                            <location><![CDATA[판교]]></location>
+                            <salary><![CDATA[5500~7500만원]]></salary>
+                            <experience><![CDATA[2~4년]]></experience>
+                            <matchDate><![CDATA[2024-01-24]]></matchDate>
+                            <status><![CDATA[NEW]]></status>
+                            <logo><![CDATA[🟡]]></logo>
+                            <postId><![CDATA[POST002]]></postId>
+                            <companyId><![CDATA[COMP002]]></companyId>
+                        </w2:row>
+                        <w2:row>
+                            <company><![CDATA[토스]]></company>
+                            <jobTitle><![CDATA[프론트엔드 개발자 채용]]></jobTitle>
+                            <position><![CDATA[프론트엔드 개발자]]></position>
+                            <location><![CDATA[서울 강남]]></location>
+                            <salary><![CDATA[7000~9000만원]]></salary>
+                            <experience><![CDATA[4~6년]]></experience>
+                            <matchDate><![CDATA[2024-01-23]]></matchDate>
+                            <status><![CDATA[VIEWED]]></status>
+                            <logo><![CDATA[💙]]></logo>
+                            <postId><![CDATA[POST003]]></postId>
+                            <companyId><![CDATA[COMP003]]></companyId>
+                        </w2:row>
+                        <w2:row>
+                            <company><![CDATA[쿠팡]]></company>
+                            <jobTitle><![CDATA[Java 백엔드 개발자]]></jobTitle>
+                            <position><![CDATA[백엔드 개발자]]></position>
+                            <location><![CDATA[송파구]]></location>
+                            <salary><![CDATA[6500~8500만원]]></salary>
+                            <experience><![CDATA[3~7년]]></experience>
+                            <matchDate><![CDATA[2024-01-22]]></matchDate>
+                            <status><![CDATA[NEW]]></status>
+                            <logo><![CDATA[🟠]]></logo>
+                            <postId><![CDATA[POST004]]></postId>
+                            <companyId><![CDATA[COMP004]]></companyId>
+                        </w2:row>
+                        <w2:row>
+                            <company><![CDATA[라인]]></company>
+                            <jobTitle><![CDATA[React 프론트엔드 개발자]]></jobTitle>
+                            <position><![CDATA[프론트엔드 개발자]]></position>
+                            <location><![CDATA[신사동]]></location>
+                            <salary><![CDATA[5000~7000만원]]></salary>
+                            <experience><![CDATA[2~5년]]></experience>
+                            <matchDate><![CDATA[2024-01-21]]></matchDate>
+                            <status><![CDATA[INTERESTED]]></status>
+                            <logo><![CDATA[💚]]></logo>
+                            <postId><![CDATA[POST005]]></postId>
+                            <companyId><![CDATA[COMP005]]></companyId>
+                        </w2:row>
+                        <w2:row>
+                            <company><![CDATA[배달의민족]]></company>
+                            <jobTitle><![CDATA[풀스택 개발자 모집]]></jobTitle>
+                            <position><![CDATA[풀스택 개발자]]></position>
+                            <location><![CDATA[송파구]]></location>
+                            <salary><![CDATA[5500~7500만원]]></salary>
+                            <experience><![CDATA[3~5년]]></experience>
+                            <matchDate><![CDATA[2024-01-20]]></matchDate>
+                            <status><![CDATA[VIEWED]]></status>
+                            <logo><![CDATA[🔷]]></logo>
+                            <postId><![CDATA[POST006]]></postId>
+                            <companyId><![CDATA[COMP006]]></companyId>
+                        </w2:row>
+                    </w2:data>
+                </w2:dataList>
+            </w2:dataCollection>
         </xf:model>
         <w2:layoutInfo/>
         <w2:publicInfo method=""/>
+        
+        <style type="text/css"><![CDATA[
+
+            .main-wrap {
+                width: 100%;
+                background-color: #ffffff;
+                font-family: "Malgun Gothic", "맑은 고딕", sans-serif;
+            }
+            
+            /* 메인 레이아웃 */
+            .main-container {
+                display: flex;
+                min-height: calc(100vh - 70px);
+                max-width: 1400px;
+                margin: 0 auto;
+                background-color: #f8f9fa;
+            }
+
+            /* 메인 콘텐츠 */
+            .main-content {
+                flex: 1;
+                padding: min(30px, 4vw);
+                overflow-y: auto;
+            }
+
+            /* 매칭제안 페이지 헤더 */
+            .page-header {
+                background-color: white;
+                border-radius: 12px;
+                padding: min(30px, 4vw);
+                margin-bottom: 24px;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                flex-wrap: wrap;
+                gap: 20px;
+            }
+
+            .page-info {
+                display: flex;
+                align-items: center;
+                gap: 20px;
+                flex: 1;
+                min-width: 0;
+            }
+
+            .page-icon {
+                width: 80px;
+                height: 80px;
+                border-radius: 50%;
+                background: linear-gradient(135deg, #667eea, #764ba2);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: white;
+                font-size: clamp(32px, 4vw, 40px);
+                flex-shrink: 0;
+            }
+
+            .page-details h1 {
+                font-size: clamp(24px, 4vw, 28px);
+                font-weight: bold;
+                color: #333;
+                margin: 0 0 8px 0;
+            }
+
+            .page-description {
+                font-size: clamp(14px, 2vw, 16px);
+                color: #666;
+                line-height: 1.5;
+            }
+
+            /* 통계 카드 */
+            .stats-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 20px;
+                margin-bottom: 30px;
+            }
+
+            .stat-card {
+                background: linear-gradient(135deg, #667eea, #764ba2);
+                color: white;
+                padding: 24px;
+                border-radius: 12px;
+                text-align: center;
+                box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+                transition: transform 0.2s ease;
+            }
+
+            .stat-card:hover {
+                transform: translateY(-2px);
+            }
+
+            .stat-card.new {
+                background: linear-gradient(135deg, #f093fb, #f5576c);
+                box-shadow: 0 4px 15px rgba(240, 147, 251, 0.3);
+            }
+
+            .stat-card.viewed {
+                background: linear-gradient(135deg, #4facfe, #00f2fe);
+                box-shadow: 0 4px 15px rgba(79, 172, 254, 0.3);
+            }
+
+            .stat-card.interested {
+                background: linear-gradient(135deg, #43e97b, #38f9d7);
+                box-shadow: 0 4px 15px rgba(67, 233, 123, 0.3);
+            }
+
+            .stat-number {
+                font-size: 36px;
+                font-weight: bold;
+                margin-bottom: 8px;
+                display: block;
+            }
+
+            .stat-label {
+                font-size: 14px;
+                opacity: 0.9;
+            }
+
+            /* 필터 탭 */
+            .filter-section {
+                background-color: white;
+                border-radius: 12px;
+                padding: 20px;
+                margin-bottom: 24px;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            }
+
+            .filter-tabs {
+                display: flex;
+                gap: 8px;
+                flex-wrap: wrap;
+            }
+
+            .filter-tab {
+                padding: 8px 16px;
+                border: 1px solid #e0e0e0;
+                background: white;
+                border-radius: 20px;
+                cursor: pointer;
+                font-size: 14px;
+                transition: all 0.2s ease;
+                color: #666;
+            }
+
+            .filter-tab.active {
+                background: linear-gradient(135deg, #667eea, #764ba2);
+                color: white;
+                border-color: #667eea;
+            }
+
+            .filter-tab:hover:not(.active) {
+                background-color: #f8f9fa;
+                color: #333;
+            }
+
+            /* 매칭제안 카드들 */
+            .matches-section {
+                background-color: white;
+                border-radius: 12px;
+                padding: 24px;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            }
+
+            .matches-grid {
+                display: grid;
+                gap: 20px;
+            }
+
+            .match-card {
+                background: #f8f9fa;
+                border-radius: 12px;
+                padding: 24px;
+                border-left: 4px solid #e0e0e0;
+                transition: all 0.3s ease;
+                position: relative;
+                cursor: pointer;
+            }
+
+            .match-card:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+            }
+
+            .match-card.new {
+                border-left-color: #f093fb;
+                background: linear-gradient(135deg, #fff8fc, #fef7f8);
+            }
+
+            .match-card.viewed {
+                border-left-color: #4facfe;
+                background: linear-gradient(135deg, #f8fcff, #f7fafe);
+            }
+
+            .match-card.interested {
+                border-left-color: #43e97b;
+                background: linear-gradient(135deg, #f8fefb, #f7fdf9);
+            }
+
+            .card-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 16px;
+            }
+
+            .company-info {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+            }
+
+            .company-logo {
+                width: 48px;
+                height: 48px;
+                border-radius: 8px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 24px;
+                background-color: white;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+
+            .company-details {
+                flex: 1;
+            }
+
+            .company-name {
+                font-size: 18px;
+                font-weight: bold;
+                color: #333;
+                margin-bottom: 4px;
+            }
+
+            .job-title {
+                font-size: 16px;
+                color: #007bff;
+                font-weight: 600;
+                margin-bottom: 2px;
+            }
+
+            .position-name {
+                font-size: 14px;
+                color: #666;
+            }
+
+            .match-date {
+                font-size: 12px;
+                color: #999;
+                display: flex;
+                align-items: center;
+                gap: 4px;
+            }
+
+            .status-badge {
+                position: absolute;
+                top: 15px;
+                right: 15px;
+                padding: 4px 8px;
+                border-radius: 12px;
+                font-size: 10px;
+                font-weight: 600;
+                text-align: center;
+            }
+
+            .status-new {
+                background-color: #f093fb;
+                color: white;
+            }
+
+            .status-viewed {
+                background-color: #4facfe;
+                color: white;
+            }
+
+            .status-interested {
+                background-color: #43e97b;
+                color: white;
+            }
+
+            .card-body {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+                gap: 16px;
+                margin-bottom: 20px;
+                padding: 16px;
+                background: rgba(255,255,255,0.7);
+                border-radius: 8px;
+            }
+
+            .info-item {
+                display: flex;
+                flex-direction: column;
+                gap: 4px;
+            }
+
+            .info-label {
+                font-size: 12px;
+                color: #666;
+                font-weight: 500;
+            }
+
+            .info-value {
+                font-size: 14px;
+                color: #333;
+                font-weight: 600;
+            }
+
+            .card-actions {
+                display: flex;
+                gap: 10px;
+                justify-content: flex-end;
+            }
+
+            .btn-view, .btn-apply {
+                padding: 8px 16px;
+                border: none;
+                border-radius: 6px;
+                font-size: 14px;
+                cursor: pointer;
+                transition: background-color 0.2s ease;
+                font-weight: 600;
+            }
+
+            .btn-view {
+                background-color: #6c757d;
+                color: white;
+            }
+
+            .btn-view:hover {
+                background-color: #5a6268;
+            }
+
+            .btn-apply {
+                background-color: #007bff;
+                color: white;
+            }
+
+            .btn-apply:hover {
+                background-color: #0056b3;
+            }
+
+            /* NEW 뱃지 */
+            .new-badge {
+                background-color: #ff4757;
+                color: white;
+                font-size: 10px;
+                padding: 2px 6px;
+                border-radius: 8px;
+                margin-left: 8px;
+                animation: pulse 2s infinite;
+            }
+
+            @keyframes pulse {
+                0% { opacity: 1; }
+                50% { opacity: 0.7; }
+                100% { opacity: 1; }
+            }
+
+            /* 반응형 디자인 */
+            @media (max-width: 1024px) {
+                .main-container {
+                    flex-direction: column;
+                }
+
+                .stats-grid {
+                    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+                }
+            }
+
+            @media (max-width: 768px) {
+                .sidebar, .main-content {
+                    padding: 15px;
+                }
+
+                .page-header {
+                    flex-direction: column;
+                    text-align: center;
+                    gap: 15px;
+                }
+
+                .page-info {
+                    flex-direction: column;
+                    text-align: center;
+                }
+
+                .stats-grid {
+                    grid-template-columns: repeat(2, 1fr);
+                    gap: 15px;
+                }
+
+                .stat-number {
+                    font-size: 28px;
+                }
+
+                .match-card {
+                    padding: 16px;
+                }
+
+                .card-header {
+                    flex-direction: column;
+                    align-items: flex-start;
+                    gap: 8px;
+                }
+
+                .card-actions {
+                    flex-direction: column;
+                }
+
+                .filter-tabs {
+                    flex-wrap: wrap;
+                }
+
+                .card-body {
+                    grid-template-columns: 1fr;
+                    gap: 12px;
+                }
+            }
+
+            /* 빈 상태 */
+            .empty-state {
+                text-align: center;
+                padding: 60px 20px;
+                color: #999;
+            }
+
+            .empty-state .empty-icon {
+                font-size: 48px;
+                margin-bottom: 16px;
+                display: block;
+            }
+
+            .empty-state .empty-text {
+                font-size: 16px;
+                margin-bottom: 8px;
+            }
+
+            .empty-state .empty-subtext {
+                font-size: 14px;
+                color: #ccc;
+            }
+        ]]></style>
+        
         <script lazy="false" type="text/javascript"><![CDATA[
 scwin.onpageload = function() {
-	
+    // 페이지 로드 시 통계 계산 및 카드 렌더링
+    scwin.calculateStats();
+    scwin.applyStatusClasses();
+    scwin.setupFilterTabs();
+};
+
+// 통계 계산
+scwin.calculateStats = function() {
+    var totalCount = dlt_matchOffers.getRowCount();
+    var newCount = 0;
+    var viewedCount = 0;
+    var interestedCount = 0;
+    
+    for (var i = 0; i < totalCount; i++) {
+        var status = dlt_matchOffers.getCellData(i, "status");
+        if (status === "NEW") {
+            newCount++;
+        } else if (status === "VIEWED") {
+            viewedCount++;
+        } else if (status === "INTERESTED") {
+            interestedCount++;
+        }
+    }
+    
+    // 통계 표시
+    setTimeout(function() {
+        var totalElement = document.getElementById('totalMatches');
+        var newElement = document.getElementById('newMatches');
+        var viewedElement = document.getElementById('viewedMatches');
+        var interestedElement = document.getElementById('interestedMatches');
+        
+        if (totalElement) totalElement.textContent = totalCount;
+        if (newElement) newElement.textContent = newCount;
+        if (viewedElement) viewedElement.textContent = viewedCount;
+        if (interestedElement) interestedElement.textContent = interestedCount;
+    }, 100);
+};
+
+// 상태별 클래스 적용
+scwin.applyStatusClasses = function() {
+    var totalCount = dlt_matchOffers.getRowCount();
+    
+    setTimeout(function() {
+        var cards = document.querySelectorAll('.match-card');
+        var statusBadges = document.querySelectorAll('.status-badge');
+        
+        for (var i = 0; i < cards.length && i < totalCount; i++) {
+            var status = dlt_matchOffers.getCellData(i, "status");
+            var card = cards[i];
+            var badge = statusBadges[i];
+            
+            // 카드 클래스 적용
+            if (status === "NEW") {
+                card.classList.add('new');
+                if (badge) {
+                    badge.className = 'status-badge status-new';
+                    badge.textContent = 'NEW';
+                }
+            } else if (status === "VIEWED") {
+                card.classList.add('viewed');
+                if (badge) {
+                    badge.className = 'status-badge status-viewed';
+                    badge.textContent = '확인함';
+                }
+            } else if (status === "INTERESTED") {
+                card.classList.add('interested');
+                if (badge) {
+                    badge.className = 'status-badge status-interested';
+                    badge.textContent = '관심표시';
+                }
+            }
+        }
+    }, 100);
+};
+
+// 필터 탭 설정
+scwin.setupFilterTabs = function() {
+    setTimeout(function() {
+        var tabs = document.querySelectorAll('.filter-tab');
+        if (tabs.length > 0) {
+            tabs[0].classList.add('active');
+        }
+    }, 100);
+};
+
+// 필터링
+scwin.filterMatches = function(type) {
+    // 모든 탭에서 active 클래스 제거
+    var tabs = document.querySelectorAll('.filter-tab');
+    tabs.forEach(function(tab) {
+        tab.classList.remove('active');
+    });
+    
+    // 클릭된 탭에 active 클래스 추가
+    event.target.classList.add('active');
+    
+    // 카드 필터링
+    var cards = document.querySelectorAll('.match-card');
+    var totalCount = dlt_matchOffers.getRowCount();
+    
+    for (var i = 0; i < cards.length && i < totalCount; i++) {
+        var card = cards[i];
+        var status = dlt_matchOffers.getCellData(i, "status");
+        var shouldShow = false;
+        
+        switch(type) {
+            case 'all':
+                shouldShow = true;
+                break;
+            case 'new':
+                shouldShow = (status === "NEW");
+                break;
+            case 'viewed':
+                shouldShow = (status === "VIEWED");
+                break;
+            case 'interested':
+                shouldShow = (status === "INTERESTED");
+                break;
+        }
+        
+        card.style.display = shouldShow ? 'block' : 'none';
+    }
+};
+
+// 매칭제안 상세보기
+scwin.viewMatchDetail = function(rowIndex) {
+    var company = dlt_matchOffers.getCellData(rowIndex, "company");
+    var jobTitle = dlt_matchOffers.getCellData(rowIndex, "jobTitle");
+    var position = dlt_matchOffers.getCellData(rowIndex, "position");
+    var location = dlt_matchOffers.getCellData(rowIndex, "location");
+    var salary = dlt_matchOffers.getCellData(rowIndex, "salary");
+    var experience = dlt_matchOffers.getCellData(rowIndex, "experience");
+    var postId = dlt_matchOffers.getCellData(rowIndex, "postId");
+    
+    // 상태를 VIEWED로 변경
+    dlt_matchOffers.setCellData(rowIndex, "status", "VIEWED");
+    
+    // 공고 상세 페이지로 이동 (실제로는 해당 페이지로 이동)
+    var detailMessage = "=== 매칭 제안 상세 정보 ===\n\n";
+    detailMessage += "회사명: " + company + "\n";
+    detailMessage += "공고제목: " + jobTitle + "\n";
+    detailMessage += "포지션: " + position + "\n";
+    detailMessage += "근무지역: " + location + "\n";
+    detailMessage += "연봉: " + salary + "\n";
+    detailMessage += "경력: " + experience + "\n";
+    detailMessage += "\n해당 공고 페이지로 이동합니다.";
+    
+    alert(detailMessage);
+    
+    // 통계 재계산 및 UI 업데이트
+    scwin.calculateStats();
+    scwin.applyStatusClasses();
+};
+
+// 지원하기
+scwin.applyToJob = function(rowIndex) {
+    var company = dlt_matchOffers.getCellData(rowIndex, "company");
+    var jobTitle = dlt_matchOffers.getCellData(rowIndex, "jobTitle");
+    var postId = dlt_matchOffers.getCellData(rowIndex, "postId");
+    
+    // 상태를 INTERESTED로 변경
+    dlt_matchOffers.setCellData(rowIndex, "status", "INTERESTED");
+    
+    var confirmMessage = company + "의 '" + jobTitle + "' 포지션에 지원하시겠습니까?";
+    
+    if (confirm(confirmMessage)) {
+        alert("지원이 완료되었습니다!");
+        
+        // 통계 재계산 및 UI 업데이트
+        scwin.calculateStats();
+        scwin.applyStatusClasses();
+        
+        // 실제로는 지원 API 호출
+    }
+};
+
+// 매칭제안 카드 클릭 시 상세보기
+scwin.onMatchCardClick = function(rowIndex) {
+    scwin.viewMatchDetail(rowIndex);
+};
+
+// 검색 기능
+scwin.searchMatches = function(searchText) {
+    if (!searchText || searchText.trim() === "") {
+        scwin.filterMatches('all');
+        return;
+    }
+    
+    var cards = document.querySelectorAll('.match-card');
+    var totalCount = dlt_matchOffers.getRowCount();
+    
+    for (var i = 0; i < cards.length && i < totalCount; i++) {
+        var card = cards[i];
+        var company = dlt_matchOffers.getCellData(i, "company");
+        var jobTitle = dlt_matchOffers.getCellData(i, "jobTitle");
+        var position = dlt_matchOffers.getCellData(i, "position");
+        
+        var shouldShow = company.toLowerCase().includes(searchText.toLowerCase()) || 
+                        jobTitle.toLowerCase().includes(searchText.toLowerCase()) ||
+                        position.toLowerCase().includes(searchText.toLowerCase());
+        
+        card.style.display = shouldShow ? 'block' : 'none';
+    }
+};
+
+// 데이터 새로고침
+scwin.refreshData = function() {
+    // 실제 환경에서는 서버에서 데이터를 다시 가져오는 로직
+    scwin.calculateStats();
+    scwin.applyStatusClasses();
+    alert("새로운 매칭제안을 확인했습니다.");
 };
 ]]></script>
     </head>
+    
     <body ev:onpageload="scwin.onpageload">
-    	<xf:group class="sub_contents" id="" meta_snippetCategory="00_화면시작" meta_snippetKeyComponent="true" meta_snippetName="0_01 페이지시작"
-    		style="">
-    	</xf:group>
+        <xf:group class="main-wrap">
+
+            <!-- 메인 컨테이너 -->
+            <xf:group class="main-container">
+                <!-- 메인 콘텐츠 -->
+                <main class="main-content">
+                    <!-- 매칭제안 페이지 헤더 -->
+                    <section class="page-header">
+                        <div class="page-info">
+                            <div class="page-icon">💌</div>
+                            <div class="page-details">
+                                <h1>매칭 제안</h1>
+                                <div class="page-description">기업에서 보낸 매칭 제안을 확인하고 관심있는 공고에 지원해보세요.</div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- 매칭제안 통계 -->
+                    <section class="stats-grid">
+                        <div class="stat-card">
+                            <span class="stat-number" id="totalMatches">0</span>
+                            <span class="stat-label">총 제안</span>
+                        </div>
+                        <div class="stat-card new">
+                            <span class="stat-number" id="newMatches">0</span>
+                            <span class="stat-label">새 제안</span>
+                        </div>
+                        <div class="stat-card viewed">
+                            <span class="stat-number" id="viewedMatches">0</span>
+                            <span class="stat-label">확인한 제안</span>
+                        </div>
+                        <div class="stat-card interested">
+                            <span class="stat-number" id="interestedMatches">0</span>
+                            <span class="stat-label">관심 표시</span>
+                        </div>
+                    </section>
+
+                    <!-- 필터 탭 -->
+                    <section class="filter-section">
+                        <div class="filter-tabs">
+                            <button class="filter-tab" onclick="scwin.filterMatches('all')">전체</button>
+                            <button class="filter-tab" onclick="scwin.filterMatches('new')">새 제안</button>
+                            <button class="filter-tab" onclick="scwin.filterMatches('viewed')">확인함</button>
+                            <button class="filter-tab" onclick="scwin.filterMatches('interested')">관심표시</button>
+                        </div>
+                    </section>
+
+                    <!-- 매칭제안 카드들 -->
+                    <section class="matches-section">
+                        <div class="matches-grid">
+                            <w2:generator id="gen_matches" dataList="data:dlt_matchOffers" style="">
+                                <div class="match-card" onclick="scwin.onMatchCardClick(%%_rowIndex%%)">
+                                    <div class="status-badge"></div>
+                                    
+                                    <div class="card-header">
+                                        <div class="company-info">
+                                            <div class="company-logo">
+                                                <w2:textbox ref="data:dlt_matchOffers.logo"></w2:textbox>
+                                            </div>
+                                            <div class="company-details">
+                                                <div class="company-name">
+                                                    <w2:textbox ref="data:dlt_matchOffers.company"></w2:textbox>
+                                                </div>
+                                                <div class="job-title">
+                                                    <w2:textbox ref="data:dlt_matchOffers.jobTitle"></w2:textbox>
+                                                </div>
+                                                <div class="position-name">
+                                                    <w2:textbox ref="data:dlt_matchOffers.position"></w2:textbox>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="match-date">
+                                            🕒 <w2:textbox ref="data:dlt_matchOffers.matchDate"></w2:textbox>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="card-body">
+                                        <div class="info-item">
+                                            <div class="info-label">근무지역</div>
+                                            <div class="info-value">
+                                                <w2:textbox ref="data:dlt_matchOffers.location"></w2:textbox>
+                                            </div>
+                                        </div>
+                                        <div class="info-item">
+                                            <div class="info-label">연봉</div>
+                                            <div class="info-value">
+                                                <w2:textbox ref="data:dlt_matchOffers.salary"></w2:textbox>
+                                            </div>
+                                        </div>
+                                        <div class="info-item">
+                                            <div class="info-label">경력</div>
+                                            <div class="info-value">
+                                                <w2:textbox ref="data:dlt_matchOffers.experience"></w2:textbox>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="card-actions">
+                                        <button class="btn-view" onclick="event.stopPropagation(); scwin.viewMatchDetail(%%_rowIndex%%)">상세보기</button>
+                                        <button class="btn-apply" onclick="event.stopPropagation(); scwin.applyToJob(%%_rowIndex%%)">지원하기</button>
+                                    </div>
+                                </div>
+                            </w2:generator>
+                        </div>
+                    </section>
+                </main>
+            </xf:group>
+        </xf:group>
     </body>
 </html>
