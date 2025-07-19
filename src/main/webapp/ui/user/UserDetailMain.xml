@@ -391,6 +391,17 @@ scwin.getUserInfoByCookie = function () {
     }
     return userInfo;
 }
+
+// 사용자 정보 수정 페이지로 이동
+scwin.btn_userUpdate_onclick = function() {
+    try {
+        console.log("사용자 정보 수정 페이지로 이동");
+        $p.url("/InsWebApp/ui/user/updateUser.xml");
+    } catch (e) {
+        console.error("사용자 정보 수정 페이지 이동 오류:", e);
+        alert("페이지 이동 중 오류가 발생했습니다.");
+    }
+};
 ]]></script>
 	</head>
 

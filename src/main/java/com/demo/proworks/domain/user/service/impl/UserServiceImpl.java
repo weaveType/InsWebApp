@@ -248,19 +248,39 @@ public class UserServiceImpl implements UserService {
 		return userDAO.selectUsersByjobPostingId(applicantVo);
 	}
 
+	/**
+	 * 사용자의 비밀번호를 변경한다.
+	 *
+	 * @param userId          사용자 ID
+	 * @param currentPassword 현재 비밀번호
+	 * @param newPassword     새로운 비밀번호
+	 * @return 변경 성공 여부 (true: 성공, false: 실패)
+	 * @throws Exception
+	 */
 	@Override
 	public boolean updatePassword(int userId, String currentPassword, String newPassword) throws Exception {
+		// 현재 사용자 정보 가져오기
 		UserVo userVo = new UserVo();
 		userVo.setUserId(userId);
-		UserVo currentUser = userDAO.selectUser(userVo);
+		UserVo currentUser = selectUser(userVo);
 
-		if (currentUser != null && BCrypt.checkpw(currentPassword, currentUser.getPassword())) {
-			String hashedNewPassword = BCrypt.hashpw(newPassword, BCrypt.gensalt(12));
-			currentUser.setPassword(hashedNewPassword);
-			userDAO.updatePassword(currentUser);
-			return true;
+		if (currentUser == null) {
+			return false;
 		}
-		return false;
+
+		// 현재 비밀번호 검증
+		if (!BCrypt.checkpw(currentPassword, currentUser.getPassword())) {
+			return false;
+		}
+
+		// 새 비밀번호 해싱
+		String hashedPassword = BCrypt.hashpw(newPassword, BCrypt.gensalt(12));
+
+		// 비밀번호 업데이트
+		userVo.setPassword(hashedPassword);
+		int result = userDAO.updatePassword(userVo);
+
+		return result > 0;
 	}
 
 	/**
@@ -270,11 +290,18 @@ public class UserServiceImpl implements UserService {
 	 * @return ScoutListVo 유저 목록
 	 * @throws Exception
 	 */
+	@Override
 	public ScoutListVo getScoutUsersByPostId(ScoutVo scoutVo) throws Exception {
 		List<ScoutDetailVo> detailList = userDAO.getScoutUsersByPostId(scoutVo);
-		ScoutListVo scoutListVo = new ScoutListVo();
-		scoutListVo.setScoutDetailVo(detailList);
-		return scoutListVo;
+		int totalCount = userDAO.getScoutUserCount(scoutVo);
+		
+		ScoutListVo resultVo = new ScoutListVo();
+		resultVo.setScoutDetailVo(detailList);
+		resultVo.setTotalCount(totalCount);
+		resultVo.setPageIndex(scoutVo.getPageIndex());
+		resultVo.setPageSize(scoutVo.getPageSize());
+		
+		return resultVo;
 	}
 
 	/**
@@ -284,7 +311,21 @@ public class UserServiceImpl implements UserService {
 	 * @return 유저의 성향검사 및 코드검사 여부
 	 * @throws Exception
 	 */
+	@Override
 	public MatchingCheckedVo selectMatchingChecked(MatchingCheckedVo matchingCheckedVo) throws Exception {
 		return userDAO.selectMatchingChecked(matchingCheckedVo);
+	}
+	
+	/**
+	 * 사용자의 이력서 파일명을 업데이트한다.
+	 *
+	 * @param userVo 사용자 정보 UserVo (userId와 resumeFileName 필드 필수)
+	 * @return 업데이트 결과 (성공 시 1, 실패 시 0)
+	 * @throws Exception
+	 */
+	@Override
+	public int updateResumeFileName(UserVo userVo) throws Exception {
+		// users_info 테이블의 resume_file_name 필드 업데이트
+		return userDAO.updateResumeFileName(userVo);
 	}
 }
