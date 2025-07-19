@@ -87,18 +87,10 @@ scwin.btnLogin_onclick = function () {
         height: "530px",
         modal: true,
         resizable: true,
-<<<<<<< HEAD
         center: true,
         popupName: "로그인/회원가입",
         closeAction: "scwin.closeLoginPopup",
         dataObject: loginPopupData
-=======
-        
-        popupName: "로그인/회원가입",
-        closeAction: "scwin.closeLoginPopup",
-        dataObject: loginPopupData
-        
->>>>>>> c517f1efca5ef626bf2d1cc0b42b90efb5a6f760
     };
 
     // 팝업 생성
