@@ -574,7 +574,7 @@ scwin.ac_techStack_onselected = function (e) {
     if (selectedIndex < 0) return;
 
     // 선택된 행의 id / name 추출
-    const techStackId   = dlt_techStackOptions.getCellData(selectedIndex, "techStackId");
+    const techStackId = dlt_techStackOptions.getCellData(selectedIndex, "techStackId");
     const techStackName = dlt_techStackOptions.getCellData(selectedIndex, "techStackName");
 
     // (1) 이미 추가된 스택은 중복으로 넣지 않게 체크
@@ -598,7 +598,7 @@ scwin.ac_techStack_onselected = function (e) {
 };
 
 // dlt_selectTechStacks 의 내용을 기반으로 generator 를 다시 그리는 함수
-scwin.renderSelectedTechStacks = function() {
+scwin.renderSelectedTechStacks = function () {
     gen_selectedTechStacks.removeAll(); // 기존 항목 모두 제거
     var rowCount = dlt_selectTechStacks.getRowCount();
     for (var i = 0; i < rowCount; i++) {
@@ -610,13 +610,13 @@ scwin.renderSelectedTechStacks = function() {
 };
 
 // 페이지 로드 시 또는 사용자 정보 로드 후 기존 기술스택을 UI에 채우는 함수
-scwin.populateSelectedTechStacks = function() {
+scwin.populateSelectedTechStacks = function () {
     if (scwin.initialTechStackString && dlt_techStackOptions.getRowCount() > 0) {
         var techStackIds = scwin.initialTechStackString.split(",").map(id => id.trim());
-        
+
         dlt_selectTechStacks.removeAll(); // 기존 데이터 초기화
 
-        techStackIds.forEach(function(id) {
+        techStackIds.forEach(function (id) {
             var matchedIndex = dlt_techStackOptions.getMatchedIndex("techStackId", id);
             if (matchedIndex > -1) {
                 var techStackName = dlt_techStackOptions.getCellData(matchedIndex, "techStackName");
@@ -630,10 +630,11 @@ scwin.populateSelectedTechStacks = function() {
 };
 
 // 기술스택 삭제 함수
-scwin.removeTechStack = function(e) {
-    var index = e.info.idx; // 클릭된 버튼의 generator 인덱스
-    if (typeof index === 'number' && index > -1) {
-        dlt_selectTechStacks.deleteRow(index);
+scwin.removeTechStack = function (e) {
+    var index = this.getGeneratedIndex();  // 현재 반복 아이템의 index
+
+    if (index >= 0) {
+        dlt_selectTechStacks.removeRow(index);
         scwin.renderSelectedTechStacks(); // UI 업데이트
     }
 };]]></script>

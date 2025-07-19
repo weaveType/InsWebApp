@@ -206,7 +206,7 @@ public class UserServiceImpl implements UserService {
 			userDAO.insertUserInfo(userVo);
 		}
 
-		if (userVo.getTechStackVo().size() != 0) {
+		if (userVo.getTechStackVo() != null) {
 
 			// ① 현재 매핑 개수 조회
 			int curCnt = userDAO.countUserTechStacks(userVo);
