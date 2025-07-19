@@ -7,8 +7,11 @@ import org.springframework.stereotype.Repository;
 
 import com.inswave.elfw.exception.ElException;
 import com.demo.proworks.domain.post.vo.JobApplicationVo;
+<<<<<<< HEAD
+=======
 import com.demo.proworks.domain.post.vo.MainPostingListVo;
 import com.demo.proworks.domain.post.vo.MainPostingVo;
+>>>>>>> c517f1efca5ef626bf2d1cc0b42b90efb5a6f760
 import com.demo.proworks.domain.post.vo.PostMatchVo;
 import com.demo.proworks.domain.post.vo.PostVo;
 import com.demo.proworks.domain.post.vo.TechStackVo;
@@ -163,6 +166,11 @@ public class PostDAO extends com.demo.proworks.cmmn.dao.ProworksDefaultAbstractD
 		return (List<PostVo>) list("com.demo.proworks.domain.post.findPostsByMbti", postMatchVo);
 	}
 
+<<<<<<< HEAD
+
+
+=======
+>>>>>>> c517f1efca5ef626bf2d1cc0b42b90efb5a6f760
 	public long findPostsByMbtiCount(PostMatchVo postMatchVo) throws ElException {
 		return (long) selectByPk("com.demo.proworks.domain.post.findPostsByMbtiCount", postMatchVo);
 	}
@@ -195,6 +203,8 @@ public class PostDAO extends com.demo.proworks.cmmn.dao.ProworksDefaultAbstractD
 	public int updateApplicationStatus(JobApplicationVo jobApplicationVo) throws ElException {
 		return update("com.demo.proworks.domain.post.updateApplicationStatus", jobApplicationVo);
 	}
+<<<<<<< HEAD
+=======
 
 	/**
 	 * 메인 페이지에서 출력할 공고목록을 조회한다.
@@ -205,4 +215,5 @@ public class PostDAO extends com.demo.proworks.cmmn.dao.ProworksDefaultAbstractD
 	public List<MainPostingVo> selectPostingList() throws Exception {
 		return (List<MainPostingVo>) list("com.demo.proworks.domain.post.selectPostingList");
 	}
+>>>>>>> c517f1efca5ef626bf2d1cc0b42b90efb5a6f760
 }

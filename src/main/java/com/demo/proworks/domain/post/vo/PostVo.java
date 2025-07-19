@@ -58,6 +58,21 @@ public class PostVo extends com.demo.proworks.cmmn.ProworksCommVO {
     @ElDtoField(logicalName = "사용자_MBTI", physicalName = "userMbti", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
     private String userMbti;
 
+<<<<<<< HEAD
+    @ElDtoField(logicalName = "company_name", physicalName = "companyName", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private String companyName;
+
+    @ElDtoField(logicalName = "industry", physicalName = "industry", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private String industry;
+
+    @ElDtoField(logicalName = "emp_count", physicalName = "empCount", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private String empCount;
+
+    @ElDtoField(logicalName = "job_image_file_name", physicalName = "jobImageFileName", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private String jobImageFileName;
+
+=======
+>>>>>>> c517f1efca5ef626bf2d1cc0b42b90efb5a6f760
     @ElVoField(physicalName = "jobPostingId")
     public String getJobPostingId(){
         String ret = this.jobPostingId;
@@ -223,6 +238,53 @@ public class PostVo extends com.demo.proworks.cmmn.ProworksCommVO {
         this.userMbti = userMbti;
     }
 
+<<<<<<< HEAD
+    @ElVoField(physicalName = "companyName")
+    public String getCompanyName(){
+        String ret = this.companyName;
+        return ret;
+    }
+
+    @ElVoField(physicalName = "companyName")
+    public void setCompanyName(String companyName){
+        this.companyName = companyName;
+    }
+
+    @ElVoField(physicalName = "industry")
+    public String getIndustry(){
+        String ret = this.industry;
+        return ret;
+    }
+
+    @ElVoField(physicalName = "industry")
+    public void setIndustry(String industry){
+        this.industry = industry;
+    }
+
+    @ElVoField(physicalName = "empCount")
+    public String getEmpCount(){
+        String ret = this.empCount;
+        return ret;
+    }
+
+    @ElVoField(physicalName = "empCount")
+    public void setEmpCount(String empCount){
+        this.empCount = empCount;
+    }
+
+    @ElVoField(physicalName = "jobImageFileName")
+    public String getJobImageFileName(){
+        String ret = this.jobImageFileName;
+        return ret;
+    }
+
+    @ElVoField(physicalName = "jobImageFileName")
+    public void setJobImageFileName(String jobImageFileName){
+        this.jobImageFileName = jobImageFileName;
+    }
+
+=======
+>>>>>>> c517f1efca5ef626bf2d1cc0b42b90efb5a6f760
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -241,7 +303,15 @@ public class PostVo extends com.demo.proworks.cmmn.ProworksCommVO {
         sb.append("postedAt").append("=").append(postedAt).append(",");
         sb.append("status").append("=").append(status).append(",");
         sb.append("mbtiMatchFilter").append("=").append(mbtiMatchFilter).append(",");
+<<<<<<< HEAD
+        sb.append("userMbti").append("=").append(userMbti).append(",");
+        sb.append("companyName").append("=").append(companyName).append(",");
+        sb.append("industry").append("=").append(industry).append(",");
+        sb.append("empCount").append("=").append(empCount).append(",");
+        sb.append("jobImageFileName").append("=").append(jobImageFileName);
+=======
         sb.append("userMbti").append("=").append(userMbti);
+>>>>>>> c517f1efca5ef626bf2d1cc0b42b90efb5a6f760
         sb.append("]");
         return sb.toString();
 

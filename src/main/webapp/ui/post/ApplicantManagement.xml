@@ -210,7 +210,11 @@ scwin.pass_btn_onclick = function (e) {
 
     $c.win.openPopup("PassEmail.xml", {
         id: "pop_passEmail",
+<<<<<<< HEAD
+        type: "wframePopup",
+=======
         type: "pageFramePopup",
+>>>>>>> c517f1efca5ef626bf2d1cc0b42b90efb5a6f760
         width: "700px",
         height: "650px",
         popupName: "합격 메일 보내기",

@@ -19,8 +19,11 @@
 						<w2:key id="email" name="이메일" dataType="text"></w2:key>
 						<w2:key id="bio" name="자기소개" dataType="text"></w2:key>
 						<w2:key id="testChecked" name="테스트완료여부" dataType="boolean"></w2:key>
+<<<<<<< HEAD
+=======
 						<w2:key id="isMbtiChecked" name="MBTI검사완료여부" dataType="number"></w2:key>
 						<w2:key id="isCodeChecked" name="코드분석완료여부" dataType="number"></w2:key>
+>>>>>>> c517f1efca5ef626bf2d1cc0b42b90efb5a6f760
 					</w2:keyInfo>
 				</w2:dataMap>
 			</w2:dataCollection>
@@ -76,13 +79,21 @@
             color: #666;
             margin-bottom: 15px;
             padding-bottom: 8px;
+<<<<<<< HEAD
+            padding-left: 5px; /* 카테고리 제목도 왼쪽으로 */
+=======
             padding-left: 5px;
+>>>>>>> c517f1efca5ef626bf2d1cc0b42b90efb5a6f760
             border-bottom: 1px solid #f0f0f0;
         }
 
         .menu-item {
             display: block;
+<<<<<<< HEAD
+            padding: 12px 16px 12px 8px; /* 좌측 패딩을 8px로 줄임 */
+=======
             padding: 12px 16px 12px 8px;
+>>>>>>> c517f1efca5ef626bf2d1cc0b42b90efb5a6f760
             margin-bottom: 4px;
             color: #333;
             text-decoration: none;
@@ -323,6 +334,77 @@
             background: linear-gradient(135deg, #f8fff8, #e8f5e8);
         }
 
+<<<<<<< HEAD
+        /* 액션 카드 */
+        .action-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .action-card {
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .action-card.incomplete {
+            border: 2px solid #fc8181;
+        }
+
+        .action-card-icon {
+            width: 150px;
+            height: 150px;
+            border-radius: 16px;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+        }
+
+        .action-card-title {
+            font-size: clamp(16px, 2.5vw, 18px);
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .action-card-subtitle {
+            font-size: clamp(12px, 1.8vw, 14px);
+            color: #666;
+            margin-bottom: 16px;
+            line-height: 1.4;
+        }
+
+        .action-card-button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-size: clamp(13px, 1.8vw, 14px);
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .action-card-button:hover {
+            background-color: #0056b3;
+        }
+
+        .action-card.incomplete .action-card-button {
+            background-color: #dc3545;
+        }
+
+        .action-card.incomplete .action-card-button:hover {
+            background-color: #c82333;
+        }
+
+=======
+>>>>>>> c517f1efca5ef626bf2d1cc0b42b90efb5a6f760
         .incomplete-badge {
             position: absolute;
             top: 15px;
@@ -345,7 +427,11 @@
                 width: 100%;
                 border-right: none;
                 border-bottom: 1px solid #e0e0e0;
+<<<<<<< HEAD
+                padding: 15px 15px 15px 10px; /* 모바일에서도 좌측 패딩 줄임 */
+=======
                 padding: 15px 15px 15px 10px;
+>>>>>>> c517f1efca5ef626bf2d1cc0b42b90efb5a6f760
             }
 
             .sidebar-menu {
@@ -353,6 +439,13 @@
                 grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
                 gap: 20px;
             }
+<<<<<<< HEAD
+
+            .action-cards {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            }
+=======
+>>>>>>> c517f1efca5ef626bf2d1cc0b42b90efb5a6f760
         }
 
         @media (max-width: 768px) {
@@ -393,6 +486,13 @@
                 gap: 15px;
             }
 
+<<<<<<< HEAD
+            .action-cards {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+=======
+>>>>>>> c517f1efca5ef626bf2d1cc0b42b90efb5a6f760
 
             .sidebar-menu {
                 grid-template-columns: 1fr;
@@ -450,13 +550,21 @@ scwin.updateCardStatus = function(e) {
         
         // 서버 응답이 elData 키를 포함할 수도 있고 아닐 수도 있음
         var data = res.elData || res;
+<<<<<<< HEAD
+        console.log("서버에서 받은 데이터:", data);
+=======
+>>>>>>> c517f1efca5ef626bf2d1cc0b42b90efb5a6f760
         
         // dataMap에 값 매핑
         if (data) {
             dma_userInfoVo.setJSON(data);
+<<<<<<< HEAD
+            console.log("dma_userInfoVo 데이터 설정 완료:", dma_userInfoVo.getJSON());
+=======
 
             // UserDetailMain.xml 로드 및 데이터 전달 (pageFrame의 src를 설정하여 로드)
             contentFrame.setSrc('UserDetailMain.xml', { dataObject: dma_userInfoVo.getJSON() });
+>>>>>>> c517f1efca5ef626bf2d1cc0b42b90efb5a6f760
         }
 
         // MBTI/코드분석 카드 상태 업데이트
@@ -503,7 +611,11 @@ scwin.menu_history_onclick = function() {
 
 // 매칭제안 메뉴 클릭 이벤트
 scwin.menu_interest_onclick = function() {
+<<<<<<< HEAD
+    contentFrame.setSrc('MatchingProposal.xml');
+=======
     contentFrame.setSrc('UserMatchPage.xml');
+>>>>>>> c517f1efca5ef626bf2d1cc0b42b90efb5a6f760
 };
 
 // MBTI 검사 시작

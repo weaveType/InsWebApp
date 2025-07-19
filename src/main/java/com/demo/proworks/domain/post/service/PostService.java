@@ -3,7 +3,10 @@ package com.demo.proworks.domain.post.service;
 import java.util.List;
 
 import com.demo.proworks.domain.post.vo.JobApplicationVo;
+<<<<<<< HEAD
+=======
 import com.demo.proworks.domain.post.vo.MainPostingListVo;
+>>>>>>> c517f1efca5ef626bf2d1cc0b42b90efb5a6f760
 import com.demo.proworks.domain.post.vo.PostMatchVo;
 import com.demo.proworks.domain.post.vo.PostVo;
 import com.demo.proworks.domain.post.vo.SendEmailVo;
@@ -154,6 +157,8 @@ public interface PostService {
 	 * @throws Exception
 	 */
 	public int insertJobApplication(JobApplicationVo jobApplicationVo) throws Exception;
+<<<<<<< HEAD
+=======
 
 	/**
 	 * 메인 페이지에서 출력할 공고목록을 조회한다.
@@ -162,4 +167,5 @@ public interface PostService {
 	 * @throws Exception
 	 */
 	public MainPostingListVo selectPostingList() throws Exception;
+>>>>>>> c517f1efca5ef626bf2d1cc0b42b90efb5a6f760
 }

@@ -31,6 +31,8 @@
 						<w2:key dataType="text" name="코드분석 진행여부" id="isCodeChecked"></w2:key>
 					</w2:keyInfo>
 				</w2:dataMap>
+<<<<<<< HEAD
+=======
 				<w2:dataList baseNode="list" repeatNode="map" id="dlt_posting_list" saveRemovedData="true">
 					<w2:columnInfo>
 						<w2:column dataType="text" name="기업명" id="name"></w2:column>
@@ -40,6 +42,7 @@
 						<w2:column dataType="text" name="공고 ID" id="jobPostingId"></w2:column>
 					</w2:columnInfo>
 				</w2:dataList>
+>>>>>>> c517f1efca5ef626bf2d1cc0b42b90efb5a6f760
 			</w2:dataCollection>
 
 			<w2:workflowCollection></w2:workflowCollection>
@@ -50,6 +53,11 @@
 				target='data:json,{"id":"dlt_company_list","key":"elData.corporateMainVo"}' mode="asynchronous" encoding="UTF-8"
 				processMsg="참여 기업 목록을 조회 중입니다." ev:submitdone="scwin.sbm_selectCompanyList_submitdone" ev:submiterror="">
 			</xf:submission>
+<<<<<<< HEAD
+			<xf:submission id="smb_selectMatchingChecked" action="/InsWebApp/US0001Match.pwkjson" method="post" mediatype="application/json" ref='data:json,{"id":"dmp_matchingCheckedVo","key":"matchingCheckedVo"}' target='data:json,{"id":"dmp_matchingCheckedVo","key":"elData"}'
+				encoding="UTF-8" mode="asynchronous" processMsg="매칭 정보 조회 중..." ev:submitdone="scwin.smb_selectMatchingChecked_submitdone"
+				ev:submiterror="">
+=======
 			<xf:submission id="smb_selectMatchingChecked" action="/InsWebApp/US0001Match.pwkjson" method="post" mediatype="application/json"
 				ref='data:json,{"id":"dmp_matchingCheckedVo","key":"matchingCheckedVo"}'
 				target='data:json,{"id":"dmp_matchingCheckedVo","key":"elData"}' encoding="UTF-8" mode="asynchronous" processMsg="매칭 정보 조회 중..."
@@ -58,12 +66,20 @@
 			<xf:submission id="sbm_selectPostingList" action="/InsWebApp/POS0003List.pwkjson" method="post" mediatype="application/json"
 				ref="" target='data:json,{"id":"dlt_posting_list","key":"mainPostingListVo.mainPostingVo"}' encoding="UTF-8" instance="" replace="" errorHandler="" customHandler="" mode="asynchronous" processMsg="" ev:submit=""
 				ev:submitdone="scwin.sbm_selectPostingList_submitdone" ev:submiterror="" abortTrigger="">
+>>>>>>> c517f1efca5ef626bf2d1cc0b42b90efb5a6f760
 			</xf:submission>
 		</xf:model>
 		<w2:layoutInfo />
 		<w2:publicInfo method="" />
 		<script type="text/javascript"><![CDATA[// 페이지 로드 시 팝업 닫기 액션 함수들 정의
 scwin.onpageload = function () {
+<<<<<<< HEAD
+    
+    // 로그인 상태 확인 및 UI 업데이트
+    scwin.updateLoginArea();
+
+    // 페이지 완전 로드 후 회사 목록 조회
+=======
 
     // 로그인 상태 확인 및 UI 업데이트
     scwin.updateLoginArea();
@@ -72,6 +88,7 @@ scwin.onpageload = function () {
     $c.sbm.execute(sbm_selectPostingList);
 
     // 회사 목록 조회
+>>>>>>> c517f1efca5ef626bf2d1cc0b42b90efb5a6f760
     scwin.loadCompanyList();
 };
 
@@ -107,7 +124,11 @@ scwin.updateLoginArea = function () {
     }
 };
 
+<<<<<<< HEAD
+scwin.smb_selectMatchingChecked_submitdone = function(e) {
+=======
 scwin.smb_selectMatchingChecked_submitdone = function (e) {
+>>>>>>> c517f1efca5ef626bf2d1cc0b42b90efb5a6f760
     var elHeader = e.responseJSON.elHeader;
     if (elHeader && elHeader.resSuc === false) {
         console.error("매칭 정보 조회 실패:", elHeader.resMsg);
@@ -165,16 +186,28 @@ scwin.btnLogin_onclick = function () {
     // 팝업 생성 옵션 지정
     var options = {
         id: "login_popup",
+<<<<<<< HEAD
+        type: "wframePopup",
+        width: "450px",
+        height: "550px",
+        modal: true,
+        resizable: true,
+        center: true,
+=======
         type: "pageFramePopup",
         width: "450px",
         height: "550px",
         modal: true,
+>>>>>>> c517f1efca5ef626bf2d1cc0b42b90efb5a6f760
         popupName: "로그인/회원가입",
         closeAction: "scwin.login_popup_closeAction",
         dataObject: loginPopupData
     };
 
     // 팝업 생성
+<<<<<<< HEAD
+    $p.openPopup("../user/Login.xml", options);
+=======
     //$p.openPopup("../user/Login.xml", options);
     $c.win.openPopup("../user/Login.xml", {
         id: "login_popup",
@@ -186,6 +219,7 @@ scwin.btnLogin_onclick = function () {
         closeAction: "scwin.login_popup_closeAction",
         dataObject: loginPopupData
     });
+>>>>>>> c517f1efca5ef626bf2d1cc0b42b90efb5a6f760
 };
 
 scwin.ad_onclick = function (e) {
@@ -208,6 +242,11 @@ scwin.card3_onclick = function () {
 
 };
 
+<<<<<<< HEAD
+// 포지션 카드 클릭 이벤트
+scwin.position_onclick = function () {
+    // 해당 공고로 이동
+=======
 scwin.handlePositionCardClick = function() {
     var index = this.getGeneratedIndex();
     if (typeof index === 'number' && index >= 0) {
@@ -217,6 +256,7 @@ scwin.handlePositionCardClick = function() {
     } else {
         console.error("유효한 인덱스를 가져올 수 없습니다.");
     }
+>>>>>>> c517f1efca5ef626bf2d1cc0b42b90efb5a6f760
 };
 
 /**
@@ -264,19 +304,47 @@ scwin.sbm_selectCompanyList_submitdone = function (e) {
 
 createCompanyList = function () {
     // WebSquare 컴포넌트 객체 가져오기
+<<<<<<< HEAD
+    var containerComponent = grp_companies_container;
+=======
     var containerComponent = gen_company_card;
+>>>>>>> c517f1efca5ef626bf2d1cc0b42b90efb5a6f760
     if (!containerComponent) {
         console.error('회사 목록 컨테이너 컴포넌트를 찾을 수 없습니다.');
         return;
     }
 
+<<<<<<< HEAD
+    var container = document.querySelector('.companies-container');
+
+    // 기존 내용 제거
+    container.innerHTML = '';
+=======
     // 기존 내용 제거
     gen_company_card.removeAll();
+>>>>>>> c517f1efca5ef626bf2d1cc0b42b90efb5a6f760
 
     // DataList에서 데이터 가져오기
     var rowCount = dlt_company_list.getRowCount();
 
     if (rowCount === 0) {
+<<<<<<< HEAD
+        container.innerHTML = '<xf:group style="text-align: center; padding: 40px; color: #666; font-size: 16px;">등록된 기업이 없습니다.</xf:group>';
+        return;
+    }
+
+    // 회사 데이터를 그룹화하여 행별로 표시 (한 행에 4개씩)
+    var companiesPerRow = 4;
+    var currentRow = null;
+
+    for (var i = 0; i < rowCount; i++) {
+        // 새로운 행 생성 (4개마다)
+        if (i % companiesPerRow === 0) {
+            currentRow = document.createElement('xf:group');
+            currentRow.className = 'company-row';
+            container.appendChild(currentRow);
+        }
+=======
         // 제너레이터 내부에 메시지 표시 (필요시)
         // gen_company_card.insertChild(); // 빈 항목 추가
         // var msgTxt = gen_company_card.getChild(0, "txt_no_company"); // 템플릿에 txt_no_company 추가 필요
@@ -291,6 +359,7 @@ createCompanyList = function () {
 
     for (var i = 0; i < rowCount; i++) {
         gen_company_card.insertChild();
+>>>>>>> c517f1efca5ef626bf2d1cc0b42b90efb5a6f760
 
         // 회사 데이터 가져오기
         var companyData = {
@@ -298,6 +367,61 @@ createCompanyList = function () {
             name: dlt_company_list.getCellData(i, 'name') || '회사명 없음',
             logoFileName: dlt_company_list.getCellData(i, 'logoFileName')
         };
+<<<<<<< HEAD
+        // ── 회사 카드 요소 생성 ─────────────────────────────
+        var companyCard = document.createElement('xf:group');
+        companyCard.className = 'company-item';
+        companyCard.style.cursor = 'pointer';
+
+        // 로고 경로(있으면) vs 기본 이미지(없으면)
+        var logoBase = '/InsWebApp/images/company/'; // 실제 로고가 저장된 폴더
+        var defaultLogo = '/InsWebApp/images/ws5/default_company.png';   // 기본 이미지
+
+        var hasLogo = companyData.logoFileName && companyData.logoFileName.trim() !== '';
+        var imgSrc = hasLogo ? logoBase + encodeURIComponent(companyData.logoFileName)
+            : defaultLogo;
+
+        // 카드 HTML
+        var cardContent =
+            '<xf:group style="display:flex;align-items:center;justify-content:center;height:100%;gap:10px;">' +
+            '<img src="' + imgSrc + '" ' +
+            'style="max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;" ' +
+            // 깨졌을 때도 기본 이미지로 대체
+            'onerror="this.onerror=null;this.src=\'' + defaultLogo + '\';" ' +
+            'alt="' + companyData.name + ' 로고" />' +
+            '<span class="company-name" style="font-weight:500;">' + companyData.name + '</span>' +
+            '</xf:group>';
+
+        companyCard.innerHTML = cardContent;
+
+        // 클릭 이벤트 추가 (클로저 사용하여 데이터 바인딩)
+        (function (data) {
+            companyCard.addEventListener('click', function () {
+                scwin.onCompanyCardClick(data);
+            });
+        })(companyData);
+
+        // 호버 효과 추가
+        companyCard.addEventListener('mouseenter', function () {
+            this.style.backgroundColor = '#f8fbff';
+            this.style.borderColor = '#007bff';
+        });
+
+        companyCard.addEventListener('mouseleave', function () {
+            this.style.backgroundColor = '#fff';
+            this.style.borderColor = '#e8f0fe';
+        });
+
+        // 현재 행에 카드 추가
+        currentRow.appendChild(companyCard);
+    }
+
+};
+
+/* 회사 카드 클릭 이벤트 핸들러 */
+scwin.onCompanyCardClick = function (companyData) {
+    $c.win.alert(companyData.name + " 해당 기업의 공고등록 페이지로 이동합니다.\n(userId: " + companyData.userId + ")");
+=======
 
         var img_company_logo = gen_company_card.getChild(i, "img_company_logo");
         var txt_company_name = gen_company_card.getChild(i, "txt_company_name");
@@ -316,10 +440,14 @@ createCompanyList = function () {
         // 호버 효과는 CSS로 처리하는 것이 좋습니다.
         // 클릭 이벤트는 generator 내부의 trigger 컴포넌트에서 처리됩니다.
     }
+>>>>>>> c517f1efca5ef626bf2d1cc0b42b90efb5a6f760
 };
 
 scwin.refreshCompanyList = function () {
     scwin.loadCompanyList();
+<<<<<<< HEAD
+};]]></script>
+=======
 };
 
 scwin.sbm_selectPostingList_submitdone = function (e) {
@@ -367,6 +495,7 @@ scwin.sbm_selectPostingList_submitdone = function (e) {
     }
 };
 ]]></script>
+>>>>>>> c517f1efca5ef626bf2d1cc0b42b90efb5a6f760
 		<style type="text/css"><![CDATA[
 
             /* 메인 히어로 섹션 - 완전 반응형 */
@@ -689,9 +818,19 @@ scwin.sbm_selectPostingList_submitdone = function (e) {
             /* 회사 목록 - 반응형 그리드 */
             .companies-container {
                 margin-top: 30px;
+<<<<<<< HEAD
+            }
+
+            .company-row {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+                gap: 20px;
+                margin-bottom: 20px;
+=======
                 display: grid;
                 grid-template-columns: repeat(4, 1fr);
                 gap: 20px;
+>>>>>>> c517f1efca5ef626bf2d1cc0b42b90efb5a6f760
                 max-width: 1000px;
                 margin-left: auto;
                 margin-right: auto;
@@ -740,6 +879,59 @@ scwin.sbm_selectPostingList_submitdone = function (e) {
                 border-radius: 4px;
             }
 
+<<<<<<< HEAD
+            /* 회사 카드 로딩 애니메이션 */
+            .company-item.loading {
+                background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+                background-size: 200% 100%;
+                animation: loading 1.5s infinite;
+            }
+
+            @keyframes loading {
+                0% { background-position: 200% 0; }
+                100% { background-position: -200% 0; }
+            }
+
+            /* 회사 카드 특별 효과 */
+            .company-item::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: -100%;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+                transition: left 0.5s;
+            }
+
+            .company-item:hover::before {
+                left: 100%;
+            }
+
+            /* 푸터 */
+            .footer {
+                background-color: #f8f8f8;
+                border-top: 1px solid #e0e0e0;
+                padding: min(40px, 5vw) min(50px, 4vw);
+            }
+
+            .footer-title {
+                font-size: clamp(18px, 3vw, 20px);
+                font-weight: bold;
+                color: #333;
+                margin-bottom: 20px;
+                display: block;
+            }
+
+            .footer-text {
+                font-size: clamp(10px, 1.5vw, 12px);
+                color: #666;
+                line-height: 1.8;
+                display: block;
+                margin-bottom: 5px;
+            }
+=======
+>>>>>>> c517f1efca5ef626bf2d1cc0b42b90efb5a6f760
 
             /* 태블릿 반응형 */
             @media (max-width: 1024px) {
@@ -775,10 +967,13 @@ scwin.sbm_selectPostingList_submitdone = function (e) {
                 .positions-container {
                     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
                 }
+<<<<<<< HEAD
+=======
 
                 .companies-container {
                     grid-template-columns: repeat(2, 1fr);
                 }
+>>>>>>> c517f1efca5ef626bf2d1cc0b42b90efb5a6f760
             }
 
             /* 모바일 반응형 */
@@ -823,8 +1018,14 @@ scwin.sbm_selectPostingList_submitdone = function (e) {
                     gap: 15px;
                 }
 
+<<<<<<< HEAD
+                .company-row {
+                    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+                    gap: 15px;
+=======
                 .companies-container {
                     grid-template-columns: 1fr;
+>>>>>>> c517f1efca5ef626bf2d1cc0b42b90efb5a6f760
                 }
 
                 .section {
@@ -965,6 +1166,8 @@ scwin.sbm_selectPostingList_submitdone = function (e) {
                 color: #666;
             }
 
+<<<<<<< HEAD
+=======
             /* 개발자 성향 태그 스타일 */
             .dev-type-tag-container {
                 display: flex;
@@ -984,6 +1187,7 @@ scwin.sbm_selectPostingList_submitdone = function (e) {
                 border: 1px solid #b2ebf2;
             }
 
+>>>>>>> c517f1efca5ef626bf2d1cc0b42b90efb5a6f760
             /* 작은 모바일 */
             @media (max-width: 480px) {
                 .company-row {
@@ -1146,6 +1350,39 @@ scwin.sbm_selectPostingList_submitdone = function (e) {
 			<xf:group class="section section-gray" tagname="section">
 				<w2:textbox class="section-title" label="로그인하고 내 조건에 맞는 포지션 추천받기"></w2:textbox>
 
+<<<<<<< HEAD
+				<xf:group class="positions-container">
+					<!-- 포지션 카드 1 -->
+					<xf:group class="position-card" id="position1" ev:onclick="scwin.position_onclick">
+						<xf:group class="position-header position-header-dark">
+							<w2:textbox class="position-status" label="인기"></w2:textbox>
+						</xf:group>
+						<w2:textbox class="position-company" label="(주)이디야"></w2:textbox>
+						<w2:textbox class="position-title" label="경력 · 경영관리 · HR · 서울(본사)"></w2:textbox>
+						<w2:textbox class="position-status-text" label="지원자관리"></w2:textbox>
+					</xf:group>
+
+					<!-- 포지션 카드 2 -->
+					<xf:group class="position-card" id="position2" ev:onclick="scwin.position_onclick">
+						<xf:group class="position-header position-header-dark">
+							<w2:textbox class="position-status" label="인기"></w2:textbox>
+						</xf:group>
+						<w2:textbox class="position-company" label="(주)이디야"></w2:textbox>
+						<w2:textbox class="position-title" label="경력 · 디자인 · 웹디자인 · 서울(본사)"></w2:textbox>
+						<w2:textbox class="position-status-text" label="공고작성"></w2:textbox>
+					</xf:group>
+
+					<!-- 포지션 카드 3 -->
+					<xf:group class="position-card" id="position3" ev:onclick="scwin.position_onclick">
+						<xf:group class="position-header position-header-blue">
+							<w2:textbox class="position-status" label="인기"></w2:textbox>
+						</xf:group>
+						<w2:textbox class="position-company" label="동아사이그룹"></w2:textbox>
+						<w2:textbox class="position-title" label="신입/경력 · 총무 · 총무/관리 · 수도권(전국)"></w2:textbox>
+						<w2:textbox class="position-status-text" label="채용리뷰"></w2:textbox>
+					</xf:group>
+				</xf:group>
+=======
 				<w2:generator id="gen_position_card" class="positions-container">
 						<xf:group class="position-card" style="position: relative;">
 							<xf:group class="position-header position-header-dark"></xf:group>
@@ -1164,6 +1401,7 @@ scwin.sbm_selectPostingList_submitdone = function (e) {
 							</xf:trigger>
 						</xf:group>
 					</w2:generator>
+>>>>>>> c517f1efca5ef626bf2d1cc0b42b90efb5a6f760
 			</xf:group>
 
 			<!-- 매칭 참여 기업 섹션 -->
@@ -1171,6 +1409,11 @@ scwin.sbm_selectPostingList_submitdone = function (e) {
 				<w2:textbox class="section-title" label="매칭 참여 기업"></w2:textbox>
 				<w2:textbox class="section-subtitle" id="txt_company_count" label="참여 기업: 0개"></w2:textbox>
 
+<<<<<<< HEAD
+				<xf:group class="companies-container" id="grp_companies_container">
+					<!-- 동적으로 생성될 회사 목록 영역 -->
+				</xf:group>
+=======
 				<w2:generator id="gen_company_card" class="companies-container">
 					<xf:group class="company-item" style="cursor: pointer;">
 						<xf:group style="display:flex;align-items:center;justify-content:center;height:100%;gap:10px;">
@@ -1180,6 +1423,7 @@ scwin.sbm_selectPostingList_submitdone = function (e) {
 						<xf:trigger style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: transparent; border: none;" type="button" id="btn_company_card_overlay" ev:onclick="scwin.handleCompanyCardClick"></xf:trigger>
 					</xf:group>
 				</w2:generator>
+>>>>>>> c517f1efca5ef626bf2d1cc0b42b90efb5a6f760
 			</xf:group>
 		</xf:group>
 	</body>

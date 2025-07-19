@@ -40,6 +40,10 @@
         				<w2:key dataType="text" id="empCount" name="emp_count"></w2:key>
         				<w2:key dataType="text" id="selectedTechStackNames" name="selected_tech_stack_names"></w2:key>
         				<w2:key dataType="text" id="preferredDeveloperTypes" name="preferred_developer_types"></w2:key>
+<<<<<<< HEAD
+        				<w2:key dataType="text" id="jobImageFileName" name="job_image_file_name"></w2:key>
+=======
+>>>>>>> c517f1efca5ef626bf2d1cc0b42b90efb5a6f760
         			</w2:keyInfo>
         			<w2:data use="false"></w2:data>
         		</w2:dataMap>
@@ -729,6 +733,12 @@ scwin.sbm_selectPostDetail_submitdone = function (e) {
 scwin.updateUI = function () {
     console.log("=== UI 업데이트 시작 ===");
 
+<<<<<<< HEAD
+    // 메인 이미지 업데이트
+    scwin.updateMainImage();
+
+=======
+>>>>>>> c517f1efca5ef626bf2d1cc0b42b90efb5a6f760
     // 메타 정보 업데이트
     scwin.updateJobMeta();
 
@@ -745,6 +755,39 @@ scwin.updateUI = function () {
 };
 
 /**
+<<<<<<< HEAD
+ * 메인 이미지 업데이트
+ */
+scwin.updateMainImage = function () {
+    var jobImageFileName = dmp_postDetail.get("jobImageFileName");
+    var companyName = dmp_postDetail.get("companyName") || "정보없음";
+    var mainImageContainer = document.getElementById("main-image-container");
+    
+    if (mainImageContainer) {
+        if (jobImageFileName && jobImageFileName.trim() !== "") {
+            // 공고 이미지가 있는 경우 - 이미지 표시
+            var imagePath = "/InsWebApp/images/company/" + jobImageFileName;
+            console.log("공고 이미지 표시:", imagePath);
+            
+            mainImageContainer.innerHTML = 
+                '<img src="' + imagePath + '" alt="공고 이미지" style="width: 100%; height: 100%; object-fit: cover; border-radius: 6px;" ' +
+                'onerror="this.style.display=\'none\'; this.nextSibling.style.display=\'flex\';" />' +
+                '<div style="display: none; width: 100%; height: 100%; align-items: center; justify-content: center; color: white; font-weight: bold; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);">' +
+                companyName + '</div>';
+        } else {
+            // 공고 이미지가 없는 경우 - 회사명 표시
+            console.log("공고 이미지 없음, 회사명 표시:", companyName);
+            
+            mainImageContainer.innerHTML = 
+                '<div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);">' +
+                companyName + '</div>';
+        }
+    }
+};
+
+/**
+=======
+>>>>>>> c517f1efca5ef626bf2d1cc0b42b90efb5a6f760
  * 메타 정보 업데이트
  */
 scwin.updateJobMeta = function () {
@@ -1131,8 +1174,13 @@ scwin.btnScout_onclick = function (e) {
                     <!-- 회사 이미지 갤러리 -->
                     <section class="company-images">
                         <xf:group class="image-gallery">
+<<<<<<< HEAD
+                            <xf:group class="main-image" id="main-image-container">
+                                <!-- 이미지 또는 회사명이 JavaScript로 동적 설정됩니다 -->
+=======
                             <xf:group class="main-image">
                                 <w2:textbox ref="data:dmp_postDetail.companyName"></w2:textbox>
+>>>>>>> c517f1efca5ef626bf2d1cc0b42b90efb5a6f760
                             </xf:group>
                             <xf:group class="sub-image">
                                 <w2:textbox label="채용 진행중"></w2:textbox>

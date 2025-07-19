@@ -16,6 +16,17 @@
 						<w2:key id="preferredLocations" name="지역" dataType="text"></w2:key>
 						<w2:key id="currentPosition" name="직무분야" dataType="text"></w2:key>
 						<w2:key id="yearSalary" name="희망연봉" dataType="number"></w2:key>
+<<<<<<< HEAD
+						<w2:key id="isMbtiChecked" name="MBTI완료여부" dataType="text"></w2:key>
+						<w2:key id="isCodeChecked" name="코드분석완료여부" dataType="text"></w2:key>
+					</w2:keyInfo>
+				</w2:dataMap>
+			</w2:dataCollection>
+			<xf:submission id="sbm_userDetail" action="/InsWebApp/US0002UpdView.pwkjson" method="post" mediatype="application/json"
+				ref='data:json,{"id":"dma_userInfoVo", "key":"userInfoVo"}' target='data:json,{"id":"dma_userInfoVo", "key":"elData"}' encoding="UTF-8" instance="" replace="" errorHandler=""
+				customHandler="" mode="asynchronous" processMsg="유저 정보 조회중" ev:submit="" ev:submitdone="scwin.updateCardStatus" ev:submiterror="" abortTrigger="">
+			</xf:submission>
+=======
 						<w2:key id="email" name="이메일" dataType="text"></w2:key>
 						<w2:key id="bio" name="자기소개" dataType="text"></w2:key>
 						<w2:key id="testChecked" name="테스트완료여부" dataType="boolean"></w2:key>
@@ -24,6 +35,7 @@
 					</w2:keyInfo>
 				</w2:dataMap>
 			</w2:dataCollection>
+>>>>>>> c517f1efca5ef626bf2d1cc0b42b90efb5a6f760
 		</xf:model>
 		<w2:layoutInfo />
 		<w2:publicInfo method="" />
@@ -56,6 +68,10 @@
             width: 80px;
             height: 80px;
             border-radius: 50%;
+<<<<<<< HEAD
+            background: #f0f0f0; /* 이미지 로딩 전 배경색 */
+=======
+>>>>>>> c517f1efca5ef626bf2d1cc0b42b90efb5a6f760
             display: flex;
             align-items: center;
             justify-content: center;
@@ -75,6 +91,10 @@
         }
 
         .status-badge {
+<<<<<<< HEAD
+            background-color: #28a745;
+=======
+>>>>>>> c517f1efca5ef626bf2d1cc0b42b90efb5a6f760
             color: white;
             padding: 4px 8px;
             border-radius: 12px;
@@ -82,6 +102,57 @@
             font-weight: 500;
         }
 
+<<<<<<< HEAD
+        /* 매칭 토글 */
+        .matching-toggle {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+
+        .toggle-label {
+            font-size: clamp(14px, 2vw, 16px);
+            font-weight: 600;
+            color: #333;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 60px;
+            height: 30px;
+            background-color: #28a745;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .toggle-switch.off {
+            background-color: #ccc;
+        }
+
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 24px;
+            height: 24px;
+            background-color: white;
+            border-radius: 50%;
+            transition: transform 0.3s ease;
+        }
+
+        .toggle-switch.off::after {
+            transform: translateX(0);
+        }
+
+        .toggle-switch:not(.off)::after {
+            transform: translateX(30px);
+        }
+
+=======
+>>>>>>> c517f1efca5ef626bf2d1cc0b42b90efb5a6f760
         /* 정보 카드 그리드 */
         .info-grid {
             display: grid;
@@ -90,6 +161,21 @@
             margin-bottom: 32px;
         }
 
+<<<<<<< HEAD
+.info-card {
+    width: 100%;
+    background-color: #fff;
+    border: 1px solid #e0e0e0;   /* ← 옅은 테두리로 구분감만 */
+    border-radius: 12px;
+    padding: 24px;
+
+    /* 그림자·움직임 제거 */
+    box-shadow: none;
+    transition: none;
+    cursor: default;             /* 선택적으로 pointer → default 변경 */
+}
+
+=======
         .info-card {
             width: 100%;
             border: 1px solid #e0e0e0;
@@ -101,6 +187,7 @@
             transition: none;
             cursor: default;
         }
+>>>>>>> c517f1efca5ef626bf2d1cc0b42b90efb5a6f760
 
         .info-card-header {
             display: flex;
@@ -143,6 +230,10 @@
 
         /* 섹션 */
         .section {
+<<<<<<< HEAD
+            background-color: white;
+=======
+>>>>>>> c517f1efca5ef626bf2d1cc0b42b90efb5a6f760
             border-radius: 12px;
             padding: min(30px, 4vw);
             margin-bottom: 24px;
@@ -243,6 +334,8 @@
             font-weight: bold;
         }
 
+<<<<<<< HEAD
+=======
         .completed-badge {
             position: absolute;
             top: 15px;
@@ -259,6 +352,7 @@
             visibility: hidden;
         }
 
+>>>>>>> c517f1efca5ef626bf2d1cc0b42b90efb5a6f760
         /* 반응형 디자인 */
         @media (max-width: 1024px) {
             .action-cards {
@@ -305,6 +399,49 @@
         }
         ]]></style>
 
+<<<<<<< HEAD
+		<script lazy="false" type="text/javascript"><![CDATA[scwin.onpageload = function () {
+    var userInfoStr = WebSquare.cookie.getCookie("userInfo");
+    var userInfo = JSON.parse(userInfoStr);
+    dma_userInfoVo.set("accountId", userInfo.accountId);
+    console.log(dma_userInfoVo);
+
+    // 서버 통신
+    $c.sbm.execute($p, sbm_userDetail);
+};
+
+// 사이드바 메뉴 클릭
+scwin.sidebarMenu_onclick = function (menuId) {
+    switch (menuId) {
+        case 'matching_inquiry':
+            alert("매칭 현황 페이지로 이동합니다.");
+            break;
+        case 'matching_profile':
+            // 현재 페이지이므로 아무것도 하지 않음
+            break;
+        case 'profile':
+            $p.url("ProfileEditStep1.xml");
+            break;
+        case 'application_history':
+            $p.url("ApplicationHistory.xml");
+            break;
+    }
+};
+
+// MBTI 검사 시작
+scwin.startMbti_onclick = function () {
+    alert("MBTI 성격 검사를 시작합니다.");
+};
+
+// 코드분석 시작
+scwin.startCodeAnalysis_onclick = function () {
+    alert("코드분석을 시작합니다.");
+};
+
+scwin.btn_userUpdate_onclick = function (e) {
+    $p.url("updateUser.xml");
+};
+=======
 		<script lazy="false" type="text/javascript"><![CDATA[
 scwin.onpageload = function () {
     // 부모 페이지의 dma_userInfoVo 데이터맵 참조
@@ -391,6 +528,7 @@ scwin.getUserInfoByCookie = function () {
     }
     return userInfo;
 }
+>>>>>>> c517f1efca5ef626bf2d1cc0b42b90efb5a6f760
 ]]></script>
 	</head>
 
@@ -457,6 +595,20 @@ scwin.getUserInfoByCookie = function () {
 
 					<!-- 매칭에 필요한 정보 섹션 -->
 					<section class="section">
+<<<<<<< HEAD
+						<w2:textbox class="section-title" label="매칭에 필요한 정보를 입력해주세요."></w2:textbox>
+
+						<xf:group class="action-cards">
+							<!-- MBTI 성격 검사 카드 -->
+							<xf:group id="mbti_card" class="action-card incomplete" ev:onclick="scwin.startMbti_onclick()">
+								<xf:group class="incomplete-badge">미완료</xf:group>
+								<xf:group class="action-card-icon" style="">
+									<xf:image src="/InsWebApp/images/ws5/main/mbti_check.png" style="width:100%;height:100%;" id=""></xf:image>
+								</xf:group>
+								<w2:textbox class="action-card-title" label="mbti 성격 검사"></w2:textbox>
+								<w2:textbox class="action-card-subtitle" label="ex : 8가지 성향을 4개의 성향을 알아 낼 수 있습니다"></w2:textbox>
+								<xf:trigger class="action-card-button" type="button">
+=======
 						<w2:textbox id="section_title" class="section-title" label="매칭에 필요한 정보를 입력해주세요."></w2:textbox>
 
 						<xf:group id="action_cards_group" class="action-cards">
@@ -469,27 +621,40 @@ scwin.getUserInfoByCookie = function () {
 								<w2:textbox class="action-card-title" label="mbti 성격 검사"></w2:textbox>
 								<w2:textbox class="action-card-subtitle" label="ex : 8가지 성향을 4개의 성향을 알아 낼 수 있습니다"></w2:textbox>
 								<xf:trigger id="mbti_button" class="action-card-button" type="button">
+>>>>>>> c517f1efca5ef626bf2d1cc0b42b90efb5a6f760
 									<xf:label><![CDATA[시작하기]]></xf:label>
 								</xf:trigger>
 							</xf:group>
 
 							<!-- 코드분석 카드 -->
 							<xf:group id="code_card" class="action-card incomplete" ev:onclick="scwin.startCodeAnalysis_onclick()">
+<<<<<<< HEAD
+								<xf:group class="incomplete-badge">미완료</xf:group>
+
+=======
 								<w2:textbox id="code_badge" class="incomplete-badge" label="미완료"></w2:textbox>
+>>>>>>> c517f1efca5ef626bf2d1cc0b42b90efb5a6f760
 								<xf:group class="action-card-icon" style="">
 									<xf:image src="/InsWebApp/images/ws5/main/code_check.png" style="width:100%;height:100%;" id=""></xf:image>
 								</xf:group>
 								<w2:textbox class="action-card-title" label="코드분석"></w2:textbox>
 								<w2:textbox class="action-card-subtitle" label="ex : 8가지 성향을 4개의 성향을 알아 낼 수 있습니다"></w2:textbox>
+<<<<<<< HEAD
+								<xf:trigger class="action-card-button" type="button">
+=======
 								<xf:trigger id="code_button" class="action-card-button" type="button">
+>>>>>>> c517f1efca5ef626bf2d1cc0b42b90efb5a6f760
 									<xf:label><![CDATA[분석하기]]></xf:label>
 								</xf:trigger>
 							</xf:group>
 						</xf:group>
+<<<<<<< HEAD
+=======
 						<xf:group id="result_section" style="display:none; text-align: center; padding: 20px;">
 							<w2:textbox id="result_mbti_type" style="font-size: 28px; font-weight: bold; margin-top: 20px; color: #007bff;"></w2:textbox>
 							<xf:image id="result_image" src="" style="max-width: 400px; width: 100%; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin-top: 20px;"></xf:image>
 						</xf:group>
+>>>>>>> c517f1efca5ef626bf2d1cc0b42b90efb5a6f760
 					</section>
 				</main>
 			</xf:group>

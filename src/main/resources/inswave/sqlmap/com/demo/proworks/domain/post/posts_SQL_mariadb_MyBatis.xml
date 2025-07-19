@@ -31,6 +31,10 @@
             <if test="expiresAt               != null"> , EXPIRES_AT                </if>
             <if test="postedAt                != null"> , POSTED_AT                 </if>
             <if test="status                   != null"> , STATUS                    </if>
+<<<<<<< HEAD
+            <if test="jobImageFileName        != null"> , JOB_IMAGE_FILE_NAME       </if>
+=======
+>>>>>>> c517f1efca5ef626bf2d1cc0b42b90efb5a6f760
         )
         VALUES  
         ( 
@@ -45,6 +49,10 @@
             <if test="expiresAt               != null"> , #{expiresAt}                </if>
             <if test="postedAt                != null"> , #{postedAt}                 </if>
             <if test="status                   != null"> , #{status}                    </if>
+<<<<<<< HEAD
+            <if test="jobImageFileName        != null"> , #{jobImageFileName}          </if>
+=======
+>>>>>>> c517f1efca5ef626bf2d1cc0b42b90efb5a6f760
  
         )          
     </insert>	
@@ -94,6 +102,51 @@
     </select>
 	
     <select id="selectListPost" parameterType="com.demo.proworks.domain.post.vo.PostVo" resultType="com.demo.proworks.domain.post.vo.PostVo">
+<<<<<<< HEAD
+    	<!-- 공고정보 목록을 조회한다. (회사명 포함, 소프트 삭제된 공고 제외) -->
+           SELECT    /* QueryID : com.demo.proworks.domain.post.selectListPost */
+               p.JOB_POSTING_ID as jobPostingId, 
+               p.COMPANY_ID as companyId, 
+               p.TITLE as title, 
+               p.DESCRIPTION as description, 
+               p.EXPERIENCE_LEVEL as experienceLevel, 
+               p.SALARY_RANGE as salaryRange, 
+               p.LOCATION as location, 
+               p.WORK_TYPE as workType, 
+               p.PREFERRED_DEVELOPER_TYPES as preferredDeveloperTypes, 
+               p.EXPIRES_AT as expiresAt, 
+               p.POSTED_AT as postedAt, 
+               p.STATUS as status,
+               p.JOB_IMAGE_FILE_NAME as jobImageFileName,
+               u.name as companyName,
+               c.industry as industry,
+               c.emp_count as empCount		       
+           FROM POSTS p
+           INNER JOIN companys c ON p.company_id = c.company_id
+           INNER JOIN users u ON c.user_id = u.user_id
+           WHERE  1=1
+           AND (p.IS_DELETED IS NULL OR p.IS_DELETED = 0)
+           AND (c.is_deleted IS NULL OR c.is_deleted = 0)
+           <if test="companyId != null and companyId != ''">
+           AND p.COMPANY_ID = #{companyId}
+           </if>
+           ORDER BY p.POSTED_AT DESC
+    </select>
+	
+    <select id="selectListCountPost" parameterType="com.demo.proworks.domain.post.vo.PostVo" resultType="long">
+    <!-- 공고정보 목록의 카운트를 조회한다. (회사명 포함, 소프트 삭제된 공고 제외) -->
+    
+         SELECT    /* QueryID : com.demo.proworks.domain.post.selectListCountPost */
+             COUNT(*) totcnt  		                  
+         FROM POSTS p
+         INNER JOIN companys c ON p.company_id = c.company_id
+         INNER JOIN users u ON c.user_id = u.user_id
+         WHERE  1=1
+         AND (p.IS_DELETED IS NULL OR p.IS_DELETED = 0)
+         AND (c.is_deleted IS NULL OR c.is_deleted = 0)
+         <if test="companyId != null and companyId != ''">
+         AND p.COMPANY_ID = #{companyId}
+=======
     	<!-- 공고정보 목록을 조회한다. (소프트 삭제된 공고 제외) -->
            SELECT    /* QueryID : com.demo.proworks.domain.post.selectListPost */
                JOB_POSTING_ID as jobPostingId, 
@@ -127,6 +180,7 @@
          AND (IS_DELETED IS NULL OR IS_DELETED = 0)
          <if test="companyId != null and companyId != ''">
          AND COMPANY_ID = #{companyId}
+>>>>>>> c517f1efca5ef626bf2d1cc0b42b90efb5a6f760
          </if>
 
     </select>
@@ -286,6 +340,8 @@ WHERE p.status = 'active'
         WHERE
             user_id = #{accountId}
     </update>
+<<<<<<< HEAD
+=======
 <select id="selectPostingList" resultType="com.demo.proworks.domain.post.vo.MainPostingVo">
 SELECT 
     u.name AS name,
@@ -299,4 +355,5 @@ JOIN users u ON c.user_id = u.user_id
 ORDER BY p.posted_at DESC
 LIMIT 3;
 </select>
+>>>>>>> c517f1efca5ef626bf2d1cc0b42b90efb5a6f760
 </mapper>
