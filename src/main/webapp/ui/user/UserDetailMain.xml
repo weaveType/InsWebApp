@@ -306,43 +306,29 @@ scwin.updateCardStatus = function(userInfoData) {
     try {
         console.log("UserDetailMain.xml - updateCardStatus 호출됨", userInfoData);
 
-        // MBTI/코드분석 카드 상태 업데이트
-        var mbtiCard = document.getElementById("mbti_card");
-        var codeCard = document.getElementById("code_card");
-
-        if (mbtiCard) {
-            if (userInfoData.isMbtiChecked === 1) {
-                mbtiCard.classList.remove("incomplete");
-                mbtiCard.classList.add("completed");
-                var badge = mbtiCard.querySelector('.incomplete-badge');
-                if (badge) badge.remove();
+        // MBTI 카드 처리
+        if (mbti_card) {
+            if (userInfoData.get("isMbtiChecked") == 1) {
+                mbti_card.removeClass("incomplete");
+                mbti_card.addClass("completed");
+                mbti_badge.hide();
             } else {
-                mbtiCard.classList.remove("completed");
-                mbtiCard.classList.add("incomplete");
-                if (!mbtiCard.querySelector('.incomplete-badge')) {
-                    var newBadge = document.createElement('xf:group');
-                    newBadge.className = 'incomplete-badge';
-                    newBadge.textContent = '미완료';
-                    mbtiCard.prepend(newBadge);
-                }
+                mbti_card.removeClass("completed");
+                mbti_card.addClass("incomplete");
+                mbti_badge.show();
             }
         }
         
-        if (codeCard) {
-            if (userInfoData.isCodeChecked === 1) {
-                codeCard.classList.remove("incomplete");
-                codeCard.classList.add("completed");
-                var badge2 = codeCard.querySelector('.incomplete-badge');
-                if (badge2) badge2.remove();
+        // 코드분석 카드 처리
+        if (code_card) {
+            if (userInfoData.get("isCodeChecked") == 1) {
+                code_card.removeClass("incomplete");
+                code_card.addClass("completed");
+                code_badge.hide();
             } else {
-                codeCard.classList.remove("completed");
-                codeCard.classList.add("incomplete");
-                if (!codeCard.querySelector('.incomplete-badge')) {
-                    var newBadge2 = document.createElement('xf:group');
-                    newBadge2.className = 'incomplete-badge';
-                    newBadge2.textContent = '미완료';
-                    codeCard.prepend(newBadge2);
-                }
+                code_card.removeClass("completed");
+                code_card.addClass("incomplete");
+                code_badge.show();
             }
         }
     } catch(err) {
@@ -420,7 +406,7 @@ scwin.updateCardStatus = function(userInfoData) {
 						<xf:group class="action-cards">
 							<!-- MBTI 성격 검사 카드 -->
 							<xf:group id="mbti_card" class="action-card incomplete" ev:onclick="scwin.startMbti_onclick()">
-								<xf:group class="incomplete-badge">미완료</xf:group>
+								<xf:group id="mbti_badge" class="incomplete-badge">미완료</xf:group>
 								<xf:group class="action-card-icon" style="">
 									<xf:image src="/InsWebApp/images/ws5/main/mbti_check.png" style="width:100%;height:100%;" id=""></xf:image>
 								</xf:group>
@@ -433,7 +419,7 @@ scwin.updateCardStatus = function(userInfoData) {
 
 							<!-- 코드분석 카드 -->
 							<xf:group id="code_card" class="action-card incomplete" ev:onclick="scwin.startCodeAnalysis_onclick()">
-								<xf:group class="incomplete-badge">미완료</xf:group>
+								<xf:group id="code_badge" class="incomplete-badge">미완료</xf:group>
 
 								<xf:group class="action-card-icon" style="">
 									<xf:image src="/InsWebApp/images/ws5/main/code_check.png" style="width:100%;height:100%;" id=""></xf:image>
