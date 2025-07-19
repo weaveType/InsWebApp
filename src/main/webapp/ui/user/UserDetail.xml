@@ -493,7 +493,7 @@ scwin.sbm_userDetail_submiterror = function(e){
 
 // 프로필 메뉴 클릭 이벤트
 scwin.menu_profile_onclick = function() {
-    // UserDetailMain.xml은 이미 sbm_userDetail_submitdone에서 로드되므로, 여기서는 별도 처리 없음
+    contentFrame.setSrc('UserDetailMain.xml');
 };
 
 // 지원현황 메뉴 클릭 이벤트
