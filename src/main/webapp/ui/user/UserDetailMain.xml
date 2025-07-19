@@ -327,6 +327,7 @@ scwin.updateCardStatus = function(userInfoData) {
             if (userInfoData.get("isMbtiChecked") == 1) {
                 mbti_card.removeClass("incomplete");
                 mbti_card.addClass("completed");
+
                 mbti_badge.setLabel("완료");
                 mbti_badge.removeClass("incomplete-badge");
                 mbti_badge.addClass("completed-badge");
@@ -334,6 +335,7 @@ scwin.updateCardStatus = function(userInfoData) {
             } else {
                 mbti_card.removeClass("completed");
                 mbti_card.addClass("incomplete");
+
                 mbti_badge.setLabel("미완료");
                 mbti_badge.removeClass("completed-badge");
                 mbti_badge.addClass("incomplete-badge");
@@ -346,6 +348,7 @@ scwin.updateCardStatus = function(userInfoData) {
             if (userInfoData.get("isCodeChecked") == 1) {
                 code_card.removeClass("incomplete");
                 code_card.addClass("completed");
+
                 code_badge.setLabel("완료");
                 code_badge.removeClass("incomplete-badge");
                 code_badge.addClass("completed-badge");
@@ -353,6 +356,7 @@ scwin.updateCardStatus = function(userInfoData) {
             } else {
                 code_card.removeClass("completed");
                 code_card.addClass("incomplete");
+
                 code_badge.setLabel("미완료");
                 code_badge.removeClass("completed-badge");
                 code_badge.addClass("incomplete-badge");
