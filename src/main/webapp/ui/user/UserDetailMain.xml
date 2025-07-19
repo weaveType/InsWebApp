@@ -401,6 +401,10 @@ scwin.getUserInfoByCookie = function () {
     }
     return userInfo;
 }
+
+scwin.btn_userUpdate_onclick = function (e) {
+    $p.url("updateUser.xml");
+};
 ]]></script>
 	</head>
 

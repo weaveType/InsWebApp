@@ -30,6 +30,8 @@ import com.demo.proworks.domain.user.vo.ApplicantListVo;
 import com.demo.proworks.domain.user.vo.ApplicantDetailVo;
 import com.demo.proworks.domain.user.vo.ScoutVo;
 import com.demo.proworks.domain.user.vo.ScoutListVo;
+import com.demo.proworks.domain.user.vo.ApplicationHistoryVo;
+import com.demo.proworks.domain.user.vo.ApplicationHistoryListVo;
 import com.demo.proworks.cmmn.ProworksUserHeader;
 import com.inswave.elfw.util.ControllerContextUtil;
 
@@ -1309,5 +1311,110 @@ public class UserController {
 	@ElDescription(sub = "해당 유저의 성향검사 및 코드검사 여부 확인", desc = "해당 유저의 성향검사 및 코드검사 여부를 가져온다")
 	public MatchingCheckedVo selectMatchingChecked(MatchingCheckedVo matchingCheckedVo) throws Exception {
 		return userService.selectMatchingChecked(matchingCheckedVo);
+	}
+
+	/**
+	 * 사용자의 지원현황 목록을 조회한다.
+	 *
+	 * @param applicationHistoryVo 지원현황 조회 조건
+	 * @return 지원현황 목록
+	 * @throws Exception
+	 */
+	@ElService(key = "USApplicationHistoryList")
+	@RequestMapping(value = "USApplicationHistoryList")
+	@ElDescription(sub = "지원현황 목록조회", desc = "사용자의 지원현황 목록을 조회한다.")
+	public ApplicationHistoryListVo selectApplicationHistoryList(ApplicationHistoryVo applicationHistoryVo) throws Exception {
+		// 세션에서 사용자 ID 가져오기
+		ProworksUserHeader userHeader = null;
+		try {
+			userHeader = (ProworksUserHeader) ControllerContextUtil.getUserHeader();
+		} catch (Exception e) {
+			System.out.println("사용자 헤더 조회 중 오류: " + e.getMessage());
+		}
+		
+		if (userHeader != null) {
+			applicationHistoryVo.setUserId(userHeader.getAccountId());
+		}
+
+		List<ApplicationHistoryVo> applicationList = userService.selectApplicationHistoryList(applicationHistoryVo);
+		List<ApplicationHistoryVo> statsList = userService.selectApplicationHistoryStats(applicationHistoryVo);
+		long totalCount = userService.selectApplicationHistoryCount(applicationHistoryVo);
+
+		ApplicationHistoryListVo result = new ApplicationHistoryListVo();
+		result.setApplicationHistoryList(applicationList);
+		result.setApplicationStatsList(statsList);
+		result.setTotalCount(totalCount);
+		result.setPageSize(applicationHistoryVo.getPageSize());
+		result.setPageIndex(applicationHistoryVo.getPageIndex());
+
+		return result;
+	}
+
+	/**
+	 * 지원현황 상세정보를 조회한다.
+	 *
+	 * @param applicationHistoryVo 지원현황 조회 조건
+	 * @return 지원현황 상세정보
+	 * @throws Exception
+	 */
+	@ElService(key = "USApplicationHistoryDetail")
+	@RequestMapping(value = "USApplicationHistoryDetail")
+	@ElDescription(sub = "지원현황 상세조회", desc = "지원현황의 상세정보를 조회한다.")
+	public ApplicationHistoryVo selectApplicationHistoryDetail(ApplicationHistoryVo applicationHistoryVo) throws Exception {
+		return userService.selectApplicationHistoryDetail(applicationHistoryVo);
+	}
+
+	/**
+	 * 지원현황을 등록한다.
+	 *
+	 * @param applicationHistoryVo 지원현황 정보
+	 * @return 등록 결과
+	 * @throws Exception
+	 */
+	@ElService(key = "USApplicationHistoryInsert")
+	@RequestMapping(value = "USApplicationHistoryInsert")
+	@ElDescription(sub = "지원현황 등록", desc = "새로운 지원현황을 등록한다.")
+	public int insertApplicationHistory(ApplicationHistoryVo applicationHistoryVo) throws Exception {
+		// 세션에서 사용자 ID 가져오기
+		ProworksUserHeader userHeader = null;
+		try {
+			userHeader = (ProworksUserHeader) ControllerContextUtil.getUserHeader();
+		} catch (Exception e) {
+			System.out.println("사용자 헤더 조회 중 오류: " + e.getMessage());
+		}
+		
+		if (userHeader != null) {
+			applicationHistoryVo.setUserId(userHeader.getAccountId());
+		}
+
+		return userService.insertApplicationHistory(applicationHistoryVo);
+	}
+
+	/**
+	 * 지원현황을 수정한다.
+	 *
+	 * @param applicationHistoryVo 지원현황 정보
+	 * @return 수정 결과
+	 * @throws Exception
+	 */
+	@ElService(key = "USApplicationHistoryUpdate")
+	@RequestMapping(value = "USApplicationHistoryUpdate")
+	@ElDescription(sub = "지원현황 수정", desc = "지원현황 정보를 수정한다.")
+	public int updateApplicationHistory(ApplicationHistoryVo applicationHistoryVo) throws Exception {
+		return userService.updateApplicationHistory(applicationHistoryVo);
+	}
+
+	/**
+	 * 지원현황을 삭제한다.
+	 *
+	 * @param applicationHistoryVo 지원현황 정보
+	 * @return 삭제 결과
+	 * @throws Exception
+	 */
+	@ElService(key = "USApplicationHistoryDelete")
+	@RequestMapping(value = "USApplicationHistoryDelete")
+	@ElDescription(sub = "지원현황 삭제", desc = "지원현황을 삭제한다.")
+	public int deleteApplicationHistory(ApplicationHistoryVo applicationHistoryVo) throws Exception {
+		return userService.deleteApplicationHistory(applicationHistoryVo);
 	}
 }

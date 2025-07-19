@@ -10,101 +10,23 @@
         <w2:MSA/>
         <xf:model>
             <w2:dataCollection baseNode="map">
-                <w2:dataList baseNode="list" repeatNode="map" id="dlt_matchOffers" saveRemovedData="true">
-                    <w2:columnInfo>
-                        <w2:column id="company" name="회사명" dataType="text"></w2:column>
-                        <w2:column id="jobTitle" name="공고제목" dataType="text"></w2:column>
-                        <w2:column id="position" name="포지션" dataType="text"></w2:column>
-                        <w2:column id="location" name="근무지역" dataType="text"></w2:column>
-                        <w2:column id="salary" name="연봉" dataType="text"></w2:column>
-                        <w2:column id="experience" name="경력" dataType="text"></w2:column>
-                        <w2:column id="matchDate" name="매칭일자" dataType="text"></w2:column>
-                        <w2:column id="status" name="상태" dataType="text"></w2:column>
-                        <w2:column id="logo" name="로고" dataType="text"></w2:column>
-                        <w2:column id="postId" name="공고ID" dataType="text"></w2:column>
-                        <w2:column id="companyId" name="회사ID" dataType="text"></w2:column>
-                    </w2:columnInfo>
-                    <w2:data use="true">
-                        <w2:row>
-                            <company><![CDATA[㈜네이버]]></company>
-                            <jobTitle><![CDATA[백엔드 개발자 모집]]></jobTitle>
-                            <position><![CDATA[백엔드 개발자]]></position>
-                            <location><![CDATA[판교]]></location>
-                            <salary><![CDATA[6000~8000만원]]></salary>
-                            <experience><![CDATA[3~5년]]></experience>
-                            <matchDate><![CDATA[2024-01-25]]></matchDate>
-                            <status><![CDATA[NEW]]></status>
-                            <logo><![CDATA[🟢]]></logo>
-                            <postId><![CDATA[POST001]]></postId>
-                            <companyId><![CDATA[COMP001]]></companyId>
-                        </w2:row>
-                        <w2:row>
-                            <company><![CDATA[카카오]]></company>
-                            <jobTitle><![CDATA[풀스택 개발자 급구]]></jobTitle>
-                            <position><![CDATA[풀스택 개발자]]></position>
-                            <location><![CDATA[판교]]></location>
-                            <salary><![CDATA[5500~7500만원]]></salary>
-                            <experience><![CDATA[2~4년]]></experience>
-                            <matchDate><![CDATA[2024-01-24]]></matchDate>
-                            <status><![CDATA[NEW]]></status>
-                            <logo><![CDATA[🟡]]></logo>
-                            <postId><![CDATA[POST002]]></postId>
-                            <companyId><![CDATA[COMP002]]></companyId>
-                        </w2:row>
-                        <w2:row>
-                            <company><![CDATA[토스]]></company>
-                            <jobTitle><![CDATA[프론트엔드 개발자 채용]]></jobTitle>
-                            <position><![CDATA[프론트엔드 개발자]]></position>
-                            <location><![CDATA[서울 강남]]></location>
-                            <salary><![CDATA[7000~9000만원]]></salary>
-                            <experience><![CDATA[4~6년]]></experience>
-                            <matchDate><![CDATA[2024-01-23]]></matchDate>
-                            <status><![CDATA[VIEWED]]></status>
-                            <logo><![CDATA[💙]]></logo>
-                            <postId><![CDATA[POST003]]></postId>
-                            <companyId><![CDATA[COMP003]]></companyId>
-                        </w2:row>
-                        <w2:row>
-                            <company><![CDATA[쿠팡]]></company>
-                            <jobTitle><![CDATA[Java 백엔드 개발자]]></jobTitle>
-                            <position><![CDATA[백엔드 개발자]]></position>
-                            <location><![CDATA[송파구]]></location>
-                            <salary><![CDATA[6500~8500만원]]></salary>
-                            <experience><![CDATA[3~7년]]></experience>
-                            <matchDate><![CDATA[2024-01-22]]></matchDate>
-                            <status><![CDATA[NEW]]></status>
-                            <logo><![CDATA[🟠]]></logo>
-                            <postId><![CDATA[POST004]]></postId>
-                            <companyId><![CDATA[COMP004]]></companyId>
-                        </w2:row>
-                        <w2:row>
-                            <company><![CDATA[라인]]></company>
-                            <jobTitle><![CDATA[React 프론트엔드 개발자]]></jobTitle>
-                            <position><![CDATA[프론트엔드 개발자]]></position>
-                            <location><![CDATA[신사동]]></location>
-                            <salary><![CDATA[5000~7000만원]]></salary>
-                            <experience><![CDATA[2~5년]]></experience>
-                            <matchDate><![CDATA[2024-01-21]]></matchDate>
-                            <status><![CDATA[INTERESTED]]></status>
-                            <logo><![CDATA[💚]]></logo>
-                            <postId><![CDATA[POST005]]></postId>
-                            <companyId><![CDATA[COMP005]]></companyId>
-                        </w2:row>
-                        <w2:row>
-                            <company><![CDATA[배달의민족]]></company>
-                            <jobTitle><![CDATA[풀스택 개발자 모집]]></jobTitle>
-                            <position><![CDATA[풀스택 개발자]]></position>
-                            <location><![CDATA[송파구]]></location>
-                            <salary><![CDATA[5500~7500만원]]></salary>
-                            <experience><![CDATA[3~5년]]></experience>
-                            <matchDate><![CDATA[2024-01-20]]></matchDate>
-                            <status><![CDATA[VIEWED]]></status>
-                            <logo><![CDATA[🔷]]></logo>
-                            <postId><![CDATA[POST006]]></postId>
-                            <companyId><![CDATA[COMP006]]></companyId>
-                        </w2:row>
-                    </w2:data>
-                </w2:dataList>
+            	<w2:dataList baseNode="list" repeatNode="map" id="dlt_matchOffers" saveRemovedData="true">
+            		<w2:columnInfo>
+            			<w2:column id="company" name="회사명" dataType="text"></w2:column>
+            			<w2:column id="jobTitle" name="공고제목" dataType="text"></w2:column>
+            			<w2:column id="position" name="포지션" dataType="text"></w2:column>
+            			<w2:column id="location" name="근무지역" dataType="text"></w2:column>
+            			<w2:column id="salary" name="연봉" dataType="text"></w2:column>
+            			<w2:column id="experience" name="경력" dataType="text"></w2:column>
+            			<w2:column id="status" name="상태" dataType="text"></w2:column>
+            			<w2:column id="logo" name="로고" dataType="text"></w2:column>
+            			<w2:column id="jobPostingId" name="공고ID" dataType="text"></w2:column>
+            			<w2:column id="companyId" name="회사ID" dataType="text"></w2:column>
+            		</w2:columnInfo>
+            	</w2:dataList>
+            	<w2:dataMap baseNode="map" id="dataMap1">
+            		<w2:keyInfo></w2:keyInfo>
+            	</w2:dataMap>
             </w2:dataCollection>
         </xf:model>
         <w2:layoutInfo/>
