@@ -255,6 +255,10 @@
             font-weight: bold;
         }
 
+        .hidden-button {
+            visibility: hidden;
+        }
+
         /* 반응형 디자인 */
         @media (max-width: 1024px) {
             .action-cards {
@@ -326,14 +330,14 @@ scwin.updateCardStatus = function(userInfoData) {
                 mbti_badge.setLabel("완료");
                 mbti_badge.removeClass("incomplete-badge");
                 mbti_badge.addClass("completed-badge");
-                mbti_button.hide();
+                mbti_button.addClass("hidden-button");
             } else {
                 mbti_card.removeClass("completed");
                 mbti_card.addClass("incomplete");
                 mbti_badge.setLabel("미완료");
                 mbti_badge.removeClass("completed-badge");
                 mbti_badge.addClass("incomplete-badge");
-                mbti_button.show();
+                mbti_button.removeClass("hidden-button");
             }
         }
         
@@ -345,14 +349,14 @@ scwin.updateCardStatus = function(userInfoData) {
                 code_badge.setLabel("완료");
                 code_badge.removeClass("incomplete-badge");
                 code_badge.addClass("completed-badge");
-                code_button.hide();
+                code_button.addClass("hidden-button");
             } else {
                 code_card.removeClass("completed");
                 code_card.addClass("incomplete");
                 code_badge.setLabel("미완료");
                 code_badge.removeClass("completed-badge");
                 code_badge.addClass("incomplete-badge");
-                code_button.show();
+                code_button.removeClass("hidden-button");
             }
         }
     } catch(err) {
