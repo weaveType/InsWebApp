@@ -317,14 +317,22 @@
     }
 };
 
-// 사용자 정보 조회 완료 처리 (UserDetailMain.xml 내부에서 호출)
-scwin.updateCardStatus = function(userInfoData) {
+// 사용자 정보 조회 완료 처리
+scwin.updateCardStatus = function (userInfoData) {
     try {
-        console.log("UserDetailMain.xml - updateCardStatus 호출됨", userInfoData);
+        let isMbtiDone = userInfoData.get("isMbtiChecked") == 1;
+        let isCodeDone = userInfoData.get("isCodeChecked") == 1;
 
-        // MBTI 카드 처리
-        if (mbti_card) {
-            if (userInfoData.get("isMbtiChecked") == 1) {
+        // 코드검사 및 성향검사를 완료하였을 경우
+        if (isMbtiDone && isCodeDone) {
+            var mbtiType = scwin.getUserInfoByCookie().mbti;
+            if (mbtiType) {
+                const imageUrl = "/InsWebApp/images/ws5/mbti/" + mbtiType + ".png";
+            }
+        }
+        // 성향검사만 완료하였을 경우
+        else if (mbti_card) {
+            if (isMbtiDone) {
                 mbti_card.removeClass("incomplete");
                 mbti_card.addClass("completed");
 
@@ -342,10 +350,10 @@ scwin.updateCardStatus = function(userInfoData) {
                 mbti_button.removeClass("hidden-button");
             }
         }
-        
-        // 코드분석 카드 처리
-        if (code_card) {
-            if (userInfoData.get("isCodeChecked") == 1) {
+
+        // 코드분석만 완료하였을 경우
+        else if (code_card) {
+            if (isCodeDone) {
                 code_card.removeClass("incomplete");
                 code_card.addClass("completed");
 
@@ -363,10 +371,25 @@ scwin.updateCardStatus = function(userInfoData) {
                 code_button.removeClass("hidden-button");
             }
         }
-    } catch(err) {
+    } catch (err) {
         console.error("UserDetailMain.xml - updateCardStatus 오류:", err);
     }
 };
+
+scwin.getUserInfoByCookie = function () {
+    var userInfoCookie = WebSquare.cookie.getCookie("userInfo");
+    var userInfo = null;
+
+    if (userInfoCookie) {
+        try {
+            userInfo = JSON.parse(userInfoCookie);
+        } catch (e) {
+            console.error("사용자 정보 파싱 오류:", e);
+            userInfo = null;
+        }
+    }
+    return userInfo;
+}
 ]]></script>
 	</head>
 
