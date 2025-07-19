@@ -368,11 +368,9 @@ scwin.btn_sendEmail_onclick = function (e) {
 ]]></script>
     </head>
     <body ev:onpageload="scwin.onpageload">
-<<<<<<< HEAD
-        <xf:group class="main-container">
-=======
+
         <xf:group class="main-container" id="">
->>>>>>> c517f1efca5ef626bf2d1cc0b42b90efb5a6f760
+
             <!-- 합격자 메일 템플릿 섹션 -->
             <xf:group class="template-section">
                 <w2:textbox class="section-title" label="✅ 합격자 메일 템플릿"></w2:textbox>
