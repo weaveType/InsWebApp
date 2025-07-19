@@ -56,10 +56,6 @@
             width: 80px;
             height: 80px;
             border-radius: 50%;
-<<<<<<< HEAD
-            background: #f0f0f0; /* 이미지 로딩 전 배경색 */
-=======
->>>>>>> c517f1efca5ef626bf2d1cc0b42b90efb5a6f760
             display: flex;
             align-items: center;
             justify-content: center;
@@ -79,10 +75,6 @@
         }
 
         .status-badge {
-<<<<<<< HEAD
-            background-color: #28a745;
-=======
->>>>>>> c517f1efca5ef626bf2d1cc0b42b90efb5a6f760
             color: white;
             padding: 4px 8px;
             border-radius: 12px;
@@ -90,57 +82,6 @@
             font-weight: 500;
         }
 
-<<<<<<< HEAD
-        /* 매칭 토글 */
-        .matching-toggle {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            flex-shrink: 0;
-        }
-
-        .toggle-label {
-            font-size: clamp(14px, 2vw, 16px);
-            font-weight: 600;
-            color: #333;
-        }
-
-        .toggle-switch {
-            position: relative;
-            width: 60px;
-            height: 30px;
-            background-color: #28a745;
-            border-radius: 15px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        .toggle-switch.off {
-            background-color: #ccc;
-        }
-
-        .toggle-switch::after {
-            content: '';
-            position: absolute;
-            top: 3px;
-            left: 3px;
-            width: 24px;
-            height: 24px;
-            background-color: white;
-            border-radius: 50%;
-            transition: transform 0.3s ease;
-        }
-
-        .toggle-switch.off::after {
-            transform: translateX(0);
-        }
-
-        .toggle-switch:not(.off)::after {
-            transform: translateX(30px);
-        }
-
-=======
->>>>>>> c517f1efca5ef626bf2d1cc0b42b90efb5a6f760
         /* 정보 카드 그리드 */
         .info-grid {
             display: grid;
@@ -149,21 +90,7 @@
             margin-bottom: 32px;
         }
 
-<<<<<<< HEAD
-.info-card {
-    width: 100%;
-    background-color: #fff;
-    border: 1px solid #e0e0e0;   /* ← 옅은 테두리로 구분감만 */
-    border-radius: 12px;
-    padding: 24px;
 
-    /* 그림자·움직임 제거 */
-    box-shadow: none;
-    transition: none;
-    cursor: default;             /* 선택적으로 pointer → default 변경 */
-}
-
-=======
         .info-card {
             width: 100%;
             border: 1px solid #e0e0e0;
@@ -175,7 +102,6 @@
             transition: none;
             cursor: default;
         }
->>>>>>> c517f1efca5ef626bf2d1cc0b42b90efb5a6f760
 
         .info-card-header {
             display: flex;
@@ -218,10 +144,6 @@
 
         /* 섹션 */
         .section {
-<<<<<<< HEAD
-            background-color: white;
-=======
->>>>>>> c517f1efca5ef626bf2d1cc0b42b90efb5a6f760
             border-radius: 12px;
             padding: min(30px, 4vw);
             margin-bottom: 24px;
@@ -322,8 +244,6 @@
             font-weight: bold;
         }
 
-<<<<<<< HEAD
-=======
         .completed-badge {
             position: absolute;
             top: 15px;
@@ -340,7 +260,6 @@
             visibility: hidden;
         }
 
->>>>>>> c517f1efca5ef626bf2d1cc0b42b90efb5a6f760
         /* 반응형 디자인 */
         @media (max-width: 1024px) {
             .action-cards {
@@ -426,14 +345,20 @@ scwin.updateCardStatus = function (userInfoData) {
             // MBTI 카드 상태 업데이트
             if (mbti_card) {
                 if (isMbtiDone) {
-                    mbti_card.removeClass("incomplete").addClass("completed");
+                    mbti_card.removeClass("incomplete");
+                    mbti_card.addClass("completed");
+
                     mbti_badge.setLabel("완료");
-                    mbti_badge.removeClass("incomplete-badge").addClass("completed-badge");
+                    mbti_badge.removeClass("incomplete-badge");
+                    mbti_badge.addClass("completed-badge");
+
                     mbti_button.addClass("hidden-button");
                 } else {
-                    mbti_card.removeClass("completed").addClass("incomplete");
+                    mbti_card.removeClass("completed");
+                    mbti_card.addClass("incomplete");
                     mbti_badge.setLabel("미완료");
-                    mbti_badge.removeClass("completed-badge").addClass("incomplete-badge");
+                    mbti_badge.removeClass("completed-badge");
+                    mbti_badge.addClass("incomplete-badge");
                     mbti_button.removeClass("hidden-button");
                 }
             }
@@ -441,14 +366,18 @@ scwin.updateCardStatus = function (userInfoData) {
             // 코드분석 카드 상태 업데이트
             if (code_card) {
                 if (isCodeDone) {
-                    code_card.removeClass("incomplete").addClass("completed");
+                    code_card.removeClass("incomplete");
+                    code_card.addClass("completed");
                     code_badge.setLabel("완료");
-                    code_badge.removeClass("incomplete-badge").addClass("completed-badge");
+                    code_badge.removeClass("incomplete-badge");
+                    code_badge.addClass("completed-badge");
                     code_button.addClass("hidden-button");
                 } else {
-                    code_card.removeClass("completed").addClass("incomplete");
+                    code_card.removeClass("completed");
+                    code_card.addClass("incomplete");
                     code_badge.setLabel("미완료");
-                    code_badge.removeClass("completed-badge").addClass("incomplete-badge");
+                    code_badge.removeClass("completed-badge");
+                    code_badge.addClass("incomplete-badge");
                     code_button.removeClass("hidden-button");
                 }
             }
@@ -472,7 +401,9 @@ scwin.getUserInfoByCookie = function () {
     }
     return userInfo;
 }
->>>>>>> c517f1efca5ef626bf2d1cc0b42b90efb5a6f760
+scwin.btn_userUpdate_onclick = function (e) {
+    $p.url("updateUser.xml");
+};
 ]]></script>
 	</head>
 

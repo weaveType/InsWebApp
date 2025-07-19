@@ -8,61 +8,76 @@
         <w2:MSA />
         <xf:model>
             <w2:dataCollection baseNode="map">
-                <w2:dataMap baseNode="map" id="dma_userInfoVo">
-                    <w2:keyInfo>
-                        <w2:key id="accountId" name="계정 ID" dataType="number"></w2:key>
-                        <w2:key id="email" name="이메일" dataType="text"></w2:key>
-                        <w2:key id="name" name="사용자명" dataType="text"></w2:key>
-                        <w2:key id="career" name="경력수준" dataType="text"></w2:key>
-                        <w2:key id="preferredLocations" name="지역" dataType="text"></w2:key>
-                        <w2:key id="currentPosition" name="직무분야" dataType="text"></w2:key>
-                        <w2:key id="yearSalary" name="희망연봉" dataType="number"></w2:key>
-                        <w2:key id="bio" name="자기소개" dataType="text"></w2:key>
-                        <w2:key id="testChecked" name="테스트완료여부" dataType="boolean"></w2:key>
-                    </w2:keyInfo>
-                </w2:dataMap>
-                
-                <!-- 경력 옵션 -->
-                <w2:dataList id="dlt_careerOptions" baseNode="list" repeatNode="map" saveRemovedData="true">
-                    <w2:columnInfo>
-                        <w2:column id="label" name="레이블" dataType="text"></w2:column>
-                        <w2:column id="value" name="값" dataType="text"></w2:column>
-                    </w2:columnInfo>
-                </w2:dataList>
-                
-                <!-- 직무분야 옵션 -->
-                <w2:dataList id="dlt_positionOptions" baseNode="list" repeatNode="map" saveRemovedData="true">
-                    <w2:columnInfo>
-                        <w2:column id="label" name="레이블" dataType="text"></w2:column>
-                        <w2:column id="value" name="값" dataType="text"></w2:column>
-                    </w2:columnInfo>
-                </w2:dataList>
-                
-                <!-- 지역 옵션 -->
-                <w2:dataList id="dlt_locationOptions" baseNode="list" repeatNode="map" saveRemovedData="true">
-                    <w2:columnInfo>
-                        <w2:column id="label" name="레이블" dataType="text"></w2:column>
-                        <w2:column id="value" name="값" dataType="text"></w2:column>
-                    </w2:columnInfo>
-                </w2:dataList>
-                
-                <!-- 연봉 옵션 -->
-                <w2:dataList id="dlt_salaryOptions" baseNode="list" repeatNode="map" saveRemovedData="true">
-                    <w2:columnInfo>
-                        <w2:column id="label" name="레이블" dataType="text"></w2:column>
-                        <w2:column id="value" name="값" dataType="number"></w2:column>
-                    </w2:columnInfo>
-                </w2:dataList>
+            	<w2:dataMap baseNode="map" id="dma_userInfoVo">
+            		<w2:keyInfo>
+            			<w2:key id="accountId" name="계정 ID" dataType="number"></w2:key>
+            			<w2:key id="email" name="이메일" dataType="text"></w2:key>
+            			<w2:key id="name" name="사용자명" dataType="text"></w2:key>
+            			<w2:key id="career" name="경력수준" dataType="text"></w2:key>
+            			<w2:key id="preferredLocations" name="지역" dataType="text"></w2:key>
+            			<w2:key id="currentPosition" name="직무분야" dataType="text"></w2:key>
+            			<w2:key id="yearSalary" name="희망연봉" dataType="number"></w2:key>
+            			<w2:key id="bio" name="자기소개" dataType="text"></w2:key>
+            			<w2:key id="testChecked" name="테스트완료여부" dataType="boolean"></w2:key>
+            			<w2:key id="techStack" name="기술스택" dataType="text"></w2:key>
+            		</w2:keyInfo>
+            	</w2:dataMap>
 
-                <w2:dataMap baseNode="map" id="dma_passwordChangeVo">
-                    <w2:keyInfo>
-                        <w2:key id="currentPassword" name="현재 비밀번호" dataType="text"></w2:key>
-                        <w2:key id="newPassword" name="새 비밀번호" dataType="text"></w2:key>
-                        <w2:key id="confirmPassword" name="새 비밀번호 확인" dataType="text"></w2:key>
-                    </w2:keyInfo>
-                </w2:dataMap>
+            	<!-- 경력 옵션 -->
+            	<w2:dataList id="dlt_careerOptions" baseNode="list" repeatNode="map" saveRemovedData="true">
+            		<w2:columnInfo>
+            			<w2:column id="label" name="레이블" dataType="text"></w2:column>
+            			<w2:column id="value" name="값" dataType="text"></w2:column>
+            		</w2:columnInfo>
+            	</w2:dataList>
+
+            	<!-- 직무분야 옵션 -->
+            	<w2:dataList id="dlt_positionOptions" baseNode="list" repeatNode="map" saveRemovedData="true">
+            		<w2:columnInfo>
+            			<w2:column id="label" name="레이블" dataType="text"></w2:column>
+            			<w2:column id="value" name="값" dataType="text"></w2:column>
+            		</w2:columnInfo>
+            	</w2:dataList>
+
+            	<!-- 지역 옵션 -->
+            	<w2:dataList id="dlt_locationOptions" baseNode="list" repeatNode="map" saveRemovedData="true">
+            		<w2:columnInfo>
+            			<w2:column id="label" name="레이블" dataType="text"></w2:column>
+            			<w2:column id="value" name="값" dataType="text"></w2:column>
+            		</w2:columnInfo>
+            	</w2:dataList>
+
+            	<!-- 연봉 옵션 -->
+            	<w2:dataList id="dlt_salaryOptions" baseNode="list" repeatNode="map" saveRemovedData="true">
+            		<w2:columnInfo>
+            			<w2:column id="label" name="레이블" dataType="text"></w2:column>
+            			<w2:column id="value" name="값" dataType="number"></w2:column>
+            		</w2:columnInfo>
+            	</w2:dataList>
+
+            	<w2:dataMap baseNode="map" id="dma_passwordChangeVo">
+            		<w2:keyInfo>
+            			<w2:key id="currentPassword" name="현재 비밀번호" dataType="text"></w2:key>
+            			<w2:key id="newPassword" name="새 비밀번호" dataType="text"></w2:key>
+            			<w2:key id="confirmPassword" name="새 비밀번호 확인" dataType="text"></w2:key>
+            		</w2:keyInfo>
+            	</w2:dataMap>
+
+            	<!-- 기술스택 옵션 -->
+            	<w2:dataList id="dlt_techStackOptions" baseNode="list" repeatNode="map" saveRemovedData="true">
+            		<w2:columnInfo>
+            			<w2:column id="techStackId" name="기술스택 ID" dataType="text"></w2:column>
+            			<w2:column id="techStackName" name="기술스택 이름" dataType="text"></w2:column>
+            		</w2:columnInfo>
+            	</w2:dataList>
+            	<w2:dataList baseNode="list" repeatNode="map" id="dlt_selectTechStacks" saveRemovedData="true">
+            		<w2:columnInfo>
+            			<w2:column dataType="text" name="기술스택 ID" id="techStackId"></w2:column>
+            			<w2:column dataType="text" name="기술스택 이름" id="techStackName"></w2:column>
+            		</w2:columnInfo>
+            	</w2:dataList>
             </w2:dataCollection>
-            
+
             <!-- 사용자 정보 조회 submission -->
             <xf:submission id="sbm_userDetail" action="/InsWebApp/US0002UpdView.pwkjson" method="post" mediatype="application/json"
                 ref='data:json,{"id":"dma_userInfoVo", "key":"userInfoVo"}' target='data:json,{"id":"dma_userInfoVo", "key":"elData"}' encoding="UTF-8" instance="" replace="" errorHandler=""
@@ -79,6 +94,12 @@
             <xf:submission id="sbm_updatePassword" action="/InsWebApp/USUpdatePassword.pwkjson" method="post" mediatype="application/json"
                 ref='data:json,{"id":"dma_passwordChangeVo"}' target="" encoding="UTF-8" instance="" replace="" errorHandler=""
                 customHandler="" mode="asynchronous" processMsg="비밀번호 변경중" ev:submit="" ev:submitdone="scwin.sbm_updatePassword_submitdone" ev:submiterror="scwin.sbm_updatePassword_submiterror" abortTrigger="">
+            </xf:submission>
+            
+            <!-- 기술스택 목록 조회 submission -->
+            <xf:submission id="sbm_selectTechStackList" action="/InsWebApp/POS0002List.pwkjson" method="post" mediatype="application/json"
+                target='data:json,{"id":"dlt_techStackOptions", "key":"techStackVoList"}' encoding="UTF-8" instance="" replace="" errorHandler=""
+                customHandler="" mode="asynchronous" processMsg="기술스택 조회중" ev:submitdone="scwin.sbm_selectTechStackList_submitdone" ev:submiterror="scwin.sbm_selectTechStackList_submiterror" abortTrigger="">
             </xf:submission>
         </xf:model>
         <w2:layoutInfo />
@@ -229,11 +250,11 @@
         ]]></style>
         
         <script lazy="false" type="text/javascript"><![CDATA[
-scwin.onpageload = function() {
+scwin.onpageload = function () {
     try {
         // 옵션 데이터 초기화
         scwin.initializeOptions();
-        
+
         // 쿠키에서 사용자 정보 가져오기
         var userInfoStr = WebSquare.cookie.getCookie("userInfo");
         if (!userInfoStr) {
@@ -242,10 +263,10 @@ scwin.onpageload = function() {
             $p.url("/InsWebApp/ui/user/Login.xml");
             return;
         }
-        
+
         var userInfo = JSON.parse(userInfoStr);
         console.log("사용자 쿠키 정보:", userInfo);
-        
+
         // 계정 ID가 없을 경우 오류 처리
         if (!userInfo.accountId) {
             console.error("사용자 ID를 찾을 수 없습니다.");
@@ -253,11 +274,14 @@ scwin.onpageload = function() {
             $p.url("/InsWebApp/ui/user/Login.xml");
             return;
         }
-        
+
         dma_userInfoVo.set("accountId", userInfo.accountId);
-        
+
         // 사용자 정보 조회 요청
         $c.sbm.execute($p, sbm_userDetail);
+
+        // 기술스택 목록 조회 요청
+        $c.sbm.execute($p, sbm_selectTechStackList);
     } catch (e) {
         console.error("onpageload 오류:", e);
         alert("페이지 로드 중 오류가 발생했습니다.");
@@ -265,95 +289,102 @@ scwin.onpageload = function() {
 };
 
 // 옵션 데이터 초기화
-scwin.initializeOptions = function() {
+scwin.initializeOptions = function () {
     // 경력 옵션
     var careerOptions = [
-        {label: "신입", value: "신입"},
-        {label: "1년 미만", value: "1년 미만"},
-        {label: "1-3년", value: "1-3년"},
-        {label: "3-5년", value: "3-5년"},
-        {label: "5-10년", value: "5-10년"},
-        {label: "10년 이상", value: "10년 이상"}
+        { label: "신입", value: "신입" },
+        { label: "1년 미만", value: "1년 미만" },
+        { label: "1-3년", value: "1-3년" },
+        { label: "3-5년", value: "3-5년" },
+        { label: "5-10년", value: "5-10년" },
+        { label: "10년 이상", value: "10년 이상" }
     ];
     dlt_careerOptions.setJSON(careerOptions);
-    
+
     // 직무분야 옵션
     var positionOptions = [
-        {label: "프론트엔드 개발자", value: "프론트엔드 개발자"},
-        {label: "백엔드 개발자", value: "백엔드 개발자"},
-        {label: "풀스택 개발자", value: "풀스택 개발자"},
-        {label: "모바일 개발자", value: "모바일 개발자"},
-        {label: "데이터 엔지니어", value: "데이터 엔지니어"},
-        {label: "DevOps 엔지니어", value: "DevOps 엔지니어"},
-        {label: "AI/ML 엔지니어", value: "AI/ML 엔지니어"},
-        {label: "보안 엔지니어", value: "보안 엔지니어"}
+        { label: "프론트엔드 개발자", value: "프론트엔드 개발자" },
+        { label: "백엔드 개발자", value: "백엔드 개발자" },
+        { label: "풀스택 개발자", value: "풀스택 개발자" },
+        { label: "모바일 개발자", value: "모바일 개발자" },
+        { label: "데이터 엔지니어", value: "데이터 엔지니어" },
+        { label: "DevOps 엔지니어", value: "DevOps 엔지니어" },
+        { label: "AI/ML 엔지니어", value: "AI/ML 엔지니어" },
+        { label: "보안 엔지니어", value: "보안 엔지니어" }
     ];
     dlt_positionOptions.setJSON(positionOptions);
-    
+
     // 지역 옵션
     var locationOptions = [
-        {label: "서울", value: "서울"},
-        {label: "경기", value: "경기"},
-        {label: "인천", value: "인천"},
-        {label: "부산", value: "부산"},
-        {label: "대구", value: "대구"},
-        {label: "대전", value: "대전"},
-        {label: "광주", value: "광주"},
-        {label: "울산", value: "울산"},
-        {label: "세종", value: "세종"},
-        {label: "강원", value: "강원"},
-        {label: "충북", value: "충북"},
-        {label: "충남", value: "충남"},
-        {label: "전북", value: "전북"},
-        {label: "전남", value: "전남"},
-        {label: "경북", value: "경북"},
-        {label: "경남", value: "경남"},
-        {label: "제주", value: "제주"}
+        { label: "서울", value: "서울" },
+        { label: "경기", value: "경기" },
+        { label: "인천", value: "인천" },
+        { label: "부산", value: "부산" },
+        { label: "대구", value: "대구" },
+        { label: "대전", value: "대전" },
+        { label: "광주", value: "광주" },
+        { label: "울산", value: "울산" },
+        { label: "세종", value: "세종" },
+        { label: "강원", value: "강원" },
+        { label: "충북", value: "충북" },
+        { label: "충남", value: "충남" },
+        { label: "전북", value: "전북" },
+        { label: "전남", value: "전남" },
+        { label: "경북", value: "경북" },
+        { label: "경남", value: "경남" },
+        { label: "제주", value: "제주" }
     ];
     dlt_locationOptions.setJSON(locationOptions);
-    
+
     // 연봉 옵션
     var salaryOptions = [
-        {label: "3,000만원 이하", value: 3000},
-        {label: "3,000 ~ 3,300만원", value: 3300},
-        {label: "3,300 ~ 3,600만원", value: 3600},
-        {label: "3,600 ~ 4,000만원", value: 4000},
-        {label: "4,000 ~ 4,500만원", value: 4500},
-        {label: "4,500 ~ 5,000만원", value: 5000},
-        {label: "5,000 ~ 6,000만원", value: 6000},
-        {label: "6,000 ~ 7,000만원", value: 7000},
-        {label: "7,000 ~ 8,000만원", value: 8000},
-        {label: "8,000만원 이상", value: 8500}
+        { label: "3,000만원 이하", value: 3000 },
+        { label: "3,000 ~ 3,300만원", value: 3300 },
+        { label: "3,300 ~ 3,600만원", value: 3600 },
+        { label: "3,600 ~ 4,000만원", value: 4000 },
+        { label: "4,000 ~ 4,500만원", value: 4500 },
+        { label: "4,500 ~ 5,000만원", value: 5000 },
+        { label: "5,000 ~ 6,000만원", value: 6000 },
+        { label: "6,000 ~ 7,000만원", value: 7000 },
+        { label: "7,000 ~ 8,000만원", value: 8000 },
+        { label: "8,000만원 이상", value: 8500 }
     ];
     dlt_salaryOptions.setJSON(salaryOptions);
 };
 
 // 사용자 정보 조회 완료
-scwin.sbm_userDetail_submitdone = function(e) {
+scwin.sbm_userDetail_submitdone = function (e) {
     try {
         console.log("사용자 정보 로드 완료:", dma_userInfoVo.getJSON());
-        
+
+        // 초기 기술스택 문자열 저장
+        scwin.initialTechStackString = dma_userInfoVo.get("techStack");
+        console.log("초기 기술스택 문자열:", scwin.initialTechStackString);
+
+        // 선택된 기술스택 UI 채우기 시도
+        scwin.populateSelectedTechStacks();
+
         // 데이터 로드 완료 후 필드가 비어있는 경우 처리
         if (!dma_userInfoVo.get("currentPosition")) {
             console.log("직무분야 정보가 없습니다.");
         }
-        
+
         if (!dma_userInfoVo.get("preferredLocations")) {
             console.log("선호 지역 정보가 없습니다.");
         }
-        
+
         if (!dma_userInfoVo.get("career")) {
             console.log("경력 정보가 없습니다.");
         }
-        
+
         if (!dma_userInfoVo.get("yearSalary")) {
             console.log("희망연봉 정보가 없습니다.");
         }
-        
+
         if (!dma_userInfoVo.get("bio")) {
             console.log("자기소개 정보가 없습니다.");
         }
-        
+
     } catch (e) {
         console.error("sbm_userDetail_submitdone 오류:", e);
         alert("사용자 정보 로드 중 오류가 발생했습니다.");
@@ -361,13 +392,13 @@ scwin.sbm_userDetail_submitdone = function(e) {
 };
 
 // 사용자 정보 조회 오류
-scwin.sbm_userDetail_submiterror = function(e) {
+scwin.sbm_userDetail_submiterror = function (e) {
     alert("사용자 정보를 불러오는데 실패했습니다.");
     console.error("사용자 정보 조회 오류:", e);
 };
 
 // 저장 버튼 클릭
-scwin.btn_save_onclick = function(e) {
+scwin.btn_save_onclick = function (e) {
     try {
         // 필수 입력 항목 검증
         var name = dma_userInfoVo.get("name");
@@ -376,9 +407,18 @@ scwin.btn_save_onclick = function(e) {
             ibx_name.focus();
             return;
         }
-        
+
         // 서버에 저장 요청
         if (confirm("변경사항을 저장하시겠습니까?")) {
+            // dlt_selectTechStacks 에 있는 기술스택 ID들을 콤마로 구분된 문자열로 변환
+            var selectedTechStackIds = [];
+            for (var i = 0; i < dlt_selectTechStacks.getRowCount(); i++) {
+                selectedTechStackIds.push(dlt_selectTechStacks.getCellData(i, "techStackId"));
+            }
+            dma_userInfoVo.set("techStack", selectedTechStackIds.join(","));
+
+            console.log("전송될 기술스택 값 (dma_userInfoVo.techStack):", dma_userInfoVo.get("techStack"));
+
             $c.sbm.execute($p, sbm_updateUser);
         }
     } catch (e) {
@@ -388,7 +428,7 @@ scwin.btn_save_onclick = function(e) {
 };
 
 // 저장 완료
-scwin.sbm_updateUser_submitdone = function(e) {
+scwin.sbm_updateUser_submitdone = function (e) {
     try {
         var res = e.responseJSON;
         if (res && res.result === "success") {
@@ -405,20 +445,20 @@ scwin.sbm_updateUser_submitdone = function(e) {
 };
 
 // 저장 오류
-scwin.sbm_updateUser_submiterror = function(e) {
+scwin.sbm_updateUser_submiterror = function (e) {
     alert("개인정보 수정에 실패했습니다.");
     console.error("저장 오류:", e);
 };
 
 // 취소 버튼 클릭
-scwin.btn_cancel_onclick = function(e) {
+scwin.btn_cancel_onclick = function (e) {
     if (confirm("변경사항을 저장하지 않고 돌아가시겠습니까?")) {
         $p.url("/InsWebApp/ui/user/UserDetail.xml");
     }
 };
 
 // 비밀번호 변경 버튼 클릭
-scwin.btn_changePassword_onclick = function(e) {
+scwin.btn_changePassword_onclick = function (e) {
     var currentPassword = dma_passwordChangeVo.get("currentPassword");
     var newPassword = dma_passwordChangeVo.get("newPassword");
     var confirmPassword = dma_passwordChangeVo.get("confirmPassword");
@@ -442,7 +482,7 @@ scwin.btn_changePassword_onclick = function(e) {
 };
 
 // 비밀번호 변경 완료
-scwin.sbm_updatePassword_submitdone = function(e) {
+scwin.sbm_updatePassword_submitdone = function (e) {
     var res = e.responseJSON;
     if (res && res.result === "success") {
         alert("비밀번호가 성공적으로 변경되었습니다.");
@@ -456,11 +496,121 @@ scwin.sbm_updatePassword_submitdone = function(e) {
 };
 
 // 비밀번호 변경 오류
-scwin.sbm_updatePassword_submiterror = function(e) {
+scwin.sbm_updatePassword_submiterror = function (e) {
     alert("비밀번호 변경 중 오류가 발생했습니다.");
     console.error("비밀번호 변경 오류:", e);
 };
-]]></script>
+
+// 기술스택 목록 조회 완료
+scwin.sbm_selectTechStackList_submitdone = function (e) {
+    console.log("기술스택 목록 로드 완료:", dlt_techStackOptions.getAllJSON());
+    // 선택된 기술스택 UI 채우기 시도
+    scwin.populateSelectedTechStacks();
+};
+
+// 기술스택 목록 조회 오류
+scwin.sbm_selectTechStackList_submiterror = function (e) {
+    alert("기술스택 목록을 불러오는데 실패했습니다.");
+    console.error("기술스택 목록 조회 오류:", e);
+};
+
+// 선택된 기술스택 UI 채우기
+scwin.populateSelectedTechStacks = function () {
+    // 사용자 정보와 기술스택 옵션이 모두 로드되었는지 확인
+    if (!scwin.initialTechStackString || dlt_techStackOptions.getRowCount() === 0) {
+        console.log("populateSelectedTechStacks: 데이터 준비 안됨. 재시도.");
+        return;
+    }
+
+    console.log("populateSelectedTechStacks: 기술스택 UI 채우기 시작");
+
+    // dlt_selectTechStacks 초기화
+    dlt_selectTechStacks.removeAll();
+
+    var techStackIds = scwin.initialTechStackString.split(",").map(function(item) { return item.trim(); });
+
+    techStackIds.forEach(function (techStackId) {
+        if (techStackId) {
+            const selectedIndex = dlt_techStackOptions.getMatchedIndex("techStackId", techStackId);
+            if (selectedIndex !== -1) {
+                const techStackName = dlt_techStackOptions.getCellData(selectedIndex, "techStackName");
+                const newRowIndex = dlt_selectTechStacks.insertRow();
+                dlt_selectTechStacks.setCellData(newRowIndex, "techStackId", techStackId);
+                dlt_selectTechStacks.setCellData(newRowIndex, "techStackName", techStackName);
+            } else {
+                console.warn("populateSelectedTechStacks: 일치하는 기술스택 ID를 찾을 수 없습니다:", techStackId);
+            }
+        }
+    });
+
+    console.log("populateSelectedTechStacks: 기술스택 UI 채우기 완료. dlt_selectTechStacks:", dlt_selectTechStacks.getAllJSON());
+};
+
+// 기술스택 AutoComplete 선택 완료 이벤트
+
+// 선택된 기술스택 UI 채우기
+scwin.populateSelectedTechStacks = function () {
+    // 사용자 정보와 기술스택 옵션이 모두 로드되었는지 확인
+    if (!scwin.initialTechStackString || dlt_techStackOptions.getRowCount() === 0) {
+        console.log("populateSelectedTechStacks: 데이터 준비 안됨. 재시도.");
+        return;
+    }
+
+    console.log("populateSelectedTechStacks: 기술스택 UI 채우기 시작");
+
+    // dlt_selectTechStacks 초기화
+    dlt_selectTechStacks.removeAll();
+
+    var techStackIds = scwin.initialTechStackString.split(",").map(function(item) { return item.trim(); });
+
+    techStackIds.forEach(function (techStackId) {
+        if (techStackId) {
+            const selectedIndex = dlt_techStackOptions.getMatchedIndex("techStackId", techStackId);
+            if (selectedIndex !== -1) {
+                const techStackName = dlt_techStackOptions.getCellData(selectedIndex, "techStackName");
+                const newRowIndex = dlt_selectTechStacks.insertRow();
+                dlt_selectTechStacks.setCellData(newRowIndex, "techStackId", techStackId);
+                dlt_selectTechStacks.setCellData(newRowIndex, "techStackName", techStackName);
+            } else {
+                console.warn("populateSelectedTechStacks: 일치하는 기술스택 ID를 찾을 수 없습니다:", techStackId);
+            }
+        }
+    });
+
+    console.log("populateSelectedTechStacks: 기술스택 UI 채우기 완료. dlt_selectTechStacks:", dlt_selectTechStacks.getAllJSON());
+};
+
+// 기술스택 AutoComplete 선택 완료 이벤트
+
+scwin.ac_techStack_onselected = function (e) {
+
+    const selectedValue = ac_techStack.getValue();
+
+    if (!selectedValue) return;
+
+    // dlt_techStackOptions 에서 선택된 value 에 해당하는 행 찾기
+    const selectedIndex = dlt_techStackOptions.getMatchedIndex("techStackId", selectedValue);
+    if (selectedIndex < 0) return;
+
+    // 선택된 행의 id / name 추출
+    const techStackId   = dlt_techStackOptions.getCellData(selectedIndex, "techStackId");
+    const techStackName = dlt_techStackOptions.getCellData(selectedIndex, "techStackName");
+
+    // (1) 이미 추가된 스택은 중복으로 넣지 않게 체크
+    const dupIndex = dlt_selectTechStacks.getMatchedIndex("techStackId", techStackId);
+    if (dupIndex > 0) {
+        console.log(`[중복] techStackId=${techStackId} 는 이미 DataList 에 존재합니다.`);
+        
+        console.log("추가못한 로그 :", dlt_selectTechStacks.getAllJSON());
+        return;
+    }
+
+    // (2) DataList 에 행 추가
+    const newRowIndex = dlt_selectTechStacks.insertRow();
+    dlt_selectTechStacks.setCell
+    dlt_selectTechStacks.setCellData(newRowIndex, "techStackId", techStackId);
+    dlt_selectTechStacks.setCellData(newRowIndex, "techStackName", techStackName);
+};]]></script>
     </head>
     
     <body ev:onpageload="scwin.onpageload">
@@ -475,87 +625,119 @@ scwin.sbm_updatePassword_submiterror = function(e) {
             
             <!-- 폼 영역 -->
             <xf:group class="update-form">
-                <!-- 이메일 (읽기전용) -->
-                <xf:group class="form-group">
-                    <w2:textbox class="form-label" label="이메일"></w2:textbox>
-                    <xf:input id="ibx_email" ref="data:dma_userInfoVo.email" class="form-input" readOnly="true" style="background-color: #f5f5f5;"></xf:input>
-                </xf:group>
-                
-                <!-- 이름 -->
-                <xf:group class="form-group">
-                    <w2:textbox class="form-label" label="이름">
-                        <w2:span class="form-required" label=" *"></w2:span>
-                    </w2:textbox>
-                    <xf:input id="ibx_name" ref="data:dma_userInfoVo.name" class="form-input" placeholder="이름을 입력하세요"></xf:input>
-                </xf:group>
-                
-                <!-- 경력 -->
-                <xf:group class="form-group">
-                    <w2:textbox class="form-label" label="경력"></w2:textbox>
-                    <xf:select1 id="sel_career" ref="data:dma_userInfoVo.career" class="form-select" appearance="minimal" chooseOption="false">
-                        <xf:choices>
-                            <xf:itemset nodeset="data:dlt_careerOptions">
-                                <xf:label ref="label"></xf:label>
-                                <xf:value ref="value"></xf:value>
-                            </xf:itemset>
-                        </xf:choices>
-                    </xf:select1>
-                </xf:group>
-                
-                <!-- 직무분야 -->
-                <xf:group class="form-group">
-                    <w2:textbox class="form-label" label="직무분야"></w2:textbox>
-                    <xf:select1 id="sel_position" ref="data:dma_userInfoVo.currentPosition" class="form-select" appearance="minimal" chooseOption="false">
-                        <xf:choices>
-                            <xf:itemset nodeset="data:dlt_positionOptions">
-                                <xf:label ref="label"></xf:label>
-                                <xf:value ref="value"></xf:value>
-                            </xf:itemset>
-                        </xf:choices>
-                    </xf:select1>
-                </xf:group>
-                
-                <!-- 선호 지역 -->
-                <xf:group class="form-group">
-                    <w2:textbox class="form-label" label="선호 지역"></w2:textbox>
-                    <xf:select1 id="sel_location" ref="data:dma_userInfoVo.preferredLocations" class="form-select" appearance="minimal" chooseOption="false">
-                        <xf:choices>
-                            <xf:itemset nodeset="data:dlt_locationOptions">
-                                <xf:label ref="label"></xf:label>
-                                <xf:value ref="value"></xf:value>
-                            </xf:itemset>
-                        </xf:choices>
-                    </xf:select1>
-                </xf:group>
-                
-                <!-- 희망연봉 -->
-                <xf:group class="form-group">
-                    <w2:textbox class="form-label" label="희망연봉"></w2:textbox>
-                    <xf:select1 id="sel_salary" ref="data:dma_userInfoVo.yearSalary" class="form-select" appearance="minimal" chooseOption="false">
-                        <xf:choices>
-                            <xf:itemset nodeset="data:dlt_salaryOptions">
-                                <xf:label ref="label"></xf:label>
-                                <xf:value ref="value"></xf:value>
-                            </xf:itemset>
-                        </xf:choices>
-                    </xf:select1>
-                </xf:group>
-                
-                <!-- 자기소개 -->
-                <xf:group class="form-group">
-                    <w2:textbox class="form-label" label="자기소개"></w2:textbox>
-                    <xf:textarea id="txa_bio" ref="data:dma_userInfoVo.bio" class="form-textarea" placeholder="간단한 자기소개를 작성해주세요"></xf:textarea>
-                </xf:group>
-                
-                <!-- 버튼 영역 -->
-                <xf:group class="button-group">
-                    <xf:trigger class="btn btn-primary" type="button" ev:onclick="scwin.btn_save_onclick">
-                        <xf:label><![CDATA[저장]]></xf:label>
-                    </xf:trigger>
-                    <xf:trigger class="btn btn-secondary" type="button" ev:onclick="scwin.btn_cancel_onclick">
-                        <xf:label><![CDATA[취소]]></xf:label>
-                    </xf:trigger>
-                </xf:group>
+            	<!-- 이메일 (읽기전용) -->
+            	<xf:group class="form-group">
+            		<w2:textbox class="form-label" label="이메일"></w2:textbox>
+            		<xf:input id="ibx_email" ref="data:dma_userInfoVo.email" class="form-input" readOnly="true"
+            			style="background-color: #f5f5f5;">
+            		</xf:input>
+            	</xf:group>
+
+            	<!-- 이름 -->
+            	<xf:group class="form-group">
+            		<w2:textbox class="form-label" label="이름">
+            			<w2:span class="form-required" label=" *"></w2:span>
+            		</w2:textbox>
+            		<xf:input id="ibx_name" ref="data:dma_userInfoVo.name" class="form-input" placeholder="이름을 입력하세요"></xf:input>
+            	</xf:group>
+
+            	<!-- 경력 -->
+            	<xf:group class="form-group">
+            		<w2:textbox class="form-label" label="경력"></w2:textbox>
+            		<xf:select1 id="sel_career" ref="data:dma_userInfoVo.career" class="form-select" appearance="minimal"
+            			chooseOption="false">
+            			<xf:choices>
+            				<xf:itemset nodeset="data:dlt_careerOptions">
+            					<xf:label ref="label"></xf:label>
+            					<xf:value ref="value"></xf:value>
+            				</xf:itemset>
+            			</xf:choices>
+            		</xf:select1>
+            	</xf:group>
+
+            	<!-- 직무분야 -->
+            	<xf:group class="form-group">
+            		<w2:textbox class="form-label" label="직무분야"></w2:textbox>
+            		<xf:select1 id="sel_position" ref="data:dma_userInfoVo.currentPosition" class="form-select" appearance="minimal"
+            			chooseOption="false">
+            			<xf:choices>
+            				<xf:itemset nodeset="data:dlt_positionOptions">
+            					<xf:label ref="label"></xf:label>
+            					<xf:value ref="value"></xf:value>
+            				</xf:itemset>
+            			</xf:choices>
+            		</xf:select1>
+            	</xf:group>
+
+            	<!-- 선호 지역 -->
+            	<xf:group class="form-group">
+            		<w2:textbox class="form-label" label="선호 지역"></w2:textbox>
+            		<xf:select1 id="sel_location" ref="data:dma_userInfoVo.preferredLocations" class="form-select" appearance="minimal"
+            			chooseOption="false">
+            			<xf:choices>
+            				<xf:itemset nodeset="data:dlt_locationOptions">
+            					<xf:label ref="label"></xf:label>
+            					<xf:value ref="value"></xf:value>
+            				</xf:itemset>
+            			</xf:choices>
+            		</xf:select1>
+            	</xf:group>
+
+            	<!-- 희망연봉 -->
+            	<xf:group class="form-group">
+            		<w2:textbox class="form-label" label="희망연봉"></w2:textbox>
+            		<xf:select1 id="sel_salary" ref="data:dma_userInfoVo.yearSalary" class="form-select" appearance="minimal"
+            			chooseOption="false">
+            			<xf:choices>
+            				<xf:itemset nodeset="data:dlt_salaryOptions">
+            					<xf:label ref="label"></xf:label>
+            					<xf:value ref="value"></xf:value>
+            				</xf:itemset>
+            			</xf:choices>
+            		</xf:select1>
+            		<xf:group class="form-group" style="">
+            			<w2:textbox class="form-label" label="기술스택"></w2:textbox>
+
+            			<w2:autoComplete id="ac_techStack" 
+            				editType="select" 
+            				style="width: 100%; height: 36px;" 
+            				submenuSize="auto" 
+            				search="start" 
+            				searchTarget="label"
+            				caseSensitive="false"
+            				allowEmptySubmission="false"
+            				placeholder="기술스택을 입력하거나 선택하세요"
+            				ref="data:dma_userInfoVo.techStack" 
+            				chooseOption="true" 
+            				chooseOptionLabel="기술스택을 선택하세요"
+            				ev:onchange="scwin.ac_techStack_onchange"
+            				ev:onselected="scwin.ac_techStack_onselected">
+            				<w2:choices>
+            					<w2:itemset nodeset="data:dlt_techStackOptions">
+            						<w2:label ref="techStackName"></w2:label>
+            						<w2:value ref="techStackId"></w2:value>
+            					</w2:itemset>
+            				</w2:choices>
+            			</w2:autoComplete>
+            		</xf:group>
+            	</xf:group>
+
+            	<!-- 자기소개 -->
+            	<xf:group class="form-group">
+            		<w2:textbox class="form-label" label="자기소개"></w2:textbox>
+            		<xf:textarea id="txa_bio" ref="data:dma_userInfoVo.bio" class="form-textarea" placeholder="간단한 자기소개를 작성해주세요"></xf:textarea>
+            	</xf:group>
+
+            	<!-- 버튼 영역 -->
+            	<xf:group class="button-group">
+            		<xf:trigger class="btn btn-primary" type="button" ev:onclick="scwin.btn_save_onclick">
+            			<xf:label><![CDATA[저장]]></xf:label>
+            		</xf:trigger>
+            		<xf:trigger class="btn btn-secondary" type="button" ev:onclick="scwin.btn_cancel_onclick">
+            			<xf:label><![CDATA[취소]]></xf:label>
+            		</xf:trigger>
+            	</xf:group>
+            	
             </xf:group>
 
             <!-- 비밀번호 변경 폼 -->
