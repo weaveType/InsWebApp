@@ -36,6 +36,7 @@
 						<w2:column dataType="text" id="empCount" name="emp_count"></w2:column>
 						<w2:column dataType="text" id="techStackNames" name="tech_stack_names"></w2:column>
 						<w2:column dataType="text" id="preferredDeveloperTypes" name="preferred_developer_types"></w2:column>
+						<w2:column dataType="text" id="jobImageFileName" name="job_image_file_name"></w2:column>
 					</w2:columnInfo>
 				</w2:dataList>
 
@@ -492,6 +493,26 @@ scwin.sbm_selectPostList_submitdone = function (e) {
         return false;
     }
 
+    // 첫 번째 공고 데이터 구조 분석
+    if (elData.postVoList && elData.postVoList.length > 0) {
+        console.log("=== 서버 응답 첫 번째 공고 분석 ===");
+        var firstPost = elData.postVoList[0];
+        console.log("첫 번째 공고 Keys:", Object.keys(firstPost));
+        console.log("첫 번째 공고 전체:", firstPost);
+        
+        // 이미지 관련 필드 검사
+        var imageRelatedFields = [];
+        Object.keys(firstPost).forEach(function(key) {
+            if (key.toLowerCase().includes('image') || 
+                key.toLowerCase().includes('file') || 
+                key.toLowerCase().includes('photo') ||
+                key.toLowerCase().includes('picture')) {
+                imageRelatedFields.push(key + ': ' + firstPost[key]);
+            }
+        });
+        console.log("������️ 서버 응답의 이미지 관련 필드들:", imageRelatedFields);
+    }
+
     // 데이터를 DataList에 셋팅
     dlt_postList.setJSON(elData.postVoList || []);
 
@@ -588,32 +609,48 @@ scwin.createJobCard = function (jobData, index) {
     var imagePath = '';
     var imageAlt = '';
     
-    // 디버깅 정보 출력
+    // 디버깅 정보 출력 - 모든 가능한 이미지 필드 확인
     console.log("=== 이미지 경로 디버깅 ===");
-    console.log("jobData.imagePath:", jobData.imagePath);
-    console.log("jobData.companyId:", jobData.companyId);
-    console.log("jobData.companyName:", jobData.companyName);
-    console.log("jobData.jobImageFileName:", jobData.jobImageFileName);
+    console.log("jobData 전체 Keys:", Object.keys(jobData));
+    console.log("jobData 전체:", jobData);
     
+    // 이미지 관련 가능한 모든 필드 확인
+    var imageFields = [
+        'imagePath', 'jobImageFileName', 'jobImageFilename', 'job_image_file_name',
+        'image_path', 'imageUrl', 'image_url', 'filePath', 'file_path',
+        'fileName', 'file_name', 'uploadedImage', 'uploaded_image'
+    ];
+    
+    console.log("=== 이미지 필드 전체 검사 ===");
+    imageFields.forEach(function(field) {
+        if (jobData[field] !== undefined) {
+            console.log("✅ 발견:", field, "=", jobData[field]);
+        }
+    });
+    
+    // 1순위: 공고에 업로드된 이미지 (PostCreate에서 설정한 파일)
     if (jobData.jobImageFileName && jobData.jobImageFileName.trim() !== "" && jobData.jobImageFileName !== "null") {
-        // 공고에 업로드된 이미지가 있는 경우 (PostCreate에서 설정된 필드명 사용)
         imagePath = '/InsWebApp/images/company/' + jobData.jobImageFileName;
-        imageAlt = jobData.title || '공고 이미지';
-        console.log("✅ 공고 이미지 사용:", imagePath);
-    } else if (jobData.imagePath && jobData.imagePath.trim() !== "" && jobData.imagePath !== "null") {
-        // 다른 이미지 필드가 있는 경우
-        imagePath = '/InsWebApp/images/company/' + jobData.imagePath;
-        imageAlt = jobData.title || '공고 이미지';
-        console.log("✅ imagePath 사용:", imagePath);
-    } else {
-        // 기본 이미지 사용
+        imageAlt = (jobData.title || '공고') + ' 이미지';
+        console.log("✅ 1순위 - 공고 이미지 사용:", imagePath);
+    } 
+    // 2순위: 회사 로고 (회사별 개별 로고)
+    else if (jobData.companyId && jobData.companyId.toString().trim() !== "") {
+        imagePath = '/InsWebApp/images/company/' + jobData.companyId + '.png';
+        imageAlt = (jobData.companyName || '회사') + ' 로고';
+        console.log("✅ 2순위 - 회사 로고 사용:", imagePath);
+    } 
+    // 3순위: 기본 이미지
+    else {
         imagePath = '/InsWebApp/images/ws5/default_company.png';
         imageAlt = (jobData.companyName || '회사') + ' 기본 이미지';
-        console.log("✅ 기본 이미지 사용:", imagePath);
+        console.log("✅ 3순위 - 기본 이미지 사용:", imagePath);
     }
 
-    // 이미지 HTML 생성 (항상 이미지 태그 사용)
-    var imageHtml = '<img src="' + imagePath + '" alt="' + imageAlt + '" onerror="scwin.handleImageError(this, \'' + (jobData.companyName || '회사명') + '\')" />';
+    // 이미지 HTML 생성 (fallback chain 사용)
+    var imageHtml = '<img src="' + imagePath + '" alt="' + imageAlt + '" ' +
+                   'onload="console.log(\'✅ 이미지 로딩 성공:\', this.src);" ' +
+                   'onerror="scwin.handleSimpleImageError(this, \'' + (jobData.companyId || '') + '\');" />';
     console.log("생성된 이미지 HTML:", imageHtml);
 
     card.innerHTML =
@@ -624,7 +661,7 @@ scwin.createJobCard = function (jobData, index) {
         '<button class="bookmark-btn" onclick="scwin.toggleBookmark(event, \'' + jobData.jobPostingId + '\')">♡</button>' +
         '</xf:group>' +
         '<xf:group class="job-company" onclick="scwin.viewCompany(event, \'' + jobData.companyId + '\')">' +
-        (jobData.companyId ? '<img src="/InsWebApp/images/ws5/default_company.png" alt="' + (jobData.companyName || '회사') + ' 로고" class="company-logo" />' : '') +
+        (jobData.companyId ? '<img src="/InsWebApp/images/company/' + jobData.companyId + '.png" alt="' + (jobData.companyName || '회사') + ' 로고" class="company-logo" onerror="this.src=\'/InsWebApp/images/ws5/default_company.png\'" />' : '') +
         '<span>' + (jobData.companyName || '회사명 정보없음') + '</span>' +
         '</xf:group>' +
         '<xf:group class="job-description">' +
@@ -734,45 +771,78 @@ scwin.openPostDetail = function (jobPostingId) {
 };
 
 /**
- * 이미지 로딩 에러 처리
+ * 이미지 로딩 에러 처리 (우선순위 fallback)
  */
-scwin.handleImageError = function (img, companyName) {
+scwin.handleImageError = function (img, companyName, companyId) {
     console.log("❌ 이미지 로딩 실패:", img.src);
-    console.log("회사명:", companyName);
-    
-    // 기본 이미지들을 순서대로 시도
-    var defaultImages = [
-        '/InsWebApp/images/ws5/default_company.png',
-        '/InsWebApp/images/company/default.png',
-        '/InsWebApp/images/ws5/logo_inswave_w.png'
-    ];
+    console.log("회사명:", companyName, "회사ID:", companyId);
     
     var currentSrc = img.src;
-    var nextImageIndex = -1;
+    var nextImageSrc = '';
     
-    // 현재 실패한 이미지가 기본 이미지 목록에 있는지 확인
-    for (var i = 0; i < defaultImages.length; i++) {
-        if (currentSrc.indexOf(defaultImages[i]) !== -1) {
-            nextImageIndex = i + 1;
-            break;
+    // 현재 실패한 이미지 유형 판단 및 다음 우선순위 이미지 설정
+    if (currentSrc.indexOf('/images/company/') !== -1 && currentSrc.indexOf('.png') === -1) {
+        // 공고 이미지 실패 → 회사 로고 시도
+        if (companyId && companyId.trim() !== '') {
+            nextImageSrc = '/InsWebApp/images/company/' + companyId + '.png';
+            console.log("공고 이미지 실패 → 회사 로고 시도:", nextImageSrc);
+        } else {
+            nextImageSrc = '/InsWebApp/images/ws5/default_company.png';
+            console.log("공고 이미지 실패 & 회사ID 없음 → 기본 이미지 시도:", nextImageSrc);
+        }
+    } else if (currentSrc.indexOf('/images/company/') !== -1 && currentSrc.indexOf('.png') !== -1) {
+        // 회사 로고 실패 → 기본 이미지 시도
+        nextImageSrc = '/InsWebApp/images/ws5/default_company.png';
+        console.log("회사 로고 실패 → 기본 이미지 시도:", nextImageSrc);
+    } else if (currentSrc.indexOf('/images/ws5/default_company.png') !== -1) {
+        // 기본 이미지도 실패 → 다른 기본 이미지 시도
+        nextImageSrc = '/InsWebApp/images/ws5/logo_inswave_w.png';
+        console.log("기본 이미지 실패 → 대체 기본 이미지 시도:", nextImageSrc);
+    }
+    
+    // 다음 이미지 시도
+    if (nextImageSrc && nextImageSrc !== currentSrc) {
+        img.src = nextImageSrc;
+        return;
+    }
+    
+    // 모든 이미지 실패 시 텍스트 플레이스홀더로 대체
+    console.log("❌ 모든 이미지 실패 - 텍스트 플레이스홀더 표시");
+    var placeholder = document.createElement('div');
+    placeholder.className = 'job-image-placeholder';
+    placeholder.innerHTML = '<span class="icon">������</span><span>' + (companyName || '회사') + '</span>';
+    
+    if (img.parentNode) {
+        img.parentNode.replaceChild(placeholder, img);
+    }
+};
+
+/**
+ * 간단한 이미지 에러 처리
+ */
+scwin.handleSimpleImageError = function (img, companyId) {
+    console.log("❌ 이미지 로딩 실패:", img.src);
+    
+    var currentSrc = img.src;
+    
+    // 공고 이미지 실패 → 회사 로고 시도
+    if (currentSrc.indexOf('/images/company/') !== -1 && currentSrc.indexOf('.png') === -1) {
+        if (companyId && companyId.trim() !== '') {
+            console.log("공고 이미지 실패 → 회사 로고 시도");
+            img.onerror = function() { 
+                console.log("회사 로고도 실패 → 기본 이미지 시도");
+                this.onerror = null; 
+                this.src = '/InsWebApp/images/ws5/default_company.png'; 
+            };
+            img.src = '/InsWebApp/images/company/' + companyId + '.png';
+            return;
         }
     }
     
-    // 다음 기본 이미지 시도
-    if (nextImageIndex >= 0 && nextImageIndex < defaultImages.length) {
-        console.log("다음 기본 이미지 시도:", defaultImages[nextImageIndex]);
-        img.src = defaultImages[nextImageIndex];
-    } else {
-        // 모든 이미지 실패 시 텍스트 플레이스홀더로 대체
-        console.log("모든 이미지 실패 - 텍스트 플레이스홀더 표시");
-        var placeholder = document.createElement('div');
-        placeholder.className = 'job-image-placeholder';
-        placeholder.innerHTML = '<span class="icon">������</span><span>' + (companyName || '회사') + '</span>';
-        
-        if (img.parentNode) {
-            img.parentNode.replaceChild(placeholder, img);
-        }
-    }
+    // 그 외 모든 경우 → 기본 이미지
+    console.log("기본 이미지로 fallback");
+    img.onerror = null;
+    img.src = '/InsWebApp/images/ws5/default_company.png';
 };
 
 /**
