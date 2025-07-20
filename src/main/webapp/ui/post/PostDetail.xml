@@ -730,54 +730,142 @@ scwin.sbm_selectPostDetail_submitdone = function (e) {
 scwin.updateUI = function () {
     console.log("=== UI 업데이트 시작 ===");
 
-
-    // 메인 이미지 업데이트
-    scwin.updateMainImage();
-
-
-    // 메타 정보 업데이트
+    // 메타 정보 업데이트 (즉시 실행 가능)
     scwin.updateJobMeta();
 
-    // 기술스택 태그 동적 생성
+    // 기술스택 태그 동적 생성 (즉시 실행 가능)
     scwin.updateTechStackTags();
 
-    // 개발자 선호 유형 태그 동적 생성
+    // 개발자 선호 유형 태그 동적 생성 (즉시 실행 가능)
     scwin.updateDeveloperTypeTags();
 
-    // 기타 정보 태그 업데이트
+    // 기타 정보 태그 업데이트 (즉시 실행 가능)
     scwin.updateInfoTags();
 
-    console.log("✅ UI 업데이트 완료");
+    // 메인 이미지 업데이트 (WebSquare DOM 렌더링 완료 대기)
+    console.log("WebSquare DOM 렌더링 완료 대기 중...");
+    setTimeout(function() {
+        scwin.updateMainImageWithRetry(0);
+    }, 500);
+
+    console.log("✅ UI 업데이트 완료 (이미지는 비동기 처리 중)");
 };
 
 /**
- * 메인 이미지 업데이트
+ * 메인 이미지 업데이트 (재시도 로직 포함)
  */
-scwin.updateMainImage = function () {
+scwin.updateMainImageWithRetry = function(retryCount) {
+    console.log("=== 메인 이미지 업데이트 시도 #" + (retryCount + 1) + " ===");
+    
     var jobImageFileName = dmp_postDetail.get("jobImageFileName");
     var companyName = dmp_postDetail.get("companyName") || "정보없음";
-    var mainImageContainer = document.getElementById("main-image-container");
     
-    if (mainImageContainer) {
-        if (jobImageFileName && jobImageFileName.trim() !== "") {
-            // 공고 이미지가 있는 경우 - 이미지 표시
-            var imagePath = "/InsWebApp/images/company/" + jobImageFileName;
-            console.log("공고 이미지 표시:", imagePath);
-            
-            mainImageContainer.innerHTML = 
-                '<img src="' + imagePath + '" alt="공고 이미지" style="width: 100%; height: 100%; object-fit: cover; border-radius: 6px;" ' +
-                'onerror="this.style.display=\'none\'; this.nextSibling.style.display=\'flex\';" />' +
-                '<div style="display: none; width: 100%; height: 100%; align-items: center; justify-content: center; color: white; font-weight: bold; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);">' +
-                companyName + '</div>';
+    // ID와 클래스로 모두 시도
+    var mainImageContainer = document.getElementById("main-image-container") || 
+                            document.querySelector(".main-image") ||
+                            document.querySelector('[id="main-image-container"]');
+    
+    console.log("공고 이미지 파일명:", jobImageFileName);
+    console.log("회사명:", companyName);
+    console.log("메인 이미지 컨테이너:", mainImageContainer);
+    console.log("DOM 전체 상태:", document.readyState);
+    
+    if (!mainImageContainer) {
+        console.warn("❌ 메인 이미지 컨테이너를 찾을 수 없습니다. (시도 #" + (retryCount + 1) + ")");
+        
+        // 최대 5번까지 재시도
+        if (retryCount < 4) {
+            console.log("1초 후 재시도...");
+            setTimeout(function() {
+                scwin.updateMainImageWithRetry(retryCount + 1);
+            }, 1000);
+            return;
         } else {
-            // 공고 이미지가 없는 경우 - 회사명 표시
-            console.log("공고 이미지 없음, 회사명 표시:", companyName);
-            
-            mainImageContainer.innerHTML = 
-                '<div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);">' +
-                companyName + '</div>';
+            console.error("❌ 최대 재시도 횟수 초과. 이미지 업데이트 실패");
+            // 디버깅 정보 출력
+            console.log("현재 DOM 구조 확인:");
+            console.log("- document.body:", document.body);
+            console.log("- .main-image 요소들:", document.querySelectorAll(".main-image"));
+            console.log("- [id 포함] 요소들:", document.querySelectorAll("*[id*='main-image']"));
+            return;
         }
     }
+    
+    console.log("✅ 메인 이미지 컨테이너 찾음!");
+    
+    if (jobImageFileName && jobImageFileName.trim() !== "" && jobImageFileName !== "null") {
+        // 공고 이미지가 있는 경우 - MainPage 기업 로고 방식과 완전히 동일하게 표시
+        // WebSquare 설정: 모든 업로드가 company 폴더에 저장됨
+        var jobImageBase = '/InsWebApp/images/company/'; // 기업 로고와 동일한 경로
+        var defaultJobImage = '/InsWebApp/images/ws5/default_company.png'; // 기본 이미지
+        
+        // MainPage와 완전히 동일한 방식: 이미지 설정
+        var hasJobImage = jobImageFileName && jobImageFileName.trim() !== '';
+        var imgSrc = hasJobImage ? jobImageBase + encodeURIComponent(jobImageFileName) : defaultJobImage;
+        
+        console.log("✅ 공고 이미지 있음 - MainPage 방식과 완전히 동일하게 표시");
+        console.log("공고 이미지 경로:", imgSrc);
+        console.log("파일명:", jobImageFileName);
+        
+        // MainPage와 동일한 방식으로 이미지 설정 (setSrc 대신 HTML 사용)
+        mainImageContainer.innerHTML = 
+            '<img id="job-main-image" src="' + imgSrc + '" alt="공고 이미지" ' +
+            'style="width: 100%; height: 100%; object-fit: cover; border-radius: 6px;" ' +
+            'onload="console.log(\'✅ 이미지 로딩 성공: ' + imgSrc + '\');" ' +
+            'onerror="console.log(\'❌ 이미지 로딩 실패: ' + imgSrc + '\'); this.src=\'' + defaultJobImage + '\';" />';
+            
+        console.log("✅ 이미지 HTML 설정 완료 (MainPage와 동일한 방식)");
+        
+    } else {
+        // 공고 이미지가 없는 경우 - 회사명 표시
+        console.log("❌ 공고 이미지 없음 - 회사명 표시");
+        console.log("jobImageFileName 값:", jobImageFileName, "(타입:", typeof jobImageFileName, ")");
+        
+        mainImageContainer.innerHTML = 
+            '<div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);">' +
+            companyName + '</div>';
+            
+        console.log("회사명 텍스트 표시 완료");
+    }
+    
+    console.log("=== 메인 이미지 업데이트 성공! ===");
+};
+
+/**
+ * 이미지 로딩 오류 처리 함수 (CreateCompany 방식 참고)
+ */
+scwin.handleImageLoadError = function(imgElement, companyName, imagePaths) {
+    console.log("=== 이미지 로딩 오류 처리 시작 ===");
+    console.log("실패한 이미지 경로:", imgElement.src);
+    
+    // 현재 실패한 경로의 인덱스 찾기
+    var currentIndex = -1;
+    for (var i = 0; i < imagePaths.length; i++) {
+        if (imgElement.src.indexOf(imagePaths[i]) !== -1) {
+            currentIndex = i;
+            break;
+        }
+    }
+    
+    // 다음 경로 시도
+    var nextIndex = currentIndex + 1;
+    if (nextIndex < imagePaths.length) {
+        console.log("다음 경로 시도 중:", imagePaths[nextIndex]);
+        imgElement.src = imagePaths[nextIndex];
+    } else {
+        // 모든 경로 실패 - fallback 텍스트 표시
+        console.error("❌ 모든 이미지 경로 실패 - fallback 텍스트 표시");
+        console.log("시도한 모든 경로:", imagePaths);
+        
+        imgElement.style.display = 'none';
+        var fallbackDiv = document.getElementById('fallback-text');
+        if (fallbackDiv) {
+            fallbackDiv.style.display = 'flex';
+            console.log("✅ fallback 텍스트 표시 완료:", companyName);
+        }
+    }
+    
+    console.log("=== 이미지 로딩 오류 처리 완료 ===");
 };
 
 /**
