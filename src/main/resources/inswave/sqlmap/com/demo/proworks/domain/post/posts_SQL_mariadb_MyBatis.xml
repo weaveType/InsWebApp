@@ -85,13 +85,30 @@
     </update>
 	
     <select id="selectPost" parameterType="com.demo.proworks.domain.post.vo.PostVo" resultType="com.demo.proworks.domain.post.vo.PostVo">
-    	<!-- 공고정보를 상세 조회한다. (소프트 삭제된 공고 제외) -->	
+    	<!-- 공고정보를 상세 조회한다. (회사명, 이미지 파일명 포함, 소프트 삭제된 공고 제외) -->	
         SELECT     /* QueryID : com.demo.proworks.domain.post.selectPost */
-            JOB_POSTING_ID as jobPostingId, COMPANY_ID as companyId, TITLE as title, DESCRIPTION as description, EXPERIENCE_LEVEL as experienceLevel, SALARY_RANGE as salaryRange, LOCATION as location, WORK_TYPE as workType, PREFERRED_DEVELOPER_TYPES as preferredDeveloperTypes, EXPIRES_AT as expiresAt, POSTED_AT as postedAt, STATUS as status
-        FROM POSTS 
-        WHERE 
-                JOB_POSTING_ID            = #{jobPostingId}
-        AND (IS_DELETED IS NULL OR IS_DELETED = 0)
+               p.JOB_POSTING_ID as jobPostingId, 
+               p.COMPANY_ID as companyId, 
+               p.TITLE as title, 
+               p.DESCRIPTION as description, 
+               p.EXPERIENCE_LEVEL as experienceLevel, 
+               p.SALARY_RANGE as salaryRange, 
+               p.LOCATION as location, 
+               p.WORK_TYPE as workType, 
+               p.PREFERRED_DEVELOPER_TYPES as preferredDeveloperTypes, 
+               p.EXPIRES_AT as expiresAt, 
+               p.POSTED_AT as postedAt, 
+               p.STATUS as status,
+               p.JOB_IMAGE_FILE_NAME as jobImageFileName,
+               u.name as companyName,
+               c.industry as industry,
+               c.emp_count as empCount
+        FROM POSTS p
+        INNER JOIN companys c ON p.company_id = c.company_id
+        INNER JOIN users u ON c.user_id = u.user_id
+        WHERE p.JOB_POSTING_ID = #{jobPostingId}
+        AND (p.IS_DELETED IS NULL OR p.IS_DELETED = 0)
+        AND (c.is_deleted IS NULL OR c.is_deleted = 0)
 			
     </select>
 	
