@@ -144,6 +144,14 @@
 				color: #666666 !important;
 				cursor: not-allowed !important;
 			}
+			.resume-link-text {
+				color: #007bff; 
+				cursor: pointer; 
+				text-decoration: underline;
+			}
+			.resume-none-text {
+				color: #6c757d;
+			}
 		</style>
 		<xf:model>
 			<w2:dataCollection baseNode="map">
@@ -178,6 +186,12 @@
 		</xf:model>
 		<script lazy="false" type="text/javascript"><![CDATA[
 scwin.onpageload = function () {
+    // window 객체에 customRenderer 함수 등록
+    window.scwin = window.scwin || {};
+    window.scwin.openResumePreview = scwin.openResumePreview;
+    window.scwin.resumeCustomRenderer = scwin.resumeCustomRenderer;
+    window.scwin.displayResumeFileName = scwin.displayResumeFileName;
+
     var jobPostingId = null;
 
     try {
@@ -197,6 +211,14 @@ scwin.onpageload = function () {
     dmp_applicantVo.set("jobPostingId", jobPostingId);
     scwin.updateButtonStates(); // 페이지 로드 시 버튼 상태 초기화
     scwin.search();
+    
+    // 그리드뷰 갱신하기 (customRenderer 적용을 위해)
+    setTimeout(function() {
+        if (gridView) {
+            console.log("지원자 관리 페이지 그리드뷰 새로고침");
+            gridView.refresh();
+        }
+    }, 500);
 };
 
 scwin.search = function () {
@@ -232,11 +254,30 @@ scwin.onPageChange = function (e) {
 };
 
 scwin.onApplicantListLoad = function (e) {
+    console.log("지원자 목록 조회 완료", e);
+    
     if (e.status === 200) {
         var responseData = e.responseJSON;
         if (responseData && responseData.elData) {
             var totalCount = responseData.elData.totalCount;
             pageList1.setTotalRowCount(totalCount);
+            
+            console.log("지원자 상세 데이터:", responseData.elData.applicantDetailVo);
+            
+            // 데이터 로드 후 커스텀 렌더러 재적용
+            setTimeout(function() {
+                console.log("이력서 필드 렌더링 시작");
+                var rows = gridView.getRowCount();
+                console.log("그리드 행 수:", rows);
+                
+                for (var i = 0; i < rows; i++) {
+                    var resumeFileName = dlt_applicantVoList.getCellData(i, "resumeFileName");
+                    console.log("행 " + i + " 이력서 파일명:", resumeFileName);
+                }
+                
+                // 전체 그리드 새로고침
+                gridView.refresh();
+            }, 200);
         }
         // 데이터 로드 후 버튼 상태를 다시 한 번 업데이트할 수 있습니다.
         scwin.updateButtonStates();
@@ -308,6 +349,101 @@ scwin.fail_btn_onclick = function (e) {
         selectedUsers: emailInfoList
     });
 };
+
+// 이력서 필드에 대한 formatter 함수 구현 (customRenderer 대신)
+scwin.displayResumeFileName = function(value) {
+    console.log("displayResumeFileName 호출됨, value:", value);
+    
+    // 이력서 파일명이 있는지 확인
+    var hasResume = value && value.trim() !== "";
+    
+    if (hasResume) {
+        return "<span class='resume-link-text'>이력서 보기</span>";
+    } else {
+        return "<span class='resume-none-text'>이력서 없음</span>";
+    }
+};
+
+// 그리드 셀 클릭 이벤트 (이력서 컬럼)
+scwin.gridView_oncellclick = function(row, col, colId) {
+    console.log("그리드 셀 클릭: row=" + row + ", col=" + col + ", colId=" + colId);
+    
+    if (colId === "resumeFileName") {
+        // 해당 행의 이력서 파일명 확인
+        var resumeFileName = dlt_applicantVoList.getCellData(row, "resumeFileName");
+        
+        // 이력서가 없으면 무시
+        if (!resumeFileName || resumeFileName.trim() === "") {
+            console.log("이력서 파일이 없습니다.");
+            return;
+        }
+        
+        console.log("이력서 미리보기 열기 시도: " + resumeFileName);
+        scwin.openResumePreview(row);
+    }
+};
+
+// 이력서 미리보기 팝업 열기
+scwin.openResumePreview = function(rowIndex) {
+    try {
+        console.log("이력서 미리보기 팝업 열기 - 행 인덱스:", rowIndex);
+        
+        // 선택된 행의 데이터 가져오기
+        var accountId = dlt_applicantVoList.getCellData(rowIndex, "accountId");
+        var userName = dlt_applicantVoList.getCellData(rowIndex, "name");
+        var resumeFileName = dlt_applicantVoList.getCellData(rowIndex, "resumeFileName");
+        
+        console.log("선택된 사용자 정보:", {
+            accountId: accountId,
+            userName: userName,
+            resumeFileName: resumeFileName
+        });
+        
+        // 이력서가 없는 경우
+        if (!resumeFileName || resumeFileName.trim() === "") {
+            $c.win.alert("등록된 이력서가 없습니다.");
+            return;
+        }
+        
+        // 팝업에 전달할 데이터
+        var popupData = {
+            accountId: accountId,
+            userName: userName || "사용자",
+            resumeFileName: resumeFileName
+        };
+        
+        // 전역 변수로 파라미터 저장
+        window.scwin.paramData = popupData;
+        
+        // 세션 스토리지에도 저장
+        try {
+            sessionStorage.setItem("resumePreviewParams", JSON.stringify(popupData));
+        } catch(e) {
+            console.error("세션 스토리지 저장 오류:", e);
+        }
+        
+        // 팝업 옵션
+        var popupOptions = {
+            id: "resume_preview_popup_" + accountId,
+            type: "wframePopup", // pageFramePopup에서 wframePopup으로 변경
+            width: "900px",
+            height: "700px",
+            modal: true,
+            popupName: "이력서 미리보기",
+            resizable: true
+        };
+        
+        console.log("팝업 데이터:", popupData);
+        console.log("팝업 옵션:", popupOptions);
+        
+        // 팝업 열기
+        $c.win.openPopup("../common/ResumePreviewPopup.xml", popupOptions, popupData);
+        
+    } catch (error) {
+        console.error("이력서 미리보기 팝업 열기 중 오류:", error);
+        $c.win.alert("이력서 미리보기를 열 수 없습니다: " + error.message);
+    }
+};
 ]]></script>
 	</head>
 	<body ev:onpageload="scwin.onpageload">
@@ -361,7 +497,7 @@ scwin.fail_btn_onclick = function (e) {
 			<xf:group style="display:flex; flex-direction:column; justify-content:center; align-items:center; padding:20px;">
 				<w2:gridView checkAllType="false" defaultCellHeight="20" id="gridView"
 					style="height:633px;width: 100%;overflow:hidden;box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);border:none;background:#ffffff;"
-					dataList="data:dlt_applicantVoList" readOnly="true" visibleRowNum="10" sortable="true" focusFlow="linear">
+					dataList="data:dlt_applicantVoList" readOnly="true" visibleRowNum="10" sortable="true" focusFlow="linear" ev:oncellclick="scwin.gridView_oncellclick">
 					<w2:caption style="" id="caption2" value="this is a grid caption."></w2:caption>
 					<w2:header style="" id="header2">
 						<w2:row style="" id="row3">
@@ -389,7 +525,7 @@ scwin.fail_btn_onclick = function (e) {
 							<w2:column width="100" inputType="text" style="" id="email" value="" displayMode="label"></w2:column>
 							<w2:column width="80" inputType="text" style="" id="career" value="" displayMode="label"></w2:column>
 							<w2:column width="100" inputType="text" style="" id="currentPosition" value="" displayMode="label"></w2:column>
-							<w2:column width="*" inputType="text" style="" id="resumeFileName" value="" displayMode="label"></w2:column>
+							<w2:column width="150" inputType="text" style="cursor:pointer; color:#007bff;" id="resumeFileName" value="" displayMode="HTML" displayFormatter="scwin.displayResumeFileName"></w2:column>
 							<w2:column width="80" inputType="text" style="" id="typeCode" value="" displayMode="label"></w2:column>
 							<w2:column width="*" inputType="text" style="" id="techStack" value="" displayMode="label"></w2:column>
 							<w2:column width="100" inputType="text" style="" id="applicationStatus" value="" displayMode="label"></w2:column>

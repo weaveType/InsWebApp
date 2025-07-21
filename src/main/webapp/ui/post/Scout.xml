@@ -167,6 +167,14 @@
                 background-color: #6c757d;
                 color: white;
             }
+            .resume-link-text {
+                color: #007bff; 
+                cursor: pointer; 
+                text-decoration: underline;
+            }
+            .resume-none-text {
+                color: #6c757d;
+            }
         </style>
         <xf:model>
             <w2:dataCollection baseNode="map">
@@ -208,11 +216,24 @@
             </xf:submission>
         </xf:model>
         <script lazy="false" type="text/javascript"><![CDATA[scwin.onpageload = function () {
+    // window 객체에 formatter 함수 등록
+    window.scwin = window.scwin || {};
+    window.scwin.openResumePreview = scwin.openResumePreview;
+    window.scwin.displayResumeFileName = scwin.displayResumeFileName;
+    
     // 회사 아이디로 유저 불러오기
     scwin.getJobPostingId();
 
     // 스카웃 상태 필터 기본값 설정
     scoutStatusFilter.setValue("NOT_SCOUTED");
+    
+    // 그리드뷰 갱신하기
+    setTimeout(function() {
+        if (gridView1) {
+            console.log("스카웃 페이지 그리드뷰 새로고침");
+            gridView1.refresh();
+        }
+    }, 500);
 };
 
 // 파라미터로 postId 받기
@@ -359,7 +380,126 @@ scwin.w2selectbox_disabled_onselected = function () {
 };
 
 scwin.sbm_scoutVo_submitdone = function (e) {
+    console.log("스카웃 데이터 조회 완료", e);
+    
+    try {
+        if (e && e.responseJSON && e.responseJSON.elData && e.responseJSON.elData.scoutDetailVo) {
+            var data = e.responseJSON.elData.scoutDetailVo;
+            console.log("스카웃 상세 데이터:", data);
+            
+            // 데이터 로드 후 커스텀 렌더러 재적용
+            setTimeout(function() {
+                console.log("이력서 필드 렌더링 시작");
+                var rows = gridView1.getRowCount();
+                console.log("그리드 행 수:", rows);
+                
+                for (var i = 0; i < rows; i++) {
+                    var resumeFileName = dlt_scoutListVo.getCellData(i, "resumeFileName");
+                    console.log("행 " + i + " 이력서 파일명:", resumeFileName);
+                }
+                
+                // 전체 그리드 새로고침
+                gridView1.refresh();
+            }, 200);
+        }
+    } catch (error) {
+        console.error("스카웃 데이터 처리 중 오류:", error);
+    }
+};
 
+// 이력서 필드에 대한 formatter 함수 구현
+scwin.displayResumeFileName = function(value) {
+    console.log("displayResumeFileName 호출됨, value:", value);
+    
+    // 이력서 파일명이 있는지 확인
+    var hasResume = value && value.trim() !== "";
+    
+    if (hasResume) {
+        return "<span class='resume-link-text'>이력서 보기</span>";
+    } else {
+        return "<span class='resume-none-text'>이력서 없음</span>";
+    }
+};
+
+// 그리드 셀 클릭 이벤트 (이력서 컬럼)
+scwin.gridView1_oncellclick = function(row, col, colId) {
+    console.log("그리드 셀 클릭: row=" + row + ", col=" + col + ", colId=" + colId);
+    
+    if (colId === "resumeFileName") {
+        // 해당 행의 이력서 파일명 확인
+        var resumeFileName = dlt_scoutListVo.getCellData(row, "resumeFileName");
+        
+        // 이력서가 없으면 무시
+        if (!resumeFileName || resumeFileName.trim() === "") {
+            console.log("이력서 파일이 없습니다.");
+            return;
+        }
+        
+        console.log("이력서 미리보기 열기 시도: " + resumeFileName);
+        scwin.openResumePreview(row);
+    }
+};
+
+// 이력서 미리보기 팝업 열기
+scwin.openResumePreview = function(rowIndex) {
+    try {
+        console.log("이력서 미리보기 팝업 열기 - 행 인덱스:", rowIndex);
+        
+        // 선택된 행의 데이터 가져오기
+        var accountId = dlt_scoutListVo.getCellData(rowIndex, "accountId");
+        var userName = dlt_scoutListVo.getCellData(rowIndex, "name");
+        var resumeFileName = dlt_scoutListVo.getCellData(rowIndex, "resumeFileName");
+        
+        console.log("선택된 사용자 정보:", {
+            accountId: accountId,
+            userName: userName,
+            resumeFileName: resumeFileName
+        });
+        
+        // 이력서가 없는 경우
+        if (!resumeFileName || resumeFileName.trim() === "") {
+            $c.win.alert("등록된 이력서가 없습니다.");
+            return;
+        }
+        
+        // 팝업에 전달할 데이터
+        var popupData = {
+            accountId: accountId,
+            userName: userName || "사용자",
+            resumeFileName: resumeFileName
+        };
+        
+        // 전역 변수로 파라미터 저장
+        window.scwin.paramData = popupData;
+        
+        // 세션 스토리지에도 저장
+        try {
+            sessionStorage.setItem("resumePreviewParams", JSON.stringify(popupData));
+        } catch(e) {
+            console.error("세션 스토리지 저장 오류:", e);
+        }
+        
+        // 팝업 옵션
+        var popupOptions = {
+            id: "resume_preview_popup_" + accountId,
+            type: "wframePopup", // pageFramePopup에서 wframePopup으로 변경
+            width: "900px",
+            height: "700px",
+            modal: true,
+            popupName: "이력서 미리보기",
+            resizable: true
+        };
+        
+        console.log("팝업 데이터:", popupData);
+        console.log("팝업 옵션:", popupOptions);
+        
+        // 팝업 열기
+        $c.win.openPopup("../common/ResumePreviewPopup.xml", popupOptions, popupData);
+        
+    } catch (error) {
+        console.error("이력서 미리보기 팝업 열기 중 오류:", error);
+        $c.win.alert("이력서 미리보기를 열 수 없습니다: " + error.message);
+    }
 };
 
 ]]></script>
@@ -462,7 +602,7 @@ scwin.sbm_scoutVo_submitdone = function (e) {
             	<w2:gridView checkAllType="false" dataList="data:dlt_scoutListVo" defaultCellHeight="20" focusFlow="linear"
             		id="gridView1" readOnly="true" sortable="true"
             		style="height:633px;width: 100%;overflow:hidden;box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);border:none;background:#ffffff;"
-            		visibleRowNum="10">
+            		visibleRowNum="10" ev:oncellclick="scwin.gridView1_oncellclick">
             		<w2:caption id="caption2" style="" value="this is a grid caption."></w2:caption>
             		<w2:header id="header2" style="">
             			<w2:row id="row3" style="">
@@ -489,7 +629,7 @@ scwin.sbm_scoutVo_submitdone = function (e) {
             				<w2:column displayMode="label" id="email" inputType="text" style="" value="" width="100"></w2:column>
             				<w2:column displayMode="label" id="career" inputType="text" style="" value="" width="80"></w2:column>
             				<w2:column displayMode="label" id="currentPosition" inputType="text" style="" value="" width="100"></w2:column>
-            				<w2:column displayMode="label" id="resumeFileName" inputType="text" style="" value="" width="*"></w2:column>
+            				<w2:column displayMode="HTML" id="resumeFileName" inputType="text" style="cursor:pointer; color:#007bff;" value="" width="150" displayFormatter="scwin.displayResumeFileName"></w2:column>
             				<w2:column displayMode="label" id="typeCode" inputType="text" style="" value="" width="80"></w2:column>
             				<w2:column displayMode="label" id="techStack" inputType="text" style="" value="" width="*"></w2:column>
             			</w2:row>
