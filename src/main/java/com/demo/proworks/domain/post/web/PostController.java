@@ -415,7 +415,10 @@ public class PostController {
 	@RequestMapping(value = "POS0001Upd")
 	@ElValidator(errUrl = "/post/postRegister", errContinue = true)
 	@ElDescription(sub = "공고정보 갱신처리", desc = "공고정보를 갱신 처리 한다.")
-	public void updatePost(PostVo postVo) throws Exception {
+	public PostVo updatePost(PostVo postVo) throws Exception {
+
+		System.out.println("=== 공고 수정 처리 시작 ===");
+		System.out.println("수정할 공고 ID: " + postVo.getJobPostingId());
 
 		// 권한 검증: 기존 공고 조회해서 현재 사용자 회사 것인지 확인
 		PostVo existingPost = postService.selectPost(postVo);
@@ -463,6 +466,28 @@ public class PostController {
 				System.err.println("기술스택 수정 중 오류: " + e.getMessage());
 			}
 		}
+
+		// 수정된 공고 정보 다시 조회해서 반환
+		PostVo updatedPost = postService.selectPost(postVo);
+		
+		// 기술스택 정보도 함께 설정
+		try {
+			List<TechStackVo> techStacks = postService.selectTechStacksByPostId(updatedPost.getJobPostingId());
+			if (techStacks != null && !techStacks.isEmpty()) {
+				String[] techStackNames = new String[techStacks.size()];
+				for (int i = 0; i < techStacks.size(); i++) {
+					techStackNames[i] = techStacks.get(i).getTechStackName();
+				}
+				
+				ObjectMapper objectMapper = new ObjectMapper();
+				updatedPost.setSelectedTechStackNames(objectMapper.writeValueAsString(techStackNames));
+			}
+		} catch (Exception e) {
+			System.err.println("수정 후 기술스택 조회 중 오류: " + e.getMessage());
+		}
+
+		System.out.println("=== 공고 수정 처리 완료 ===");
+		return updatedPost;
 	}
 
 	/**
