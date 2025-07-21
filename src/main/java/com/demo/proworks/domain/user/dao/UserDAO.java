@@ -272,7 +272,16 @@ public class UserDAO extends com.demo.proworks.cmmn.dao.ProworksDefaultAbstractD
 	public MatchingCheckedVo selectMatchingChecked(MatchingCheckedVo vo) throws Exception {
 		return (MatchingCheckedVo) selectByPk("com.demo.proworks.domain.user.selectMatchingChecked", vo);
 	}
-
+	
+	/**
+	 * 사용자의 이력서 파일명을 업데이트한다.
+	 * 
+	 * @param userVo 사용자 정보 UserVo (userId와 resumeFileName 필드 필수)
+	 * @return 업데이트 결과 (성공 시 1, 실패 시 0)
+	 * @throws ElException
+	 */
+	public int updateResumeFileName(UserVo vo) throws ElException {
+		return update("com.demo.proworks.domain.user.updateResumeFileName", vo);
 	/**
 	 * 지원현황 목록을 조회한다.
 	 *

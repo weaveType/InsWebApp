@@ -16,6 +16,9 @@ public class UserInfoVo extends com.demo.proworks.cmmn.ProworksCommVO {
     @ElDtoField(logicalName = "계정 ID", physicalName = "accountId", type = "int", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
     private int accountId;
 
+    @ElDtoField(logicalName = "이메일", physicalName = "email", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private String email;
+
     @ElDtoField(logicalName = "사용자명", physicalName = "name", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
     private String name;
 
@@ -37,6 +40,15 @@ public class UserInfoVo extends com.demo.proworks.cmmn.ProworksCommVO {
     @ElDtoField(logicalName = "코드분석완료여부", physicalName = "isCodeChecked", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
     private String isCodeChecked;
 
+    @ElDtoField(logicalName = "자기소개", physicalName = "bio", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private String bio;
+
+    @ElDtoField(logicalName = "이력서 파일명", physicalName = "resumeFileName", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private String resumeFileName;
+
+    @ElDtoField(logicalName = "프로필 이미지 파일명", physicalName = "profileImageName", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private String profileImageName;
+
     @ElVoField(physicalName = "accountId")
     public int getAccountId(){
         return accountId;
@@ -45,6 +57,17 @@ public class UserInfoVo extends com.demo.proworks.cmmn.ProworksCommVO {
     @ElVoField(physicalName = "accountId")
     public void setAccountId(int accountId){
         this.accountId = accountId;
+    }
+
+    @ElVoField(physicalName = "email")
+    public String getEmail(){
+        String ret = this.email;
+        return ret;
+    }
+
+    @ElVoField(physicalName = "email")
+    public void setEmail(String email){
+        this.email = email;
     }
 
     @ElVoField(physicalName = "name")
@@ -123,16 +146,53 @@ public class UserInfoVo extends com.demo.proworks.cmmn.ProworksCommVO {
         this.isCodeChecked = isCodeChecked;
     }
 
+    @ElVoField(physicalName = "bio")
+    public String getBio(){
+        String ret = this.bio;
+        return ret;
+    }
+
+    @ElVoField(physicalName = "bio")
+    public void setBio(String bio){
+        this.bio = bio;
+    }
+
+    @ElVoField(physicalName = "resumeFileName")
+    public String getResumeFileName(){
+        String ret = this.resumeFileName;
+        return ret;
+    }
+
+    @ElVoField(physicalName = "resumeFileName")
+    public void setResumeFileName(String resumeFileName){
+        this.resumeFileName = resumeFileName;
+    }
+
+    @ElVoField(physicalName = "profileImageName")
+    public String getProfileImageName(){
+        String ret = this.profileImageName;
+        return ret;
+    }
+
+    @ElVoField(physicalName = "profileImageName")
+    public void setProfileImageName(String profileImageName){
+        this.profileImageName = profileImageName;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("UserInfoVo [");
         sb.append("accountId").append("=").append(accountId).append(",");
+        sb.append("email").append("=").append(email).append(",");
         sb.append("name").append("=").append(name).append(",");
         sb.append("career").append("=").append(career).append(",");
         sb.append("preferredLocations").append("=").append(preferredLocations).append(",");
         sb.append("currentPosition").append("=").append(currentPosition).append(",");
         sb.append("yearSalary").append("=").append(yearSalary).append(",");
+        sb.append("bio").append("=").append(bio).append(",");
+        sb.append("resumeFileName").append("=").append(resumeFileName).append(",");
+        sb.append("profileImageName").append("=").append(profileImageName).append(",");
         sb.append("isMbtiChecked").append("=").append(isMbtiChecked).append(",");
         sb.append("isCodeChecked").append("=").append(isCodeChecked);
         sb.append("]");
