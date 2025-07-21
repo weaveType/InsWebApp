@@ -312,7 +312,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public ScoutListVo getScoutUsersByPostId(ScoutVo scoutVo) throws Exception {
 		String preferredDeveloperTypes = postDAO.selectPreferredDeveloperTypesByPostId(scoutVo.getJobPostingId());
-		scoutVo.setUserMbti(preferredDeveloperTypes);
+		scoutVo.setCompanyMbti(preferredDeveloperTypes);
 		List<ScoutDetailVo> detailList = userDAO.getScoutUsersByPostId(scoutVo);
 		int totalCount = userDAO.getScoutUserCount(scoutVo);
 

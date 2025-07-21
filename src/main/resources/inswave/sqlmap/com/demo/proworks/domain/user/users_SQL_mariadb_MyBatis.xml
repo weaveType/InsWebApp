@@ -345,7 +345,8 @@ GROUP_CONCAT(ts.tech_stack_name SEPARATOR ', ') AS techStack,
 umt.type_code AS typeCode,
 ui.resume_file_name AS resumeFileName,
 u.email AS email,
-u.user_id AS accountId
+u.user_id AS accountId,
+IFNULL(MAX(compat.match_cnt), 0) as mbtiMatchScore
 FROM
 users u
 JOIN
@@ -360,8 +361,17 @@ LEFT JOIN
 users_tech_stack_relation tsr ON u.user_id = tsr.user_id
 LEFT JOIN
 tech_stack ts ON tsr.tech_stack_id = ts.tech_stack_id
+<if test="companyMbti != null and companyMbti != ''">
+LEFT JOIN JSON_TABLE(
+    #{companyMbti},
+    "$[*]" COLUMNS(company_mbti CHAR(4) PATH "$")
+) jt ON JSON_VALID(#{companyMbti}) AND jt.company_mbti IS NOT NULL
+LEFT JOIN mbti_compat compat ON compat.code1 = umt.type_code 
+    AND compat.code2 = jt.company_mbti
+</if>
 WHERE
 ja.user_id IS NULL
+AND umt.type_code IS NOT NULL  <!-- MBTI가 있는 사용자만 필터링 -->
 <if test="scoutStatus == 'NOT_SCOUTED'">
 AND sr.user_id IS NULL
 </if>
@@ -377,7 +387,13 @@ ui.current_position,
 umt.type_code,
 ui.resume_file_name,
 u.email
+<if test="mbtiMatchFilter != null and mbtiMatchFilter != '' and mbtiMatchFilter != '0'">
+HAVING IFNULL(MAX(compat.match_cnt), 0) >= CAST(#{mbtiMatchFilter} AS UNSIGNED)
+</if>
 ORDER BY
+<if test="companyMbti != null and companyMbti != ''">
+mbtiMatchScore DESC,
+</if>
 u.user_id DESC
 LIMIT #{pageSize} OFFSET ${(pageIndex - 1) * pageSize}
 </select>
@@ -436,13 +452,33 @@ LIMIT #{pageSize} OFFSET ${(pageIndex - 1) * pageSize}
     users_tech_stack_relation tsr ON u.user_id = tsr.user_id
     LEFT JOIN
     tech_stack ts ON tsr.tech_stack_id = ts.tech_stack_id
+    <if test="companyMbti != null and companyMbti != ''">
+    LEFT JOIN JSON_TABLE(
+        #{companyMbti},
+        "$[*]" COLUMNS(company_mbti CHAR(4) PATH "$")
+    ) jt ON JSON_VALID(#{companyMbti}) AND jt.company_mbti IS NOT NULL
+    LEFT JOIN mbti_compat compat ON compat.code1 = umt.type_code 
+        AND compat.code2 = jt.company_mbti
+    </if>
     WHERE
     ja.user_id IS NULL
+    AND umt.type_code IS NOT NULL  <!-- MBTI가 있는 사용자만 필터링 -->
     <if test="scoutStatus == 'NOT_SCOUTED'">
     AND sr.user_id IS NULL
     </if>
     <if test="scoutStatus == 'SCOUTED'">
     AND sr.user_id IS NOT NULL
+    </if>
+    <if test="mbtiMatchFilter != null and mbtiMatchFilter != '' and mbtiMatchFilter != '0' and companyMbti != null and companyMbti != ''">
+    AND EXISTS (
+        SELECT 1 FROM JSON_TABLE(
+            #{companyMbti},
+            "$[*]" COLUMNS(company_mbti CHAR(4) PATH "$")
+        ) jt2
+        INNER JOIN mbti_compat compat2 ON compat2.code1 = umt.type_code 
+            AND compat2.code2 = jt2.company_mbti
+        WHERE compat2.match_cnt >= CAST(#{mbtiMatchFilter} AS UNSIGNED)
+    )
     </if>
     <!-- scoutStatus가 'ALL'인 경우 스카웃 관련 조건 없음 -->
 </select>
