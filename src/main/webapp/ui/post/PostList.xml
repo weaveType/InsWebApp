@@ -635,8 +635,8 @@ scwin.createJobCard = function (jobData, index) {
         console.log("✅ 1순위 - 공고 이미지 사용:", imagePath);
     } 
     // 2순위: 회사 로고 (회사별 개별 로고)
-    else if (jobData.companyId && jobData.companyId.toString().trim() !== "") {
-        imagePath = '/InsWebApp/images/company/' + jobData.companyId + '.png';
+    else if (jobData.logoFileName && jobData.logoFileName.trim() !== "" && jobData.logoFileName !== "null") {
+        imagePath = '/InsWebApp/images/company/' + jobData.logoFileName;
         imageAlt = (jobData.companyName || '회사') + ' 로고';
         console.log("✅ 2순위 - 회사 로고 사용:", imagePath);
     } 
@@ -661,7 +661,9 @@ scwin.createJobCard = function (jobData, index) {
         '<button class="bookmark-btn" onclick="scwin.toggleBookmark(event, \'' + jobData.jobPostingId + '\')">♡</button>' +
         '</xf:group>' +
         '<xf:group class="job-company" onclick="scwin.viewCompany(event, \'' + jobData.companyId + '\')">' +
-        (jobData.companyId ? '<img src="/InsWebApp/images/company/' + jobData.companyId + '.png" alt="' + (jobData.companyName || '회사') + ' 로고" class="company-logo" onerror="this.src=\'/InsWebApp/images/ws5/default_company.png\'" />' : '') +
+        (jobData.logoFileName && jobData.logoFileName.trim() !== "" && jobData.logoFileName !== "null" ? 
+            '<img src="/InsWebApp/images/company/' + encodeURIComponent(jobData.logoFileName) + '" alt="' + (jobData.companyName || '회사') + ' 로고" class="company-logo" onerror="this.src=\'/InsWebApp/images/ws5/default_company.png\'" />' : 
+            '<img src="/InsWebApp/images/ws5/default_company.png" alt="' + (jobData.companyName || '회사') + ' 기본 로고" class="company-logo" />') +
         '<span>' + (jobData.companyName || '회사명 정보없음') + '</span>' +
         '</xf:group>' +
         '<xf:group class="job-description">' +
