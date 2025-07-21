@@ -300,7 +300,7 @@ createCompanyList = function () {
 
         // 이미지 설정
         var hasLogo = companyData.logoFileName && companyData.logoFileName.trim() !== '';
-        var imgSrc = hasLogo ? logoBase + encodeURIComponent(companyData.logoFileName) : defaultLogo;
+        var imgSrc = hasLogo ? logoBase + companyData.logoFileName : defaultLogo;
         img_company_logo.setSrc(imgSrc);
         // onerror 처리는 WebSquare image 컴포넌트의 속성으로 처리하거나, 직접 DOM 접근이 필요할 수 있습니다.
         // 현재 WebSquare image 컴포넌트의 onerror 속성 지원 여부를 확인해야 합니다.
