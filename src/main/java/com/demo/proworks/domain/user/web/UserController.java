@@ -53,6 +53,7 @@ import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.JsonNode;
+
 /**
  * @subject : 일반회원 관련 처리를 담당하는 컨트롤러
  * @description : 일반회원 관련 처리를 담당하는 컨트롤러
@@ -1825,5 +1826,20 @@ public class UserController {
 	@ElDescription(sub = "지원현황 삭제", desc = "지원현황을 삭제한다.")
 	public int deleteApplicationHistory(ApplicationHistoryVo applicationHistoryVo) throws Exception {
 		return userService.deleteApplicationHistory(applicationHistoryVo);
+	}
+
+	/**
+	 * 지원현황을 삭제한다.
+	 *
+	 * @param applicationHistoryVo 지원현황 정보
+	 * @return 삭제 결과
+	 * @throws Exception
+	 */
+	@ElService(key = "US0001Cnt")
+	@RequestMapping(value = "US0001Cnt")
+	@ElDescription(sub = "지원현황 삭제", desc = "지원현황을 삭제한다.")
+	public int getApplicationStats(ApplicationHistoryVo applicationHistoryVo) throws Exception {
+//		return userService.getApplicationStats(applicationHistoryVo);
+		return 1;
 	}
 }
