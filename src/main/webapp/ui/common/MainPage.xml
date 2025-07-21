@@ -190,7 +190,7 @@ scwin.ad_onclick = function (e) {
 
 // 카드 클릭 이벤트
 scwin.card1_onclick = function () {
-    alert("튜토리얼 페이지로 이동합니다.");
+    $p.url("../common/Tutorial.xml");
 };
 
 scwin.card2_onclick = function () {
