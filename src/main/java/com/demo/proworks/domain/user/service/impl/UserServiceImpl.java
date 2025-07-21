@@ -1,8 +1,6 @@
 package com.demo.proworks.domain.user.service.impl;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 
@@ -311,13 +309,13 @@ public class UserServiceImpl implements UserService {
 	public ScoutListVo getScoutUsersByPostId(ScoutVo scoutVo) throws Exception {
 		List<ScoutDetailVo> detailList = userDAO.getScoutUsersByPostId(scoutVo);
 		int totalCount = userDAO.getScoutUserCount(scoutVo);
-		
+
 		ScoutListVo resultVo = new ScoutListVo();
 		resultVo.setScoutDetailVo(detailList);
 		resultVo.setTotalCount(totalCount);
 		resultVo.setPageIndex(scoutVo.getPageIndex());
 		resultVo.setPageSize(scoutVo.getPageSize());
-		
+
 		return resultVo;
 	}
 
@@ -332,6 +330,7 @@ public class UserServiceImpl implements UserService {
 	public MatchingCheckedVo selectMatchingChecked(MatchingCheckedVo matchingCheckedVo) throws Exception {
 		return userDAO.selectMatchingChecked(matchingCheckedVo);
 	}
+
 	/**
 	 * 사용자의 이력서 파일명을 업데이트한다.
 	 *
@@ -343,6 +342,7 @@ public class UserServiceImpl implements UserService {
 	public int updateResumeFileName(UserVo userVo) throws Exception {
 		// users_info 테이블의 resume_file_name 필드 업데이트
 		return userDAO.updateResumeFileName(userVo);
+	}
 
 	/**
 	 * 지원현황 목록을 조회한다.

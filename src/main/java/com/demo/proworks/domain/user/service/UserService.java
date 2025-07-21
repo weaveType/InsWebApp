@@ -199,7 +199,7 @@ public interface UserService {
 	 * @throws Exception
 	 */
 	public MatchingCheckedVo selectMatchingChecked(MatchingCheckedVo matchingCheckedVo) throws Exception;
-	
+
 	/**
 	 * 사용자의 이력서 파일명을 업데이트한다.
 	 *
@@ -216,7 +216,8 @@ public interface UserService {
 	 * @return 지원현황 목록
 	 * @throws Exception
 	 */
-	public List<ApplicationHistoryVo> selectApplicationHistoryList(ApplicationHistoryVo applicationHistoryVo) throws Exception;
+	public List<ApplicationHistoryVo> selectApplicationHistoryList(ApplicationHistoryVo applicationHistoryVo)
+			throws Exception;
 
 	/**
 	 * 지원현황 통계를 조회한다. (상태별 GROUP BY)
@@ -225,7 +226,8 @@ public interface UserService {
 	 * @return 지원현황 통계 목록
 	 * @throws Exception
 	 */
-	public List<ApplicationHistoryVo> selectApplicationHistoryStats(ApplicationHistoryVo applicationHistoryVo) throws Exception;
+	public List<ApplicationHistoryVo> selectApplicationHistoryStats(ApplicationHistoryVo applicationHistoryVo)
+			throws Exception;
 
 	/**
 	 * 지원현황 총 개수를 조회한다.
@@ -243,7 +245,8 @@ public interface UserService {
 	 * @return 지원현황 상세정보
 	 * @throws Exception
 	 */
-	public ApplicationHistoryVo selectApplicationHistoryDetail(ApplicationHistoryVo applicationHistoryVo) throws Exception;
+	public ApplicationHistoryVo selectApplicationHistoryDetail(ApplicationHistoryVo applicationHistoryVo)
+			throws Exception;
 
 	/**
 	 * 지원현황을 등록한다.
@@ -271,5 +274,4 @@ public interface UserService {
 	 * @throws Exception
 	 */
 	public int deleteApplicationHistory(ApplicationHistoryVo applicationHistoryVo) throws Exception;
-
 }

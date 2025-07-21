@@ -190,11 +190,11 @@ public class UserInfoVo extends com.demo.proworks.cmmn.ProworksCommVO {
         sb.append("preferredLocations").append("=").append(preferredLocations).append(",");
         sb.append("currentPosition").append("=").append(currentPosition).append(",");
         sb.append("yearSalary").append("=").append(yearSalary).append(",");
+        sb.append("isMbtiChecked").append("=").append(isMbtiChecked).append(",");
+        sb.append("isCodeChecked").append("=").append(isCodeChecked).append(",");
         sb.append("bio").append("=").append(bio).append(",");
         sb.append("resumeFileName").append("=").append(resumeFileName).append(",");
-        sb.append("profileImageName").append("=").append(profileImageName).append(",");
-        sb.append("isMbtiChecked").append("=").append(isMbtiChecked).append(",");
-        sb.append("isCodeChecked").append("=").append(isCodeChecked);
+        sb.append("profileImageName").append("=").append(profileImageName);
         sb.append("]");
         return sb.toString();
 
