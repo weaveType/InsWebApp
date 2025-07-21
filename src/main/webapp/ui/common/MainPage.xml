@@ -65,6 +65,13 @@
 		<script type="text/javascript"><![CDATA[// 페이지 로드 시 팝업 닫기 액션 함수들 정의
 scwin.onpageload = function () {
 
+    var userInfoStr = WebSquare.cookie.getCookie("userInfo");
+    var userInfo = JSON.parse(userInfoStr);
+
+    if (userInfo.role === "COMPANY") {
+        $p.url("../corporate/RecruitmentDashboard.xml");
+    }
+
     // 로그인 상태 확인 및 UI 업데이트
     scwin.updateLoginArea();
 
@@ -208,7 +215,7 @@ scwin.card3_onclick = function () {
 
 };
 
-scwin.handlePositionCardClick = function() {
+scwin.handlePositionCardClick = function () {
     var index = this.getGeneratedIndex();
     if (typeof index === 'number' && index >= 0) {
         var jobPostingId = dlt_posting_list.getCellData(index, "jobPostingId");
