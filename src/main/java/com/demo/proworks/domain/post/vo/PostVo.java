@@ -70,6 +70,9 @@ public class PostVo extends com.demo.proworks.cmmn.ProworksCommVO {
     @ElDtoField(logicalName = "job_image_file_name", physicalName = "jobImageFileName", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
     private String jobImageFileName;
 
+    @ElDtoField(logicalName = "logo_file_name", physicalName = "logoFileName", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private String logoFileName;
+
     @ElVoField(physicalName = "jobPostingId")
     public String getJobPostingId(){
         String ret = this.jobPostingId;
@@ -279,6 +282,17 @@ public class PostVo extends com.demo.proworks.cmmn.ProworksCommVO {
         this.jobImageFileName = jobImageFileName;
     }
 
+    @ElVoField(physicalName = "logoFileName")
+    public String getLogoFileName(){
+        String ret = this.logoFileName;
+        return ret;
+    }
+
+    @ElVoField(physicalName = "logoFileName")
+    public void setLogoFileName(String logoFileName){
+        this.logoFileName = logoFileName;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -301,7 +315,8 @@ public class PostVo extends com.demo.proworks.cmmn.ProworksCommVO {
         sb.append("companyName").append("=").append(companyName).append(",");
         sb.append("industry").append("=").append(industry).append(",");
         sb.append("empCount").append("=").append(empCount).append(",");
-        sb.append("jobImageFileName").append("=").append(jobImageFileName);
+        sb.append("jobImageFileName").append("=").append(jobImageFileName).append(",");
+        sb.append("logoFileName").append("=").append(logoFileName);
         sb.append("]");
         return sb.toString();
 

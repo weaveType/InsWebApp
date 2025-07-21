@@ -102,7 +102,8 @@
                p.JOB_IMAGE_FILE_NAME as jobImageFileName,
                u.name as companyName,
                c.industry as industry,
-               c.emp_count as empCount
+               c.emp_count as empCount,
+               c.logo_file_name as logoFileName
         FROM POSTS p
         INNER JOIN companys c ON p.company_id = c.company_id
         INNER JOIN users u ON c.user_id = u.user_id
@@ -130,7 +131,8 @@
                p.JOB_IMAGE_FILE_NAME as jobImageFileName,
                u.name as companyName,
                c.industry as industry,
-               c.emp_count as empCount		       
+               c.emp_count as empCount,
+               c.logo_file_name as logoFileName		       
            FROM POSTS p
            INNER JOIN companys c ON p.company_id = c.company_id
            INNER JOIN users u ON c.user_id = u.user_id
