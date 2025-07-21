@@ -1,64 +1,59 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<html xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:ev="http://www.w3.org/2001/xml-events"
-    xmlns:w2="http://www.inswave.com/websquare" 
-    xmlns:xf="http://www.w3.org/2002/xforms">
-    
-    <head meta_screenName="지원현황">
-        <w2:type>COMPONENT</w2:type>
-        <w2:buildDate/>
-        <w2:MSA/>
-        <xf:model>
-            <w2:dataCollection baseNode="map">
-                <w2:dataList baseNode="list" repeatNode="map" id="dlt_applications" saveRemovedData="true">
-                    <w2:columnInfo>
-                        <w2:column id="applicationId" name="지원ID" dataType="number"></w2:column>
-                        <w2:column id="userId" name="사용자ID" dataType="number"></w2:column>
-                        <w2:column id="company" name="회사명" dataType="text"></w2:column>
-                        <w2:column id="position" name="포지션" dataType="text"></w2:column>
-                        <w2:column id="applicationDate" name="지원일자" dataType="text"></w2:column>
-                        <w2:column id="status" name="상태" dataType="text"></w2:column>
-                        <w2:column id="result" name="결과" dataType="text"></w2:column>
-                        <w2:column id="logo" name="로고" dataType="text"></w2:column>
-                        <w2:column id="jobPostingId" name="공고ID" dataType="number"></w2:column>
-                    </w2:columnInfo>
-                </w2:dataList>
-                <w2:dataList baseNode="list" repeatNode="map" id="dlt_applicationStats" saveRemovedData="true">
-                    <w2:columnInfo>
-                        <w2:column id="statusType" name="상태타입" dataType="text"></w2:column>
-                        <w2:column id="statusCount" name="상태개수" dataType="number"></w2:column>
-                    </w2:columnInfo>
-                </w2:dataList>
-                <w2:dataMap baseNode="map" id="dmp_searchParam">
-                    <w2:keyInfo>
-                        <w2:key id="pageIndex" name="페이지번호" dataType="number"></w2:key>
-                        <w2:key id="pageSize" name="페이지크기" dataType="number"></w2:key>
-                        <w2:key id="userId" name="사용자ID" dataType="number"></w2:key>
-                        <w2:key id="status" name="상태" dataType="text"></w2:key>
-                    </w2:keyInfo>
-                </w2:dataMap>
-            </w2:dataCollection>
-            <xf:submission id="sbm_applicationHistoryList" action="/InsWebApp/USApplicationHistoryList.pwkjson" method="post" 
-                mediatype="application/json" ref='data:json,{"id":"dmp_searchParam", "key":"applicationHistoryVo"}' 
-                target='data:json,{"id":"dlt_applications", "key":"elData.applicationHistoryList"}' 
-                encoding="UTF-8" instance="" replace="" errorHandler="" customHandler="" 
-                mode="asynchronous" processMsg="지원현황 조회중..." 
-                ev:submit="" ev:submitdone="scwin.sbm_applicationHistoryList_submitdone" 
-                ev:submiterror="scwin.sbm_applicationHistoryList_submiterror" abortTrigger="">
-            </xf:submission>
-            <xf:submission id="sbm_applicationStats" action="/InsWebApp/USApplicationHistoryList.pwkjson" method="post" 
-                mediatype="application/json" ref='data:json,{"id":"dmp_searchParam", "key":"applicationHistoryVo"}' 
-                target='data:json,{"id":"dlt_applicationStats", "key":"elData.applicationStatsList"}' 
-                encoding="UTF-8" instance="" replace="" errorHandler="" customHandler="" 
-                mode="asynchronous" processMsg="" 
-                ev:submit="" ev:submitdone="scwin.sbm_applicationStats_submitdone" 
-                ev:submiterror="" abortTrigger="">
-            </xf:submission>
-        </xf:model>
-        <w2:layoutInfo/>
-        <w2:publicInfo method=""/>
-        
-        <style type="text/css"><![CDATA[
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare"
+	xmlns:xf="http://www.w3.org/2002/xforms">
+
+	<head meta_screenName="지원현황">
+		<w2:type>COMPONENT</w2:type>
+		<w2:buildDate />
+		<w2:MSA />
+		<xf:model>
+			<w2:dataCollection baseNode="map">
+				<w2:dataList baseNode="list" repeatNode="map" id="dlt_applications" saveRemovedData="true">
+					<w2:columnInfo>
+						<w2:column id="applicationId" name="지원ID" dataType="number"></w2:column>
+						<w2:column id="userId" name="사용자ID" dataType="number"></w2:column>
+						<w2:column id="company" name="회사명" dataType="text"></w2:column>
+						<w2:column id="position" name="포지션" dataType="text"></w2:column>
+						<w2:column id="applicationDate" name="지원일자" dataType="text"></w2:column>
+						<w2:column id="status" name="상태" dataType="text"></w2:column>
+						<w2:column id="result" name="결과" dataType="text"></w2:column>
+						<w2:column id="logo" name="로고" dataType="text"></w2:column>
+						<w2:column id="jobPostingId" name="공고ID" dataType="number"></w2:column>
+					</w2:columnInfo>
+				</w2:dataList>
+				<w2:dataList baseNode="list" repeatNode="map" id="dlt_applicationStats" saveRemovedData="true">
+					<w2:columnInfo>
+						<w2:column id="statusType" name="상태타입" dataType="text"></w2:column>
+						<w2:column id="statusCount" name="상태개수" dataType="number"></w2:column>
+					</w2:columnInfo>
+				</w2:dataList>
+				<w2:dataMap baseNode="map" id="dmp_searchParam">
+					<w2:keyInfo>
+						<w2:key id="pageIndex" name="페이지번호" dataType="number"></w2:key>
+						<w2:key id="pageSize" name="페이지크기" dataType="number"></w2:key>
+						<w2:key id="userId" name="사용자ID" dataType="number"></w2:key>
+						<w2:key id="status" name="상태" dataType="text"></w2:key>
+					</w2:keyInfo>
+				</w2:dataMap>
+			</w2:dataCollection>
+			<xf:submission id="sbm_applicationHistoryList" action="/InsWebApp/USApplicationHistoryList.pwkjson" method="post"
+				mediatype="application/json" ref='data:json,{"id":"dmp_searchParam", "key":"applicationHistoryVo"}'
+				target='data:json,{"id":"dlt_applications", "key":"elData.applicationHistoryList"}' encoding="UTF-8" instance="" replace=""
+				errorHandler="" customHandler="" mode="asynchronous" processMsg="지원현황 조회중..." ev:submit=""
+				ev:submitdone="scwin.sbm_applicationHistoryList_submitdone" ev:submiterror="scwin.sbm_applicationHistoryList_submiterror"
+				abortTrigger="">
+			</xf:submission>
+			<xf:submission id="sbm_applicationStats" action="/InsWebApp/USApplicationHistoryList.pwkjson" method="post"
+				mediatype="application/json" ref='data:json,{"id":"dmp_searchParam", "key":"applicationHistoryVo"}'
+				target='data:json,{"id":"dlt_applicationStats", "key":"elData.applicationStatsList"}' encoding="UTF-8" instance="" replace=""
+				errorHandler="" customHandler="" mode="asynchronous" processMsg="" ev:submit="" ev:submitdone="scwin.sbm_applicationStats_submitdone"
+				ev:submiterror="" abortTrigger="">
+			</xf:submission>
+		</xf:model>
+		<w2:layoutInfo />
+		<w2:publicInfo method="" />
+
+		<style type="text/css"><![CDATA[
 
             .main-wrap {
                 width: 100%;
@@ -136,7 +131,7 @@
                 font-size: 36px;
                 font-weight: bold;
                 margin-bottom: 8px;
-                color: #666;
+                color: #888;
                 transition: color 0.2s ease;
             }
 
@@ -159,12 +154,9 @@
             }
 
             /* 활성화된 카드는 파란색 */
-            .stat-card.active .stat-number {
-                color: #4285f4;
-            }
-
+            .stat-card.active .stat-number,
             .stat-card.active .stat-label {
-                color: #4285f4;
+                color: #4285f4 !important;
             }
 
             .stat-card.active:hover {
@@ -220,8 +212,8 @@
                 color: #ccc;
             }
         ]]></style>
-        
-        <script lazy="false" type="text/javascript"><![CDATA[
+
+		<script lazy="false" type="text/javascript"><![CDATA[
 scwin.onpageload = function() {
     // 검색 조건 초기화
     dmp_searchParam.set("pageIndex", 1);
@@ -323,13 +315,13 @@ scwin.updateStatsFromData = function() {
 // 통계 카드 선택 및 필터링
 scwin.selectStatCard = function(cardElement, filterType) {
     // 모든 통계 카드에서 active 클래스 제거
-    var allStatCards = document.querySelectorAll('.stat-card');
-    allStatCards.forEach(function(card) {
-        card.classList.remove('active');
-    });
+    total_applications.removeClass('active');
+    in_progress_applications.removeClass('active');
+    accepted_applications.removeClass('active');
+    rejected_applications.removeClass('active');
     
     // 클릭된 카드에 active 클래스 추가
-    cardElement.classList.add('active');
+    cardElement.addClass('active');
     
     // 해당 필터 적용
     scwin.filterApplications(filterType);
@@ -340,7 +332,7 @@ scwin.initializeStatCards = function() {
     setTimeout(function() {
         var firstStatCard = document.querySelector('.stat-card');
         if (firstStatCard) {
-            firstStatCard.classList.add('active');
+            firstStatCard.addClass('active');
         }
     }, 100);
 };
@@ -411,86 +403,103 @@ scwin.showApplicationDetail = function(rowIndex) {
 scwin.refreshData = function() {
     scwin.loadApplicationHistory();
 };
+
+scwin.total_applications_onclick = function (e) {
+    scwin.selectStatCard(this, 'all');
+};
+
+scwin.in_progress_applications_onclick = function (e) {
+    scwin.selectStatCard(this, 'pending');
+};
+
+scwin.accepted_applications_onclick = function (e) {
+    scwin.selectStatCard(this, 'accepted');
+};
+
+scwin.rejected_applications_onclick = function (e) {
+    scwin.selectStatCard(this, 'rejected');
+};
 ]]></script>
-    </head>
-    
-    <body ev:onpageload="scwin.onpageload">
-        <xf:group class="main-wrap">
+	</head>
 
-            <!-- 메인 컨테이너 -->
-            <xf:group class="main-container">
-                <!-- 사이드바 -->
+	<body ev:onpageload="scwin.onpageload">
+		<xf:group class="main-wrap">
 
-                <!-- 메인 콘텐츠 -->
-                <main class="main-content">
-                    <!-- 지원현황 페이지 헤더 -->
-                    <section class="page-header">
-                        <div class="page-info">                          <div class="page-details">
-                                <h1>지원 현황</h1>
-                                <div class="page-description">지원한 기업들의 현황을 확인하고 관리하세요.</div>
-                            </div>
-                        </div>
-                    </section>
+			<!-- 메인 컨테이너 -->
+			<xf:group class="main-container">
+				<!-- 사이드바 -->
 
-                    <!-- 지원현황 통계 -->
-                    <section class="stats-grid">
-                        <div class="stat-card" onclick="scwin.selectStatCard(this, 'all')">
-                            <span class="stat-number" id="totalApplications">0</span>
-                            <span class="stat-label">총 지원</span>
-                        </div>
-                        <div class="stat-card" onclick="scwin.selectStatCard(this, 'pending')">
-                            <span class="stat-number" id="waitingApplications">0</span>
-                            <span class="stat-label">진행 중</span>
-                        </div>
-                        <div class="stat-card" onclick="scwin.selectStatCard(this, 'accepted')">
-                            <span class="stat-number" id="acceptedApplications">0</span>
-                            <span class="stat-label">합격</span>
-                        </div>
-                        <div class="stat-card" onclick="scwin.selectStatCard(this, 'rejected')">
-                            <span class="stat-number" id="rejectedApplications">0</span>
-                            <span class="stat-label">불합격</span>
-                        </div>
-                    </section>
+				<!-- 메인 콘텐츠 -->
+				<main class="main-content">
+					<!-- 지원현황 페이지 헤더 -->
+					<section class="page-header">
+						<xf:group class="page-info">
+							<xf:group class="page-details">
+								<h1>지원 현황</h1>
+								<xf:group class="page-description">지원한 기업들의 현황을 확인하고 관리하세요.</xf:group>
+							</xf:group>
+						</xf:group>
+					</section>
 
-                    <!-- 필터 탭 -->
-                    <section class="filter-section">
-                    </section>
+					<!-- 지원현황 통계 -->
+					<section class="stats-grid">
+						<xf:group class="stat-card" id="total_applications" ev:onclick="scwin.total_applications_onclick">
+							<span class="stat-number" id="totalApplications">0</span>
+							<span class="stat-label">총 지원</span>
+						</xf:group>
+						<xf:group class="stat-card" id="in_progress_applications" ev:onclick="scwin.in_progress_applications_onclick">
+							<span class="stat-number" id="waitingApplications">0</span>
+							<span class="stat-label">진행 중</span>
+						</xf:group>
+						<xf:group class="stat-card" id="accepted_applications" ev:onclick="scwin.accepted_applications_onclick">
+							<span class="stat-number" id="acceptedApplications">0</span>
+							<span class="stat-label">합격</span>
+						</xf:group>
+						<xf:group class="stat-card" id="rejected_applications" ev:onclick="scwin.rejected_applications_onclick">
+							<span class="stat-number" id="rejectedApplications">0</span>
+							<span class="stat-label">불합격</span>
+						</xf:group>
+					</section>
 
-                    <!-- 지원현황 카드들 -->
-                    <section class="applications-section">
-                        <div class="applications-grid">
-                            <w2:generator id="gen_applications" dataList="data:dlt_applications" style="">
-                                <div class="application-card">
-                                    <div class="card-header">
-                                        <div class="company-info">
-                                            <div class="company-logo">
-                                                <w2:textbox ref="data:dlt_applications.logo"></w2:textbox>
-                                            </div>
-                                            <div class="company-details">
-                                                <div class="company-name">
-                                                    <w2:textbox ref="data:dlt_applications.company"></w2:textbox>
-                                                </div>
-                                                <div class="position-name">
-                                                    <w2:textbox ref="data:dlt_applications.position"></w2:textbox>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="application-date">
-                                            <w2:textbox ref="data:dlt_applications.applicationDate"></w2:textbox>
-                                        </div>
-                                    </div>
-                                    <div class="card-body">
-                                        <w2:textbox class="status-badge" ref="data:dlt_applications.status"></w2:textbox>
-                                        <div class="result-text">
-                                            <w2:textbox ref="data:dlt_applications.result"></w2:textbox>
-                                        </div>
-                                    </div>
-                                </div>
-                            </w2:generator>
-                        </div>
-                    </section>
-                </main>
-            </xf:group>
-        </xf:group>
-    </body>
+					<!-- 필터 탭 -->
+					<section class="filter-section">
+					</section>
+
+					<!-- 지원현황 카드들 -->
+					<section class="applications-section">
+						<xf:group class="applications-grid">
+							<w2:generator id="gen_applications" dataList="data:dlt_applications" style="">
+								<xf:group class="application-card">
+									<xf:group class="card-header">
+										<xf:group class="company-info">
+											<xf:group class="company-logo">
+												<w2:textbox ref="data:dlt_applications.logo"></w2:textbox>
+											</xf:group>
+											<xf:group class="company-details">
+												<xf:group class="company-name">
+													<w2:textbox ref="data:dlt_applications.company"></w2:textbox>
+												</xf:group>
+												<xf:group class="position-name">
+													<w2:textbox ref="data:dlt_applications.position"></w2:textbox>
+												</xf:group>
+											</xf:group>
+										</xf:group>
+										<xf:group class="application-date">
+											<w2:textbox ref="data:dlt_applications.applicationDate"></w2:textbox>
+										</xf:group>
+									</xf:group>
+									<xf:group class="card-body">
+										<w2:textbox class="status-badge" ref="data:dlt_applications.status"></w2:textbox>
+										<xf:group class="result-text">
+											<w2:textbox ref="data:dlt_applications.result"></w2:textbox>
+										</xf:group>
+									</xf:group>
+								</xf:group>
+							</w2:generator>
+						</xf:group>
+					</section>
+				</main>
+			</xf:group>
+		</xf:group>
+	</body>
 </html>
