@@ -179,7 +179,6 @@
             			<w2:column dataType="text" name="기술스택" id="techStack"></w2:column>
             			<w2:column dataType="text" name="mbti" id="typeCode"></w2:column>
             			<w2:column dataType="text" name="이력서" id="resumeFileName"></w2:column>
-            			<w2:column dataType="text" name="상태" id="applicationStatus"></w2:column>
             			<w2:column dataType="text" name="이메일" id="email"></w2:column>
             			<w2:column dataType="text" name="유저 ID" id="accountId"></w2:column>
             		</w2:columnInfo>
