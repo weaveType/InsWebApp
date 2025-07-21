@@ -370,7 +370,7 @@ scwin.sbm_scoutVo_submitdone = function (e) {
                         <xf:select1 id="w2selectbox_disabled" chooseOption=""
                             style="width: 180px;height: 32px;"
                             submenuSize="auto" allOption="" disabled="false" direction="auto" appearance="minimal" disabledClass="w2selectbox_disabled"
-                            chooseOptionLabel="모든 MBTI" ref="" ev:onselected="scwin.w2selectbox_disabled_onselected">
+                            chooseOptionLabel="모든 MBTI" ref="" ev:onselected="scwin.w2selectbox_disabled_onselected" class="SelectBox">
                             <xf:choices>
                                 <xf:item>
                                     <xf:label><![CDATA[모든 MBTI]]></xf:label>
