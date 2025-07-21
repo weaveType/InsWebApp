@@ -30,14 +30,25 @@
     } else {
         // 로그인 상태
         btnLogin.hide();
-        txb_login.show();
-        btnLogout.show(); // 로그아웃 버튼 표시
-        txb_login.setValue(userInfo.name + " 님");
+        btnLogout.show();
+
+        // 일반 유저헤더
+        if (userInfo.role == "USER") {
+            txb_login.show();
+            txb_login.setValue(userInfo.name + " 님");
+        }
+        else if (userInfo.role == "COMPANY") {
+            // 코드분석, 성향검사 숨김처리
+            anchor1.hide();
+            anchor2.hide();
+            anchor3.hide();
+        }
+
     }
 };
 
 
-scwin.getUserInfoByCookie = function() {
+scwin.getUserInfoByCookie = function () {
     var userInfoCookie = WebSquare.cookie.getCookie("userInfo");
     var userInfo = null;
 
@@ -98,7 +109,12 @@ scwin.btnLogin_onclick = function () {
 };
 
 scwin.codefit_Logo_onclick = function () {
-    $p.url("/InsWebApp/ui/common/MainPage.xml");
+    var userInfo = scwin.getUserInfoByCookie();
+    if (userInfo && userInfo.role === "COMPANY") {
+        $p.url("../corporate/RecruitmentDashboard.xml");
+    } else {
+        $p.url("/InsWebApp/ui/common/MainPage.xml");
+    }
 };
 
 scwin.menu1_onclick = function () {
