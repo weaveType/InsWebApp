@@ -287,6 +287,38 @@ scwin.positionFilter_onchange = function () {
     scwin.applyFilters();
 };
 
+scwin.w2selectbox_disabled_onselected = function () {
+    // 쿠키에서 userMbti 가져오기
+    var userInfoCookie = WebSquare.cookie.getCookie("userInfo");
+    if (!userInfoCookie) {
+         alert("로그인 후 사용가능한 기능입니다.");
+        return; // 함수 종료
+    }
+
+    var userInfo;
+    try {
+        userInfo = JSON.parse(userInfoCookie);
+    } catch (e) {
+        console.error("사용자 정보 파싱 오류:", e);
+        return; // 함수 종료
+    }
+
+    // userInfo.mbti가 존재하는지 확인
+    if (userInfo.role !== 'COMPANY') {
+        $c.win.alert("잘못된 접근입니다. 다시 로그인 해주세요.");
+        $p.url("../commom/MainPage.xml");
+    }
+
+    var selectedValue = w2selectbox_disabled.getValue();
+
+    // DataMap에 값 설정
+    dmp_scoutVo.set("mbtiMatchFilter", selectedValue);
+    dmp_scoutVo.set("pageIndex", "1");
+
+    // API 호출
+    $c.sbm.execute($p, sbm_selectScoutVo);
+};
+
 scwin.sbm_scoutVo_submitdone = function (e) {
 
 };
@@ -333,8 +365,32 @@ scwin.sbm_scoutVo_submitdone = function (e) {
 
                 <xf:group class="filter-group">
                 	<xf:group class="filter-group" style="">
-                		<xf:select1 id="" chooseOption="false" style="width:200px;height:32px;" submenuSize="auto" allOption="false"
-                			disabled="false" direction="auto" appearance="minimal" disabledClass="w2selectbox_disabled">
+                		<xf:select1 id="w2selectbox_disabled" chooseOption=""
+                			style="padding: 8px 12px; font-size: 14px; border: 1px solid #ccc; border-radius: 8px; background-color: #f8f8f8; width: 180px; height: auto;"
+                			submenuSize="auto" allOption="" disabled="false" direction="auto" appearance="minimal" disabledClass="w2selectbox_disabled"
+                			chooseOptionLabel="모든 MBTI" ref="" ev:onselected="scwin.w2selectbox_disabled_onselected">
+                			<xf:choices>
+                				<xf:item>
+                					<xf:label><![CDATA[모든 MBTI]]></xf:label>
+                					<xf:value><![CDATA[0]]></xf:value>
+                				</xf:item>
+                				<xf:item>
+                					<xf:label><![CDATA[4개 이상만 보기]]></xf:label>
+                					<xf:value><![CDATA[4]]></xf:value>
+                				</xf:item>
+                				<xf:item>
+                					<xf:label><![CDATA[3개 이상만 보기]]></xf:label>
+                					<xf:value><![CDATA[3]]></xf:value>
+                				</xf:item>
+                				<xf:item>
+                					<xf:label><![CDATA[2개 이상만 보기]]></xf:label>
+                					<xf:value><![CDATA[2]]></xf:value>
+                				</xf:item>
+                				<xf:item>
+                					<xf:label><![CDATA[1개 이상만 보기]]></xf:label>
+                					<xf:value><![CDATA[1]]></xf:value>
+                				</xf:item>
+                			</xf:choices>
                 		</xf:select1>
                 	</xf:group>
                 </xf:group>

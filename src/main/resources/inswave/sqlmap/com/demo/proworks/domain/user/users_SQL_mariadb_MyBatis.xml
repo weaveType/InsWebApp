@@ -417,4 +417,34 @@ LIMIT #{pageSize} OFFSET ${(pageIndex - 1) * pageSize}
 
     ON DUPLICATE KEY UPDATE tech_stack_id = tech_stack_id
 </select>
+
+<select id="getScoutUserCount" resultType="int"
+        parameterType="com.demo.proworks.domain.user.vo.ScoutVo">
+    SELECT
+    COUNT(DISTINCT u.user_id)
+    FROM
+    users u
+    JOIN
+    users_info ui ON u.user_id = ui.user_id
+    LEFT JOIN
+    users_mbti_types umt ON u.user_id = umt.user_id
+    LEFT JOIN
+    job_applications ja ON u.user_id = ja.user_id AND ja.job_posting_id = #{jobPostingId}
+    LEFT JOIN
+    scout_requests sr ON u.user_id = sr.user_id AND sr.job_posting_id = #{jobPostingId}
+    LEFT JOIN
+    users_tech_stack_relation tsr ON u.user_id = tsr.user_id
+    LEFT JOIN
+    tech_stack ts ON tsr.tech_stack_id = ts.tech_stack_id
+    WHERE
+    ja.user_id IS NULL
+    <if test="scoutStatus == 'NOT_SCOUTED'">
+    AND sr.user_id IS NULL
+    </if>
+    <if test="scoutStatus == 'SCOUTED'">
+    AND sr.user_id IS NOT NULL
+    </if>
+    <!-- scoutStatus가 'ALL'인 경우 스카웃 관련 조건 없음 -->
+</select>
+
 </mapper>
