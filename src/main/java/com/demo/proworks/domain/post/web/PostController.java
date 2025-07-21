@@ -29,6 +29,13 @@ import com.inswave.elfw.annotation.ElValidator;
 import com.inswave.elfw.core.UserHeader;
 import com.inswave.elfw.util.ControllerContextUtil;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * @subject : 공고정보 관련 처리를 담당하는 컨트롤러
@@ -605,4 +612,6 @@ public class PostController {
 	public MainPostingListVo selectPostingList() throws Exception {
 		return postService.selectPostingList();
 	}
+
+	// 공고 이미지 업로드 - WebSquare 기본 업로드 시스템 사용 (기업 업로드 방식과 동일)
 }

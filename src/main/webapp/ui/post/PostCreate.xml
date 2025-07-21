@@ -1559,8 +1559,10 @@ scwin.personality_btn_onclick = function (e) {
     console.log("=== 성향 버튼 클릭 이벤트 완료 ===");
 };
 
-// 파일 업로드 관련
-scwin.job_image_upload_onInputValueChange = function(fileName) {
+// 공고 이미지 파일 선택 이벤트 (CreateCompany 방식 완전 적용)
+scwin.job_image_upload_onInputValueChange = function (fileName) {
+    console.log("=== 공고 이미지 파일 선택 ===", fileName);
+    
     if (fileName) {
         document.getElementById("job_image_file_info").style.display = "block";
         document.getElementById("job_image_file_name").textContent = fileName;
@@ -1571,15 +1573,37 @@ scwin.job_image_upload_onInputValueChange = function(fileName) {
     }
 };
 
-// 파일 업로드 실행
+// 파일 업로드 완료 이벤트 (CreateCompany 방식)
+scwin.job_image_upload_ondone = function() {
+    console.log("=== 공고 이미지 업로드 완료 ===");
+};
+
+// 파일 업로드 실행 함수 (CreateCompany 방식 완전 동일하게 적용)
 scwin.uploadJobImage = function() {
+    console.log("=== 공고 이미지 업로드 실행 ===");
+    
     var hasJobImage = job_image_upload.getValue();
+    console.log("선택된 공고 이미지:", hasJobImage);
+
+    // 공고 이미지 업로드 (CreateCompany 로고 업로드와 완전히 동일)
     if (hasJobImage) {
+        console.log("공고 이미지 업로드 시작...");
         job_image_upload.submit();
+        
+        // 파일명 추출 (CreateCompany와 정확히 동일한 방식)
         var fullPath = job_image_upload.getValue();
-        var fileName = fullPath.split('\\').pop();
+        var fileName = fullPath.split('\\').pop(); // Extract filename
+        
+        console.log("전체 경로:", fullPath);
+        console.log("추출된 파일명:", fileName);
+        
+        // 데이터 모델에 파일명 저장 (CreateCompany와 동일)
         dmp_postVo.set("jobImageFileName", fileName);
-        console.log("공고 이미지 업로드:", fileName);
+        
+        console.log("✅ 공고 이미지 파일명 설정 완료:", fileName);
+        console.log("데이터맵에 설정된 값:", dmp_postVo.get("jobImageFileName"));
+    } else {
+        console.log("선택된 공고 이미지가 없습니다.");
     }
 };
 
@@ -1699,15 +1723,16 @@ scwin.btn_create_post_onclick = function() {
     dmp_postVo.set("selectedTechStackNames", JSON.stringify(techStackArray));
     dmp_postVo.set("preferredDeveloperTypes", JSON.stringify(personalityArray));
     
+    // 파일 업로드 실행 (CreateCompany 방식)
+    scwin.uploadJobImage();
+    
     console.log("등록 데이터:", {
         companyId: companyId,
         title: dmp_postVo.get("title"),
         techStacks: techStackArray.length,
-        personalities: personalityArray.length
+        personalities: personalityArray.length,
+        jobImageFileName: dmp_postVo.get("jobImageFileName") || "없음"
     });
-    
-    // 파일 업로드 (있는 경우)
-    scwin.uploadJobImage();
     
     // 서버 전송
     $p.executeSubmission("sbm_insertPost");
@@ -1881,17 +1906,18 @@ scwin.sbm_insertPost_submitdone = function(e) {
                         <xf:textarea class="form-textarea" placeholder="우리 회사에서 함께 일하고 싶은 개발자의 특징이나 역량을 구체적으로 설명해주세요." ref="data:dmp_postVo.description"></xf:textarea>
                     </xf:group>
 
-                    <!-- 이미지 업로드 -->
+                    <!-- 이미지 업로드 (CreateCompany 방식 완전 적용) -->
                     <xf:group class="form-group">
                         <w2:textbox class="form-label" label="공고 이미지 (선택사항)"></w2:textbox>
                         <xf:group class="upload-container" id="job_image_upload_container">
                             <w2:textbox class="upload-label" label="PNG, JPG 파일 업로드 (최대 5MB)"></w2:textbox>
-                            <w2:upload id="job_image_upload" style="width: 250px; height: 23px;" 
-                                ev:onInputValueChange="scwin.job_image_upload_onInputValueChange">
+                            <w2:upload imageStyle="position:absolute;vertical-align:middle;word-wrap:break-word"
+                                inputStyle="vertical-align:middle;word-wrap:break-word" style="width: 250px;height: 23px;" id="job_image_upload"
+                                ev:ondone="scwin.job_image_upload_ondone" ev:onInputValueChange="scwin.job_image_upload_onInputValueChange">
                             </w2:upload>
 
                             <div id="job_image_file_info" class="file-info">
-                                <span id="job_image_file_name" class="file-name"></span>
+                                <span class="file-name" id="job_image_file_name"></span>
                                 <div>✓ 파일이 선택되었습니다</div>
                             </div>
                         </xf:group>
