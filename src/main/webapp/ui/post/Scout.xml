@@ -200,13 +200,13 @@
         <script lazy="false" type="text/javascript"><![CDATA[scwin.onpageload = function () {
     // 회사 아이디로 유저 불러오기
     scwin.getJobPostingId();
-    
+
     // 스카웃 상태 필터 기본값 설정
     scoutStatusFilter.setValue("NOT_SCOUTED");
 };
 
 // 파라미터로 postId 받기
-scwin.getJobPostingId = function(){
+scwin.getJobPostingId = function () {
     var jobPostingId = scwin.getUrlParameter("jobPostingId");
 
     if (!jobPostingId) {
@@ -221,19 +221,19 @@ scwin.getJobPostingId = function(){
 };
 
 // URL 파라미터 추출
-scwin.getUrlParameter = function(name) {
+scwin.getUrlParameter = function (name) {
     const regex = new RegExp("[?&]" + name + "=([^&#]*)");
     const results = regex.exec(window.location.href);
     return results ? decodeURIComponent(results[1]) : null;
 };
 
 // 스카웃 상태 필터 변경 이벤트
-scwin.onScoutStatusFilterChange = function(e) {
+scwin.onScoutStatusFilterChange = function (e) {
     var selectedStatus = scoutStatusFilter.getValue();
     dmp_scoutVo.set("scoutStatus", selectedStatus);
     dmp_scoutVo.set("pageIndex", 1); // 페이지를 처음으로 리셋
     $c.sbm.execute(sbm_selectScoutVo);
-    
+
     // 총 개발자 수 업데이트
     scwin.updateTotalCount();
 };
@@ -291,8 +291,8 @@ scwin.w2selectbox_disabled_onselected = function () {
     // 쿠키에서 userMbti 가져오기
     var userInfoCookie = WebSquare.cookie.getCookie("userInfo");
     if (!userInfoCookie) {
-         alert("로그인 후 사용가능한 기능입니다.");
-        return; // 함수 종료
+        alert("로그인 후 사용가능한 기능입니다.");
+        $p.url("../commom/MainPage.xml");
     }
 
     var userInfo;

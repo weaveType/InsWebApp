@@ -307,6 +307,7 @@ public class UserServiceImpl implements UserService {
 	 */
 	@Override
 	public ScoutListVo getScoutUsersByPostId(ScoutVo scoutVo) throws Exception {
+	System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Scouto : " + scoutVo.toString());
 		List<ScoutDetailVo> detailList = userDAO.getScoutUsersByPostId(scoutVo);
 		int totalCount = userDAO.getScoutUserCount(scoutVo);
 
