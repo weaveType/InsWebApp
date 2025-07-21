@@ -169,20 +169,6 @@ scwin.btnLogin_onclick = function () {
             "returnUrl": window.location.href
         }
     };
-    // 팝업 생성 옵션 지정
-    var options = {
-        id: "login_popup",
-        type: "pageFramePopup",
-        width: "450px",
-        height: "550px",
-        modal: true,
-        popupName: "로그인/회원가입",
-        closeAction: "scwin.login_popup_closeAction",
-        dataObject: loginPopupData
-    };
-
-    // 팝업 생성
-    //$p.openPopup("../user/Login.xml", options);
     $c.win.openPopup("../user/Login.xml", {
         id: "login_popup",
         type: "pageFramePopup",
