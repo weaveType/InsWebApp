@@ -37,6 +37,7 @@
 						<w2:column dataType="text" id="techStackNames" name="tech_stack_names"></w2:column>
 						<w2:column dataType="text" id="preferredDeveloperTypes" name="preferred_developer_types"></w2:column>
 						<w2:column dataType="text" id="jobImageFileName" name="job_image_file_name"></w2:column>
+						<w2:column id="logoFileName" name="logo_file_name" dataType="text"></w2:column>
 					</w2:columnInfo>
 				</w2:dataList>
 
@@ -120,7 +121,7 @@
             /* 공고 카드 스타일 */
             .job-cards {
                 display: grid;
-                grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+                grid-template-columns: repeat(5, 1fr);
                 gap: 16px;
                 margin-bottom: 40px;
             }
@@ -396,7 +397,7 @@
                 }
 
                 .job-cards {
-                    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+                    grid-template-columns: repeat(4, 1fr);
                     gap: 14px;
                 }
             }
@@ -419,7 +420,7 @@
                 }
 
                 .job-cards {
-                    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                    grid-template-columns: repeat(3, 1fr);
                     gap: 16px;
                 }
 
@@ -609,49 +610,25 @@ scwin.createJobCard = function (jobData, index) {
     var imagePath = '';
     var imageAlt = '';
     
-    // 디버깅 정보 출력 - 모든 가능한 이미지 필드 확인
-    console.log("=== 이미지 경로 디버깅 ===");
-    console.log("jobData 전체 Keys:", Object.keys(jobData));
-    console.log("jobData 전체:", jobData);
-    
-    // 이미지 관련 가능한 모든 필드 확인
-    var imageFields = [
-        'imagePath', 'jobImageFileName', 'jobImageFilename', 'job_image_file_name',
-        'image_path', 'imageUrl', 'image_url', 'filePath', 'file_path',
-        'fileName', 'file_name', 'uploadedImage', 'uploaded_image'
-    ];
-    
-    console.log("=== 이미지 필드 전체 검사 ===");
-    imageFields.forEach(function(field) {
-        if (jobData[field] !== undefined) {
-            console.log("✅ 발견:", field, "=", jobData[field]);
-        }
-    });
-    
     // 1순위: 공고에 업로드된 이미지 (PostCreate에서 설정한 파일)
     if (jobData.jobImageFileName && jobData.jobImageFileName.trim() !== "" && jobData.jobImageFileName !== "null") {
         imagePath = '/InsWebApp/images/company/' + jobData.jobImageFileName;
         imageAlt = (jobData.title || '공고') + ' 이미지';
-        console.log("✅ 1순위 - 공고 이미지 사용:", imagePath);
     } 
     // 2순위: 회사 로고 (회사별 개별 로고)
     else if (jobData.logoFileName && jobData.logoFileName.trim() !== "" && jobData.logoFileName !== "null") {
         imagePath = '/InsWebApp/images/company/' + jobData.logoFileName;
         imageAlt = (jobData.companyName || '회사') + ' 로고';
-        console.log("✅ 2순위 - 회사 로고 사용:", imagePath);
     } 
     // 3순위: 기본 이미지
     else {
         imagePath = '/InsWebApp/images/ws5/default_company.png';
         imageAlt = (jobData.companyName || '회사') + ' 기본 이미지';
-        console.log("✅ 3순위 - 기본 이미지 사용:", imagePath);
     }
 
     // 이미지 HTML 생성 (fallback chain 사용)
     var imageHtml = '<img src="' + imagePath + '" alt="' + imageAlt + '" ' +
-                   'onload="console.log(\'✅ 이미지 로딩 성공:\', this.src);" ' +
-                   'onerror="scwin.handleSimpleImageError(this, \'' + (jobData.companyId || '') + '\');" />';
-    console.log("생성된 이미지 HTML:", imageHtml);
+                   'onerror="this.onerror=null;this.src=\'/InsWebApp/images/ws5/default_company.png\';" />';
 
     card.innerHTML =
         '<xf:group class="job-image">' + imageHtml + '</xf:group>' +
