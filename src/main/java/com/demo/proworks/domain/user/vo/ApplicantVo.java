@@ -22,6 +22,9 @@ public class ApplicantVo extends com.demo.proworks.cmmn.ProworksCommVO {
     @ElDtoField(logicalName = "공고_id", physicalName = "jobPostingId", type = "int", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
     private int jobPostingId;
 
+    @ElDtoField(logicalName = "상태", physicalName = "applicationStatus", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private String applicationStatus;
+
     @ElVoField(physicalName = "pageIndex")
     public long getPageIndex(){
         return pageIndex;
@@ -52,13 +55,25 @@ public class ApplicantVo extends com.demo.proworks.cmmn.ProworksCommVO {
         this.jobPostingId = jobPostingId;
     }
 
+    @ElVoField(physicalName = "applicationStatus")
+    public String getApplicationStatus(){
+        String ret = this.applicationStatus;
+        return ret;
+    }
+
+    @ElVoField(physicalName = "applicationStatus")
+    public void setApplicationStatus(String applicationStatus){
+        this.applicationStatus = applicationStatus;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("ApplicantVo [");
         sb.append("pageIndex").append("=").append(pageIndex).append(",");
         sb.append("pageSize").append("=").append(pageSize).append(",");
-        sb.append("jobPostingId").append("=").append(jobPostingId);
+        sb.append("jobPostingId").append("=").append(jobPostingId).append(",");
+        sb.append("applicationStatus").append("=").append(applicationStatus);
         sb.append("]");
         return sb.toString();
 

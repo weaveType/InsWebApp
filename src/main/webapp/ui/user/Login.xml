@@ -204,8 +204,14 @@ scwin.sbm_login_submitdone = function (e) {
         if (elHeader && elHeader.resSuc === true) {
             // 로그인 성공
             WebSquare.cookie.setCookie("userInfo", JSON.stringify(userHeader));
+
             $p.closePopup();
-            $c.win.reload();
+            if (userHeader.role == "USER") {
+                $c.win.reload();
+            } else if(userHeader.role == "COMPANY") {
+                $p.url("../corporate/RecruitmentDashboard.xml");
+            }
+
         } else {
             // 로그인 실패 (resSuc가 false거나 없음)
             const errMsg = elHeader && elHeader.errMsg ? elHeader.errMsg : "로그인에 실패했습니다.";

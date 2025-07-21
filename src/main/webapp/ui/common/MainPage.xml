@@ -65,6 +65,13 @@
 		<script type="text/javascript"><![CDATA[// 페이지 로드 시 팝업 닫기 액션 함수들 정의
 scwin.onpageload = function () {
 
+    var userInfoStr = WebSquare.cookie.getCookie("userInfo");
+    var userInfo = JSON.parse(userInfoStr);
+
+    if (userInfo.role === "COMPANY") {
+        $p.url("../corporate/RecruitmentDashboard.xml");
+    }
+
     // 로그인 상태 확인 및 UI 업데이트
     scwin.updateLoginArea();
 
@@ -162,20 +169,6 @@ scwin.btnLogin_onclick = function () {
             "returnUrl": window.location.href
         }
     };
-    // 팝업 생성 옵션 지정
-    var options = {
-        id: "login_popup",
-        type: "pageFramePopup",
-        width: "450px",
-        height: "550px",
-        modal: true,
-        popupName: "로그인/회원가입",
-        closeAction: "scwin.login_popup_closeAction",
-        dataObject: loginPopupData
-    };
-
-    // 팝업 생성
-    //$p.openPopup("../user/Login.xml", options);
     $c.win.openPopup("../user/Login.xml", {
         id: "login_popup",
         type: "pageFramePopup",
@@ -208,7 +201,7 @@ scwin.card3_onclick = function () {
 
 };
 
-scwin.handlePositionCardClick = function() {
+scwin.handlePositionCardClick = function () {
     var index = this.getGeneratedIndex();
     if (typeof index === 'number' && index >= 0) {
         var jobPostingId = dlt_posting_list.getCellData(index, "jobPostingId");
