@@ -287,6 +287,38 @@ scwin.positionFilter_onchange = function () {
     scwin.applyFilters();
 };
 
+scwin.w2selectbox_disabled_onselected = function () {
+    // 쿠키에서 userMbti 가져오기
+    var userInfoCookie = WebSquare.cookie.getCookie("userInfo");
+    if (!userInfoCookie) {
+         alert("로그인 후 사용가능한 기능입니다.");
+        return; // 함수 종료
+    }
+
+    var userInfo;
+    try {
+        userInfo = JSON.parse(userInfoCookie);
+    } catch (e) {
+        console.error("사용자 정보 파싱 오류:", e);
+        return; // 함수 종료
+    }
+
+    // userInfo.mbti가 존재하는지 확인
+    if (userInfo.role !== 'COMPANY') {
+        $c.win.alert("잘못된 접근입니다. 다시 로그인 해주세요.");
+        $p.url("../commom/MainPage.xml");
+    }
+
+    var selectedValue = w2selectbox_disabled.getValue();
+
+    // DataMap에 값 설정
+    dmp_scoutVo.set("mbtiMatchFilter", selectedValue);
+    dmp_scoutVo.set("pageIndex", "1");
+
+    // API 호출
+    $c.sbm.execute($p, sbm_selectScoutVo);
+};
+
 scwin.sbm_scoutVo_submitdone = function (e) {
 
 };
@@ -312,52 +344,72 @@ scwin.sbm_scoutVo_submitdone = function (e) {
             	
             </xf:group>
 
-            <!-- 필터링 영역 -->
-            <xf:group class="filter-container">
-                <xf:group class="filter-group">
-                	<!-- 스카웃 상태 필터 추가 -->
-                	<w2:selectbox id="scoutStatusFilter" style="width: 150px;height: 32px;" submenuSize="auto" appearance="minimal"
-                		direction="auto" chooseOption="true" chooseOptionLabel="스카웃 상태" ev:onviewchange="scwin.onScoutStatusFilterChange">
-                		<w2:choices>
-                			<w2:item>
-                				<w2:label><![CDATA[스카웃 안한 유저]]></w2:label>
-                				<w2:value><![CDATA[NOT_SCOUTED]]></w2:value>
-                			</w2:item>
-                			<w2:item>
-                				<w2:label><![CDATA[스카웃 한 유저]]></w2:label>
-                				<w2:value><![CDATA[SCOUTED]]></w2:value>
-                			</w2:item>
-                		</w2:choices>
-                	</w2:selectbox>
-                </xf:group>
-
-                <xf:group class="filter-group">
-                	<xf:group class="filter-group" style="">
-                		<xf:select1 id="" chooseOption="false" style="width:200px;height:32px;" submenuSize="auto" allOption="false"
-                			disabled="false" direction="auto" appearance="minimal" disabledClass="w2selectbox_disabled">
-                		</xf:select1>
-                	</xf:group>
-                </xf:group>
-
-                <xf:group class="filter-group">
-                    <w2:searchBox id="searchBox" placeholder="개발자 이름 검색" 
-                        style="width:200px;height:32px;" ev:onenter="scwin.searchBox_onenter">
-                    </w2:searchBox>
-                </xf:group>
-
-                <xf:group class="filter-group">
-                </xf:group>
-            </xf:group>
-
             <!-- 컨트롤 바 -->
-            <xf:group class="control-bar"
-                style="display:flex; justify-content:space-between; align-items:center; padding:15px 20px; background-color:#ffffff; border-bottom:1px solid #e9ecef;">
-                <w2:textbox id="selectedCount" label="0명 선택됨" style="color:#6c757d; font-size:14px; border:none; background:transparent;" />
-                <xf:group class="button-group" style="display:flex; align-items:center; gap:10px;">
-                    <xf:trigger class="btn-scout-all"
-                        style="background-color:#28a745; color:white; border:none; padding:8px 16px; border-radius:4px; margin-right:10px;"
-                        type="button" id="scout_all_btn" ev:onclick="scwin.scoutSelected">
-                        <xf:label><![CDATA[일괄 스카웃 제안]]></xf:label>                  </xf:trigger>
+            <xf:group
+                style="display:flex; justify-content:center; background-color:#ffffff; border-bottom:1px solid #e9ecef; padding:15px 0;">
+                <xf:group class="control-bar"
+                    style="display:flex;justify-content:space-between;align-items:center;max-width:1100px;width:94.92%;padding:0 min(30px, 4vw);">
+                    <xf:group style="display:flex; align-items:center; gap:10px;">
+                        
+                        <!-- 스카웃 상태 필터 -->
+                        <w2:selectbox id="scoutStatusFilter" style="width: 150px;height: 32px;" submenuSize="auto" appearance="minimal"
+                            direction="auto" chooseOption="true" chooseOptionLabel="스카웃 상태" ev:onviewchange="scwin.onScoutStatusFilterChange">
+                            <w2:choices>
+                                <w2:item>
+                                    <w2:label><![CDATA[스카웃 안한 유저]]></w2:label>
+                                    <w2:value><![CDATA[NOT_SCOUTED]]></w2:value>
+                                </w2:item>
+                                <w2:item>
+                                    <w2:label><![CDATA[스카웃 한 유저]]></w2:label>
+                                    <w2:value><![CDATA[SCOUTED]]></w2:value>
+                                </w2:item>
+                            </w2:choices>
+                        </w2:selectbox>
+                        
+                        <!-- MBTI 필터 -->
+                        <xf:select1 id="w2selectbox_disabled" chooseOption=""
+                            style="width: 180px;height: 32px;"
+                            submenuSize="auto" allOption="" disabled="false" direction="auto" appearance="minimal" disabledClass="w2selectbox_disabled"
+                            chooseOptionLabel="모든 MBTI" ref="" ev:onselected="scwin.w2selectbox_disabled_onselected" class="SelectBox">
+                            <xf:choices>
+                                <xf:item>
+                                    <xf:label><![CDATA[모든 MBTI]]></xf:label>
+                                    <xf:value><![CDATA[0]]></xf:value>
+                                </xf:item>
+                                <xf:item>
+                                    <xf:label><![CDATA[4개 이상만 보기]]></xf:label>
+                                    <xf:value><![CDATA[4]]></xf:value>
+                                </xf:item>
+                                <xf:item>
+                                    <xf:label><![CDATA[3개 이상만 보기]]></xf:label>
+                                    <xf:value><![CDATA[3]]></xf:value>
+                                </xf:item>
+                                <xf:item>
+                                    <xf:label><![CDATA[2개 이상만 보기]]></xf:label>
+                                    <xf:value><![CDATA[2]]></xf:value>
+                                </xf:item>
+                                <xf:item>
+                                    <xf:label><![CDATA[1개 이상만 보기]]></xf:label>
+                                    <xf:value><![CDATA[1]]></xf:value>
+                                </xf:item>
+                            </xf:choices>
+                        </xf:select1>
+                        
+                        <!-- 이름 검색 -->
+                        <w2:searchBox id="searchBox" placeholder="개발자 이름 검색" 
+                            style="width:200px;height:32px;" ev:onenter="scwin.searchBox_onenter">
+                        </w2:searchBox>
+                        
+                        <w2:textbox id="selectedCount" label="0명 선택됨" style="color:#6c757d; font-size:14px; border:none; background:transparent; margin-left:20px;" />
+                    </xf:group>
+
+                    <xf:group class="button-group" style="display:flex; align-items:center; gap:10px;">
+                        <xf:trigger class="btn-scout-all"
+                            style="background-color:#28a745; color:white; border:none; padding:8px 16px; border-radius:4px; margin-right:10px;"
+                            type="button" id="scout_all_btn" ev:onclick="scwin.scoutSelected">
+                            <xf:label><![CDATA[일괄 스카웃 제안]]></xf:label>
+                        </xf:trigger>
+                    </xf:group>
                 </xf:group>
             </xf:group>
 
