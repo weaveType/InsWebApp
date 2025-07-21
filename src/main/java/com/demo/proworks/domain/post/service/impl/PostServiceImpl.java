@@ -445,8 +445,8 @@ public class PostServiceImpl implements PostService {
 	 * @param jobPostingId 공고 ID, accountIds 스카웃 된 User ID List
 	 * @throws Exception
 	 */
-	public void selectScoutUserList(ScoutUserVo scoutUserVo) throws Exception {
-		postDAO.selectScoutUserList(scoutUserVo);
+	public void insertScoutRequest(ScoutUserVo scoutUserVo) throws Exception {
+		postDAO.insertScoutRequest(scoutUserVo);
 	}
 
 }

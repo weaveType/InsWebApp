@@ -313,7 +313,6 @@ public class UserServiceImpl implements UserService {
 	public ScoutListVo getScoutUsersByPostId(ScoutVo scoutVo) throws Exception {
 		String preferredDeveloperTypes = postDAO.selectPreferredDeveloperTypesByPostId(scoutVo.getJobPostingId());
 		scoutVo.setCompanyMbti(preferredDeveloperTypes);
-		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> scoutVo : " + scoutVo.toString());
 		List<ScoutDetailVo> detailList = userDAO.getScoutUsersByPostId(scoutVo);
 		int totalCount = userDAO.getScoutUserCount(scoutVo);
 

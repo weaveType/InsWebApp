@@ -13,32 +13,30 @@ public class ScoutUserVo extends com.demo.proworks.cmmn.ProworksCommVO {
     public ScoutUserVo(){
     }
 
-    @ElDtoField(logicalName = "공고ID", physicalName = "jobPostingId", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
-    private String jobPostingId;
+    @ElDtoField(logicalName = "공고_ID", physicalName = "jobPostingId", type = "int", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private int jobPostingId;
 
-    @ElDtoField(logicalName = "스카웃 된 유저 List", physicalName = "accountIds", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
-    private String accountIds;
+    @ElDtoField(logicalName = "유저_ID_List", physicalName = "accountIdVo", type = "", typeKind = "List", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private java.util.List<com.demo.proworks.domain.post.vo.AccountIdVo> accountIdVo;
 
     @ElVoField(physicalName = "jobPostingId")
-    public String getJobPostingId(){
-        String ret = this.jobPostingId;
-        return ret;
+    public int getJobPostingId(){
+        return jobPostingId;
     }
 
     @ElVoField(physicalName = "jobPostingId")
-    public void setJobPostingId(String jobPostingId){
+    public void setJobPostingId(int jobPostingId){
         this.jobPostingId = jobPostingId;
     }
 
-    @ElVoField(physicalName = "accountIds")
-    public String getAccountIds(){
-        String ret = this.accountIds;
-        return ret;
+    @ElVoField(physicalName = "accountIdVo")
+    public java.util.List<com.demo.proworks.domain.post.vo.AccountIdVo> getAccountIdVo(){
+        return accountIdVo;
     }
 
-    @ElVoField(physicalName = "accountIds")
-    public void setAccountIds(String accountIds){
-        this.accountIds = accountIds;
+    @ElVoField(physicalName = "accountIdVo")
+    public void setAccountIdVo(java.util.List<com.demo.proworks.domain.post.vo.AccountIdVo> accountIdVo){
+        this.accountIdVo = accountIdVo;
     }
 
     @Override
@@ -46,7 +44,7 @@ public class ScoutUserVo extends com.demo.proworks.cmmn.ProworksCommVO {
         StringBuilder sb = new StringBuilder();
         sb.append("ScoutUserVo [");
         sb.append("jobPostingId").append("=").append(jobPostingId).append(",");
-        sb.append("accountIds").append("=").append(accountIds);
+        sb.append("accountIdVo").append("=").append(accountIdVo);
         sb.append("]");
         return sb.toString();
 
@@ -58,11 +56,19 @@ public class ScoutUserVo extends com.demo.proworks.cmmn.ProworksCommVO {
 
     @Override
     public void _xStreamEnc() {
+        for( int i=0 ; accountIdVo != null && i < accountIdVo.size() ; i++ ) {
+            com.demo.proworks.domain.post.vo.AccountIdVo vo = (com.demo.proworks.domain.post.vo.AccountIdVo)accountIdVo.get(i);
+            vo._xStreamEnc();	 
+        }
     }
 
 
     @Override
     public void _xStreamDec() {
+        for( int i=0 ; accountIdVo != null && i < accountIdVo.size() ; i++ ) {
+            com.demo.proworks.domain.post.vo.AccountIdVo vo = (com.demo.proworks.domain.post.vo.AccountIdVo)accountIdVo.get(i);
+            vo._xStreamDec();	 
+        }
     }
 
 

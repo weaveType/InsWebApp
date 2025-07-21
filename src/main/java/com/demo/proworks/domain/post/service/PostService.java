@@ -171,5 +171,5 @@ public interface PostService {
 	 * @return 기술스택 목록 조회 결과
 	 * @throws Exception
 	 */
-	public void selectScoutUserList(ScoutUserVo scoutUserVo) throws Exception;
+	public void insertScoutRequest(ScoutUserVo scoutUserVo) throws Exception;
 }

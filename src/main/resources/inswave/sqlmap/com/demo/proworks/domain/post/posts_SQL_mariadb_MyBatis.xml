@@ -339,4 +339,12 @@ LIMIT 3;
     WHERE job_posting_id = #{jobPostingId}
 </select>
 
+    <insert id="insertScoutRequest" parameterType="com.demo.proworks.domain.post.vo.ScoutUserVo">
+        INSERT INTO scout_requests (job_posting_id, user_id)
+        VALUES
+        <foreach collection="accountIdVo" item="accVo" separator=",">
+            (#{jobPostingId}, #{accVo.accountId})
+        </foreach>
+    </insert>
+
 </mapper>

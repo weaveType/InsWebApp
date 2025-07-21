@@ -643,14 +643,13 @@ public class PostController {
 	
 	/**
 	 * 기업이 스카웃한 유저를 저장한다.
-	 * ㅣ@param sendEmailVo 합불여부, 메일 전송할 email, 메일 내용
-	 * @return 기술스택 목록 조회 결과
+	 * @param jobPostingId 공고 ID, accountIds 스카웃 된 User ID List
 	 * @throws Exception
 	 */
-	@ElService(key = "POS0004List")
-	@RequestMapping(value = "POS0004List")
+	@ElService(key = "POS0006List")
+	@RequestMapping(value = "POS0006List")
 	@ElDescription(sub = "스카웃 유저 저장", desc = "기업이 스카웃한 유저를 저장한다")
-	public void selectScoutUserList(ScoutUserVo scoutUserVo) throws Exception {
-		postService.selectScoutUserList(scoutUserVo);
+	public void insertScoutRequest(ScoutUserVo scoutUserVo) throws Exception {
+		postService.insertScoutRequest(scoutUserVo);
 	}
 }

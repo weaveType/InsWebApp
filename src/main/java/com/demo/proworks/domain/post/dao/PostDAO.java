@@ -214,11 +214,11 @@ public class PostDAO extends com.demo.proworks.cmmn.dao.ProworksDefaultAbstractD
 	/**
 	 * 기업이 스카웃한 유저를 저장한다. 
 	 *
-	 * @param jobPostingId 공고 ID, accountIds 스카웃 된 User ID List
-	 * @throws Exception
+	 * @param vo 스카웃 정보
+	 * @throws ElException
 	 */
-	public void selectScoutUserList(ScoutUserVo vo) throws Exception {
-		selectScoutUserList(vo);
+	public void insertScoutRequest(ScoutUserVo vo) throws ElException {
+		insert("com.demo.proworks.domain.post.insertScoutRequest", vo);
 	}
 
 }
