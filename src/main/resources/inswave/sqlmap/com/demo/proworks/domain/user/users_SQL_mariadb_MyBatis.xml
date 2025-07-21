@@ -43,7 +43,6 @@
 
 	<insert id="registerUser" parameterType="com.demo.proworks.domain.user.vo.UserVo" useGeneratedKeys="true" keyProperty="userId">
 		<!-- 일반 사용자 회원가입을 처리한다. (기본 정보만 users 테이블에 저장) -->
-
 		INSERT INTO USERS /* QueryID : com.demo.proworks.domain.user.registerUser */
 		(
 		EMAIL, PASSWORD, ROLE_ID, NAME, IS_EMAIL_CONSENT
@@ -271,32 +270,70 @@
 	</select>
 	<select id="selectUsersByjobPostingId" resultType="com.demo.proworks.domain.user.vo.ApplicantDetailVo"
 		parameterType="com.demo.proworks.domain.user.vo.ApplicantVo">
-		SELECT
-		false AS chk,
-		u.name AS name,
-		ui.career AS career,
-		ui.current_position AS currentPosition,
-		NULL AS techStack, --
-		techStack이 null로 지정되어 있음
-		umt.type_code AS typeCode,
-		ui.resume_file_name AS resumeFileName,
-		ja.application_status AS applicationStatus,
-		u.email AS email,
-		u.user_id AS accountId
-		FROM
-		users u
-		JOIN
-		users_info ui ON u.user_id = ui.user_id
-		LEFT JOIN
-		users_mbti_types umt ON u.user_id =
-		umt.user_id
-		JOIN
-		job_applications ja ON u.user_id = ja.user_id
+SELECT
+    false AS chk,
+    u.name AS name,
+    ui.career AS career,
+    ui.current_position AS currentPosition,
+    GROUP_CONCAT(ts.tech_stack_name SEPARATOR ', ') AS techStack,
+    umt.type_code AS typeCode,
+    ui.resume_file_name AS resumeFileName,
+    ja.application_status AS applicationStatus,
+    u.email AS email,
+    u.user_id AS accountId
+FROM
+    users u
+JOIN
+    users_info ui ON u.user_id = ui.user_id
+LEFT JOIN
+    users_mbti_types umt ON u.user_id = umt.user_id
+JOIN
+    job_applications ja ON u.user_id = ja.user_id
+LEFT JOIN
+    users_tech_stack_relation tsr ON u.user_id = tsr.user_id
+LEFT JOIN
+    tech_stack ts ON tsr.tech_stack_id = ts.tech_stack_id
+WHERE
+    ja.job_posting_id = #{jobPostingId}
+    <if test="applicationStatus != null and applicationStatus != ''">
+        AND ja.application_status = #{applicationStatus}
+    </if>
+GROUP BY
+    u.user_id,
+    u.name,
+    ui.career,
+    ui.current_position,
+    umt.type_code,
+    ui.resume_file_name,
+    ja.application_status,
+    u.email
+ORDER BY
+    ja.applied_at DESC
+LIMIT #{pageSize} OFFSET ${(pageIndex - 1) * pageSize}
+</select>
 
-		WHERE ja.job_posting_id = #{jobPostingId}
-
-		ORDER BY ja.applied_at DESC
-	</select>
+<select id="countUsersByjobPostingId" resultType="int"
+        parameterType="com.demo.proworks.domain.user.vo.ApplicantVo">
+    SELECT
+    COUNT(DISTINCT u.user_id)
+    FROM
+    users u
+    JOIN
+    users_info ui ON u.user_id = ui.user_id
+    LEFT JOIN
+    users_mbti_types umt ON u.user_id = umt.user_id
+    JOIN
+    job_applications ja ON u.user_id = ja.user_id
+    LEFT JOIN
+    users_tech_stack_relation tsr ON u.user_id = tsr.user_id
+    LEFT JOIN
+    tech_stack ts ON tsr.tech_stack_id = ts.tech_stack_id
+    WHERE
+    ja.job_posting_id = #{jobPostingId}
+    <if test="applicationStatus != null and applicationStatus != ''">
+        AND ja.application_status = #{applicationStatus}
+    </if>
+</select>
 	<select id="getScoutUsersByPostId" resultType="com.demo.proworks.domain.user.vo.ScoutDetailVo"
 		parameterType="com.demo.proworks.domain.user.vo.ScoutVo">
 		SELECT
@@ -335,7 +372,7 @@
 		FROM users_mbti_types
 		where user_id = #{accountId}
 	</select>
-	
+  
 	<update id="updateResumeFileName" parameterType="com.demo.proworks.domain.user.vo.UserVo">
 		<!-- 사용자의 이력서 파일명만 업데이트한다. -->
 		UPDATE USERS_INFO /* QueryID : com.demo.proworks.domain.user.updateResumeFileName */
@@ -344,4 +381,24 @@
 		  UPDATED_AT = CURRENT_TIMESTAMP
 		WHERE USER_ID = #{userId}
 	</update>
+<select id="countUserTechStacks" parameterType="com.demo.proworks.domain.user.vo.UserVo" resultType="int">
+    SELECT COUNT(*)
+      FROM users_tech_stack_relation
+     WHERE user_id = #{userId}
+</select>
+<select id="deleteUserTechStacks" parameterType="com.demo.proworks.domain.user.vo.UserVo">
+    DELETE FROM users_tech_stack_relation
+    WHERE user_id = #{userId}
+</select>
+<select id="insertUserTechStacks" parameterType="com.demo.proworks.domain.user.vo.UserVo">
+    INSERT INTO users_tech_stack_relation (user_id, tech_stack_id)
+    VALUES
+    <foreach collection="techStackVo" 
+             item="ts"                  
+             separator=",">
+        (#{userId}, #{ts.techStackId})  
+    </foreach>
+
+    ON DUPLICATE KEY UPDATE tech_stack_id = tech_stack_id
+</select>
 </mapper>

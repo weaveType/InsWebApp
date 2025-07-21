@@ -17,6 +17,7 @@ import com.demo.proworks.domain.user.vo.ScoutListVo;
 import com.demo.proworks.domain.user.vo.ScoutVo;
 import com.demo.proworks.domain.user.vo.UserInfoVo;
 import com.demo.proworks.domain.user.vo.UserVo;
+import com.demo.proworks.domain.user.vo.ApplicationHistoryVo;
 import com.demo.proworks.common.enumType.DevMbti;
 import com.demo.proworks.domain.user.dao.UserDAO;
 
@@ -260,8 +261,7 @@ public class UserDAO extends com.demo.proworks.cmmn.dao.ProworksDefaultAbstractD
 	public List<ScoutDetailVo> getScoutUsersByPostId(ScoutVo vo) throws Exception {
 		return (List<ScoutDetailVo>) list("com.demo.proworks.domain.user.getScoutUsersByPostId", vo);
 	}
-	
-	
+
 	/**
 	 * 유저의 성향검사 및 코드검사 여부를 가져온다.
 	 *
@@ -282,5 +282,117 @@ public class UserDAO extends com.demo.proworks.cmmn.dao.ProworksDefaultAbstractD
 	 */
 	public int updateResumeFileName(UserVo vo) throws ElException {
 		return update("com.demo.proworks.domain.user.updateResumeFileName", vo);
+	/**
+	 * 지원현황 목록을 조회한다.
+	 *
+	 * @param applicationHistoryVo 지원현황 조회 조건
+	 * @return 지원현황 목록
+	 * @throws Exception
+	 */
+	public List<ApplicationHistoryVo> selectApplicationHistoryList(ApplicationHistoryVo vo) throws Exception {
+		return (List<ApplicationHistoryVo>) list("com.demo.proworks.domain.user.selectApplicationHistoryList", vo);
+	}
+
+	/**
+	 * 지원현황 통계를 조회한다. (상태별 GROUP BY)
+	 *
+	 * @param applicationHistoryVo 지원현황 조회 조건
+	 * @return 지원현황 통계 목록
+	 * @throws Exception
+	 */
+	public List<ApplicationHistoryVo> selectApplicationHistoryStats(ApplicationHistoryVo vo) throws Exception {
+		return (List<ApplicationHistoryVo>) list("com.demo.proworks.domain.user.selectApplicationHistoryStats", vo);
+	}
+
+	/**
+	 * 지원현황 총 개수를 조회한다.
+	 *
+	 * @param applicationHistoryVo 지원현황 조회 조건
+	 * @return 지원현황 총 개수
+	 * @throws Exception
+	 */
+	public long selectApplicationHistoryCount(ApplicationHistoryVo vo) throws Exception {
+		return (Long) selectByPk("com.demo.proworks.domain.user.selectApplicationHistoryCount", vo);
+	}
+
+	/**
+	 * 지원현황 상세정보를 조회한다.
+	 *
+	 * @param applicationHistoryVo 지원현황 조회 조건
+	 * @return 지원현황 상세정보
+	 * @throws Exception
+	 */
+	public ApplicationHistoryVo selectApplicationHistoryDetail(ApplicationHistoryVo vo) throws Exception {
+		return (ApplicationHistoryVo) selectByPk("com.demo.proworks.domain.user.selectApplicationHistoryDetail", vo);
+	}
+
+	/**
+	 * 지원현황을 등록한다.
+	 *
+	 * @param applicationHistoryVo 지원현황 정보
+	 * @return 등록 결과
+	 * @throws Exception
+	 */
+	public int insertApplicationHistory(ApplicationHistoryVo vo) throws Exception {
+		return (Integer) insert("com.demo.proworks.domain.user.insertApplicationHistory", vo);
+	}
+
+	/**
+	 * 지원현황을 수정한다.
+	 *
+	 * @param applicationHistoryVo 지원현황 정보
+	 * @return 수정 결과
+	 * @throws Exception
+	 */
+	public int updateApplicationHistory(ApplicationHistoryVo vo) throws Exception {
+		return (Integer) update("com.demo.proworks.domain.user.updateApplicationHistory", vo);
+	}
+
+	/**
+	 * 지원현황을 삭제한다.
+	 *
+	 * @param applicationHistoryVo 지원현황 정보
+	 * @return 삭제 결과
+	 * @throws Exception
+	 */
+	public int deleteApplicationHistory(ApplicationHistoryVo vo) throws Exception {
+		return (Integer) delete("com.demo.proworks.domain.user.deleteApplicationHistory", vo);
+	}
+
+	/**
+	 * 기술스택 매핑 정보를 삭제한다.
+	 *
+	 * @param vo userId 만 채워진 UserVo
+	 * @return 삭제된 행 수
+	 * @throws Exception
+	 */
+	public int deleteUserTechStacks(UserVo vo) throws Exception {
+		return (Integer) delete("com.demo.proworks.domain.user.deleteUserTechStacks", vo);
+	}
+
+	/**
+	 * 
+	 * 기술스택 매핑 정보를 일괄 저장한다.
+	 * 
+	 * ※ `param` 구성 
+	 *	└ userId : Long / Integer 
+	 *	└ techStackIdList : List<Long> (예:[36, 7, 14])
+	 * 
+	 * @param param 매핑 파라미터
+	 * @return 삽입된 행 수
+	 * @throws Exception
+	 */
+	public int insertUserTechStacks(UserVo vo) throws Exception {
+		return (Integer) insert("com.demo.proworks.domain.user.insertUserTechStacks", vo);
+	}
+
+	/*
+	 * 사용자-기술스택 매핑 개수를 구한다.
+	 *
+	 * @param vo userId 필수
+	 * @return 매핑 행 수
+	 */
+	public int countUserTechStacks(UserVo vo) throws Exception {
+		return (Integer) selectByPk("com.demo.proworks.domain.user.countUserTechStacks", vo);
 	}
 }

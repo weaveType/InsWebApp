@@ -36,6 +36,7 @@
 						<w2:column dataType="text" id="empCount" name="emp_count"></w2:column>
 						<w2:column dataType="text" id="techStackNames" name="tech_stack_names"></w2:column>
 						<w2:column dataType="text" id="preferredDeveloperTypes" name="preferred_developer_types"></w2:column>
+						<w2:column dataType="text" id="jobImageFileName" name="job_image_file_name"></w2:column>
 					</w2:columnInfo>
 				</w2:dataList>
 
@@ -119,79 +120,140 @@
             /* 공고 카드 스타일 */
             .job-cards {
                 display: grid;
-                grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-                gap: 20px;
+                grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+                gap: 16px;
                 margin-bottom: 40px;
             }
 
             .job-card {
                 background: white;
-                border-radius: 12px;
+                border-radius: 16px;
                 overflow: hidden;
                 cursor: pointer;
                 transition: all 0.3s ease;
-                border: 1px solid #e8e8e8;
+                border: 1px solid #f0f0f0;
                 position: relative;
-                box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+                box-shadow: 0 4px 12px rgba(0,0,0,0.08);
             }
 
             .job-card:hover {
-                transform: translateY(-4px);
-                box-shadow: 0 12px 24px rgba(0,0,0,0.1);
-                border-color: #36f;
+                transform: translateY(-6px);
+                box-shadow: 0 16px 32px rgba(0,0,0,0.12);
+                border-color: #4f46e5;
+            }
+
+            .job-image {
+                width: 100%;
+                height: 120px;
+                background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+                position: relative;
+                overflow: hidden;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .job-image img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                transition: transform 0.3s ease;
+            }
+
+            .job-card:hover .job-image img {
+                transform: scale(1.05);
+            }
+
+            .job-image-placeholder {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                color: #94a3b8;
+                font-size: 11px;
+                font-weight: 500;
+            }
+
+            .job-image-placeholder .icon {
+                font-size: 32px;
+                margin-bottom: 4px;
+                opacity: 0.5;
             }
 
             .job-content {
-                padding: 24px;
+                padding: 18px;
             }
 
             .job-header {
                 display: flex;
                 justify-content: space-between;
                 align-items: flex-start;
-                margin-bottom: 16px;
+                margin-bottom: 12px;
             }
 
             .job-title {
-                font-size: 18px;
-                font-weight: 600;
-                color: #333;
-                margin-bottom: 8px;
+                font-size: 16px;
+                font-weight: 700;
+                color: #1a1a1a;
+                margin-bottom: 6px;
                 line-height: 1.4;
                 flex: 1;
-                margin-right: 12px;
+                margin-right: 8px;
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
             }
 
             .bookmark-btn {
-                background: none;
-                border: none;
-                font-size: 20px;
+                background: #f8fafc;
+                border: 1px solid #e2e8f0;
+                font-size: 16px;
                 cursor: pointer;
-                padding: 4px;
-                border-radius: 4px;
+                padding: 6px;
+                border-radius: 6px;
                 transition: all 0.2s;
+                color: #64748b;
+                min-width: 28px;
+                height: 28px;
             }
 
             .bookmark-btn:hover {
-                background: #f8f9fa;
+                background: #e2e8f0;
+                color: #4f46e5;
+                transform: scale(1.05);
             }
 
             .job-company {
-                font-size: 16px;
-                color: #36f;
-                font-weight: 500;
+                font-size: 13px;
+                color: #4f46e5;
+                font-weight: 600;
                 margin-bottom: 8px;
                 cursor: pointer;
+                transition: color 0.2s ease;
+                display: flex;
+                align-items: center;
+                gap: 6px;
             }
 
             .job-company:hover {
-                text-decoration: underline;
+                color: #3730a3;
+            }
+
+            .company-logo {
+                width: 20px;
+                height: 20px;
+                border-radius: 4px;
+                object-fit: cover;
+                background: #f8fafc;
+                border: 1px solid #e2e8f0;
+                flex-shrink: 0;
             }
 
             .job-description {
-                font-size: 14px;
-                color: #666;
-                margin-bottom: 16px;
+                font-size: 12px;
+                color: #64748b;
+                margin-bottom: 12px;
                 line-height: 1.5;
                 display: -webkit-box;
                 -webkit-line-clamp: 2;
@@ -202,56 +264,71 @@
             .job-meta {
                 display: flex;
                 flex-wrap: wrap;
-                gap: 12px;
-                margin-bottom: 16px;
+                gap: 6px;
+                margin-bottom: 12px;
             }
 
             .job-meta-item {
                 display: flex;
                 align-items: center;
                 gap: 4px;
-                font-size: 13px;
-                color: #666;
+                font-size: 11px;
+                color: #64748b;
+                background: #f8fafc;
+                padding: 4px 6px;
+                border-radius: 6px;
+                font-weight: 500;
             }
 
             .job-meta-icon {
-                font-size: 14px;
-                color: #999;
+                font-size: 12px;
+                color: #94a3b8;
             }
 
             .tech-tags {
                 display: flex;
                 flex-wrap: wrap;
-                gap: 6px;
-                margin-bottom: 16px;
+                gap: 4px;
+                margin-bottom: 12px;
             }
 
             .tech-tag {
-                background: #f1f5f9;
-                color: #475569;
-                font-size: 12px;
-                padding: 4px 8px;
+                background: #e0e7ff;
+                color: #4338ca;
+                font-size: 10px;
+                padding: 4px 6px;
                 border-radius: 6px;
-                font-weight: 500;
+                font-weight: 600;
+                transition: all 0.2s ease;
+            }
+
+            .tech-tag:hover {
+                background: #c7d2fe;
+                transform: translateY(-1px);
             }
 
             .job-footer {
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
-                padding-top: 16px;
-                border-top: 1px solid #f1f1f1;
+                padding-top: 12px;
+                border-top: 1px solid #e2e8f0;
+                margin-top: 4px;
             }
 
             .job-salary {
-                font-size: 14px;
-                font-weight: 600;
+                font-size: 12px;
+                font-weight: 700;
                 color: #059669;
+                background: #ecfdf5;
+                padding: 3px 6px;
+                border-radius: 4px;
             }
 
             .job-date {
-                font-size: 12px;
-                color: #999;
+                font-size: 11px;
+                color: #94a3b8;
+                font-weight: 500;
             }
 
             /* 페이징 */
@@ -319,8 +396,8 @@
                 }
 
                 .job-cards {
-                    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-                    gap: 16px;
+                    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+                    gap: 14px;
                 }
             }
 
@@ -342,8 +419,24 @@
                 }
 
                 .job-cards {
-                    grid-template-columns: 1fr;
+                    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
                     gap: 16px;
+                }
+
+                .job-image {
+                    height: 140px;
+                }
+
+                .job-content {
+                    padding: 16px;
+                }
+
+                .job-title {
+                    font-size: 15px;
+                }
+
+                .job-company {
+                    font-size: 12px;
                 }
 
                 .section-header {
@@ -398,6 +491,26 @@ scwin.sbm_selectPostList_submitdone = function (e) {
         alert(`에러코드 : ${elHeader.resCode}\n에러메시지 : ${elHeader.resMsg}`);
         scwin.showEmptyState();
         return false;
+    }
+
+    // 첫 번째 공고 데이터 구조 분석
+    if (elData.postVoList && elData.postVoList.length > 0) {
+        console.log("=== 서버 응답 첫 번째 공고 분석 ===");
+        var firstPost = elData.postVoList[0];
+        console.log("첫 번째 공고 Keys:", Object.keys(firstPost));
+        console.log("첫 번째 공고 전체:", firstPost);
+        
+        // 이미지 관련 필드 검사
+        var imageRelatedFields = [];
+        Object.keys(firstPost).forEach(function(key) {
+            if (key.toLowerCase().includes('image') || 
+                key.toLowerCase().includes('file') || 
+                key.toLowerCase().includes('photo') ||
+                key.toLowerCase().includes('picture')) {
+                imageRelatedFields.push(key + ': ' + firstPost[key]);
+            }
+        });
+        console.log("������️ 서버 응답의 이미지 관련 필드들:", imageRelatedFields);
     }
 
     // 데이터를 DataList에 셋팅
@@ -492,14 +605,64 @@ scwin.createJobCard = function (jobData, index) {
         }
     }
 
+    // 이미지 경로 결정 (공고 이미지 → 회사 로고 → 기본 이미지 순)
+    var imagePath = '';
+    var imageAlt = '';
+    
+    // 디버깅 정보 출력 - 모든 가능한 이미지 필드 확인
+    console.log("=== 이미지 경로 디버깅 ===");
+    console.log("jobData 전체 Keys:", Object.keys(jobData));
+    console.log("jobData 전체:", jobData);
+    
+    // 이미지 관련 가능한 모든 필드 확인
+    var imageFields = [
+        'imagePath', 'jobImageFileName', 'jobImageFilename', 'job_image_file_name',
+        'image_path', 'imageUrl', 'image_url', 'filePath', 'file_path',
+        'fileName', 'file_name', 'uploadedImage', 'uploaded_image'
+    ];
+    
+    console.log("=== 이미지 필드 전체 검사 ===");
+    imageFields.forEach(function(field) {
+        if (jobData[field] !== undefined) {
+            console.log("✅ 발견:", field, "=", jobData[field]);
+        }
+    });
+    
+    // 1순위: 공고에 업로드된 이미지 (PostCreate에서 설정한 파일)
+    if (jobData.jobImageFileName && jobData.jobImageFileName.trim() !== "" && jobData.jobImageFileName !== "null") {
+        imagePath = '/InsWebApp/images/company/' + jobData.jobImageFileName;
+        imageAlt = (jobData.title || '공고') + ' 이미지';
+        console.log("✅ 1순위 - 공고 이미지 사용:", imagePath);
+    } 
+    // 2순위: 회사 로고 (회사별 개별 로고)
+    else if (jobData.companyId && jobData.companyId.toString().trim() !== "") {
+        imagePath = '/InsWebApp/images/company/' + jobData.companyId + '.png';
+        imageAlt = (jobData.companyName || '회사') + ' 로고';
+        console.log("✅ 2순위 - 회사 로고 사용:", imagePath);
+    } 
+    // 3순위: 기본 이미지
+    else {
+        imagePath = '/InsWebApp/images/ws5/default_company.png';
+        imageAlt = (jobData.companyName || '회사') + ' 기본 이미지';
+        console.log("✅ 3순위 - 기본 이미지 사용:", imagePath);
+    }
+
+    // 이미지 HTML 생성 (fallback chain 사용)
+    var imageHtml = '<img src="' + imagePath + '" alt="' + imageAlt + '" ' +
+                   'onload="console.log(\'✅ 이미지 로딩 성공:\', this.src);" ' +
+                   'onerror="scwin.handleSimpleImageError(this, \'' + (jobData.companyId || '') + '\');" />';
+    console.log("생성된 이미지 HTML:", imageHtml);
+
     card.innerHTML =
+        '<xf:group class="job-image">' + imageHtml + '</xf:group>' +
         '<xf:group class="job-content">' +
         '<xf:group class="job-header">' +
         '<xf:group class="job-title">' + (jobData.title || '제목없음') + '</xf:group>' +
-        '<button class="bookmark-btn" onclick="scwin.toggleBookmark(event, \'' + jobData.jobPostingId + '\')"></button>' +
+        '<button class="bookmark-btn" onclick="scwin.toggleBookmark(event, \'' + jobData.jobPostingId + '\')">♡</button>' +
         '</xf:group>' +
         '<xf:group class="job-company" onclick="scwin.viewCompany(event, \'' + jobData.companyId + '\')">' +
-        (jobData.companyName || '회사명 정보없음') +
+        (jobData.companyId ? '<img src="/InsWebApp/images/company/' + jobData.companyId + '.png" alt="' + (jobData.companyName || '회사') + ' 로고" class="company-logo" onerror="this.src=\'/InsWebApp/images/ws5/default_company.png\'" />' : '') +
+        '<span>' + (jobData.companyName || '회사명 정보없음') + '</span>' +
         '</xf:group>' +
         '<xf:group class="job-description">' +
         (jobData.description || '설명이 없습니다.') +
@@ -608,6 +771,81 @@ scwin.openPostDetail = function (jobPostingId) {
 };
 
 /**
+ * 이미지 로딩 에러 처리 (우선순위 fallback)
+ */
+scwin.handleImageError = function (img, companyName, companyId) {
+    console.log("❌ 이미지 로딩 실패:", img.src);
+    console.log("회사명:", companyName, "회사ID:", companyId);
+    
+    var currentSrc = img.src;
+    var nextImageSrc = '';
+    
+    // 현재 실패한 이미지 유형 판단 및 다음 우선순위 이미지 설정
+    if (currentSrc.indexOf('/images/company/') !== -1 && currentSrc.indexOf('.png') === -1) {
+        // 공고 이미지 실패 → 회사 로고 시도
+        if (companyId && companyId.trim() !== '') {
+            nextImageSrc = '/InsWebApp/images/company/' + companyId + '.png';
+            console.log("공고 이미지 실패 → 회사 로고 시도:", nextImageSrc);
+        } else {
+            nextImageSrc = '/InsWebApp/images/ws5/default_company.png';
+            console.log("공고 이미지 실패 & 회사ID 없음 → 기본 이미지 시도:", nextImageSrc);
+        }
+    } else if (currentSrc.indexOf('/images/company/') !== -1 && currentSrc.indexOf('.png') !== -1) {
+        // 회사 로고 실패 → 기본 이미지 시도
+        nextImageSrc = '/InsWebApp/images/ws5/default_company.png';
+        console.log("회사 로고 실패 → 기본 이미지 시도:", nextImageSrc);
+    } else if (currentSrc.indexOf('/images/ws5/default_company.png') !== -1) {
+        // 기본 이미지도 실패 → 다른 기본 이미지 시도
+        nextImageSrc = '/InsWebApp/images/ws5/logo_inswave_w.png';
+        console.log("기본 이미지 실패 → 대체 기본 이미지 시도:", nextImageSrc);
+    }
+    
+    // 다음 이미지 시도
+    if (nextImageSrc && nextImageSrc !== currentSrc) {
+        img.src = nextImageSrc;
+        return;
+    }
+    
+    // 모든 이미지 실패 시 텍스트 플레이스홀더로 대체
+    console.log("❌ 모든 이미지 실패 - 텍스트 플레이스홀더 표시");
+    var placeholder = document.createElement('div');
+    placeholder.className = 'job-image-placeholder';
+    placeholder.innerHTML = '<span class="icon">������</span><span>' + (companyName || '회사') + '</span>';
+    
+    if (img.parentNode) {
+        img.parentNode.replaceChild(placeholder, img);
+    }
+};
+
+/**
+ * 간단한 이미지 에러 처리
+ */
+scwin.handleSimpleImageError = function (img, companyId) {
+    console.log("❌ 이미지 로딩 실패:", img.src);
+    
+    var currentSrc = img.src;
+    
+    // 공고 이미지 실패 → 회사 로고 시도
+    if (currentSrc.indexOf('/images/company/') !== -1 && currentSrc.indexOf('.png') === -1) {
+        if (companyId && companyId.trim() !== '') {
+            console.log("공고 이미지 실패 → 회사 로고 시도");
+            img.onerror = function() { 
+                console.log("회사 로고도 실패 → 기본 이미지 시도");
+                this.onerror = null; 
+                this.src = '/InsWebApp/images/ws5/default_company.png'; 
+            };
+            img.src = '/InsWebApp/images/company/' + companyId + '.png';
+            return;
+        }
+    }
+    
+    // 그 외 모든 경우 → 기본 이미지
+    console.log("기본 이미지로 fallback");
+    img.onerror = null;
+    img.src = '/InsWebApp/images/ws5/default_company.png';
+};
+
+/**
  * 북마크 토글
  */
 scwin.toggleBookmark = function (event, jobPostingId) {
@@ -615,11 +853,15 @@ scwin.toggleBookmark = function (event, jobPostingId) {
     console.log("북마크 토글:", jobPostingId);
 
     var bookmarkBtn = event.target;
-    if (bookmarkBtn.textContent === '������') {
+    if (bookmarkBtn.textContent === '♡') {
         bookmarkBtn.textContent = '❤️';
+        bookmarkBtn.style.color = '#ef4444';
+        console.log("북마크 추가:", jobPostingId);
         // TODO: 서버에 북마크 추가 요청
     } else {
-        bookmarkBtn.textContent = '������';
+        bookmarkBtn.textContent = '♡';
+        bookmarkBtn.style.color = '#64748b';
+        console.log("북마크 제거:", jobPostingId);
         // TODO: 서버에 북마크 제거 요청
     }
 };

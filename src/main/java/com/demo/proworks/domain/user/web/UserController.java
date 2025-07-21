@@ -14,6 +14,8 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -32,7 +34,10 @@ import com.demo.proworks.domain.user.vo.ApplicantVo;
 import com.demo.proworks.domain.user.vo.ApplicantListVo;
 import com.demo.proworks.domain.user.vo.ApplicantDetailVo;
 import com.demo.proworks.domain.user.vo.ScoutVo;
+import com.demo.proworks.domain.user.vo.TechStackVo;
 import com.demo.proworks.domain.user.vo.ScoutListVo;
+import com.demo.proworks.domain.user.vo.ApplicationHistoryVo;
+import com.demo.proworks.domain.user.vo.ApplicationHistoryListVo;
 import com.demo.proworks.cmmn.ProworksUserHeader;
 import com.inswave.elfw.util.ControllerContextUtil;
 
@@ -44,6 +49,8 @@ import com.inswave.elfw.login.LoginInfo;
 import com.inswave.elfw.login.LoginProcessor;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.JsonNode;
 import java.util.Enumeration;
@@ -247,27 +254,27 @@ public class UserController {
 			emailResult.put("email", "");
 			emailResult.put("role", "ERROR");
 		} else {
-		// 이메일 설정
+			// 이메일 설정
 			emailResult.put("email", email);
 
-		try {
-			boolean isDuplicate = userService.checkEmailDuplicate(email);
+			try {
+				boolean isDuplicate = userService.checkEmailDuplicate(email);
 
-			if (isDuplicate) {
-				// 중복된 이메일인 경우
-				System.out.println("결과: 이메일 중복");
+				if (isDuplicate) {
+					// 중복된 이메일인 경우
+					System.out.println("결과: 이메일 중복");
 					emailResult.put("role", "DUPLICATE");
-			} else {
-				// 사용 가능한 이메일인 경우
-				System.out.println("결과: 이메일 사용 가능");
+				} else {
+					// 사용 가능한 이메일인 경우
+					System.out.println("결과: 이메일 사용 가능");
 					emailResult.put("role", "AVAILABLE");
-			}
+				}
 
-		} catch (Exception e) {
+			} catch (Exception e) {
 				// 오류 발생시
 				System.out.println("오류 발생: " + e.getMessage());
 				emailResult.put("role", "ERROR");
-		}
+			}
 		}
 
 		// ProWorks5 표준 응답 구조로 변경
@@ -408,12 +415,12 @@ public class UserController {
 
 			// users_info 테이블에 기본 정보 저장
 			System.out.println("=== users_info 테이블에 기본 정보 저장 시작 ===");
-			
+
 			// 기존 사용자 정보 조회 (회원가입 플로우에서 입력한 정보 보존)
 			UserVo queryVo = new UserVo();
 			queryVo.setUserId(userId);
 			UserVo existingUserInfo = userService.selectUserInfoByUserId(queryVo);
-			
+
 			// 기존 데이터가 있으면 병합, 없으면 새로 생성
 			UserVo userInfoVo = existingUserInfo != null ? existingUserInfo : new UserVo();
 			userInfoVo.setUserId(userId);
@@ -452,7 +459,7 @@ public class UserController {
 			try {
 				userService.insertOrUpdateUserInfo(userInfoVo);
 				System.out.println("=== users_info 테이블에 기본 정보 저장 완료 (기존 데이터 보존) ===");
-				
+
 				// 저장된 데이터 확인을 위한 로그
 				if (existingUserInfo != null) {
 					System.out.println("기존 연봉 정보 보존: " + existingUserInfo.getYearSalary());
@@ -558,7 +565,7 @@ public class UserController {
 			System.out.println("ServletContext 경로: " + request.getSession().getServletContext().getContextPath());
 			System.out.println("작업 디렉토리: " + System.getProperty("user.dir"));
 			System.out.println("==========================================");
-			
+
 			File uploadDirectory = new File(uploadDir);
 			if (!uploadDirectory.exists()) {
 				uploadDirectory.mkdirs();
@@ -741,7 +748,7 @@ public class UserController {
 			} catch (Exception e) {
 				System.out.println("사용자 헤더 조회 중 오류: " + e.getMessage());
 			}
-			
+
 			if (userHeader == null) {
 				System.out.println("사용자 헤더를 찾을 수 없음");
 				result.put("result", "fail");
@@ -756,7 +763,7 @@ public class UserController {
 			UserVo queryVo = new UserVo();
 			queryVo.setUserId(userId);
 			UserVo existingUserVo = userService.selectUser(queryVo);
-			
+
 			if (existingUserVo == null) {
 				result.put("result", "fail");
 				result.put("message", "사용자 정보를 찾을 수 없습니다.");
@@ -765,7 +772,7 @@ public class UserController {
 
 			// 수정할 데이터 추출 (dma_userInfoVo 노드에서)
 			JsonNode userInfoNode = rootNode.has("dma_userInfoVo") ? rootNode.get("dma_userInfoVo") : rootNode;
-			
+
 			// users 테이블 정보 수정
 			if (userInfoNode.has("name")) {
 				String name = userInfoNode.get("name").asText();
@@ -779,7 +786,7 @@ public class UserController {
 			// users_info 테이블 정보 수정
 			UserVo userInfoVo = new UserVo();
 			userInfoVo.setUserId(userId);
-			
+
 			// 경력
 			if (userInfoNode.has("career")) {
 				String career = userInfoNode.get("career").asText();
@@ -788,7 +795,7 @@ public class UserController {
 					System.out.println("경력 업데이트: " + career);
 				}
 			}
-			
+
 			// 직무분야
 			if (userInfoNode.has("currentPosition")) {
 				String currentPosition = userInfoNode.get("currentPosition").asText();
@@ -797,7 +804,7 @@ public class UserController {
 					System.out.println("직무분야 업데이트: " + currentPosition);
 				}
 			}
-			
+
 			// 선호 지역
 			if (userInfoNode.has("preferredLocations")) {
 				String preferredLocations = userInfoNode.get("preferredLocations").asText();
@@ -806,14 +813,14 @@ public class UserController {
 					System.out.println("선호 지역 업데이트: " + preferredLocations);
 				}
 			}
-			
+
 			// 희망연봉
 			if (userInfoNode.has("yearSalary")) {
 				int yearSalary = userInfoNode.get("yearSalary").asInt();
 				userInfoVo.setYearSalary(yearSalary);
 				System.out.println("희망연봉 업데이트: " + yearSalary);
 			}
-			
+
 			// 자기소개
 			if (userInfoNode.has("bio")) {
 				String bio = userInfoNode.get("bio").asText();
@@ -823,6 +830,42 @@ public class UserController {
 				}
 			}
 
+			// 기술스택
+			if (userInfoNode.has("techStack") && !userInfoNode.get("techStack").isNull()) {
+
+				JsonNode techNode = userInfoNode.get("techStack");
+				List<Long> idList = new ArrayList<>();
+
+				/* ① JSON 배열 처리 */
+				if (techNode.isArray()) {
+					for (JsonNode n : techNode) {
+						if (n.isNumber() || n.isTextual()) { // 36 또는 "36"
+							idList.add(n.asLong());
+						} else if (n.isObject() && n.has("id")) { // { "id": 36 }
+							idList.add(n.get("id").asLong());
+						}
+					}
+
+					/* ② CSV 문자열 처리 (예: "36,7") */
+				} else if (techNode.isTextual()) {
+					String csv = techNode.asText();
+					Arrays.stream(csv.split(",")).map(String::trim).filter(s -> !s.isEmpty()).map(Long::valueOf)
+							.forEach(idList::add);
+				}
+
+				/* ③ 중복 제거 후 TechStackVo 리스트로 변환 */
+				if (!idList.isEmpty()) {
+
+					List<TechStackVo> tsVoList = idList.stream().distinct().map(id -> {
+						TechStackVo ts = new TechStackVo();
+						ts.setTechStackId(id); // ✅ 핵심 수정
+						return ts;
+					}).collect(Collectors.toList());
+
+					userInfoVo.setTechStackVo(tsVoList); // ✅ user.vo 패키지 타입으로 전달
+					System.out.println("techStackVo 업데이트: " + tsVoList);
+				}
+			}
 			// users_info 테이블 업데이트
 			userService.insertOrUpdateUserInfo(userInfoVo);
 
@@ -885,7 +928,7 @@ public class UserController {
 			} catch (Exception e) {
 				System.out.println("사용자 헤더 조회 중 오류: " + e.getMessage());
 			}
-			
+
 			if (userHeader == null) {
 				System.out.println("사용자 헤더를 찾을 수 없음");
 				result.put("result", "fail");
@@ -896,10 +939,13 @@ public class UserController {
 			int userId = userHeader.getAccountId();
 
 			// 비밀번호 데이터 추출
-			JsonNode passwordNode = rootNode.has("dma_passwordChangeVo") ? rootNode.get("dma_passwordChangeVo") : rootNode;
-			String currentPassword = passwordNode.has("currentPassword") ? passwordNode.get("currentPassword").asText() : null;
+			JsonNode passwordNode = rootNode.has("dma_passwordChangeVo") ? rootNode.get("dma_passwordChangeVo")
+					: rootNode;
+			String currentPassword = passwordNode.has("currentPassword") ? passwordNode.get("currentPassword").asText()
+					: null;
 			String newPassword = passwordNode.has("newPassword") ? passwordNode.get("newPassword").asText() : null;
-			String confirmPassword = passwordNode.has("confirmPassword") ? passwordNode.get("confirmPassword").asText() : null;
+			String confirmPassword = passwordNode.has("confirmPassword") ? passwordNode.get("confirmPassword").asText()
+					: null;
 
 			if (currentPassword == null || newPassword == null || confirmPassword == null) {
 				result.put("result", "fail");
@@ -912,7 +958,7 @@ public class UserController {
 				result.put("message", "새 비밀번호가 일치하지 않습니다.");
 				return result;
 			}
-			
+
 			// 서비스 호출
 			boolean success = userService.updatePassword(userId, currentPassword, newPassword);
 
@@ -1240,7 +1286,7 @@ public class UserController {
 			// career 필드 값 설정 - 프론트에서 보낸 값 그대로 사용
 			if (!career.trim().isEmpty()) {
 				userVo.setCareer(career); // 프론트에서 설정한 career 값을 그대로 사용
-			} 
+			}
 
 			// 자기소개 설정
 			if (!bio.trim().isEmpty()) {
@@ -1277,6 +1323,7 @@ public class UserController {
 		UserInfoVo selectUserVo = userService.selectUserDetail(userInfoVo);
 		return selectUserVo;
 	}
+
 	/**
 	 * 공고에 이력서 지원처리를 한다.
 	 *
@@ -1459,6 +1506,40 @@ public class UserController {
 			result.put("message", "이력서 업로드 중 오류가 발생했습니다.");
 		}
 		
+	 * 사용자의 지원현황 목록을 조회한다.
+	 *
+	 * @param applicationHistoryVo 지원현황 조회 조건
+	 * @return 지원현황 목록
+	 * @throws Exception
+	 */
+	@ElService(key = "USApplicationHistoryList")
+	@RequestMapping(value = "USApplicationHistoryList")
+	@ElDescription(sub = "지원현황 목록조회", desc = "사용자의 지원현황 목록을 조회한다.")
+	public ApplicationHistoryListVo selectApplicationHistoryList(ApplicationHistoryVo applicationHistoryVo)
+			throws Exception {
+		// 세션에서 사용자 ID 가져오기
+		ProworksUserHeader userHeader = null;
+		try {
+			userHeader = (ProworksUserHeader) ControllerContextUtil.getUserHeader();
+		} catch (Exception e) {
+			System.out.println("사용자 헤더 조회 중 오류: " + e.getMessage());
+		}
+
+		if (userHeader != null) {
+			applicationHistoryVo.setUserId(userHeader.getAccountId());
+		}
+
+		List<ApplicationHistoryVo> applicationList = userService.selectApplicationHistoryList(applicationHistoryVo);
+		List<ApplicationHistoryVo> statsList = userService.selectApplicationHistoryStats(applicationHistoryVo);
+		long totalCount = userService.selectApplicationHistoryCount(applicationHistoryVo);
+
+		ApplicationHistoryListVo result = new ApplicationHistoryListVo();
+		result.setApplicationHistoryList(applicationList);
+		result.setApplicationStatsList(statsList);
+		result.setTotalCount(totalCount);
+		result.setPageSize(applicationHistoryVo.getPageSize());
+		result.setPageIndex(applicationHistoryVo.getPageIndex());
+
 		return result;
 	}
 
@@ -1669,5 +1750,73 @@ public class UserController {
 		System.out.println("=== ProWorks5 이력서 정보 조회 요청 종료 ===");
 		System.out.println("응답 결과: " + result);
 		return result;
+   
+   /*
+	 * 지원현황 상세정보를 조회한다.
+	 *
+	 * @param applicationHistoryVo 지원현황 조회 조건
+	 * @return 지원현황 상세정보
+	 * @throws Exception
+	 */
+	@ElService(key = "USApplicationHistoryDetail")
+	@RequestMapping(value = "USApplicationHistoryDetail")
+	@ElDescription(sub = "지원현황 상세조회", desc = "지원현황의 상세정보를 조회한다.")
+	public ApplicationHistoryVo selectApplicationHistoryDetail(ApplicationHistoryVo applicationHistoryVo)
+			throws Exception {
+		return userService.selectApplicationHistoryDetail(applicationHistoryVo);
+	}
+
+	/**
+	 * 지원현황을 등록한다.
+	 *
+	 * @param applicationHistoryVo 지원현황 정보
+	 * @return 등록 결과
+	 * @throws Exception
+	 */
+	@ElService(key = "USApplicationHistoryInsert")
+	@RequestMapping(value = "USApplicationHistoryInsert")
+	@ElDescription(sub = "지원현황 등록", desc = "새로운 지원현황을 등록한다.")
+	public int insertApplicationHistory(ApplicationHistoryVo applicationHistoryVo) throws Exception {
+		// 세션에서 사용자 ID 가져오기
+		ProworksUserHeader userHeader = null;
+		try {
+			userHeader = (ProworksUserHeader) ControllerContextUtil.getUserHeader();
+		} catch (Exception e) {
+			System.out.println("사용자 헤더 조회 중 오류: " + e.getMessage());
+		}
+
+		if (userHeader != null) {
+			applicationHistoryVo.setUserId(userHeader.getAccountId());
+		}
+
+		return userService.insertApplicationHistory(applicationHistoryVo);
+	}
+
+	/**
+	 * 지원현황을 수정한다.
+	 *
+	 * @param applicationHistoryVo 지원현황 정보
+	 * @return 수정 결과
+	 * @throws Exception
+	 */
+	@ElService(key = "USApplicationHistoryUpdate")
+	@RequestMapping(value = "USApplicationHistoryUpdate")
+	@ElDescription(sub = "지원현황 수정", desc = "지원현황 정보를 수정한다.")
+	public int updateApplicationHistory(ApplicationHistoryVo applicationHistoryVo) throws Exception {
+		return userService.updateApplicationHistory(applicationHistoryVo);
+	}
+
+	/**
+	 * 지원현황을 삭제한다.
+	 *
+	 * @param applicationHistoryVo 지원현황 정보
+	 * @return 삭제 결과
+	 * @throws Exception
+	 */
+	@ElService(key = "USApplicationHistoryDelete")
+	@RequestMapping(value = "USApplicationHistoryDelete")
+	@ElDescription(sub = "지원현황 삭제", desc = "지원현황을 삭제한다.")
+	public int deleteApplicationHistory(ApplicationHistoryVo applicationHistoryVo) throws Exception {
+		return userService.deleteApplicationHistory(applicationHistoryVo);
 	}
 }

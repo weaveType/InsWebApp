@@ -1,6 +1,8 @@
 package com.demo.proworks.domain.user.service.impl;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 
@@ -16,6 +18,7 @@ import com.demo.proworks.domain.user.vo.ScoutListVo;
 import com.demo.proworks.domain.user.vo.ScoutVo;
 import com.demo.proworks.domain.user.vo.UserInfoVo;
 import com.demo.proworks.domain.user.vo.UserVo;
+import com.demo.proworks.domain.user.vo.ApplicationHistoryVo;
 import com.demo.proworks.common.enumType.DevMbti;
 import com.demo.proworks.domain.user.dao.UserDAO;
 import org.mindrot.jbcrypt.BCrypt;
@@ -197,11 +200,25 @@ public class UserServiceImpl implements UserService {
 
 		if (existingInfo != null) {
 			// 기존 데이터가 있으면 업데이트
-			return userDAO.updateUserInfo(userVo);
+			userDAO.updateUserInfo(userVo);
 		} else {
 			// 기존 데이터가 없으면 신규 삽입
-			return userDAO.insertUserInfo(userVo);
+			userDAO.insertUserInfo(userVo);
 		}
+
+		if (userVo.getTechStackVo() != null) {
+
+			// ① 현재 매핑 개수 조회
+			int curCnt = userDAO.countUserTechStacks(userVo);
+
+			if (curCnt != 0) { // 기존의 값이 있다면 삭제
+				userDAO.deleteUserTechStacks(userVo);
+			}
+
+			// 추가
+			userDAO.insertUserTechStacks(userVo);
+		}
+		return 1;
 	}
 
 	/**
@@ -315,7 +332,6 @@ public class UserServiceImpl implements UserService {
 	public MatchingCheckedVo selectMatchingChecked(MatchingCheckedVo matchingCheckedVo) throws Exception {
 		return userDAO.selectMatchingChecked(matchingCheckedVo);
 	}
-	
 	/**
 	 * 사용자의 이력서 파일명을 업데이트한다.
 	 *
@@ -327,5 +343,84 @@ public class UserServiceImpl implements UserService {
 	public int updateResumeFileName(UserVo userVo) throws Exception {
 		// users_info 테이블의 resume_file_name 필드 업데이트
 		return userDAO.updateResumeFileName(userVo);
+
+	/**
+	 * 지원현황 목록을 조회한다.
+	 *
+	 * @param applicationHistoryVo 지원현황 조회 조건
+	 * @return 지원현황 목록
+	 * @throws Exception
+	 */
+	public List<ApplicationHistoryVo> selectApplicationHistoryList(ApplicationHistoryVo applicationHistoryVo)
+			throws Exception {
+		return userDAO.selectApplicationHistoryList(applicationHistoryVo);
+	}
+
+	/**
+	 * 지원현황 통계를 조회한다. (상태별 GROUP BY)
+	 *
+	 * @param applicationHistoryVo 지원현황 조회 조건
+	 * @return 지원현황 통계 목록
+	 * @throws Exception
+	 */
+	public List<ApplicationHistoryVo> selectApplicationHistoryStats(ApplicationHistoryVo applicationHistoryVo)
+			throws Exception {
+		return userDAO.selectApplicationHistoryStats(applicationHistoryVo);
+	}
+
+	/**
+	 * 지원현황 총 개수를 조회한다.
+	 *
+	 * @param applicationHistoryVo 지원현황 조회 조건
+	 * @return 지원현황 총 개수
+	 * @throws Exception
+	 */
+	public long selectApplicationHistoryCount(ApplicationHistoryVo applicationHistoryVo) throws Exception {
+		return userDAO.selectApplicationHistoryCount(applicationHistoryVo);
+	}
+
+	/**
+	 * 지원현황 상세정보를 조회한다.
+	 *
+	 * @param applicationHistoryVo 지원현황 조회 조건
+	 * @return 지원현황 상세정보
+	 * @throws Exception
+	 */
+	public ApplicationHistoryVo selectApplicationHistoryDetail(ApplicationHistoryVo applicationHistoryVo)
+			throws Exception {
+		return userDAO.selectApplicationHistoryDetail(applicationHistoryVo);
+	}
+
+	/**
+	 * 지원현황을 등록한다.
+	 *
+	 * @param applicationHistoryVo 지원현황 정보
+	 * @return 등록 결과
+	 * @throws Exception
+	 */
+	public int insertApplicationHistory(ApplicationHistoryVo applicationHistoryVo) throws Exception {
+		return userDAO.insertApplicationHistory(applicationHistoryVo);
+	}
+
+	/**
+	 * 지원현황을 수정한다.
+	 *
+	 * @param applicationHistoryVo 지원현황 정보
+	 * @return 수정 결과
+	 * @throws Exception
+	 */
+	public int updateApplicationHistory(ApplicationHistoryVo applicationHistoryVo) throws Exception {
+		return userDAO.updateApplicationHistory(applicationHistoryVo);
+	}
+
+	/**
+	 * 지원현황을 삭제한다.
+	 *
+	 * @param applicationHistoryVo 지원현황 정보
+	 * @return 삭제 결과
+	 * @throws Exception
+	 */
+	public int deleteApplicationHistory(ApplicationHistoryVo applicationHistoryVo) throws Exception {
+		return userDAO.deleteApplicationHistory(applicationHistoryVo);
 	}
 }

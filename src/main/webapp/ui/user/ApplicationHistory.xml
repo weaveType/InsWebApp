@@ -12,81 +12,48 @@
             <w2:dataCollection baseNode="map">
                 <w2:dataList baseNode="list" repeatNode="map" id="dlt_applications" saveRemovedData="true">
                     <w2:columnInfo>
+                        <w2:column id="applicationId" name="지원ID" dataType="number"></w2:column>
+                        <w2:column id="userId" name="사용자ID" dataType="number"></w2:column>
                         <w2:column id="company" name="회사명" dataType="text"></w2:column>
                         <w2:column id="position" name="포지션" dataType="text"></w2:column>
                         <w2:column id="applicationDate" name="지원일자" dataType="text"></w2:column>
                         <w2:column id="status" name="상태" dataType="text"></w2:column>
                         <w2:column id="result" name="결과" dataType="text"></w2:column>
                         <w2:column id="logo" name="로고" dataType="text"></w2:column>
+                        <w2:column id="jobPostingId" name="공고ID" dataType="number"></w2:column>
                     </w2:columnInfo>
-                    <w2:data use="true">
-                        <w2:row>
-                            <company><![CDATA[㈜네이버]]></company>
-                            <position><![CDATA[백엔드 개발자]]></position>
-                            <applicationDate><![CDATA[2024-01-15]]></applicationDate>
-                            <status><![CDATA[서류통과]]></status>
-                            <result><![CDATA[1차 면접 대기]]></result>
-                            <logo><![CDATA[🟢]]></logo>
-                        </w2:row>
-                        <w2:row>
-                            <company><![CDATA[카카오]]></company>
-                            <position><![CDATA[프론트엔드 개발자]]></position>
-                            <applicationDate><![CDATA[2024-01-10]]></applicationDate>
-                            <status><![CDATA[최종합격]]></status>
-                            <result><![CDATA[합격]]></result>
-                            <logo><![CDATA[🟡]]></logo>
-                        </w2:row>
-                        <w2:row>
-                            <company><![CDATA[삼성전자]]></company>
-                            <position><![CDATA[풀스택 개발자]]></position>
-                            <applicationDate><![CDATA[2024-01-05]]></applicationDate>
-                            <status><![CDATA[면접진행]]></status>
-                            <result><![CDATA[2차 면접 진행중]]></result>
-                            <logo><![CDATA[🔵]]></logo>
-                        </w2:row>
-                        <w2:row>
-                            <company><![CDATA[LG전자]]></company>
-                            <position><![CDATA[백엔드 개발자]]></position>
-                            <applicationDate><![CDATA[2024-01-01]]></applicationDate>
-                            <status><![CDATA[불합격]]></status>
-                            <result><![CDATA[아쉽게 불합격]]></result>
-                            <logo><![CDATA[🔴]]></logo>
-                        </w2:row>
-                        <w2:row>
-                            <company><![CDATA[토스]]></company>
-                            <position><![CDATA[풀스택 개발자]]></position>
-                            <applicationDate><![CDATA[2024-01-20]]></applicationDate>
-                            <status><![CDATA[서류통과]]></status>
-                            <result><![CDATA[서류 검토 완료]]></result>
-                            <logo><![CDATA[💙]]></logo>
-                        </w2:row>
-                        <w2:row>
-                            <company><![CDATA[쿠팡]]></company>
-                            <position><![CDATA[백엔드 개발자]]></position>
-                            <applicationDate><![CDATA[2024-01-18]]></applicationDate>
-                            <status><![CDATA[최종합격]]></status>
-                            <result><![CDATA[최종 합격]]></result>
-                            <logo><![CDATA[🟠]]></logo>
-                        </w2:row>
-                        <w2:row>
-                            <company><![CDATA[라인]]></company>
-                            <position><![CDATA[프론트엔드 개발자]]></position>
-                            <applicationDate><![CDATA[2024-01-22]]></applicationDate>
-                            <status><![CDATA[면접진행]]></status>
-                            <result><![CDATA[1차 면접 통과]]></result>
-                            <logo><![CDATA[💚]]></logo>
-                        </w2:row>
-                        <w2:row>
-                            <company><![CDATA[배달의민족]]></company>
-                            <position><![CDATA[풀스택 개발자]]></position>
-                            <applicationDate><![CDATA[2024-01-25]]></applicationDate>
-                            <status><![CDATA[서류통과]]></status>
-                            <result><![CDATA[코딩테스트 진행중]]></result>
-                            <logo><![CDATA[🔷]]></logo>
-                        </w2:row>
-                    </w2:data>
                 </w2:dataList>
+                <w2:dataList baseNode="list" repeatNode="map" id="dlt_applicationStats" saveRemovedData="true">
+                    <w2:columnInfo>
+                        <w2:column id="statusType" name="상태타입" dataType="text"></w2:column>
+                        <w2:column id="statusCount" name="상태개수" dataType="number"></w2:column>
+                    </w2:columnInfo>
+                </w2:dataList>
+                <w2:dataMap baseNode="map" id="dmp_searchParam">
+                    <w2:keyInfo>
+                        <w2:key id="pageIndex" name="페이지번호" dataType="number"></w2:key>
+                        <w2:key id="pageSize" name="페이지크기" dataType="number"></w2:key>
+                        <w2:key id="userId" name="사용자ID" dataType="number"></w2:key>
+                        <w2:key id="status" name="상태" dataType="text"></w2:key>
+                    </w2:keyInfo>
+                </w2:dataMap>
             </w2:dataCollection>
+            <xf:submission id="sbm_applicationHistoryList" action="/InsWebApp/USApplicationHistoryList.pwkjson" method="post" 
+                mediatype="application/json" ref='data:json,{"id":"dmp_searchParam", "key":"applicationHistoryVo"}' 
+                target='data:json,{"id":"dlt_applications", "key":"elData.applicationHistoryList"}' 
+                encoding="UTF-8" instance="" replace="" errorHandler="" customHandler="" 
+                mode="asynchronous" processMsg="지원현황 조회중..." 
+                ev:submit="" ev:submitdone="scwin.sbm_applicationHistoryList_submitdone" 
+                ev:submiterror="scwin.sbm_applicationHistoryList_submiterror" abortTrigger="">
+            </xf:submission>
+            <xf:submission id="sbm_applicationStats" action="/InsWebApp/USApplicationHistoryList.pwkjson" method="post" 
+                mediatype="application/json" ref='data:json,{"id":"dmp_searchParam", "key":"applicationHistoryVo"}' 
+                target='data:json,{"id":"dlt_applicationStats", "key":"elData.applicationStatsList"}' 
+                encoding="UTF-8" instance="" replace="" errorHandler="" customHandler="" 
+                mode="asynchronous" processMsg="" 
+                ev:submit="" ev:submitdone="scwin.sbm_applicationStats_submitdone" 
+                ev:submiterror="" abortTrigger="">
+            </xf:submission>
         </xf:model>
         <w2:layoutInfo/>
         <w2:publicInfo method=""/>
@@ -531,109 +498,88 @@
         
         <script lazy="false" type="text/javascript"><![CDATA[
 scwin.onpageload = function() {
-    // 페이지 로드 시 통계 계산 및 카드 렌더링
-    scwin.calculateStats();
-    scwin.applyStatusClasses();
-    scwin.setupFilterTabs();
+    // 검색 조건 초기화
+    dmp_searchParam.set("pageIndex", 1);
+    dmp_searchParam.set("pageSize", 10);
+    
+    // 지원현황 목록 조회
+    scwin.loadApplicationHistory();
 };
 
-// 헤더 이벤트들
-scwin.weaveTypeLogo_onclick = function() {
-    $p.url("../common/weaveTypeMain.xml");
+// 지원현황 목록 로드
+scwin.loadApplicationHistory = function() {
+    $c.sbm.execute($p, sbm_applicationHistoryList);
 };
 
-scwin.menu1_onclick = function() {
-    alert("매칭 페이지로 이동합니다.");
-};
-
-scwin.menu2_onclick = function() {
-    alert("MBTI 검사 페이지로 이동합니다.");
-};
-
-scwin.menu3_onclick = function() {
-    $p.url("../posting/PostList.xml");
-};
-
-scwin.btnLogin_onclick = function() {
-    alert("로그인/회원가입 페이지로 이동합니다.");
-};
-
-scwin.btnEnterprise_onclick = function() {
-    alert("기업 서비스 페이지로 이동합니다.");
-};
-
-scwin.searchInput_onkeypress = function(e) {
-    if (e.keyCode === 13) {
-        var searchText = searchInput.getValue();
-        if (searchText && searchText.trim() !== "") {
-            alert("'" + searchText + "'를 검색합니다.");
+// 지원현황 목록 조회 완료
+scwin.sbm_applicationHistoryList_submitdone = function(e) {
+    try {
+        var res = e.responseJSON;
+        if (res && res.elData) {
+            // 지원현황 목록 설정
+            if (res.elData.applicationHistoryList) {
+                dlt_applications.setJSON(res.elData.applicationHistoryList);
+            }
+            
+            // 통계 데이터 설정
+            if (res.elData.applicationStatsList) {
+                dlt_applicationStats.setJSON(res.elData.applicationStatsList);
+                scwin.updateStatsFromData();
+            }
+            
+            // UI 업데이트
+            scwin.applyStatusClasses();
+            scwin.setupFilterTabs();
         }
+    } catch(err) {
+        console.error("지원현황 조회 오류:", err);
+        alert("지원현황 조회 중 오류가 발생했습니다.");
     }
 };
 
-scwin.btnSearch_onclick = function() {
-    var searchText = searchInput.getValue();
-    if (searchText && searchText.trim() !== "") {
-        alert("'" + searchText + "'를 검색합니다.");
-    }
+// 지원현황 목록 조회 오류
+scwin.sbm_applicationHistoryList_submiterror = function(e) {
+    console.error("지원현황 조회 실패:", e);
+    alert("지원현황을 불러오는데 실패했습니다.");
 };
 
-// 사이드바 메뉴 클릭
-scwin.sidebarMenu_onclick = function(menuId) {
-    switch(menuId) {
-        case 'matching_home':
-            alert("매칭 홈으로 이동합니다.");
-            break;
-        case 'matching_inquiry':
-            alert("매칭 현황 페이지로 이동합니다.");
-            break;
-        case 'matching_profile':
-            // UserDetail.xml로 이동
-            $p.url("UserDetail.xml");
-            break;
-        case 'matching_settings':
-            alert("매칭 설정 페이지로 이동합니다.");
-            break;
-        case 'profile':
-            $p.url("ProfileEditStep1.xml");
-            break;
-        case 'login_connection':
-            alert("로그인 연결 페이지로 이동합니다.");
-            break;
-        case 'application_history':
-            // 현재 페이지이므로 아무것도 하지 않음
-            break;
-        case 'interest_company':
-            alert("관심기업 페이지로 이동합니다.");
-            break;
-        case 'bookmark':
-            alert("북마크 페이지로 이동합니다.");
-            break;
-        case 'notification_management':
-            alert("알림 관리 페이지로 이동합니다.");
-            break;
-    }
-};
-
-// 통계 계산
-scwin.calculateStats = function() {
+// 통계 데이터로부터 UI 업데이트
+scwin.updateStatsFromData = function() {
     var totalCount = dlt_applications.getRowCount();
     var waitingCount = 0;
     var acceptedCount = 0;
     var rejectedCount = 0;
     
-    for (var i = 0; i < totalCount; i++) {
-        var status = dlt_applications.getCellData(i, "status");
-        if (status === "서류통과" || status === "면접진행") {
-            waitingCount++;
-        } else if (status === "최종합격") {
-            acceptedCount++;
-        } else if (status === "불합격") {
-            rejectedCount++;
+    // 통계 데이터가 있는 경우 사용
+    var statsCount = dlt_applicationStats.getRowCount();
+    if (statsCount > 0) {
+        for (var i = 0; i < statsCount; i++) {
+            var statusType = dlt_applicationStats.getCellData(i, "statusType");
+            var count = dlt_applicationStats.getCellData(i, "statusCount");
+            
+            if (statusType === "pending") {
+                waitingCount = count;
+            } else if (statusType === "accepted") {
+                acceptedCount = count;
+            } else if (statusType === "rejected") {
+                rejectedCount = count;
+            }
+        }
+    } else {
+        // 통계 데이터가 없는 경우 직접 계산
+        for (var i = 0; i < totalCount; i++) {
+            var status = dlt_applications.getCellData(i, "status");
+            if (status === "서류통과" || status === "면접진행") {
+                waitingCount++;
+            } else if (status === "최종합격") {
+                acceptedCount++;
+            } else if (status === "불합격") {
+                rejectedCount++;
+            }
         }
     }
     
-    // 통계 표시
+    // 통계 UI 업데이트
     setTimeout(function() {
         var totalElement = document.getElementById('totalApplications');
         var waitingElement = document.getElementById('waitingApplications');
@@ -651,7 +597,6 @@ scwin.calculateStats = function() {
 scwin.applyStatusClasses = function() {
     var totalCount = dlt_applications.getRowCount();
     
-    // 모든 카드에 상태별 클래스 적용
     setTimeout(function() {
         var cards = document.querySelectorAll('.application-card');
         var statusBadges = document.querySelectorAll('.status-badge');
@@ -661,7 +606,6 @@ scwin.applyStatusClasses = function() {
             var card = cards[i];
             var badge = statusBadges[i];
             
-            // 카드 클래스 적용
             if (status === "서류통과" || status === "면접진행") {
                 card.classList.add('pending');
                 if (badge) badge.className = 'status-badge status-pending';
@@ -688,40 +632,24 @@ scwin.setupFilterTabs = function() {
 
 // 필터링
 scwin.filterApplications = function(type) {
-    // 모든 탭에서 active 클래스 제거
+    // 검색 조건 설정
+    if (type !== 'all') {
+        dmp_searchParam.set("status", type);
+    } else {
+        dmp_searchParam.set("status", "");
+    }
+    
+    // 다시 조회
+    scwin.loadApplicationHistory();
+    
+    // 탭 active 클래스 변경
     var tabs = document.querySelectorAll('.filter-tab');
     tabs.forEach(function(tab) {
         tab.classList.remove('active');
     });
     
-    // 클릭된 탭에 active 클래스 추가
-    event.target.classList.add('active');
-    
-    // 카드 필터링
-    var cards = document.querySelectorAll('.application-card');
-    var totalCount = dlt_applications.getRowCount();
-    
-    for (var i = 0; i < cards.length && i < totalCount; i++) {
-        var card = cards[i];
-        var status = dlt_applications.getCellData(i, "status");
-        var shouldShow = false;
-        
-        switch(type) {
-            case 'all':
-                shouldShow = true;
-                break;
-            case 'pending':
-                shouldShow = (status === "서류통과" || status === "면접진행");
-                break;
-            case 'accepted':
-                shouldShow = (status === "최종합격");
-                break;
-            case 'rejected':
-                shouldShow = (status === "불합격");
-                break;
-        }
-        
-        card.style.display = shouldShow ? 'block' : 'none';
+    if (event && event.target) {
+        event.target.classList.add('active');
     }
 };
 
@@ -732,6 +660,7 @@ scwin.showApplicationDetail = function(rowIndex) {
     var status = dlt_applications.getCellData(rowIndex, "status");
     var result = dlt_applications.getCellData(rowIndex, "result");
     var applicationDate = dlt_applications.getCellData(rowIndex, "applicationDate");
+    var jobPostingId = dlt_applications.getCellData(rowIndex, "jobPostingId");
     
     var detailMessage = "=== 지원 상세 정보 ===\n\n";
     detailMessage += "회사명: " + company + "\n";
@@ -739,8 +668,12 @@ scwin.showApplicationDetail = function(rowIndex) {
     detailMessage += "지원일자: " + applicationDate + "\n";
     detailMessage += "상태: " + status + "\n";
     detailMessage += "결과: " + result + "\n";
+    detailMessage += "\n해당 공고 페이지로 이동하시겠습니까?";
     
-    alert(detailMessage);
+    if (confirm(detailMessage)) {
+        // 실제로는 공고 상세 페이지로 이동
+        alert("공고 ID " + jobPostingId + " 페이지로 이동합니다.");
+    }
 };
 
 // 후기 작성
@@ -748,8 +681,7 @@ scwin.writeReview = function(rowIndex) {
     var company = dlt_applications.getCellData(rowIndex, "company");
     var position = dlt_applications.getCellData(rowIndex, "position");
     
-    var reviewMessage = company + " " + position + " 포지션에 대한 후기를 작성하시겠습니까?\n\n";
-    reviewMessage += "후기 작성 페이지로 이동합니다.";
+    var reviewMessage = company + " " + position + " 포지션에 대한 후기를 작성하시겠습니까?";
     
     if (confirm(reviewMessage)) {
         alert("후기 작성 페이지로 이동합니다.");
@@ -757,46 +689,9 @@ scwin.writeReview = function(rowIndex) {
     }
 };
 
-// 상태별 뱃지 클래스 반환
-scwin.getStatusBadgeClass = function(status) {
-    if (status === "서류통과" || status === "면접진행") {
-        return "status-pending";
-    } else if (status === "최종합격") {
-        return "status-accepted";
-    } else if (status === "불합격") {
-        return "status-rejected";
-    }
-    return "status-pending";
-};
-
-// 검색 기능
-scwin.searchApplications = function(searchText) {
-    if (!searchText || searchText.trim() === "") {
-        scwin.filterApplications('all');
-        return;
-    }
-    
-    var cards = document.querySelectorAll('.application-card');
-    var totalCount = dlt_applications.getRowCount();
-    
-    for (var i = 0; i < cards.length && i < totalCount; i++) {
-        var card = cards[i];
-        var company = dlt_applications.getCellData(i, "company");
-        var position = dlt_applications.getCellData(i, "position");
-        
-        var shouldShow = company.toLowerCase().includes(searchText.toLowerCase()) || 
-                        position.toLowerCase().includes(searchText.toLowerCase());
-        
-        card.style.display = shouldShow ? 'block' : 'none';
-    }
-};
-
 // 데이터 새로고침
 scwin.refreshData = function() {
-    // 실제 환경에서는 서버에서 데이터를 다시 가져오는 로직
-    scwin.calculateStats();
-    scwin.applyStatusClasses();
-    alert("데이터를 새로고침했습니다.");
+    scwin.loadApplicationHistory();
 };
 ]]></script>
     </head>

@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,18 +14,28 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.demo.proworks.cmmn.ProworksUserHeader;
 import com.demo.proworks.domain.post.service.PostService;
 import com.demo.proworks.domain.post.vo.PostVo;
+import com.demo.proworks.domain.post.vo.SendEmailInfoListVo;
 import com.demo.proworks.domain.post.vo.SendEmailVo;
 import com.demo.proworks.domain.post.vo.JobApplicationVo;
 import com.demo.proworks.domain.post.vo.PostListVo;
 import com.demo.proworks.domain.post.vo.PostMatchVo;
 import com.demo.proworks.domain.post.vo.TechStackVo;
+import com.demo.proworks.domain.post.vo.TechStackListVo;
 import com.demo.proworks.domain.post.vo.MainPostingListVo;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.inswave.elfw.annotation.ElDescription;
 import com.inswave.elfw.annotation.ElService;
 import com.inswave.elfw.annotation.ElValidator;
+import com.inswave.elfw.core.UserHeader;
 import com.inswave.elfw.util.ControllerContextUtil;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * @subject : 공고정보 관련 처리를 담당하는 컨트롤러
@@ -57,7 +68,7 @@ public class PostController {
 	}
 
 	/**
-	 * 공고정보 목록을 조회합니다.
+	 * 공고정보 목록을 조회합니다. (일반 사용자용 - 모든 공고 조회)
 	 *
 	 * @param postVo 공고정보
 	 * @return 목록조회 결과
@@ -65,8 +76,48 @@ public class PostController {
 	 */
 	@ElService(key = "POS0001List")
 	@RequestMapping(value = "POS0001List")
-	@ElDescription(sub = "공고정보 목록조회", desc = "공고정보 목록 조회를 한다.")
+	@ElDescription(sub = "공고정보 목록조회", desc = "모든 공고정보 목록 조회를 한다.")
 	public Map<String, Object> selectListPost(PostVo postVo) throws Exception {
+
+		System.out.println("=== 일반 사용자용 공고 목록 조회 ===");
+
+		// ✅ 일반 사용자용: companyId 필터링 제거 (모든 공고 조회)
+		postVo.setCompanyId(null);
+		System.out.println("모든 공고 조회 (companyId 필터 제거)");
+
+		List<PostVo> postList = postService.selectListPost(postVo);
+		long totCnt = postService.selectListCountPost(postVo);
+
+		System.out.println("조회된 공고 수: " + postList.size());
+		System.out.println("전체 공고 수: " + totCnt);
+
+		// 회사명 정보 로깅
+		for (int i = 0; i < Math.min(postList.size(), 3); i++) {
+			PostVo post = postList.get(i);
+			System.out.println("공고 " + (i + 1) + ": " + post.getTitle() + " - 회사: " + post.getCompanyName());
+		}
+
+		PostListVo retPostList = new PostListVo();
+		retPostList.setPostVoList(postList);
+		retPostList.setTotalCount(totCnt);
+		Map<String, Object> response = new HashMap<>();
+		response.put("elData", retPostList);
+		return response;
+	}
+
+	/**
+	 * 기업 회원용 공고정보 목록을 조회합니다. (자신의 공고만)
+	 *
+	 * @param postVo 공고정보
+	 * @return 목록조회 결과
+	 * @throws Exception
+	 */
+	@ElService(key = "POS0005List")
+	@RequestMapping(value = "POS0005List")
+	@ElDescription(sub = "기업용 공고정보 목록조회", desc = "현재 기업의 공고정보 목록만 조회한다.")
+	public Map<String, Object> selectListPostForCompany(PostVo postVo) throws Exception {
+
+		System.out.println("=== 기업 회원용 공고 목록 조회 ===");
 
 		// 현재 사용자의 Company ID로 필터링
 		String currentCompanyId = postVo.getCompanyId();
@@ -78,11 +129,14 @@ public class PostController {
 		List<PostVo> postList = postService.selectListPost(postVo);
 		long totCnt = postService.selectListCountPost(postVo);
 
+		System.out.println("조회된 공고 수: " + postList.size());
+		System.out.println("전체 공고 수: " + totCnt);
+
 		PostListVo retPostList = new PostListVo();
 		retPostList.setPostVoList(postList);
 		retPostList.setTotalCount(totCnt);
 		Map<String, Object> response = new HashMap<>();
-		response.put("elData", retPostList); // PostListVo 객체를 "elData" 키 아래에 넣습니다.
+		response.put("elData", retPostList);
 		return response;
 	}
 
@@ -558,4 +612,6 @@ public class PostController {
 	public MainPostingListVo selectPostingList() throws Exception {
 		return postService.selectPostingList();
 	}
+
+	// 공고 이미지 업로드 - WebSquare 기본 업로드 시스템 사용 (기업 업로드 방식과 동일)
 }

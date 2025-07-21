@@ -137,7 +137,12 @@
 			cursor: pointer;
 			}
 			.email-modal button.cancel {
-			background-color: #dc3545;
+				background-color: #dc3545;
+			}
+			.btn-disabled {
+				background-color: #cccccc !important;
+				color: #666666 !important;
+				cursor: not-allowed !important;
 			}
 		</style>
 		<xf:model>
@@ -162,35 +167,87 @@
 						<w2:key dataType="text" name="페이지_번호" id="pageIndex" defaultValue="1"></w2:key>
 						<w2:key dataType="text" name="페이지_건수" id="pageSize" defaultValue="10"></w2:key>
 						<w2:key dataType="number" name="공고_id" id="jobPostingId"></w2:key>
+						<w2:key dataType="text" name="상태" id="applicationStatus"></w2:key>
 					</w2:keyInfo>
 				</w2:dataMap>
 			</w2:dataCollection>
 			<xf:submission id="sbm_applicantList" action="/InsWebApp/US0002List.pwkjson" method="post" mediatype="application/json" ref='data:json,{"id":"dmp_applicantVo","key":"applicantVo"}'
 				target='data:json,{"id":"dlt_applicantVoList","key":"elData.applicantDetailVo"}' encoding="UTF-8" instance="" replace="" errorHandler="" customHandler="" mode="asynchronous" processMsg="지원자 목록을 조회중입니다." ev:submit=""
-				ev:submitdone="" ev:submiterror="" abortTrigger="">
+				ev:submitdone="scwin.onApplicantListLoad" ev:submiterror="" abortTrigger="">
 			</xf:submission>
 		</xf:model>
-		<script lazy="false" type="text/javascript"><![CDATA[scwin.onpageload = function () {
+		<script lazy="false" type="text/javascript"><![CDATA[
+scwin.onpageload = function () {
     var jobPostingId = null;
 
-    if (!jobPostingId) {
-        try {
-            var href = window.location.href;
-            var match = href.match(/[?&]jobPostingId=([^&]*)/);
-            if (match && match[1]) {
-                jobPostingId = decodeURIComponent(match[1]);
-            }
-        } catch (e) {
-            console.log("location.href 파싱 실패:", e);
+    try {
+        var href = window.location.href;
+        var match = href.match(/[?&]jobPostingId=([^&]*)/);
+        if (match && match[1]) {
+            jobPostingId = decodeURIComponent(match[1]);
         }
-    } else {
-        // 비정상적 접근. 이전페이지로 이동
+    } catch (e) {
+        console.log("location.href 파싱 실패:", e);
     }
+
+    if (!jobPostingId) {
+        // 비정상적 접근 처리
+    }
+
     dmp_applicantVo.set("jobPostingId", jobPostingId);
+    scwin.updateButtonStates(); // 페이지 로드 시 버튼 상태 초기화
+    scwin.search();
+};
+
+scwin.search = function () {
     $c.sbm.execute(sbm_applicantList);
 };
 
+scwin.updateButtonStates = function () {
+    var filterValue = statusFilter.getValue();
+    var isReviewStatus = (filterValue === '서류검토');
+
+    pass_btn.setDisabled(!isReviewStatus);
+    fail_btn.setDisabled(!isReviewStatus);
+
+    if (isReviewStatus) {
+        pass_btn.removeClass("btn-disabled");
+        fail_btn.removeClass("btn-disabled");
+    } else {
+        pass_btn.addClass("btn-disabled");
+        fail_btn.addClass("btn-disabled");
+    }
+};
+
+scwin.onStatusFilterChange = function (e) {
+    dmp_applicantVo.set("applicationStatus", statusFilter.getValue());
+    dmp_applicantVo.set("pageIndex", 1);
+    scwin.updateButtonStates(); // 필터 변경 시 즉시 버튼 상태 업데이트
+    scwin.search();
+};
+
+scwin.onPageChange = function (e) {
+    dmp_applicantVo.set("pageIndex", e.pageIndex);
+    scwin.search();
+};
+
+scwin.onApplicantListLoad = function (e) {
+    if (e.status === 200) {
+        var responseData = e.responseJSON;
+        if (responseData && responseData.elData) {
+            var totalCount = responseData.elData.totalCount;
+            pageList1.setTotalRowCount(totalCount);
+        }
+        // 데이터 로드 후 버튼 상태를 다시 한 번 업데이트할 수 있습니다.
+        scwin.updateButtonStates();
+    }
+};
+
 scwin.pass_btn_onclick = function (e) {
+    if (statusFilter.getValue() !== '서류검토') {
+        $c.win.alert("필터링 조건이 서류검토일 경우에만 사용가능합니다.");
+        return;
+    }
 
     var checkedData = gridView.getCheckedIndex("chk");
 
@@ -199,7 +256,6 @@ scwin.pass_btn_onclick = function (e) {
         return;
     }
 
-    // 선택된 지원자들의 정보 추출
     var emailInfoList = checkedData.map(function (rowIndex) {
         return {
             email: dlt_applicantVoList.getCellData(rowIndex, "email"),
@@ -216,12 +272,15 @@ scwin.pass_btn_onclick = function (e) {
         popupName: "합격 메일 보내기",
         modal: true
     }, {
-        selectedUsers: emailInfoList  // 데이터 전달
+        selectedUsers: emailInfoList
     });
-
-}
+};
 
 scwin.fail_btn_onclick = function (e) {
+    if (statusFilter.getValue() !== '서류검토') {
+        $c.win.alert("필터링 조건이 서류검토일 경우에만 사용가능합니다.");
+        return;
+    }
 
     var checkedData = gridView.getCheckedIndex("chk");
 
@@ -230,7 +289,6 @@ scwin.fail_btn_onclick = function (e) {
         return;
     }
 
-    // 선택된 지원자들의 정보 추출
     var emailInfoList = checkedData.map(function (rowIndex) {
         return {
             email: dlt_applicantVoList.getCellData(rowIndex, "email"),
@@ -239,7 +297,6 @@ scwin.fail_btn_onclick = function (e) {
         };
     });
 
-    // 팝업 생성 옵션
     $c.win.openPopup("FailEmail.xml", {
         id: "pop_failEmail",
         type: "wframePopup",
@@ -248,7 +305,7 @@ scwin.fail_btn_onclick = function (e) {
         popupName: "불합격 메일 보내기",
         modal: true
     }, {
-        selectedUsers: emailInfoList  // 데이터 전달
+        selectedUsers: emailInfoList
     });
 };
 ]]></script>
@@ -266,7 +323,7 @@ scwin.fail_btn_onclick = function (e) {
 
 						<!-- 상태 필터 추가 -->
 						<w2:selectbox id="statusFilter" style="width: 130px;height: 32px;" submenuSize="auto" appearance="minimal"
-							direction="auto" chooseOption="true" chooseOptionLabel="상태 필터">
+							direction="auto" chooseOption="true" chooseOptionLabel="상태 필터" ev:onviewchange="scwin.onStatusFilterChange">
 							<w2:choices>
 								<w2:item>
 									<w2:label><![CDATA[서류검토]]></w2:label>
@@ -342,7 +399,7 @@ scwin.fail_btn_onclick = function (e) {
 				<xf:group class="pglbox" id="" meta_snippetCategory="06_그리드" meta_snippetKeyComponent="true" meta_snippetName="6_03 페이지리스트"
 					style="margin-top:20px;">
 					<w2:pageList class="pgl" displayButtonType="display" displayFormat="#" id="pageList1" pageSize="10" pagingType="0"
-						style="">
+						style="" ev:onpagelistclick="scwin.onPageChange">
 					</w2:pageList>
 				</xf:group>
 			</xf:group>

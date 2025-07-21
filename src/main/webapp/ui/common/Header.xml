@@ -30,14 +30,25 @@
     } else {
         // 로그인 상태
         btnLogin.hide();
-        txb_login.show();
-        btnLogout.show(); // 로그아웃 버튼 표시
-        txb_login.setValue(userInfo.name + " 님");
+        btnLogout.show();
+
+        // 일반 유저헤더
+        if (userInfo.role == "USER") {
+            txb_login.show();
+            txb_login.setValue(userInfo.name + " 님");
+        }
+        else if (userInfo.role == "COMPANY") {
+            // 코드분석, 성향검사 숨김처리
+            anchor1.hide();
+            anchor2.hide();
+            anchor3.hide();
+        }
+
     }
 };
 
 
-scwin.getUserInfoByCookie = function() {
+scwin.getUserInfoByCookie = function () {
     var userInfoCookie = WebSquare.cookie.getCookie("userInfo");
     var userInfo = null;
 
@@ -70,6 +81,7 @@ scwin.logout_onclick = function () {
 
 // 로그인 관련 팝업 호출 함수
 scwin.btnLogin_onclick = function () {
+    // 로그인 팝업에 전달할 데이터
     var loginPopupData = {
         "type": "json",
         "name": "login_param",
@@ -78,50 +90,47 @@ scwin.btnLogin_onclick = function () {
             "returnUrl": window.location.href
         }
     };
-
-    // 팝업 생성 옵션 지정
-    var options = {
+    $c.win.openPopup("../user/Login.xml", {
         id: "login_popup",
-        type: "wframePopup",
-        width: "430px",
-        height: "530px",
+        type: "pageFramePopup",
+        width: "450px",
+        height: "550px",
         modal: true,
-        resizable: true,
-        
         popupName: "로그인/회원가입",
-        closeAction: "scwin.closeLoginPopup",
+        closeAction: "scwin.login_popup_closeAction",
         dataObject: loginPopupData
-        
-    };
-
-    // 팝업 생성
-    $p.openPopup("../user/Login.xml", options);
+    });
 };
 
 scwin.codefit_Logo_onclick = function () {
-    $p.url("/InsWebApp/ui/common/MainPage.xml");
+    var userInfo = scwin.getUserInfoByCookie();
+    if (userInfo && userInfo.role === "COMPANY") {
+        $p.url("/InsWebApp/ui/corporate/RecruitmentDashboard.xml");
+    } else {
+        $p.url("/InsWebApp/ui/common/MainPage.xml");
+    }
 };
 
 scwin.menu1_onclick = function () {
-    $p.url("../user/CodeAnalysisMain.xml");
+    $p.url("/InsWebApp/ui/user/CodeAnalysisMain.xml");
 };
 
 scwin.menu2_onclick = function () {
-    $p.url("../survey/SurveyMbti.xml");
+    $p.url("/InsWebApp/ui/survey/SurveyMbti.xml");
 };
 
 scwin.menu3_onclick = function () {
-    $p.url("../post/PostList.xml");
+    $p.url("/InsWebApp/ui/post/PostList.xml");
 };
 
 scwin.btnEnterprise_onclick = function () {
     var userInfo = scwin.getUserInfoByCookie();
     if (userInfo === null) {
-        $p.url("../common/CompanyMain.xml");
+        $p.url("/InsWebApp/ui/common/CompanyMain.xml");
     } else if (userInfo.role === "USER") {
-        $p.url("../common/CompanyMain.xml");
+        $p.url("/InsWebApp/ui/common/CompanyMain.xml");
     } else if (userInfo.role === "COMPANY") {
-        $p.url("../corporate/RecruitmentDashboard.xml");
+        $p.url("/InsWebApp/ui/corporate/RecruitmentDashboard.xml");
     }
 };
 
@@ -131,12 +140,12 @@ scwin.goToUserDetail = function () {
 
 // 기업 등록 페이지로 이동
 scwin.goToCompanyRegister = function () {
-    $p.url("../company/create_company.xml");
+    $p.url("/InsWebApp/ui/company/create_company.xml");
 };
 
 // 개인정보 수정페이지
 scwin.txb_login_onclick = function () {
-    $p.url("../user/UserDetail.xml");
+    $p.url("/InsWebApp/ui/user/UserDetail.xml");
 };
 ]]></script>
 		<style type="text/css"><![CDATA[

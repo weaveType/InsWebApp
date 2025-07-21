@@ -90,6 +90,7 @@
             margin-bottom: 32px;
         }
 
+
         .info-card {
             width: 100%;
             border: 1px solid #e0e0e0;
@@ -304,7 +305,6 @@
             }
         }
         ]]></style>
-
 		<script lazy="false" type="text/javascript"><![CDATA[
 scwin.onpageload = function () {
     // 부모 페이지의 dma_userInfoVo 데이터맵 참조
@@ -345,14 +345,20 @@ scwin.updateCardStatus = function (userInfoData) {
             // MBTI 카드 상태 업데이트
             if (mbti_card) {
                 if (isMbtiDone) {
-                    mbti_card.removeClass("incomplete").addClass("completed");
+                    mbti_card.removeClass("incomplete");
+                    mbti_card.addClass("completed");
+
                     mbti_badge.setLabel("완료");
-                    mbti_badge.removeClass("incomplete-badge").addClass("completed-badge");
+                    mbti_badge.removeClass("incomplete-badge");
+                    mbti_badge.addClass("completed-badge");
+
                     mbti_button.addClass("hidden-button");
                 } else {
-                    mbti_card.removeClass("completed").addClass("incomplete");
+                    mbti_card.removeClass("completed");
+                    mbti_card.addClass("incomplete");
                     mbti_badge.setLabel("미완료");
-                    mbti_badge.removeClass("completed-badge").addClass("incomplete-badge");
+                    mbti_badge.removeClass("completed-badge");
+                    mbti_badge.addClass("incomplete-badge");
                     mbti_button.removeClass("hidden-button");
                 }
             }
@@ -360,14 +366,18 @@ scwin.updateCardStatus = function (userInfoData) {
             // 코드분석 카드 상태 업데이트
             if (code_card) {
                 if (isCodeDone) {
-                    code_card.removeClass("incomplete").addClass("completed");
+                    code_card.removeClass("incomplete");
+                    code_card.addClass("completed");
                     code_badge.setLabel("완료");
-                    code_badge.removeClass("incomplete-badge").addClass("completed-badge");
+                    code_badge.removeClass("incomplete-badge");
+                    code_badge.addClass("completed-badge");
                     code_button.addClass("hidden-button");
                 } else {
-                    code_card.removeClass("completed").addClass("incomplete");
+                    code_card.removeClass("completed");
+                    code_card.addClass("incomplete");
                     code_badge.setLabel("미완료");
-                    code_badge.removeClass("completed-badge").addClass("incomplete-badge");
+                    code_badge.removeClass("completed-badge");
+                    code_badge.addClass("incomplete-badge");
                     code_button.removeClass("hidden-button");
                 }
             }
@@ -391,7 +401,6 @@ scwin.getUserInfoByCookie = function () {
     }
     return userInfo;
 }
-
 // 사용자 정보 수정 페이지로 이동
 scwin.btn_userUpdate_onclick = function() {
     try {
@@ -401,7 +410,6 @@ scwin.btn_userUpdate_onclick = function() {
         console.error("사용자 정보 수정 페이지 이동 오류:", e);
         alert("페이지 이동 중 오류가 발생했습니다.");
     }
-};
 ]]></script>
 	</head>
 
