@@ -331,116 +331,15 @@ scwin.sbm_scoutVo_submitdone = function (e) {
                 			</xf:choices>
                 		</xf:checkcombobox>
                 	</xf:group>
-                	<w2:textbox class="filter-label" label="기술스택:" style="border:none; background:transparent;"></w2:textbox>
-                	<xf:checkcombobox id="techStackFilter" chooseOption="전체" displayMode="label" style="width:200px;height:32px;"
-                		submenuSize="auto" allOption="전체" ev:onchange="scwin.techStackFilter_onchange">
-                		<xf:choices>
-                			<xf:item>
-                				<xf:label><![CDATA[Java]]></xf:label>
-                				<xf:value><![CDATA[java]]></xf:value>
-                			</xf:item>
-                			<xf:item>
-                				<xf:label><![CDATA[Spring Boot]]></xf:label>
-                				<xf:value><![CDATA[springboot]]></xf:value>
-                			</xf:item>
-                			<xf:item>
-                				<xf:label><![CDATA[React]]></xf:label>
-                				<xf:value><![CDATA[react]]></xf:value>
-                			</xf:item>
-                			<xf:item>
-                				<xf:label><![CDATA[Node.js]]></xf:label>
-                				<xf:value><![CDATA[nodejs]]></xf:value>
-                			</xf:item>
-                			<xf:item>
-                				<xf:label><![CDATA[Python]]></xf:label>
-                				<xf:value><![CDATA[python]]></xf:value>
-                			</xf:item>
-                			<xf:item>
-                				<xf:label><![CDATA[Docker]]></xf:label>
-                				<xf:value><![CDATA[docker]]></xf:value>
-                			</xf:item>
-                		</xf:choices>
-                	</xf:checkcombobox>
                 </xf:group>
 
                 <xf:group class="filter-group">
-                    <w2:textbox class="filter-label" label="경력:" style="border:none; background:transparent;"></w2:textbox>
-                    <xf:select1 id="experienceFilter" chooseOption="전체" appearance="minimal" 
-                        style="width:120px;height:32px;" ev:onchange="scwin.experienceFilter_onchange">
-                        <xf:choices>
-                            <xf:item>
-                                <xf:label><![CDATA[신입]]></xf:label>
-                                <xf:value><![CDATA[신입]]></xf:value>
-                            </xf:item>
-                            <xf:item>
-                                <xf:label><![CDATA[1-3년]]></xf:label>
-                                <xf:value><![CDATA[1-3년]]></xf:value>
-                            </xf:item>
-                            <xf:item>
-                                <xf:label><![CDATA[4-6년]]></xf:label>
-                                <xf:value><![CDATA[4-6년]]></xf:value>
-                            </xf:item>
-                            <xf:item>
-                                <xf:label><![CDATA[7년이상]]></xf:label>
-                                <xf:value><![CDATA[7년이상]]></xf:value>
-                            </xf:item>
-                        </xf:choices>
-                    </xf:select1>
-                </xf:group>
-
-                <xf:group class="filter-group">
-                    <w2:textbox class="filter-label" label="포지션:" style="border:none; background:transparent;"></w2:textbox>
-                    <xf:select1 id="positionFilter" chooseOption="전체" appearance="minimal" 
-                        style="width:120px;height:32px;" ev:onchange="scwin.positionFilter_onchange">
-                        <xf:choices>
-                            <xf:item>
-                                <xf:label><![CDATA[Backend]]></xf:label>
-                                <xf:value><![CDATA[backend]]></xf:value>
-                            </xf:item>
-                            <xf:item>
-                                <xf:label><![CDATA[Frontend]]></xf:label>
-                                <xf:value><![CDATA[frontend]]></xf:value>
-                            </xf:item>
-                            <xf:item>
-                                <xf:label><![CDATA[Fullstack]]></xf:label>
-                                <xf:value><![CDATA[fullstack]]></xf:value>
-                            </xf:item>
-                            <xf:item>
-                                <xf:label><![CDATA[Mobile]]></xf:label>
-                                <xf:value><![CDATA[mobile]]></xf:value>
-                            </xf:item>
-                            <xf:item>
-                                <xf:label><![CDATA[Data]]></xf:label>
-                                <xf:value><![CDATA[data]]></xf:value>
-                            </xf:item>
-                            <xf:item>
-                                <xf:label><![CDATA[DevOps]]></xf:label>
-                                <xf:value><![CDATA[devops]]></xf:value>
-                            </xf:item>
-                            <xf:item>
-                                <xf:label><![CDATA[Security]]></xf:label>
-                                <xf:value><![CDATA[security]]></xf:value>
-                            </xf:item>
-                            <xf:item>
-                                <xf:label><![CDATA[AI]]></xf:label>
-                                <xf:value><![CDATA[ai]]></xf:value>
-                            </xf:item>
-                        </xf:choices>
-                    </xf:select1>
-                </xf:group>
-
-                <xf:group class="filter-group">
-                    <w2:textbox class="filter-label" label="검색:" style="border:none; background:transparent;"></w2:textbox>
                     <w2:searchBox id="searchBox" placeholder="개발자 이름 검색" 
                         style="width:200px;height:32px;" ev:onenter="scwin.searchBox_onenter">
                     </w2:searchBox>
                 </xf:group>
 
                 <xf:group class="filter-group">
-                    <xf:trigger class="btn-reset" type="button" ev:onclick="scwin.resetFilters"
-                        style="background-color:#6c757d; color:white; border:none; padding:8px 16px; border-radius:4px;">
-                        <xf:label><![CDATA[필터 초기화]]></xf:label>
-                    </xf:trigger>
                 </xf:group>
             </xf:group>
 
@@ -481,7 +380,6 @@ scwin.sbm_scoutVo_submitdone = function (e) {
             				<w2:column displayMode="label" id="column5" inputType="text" style="height:40px;" value="이력서" width="150"></w2:column>
             				<w2:column displayMode="label" id="column6" inputType="text" style="height:40px;" value="mbti" width="80"></w2:column>
             				<w2:column displayMode="label" id="column7" inputType="text" style="height:40px;" value="기술스택" width="*"></w2:column>
-            				<w2:column displayMode="label" id="column3" inputType="text" style="height:40px;" value="상태" width="100"></w2:column>
             			</w2:row>
             		</w2:header>
             		<w2:gBody id="gBody2" style="">
@@ -497,7 +395,6 @@ scwin.sbm_scoutVo_submitdone = function (e) {
             				<w2:column displayMode="label" id="resumeFileName" inputType="text" style="" value="" width="*"></w2:column>
             				<w2:column displayMode="label" id="typeCode" inputType="text" style="" value="" width="80"></w2:column>
             				<w2:column displayMode="label" id="techStack" inputType="text" style="" value="" width="*"></w2:column>
-            				<w2:column displayMode="label" id="applicationStatus" inputType="text" style="" value="" width="100"></w2:column>
             			</w2:row>
             		</w2:gBody>
             	</w2:gridView>
