@@ -173,10 +173,19 @@
                     'D_F': { name: 'Debug vs Feature', desc: '작업 선호' }
                 };
                 
-                // 축별로 질문 렌더링
-                for (var axis in scwin.surveyQuestions) {
+                // 축 순서를 명시적으로 지정해서 렌더링 (B_A -> R_I -> S_T -> D_F)
+                var axisOrder = ['B_A', 'R_I', 'S_T', 'D_F'];
+                
+                for (var i = 0; i < axisOrder.length; i++) {
+                    var axis = axisOrder[i];
                     var questions = scwin.surveyQuestions[axis];
                     var axisInfo = axisNames[axis] || { name: axis, desc: '' };
+                    
+                    // 축에 질문이 없으면 건너뛰기
+                    if (!questions || questions.length === 0) {
+                        console.warn('축 ' + axis + '에 질문이 없습니다.');
+                        continue;
+                    }
                     
                     html += '<div class="axis-section">';
                     html += '<div class="axis-header">';
@@ -185,8 +194,8 @@
                     html += '</div>';
                     
                     // 해당 축의 질문들
-                    for (var i = 0; i < questions.length; i++) {
-                        var question = questions[i];
+                    for (var q = 0; q < questions.length; q++) {
+                        var question = questions[q];
                         
                         html += '<div class="question-card" data-question-id="' + question.questionId + '">';
                         html += '<div class="question-number">Q' + question.questionId + '</div>';
@@ -407,7 +416,25 @@
                 
                 // 결과 섹션 보이기
                 var resultSection = document.querySelector('.result-section');
-                if (resultSection) resultSection.style.display = 'block';
+                if (resultSection) {
+                    resultSection.style.display = 'block';
+                    
+                    // 결과 섹션으로 부드럽게 스크롤 (약간의 딜레이 후)
+                    setTimeout(function() {
+                        resultSection.scrollIntoView({ 
+                            behavior: 'smooth', 
+                            block: 'start' 
+                        });
+                        
+                        // 추가 여백을 위해 약간 더 위로 스크롤
+                        setTimeout(function() {
+                            window.scrollBy({
+                                top: -50, // 50px 위로 추가 스크롤
+                                behavior: 'smooth'
+                            });
+                        }, 800); // 첫 번째 스크롤 완료 후
+                    }, 300); // 결과 표시 후 300ms 딜레이
+                }
                 
                 // 결과 데이터 설정
                 var typeCodeEl = document.querySelector('.result-type-code');
@@ -419,73 +446,91 @@
                 var typeDescEl = document.querySelector('.result-type-desc');
                 if (typeDescEl) typeDescEl.textContent = typeInfo.desc;
                 
-                // 점수 표시 (0점 기준 -50~+50, 부호 포함)
+                // 점수를 시각적 바 차트로 표시
                 if (result.scores) {
                     var scores = result.scores;
                     
-                    // B/A 축 (+: Architect, -: Builder)
-                    var scoreAbEl = document.querySelector('.score-ab');
-                    var abScore = scores['A_B'] || 0;
-                    if (scoreAbEl) scoreAbEl.textContent = (abScore >= 0 ? '+' : '') + Math.round(abScore) + '점';
-                    
-                    var abTypeEl = document.querySelector('.ab-type');
-                    if (abTypeEl) {
-                        if (abScore >= 0) {
-                            abTypeEl.textContent = 'Architect 성향 (' + Math.round(abScore) + ')';
-                            abTypeEl.style.color = '#2563eb';
-                        } else {
-                            abTypeEl.textContent = 'Builder 성향 (' + Math.round(abScore) + ')';
-                            abTypeEl.style.color = '#dc2626';
-                        }
+                    // 점수를 퍼센트로 변환하는 함수 (-50~+50을 0~100%로)
+                    function scoreToPercentage(score) {
+                        return Math.max(0, Math.min(100, (score + 50)));
                     }
+                    
+                    // 순차적 애니메이션을 위한 함수
+                    function animateBar(fillEl, indicatorEl, resultEl, percentage, score, leftLabel, rightLabel, leftColor, rightColor, delay) {
+                        setTimeout(function() {
+                            if (fillEl) {
+                                fillEl.style.width = percentage + '%';
+                            }
+                            if (indicatorEl) {
+                                indicatorEl.style.left = percentage + '%';
+                            }
+                            
+                            // 결과 텍스트 업데이트
+                            setTimeout(function() {
+                                if (resultEl) {
+                                    var intensity = Math.abs(score);
+                                    var intensityText = '';
+                                    if (intensity < 10) intensityText = '약간';
+                                    else if (intensity < 25) intensityText = '보통';
+                                    else if (intensity < 40) intensityText = '강한';
+                                    else intensityText = '매우 강한';
+                                    
+                                    if (score >= 0) {
+                                        resultEl.textContent = intensityText + ' ' + rightLabel + ' 성향';
+                                        resultEl.style.color = rightColor;
+                                    } else {
+                                        resultEl.textContent = intensityText + ' ' + leftLabel + ' 성향';
+                                        resultEl.style.color = leftColor;
+                                    }
+                                    
+                                    // 결과 카드 애니메이션
+                                    resultEl.style.animation = 'resultFadeIn 0.6s ease-out forwards';
+                                }
+                            }, 800); // 바 애니메이션 후 결과 표시
+                        }, delay);
+                    }
+                    
+                    // 각 축별 애니메이션 실행 (순차적)
+                    
+                    // B/A 축 (+: Architect, -: Builder)
+                    var abScore = scores['A_B'] || 0;
+                    var abPercentage = scoreToPercentage(abScore);
+                    animateBar(
+                        document.querySelector('.score-bar-ab'),
+                        document.querySelector('.score-indicator-ab'),
+                        document.querySelector('.ab-result'),
+                        abPercentage, abScore, 'Builder', 'Architect', '#6366f1', '#a855f7', 200
+                    );
                     
                     // R/I 축 (+: Innovate, -: Refactor)
-                    var scoreRiEl = document.querySelector('.score-ri');
                     var riScore = scores['R_I'] || 0;
-                    if (scoreRiEl) scoreRiEl.textContent = (riScore >= 0 ? '+' : '') + Math.round(riScore) + '점';
-                    
-                    var riTypeEl = document.querySelector('.ri-type');
-                    if (riTypeEl) {
-                        if (riScore >= 0) {
-                            riTypeEl.textContent = 'Innovate 성향 (' + Math.round(riScore) + ')';
-                            riTypeEl.style.color = '#2563eb';
-                        } else {
-                            riTypeEl.textContent = 'Refactor 성향 (' + Math.round(riScore) + ')';
-                            riTypeEl.style.color = '#dc2626';
-                        }
-                    }
+                    var riPercentage = scoreToPercentage(riScore);
+                    animateBar(
+                        document.querySelector('.score-bar-ri'),
+                        document.querySelector('.score-indicator-ri'),
+                        document.querySelector('.ri-result'),
+                        riPercentage, riScore, 'Refactor', 'Innovate', '#4f46e5', '#9333ea', 500
+                    );
                     
                     // S/T 축 (+: Team, -: Solo)
-                    var scoreStEl = document.querySelector('.score-st');
                     var stScore = scores['S_T'] || 0;
-                    if (scoreStEl) scoreStEl.textContent = (stScore >= 0 ? '+' : '') + Math.round(stScore) + '점';
-                    
-                    var stTypeEl = document.querySelector('.st-type');
-                    if (stTypeEl) {
-                        if (stScore >= 0) {
-                            stTypeEl.textContent = 'Team 성향 (' + Math.round(stScore) + ')';
-                            stTypeEl.style.color = '#2563eb';
-                        } else {
-                            stTypeEl.textContent = 'Solo 성향 (' + Math.round(stScore) + ')';
-                            stTypeEl.style.color = '#dc2626';
-                        }
-                    }
+                    var stPercentage = scoreToPercentage(stScore);
+                    animateBar(
+                        document.querySelector('.score-bar-st'),
+                        document.querySelector('.score-indicator-st'),
+                        document.querySelector('.st-result'),
+                        stPercentage, stScore, 'Solo', 'Team', '#3730a3', '#7c2d92', 800
+                    );
                     
                     // D/F 축 (+: Feature, -: Debug)
-                    var scoreDfEl = document.querySelector('.score-df');
                     var dfScore = scores['D_F'] || 0;
-                    if (scoreDfEl) scoreDfEl.textContent = (dfScore >= 0 ? '+' : '') + Math.round(dfScore) + '점';
-                    
-                    var dfTypeEl = document.querySelector('.df-type');
-                    if (dfTypeEl) {
-                        if (dfScore >= 0) {
-                            dfTypeEl.textContent = 'Feature 성향 (' + Math.round(dfScore) + ')';
-                            dfTypeEl.style.color = '#2563eb';
-                        } else {
-                            dfTypeEl.textContent = 'Debug 성향 (' + Math.round(dfScore) + ')';
-                            dfTypeEl.style.color = '#dc2626';
-                        }
-                    }
+                    var dfPercentage = scoreToPercentage(dfScore);
+                    animateBar(
+                        document.querySelector('.score-bar-df'),
+                        document.querySelector('.score-indicator-df'),
+                        document.querySelector('.df-result'),
+                        dfPercentage, dfScore, 'Debug', 'Feature', '#1e40af', '#581c87', 1100
+                    );
                 }
                 
                 console.log('설문 결과 표시 완료:', typeCode, typeInfo.name);
@@ -852,36 +897,261 @@
                 margin-bottom: 30px;
             }
             
-            .score-grid {
-                display: grid;
-                grid-template-columns: repeat(2, 1fr);
-                gap: 20px;
-                margin-bottom: 30px;
+            .score-bars {
+                display: flex;
+                flex-direction: column;
+                gap: 35px;
+                margin-bottom: 40px;
             }
             
-            .score-item {
-                background: #f8f9fa;
-                border-radius: 12px;
-                padding: 20px;
+            .score-bar-item {
+                background: linear-gradient(145deg, #ffffff, #f8fafc);
+                border-radius: 24px;
+                padding: 32px;
+                box-shadow: 
+                    0 20px 40px -12px rgba(0, 0, 0, 0.08),
+                    0 8px 24px -8px rgba(0, 0, 0, 0.04),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+                border: 1px solid rgba(255, 255, 255, 0.8);
+                position: relative;
+                overflow: hidden;
+                transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+            
+            .score-bar-item::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 4px;
+                background: linear-gradient(90deg, 
+                    rgba(99, 102, 241, 0.8) 0%,
+                    rgba(139, 92, 246, 0.8) 25%,
+                    rgba(124, 58, 237, 0.8) 50%,
+                    rgba(91, 33, 182, 0.8) 75%,
+                    rgba(30, 64, 175, 0.8) 100%);
+                border-radius: 24px 24px 0 0;
+            }
+            
+            .score-bar-item:hover {
+                transform: translateY(-4px);
+                box-shadow: 
+                    0 32px 64px -16px rgba(0, 0, 0, 0.12),
+                    0 16px 32px -8px rgba(0, 0, 0, 0.08),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+            }
+            
+            .score-bar-title {
+                font-size: 18px;
+                font-weight: 700;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
                 text-align: center;
+                margin-bottom: 24px;
+                letter-spacing: -0.025em;
             }
             
-            .score-label {
-                font-size: 14px;
-                color: #666;
-                margin-bottom: 8px;
+            .score-bar-container {
+                display: flex;
+                align-items: center;
+                gap: 20px;
+                margin-bottom: 16px;
             }
             
-            .score-ab, .score-ri, .score-st, .score-df {
-                font-size: 24px;
-                font-weight: bold;
-                color: #007bff;
+            .left-label, .right-label {
+                font-size: 13px;
+                font-weight: 600;
+                min-width: 80px;
+                text-align: center;
+                padding: 8px 12px;
+                border-radius: 16px;
+                transition: all 0.3s ease;
+                position: relative;
             }
             
-            .ab-type, .ri-type, .st-type, .df-type {
-                font-size: 12px;
-                color: #666;
-                margin-top: 4px;
+            .left-label {
+                background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%);
+                color: #4338ca;
+                border: 1px solid rgba(67, 56, 202, 0.2);
+            }
+            
+            .right-label {
+                background: linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%);
+                color: #7c3aed;
+                border: 1px solid rgba(124, 58, 237, 0.2);
+            }
+            
+            .score-bar-track {
+                flex: 1;
+                height: 28px;
+                background: linear-gradient(145deg, #f1f3f6, #e2e6ea);
+                border-radius: 14px;
+                position: relative;
+                overflow: hidden;
+                box-shadow: 
+                    inset 0 2px 8px rgba(0, 0, 0, 0.08),
+                    inset 0 1px 4px rgba(0, 0, 0, 0.04);
+                border: 1px solid rgba(0, 0, 0, 0.04);
+            }
+            
+            .score-bar-center {
+                position: absolute;
+                left: 50%;
+                top: 0;
+                width: 3px;
+                height: 100%;
+                background: linear-gradient(180deg, #8e9aaf 0%, #6c757d 100%);
+                transform: translateX(-50%);
+                z-index: 2;
+                border-radius: 2px;
+                box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.3);
+            }
+            
+            .score-bar-fill {
+                height: 100%;
+                border-radius: 14px;
+                position: relative;
+                z-index: 1;
+                transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+                animation: fillAnimation 2s ease-in-out;
+                overflow: hidden;
+            }
+            
+            @keyframes fillAnimation {
+                0% { width: 50% !important; opacity: 0.5; }
+                50% { opacity: 0.8; }
+                100% { opacity: 1; }
+            }
+            
+            .score-bar-fill::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: linear-gradient(90deg, 
+                    rgba(255, 255, 255, 0.3) 0%, 
+                    rgba(255, 255, 255, 0.1) 50%, 
+                    rgba(255, 255, 255, 0.3) 100%);
+                animation: shimmer 3s infinite;
+            }
+            
+            @keyframes shimmer {
+                0% { transform: translateX(-100%); }
+                100% { transform: translateX(100%); }
+            }
+            
+            .score-bar-ab {
+                background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
+                box-shadow: 0 4px 16px rgba(99, 102, 241, 0.25);
+            }
+            
+            .score-bar-ri {
+                background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #9333ea 100%);
+                box-shadow: 0 4px 16px rgba(79, 70, 229, 0.25);
+            }
+            
+            .score-bar-st {
+                background: linear-gradient(135deg, #3730a3 0%, #5b21b6 50%, #7c2d92 100%);
+                box-shadow: 0 4px 16px rgba(55, 48, 163, 0.25);
+            }
+            
+            .score-bar-df {
+                background: linear-gradient(135deg, #1e40af 0%, #3730a3 50%, #581c87 100%);
+                box-shadow: 0 4px 16px rgba(30, 64, 175, 0.25);
+            }
+            
+            .score-bar-indicator {
+                position: absolute;
+                top: -8px;
+                width: 20px;
+                height: 44px;
+                background: linear-gradient(145deg, #2d3436, #636e72);
+                border-radius: 12px;
+                transform: translateX(-50%);
+                transition: left 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+                z-index: 4;
+                box-shadow: 
+                    0 8px 24px rgba(0, 0, 0, 0.2),
+                    0 4px 12px rgba(0, 0, 0, 0.15),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+                border: 2px solid rgba(255, 255, 255, 0.3);
+                animation: indicatorPulse 2s ease-in-out infinite;
+            }
+            
+            @keyframes indicatorPulse {
+                0%, 100% { 
+                    box-shadow: 
+                        0 8px 24px rgba(0, 0, 0, 0.2),
+                        0 4px 12px rgba(0, 0, 0, 0.15),
+                        0 0 0 0 rgba(255, 255, 255, 0.4);
+                }
+                50% { 
+                    box-shadow: 
+                        0 12px 32px rgba(0, 0, 0, 0.25),
+                        0 6px 16px rgba(0, 0, 0, 0.2),
+                        0 0 0 8px rgba(255, 255, 255, 0.1);
+                }
+            }
+            
+            .score-bar-indicator::before {
+                content: '';
+                position: absolute;
+                top: -12px;
+                left: 50%;
+                width: 0;
+                height: 0;
+                border-left: 10px solid transparent;
+                border-right: 10px solid transparent;
+                border-bottom: 12px solid #2d3436;
+                transform: translateX(-50%);
+                filter: drop-shadow(0 -2px 4px rgba(0, 0, 0, 0.2));
+            }
+            
+            .score-bar-indicator::after {
+                content: '';
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                width: 8px;
+                height: 8px;
+                background: radial-gradient(circle, #74b9ff 0%, #0984e3 100%);
+                border-radius: 50%;
+                transform: translate(-50%, -50%);
+                box-shadow: 0 0 12px rgba(116, 185, 255, 0.8);
+                animation: dotPulse 2s ease-in-out infinite;
+            }
+            
+            @keyframes dotPulse {
+                0%, 100% { transform: translate(-50%, -50%) scale(1); }
+                50% { transform: translate(-50%, -50%) scale(1.2); }
+            }
+            
+            .score-bar-result {
+                font-size: 15px;
+                text-align: center;
+                font-weight: 600;
+                padding: 12px 20px;
+                border-radius: 20px;
+                background: linear-gradient(145deg, #f8fafc, #e2e8f0);
+                border: 1px solid rgba(226, 232, 240, 0.8);
+                transition: all 0.3s ease;
+                animation: resultFadeIn 0.5s ease-out 1.5s both;
+            }
+            
+            @keyframes resultFadeIn {
+                from { 
+                    opacity: 0; 
+                    transform: translateY(10px); 
+                }
+                to { 
+                    opacity: 1; 
+                    transform: translateY(0); 
+                }
             }
             
             .confidence-section {
@@ -986,8 +1256,68 @@
                     grid-template-columns: repeat(2, 1fr);
                 }
                 
-                .score-grid {
-                    grid-template-columns: 1fr;
+                .score-bars {
+                    gap: 24px;
+                }
+                
+                .score-bar-item {
+                    padding: 24px 20px;
+                    border-radius: 20px;
+                }
+                
+                .score-bar-title {
+                    font-size: 16px;
+                    margin-bottom: 20px;
+                }
+                
+                .score-bar-container {
+                    gap: 12px;
+                    margin-bottom: 14px;
+                }
+                
+                .left-label, .right-label {
+                    font-size: 11px;
+                    min-width: 60px;
+                    padding: 6px 10px;
+                    border-radius: 12px;
+                }
+                
+                .score-bar-track {
+                    height: 24px;
+                    border-radius: 12px;
+                }
+                
+                .score-bar-center {
+                    width: 2px;
+                }
+                
+                .score-bar-fill {
+                    border-radius: 12px;
+                }
+                
+                .score-bar-indicator {
+                    width: 16px;
+                    height: 36px;
+                    top: -6px;
+                    border-radius: 10px;
+                }
+                
+                .score-bar-indicator::before {
+                    top: -10px;
+                    border-left: 8px solid transparent;
+                    border-right: 8px solid transparent;
+                    border-bottom: 10px solid #2d3436;
+                }
+                
+                .score-bar-indicator::after {
+                    width: 6px;
+                    height: 6px;
+                }
+                
+                .score-bar-result {
+                    font-size: 13px;
+                    padding: 10px 16px;
+                    border-radius: 16px;
                 }
                 
                 .result-buttons {
@@ -1061,40 +1391,76 @@
 						<w2:textbox class="result-type-desc" label="검증된 기술로 팀과 함께 견고한 기능을 구축하는 개발자" tagname="div"></w2:textbox>
 					</xf:group>
 
-					<xf:group class="score-section">
-						<w2:textbox class="score-title" label="상세 점수" tagname="div"></w2:textbox>
+					                    <xf:group class="score-section">
+                        <w2:textbox class="score-title" label="성향 분석 결과" tagname="div"></w2:textbox>
 
-						<xf:group class="score-grid">
-							<xf:group class="score-item">
-								<w2:textbox class="score-label" label="Builder ↔ Architect" tagname="div"></w2:textbox>
-								<w2:textbox class="score-ab" label="0점" tagname="div"></w2:textbox>
-								<w2:textbox class="ab-type" label="분석 중..." tagname="div"></w2:textbox>
-							</xf:group>
+                        <xf:group class="score-bars">
+                            <!-- Builder vs Architect -->
+                            <xf:group class="score-bar-item">
+                                <w2:textbox class="score-bar-title" label="개발 스타일" tagname="div"></w2:textbox>
+                                <xf:group class="score-bar-container">
+                                    <w2:textbox class="left-label" label="Builder" tagname="div"></w2:textbox>
+                                    <xf:group class="score-bar-track">
+                                        <w2:textbox class="score-bar-center" label="" tagname="div"></w2:textbox>
+                                        <w2:textbox class="score-bar-fill score-bar-ab" label="" tagname="div" style="width: 50%;"></w2:textbox>
+                                        <w2:textbox class="score-bar-indicator score-indicator-ab" label="" tagname="div" style="left: 50%;"></w2:textbox>
+                                    </xf:group>
+                                    <w2:textbox class="right-label" label="Architect" tagname="div"></w2:textbox>
+                                </xf:group>
+                                <w2:textbox class="score-bar-result ab-result" label="분석 중..." tagname="div"></w2:textbox>
+                            </xf:group>
 
-							<xf:group class="score-item">
-								<w2:textbox class="score-label" label="Refactor ↔ Innovate" tagname="div"></w2:textbox>
-								<w2:textbox class="score-ri" label="0점" tagname="div"></w2:textbox>
-								<w2:textbox class="ri-type" label="분석 중..." tagname="div"></w2:textbox>
-							</xf:group>
+                            <!-- Refactor vs Innovate -->
+                            <xf:group class="score-bar-item">
+                                <w2:textbox class="score-bar-title" label="기술 성향" tagname="div"></w2:textbox>
+                                <xf:group class="score-bar-container">
+                                    <w2:textbox class="left-label" label="Refactor" tagname="div"></w2:textbox>
+                                    <xf:group class="score-bar-track">
+                                        <w2:textbox class="score-bar-center" label="" tagname="div"></w2:textbox>
+                                        <w2:textbox class="score-bar-fill score-bar-ri" label="" tagname="div" style="width: 50%;"></w2:textbox>
+                                        <w2:textbox class="score-bar-indicator score-indicator-ri" label="" tagname="div" style="left: 50%;"></w2:textbox>
+                                    </xf:group>
+                                    <w2:textbox class="right-label" label="Innovate" tagname="div"></w2:textbox>
+                                </xf:group>
+                                <w2:textbox class="score-bar-result ri-result" label="분석 중..." tagname="div"></w2:textbox>
+                            </xf:group>
 
-							<xf:group class="score-item">
-								<w2:textbox class="score-label" label="Solo ↔ Team" tagname="div"></w2:textbox>
-								<w2:textbox class="score-st" label="0점" tagname="div"></w2:textbox>
-								<w2:textbox class="st-type" label="분석 중..." tagname="div"></w2:textbox>
-							</xf:group>
+                            <!-- Solo vs Team -->
+                            <xf:group class="score-bar-item">
+                                <w2:textbox class="score-bar-title" label="협업 방식" tagname="div"></w2:textbox>
+                                <xf:group class="score-bar-container">
+                                    <w2:textbox class="left-label" label="Solo" tagname="div"></w2:textbox>
+                                    <xf:group class="score-bar-track">
+                                        <w2:textbox class="score-bar-center" label="" tagname="div"></w2:textbox>
+                                        <w2:textbox class="score-bar-fill score-bar-st" label="" tagname="div" style="width: 50%;"></w2:textbox>
+                                        <w2:textbox class="score-bar-indicator score-indicator-st" label="" tagname="div" style="left: 50%;"></w2:textbox>
+                                    </xf:group>
+                                    <w2:textbox class="right-label" label="Team" tagname="div"></w2:textbox>
+                                </xf:group>
+                                <w2:textbox class="score-bar-result st-result" label="분석 중..." tagname="div"></w2:textbox>
+                            </xf:group>
 
-							<xf:group class="score-item">
-								<w2:textbox class="score-label" label="Debug ↔ Feature" tagname="div"></w2:textbox>
-								<w2:textbox class="score-df" label="0점" tagname="div"></w2:textbox>
-								<w2:textbox class="df-type" label="분석 중..." tagname="div"></w2:textbox>
-							</xf:group>
-						</xf:group>
+                            <!-- Debug vs Feature -->
+                            <xf:group class="score-bar-item">
+                                <w2:textbox class="score-bar-title" label="작업 선호" tagname="div"></w2:textbox>
+                                <xf:group class="score-bar-container">
+                                    <w2:textbox class="left-label" label="Debug" tagname="div"></w2:textbox>
+                                    <xf:group class="score-bar-track">
+                                        <w2:textbox class="score-bar-center" label="" tagname="div"></w2:textbox>
+                                        <w2:textbox class="score-bar-fill score-bar-df" label="" tagname="div" style="width: 50%;"></w2:textbox>
+                                        <w2:textbox class="score-bar-indicator score-indicator-df" label="" tagname="div" style="left: 50%;"></w2:textbox>
+                                    </xf:group>
+                                    <w2:textbox class="right-label" label="Feature" tagname="div"></w2:textbox>
+                                </xf:group>
+                                <w2:textbox class="score-bar-result df-result" label="분석 중..." tagname="div"></w2:textbox>
+                            </xf:group>
+                        </xf:group>
 
-						<xf:group class="confidence-section">
-							<w2:textbox class="confidence-label" label="분석 신뢰도" tagname="div"></w2:textbox>
-							<w2:textbox class="score-confidence" label="0%" tagname="div"></w2:textbox>
-						</xf:group>
-					</xf:group>
+                        <xf:group class="confidence-section">
+                            <w2:textbox class="confidence-label" label="분석 신뢰도" tagname="div"></w2:textbox>
+                            <w2:textbox class="score-confidence" label="0%" tagname="div"></w2:textbox>
+                        </xf:group>
+                    </xf:group>
 
 					<xf:group class="result-buttons">
 						<xf:trigger class="btn-restart" ev:onclick="scwin.btn_restart_onclick">
