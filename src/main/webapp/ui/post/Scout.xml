@@ -183,11 +183,6 @@
             			<w2:column dataType="text" name="유저 ID" id="accountId"></w2:column>
             		</w2:columnInfo>
             	</w2:dataList>
-            	<w2:dataList baseNode="list" repeatNode="map" id="dlt_accountIdVo" saveRemovedData="true">
-            		<w2:columnInfo>
-            			<w2:column dataType="text" name="유저_ID" id="accountId"></w2:column>
-            		</w2:columnInfo>
-            	</w2:dataList>
             	<w2:dataMap baseNode="map" id="dmp_scoutVo">
             		<w2:keyInfo>
             			<w2:key dataType="text" name="페이지_번호" id="pageIndex" defaultValue="1"></w2:key>
@@ -199,7 +194,8 @@
             	</w2:dataMap>
                 <w2:dataMap baseNode="map" id="dmp_scoutRequest">
                     <w2:keyInfo>
-                        <w2:key id="jobPostingId" name="공고_id" dataType="number"></w2:key>
+                        <w2:key id="jobPostingId" name="공고_id" dataType="text"></w2:key>
+                        <w2:key id="accountIdVo" name="유저_ID_VO_목록" dataType="other"></w2:key>
                     </w2:keyInfo>
                 </w2:dataMap>
             </w2:dataCollection>
@@ -207,7 +203,7 @@
                 target='data:json,[{"id":"dlt_scoutListVo","key":"elData.scoutDetailVo"}]' encoding="UTF-8" instance="" replace="" errorHandler="" customHandler="" mode="asynchronous" processMsg="매칭 유저 불러오는중.." ev:submit=""
                 ev:submitdone="scwin.sbm_scoutVo_submitdone" ev:submiterror="" abortTrigger="">
             </xf:submission>
-            <xf:submission id="sbm_scoutDevelopers" action="/InsWebApp/POS0006List.pwkjson" method="post" mediatype="application/json" ref='data:json,["dmp_scoutRequest",{"id":"dmp_scoutRequest","key":"scoutUserVo"},{"id":"dlt_accountIdVo","key":"accountIdVo"}]'
+            <xf:submission id="sbm_scoutDevelopers" action="/InsWebApp/POS0006List.pwkjson" method="post" mediatype="application/json" ref='data:json,{"id":"dmp_scoutRequest","key":"scoutUserVo"}'
                 encoding="UTF-8" instance="" replace="" errorHandler="" customHandler="" mode="asynchronous" processMsg="스카웃 제안을 보내는 중입니다..." ev:submitdone="scwin.sbm_scoutDevelopers_submitdone">
             </xf:submission>
         </xf:model>
@@ -276,7 +272,7 @@ scwin.getUserInfoByCookie = function () {
 }
 
 
-// 일괄 스카웃 제안
+// 일괄 스카웃 제안 - ApplicantManagement.xml 스타일로 단순화
 scwin.scoutSelected = function () {
     var checkedRows = gridView1.getCheckedJSON("chk");
     if (checkedRows.length === 0) {
@@ -284,17 +280,22 @@ scwin.scoutSelected = function () {
         return;
     }
 
-    // DataList 초기화
-    dlt_accountIdVo.removeAll();
-    
-    // 체크된 각 유저의 accountId를 DataList에 추가
-    for (var i = 0; i < checkedRows.length; i++) {
-        var row = dlt_accountIdVo.insertRow("last");
-        dlt_accountIdVo.setCellData(row, "accountId", checkedRows[i].accountId);
-    }
-    
+    // AccountIdVo 객체 배열 생성
+    var accountIdVoList = checkedRows.map(function(row) {
+        return { accountId: row.accountId };
+    });
+
     var jobPostingId = dmp_scoutVo.get("jobPostingId");
+
+    console.log("전송할 데이터:");
+    console.log("jobPostingId:", jobPostingId);
+    console.log("accountIdVoList:", accountIdVoList);
+
+    // dmp_scoutRequest에 데이터 설정
     dmp_scoutRequest.set("jobPostingId", jobPostingId);
+    dmp_scoutRequest.set("accountIdVo", accountIdVoList);
+
+    console.log("최종 전송 데이터:", dmp_scoutRequest.getJSON());
 
     $c.sbm.execute(sbm_scoutDevelopers);
 };
