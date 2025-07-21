@@ -171,23 +171,26 @@
 				ev:submitdone="scwin.onApplicantListLoad" ev:submiterror="" abortTrigger="">
 			</xf:submission>
 		</xf:model>
-		<script lazy="false" type="text/javascript"><![CDATA[scwin.onpageload = function () {
+		<script lazy="false" type="text/javascript"><![CDATA[
+scwin.onpageload = function () {
     var jobPostingId = null;
 
-    if (!jobPostingId) {
-        try {
-            var href = window.location.href;
-            var match = href.match(/[?&]jobPostingId=([^&]*)/);
-            if (match && match[1]) {
-                jobPostingId = decodeURIComponent(match[1]);
-            }
-        } catch (e) {
-            console.log("location.href 파싱 실패:", e);
+    try {
+        var href = window.location.href;
+        var match = href.match(/[?&]jobPostingId=([^&]*)/);
+        if (match && match[1]) {
+            jobPostingId = decodeURIComponent(match[1]);
         }
-    } else {
-        // 비정상적 접근. 이전페이지로 이동
+    } catch (e) {
+        console.log("location.href 파싱 실패:", e);
     }
+
+    if (!jobPostingId) {
+        // 비정상적 접근 처리
+    }
+
     dmp_applicantVo.set("jobPostingId", jobPostingId);
+    scwin.updateButtonStates(); // 페이지 로드 시 버튼 상태 초기화
     scwin.search();
 };
 
@@ -195,9 +198,18 @@ scwin.search = function () {
     $c.sbm.execute(sbm_applicantList);
 };
 
+scwin.updateButtonStates = function () {
+    var filterValue = statusFilter.getValue();
+    var isReviewStatus = (filterValue === '서류검토');
+
+    pass_btn.setDisabled(!isReviewStatus);
+    fail_btn.setDisabled(!isReviewStatus);
+};
+
 scwin.onStatusFilterChange = function (e) {
     dmp_applicantVo.set("applicationStatus", statusFilter.getValue());
     dmp_applicantVo.set("pageIndex", 1);
+    scwin.updateButtonStates(); // 필터 변경 시 즉시 버튼 상태 업데이트
     scwin.search();
 };
 
@@ -207,15 +219,22 @@ scwin.onPageChange = function (e) {
 };
 
 scwin.onApplicantListLoad = function (e) {
-    var sbm = e.target;
-    if (sbm.xhr.status == 200) {
-        var responseData = JSON.parse(sbm.xhr.responseText);
-        var totalCount = responseData.elData.totalCount;
-        pageList1.setTotalRowCount(totalCount);
+    if (e.status === 200) {
+        var responseData = e.responseJSON;
+        if (responseData && responseData.elData) {
+            var totalCount = responseData.elData.totalCount;
+            pageList1.setTotalRowCount(totalCount);
+        }
+        // 데이터 로드 후 버튼 상태를 다시 한 번 업데이트할 수 있습니다.
+        scwin.updateButtonStates();
     }
 };
 
 scwin.pass_btn_onclick = function (e) {
+    if (statusFilter.getValue() !== '서류검토') {
+        $c.win.alert("필터링 조건이 서류검토일 경우에만 사용가능합니다.");
+        return;
+    }
 
     var checkedData = gridView.getCheckedIndex("chk");
 
@@ -224,7 +243,6 @@ scwin.pass_btn_onclick = function (e) {
         return;
     }
 
-    // 선택된 지원자들의 정보 추출
     var emailInfoList = checkedData.map(function (rowIndex) {
         return {
             email: dlt_applicantVoList.getCellData(rowIndex, "email"),
@@ -241,12 +259,15 @@ scwin.pass_btn_onclick = function (e) {
         popupName: "합격 메일 보내기",
         modal: true
     }, {
-        selectedUsers: emailInfoList  // 데이터 전달
+        selectedUsers: emailInfoList
     });
-
-}
+};
 
 scwin.fail_btn_onclick = function (e) {
+    if (statusFilter.getValue() !== '서류검토') {
+        $c.win.alert("필터링 조건이 서류검토일 경우에만 사용가능합니다.");
+        return;
+    }
 
     var checkedData = gridView.getCheckedIndex("chk");
 
@@ -255,7 +276,6 @@ scwin.fail_btn_onclick = function (e) {
         return;
     }
 
-    // 선택된 지원자들의 정보 추출
     var emailInfoList = checkedData.map(function (rowIndex) {
         return {
             email: dlt_applicantVoList.getCellData(rowIndex, "email"),
@@ -264,7 +284,6 @@ scwin.fail_btn_onclick = function (e) {
         };
     });
 
-    // 팝업 생성 옵션
     $c.win.openPopup("FailEmail.xml", {
         id: "pop_failEmail",
         type: "wframePopup",
@@ -273,7 +292,7 @@ scwin.fail_btn_onclick = function (e) {
         popupName: "불합격 메일 보내기",
         modal: true
     }, {
-        selectedUsers: emailInfoList  // 데이터 전달
+        selectedUsers: emailInfoList
     });
 };
 ]]></script>
