@@ -1117,7 +1117,6 @@ scwin.sbm_selectPostingList_submitdone = function (e) {
 			<!-- 점수매칭 섹션 -->
 			<xf:group class="section section-white" tagname="section">
 				<w2:textbox class="section-title" label="점수매칭"></w2:textbox>
-				<w2:textbox class="section-subtitle" label="접수 구직자: 120,739명"></w2:textbox>
 
 				<xf:group class="cards-container">
 					<!-- 카드 1: 튜토리얼 -->
