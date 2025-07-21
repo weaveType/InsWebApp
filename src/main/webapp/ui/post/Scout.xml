@@ -189,24 +189,34 @@
             			<w2:key dataType="text" name="페이지_건수" id="pageSize" defaultValue="10"></w2:key>
             			<w2:key dataType="text" name="공고_id" id="jobPostingId"></w2:key>
             			<w2:key dataType="text" name="스카웃_상태" id="scoutStatus" defaultValue="NOT_SCOUTED"></w2:key>
+            			<w2:key dataType="text" name="Mbti_필터" id="mbtiMatchFilter"></w2:key>
             		</w2:keyInfo>
             	</w2:dataMap>
+                <w2:dataMap baseNode="map" id="dmp_scoutRequest">
+                    <w2:keyInfo>
+                        <w2:key id="jobPostingId" name="공고_id" dataType="text"></w2:key>
+                        <w2:key id="accountIdVo" name="유저_ID_VO_목록" dataType="other"></w2:key>
+                    </w2:keyInfo>
+                </w2:dataMap>
             </w2:dataCollection>
             <xf:submission id="sbm_selectScoutVo" action="/InsWebApp/US0003List.pwkjson" method="post" mediatype="application/json" ref='data:json,{"id":"dmp_scoutVo","key":"scoutVo"}'
                 target='data:json,[{"id":"dlt_scoutListVo","key":"elData.scoutDetailVo"}]' encoding="UTF-8" instance="" replace="" errorHandler="" customHandler="" mode="asynchronous" processMsg="매칭 유저 불러오는중.." ev:submit=""
                 ev:submitdone="scwin.sbm_scoutVo_submitdone" ev:submiterror="" abortTrigger="">
             </xf:submission>
+            <xf:submission id="sbm_scoutDevelopers" action="/InsWebApp/POS0006List.pwkjson" method="post" mediatype="application/json" ref='data:json,{"id":"dmp_scoutRequest","key":"scoutUserVo"}'
+                encoding="UTF-8" instance="" replace="" errorHandler="" customHandler="" mode="asynchronous" processMsg="스카웃 제안을 보내는 중입니다..." ev:submitdone="scwin.sbm_scoutDevelopers_submitdone">
+            </xf:submission>
         </xf:model>
         <script lazy="false" type="text/javascript"><![CDATA[scwin.onpageload = function () {
     // 회사 아이디로 유저 불러오기
     scwin.getJobPostingId();
-    
+
     // 스카웃 상태 필터 기본값 설정
     scoutStatusFilter.setValue("NOT_SCOUTED");
 };
 
 // 파라미터로 postId 받기
-scwin.getJobPostingId = function(){
+scwin.getJobPostingId = function () {
     var jobPostingId = scwin.getUrlParameter("jobPostingId");
 
     if (!jobPostingId) {
@@ -221,21 +231,26 @@ scwin.getJobPostingId = function(){
 };
 
 // URL 파라미터 추출
-scwin.getUrlParameter = function(name) {
+scwin.getUrlParameter = function (name) {
     const regex = new RegExp("[?&]" + name + "=([^&#]*)");
     const results = regex.exec(window.location.href);
     return results ? decodeURIComponent(results[1]) : null;
 };
 
 // 스카웃 상태 필터 변경 이벤트
-scwin.onScoutStatusFilterChange = function(e) {
+scwin.onScoutStatusFilterChange = function (e) {
     var selectedStatus = scoutStatusFilter.getValue();
     dmp_scoutVo.set("scoutStatus", selectedStatus);
     dmp_scoutVo.set("pageIndex", 1); // 페이지를 처음으로 리셋
     $c.sbm.execute(sbm_selectScoutVo);
-    
-    // 총 개발자 수 업데이트
-    scwin.updateTotalCount();
+
+    if (selectedStatus === 'NOT_SCOUTED') {
+        scout_all_btn.setDisabled(false);
+        scout_all_btn.setStyle("background-color", "#28a745");
+    } else {
+        scout_all_btn.setDisabled(true);
+        scout_all_btn.setStyle("background-color", "#cccccc");
+    }
 };
 
 
@@ -257,14 +272,38 @@ scwin.getUserInfoByCookie = function () {
 }
 
 
-// 총 개발자 수
-scwin.updateTotalCount = function () {
+// 일괄 스카웃 제안 - ApplicantManagement.xml 스타일로 단순화
+scwin.scoutSelected = function () {
+    var checkedRows = gridView1.getCheckedJSON("chk");
+    if (checkedRows.length === 0) {
+        alert("스카웃할 개발자를 선택해주세요.");
+        return;
+    }
 
+    // AccountIdVo 객체 배열 생성
+    var accountIdVoList = checkedRows.map(function(row) {
+        return { accountId: row.accountId };
+    });
+
+    var jobPostingId = dmp_scoutVo.get("jobPostingId");
+
+    console.log("전송할 데이터:");
+    console.log("jobPostingId:", jobPostingId);
+    console.log("accountIdVoList:", accountIdVoList);
+
+    // dmp_scoutRequest에 데이터 설정
+    dmp_scoutRequest.set("jobPostingId", jobPostingId);
+    dmp_scoutRequest.set("accountIdVo", accountIdVoList);
+
+    console.log("최종 전송 데이터:", dmp_scoutRequest.getJSON());
+
+    $c.sbm.execute(sbm_scoutDevelopers);
 };
 
-// 일괄 스카웃 제안
-scwin.scoutSelected = function () {
-
+scwin.sbm_scoutDevelopers_submitdone = function(e) {
+    alert("스카웃 제안이 성공적으로 전송되었습니다.");
+    // 성공 후 그리드 및 관련 데이터 새로고침
+    $c.sbm.execute(sbm_selectScoutVo);
 };
 
 // 그리드 체크박스 변경
@@ -291,8 +330,8 @@ scwin.w2selectbox_disabled_onselected = function () {
     // 쿠키에서 userMbti 가져오기
     var userInfoCookie = WebSquare.cookie.getCookie("userInfo");
     if (!userInfoCookie) {
-         alert("로그인 후 사용가능한 기능입니다.");
-        return; // 함수 종료
+        alert("로그인 후 사용가능한 기능입니다.");
+        $p.url("../commom/MainPage.xml");
     }
 
     var userInfo;
@@ -322,6 +361,7 @@ scwin.w2selectbox_disabled_onselected = function () {
 scwin.sbm_scoutVo_submitdone = function (e) {
 
 };
+
 ]]></script>
     </head>
     <body ev:onpageload="scwin.onpageload">
@@ -370,7 +410,7 @@ scwin.sbm_scoutVo_submitdone = function (e) {
                         <xf:select1 id="w2selectbox_disabled" chooseOption=""
                             style="width: 180px;height: 32px;"
                             submenuSize="auto" allOption="" disabled="false" direction="auto" appearance="minimal" disabledClass="w2selectbox_disabled"
-                            chooseOptionLabel="모든 MBTI" ref="" ev:onselected="scwin.w2selectbox_disabled_onselected" class="SelectBox">
+                            chooseOptionLabel="모든 MBTI" ref="" ev:onselected="scwin.w2selectbox_disabled_onselected" class="SelectBox" ev:onchange="scwin.w2selectbox_disabled_onchange">
                             <xf:choices>
                                 <xf:item>
                                     <xf:label><![CDATA[모든 MBTI]]></xf:label>
@@ -405,8 +445,8 @@ scwin.sbm_scoutVo_submitdone = function (e) {
 
                     <xf:group class="button-group" style="display:flex; align-items:center; gap:10px;">
                         <xf:trigger class="btn-scout-all"
-                            style="background-color:#28a745; color:white; border:none; padding:8px 16px; border-radius:4px; margin-right:10px;"
-                            type="button" id="scout_all_btn" ev:onclick="scwin.scoutSelected">
+                            style='background-color:#cccccc'
+                            type="button" id="scout_all_btn" ev:onclick="scwin.scoutSelected" disabled="true">
                             <xf:label><![CDATA[일괄 스카웃 제안]]></xf:label>
                         </xf:trigger>
                     </xf:group>
@@ -426,7 +466,7 @@ scwin.sbm_scoutVo_submitdone = function (e) {
             		<w2:caption id="caption2" style="" value="this is a grid caption."></w2:caption>
             		<w2:header id="header2" style="">
             			<w2:row id="row3" style="">
-            				<w2:column displayMode="label" id="chk3" inputType="checkbox" readOnly="false" style="height: 40px;"
+            				<w2:column displayMode="label" id="chk" inputType="checkbox" readOnly="false" style="height: 40px;"
             					value="체크박스" width="70">
             				</w2:column>
             				<w2:column displayMode="label" id="column24" inputType="text" style="" value="ID" width="70"></w2:column>

@@ -25,6 +25,12 @@ public class ScoutVo extends com.demo.proworks.cmmn.ProworksCommVO {
     @ElDtoField(logicalName = "스카웃_상태", physicalName = "scoutStatus", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
     private String scoutStatus;
 
+    @ElDtoField(logicalName = "기업_mbti", physicalName = "companyMbti", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private String companyMbti;
+
+    @ElDtoField(logicalName = "mbti_필터", physicalName = "mbtiMatchFilter", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private String mbtiMatchFilter;
+
     @ElVoField(physicalName = "pageIndex")
     public long getPageIndex(){
         return pageIndex;
@@ -57,12 +63,35 @@ public class ScoutVo extends com.demo.proworks.cmmn.ProworksCommVO {
 
     @ElVoField(physicalName = "scoutStatus")
     public String getScoutStatus(){
-        return scoutStatus;
+        String ret = this.scoutStatus;
+        return ret;
     }
 
     @ElVoField(physicalName = "scoutStatus")
     public void setScoutStatus(String scoutStatus){
         this.scoutStatus = scoutStatus;
+    }
+
+    @ElVoField(physicalName = "companyMbti")
+    public String getCompanyMbti(){
+        String ret = this.companyMbti;
+        return ret;
+    }
+
+    @ElVoField(physicalName = "companyMbti")
+    public void setCompanyMbti(String companyMbti){
+        this.companyMbti = companyMbti;
+    }
+
+    @ElVoField(physicalName = "mbtiMatchFilter")
+    public String getMbtiMatchFilter(){
+        String ret = this.mbtiMatchFilter;
+        return ret;
+    }
+
+    @ElVoField(physicalName = "mbtiMatchFilter")
+    public void setMbtiMatchFilter(String mbtiMatchFilter){
+        this.mbtiMatchFilter = mbtiMatchFilter;
     }
 
     @Override
@@ -72,7 +101,9 @@ public class ScoutVo extends com.demo.proworks.cmmn.ProworksCommVO {
         sb.append("pageIndex").append("=").append(pageIndex).append(",");
         sb.append("pageSize").append("=").append(pageSize).append(",");
         sb.append("jobPostingId").append("=").append(jobPostingId).append(",");
-        sb.append("scoutStatus").append("=").append(scoutStatus);
+        sb.append("scoutStatus").append("=").append(scoutStatus).append(",");
+        sb.append("companyMbti").append("=").append(companyMbti).append(",");
+        sb.append("mbtiMatchFilter").append("=").append(mbtiMatchFilter);
         sb.append("]");
         return sb.toString();
 

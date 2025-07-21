@@ -11,6 +11,7 @@ import com.demo.proworks.domain.post.vo.MainPostingListVo;
 import com.demo.proworks.domain.post.vo.MainPostingVo;
 import com.demo.proworks.domain.post.vo.PostMatchVo;
 import com.demo.proworks.domain.post.vo.PostVo;
+import com.demo.proworks.domain.post.vo.ScoutUserVo;
 import com.demo.proworks.domain.post.vo.TechStackVo;
 import com.demo.proworks.domain.post.dao.PostDAO;
 
@@ -159,6 +160,10 @@ public class PostDAO extends com.demo.proworks.cmmn.dao.ProworksDefaultAbstractD
 		return (String) selectByPk("com.demo.proworks.domain.post.selectCompanyIdByUserId", userId);
 	}
 
+	public String selectPreferredDeveloperTypesByPostId(int jobPostingId) throws ElException {
+		return (String) selectByPk("com.demo.proworks.domain.post.selectPreferredDeveloperTypesByPostId", jobPostingId);
+	}
+
 	public List<PostVo> findPostsByMbti(PostMatchVo postMatchVo) throws ElException {
 		return (List<PostVo>) list("com.demo.proworks.domain.post.findPostsByMbti", postMatchVo);
 	}
@@ -205,4 +210,15 @@ public class PostDAO extends com.demo.proworks.cmmn.dao.ProworksDefaultAbstractD
 	public List<MainPostingVo> selectPostingList() throws Exception {
 		return (List<MainPostingVo>) list("com.demo.proworks.domain.post.selectPostingList");
 	}
+
+	/**
+	 * 기업이 스카웃한 유저를 저장한다. 
+	 *
+	 * @param vo 스카웃 정보
+	 * @throws ElException
+	 */
+	public void insertScoutRequest(ScoutUserVo vo) throws ElException {
+		insert("com.demo.proworks.domain.post.insertScoutRequest", vo);
+	}
+
 }
