@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.demo.proworks.cmmn.ProworksUserHeader;
 import com.demo.proworks.domain.post.service.PostService;
 import com.demo.proworks.domain.post.vo.PostVo;
+import com.demo.proworks.domain.post.vo.ScoutUserVo;
 import com.demo.proworks.domain.post.vo.SendEmailInfoListVo;
 import com.demo.proworks.domain.post.vo.SendEmailVo;
 import com.demo.proworks.domain.post.vo.JobApplicationVo;
@@ -639,4 +640,17 @@ public class PostController {
 	}
 
 	// 공고 이미지 업로드 - WebSquare 기본 업로드 시스템 사용 (기업 업로드 방식과 동일)
+	
+	/**
+	 * 기업이 스카웃한 유저를 저장한다.
+	 * ㅣ@param sendEmailVo 합불여부, 메일 전송할 email, 메일 내용
+	 * @return 기술스택 목록 조회 결과
+	 * @throws Exception
+	 */
+	@ElService(key = "POS0004List")
+	@RequestMapping(value = "POS0004List")
+	@ElDescription(sub = "스카웃 유저 저장", desc = "기업이 스카웃한 유저를 저장한다")
+	public void selectScoutUserList(ScoutUserVo scoutUserVo) throws Exception {
+		postService.selectScoutUserList(scoutUserVo);
+	}
 }

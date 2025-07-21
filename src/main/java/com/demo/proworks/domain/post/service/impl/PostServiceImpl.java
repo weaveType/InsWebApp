@@ -15,6 +15,7 @@ import com.demo.proworks.domain.post.service.PostService;
 import com.demo.proworks.domain.post.vo.JobApplicationVo;
 import com.demo.proworks.domain.post.vo.PostMatchVo;
 import com.demo.proworks.domain.post.vo.PostVo;
+import com.demo.proworks.domain.post.vo.ScoutUserVo;
 import com.demo.proworks.domain.post.vo.TechStackVo;
 import com.demo.proworks.domain.post.vo.MainPostingListVo;
 import com.demo.proworks.domain.post.vo.MainPostingVo;
@@ -435,8 +436,17 @@ public class PostServiceImpl implements PostService {
 		List<MainPostingVo> resultList = postDAO.selectPostingList();
 		MainPostingListVo resultVo = new MainPostingListVo();
 		resultVo.setMainPostingVo(resultList);
-		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> resultList" + resultList);
 		return resultVo;
+	}
+
+	/**
+	 * 기업이 스카웃한 유저를 저장한다.
+	 * 
+	 * @param jobPostingId 공고 ID, accountIds 스카웃 된 User ID List
+	 * @throws Exception
+	 */
+	public void selectScoutUserList(ScoutUserVo scoutUserVo) throws Exception {
+		postDAO.selectScoutUserList(scoutUserVo);
 	}
 
 }

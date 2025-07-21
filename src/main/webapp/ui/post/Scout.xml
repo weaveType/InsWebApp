@@ -192,10 +192,19 @@
             			<w2:key dataType="text" name="Mbti_필터" id="mbtiMatchFilter"></w2:key>
             		</w2:keyInfo>
             	</w2:dataMap>
+                <w2:dataMap baseNode="map" id="dmp_scoutRequest">
+                    <w2:keyInfo>
+                        <w2:key id="jobPostingId" name="공고_id" dataType="text"></w2:key>
+                        <w2:key id="accountIds" name="유저_ID_목록" dataType="text"></w2:key>
+                    </w2:keyInfo>
+                </w2:dataMap>
             </w2:dataCollection>
             <xf:submission id="sbm_selectScoutVo" action="/InsWebApp/US0003List.pwkjson" method="post" mediatype="application/json" ref='data:json,{"id":"dmp_scoutVo","key":"scoutVo"}'
                 target='data:json,[{"id":"dlt_scoutListVo","key":"elData.scoutDetailVo"}]' encoding="UTF-8" instance="" replace="" errorHandler="" customHandler="" mode="asynchronous" processMsg="매칭 유저 불러오는중.." ev:submit=""
                 ev:submitdone="scwin.sbm_scoutVo_submitdone" ev:submiterror="" abortTrigger="">
+            </xf:submission>
+            <xf:submission id="sbm_scoutDevelopers" action="/InsWebApp/POS0003LIST.pwkjson" method="post" mediatype="application/json" ref='data:json,{"id":"dmp_scoutRequest","key":"scoutRequestVo"}'
+                encoding="UTF-8" instance="" replace="" errorHandler="" customHandler="" mode="asynchronous" processMsg="스카웃 제안을 보내는 중입니다..." ev:submitdone="scwin.sbm_scoutDevelopers_submitdone">
             </xf:submission>
         </xf:model>
         <script lazy="false" type="text/javascript"><![CDATA[scwin.onpageload = function () {
@@ -265,7 +274,28 @@ scwin.getUserInfoByCookie = function () {
 
 // 일괄 스카웃 제안
 scwin.scoutSelected = function () {
+    var checkedRows = gridView1.getCheckedJSON("chk");
+    if (checkedRows.length === 0) {
+        alert("스카웃할 개발자를 선택해주세요.");
+        return;
+    }
 
+    var accountIds = checkedRows.map(function(row) {
+        return row.accountId;
+    });
+    console.log(accountIds.join(','));
+    var jobPostingId = dmp_scoutVo.get("jobPostingId");
+
+    dmp_scoutRequest.set("jobPostingId", jobPostingId);
+    dmp_scoutRequest.set("accountIds", accountIds.join(','));
+
+    $c.sbm.execute(sbm_scoutDevelopers);
+};
+
+scwin.sbm_scoutDevelopers_submitdone = function(e) {
+    alert("스카웃 제안이 성공적으로 전송되었습니다.");
+    // 성공 후 그리드 및 관련 데이터 새로고침
+    $c.sbm.execute(sbm_selectScoutVo);
 };
 
 // 그리드 체크박스 변경
@@ -428,7 +458,7 @@ scwin.sbm_scoutVo_submitdone = function (e) {
             		<w2:caption id="caption2" style="" value="this is a grid caption."></w2:caption>
             		<w2:header id="header2" style="">
             			<w2:row id="row3" style="">
-            				<w2:column displayMode="label" id="chk3" inputType="checkbox" readOnly="false" style="height: 40px;"
+            				<w2:column displayMode="label" id="chk" inputType="checkbox" readOnly="false" style="height: 40px;"
             					value="체크박스" width="70">
             				</w2:column>
             				<w2:column displayMode="label" id="column24" inputType="text" style="" value="ID" width="70"></w2:column>

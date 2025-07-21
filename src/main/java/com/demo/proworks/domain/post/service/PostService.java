@@ -6,6 +6,7 @@ import com.demo.proworks.domain.post.vo.JobApplicationVo;
 import com.demo.proworks.domain.post.vo.MainPostingListVo;
 import com.demo.proworks.domain.post.vo.PostMatchVo;
 import com.demo.proworks.domain.post.vo.PostVo;
+import com.demo.proworks.domain.post.vo.ScoutUserVo;
 import com.demo.proworks.domain.post.vo.SendEmailVo;
 import com.demo.proworks.domain.post.vo.TechStackVo;
 
@@ -162,4 +163,13 @@ public interface PostService {
 	 * @throws Exception
 	 */
 	public MainPostingListVo selectPostingList() throws Exception;
+
+	/**
+	 * 기업이 스카웃한 유저를 저장한다.
+	 * 
+	 * @param jobPostingId 공고 ID, accountIds 스카웃 된 User ID List
+	 * @return 기술스택 목록 조회 결과
+	 * @throws Exception
+	 */
+	public void selectScoutUserList(ScoutUserVo scoutUserVo) throws Exception;
 }
