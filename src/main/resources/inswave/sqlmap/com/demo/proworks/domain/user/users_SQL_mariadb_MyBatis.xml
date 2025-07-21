@@ -262,7 +262,7 @@ SELECT
     u.name AS name,
     ui.career AS career,
     ui.current_position AS currentPosition,
-    GROUP_CONCAT(CONCAT(tsr.tech_stack_id, ':', ts.tech_stack_name) SEPARATOR ', ') AS techStack,
+    GROUP_CONCAT(ts.tech_stack_name SEPARATOR ', ') AS techStack,
     umt.type_code AS typeCode,
     ui.resume_file_name AS resumeFileName,
     ja.application_status AS applicationStatus,
