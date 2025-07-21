@@ -235,8 +235,13 @@ scwin.onScoutStatusFilterChange = function (e) {
     dmp_scoutVo.set("pageIndex", 1); // 페이지를 처음으로 리셋
     $c.sbm.execute(sbm_selectScoutVo);
 
-    // 총 개발자 수 업데이트
-    scwin.updateTotalCount();
+    if (selectedStatus === 'NOT_SCOUTED') {
+        scout_all_btn.setDisabled(false);
+        scout_all_btn.setStyle("background-color", "#28a745");
+    } else {
+        scout_all_btn.setDisabled(true);
+        scout_all_btn.setStyle("background-color", "#cccccc");
+    }
 };
 
 
@@ -257,11 +262,6 @@ scwin.getUserInfoByCookie = function () {
     return userInfo;
 }
 
-
-// 총 개발자 수
-scwin.updateTotalCount = function () {
-
-};
 
 // 일괄 스카웃 제안
 scwin.scoutSelected = function () {
@@ -407,8 +407,8 @@ scwin.sbm_scoutVo_submitdone = function (e) {
 
                     <xf:group class="button-group" style="display:flex; align-items:center; gap:10px;">
                         <xf:trigger class="btn-scout-all"
-                            style="background-color:#28a745; color:white; border:none; padding:8px 16px; border-radius:4px; margin-right:10px;"
-                            type="button" id="scout_all_btn" ev:onclick="scwin.scoutSelected">
+                            style='background-color:#cccccc'
+                            type="button" id="scout_all_btn" ev:onclick="scwin.scoutSelected" disabled="true">
                             <xf:label><![CDATA[일괄 스카웃 제안]]></xf:label>
                         </xf:trigger>
                     </xf:group>
