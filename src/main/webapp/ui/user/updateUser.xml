@@ -108,6 +108,13 @@
                 target='data:json,{"id":"dlt_techStackOptions", "key":"techStackVoList"}' encoding="UTF-8" instance="" replace="" errorHandler=""
                 customHandler="" mode="asynchronous" processMsg="기술스택 조회중" ev:submitdone="scwin.sbm_selectTechStackList_submitdone" ev:submiterror="scwin.sbm_selectTechStackList_submiterror" abortTrigger="">
             </xf:submission>
+            
+            <!-- 이력서 삭제 submission 추가 -->
+            <xf:submission id="sbm_deleteResume" action="/InsWebApp/USDeleteResume.pwkjson" method="post" mediatype="application/json"
+                ref='data:json,{"id":"dma_userInfoVo", "key":"accountId"}' encoding="UTF-8" instance="" replace="" errorHandler=""
+                customHandler="" mode="asynchronous" processMsg="이력서 삭제 중..." 
+                ev:submit="" ev:submitdone="scwin.sbm_deleteResume_submitdone" ev:submiterror="scwin.sbm_deleteResume_submiterror" abortTrigger="">
+            </xf:submission>
         </xf:model>
         <w2:layoutInfo />
         <w2:publicInfo method="" />
@@ -829,10 +836,23 @@ scwin.btn_uploadResume_onclick = function(e) {
 
 // 이력서 삭제 버튼 클릭
 scwin.btn_deleteResume_onclick = function(e) {
-    if (confirm("이력서 파일을 삭제하시겠습니까?")) {
-        // 이력서 파일명 초기화
-        dma_userInfoVo.set("resume_file_name", "");
-        ibx_resumeFileName.setValue("");
+    try {
+        // 이력서가 있는지 확인
+        var resumeFileName = dma_userInfoVo.get("resume_file_name");
+        
+        if (!resumeFileName) {
+            alert("삭제할 이력서 파일이 없습니다.");
+            return;
+        }
+        
+        if (confirm("이력서 파일을 삭제하시겠습니까?\n삭제 시 실제 파일도 함께 삭제됩니다.")) {
+            // 서버에 이력서 삭제 요청 전송
+            console.log("이력서 삭제 요청 전송:", dma_userInfoVo.get("accountId"));
+            $c.sbm.execute($p, sbm_deleteResume);
+        }
+    } catch (e) {
+        console.error("이력서 삭제 요청 중 오류:", e);
+        alert("이력서 삭제 처리 중 오류가 발생했습니다.");
     }
 };
 
@@ -967,6 +987,47 @@ scwin.sbm_uploadResume_submitdone = function(e) {
 scwin.sbm_uploadResume_submiterror = function(e) {
     alert("이력서 업로드에 실패했습니다.");
     console.error("이력서 업로드 오류:", e);
+};
+
+// 이력서 삭제 완료 핸들러
+scwin.sbm_deleteResume_submitdone = function(e) {
+    try {
+        var res = e.responseJSON;
+        if (res && res.result === "success") {
+            console.log("이력서 삭제 성공:", res);
+            alert("이력서가 성공적으로 삭제되었습니다.");
+            
+            // 이력서 파일명 초기화
+            dma_userInfoVo.set("resume_file_name", "");
+            ibx_resumeFileName.setValue("");
+            
+            // 이벤트 리스너 초기화 (PDF 뷰어 비활성화)
+            var resumeFileNameInput = document.getElementById(ibx_resumeFileName.getID());
+            if (resumeFileNameInput) {
+                resumeFileNameInput.style.cursor = "default";
+                resumeFileNameInput.style.color = "";
+                resumeFileNameInput.style.textDecoration = "none";
+                resumeFileNameInput.title = "";
+                resumeFileNameInput._pdfViewerEnabled = false;
+                
+                // 기존 클릭 이벤트 리스너 제거
+                var newElement = resumeFileNameInput.cloneNode(true);
+                resumeFileNameInput.parentNode.replaceChild(newElement, resumeFileNameInput);
+            }
+        } else {
+            console.error("이력서 삭제 실패:", res);
+            alert(res.message || "이력서 삭제에 실패했습니다.");
+        }
+    } catch (e) {
+        console.error("sbm_deleteResume_submitdone 오류:", e);
+        alert("이력서 삭제 처리 중 오류가 발생했습니다.");
+    }
+};
+
+// 이력서 삭제 오류 핸들러
+scwin.sbm_deleteResume_submiterror = function(e) {
+    console.error("이력서 삭제 오류:", e);
+    alert("이력서 삭제에 실패했습니다.");
 };
 
 // PDF 뷰어 활성화 함수 추가
