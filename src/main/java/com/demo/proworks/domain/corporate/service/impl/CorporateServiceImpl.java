@@ -12,6 +12,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
 import com.demo.proworks.domain.corporate.service.CorporateService;
+import com.demo.proworks.domain.corporate.vo.CorporateListVo;
 import com.demo.proworks.domain.corporate.vo.CorporateMainListVo;
 import com.demo.proworks.domain.corporate.vo.CorporateSearchVo;
 import com.demo.proworks.domain.corporate.vo.CorporateVo;
@@ -54,10 +55,16 @@ public class CorporateServiceImpl implements CorporateService {
 	 * @return 회사정보 목록 List<CorporateVo>
 	 * @throws Exception
 	 */
-	public List<CorporateVo> selectListCorporate(CorporateVo corporateVo) throws Exception {
+	public CorporateListVo selectListCorporate(CorporateVo corporateVo) throws Exception {
 		List<CorporateVo> list = corporateDAO.selectListCorporate(corporateVo);
+		long totCnt = corporateDAO.selectListCountCorporate(corporateVo);
 
-		return list;
+		CorporateListVo retCorporateList = new CorporateListVo();
+		retCorporateList.setCorporateVoList(list);
+		retCorporateList.setTotalCount(totCnt);
+		retCorporateList.setPageSize(corporateVo.getPageSize());
+		retCorporateList.setPageIndex(corporateVo.getPageIndex());
+		return retCorporateList;
 	}
 
 	/**
@@ -200,6 +207,7 @@ public class CorporateServiceImpl implements CorporateService {
 	 * @throws Exception
 	 */
 	public CorporateMainListVo selectCorporateMainList(CorporateSearchVo vo) throws Exception {
+		vo.setOffset((vo.getPageIndex() - 1) * vo.getPageSize());
 		CorporateMainListVo resultVO = new CorporateMainListVo();
 		resultVO.setCorporateMainVo(corporateDAO.selectCorporateMainList(vo));
 		long totalCnt = corporateDAO.selectListCountCorporate(vo); // DAO 안에서 selectOne 사용
@@ -217,8 +225,8 @@ public class CorporateServiceImpl implements CorporateService {
 	 * @throws Exception
 	 */
 	public Long getCompanyIdByUserId(int userId) throws Exception {
-	return corporateDAO.getCompanyIdByUserId(userId);
-	
+		return corporateDAO.getCompanyIdByUserId(userId);
+
 	}
 
 }

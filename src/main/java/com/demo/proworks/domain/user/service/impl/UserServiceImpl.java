@@ -308,11 +308,11 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public ScoutListVo getScoutUsersByPostId(ScoutVo scoutVo) throws Exception {
 		List<ScoutDetailVo> detailList = userDAO.getScoutUsersByPostId(scoutVo);
-		int totalCount = userDAO.getScoutUserCount(scoutVo);
+//		int totalCount = userDAO.getScoutUserCount(scoutVo);
 
 		ScoutListVo resultVo = new ScoutListVo();
 		resultVo.setScoutDetailVo(detailList);
-		resultVo.setTotalCount(totalCount);
+//		resultVo.setTotalCount(totalCount);
 		resultVo.setPageIndex(scoutVo.getPageIndex());
 		resultVo.setPageSize(scoutVo.getPageSize());
 

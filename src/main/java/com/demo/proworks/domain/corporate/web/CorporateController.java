@@ -53,16 +53,7 @@ public class CorporateController {
 	@ElDescription(sub = "회사정보 목록조회", desc = "페이징을 처리하여 회사정보 목록 조회를 한다.")
 	public CorporateListVo selectListCorporate(CorporateVo corporateVo) throws Exception {
 
-		List<CorporateVo> corporateList = corporateService.selectListCorporate(corporateVo);
-		long totCnt = corporateService.selectListCountCorporate(corporateVo);
-
-		CorporateListVo retCorporateList = new CorporateListVo();
-		retCorporateList.setCorporateVoList(corporateList);
-		retCorporateList.setTotalCount(totCnt);
-		retCorporateList.setPageSize(corporateVo.getPageSize());
-		retCorporateList.setPageIndex(corporateVo.getPageIndex());
-
-		return retCorporateList;
+		return corporateService.selectListCorporate(corporateVo);
 	}
 
 	/**
@@ -76,9 +67,7 @@ public class CorporateController {
 	@RequestMapping(value = "CP0001UpdView")
 	@ElDescription(sub = "회사정보 갱신 폼을 위한 조회", desc = "회사정보 갱신 폼을 위한 조회를 한다.")
 	public CorporateVo selectCorporate(CorporateVo corporateVo) throws Exception {
-		CorporateVo selectCorporateVo = corporateService.selectCorporate(corporateVo);
-
-		return selectCorporateVo;
+		return corporateService.selectCorporate(corporateVo);
 	}
 
 	/**

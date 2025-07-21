@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.demo.proworks.common.vo.EmailVo;
+import com.demo.proworks.domain.corporate.vo.CorporateListVo;
 import com.demo.proworks.domain.corporate.vo.CorporateMainListVo;
 import com.demo.proworks.domain.corporate.vo.CorporateSearchVo;
 import com.demo.proworks.domain.corporate.vo.CorporateVo;
@@ -29,7 +30,7 @@ public interface CorporateService {
 	 * @return 회사정보 목록 List<CorporateVo>
 	 * @throws Exception
 	 */
-	public List<CorporateVo> selectListCorporate(CorporateVo corporateVo) throws Exception;
+	public CorporateListVo selectListCorporate(CorporateVo corporateVo) throws Exception;
 
 	/**
 	 * 조회한 회사정보 전체 카운트

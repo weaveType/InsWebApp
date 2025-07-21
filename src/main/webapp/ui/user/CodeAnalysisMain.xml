@@ -1,52 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<html xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:ev="http://www.w3.org/2001/xml-events"
-    xmlns:w2="http://www.inswave.com/websquare" 
-    xmlns:xf="http://www.w3.org/2002/xforms">
-    
-    <head meta_screenName="weaveType 코드 분석">
-        <w2:type>COMPONENT</w2:type>
-        <w2:buildDate/>
-        <w2:MSA/>
-        <xf:model>
-            <w2:dataCollection baseNode="map">
-                <w2:dataMap baseNode="map" id="dma_codeFiles">
-                    <w2:keyInfo>
-                        <w2:key id="modelFile" name="모델파일" dataType="text" value=""></w2:key>
-                        <w2:key id="controllerFile" name="컨트롤러파일" dataType="text" value=""></w2:key>
-                        <w2:key id="serviceFile" name="서비스파일" dataType="text" value=""></w2:key>
-                        <w2:key id="repositoryFile" name="레포지토리파일" dataType="text" value=""></w2:key>
-                        <w2:key id="modelFileName" name="모델파일명" dataType="text" value=""></w2:key>
-                        <w2:key id="controllerFileName" name="컨트롤러파일명" dataType="text" value=""></w2:key>
-                        <w2:key id="serviceFileName" name="서비스파일명" dataType="text" value=""></w2:key>
-                        <w2:key id="repositoryFileName" name="레포지토리파일명" dataType="text" value=""></w2:key>
-                    </w2:keyInfo>
-                </w2:dataMap>
-            </w2:dataCollection>
-            <w2:workflowCollection></w2:workflowCollection>
-            <xf:submission id="sbm_codeAnalyze" 
-                ref='data:json,{"id":"dma_codeFiles"}' 
-                target="" 
-                action="/InsWebApp/CA0001Analyze.pwkjson" 
-                method="post"
-                mediatype="application/json" 
-                encoding="UTF-8" 
-                instance="" 
-                replace="" 
-                errorHandler="" 
-                customHandler="" 
-                mode="asynchronous"
-                processMsg="코드 분석 중입니다..." 
-                ev:submit="" 
-                ev:submitdone="scwin.sbm_codeAnalyze_submitdone" 
-                ev:submiterror="scwin.sbm_codeAnalyze_submiterror" 
-                abortTrigger="">
-            </xf:submission>
-        </xf:model>
-        <w2:layoutInfo/>
-        <w2:publicInfo method=""/>
-        
-        <script type="text/javascript"><![CDATA[
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare"
+	xmlns:xf="http://www.w3.org/2002/xforms">
+
+	<head meta_screenName="weaveType 코드 분석">
+		<w2:type>COMPONENT</w2:type>
+		<w2:buildDate />
+		<w2:MSA />
+		<xf:model>
+			<w2:dataCollection baseNode="map">
+				<w2:dataMap baseNode="map" id="dma_codeFiles">
+					<w2:keyInfo>
+						<w2:key id="modelFile" name="모델파일" dataType="text" value=""></w2:key>
+						<w2:key id="controllerFile" name="컨트롤러파일" dataType="text" value=""></w2:key>
+						<w2:key id="serviceFile" name="서비스파일" dataType="text" value=""></w2:key>
+						<w2:key id="repositoryFile" name="레포지토리파일" dataType="text" value=""></w2:key>
+						<w2:key id="modelFileName" name="모델파일명" dataType="text" value=""></w2:key>
+						<w2:key id="controllerFileName" name="컨트롤러파일명" dataType="text" value=""></w2:key>
+						<w2:key id="serviceFileName" name="서비스파일명" dataType="text" value=""></w2:key>
+						<w2:key id="repositoryFileName" name="레포지토리파일명" dataType="text" value=""></w2:key>
+					</w2:keyInfo>
+				</w2:dataMap>
+			</w2:dataCollection>
+			<w2:workflowCollection></w2:workflowCollection>
+			<xf:submission id="sbm_codeAnalyze" ref='data:json,{"id":"dma_codeFiles"}' target=""
+				action="/InsWebApp/CA0001Analyze.pwkjson" method="post" mediatype="application/json" encoding="UTF-8" instance="" replace=""
+				errorHandler="" customHandler="" mode="asynchronous" processMsg="코드 분석 중입니다..." ev:submit=""
+				ev:submitdone="scwin.sbm_codeAnalyze_submitdone" ev:submiterror="scwin.sbm_codeAnalyze_submiterror" abortTrigger="">
+			</xf:submission>
+		</xf:model>
+		<w2:layoutInfo />
+		<w2:publicInfo method="" />
+
+		<script type="text/javascript"><![CDATA[
             // 업로드된 파일들을 저장할 전역 변수
             scwin.uploadedFiles = [];
             
@@ -334,7 +319,7 @@
                         '</div>' +
                         '<div class="file-actions">' +
                             '<button class="btn-change-type" type="button" title="파일 타입 변경">' +
-                                '<span class="change-icon">🔄</span>' +
+                                '<span class="change-icon">������</span>' +
                             '</button>' +
                             '<button class="btn-remove" type="button" title="파일 삭제">' +
                                 '<span class="remove-icon">❌</span>' +
@@ -691,8 +676,8 @@
                 location.href = "/InsWebApp/websquare/websquare.html?w2xPath=/InsWebApp/ui/user/UserDetail.xml";
             };
         ]]></script>
-        
-        <style type="text/css"><![CDATA[
+
+		<style type="text/css"><![CDATA[
             .main-container {
                 background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
                 min-height: 100vh;
@@ -1151,95 +1136,99 @@
                 }
             }
         ]]></style>
-    </head>
-    
-    <body ev:onpageload="scwin.onpageload">
-        <w2:wframe src="../common/Header.xml" id="headerFrame" />
-        <xf:group class="main-container">
-            <xf:group class="content-area">
-                <!-- 업로드 섹션 -->
-                <xf:group class="upload-section">
-                <xf:group class="page-header">
-                        <w2:textbox class="main-title" label="다양한 언어의 코드를 분석해드립니다" tagname="h1"></w2:textbox>
-                        <w2:textbox class="sub-title" label="Java, Python, JavaScript 등 어떤 언어든 분석 가능합니다" tagname="p"></w2:textbox>
-                </xf:group>
-                
-                <xf:group class="info-box">
-                        <w2:textbox class="info-text" label="💡 다양한 언어 지원, 여러 파일 동시 업로드, 파일당 최대 50KB, 드래그 앤 드롭 지원" tagname="p"></w2:textbox>
-                </xf:group>
-                
-                    <!-- 멀티 파일 업로드 영역 -->
-                    <xf:group class="upload-container">
-                        <xf:group class="upload-area" ev:onclick="scwin.handleUploadAreaClick()">
-                            <w2:textbox class="upload-icon" label="📁" tagname="div"></w2:textbox>
-                            <w2:textbox class="upload-title" label="코드 파일 업로드" tagname="div"></w2:textbox>
-                            <w2:textbox class="upload-description" label="여러 파일을 선택하거나 드래그 앤 드롭으로 업로드하세요" tagname="div"></w2:textbox>
-                            <xf:trigger class="upload-button">
-                                <xf:label>파일 선택</xf:label>
-                            </xf:trigger>
-                            <input type="file" id="multiFileInput" class="file-input-hidden" multiple accept=".java,.js,.ts,.py,.cpp,.c,.cs,.php,.rb,.go,.kt,.swift,.scala,.rs,.jsx,.tsx,.vue,.html,.css,.scss,.sass,.sql,.json,.xml,.yaml,.yml,.sh,.bat,.ps1,.r,.m,.pl,.lua,.dart" />
-                    </xf:group>
-                    </xf:group>
-                    
-                    <!-- 파일 목록 표시 영역 -->
-                    <xf:group class="file-list-container">
-                        <w2:textbox class="file-list-title" label="업로드된 파일 목록" tagname="div"></w2:textbox>
-                        <xf:group class="file-list">
-                            <w2:textbox class="no-files" label="업로드된 파일이 없습니다" tagname="div"></w2:textbox>
-                    </xf:group>
-                </xf:group>
-                
-                <xf:group class="action-buttons">
-                    <xf:trigger class="btn-next" ev:onclick="scwin.btn_next_onclick">
-                        <xf:label>다음</xf:label>
-                    </xf:trigger>
-                    </xf:group>
-                </xf:group>
-                
-                <!-- 결과 섹션 -->
-                <xf:group class="result-section" style="display: none;">
-                    <xf:group class="result-header">
-                        <w2:textbox class="result-title" label="분석 결과" tagname="h1"></w2:textbox>
-                        <w2:textbox class="result-subtitle" label="당신의 weaveType은..." tagname="p"></w2:textbox>
-                    </xf:group>
-                    
-                    <xf:group class="result-card">
-                        <w2:textbox class="result-type-code" label="AR" tagname="div"></w2:textbox>
-                        <w2:textbox class="result-type-name" label="개선형 아키텍트" tagname="div"></w2:textbox>
-                        <w2:textbox class="result-type-desc" label="기존 코드를 체계적으로 개선하고 최적화하는 개발자" tagname="div"></w2:textbox>
-                        <w2:textbox class="result-language" label="Detected Language: Unknown" tagname="div" style="font-size: 16px; color: #666; margin-bottom: 16px;"></w2:textbox>
-                    </xf:group>
-                    
-                    <xf:group class="score-section">
-                        <w2:textbox class="score-title" label="상세 점수" tagname="div"></w2:textbox>
-                        
-                        <xf:group class="score-grid">
-                            <xf:group class="score-item">
-                                <w2:textbox class="score-label" label="개발 스타일" tagname="div"></w2:textbox>
-                                <w2:textbox class="score-development-style" label="0점" tagname="div"></w2:textbox>
-                                <w2:textbox class="development-style-type" label="분석 중..." tagname="div" style="font-size: 12px; color: #666; margin-top: 4px;"></w2:textbox>
-                            </xf:group>
-                            
-                            <xf:group class="score-item">
-                                <w2:textbox class="score-label" label="개발자 선호도" tagname="div"></w2:textbox>
-                                <w2:textbox class="score-developer-preference" label="0점" tagname="div"></w2:textbox>
-                                <w2:textbox class="developer-preference-type" label="분석 중..." tagname="div" style="font-size: 12px; color: #666; margin-top: 4px;"></w2:textbox>
-                            </xf:group>
-                        </xf:group>
-                        
-                        <xf:group class="confidence-section">
-                            <w2:textbox class="confidence-label" label="분석 신뢰도" tagname="div"></w2:textbox>
-                            <w2:textbox class="score-confidence" label="0%" tagname="div"></w2:textbox>
-                        </xf:group>
-                    </xf:group>
-                    
-                    <xf:group class="result-buttons">
-                        <xf:trigger class="btn-restart" ev:onclick="scwin.goToUserDetail">
-                            <xf:label>프로필로 이동</xf:label>
-                        </xf:trigger>
-                    </xf:group>
-                </xf:group>
-            </xf:group>
-        </xf:group>
-    </body>
+	</head>
+
+	<body ev:onpageload="scwin.onpageload">
+		<w2:wframe src="../common/Header.xml" id="headerFrame" />
+		<xf:group class="main-container">
+			<xf:group class="content-area">
+				<!-- 업로드 섹션 -->
+				<xf:group class="upload-section">
+					<xf:group class="page-header">
+						<w2:textbox class="main-title" label="다양한 언어의 코드를 분석해드립니다" tagname="h1"></w2:textbox>
+						<w2:textbox class="sub-title" label="Java, Python, JavaScript 등 어떤 언어든 분석 가능합니다" tagname="p"></w2:textbox>
+					</xf:group>
+
+					<xf:group class="info-box">
+						<w2:textbox class="info-text" label="💡 다양한 언어 지원, 여러 파일 동시 업로드, 파일당 최대 50KB, 드래그 앤 드롭 지원" tagname="p"></w2:textbox>
+					</xf:group>
+
+					<!-- 멀티 파일 업로드 영역 -->
+					<xf:group class="upload-container">
+						<xf:group class="upload-area" ev:onclick="scwin.handleUploadAreaClick()">
+							<w2:textbox class="upload-icon" label="📁" tagname="div"></w2:textbox>
+							<w2:textbox class="upload-title" label="코드 파일 업로드" tagname="div"></w2:textbox>
+							<w2:textbox class="upload-description" label="여러 파일을 선택하거나 드래그 앤 드롭으로 업로드하세요" tagname="div"></w2:textbox>
+							<xf:trigger class="upload-button">
+								<xf:label>파일 선택</xf:label>
+							</xf:trigger>
+							<input type="file" id="multiFileInput" class="file-input-hidden" multiple="multiple"
+								accept=".java,.js,.ts,.py,.cpp,.c,.cs,.php,.rb,.go,.kt,.swift,.scala,.rs,.jsx,.tsx,.vue,.html,.css,.scss,.sass,.sql,.json,.xml,.yaml,.yml,.sh,.bat,.ps1,.r,.m,.pl,.lua,.dart" />
+						</xf:group>
+					</xf:group>
+
+					<!-- 파일 목록 표시 영역 -->
+					<xf:group class="file-list-container">
+						<w2:textbox class="file-list-title" label="업로드된 파일 목록" tagname="div"></w2:textbox>
+						<xf:group class="file-list">
+							<w2:textbox class="no-files" label="업로드된 파일이 없습니다" tagname="div"></w2:textbox>
+						</xf:group>
+					</xf:group>
+
+					<xf:group class="action-buttons">
+						<xf:trigger class="btn-next" ev:onclick="scwin.btn_next_onclick">
+							<xf:label>다음</xf:label>
+						</xf:trigger>
+					</xf:group>
+				</xf:group>
+
+				<!-- 결과 섹션 -->
+				<xf:group class="result-section" style="display: none;">
+					<xf:group class="result-header">
+						<w2:textbox class="result-title" label="분석 결과" tagname="h1"></w2:textbox>
+						<w2:textbox class="result-subtitle" label="당신의 weaveType은..." tagname="p"></w2:textbox>
+					</xf:group>
+
+					<xf:group class="result-card">
+						<w2:textbox class="result-type-code" label="AR" tagname="div"></w2:textbox>
+						<w2:textbox class="result-type-name" label="개선형 아키텍트" tagname="div"></w2:textbox>
+						<w2:textbox class="result-type-desc" label="기존 코드를 체계적으로 개선하고 최적화하는 개발자" tagname="div"></w2:textbox>
+						<w2:textbox class="result-language" label="Detected Language: Unknown" tagname="div"
+							style="font-size: 16px; color: #666; margin-bottom: 16px;"></w2:textbox>
+					</xf:group>
+
+					<xf:group class="score-section">
+						<w2:textbox class="score-title" label="상세 점수" tagname="div"></w2:textbox>
+
+						<xf:group class="score-grid">
+							<xf:group class="score-item">
+								<w2:textbox class="score-label" label="개발 스타일" tagname="div"></w2:textbox>
+								<w2:textbox class="score-development-style" label="0점" tagname="div"></w2:textbox>
+								<w2:textbox class="development-style-type" label="분석 중..." tagname="div"
+									style="font-size: 12px; color: #666; margin-top: 4px;"></w2:textbox>
+							</xf:group>
+
+							<xf:group class="score-item">
+								<w2:textbox class="score-label" label="개발자 선호도" tagname="div"></w2:textbox>
+								<w2:textbox class="score-developer-preference" label="0점" tagname="div"></w2:textbox>
+								<w2:textbox class="developer-preference-type" label="분석 중..." tagname="div"
+									style="font-size: 12px; color: #666; margin-top: 4px;"></w2:textbox>
+							</xf:group>
+						</xf:group>
+
+						<xf:group class="confidence-section">
+							<w2:textbox class="confidence-label" label="분석 신뢰도" tagname="div"></w2:textbox>
+							<w2:textbox class="score-confidence" label="0%" tagname="div"></w2:textbox>
+						</xf:group>
+					</xf:group>
+
+					<xf:group class="result-buttons">
+						<xf:trigger class="btn-restart" ev:onclick="scwin.goToUserDetail">
+							<xf:label>프로필로 이동</xf:label>
+						</xf:trigger>
+					</xf:group>
+				</xf:group>
+			</xf:group>
+		</xf:group>
+	</body>
 </html> 
