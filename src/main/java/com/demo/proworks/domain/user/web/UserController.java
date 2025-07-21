@@ -4,12 +4,15 @@ import java.util.List;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -50,6 +53,8 @@ import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.JsonNode;
+import java.util.Enumeration;
+import java.util.regex.Pattern;
 
 /**
  * @subject : 일반회원 관련 처리를 담당하는 컨트롤러
@@ -66,6 +71,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 public class UserController {
 
 	private static final int BCRYPT_ROUNDS = 12;
+	
+	// 파일 업로드 관련 상수
+	private static final String UPLOAD_ROOT_DIR = "C:/upload";
+	private static final String PROFILE_UPLOAD_DIR = "/images/profile";
+	private static final String RESUME_UPLOAD_DIR = "/resume";
+	private static final long MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
 	/** UserService */
 	@Resource(name = "userServiceImpl")
@@ -1359,6 +1370,142 @@ public class UserController {
 	}
 
 	/**
+	 * 이력서 PDF 파일을 업로드한다.
+	 * 
+	 * @param request MultipartHttpServletRequest
+	 * @return 업로드 결과
+	 * @throws Exception
+	 */
+	@ElService(key = "USUploadResume")
+	@RequestMapping(value = { "USUploadResume", "USUploadResume.pwkjson" })
+	@ElDescription(sub = "이력서 업로드", desc = "사용자의 이력서 PDF 파일을 업로드하고 서버에 저장한다.")
+	public Map<String, Object> uploadResumeFile(MultipartHttpServletRequest request) throws Exception {
+		System.out.println("=== ProWorks5 이력서 업로드 요청 시작 ===");
+
+		Map<String, Object> result = new HashMap<>();
+
+		try {
+			// 사용자 ID 가져오기 - ProworksUserHeader 사용
+			ProworksUserHeader userHeader = null;
+			try {
+				userHeader = (ProworksUserHeader) ControllerContextUtil.getUserHeader();
+			} catch (Exception e) {
+				System.out.println("사용자 헤더 조회 중 오류: " + e.getMessage());
+			}
+			
+			// 헤더가 없는 경우 파라미터에서 확인 (폼 전송 방식 지원)
+			int userId;
+			if (userHeader != null) {
+				userId = userHeader.getAccountId();
+				System.out.println("사용자 헤더에서 가져온 사용자 ID: " + userId);
+			} else {
+				String userIdStr = request.getParameter("userId");
+				if (userIdStr == null || userIdStr.trim().isEmpty()) {
+					throw new IllegalArgumentException("사용자 ID가 필요합니다.");
+				}
+				userId = Integer.parseInt(userIdStr);
+				System.out.println("파라미터에서 가져온 사용자 ID: " + userId);
+			}
+
+			// 업로드된 파일 추출
+			MultipartFile file = request.getFile("resumeFile");
+			if (file == null || file.isEmpty()) {
+				throw new IllegalArgumentException("업로드할 파일이 없습니다.");
+			}
+
+			// 파일 유효성 검사
+			String originalFileName = file.getOriginalFilename();
+			String contentType = file.getContentType();
+			long fileSize = file.getSize();
+
+			System.out.println("업로드 파일 정보:");
+			System.out.println("- 원본 파일명: " + originalFileName);
+			System.out.println("- Content Type: " + contentType);
+			System.out.println("- 파일 크기: " + fileSize + " bytes");
+
+			// PDF 파일 검증 (확장자 및 MIME 타입 확인)
+			String fileExt = "";
+			if (originalFileName != null && originalFileName.lastIndexOf(".") > -1) {
+				fileExt = originalFileName.substring(originalFileName.lastIndexOf(".") + 1).toLowerCase();
+			}
+			
+			boolean isPdfByExt = "pdf".equals(fileExt);
+			boolean isPdfByMime = (contentType != null) && (contentType.toLowerCase().contains("pdf"));
+			
+			if (!isPdfByExt && !isPdfByMime) {
+				throw new IllegalArgumentException("PDF 파일만 업로드 가능합니다.");
+			}
+
+			// 파일 크기 검사 (5MB)
+			if (fileSize > MAX_FILE_SIZE) {
+				throw new IllegalArgumentException("파일 크기는 5MB 이하여야 합니다.");
+			}
+
+			// 저장 디렉토리 설정 (톰캣 서버 내부 경로)
+			String uploadDir = request.getSession().getServletContext().getRealPath(RESUME_UPLOAD_DIR);
+			System.out.println("===== 업로드 디렉토리 경로 상세 정보 =====");
+			System.out.println("getRealPath(\"" + RESUME_UPLOAD_DIR + "\"): " + uploadDir);
+			System.out.println("ServletContext 경로: " + request.getSession().getServletContext().getContextPath());
+			System.out.println("작업 디렉토리: " + System.getProperty("user.dir"));
+			System.out.println("==========================================");
+
+			// 사용자별 디렉토리 생성 
+			String userDirPath = uploadDir + "/" + userId;
+			File userDir = new File(userDirPath);
+			if (!userDir.exists()) {
+				boolean success = userDir.mkdirs();
+				if(!success) {
+					System.out.println("디렉토리 생성 실패: " + userDirPath);
+				} else {
+					System.out.println("사용자 디렉토리 생성 성공: " + userDirPath);
+				}
+			}
+
+			// 저장할 파일명 생성 (사용자ID_타임스탬프.pdf)
+			String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+			String savedFileName = userId + "_" + timestamp + ".pdf";
+			File savedFile = new File(userDir, savedFileName);
+
+			// 파일 저장
+			try {
+				file.transferTo(savedFile);
+				System.out.println("파일 저장 완료: " + savedFile.getAbsolutePath());
+			} catch (Exception e) {
+				System.out.println("파일 저장 실패: " + e.getMessage());
+				throw e;
+			}
+			
+			// 상대 경로 저장 (데이터베이스에 저장하기 위한 경로)
+			String relativePath = RESUME_UPLOAD_DIR + "/" + userId + "/" + savedFileName;
+			
+			System.out.println("파일 저장 완료: " + savedFile.getAbsolutePath());
+			System.out.println("상대 경로: " + relativePath);
+
+			// 사용자 정보 업데이트 (resume_file_name 필드)
+			UserVo userVo = new UserVo();
+			userVo.setUserId(userId);
+			userVo.setResumeFileName(relativePath);
+			
+			// 사용자 정보 업데이트
+			userService.updateResumeFileName(userVo);
+			
+			// 결과 반환 - 경로 대신 원본 파일명만 반환
+			result.put("result", "success");
+			result.put("fileName", relativePath); // DB에 저장된 경로는 그대로 전달 (클라이언트에서 가공)
+			result.put("originalFileName", originalFileName); // 원본 파일명 추가
+			result.put("message", "이력서가 성공적으로 업로드되었습니다.");
+			
+		} catch (IllegalArgumentException e) {
+			System.out.println("이력서 업로드 유효성 검사 오류: " + e.getMessage());
+			result.put("result", "fail");
+			result.put("message", e.getMessage());
+		} catch (Exception e) {
+			System.out.println("이력서 업로드 처리 중 오류 발생: " + e.getMessage());
+			e.printStackTrace();
+			result.put("result", "fail");
+			result.put("message", "이력서 업로드 중 오류가 발생했습니다.");
+		}
+		
 	 * 사용자의 지원현황 목록을 조회한다.
 	 *
 	 * @param applicationHistoryVo 지원현황 조회 조건
@@ -1397,6 +1544,214 @@ public class UserController {
 	}
 
 	/**
+	 * 이력서 PDF 파일을 조회한다.
+	 * 
+	 * @param request HttpServletRequest
+	 * @param response HttpServletResponse
+	 * @throws Exception
+	 */
+	@ElService(key = "USViewResume")
+	@RequestMapping(value = { "USViewResume", "USViewResume.pwkjson" })
+	@ElDescription(sub = "이력서 조회", desc = "사용자의 이력서 PDF 파일을 조회한다.")
+	public void viewResumeFile(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		System.out.println("=== ProWorks5 이력서 조회 요청 시작 ===");
+		
+		InputStream inputStream = null;
+		OutputStream outputStream = null;
+		
+		try {
+			// 요청 파라미터 확인
+			String filePath = request.getParameter("filePath");
+			
+			// 파라미터 유효성 검사
+			if (filePath == null || filePath.trim().isEmpty()) {
+				response.sendError(HttpServletResponse.SC_BAD_REQUEST, "파일 경로가 필요합니다.");
+				return;
+			}
+			
+			// 파일 경로 확인 및 보안 검사
+			if (!filePath.startsWith(RESUME_UPLOAD_DIR)) {
+				System.out.println("잘못된 파일 경로: " + filePath);
+				response.sendError(HttpServletResponse.SC_BAD_REQUEST, "잘못된 파일 경로입니다.");
+				return;
+			}
+			
+			// 파일 경로에서 상대 경로만 추출
+			if (filePath.startsWith("/")) {
+				filePath = filePath.substring(1);
+			}
+			
+			// 실제 파일 경로 생성
+			String realPath = request.getSession().getServletContext().getRealPath(filePath);
+			File file = new File(realPath);
+			
+			// 파일 존재 여부 확인
+			if (!file.exists() || !file.isFile()) {
+				System.out.println("파일을 찾을 수 없음: " + realPath);
+				response.sendError(HttpServletResponse.SC_NOT_FOUND, "파일을 찾을 수 없습니다.");
+				return;
+			}
+			
+			// 파일 유형 및 헤더 설정
+			response.setContentType("application/pdf");
+			response.setHeader("Content-Disposition", "inline; filename=\"resume.pdf\"");
+			response.setHeader("Content-Length", String.valueOf(file.length()));
+			
+			// 파일 전송
+			inputStream = new FileInputStream(file);
+			outputStream = response.getOutputStream();
+			
+			byte[] buffer = new byte[8192];
+			int bytesRead;
+			while ((bytesRead = inputStream.read(buffer)) != -1) {
+				outputStream.write(buffer, 0, bytesRead);
+			}
+			
+			System.out.println("이력서 파일 전송 완료: " + filePath);
+		} catch (Exception e) {
+			System.out.println("이력서 조회 중 오류 발생: " + e.getMessage());
+			e.printStackTrace();
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "파일을 처리하는 중 오류가 발생했습니다.");
+		} finally {
+			// 리소스 정리
+			if (inputStream != null) {
+				try { inputStream.close(); } catch (Exception e) {}
+			}
+			if (outputStream != null) {
+				try { outputStream.close(); } catch (Exception e) {}
+			}
+		}
+	}
+	
+	/**
+	 * 이력서 PDF 파일 정보를 조회한다.
+	 * 
+	 * @param request HttpServletRequest
+	 * @return 이력서 파일 정보
+	 * @throws Exception
+	 */
+	@ElService(key = "USGetResumeInfo")
+	@RequestMapping(value = { "USGetResumeInfo", "USGetResumeInfo.pwkjson" })
+	@ElDescription(sub = "이력서 정보 조회", desc = "사용자의 이력서 PDF 파일 정보를 조회한다.")
+	public Map<String, Object> getResumeInfo(HttpServletRequest request) throws Exception {
+		System.out.println("=== ProWorks5 이력서 정보 조회 요청 시작 ===");
+		
+		Map<String, Object> result = new HashMap<>();
+		
+		try {
+			// 사용자 ID 가져오기 - URL 파라미터에서 확인
+			int userId = 0;
+			String userIdParam = request.getParameter("userId");
+			
+			if (userIdParam != null && !userIdParam.trim().isEmpty()) {
+				try {
+					userId = Integer.parseInt(userIdParam);
+					System.out.println("파라미터에서 가져온 사용자 ID: " + userId);
+				} catch (NumberFormatException e) {
+					throw new IllegalArgumentException("유효하지 않은 사용자 ID 형식입니다: " + userIdParam);
+				}
+			} else {
+				// POST 요청 본문에서도 확인 시도
+				try {
+					BufferedReader reader = request.getReader();
+					StringBuilder sb = new StringBuilder();
+					String line;
+					while ((line = reader.readLine()) != null) {
+						sb.append(line);
+					}
+					String body = sb.toString();
+					System.out.println("요청 본문: " + body);
+					
+					// JSON 형태인지 확인하고 파싱 시도 (간소화된 방식)
+					if (body != null && !body.trim().isEmpty() && body.contains("userId")) {
+						String userIdStart = "\"userId\"";
+						int startIdx = body.indexOf(userIdStart);
+						if (startIdx > 0) {
+							int valueStart = body.indexOf(":", startIdx);
+							if (valueStart > 0) {
+								int valueEnd = body.indexOf(",", valueStart);
+								if (valueEnd < 0) valueEnd = body.indexOf("}", valueStart);
+								if (valueEnd > 0) {
+									String value = body.substring(valueStart + 1, valueEnd).trim();
+									// 숫자만 추출
+									value = value.replaceAll("[^0-9]", "");
+									if (!value.isEmpty()) {
+										userId = Integer.parseInt(value);
+										System.out.println("요청 본문에서 가져온 사용자 ID: " + userId);
+									}
+								}
+							}
+						}
+				}
+			} catch (Exception e) {
+					System.out.println("요청 본문 처리 중 예외 발생: " + e.getMessage());
+					// 요청 본문 처리 중 예외가 발생해도 계속 진행
+				}
+			}
+			
+			// 사용자 ID가 없는 경우 오류 반환
+			if (userId == 0) {
+				throw new IllegalArgumentException("사용자 ID가 필요합니다. URL 파라미터로 userId를 전달해 주세요.");
+			}
+			
+			// 사용자 정보 조회
+			UserInfoVo userInfoVo = new UserInfoVo();
+			userInfoVo.setAccountId(userId);
+			UserInfoVo userInfo = userService.selectUserDetail(userInfoVo);
+			
+			if (userInfo == null) {
+				throw new IllegalArgumentException("사용자 ID " + userId + "에 대한 정보를 찾을 수 없습니다.");
+			}
+			
+			String resumeFileName = userInfo.getResumeFileName();
+			System.out.println("사용자 " + userId + "의 이력서 파일명: " + (resumeFileName != null ? resumeFileName : "없음"));
+			
+			// 이력서 파일 정보 설정
+			if (resumeFileName != null && !resumeFileName.trim().isEmpty()) {
+				// 파일 경로에서 파일명 추출
+				String fileName = resumeFileName;
+				if (resumeFileName.contains("/")) {
+					fileName = resumeFileName.substring(resumeFileName.lastIndexOf("/") + 1);
+				}
+				
+				// 원본 파일명 생성 (userId_timestamp.pdf 형식에서 timestamp.pdf 형식으로)
+				String displayName = fileName;
+				if (fileName.contains("_")) {
+					displayName = fileName.substring(fileName.indexOf("_") + 1);
+				}
+				
+				// 결과 설정 (필수 필드만 포함)
+				result.put("result", "success");
+				result.put("hasResume", true);
+				result.put("resumeFileName", resumeFileName);
+				result.put("displayName", "이력서_" + displayName);
+				result.put("viewUrl", request.getContextPath() + "/USViewResume.pwkjson?filePath=" + resumeFileName);
+				
+				System.out.println("이력서 정보 조회 성공");
+			} else {
+				result.put("result", "success");
+				result.put("hasResume", false);
+				result.put("message", "등록된 이력서가 없습니다.");
+				
+				System.out.println("이력서가 등록되지 않은 사용자");
+			}
+			
+		} catch (IllegalArgumentException e) {
+			System.out.println("이력서 정보 조회 유효성 검사 오류: " + e.getMessage());
+			result.put("result", "fail");
+			result.put("message", e.getMessage());
+		} catch (Exception e) {
+			System.out.println("이력서 정보 조회 중 오류 발생: " + e.getMessage());
+			e.printStackTrace();
+			result.put("result", "fail");
+			result.put("message", "이력서 정보 조회 중 서버 오류가 발생했습니다: " + e.getMessage());
+		}
+		
+		System.out.println("=== ProWorks5 이력서 정보 조회 요청 종료 ===");
+		System.out.println("응답 결과: " + result);
+		return result;
+   
+   /*
 	 * 지원현황 상세정보를 조회한다.
 	 *
 	 * @param applicationHistoryVo 지원현황 조회 조건

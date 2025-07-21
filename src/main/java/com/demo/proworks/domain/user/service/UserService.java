@@ -199,6 +199,15 @@ public interface UserService {
 	 * @throws Exception
 	 */
 	public MatchingCheckedVo selectMatchingChecked(MatchingCheckedVo matchingCheckedVo) throws Exception;
+	
+	/**
+	 * 사용자의 이력서 파일명을 업데이트한다.
+	 *
+	 * @param userVo 사용자 정보 UserVo (userId와 resumeFileName 필드 필수)
+	 * @return 업데이트 결과 (성공 시 1, 실패 시 0)
+	 * @throws Exception
+	 */
+	public int updateResumeFileName(UserVo userVo) throws Exception;
 
 	/**
 	 * 지원현황 목록을 조회한다.
