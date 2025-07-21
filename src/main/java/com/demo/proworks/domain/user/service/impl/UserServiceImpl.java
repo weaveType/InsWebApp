@@ -19,6 +19,7 @@ import com.demo.proworks.domain.user.vo.UserVo;
 import com.demo.proworks.domain.user.vo.ApplicationHistoryVo;
 import com.demo.proworks.common.enumType.DevMbti;
 import com.demo.proworks.domain.user.dao.UserDAO;
+import com.demo.proworks.domain.post.dao.PostDAO;
 import org.mindrot.jbcrypt.BCrypt;
 
 /**
@@ -37,6 +38,9 @@ public class UserServiceImpl implements UserService {
 
 	@Resource(name = "userDAO")
 	private UserDAO userDAO;
+
+	@Resource(name = "postDAO")
+	private PostDAO postDAO;
 
 	@Resource(name = "messageSource")
 	private MessageSource messageSource;
@@ -307,7 +311,8 @@ public class UserServiceImpl implements UserService {
 	 */
 	@Override
 	public ScoutListVo getScoutUsersByPostId(ScoutVo scoutVo) throws Exception {
-	System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Scouto : " + scoutVo.toString());
+		String preferredDeveloperTypes = postDAO.selectPreferredDeveloperTypesByPostId(scoutVo.getJobPostingId());
+		scoutVo.setUserMbti(preferredDeveloperTypes);
 		List<ScoutDetailVo> detailList = userDAO.getScoutUsersByPostId(scoutVo);
 		int totalCount = userDAO.getScoutUserCount(scoutVo);
 

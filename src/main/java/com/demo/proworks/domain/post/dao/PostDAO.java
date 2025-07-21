@@ -159,6 +159,10 @@ public class PostDAO extends com.demo.proworks.cmmn.dao.ProworksDefaultAbstractD
 		return (String) selectByPk("com.demo.proworks.domain.post.selectCompanyIdByUserId", userId);
 	}
 
+		public String selectPreferredDeveloperTypesByPostId(int jobPostingId) throws ElException {
+		return (String) selectByPk("com.demo.proworks.domain.post.selectPreferredDeveloperTypesByPostId", jobPostingId);
+	}
+
 	public List<PostVo> findPostsByMbti(PostMatchVo postMatchVo) throws ElException {
 		return (List<PostVo>) list("com.demo.proworks.domain.post.findPostsByMbti", postMatchVo);
 	}
