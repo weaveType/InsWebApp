@@ -168,7 +168,7 @@ public class CorporateController {
 	@RequestMapping(value = "CP0003List")
 	@ElDescription(sub = "기업정보 목록조회", desc = "메인에 출력할 기업정보 목록 조회를 한다.")
 	public CorporateMainListVo selectCorporateMainList(CorporateSearchVo corporateSearchVo) throws Exception {
-	corporateSearchVo.setOffset((corporateSearchVo.getPageIndex() - 1) * corporateSearchVo.getPageSize());
+	
        return corporateService.selectCorporateMainList(corporateSearchVo);
             
     }

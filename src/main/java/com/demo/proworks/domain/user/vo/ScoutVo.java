@@ -22,6 +22,9 @@ public class ScoutVo extends com.demo.proworks.cmmn.ProworksCommVO {
     @ElDtoField(logicalName = "공고_id", physicalName = "jobPostingId", type = "int", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
     private int jobPostingId;
 
+    @ElDtoField(logicalName = "스카웃_상태", physicalName = "scoutStatus", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private String scoutStatus;
+
     @ElVoField(physicalName = "pageIndex")
     public long getPageIndex(){
         return pageIndex;
@@ -52,13 +55,24 @@ public class ScoutVo extends com.demo.proworks.cmmn.ProworksCommVO {
         this.jobPostingId = jobPostingId;
     }
 
+    @ElVoField(physicalName = "scoutStatus")
+    public String getScoutStatus(){
+        return scoutStatus;
+    }
+
+    @ElVoField(physicalName = "scoutStatus")
+    public void setScoutStatus(String scoutStatus){
+        this.scoutStatus = scoutStatus;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("ScoutVo [");
         sb.append("pageIndex").append("=").append(pageIndex).append(",");
         sb.append("pageSize").append("=").append(pageSize).append(",");
-        sb.append("jobPostingId").append("=").append(jobPostingId);
+        sb.append("jobPostingId").append("=").append(jobPostingId).append(",");
+        sb.append("scoutStatus").append("=").append(scoutStatus);
         sb.append("]");
         return sb.toString();
 
