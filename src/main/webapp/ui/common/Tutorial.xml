@@ -339,7 +339,6 @@ scwin.demoCodeUpload = function() {
     margin: 0 auto;
     padding: 20px;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    min-height: 100vh;
     font-family: "Malgun Gothic", "맑은 고딕", sans-serif;
 }
 
@@ -438,7 +437,7 @@ scwin.demoCodeUpload = function() {
     padding: 40px;
     margin: 20px 0;
     box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-    min-height: 500px;
+    min-height: 420px;
 }
 
 .tutorial-step {
