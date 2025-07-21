@@ -137,7 +137,12 @@
 			cursor: pointer;
 			}
 			.email-modal button.cancel {
-			background-color: #dc3545;
+				background-color: #dc3545;
+			}
+			.btn-disabled {
+				background-color: #cccccc !important;
+				color: #666666 !important;
+				cursor: not-allowed !important;
 			}
 		</style>
 		<xf:model>
@@ -204,6 +209,14 @@ scwin.updateButtonStates = function () {
 
     pass_btn.setDisabled(!isReviewStatus);
     fail_btn.setDisabled(!isReviewStatus);
+
+    if (isReviewStatus) {
+        pass_btn.removeClass("btn-disabled");
+        fail_btn.removeClass("btn-disabled");
+    } else {
+        pass_btn.addClass("btn-disabled");
+        fail_btn.addClass("btn-disabled");
+    }
 };
 
 scwin.onStatusFilterChange = function (e) {
