@@ -282,6 +282,9 @@ LEFT JOIN
     tech_stack ts ON tsr.tech_stack_id = ts.tech_stack_id
 WHERE
     ja.job_posting_id = #{jobPostingId}
+    <if test="applicationStatus != null and applicationStatus != ''">
+        AND ja.application_status = #{applicationStatus}
+    </if>
 GROUP BY
     u.user_id,
     u.name,
@@ -293,6 +296,30 @@ GROUP BY
     u.email
 ORDER BY
     ja.applied_at DESC
+LIMIT #{pageSize} OFFSET ${(pageIndex - 1) * pageSize}
+</select>
+
+<select id="countUsersByjobPostingId" resultType="int"
+        parameterType="com.demo.proworks.domain.user.vo.ApplicantVo">
+    SELECT
+    COUNT(DISTINCT u.user_id)
+    FROM
+    users u
+    JOIN
+    users_info ui ON u.user_id = ui.user_id
+    LEFT JOIN
+    users_mbti_types umt ON u.user_id = umt.user_id
+    JOIN
+    job_applications ja ON u.user_id = ja.user_id
+    LEFT JOIN
+    users_tech_stack_relation tsr ON u.user_id = tsr.user_id
+    LEFT JOIN
+    tech_stack ts ON tsr.tech_stack_id = ts.tech_stack_id
+    WHERE
+    ja.job_posting_id = #{jobPostingId}
+    <if test="applicationStatus != null and applicationStatus != ''">
+        AND ja.application_status = #{applicationStatus}
+    </if>
 </select>
 	<select id="getScoutUsersByPostId" resultType="com.demo.proworks.domain.user.vo.ScoutDetailVo"
 		parameterType="com.demo.proworks.domain.user.vo.ScoutVo">
