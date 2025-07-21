@@ -842,43 +842,137 @@
             }
             
             .result-card {
-                background: white;
-                border-radius: 20px;
-                padding: 40px;
+                background: linear-gradient(145deg, #ffffff, #f8fafc);
+                border-radius: 28px;
+                padding: 50px 40px;
                 margin: 0 auto 40px auto;
                 max-width: 500px;
-                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+                box-shadow: 
+                    0 20px 40px -12px rgba(0, 0, 0, 0.15),
+                    0 8px 24px -8px rgba(0, 0, 0, 0.08),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.8);
                 display: flex;
                 flex-direction: column;
                 align-items: center;
                 text-align: center;
+                border: 1px solid rgba(255, 255, 255, 0.8);
+                position: relative;
+                overflow: hidden;
             }
             
-            .result-type-code {
-                font-size: 64px;
-                font-weight: bold;
-                color: #007bff;
-                margin-bottom: 20px;
-                font-family: 'Courier New', monospace;
+            .result-card::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: -100%;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(90deg, 
+                    transparent, 
+                    rgba(255, 255, 255, 0.4),
+                    transparent);
+                animation: cardShine 3s ease-in-out 1s;
             }
             
-            .result-type-name {
-                font-size: 28px;
-                font-weight: bold;
-                color: #333;
-                margin-bottom: 16px;
-            }
-            
-            .result-type-desc {
-                font-size: 16px;
-                color: #666;
-                line-height: 1.6;
+            @keyframes cardShine {
+                0% { left: -100%; }
+                100% { left: 100%; }
             }
             
             .mbti-result-image {
                 display: block;
-                margin: 10px auto;
-                max-width: 300px;
+                margin: 0 auto 30px auto;
+                max-width: 280px;
+                width: 100%;
+                height: auto;
+                border-radius: 20px;
+                box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+                
+                /* 초기 상태: 숨김 */
+                opacity: 0;
+                transform: scale(0.3) rotate(-10deg);
+                animation: imageReveal 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.5s forwards;
+            }
+            
+            @keyframes imageReveal {
+                0% {
+                    opacity: 0;
+                    transform: scale(0.3) rotate(-10deg);
+                }
+                50% {
+                    opacity: 0.8;
+                    transform: scale(1.05) rotate(2deg);
+                }
+                100% {
+                    opacity: 1;
+                    transform: scale(1) rotate(0deg);
+                }
+            }
+            
+            .result-type-code {
+                font-size: 72px;
+                font-weight: 900;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #8b5cf6 100%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+                margin-bottom: 24px;
+                font-family: 'Courier New', monospace;
+                letter-spacing: 4px;
+                text-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+                
+                /* 초기 상태: 숨김 */
+                opacity: 0;
+                transform: translateY(-30px) scale(0.8);
+                animation: typeCodeReveal 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 1.2s forwards;
+            }
+            
+            @keyframes typeCodeReveal {
+                0% {
+                    opacity: 0;
+                    transform: translateY(-30px) scale(0.8);
+                }
+                100% {
+                    opacity: 1;
+                    transform: translateY(0) scale(1);
+                }
+            }
+            
+            .result-type-name {
+                font-size: 32px;
+                font-weight: 800;
+                color: #2d3436;
+                margin-bottom: 20px;
+                line-height: 1.2;
+                
+                /* 초기 상태: 숨김 */
+                opacity: 0;
+                transform: translateY(20px);
+                animation: textSlideUp 0.6s ease-out 1.8s forwards;
+            }
+            
+            .result-type-desc {
+                font-size: 18px;
+                color: #636e72;
+                line-height: 1.7;
+                max-width: 400px;
+                font-weight: 500;
+                
+                /* 초기 상태: 숨김 */
+                opacity: 0;
+                transform: translateY(20px);
+                animation: textSlideUp 0.6s ease-out 2.2s forwards;
+            }
+            
+            @keyframes textSlideUp {
+                0% {
+                    opacity: 0;
+                    transform: translateY(20px);
+                }
+                100% {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
             }
             
             .score-section {
@@ -1154,24 +1248,7 @@
                 }
             }
             
-            .confidence-section {
-                background: #e7f3ff;
-                border-radius: 12px;
-                padding: 20px;
-                text-align: center;
-            }
-            
-            .confidence-label {
-                font-size: 16px;
-                color: #666;
-                margin-bottom: 8px;
-            }
-            
-            .score-confidence {
-                font-size: 32px;
-                font-weight: bold;
-                color: #28a745;
-            }
+
             
             .result-buttons {
                 margin-top: 40px;
@@ -1324,12 +1401,30 @@
                     flex-direction: column;
                 }
                 
+                .result-card {
+                    padding: 40px 24px;
+                    border-radius: 24px;
+                    margin-bottom: 30px;
+                }
+                
+                .mbti-result-image {
+                    max-width: 240px;
+                    margin-bottom: 24px;
+                }
+                
                 .result-type-code {
-                    font-size: 48px;
+                    font-size: 56px;
+                    letter-spacing: 2px;
+                    margin-bottom: 20px;
                 }
                 
                 .result-type-name {
-                    font-size: 24px;
+                    font-size: 26px;
+                    margin-bottom: 16px;
+                }
+                
+                .result-type-desc {
+                    font-size: 16px;
                 }
             }
         ]]></style>
@@ -1456,10 +1551,7 @@
                             </xf:group>
                         </xf:group>
 
-                        <xf:group class="confidence-section">
-                            <w2:textbox class="confidence-label" label="분석 신뢰도" tagname="div"></w2:textbox>
-                            <w2:textbox class="score-confidence" label="0%" tagname="div"></w2:textbox>
-                        </xf:group>
+
                     </xf:group>
 
 					<xf:group class="result-buttons">
