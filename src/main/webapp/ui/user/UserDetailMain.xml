@@ -410,7 +410,7 @@ scwin.btn_userUpdate_onclick = function() {
         console.error("사용자 정보 수정 페이지 이동 오류:", e);
         alert("페이지 이동 중 오류가 발생했습니다.");
     }
-]]></script>
+}]]></script>
 	</head>
 
 	<body ev:onpageload="scwin.onpageload">

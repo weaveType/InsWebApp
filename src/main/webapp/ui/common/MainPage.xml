@@ -312,6 +312,12 @@ createCompanyList = function () {
         // 호버 효과는 CSS로 처리하는 것이 좋습니다.
         // 클릭 이벤트는 generator 내부의 trigger 컴포넌트에서 처리됩니다.
     }
+
+};
+
+/* 회사 카드 클릭 이벤트 핸들러 */
+scwin.onCompanyCardClick = function (companyData) {
+    $c.win.alert(companyData.name + " 해당 기업의 공고등록 페이지로 이동합니다.\n(userId: " + companyData.userId + ")");
 };
 
 scwin.refreshCompanyList = function () {

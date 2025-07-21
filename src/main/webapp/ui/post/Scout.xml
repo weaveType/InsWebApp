@@ -330,6 +330,9 @@ scwin.sbm_scoutVo_submitdone = function (e) {
                 				</xf:item>
                 			</xf:choices>
                 		</xf:checkcombobox>
+                		<xf:select1 id="" chooseOption="false" style="width: 148px;height: 21px;" submenuSize="auto" allOption="false"
+                			disabled="false" direction="auto" appearance="minimal" disabledClass="w2selectbox_disabled">
+                		</xf:select1>
                 	</xf:group>
                 </xf:group>
 

@@ -272,7 +272,7 @@ public class UserDAO extends com.demo.proworks.cmmn.dao.ProworksDefaultAbstractD
 	public MatchingCheckedVo selectMatchingChecked(MatchingCheckedVo vo) throws Exception {
 		return (MatchingCheckedVo) selectByPk("com.demo.proworks.domain.user.selectMatchingChecked", vo);
 	}
-	
+
 	/**
 	 * 사용자의 이력서 파일명을 업데이트한다.
 	 * 
@@ -282,6 +282,8 @@ public class UserDAO extends com.demo.proworks.cmmn.dao.ProworksDefaultAbstractD
 	 */
 	public int updateResumeFileName(UserVo vo) throws ElException {
 		return update("com.demo.proworks.domain.user.updateResumeFileName", vo);
+	}
+
 	/**
 	 * 지원현황 목록을 조회한다.
 	 *
@@ -374,9 +376,8 @@ public class UserDAO extends com.demo.proworks.cmmn.dao.ProworksDefaultAbstractD
 	 * 
 	 * 기술스택 매핑 정보를 일괄 저장한다.
 	 * 
-	 * ※ `param` 구성 
-	 *	└ userId : Long / Integer 
-	 *	└ techStackIdList : List<Long> (예:[36, 7, 14])
+	 * ※ `param` 구성 └ userId : Long / Integer └ techStackIdList : List<Long> (예:[36,
+	 * 7, 14])
 	 * 
 	 * @param param 매핑 파라미터
 	 * @return 삽입된 행 수
@@ -386,7 +387,7 @@ public class UserDAO extends com.demo.proworks.cmmn.dao.ProworksDefaultAbstractD
 		return (Integer) insert("com.demo.proworks.domain.user.insertUserTechStacks", vo);
 	}
 
-	/*
+	/**
 	 * 사용자-기술스택 매핑 개수를 구한다.
 	 *
 	 * @param vo userId 필수
@@ -394,5 +395,16 @@ public class UserDAO extends com.demo.proworks.cmmn.dao.ProworksDefaultAbstractD
 	 */
 	public int countUserTechStacks(UserVo vo) throws Exception {
 		return (Integer) selectByPk("com.demo.proworks.domain.user.countUserTechStacks", vo);
+	}
+
+	/**
+	 * 기업의 매칭유저를 count 한다.
+	 *
+	 * @param ScoutVo 페이징 정보, 공고 ID
+	 * @return ScoutListVo 유저 목록
+	 * @throws Exception
+	 */
+	public int getScoutUserCount(ScoutVo vo) throws Exception {
+		return (Integer) selectByPk("com.demo.proworks.domain.user.getScoutUserCount", vo);
 	}
 }
