@@ -1184,13 +1184,13 @@ scwin.btnEdit_onclick = function (e) {
         try {
             // 수정 페이지로 파라미터와 함께 이동
             if ($p.parent() && $p.parent().pf_main) {
-                $p.parent().pf_main.setSrc("../post/EditPosting.xml", {
+                $p.parent().pf_main.setSrc("../post/PostEdit.xml", {
                     dataObject: {
                         jobPostingId: jobPostingId
                     }
                 });
             } else {
-                // EditPosting.xml이 없으면 일단 알림만
+                // PostEdit.xml이 없으면 일단 알림만
                 alert("수정 페이지로 이동합니다.\n공고 ID: " + jobPostingId);
             }
         } catch (error) {
