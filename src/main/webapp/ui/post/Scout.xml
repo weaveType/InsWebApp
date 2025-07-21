@@ -188,6 +188,7 @@
             			<w2:key dataType="text" name="페이지_번호" id="pageIndex" defaultValue="1"></w2:key>
             			<w2:key dataType="text" name="페이지_건수" id="pageSize" defaultValue="10"></w2:key>
             			<w2:key dataType="text" name="공고_id" id="jobPostingId"></w2:key>
+            			<w2:key dataType="text" name="스카웃_상태" id="scoutStatus" defaultValue="NOT_SCOUTED"></w2:key>
             		</w2:keyInfo>
             	</w2:dataMap>
             </w2:dataCollection>
@@ -199,6 +200,9 @@
         <script lazy="false" type="text/javascript"><![CDATA[scwin.onpageload = function () {
     // 회사 아이디로 유저 불러오기
     scwin.getJobPostingId();
+    
+    // 스카웃 상태 필터 기본값 설정
+    scoutStatusFilter.setValue("NOT_SCOUTED");
 };
 
 // 파라미터로 postId 받기
@@ -212,6 +216,7 @@ scwin.getJobPostingId = function(){
     }
 
     dmp_scoutVo.set("jobPostingId", jobPostingId);
+    dmp_scoutVo.set("scoutStatus", "NOT_SCOUTED"); // 기본값 설정
     $c.sbm.execute(sbm_selectScoutVo);
 };
 
@@ -220,6 +225,17 @@ scwin.getUrlParameter = function(name) {
     const regex = new RegExp("[?&]" + name + "=([^&#]*)");
     const results = regex.exec(window.location.href);
     return results ? decodeURIComponent(results[1]) : null;
+};
+
+// 스카웃 상태 필터 변경 이벤트
+scwin.onScoutStatusFilterChange = function(e) {
+    var selectedStatus = scoutStatusFilter.getValue();
+    dmp_scoutVo.set("scoutStatus", selectedStatus);
+    dmp_scoutVo.set("pageIndex", 1); // 페이지를 처음으로 리셋
+    $c.sbm.execute(sbm_selectScoutVo);
+    
+    // 총 개발자 수 업데이트
+    scwin.updateTotalCount();
 };
 
 
@@ -299,38 +315,25 @@ scwin.sbm_scoutVo_submitdone = function (e) {
             <!-- 필터링 영역 -->
             <xf:group class="filter-container">
                 <xf:group class="filter-group">
+                	<!-- 스카웃 상태 필터 추가 -->
+                	<w2:selectbox id="scoutStatusFilter" style="width: 150px;height: 32px;" submenuSize="auto" appearance="minimal"
+                		direction="auto" chooseOption="true" chooseOptionLabel="스카웃 상태" ev:onviewchange="scwin.onScoutStatusFilterChange">
+                		<w2:choices>
+                			<w2:item>
+                				<w2:label><![CDATA[스카웃 안한 유저]]></w2:label>
+                				<w2:value><![CDATA[NOT_SCOUTED]]></w2:value>
+                			</w2:item>
+                			<w2:item>
+                				<w2:label><![CDATA[스카웃 한 유저]]></w2:label>
+                				<w2:value><![CDATA[SCOUTED]]></w2:value>
+                			</w2:item>
+                		</w2:choices>
+                	</w2:selectbox>
+                </xf:group>
+
+                <xf:group class="filter-group">
                 	<xf:group class="filter-group" style="">
-                		<w2:textbox class="filter-label" label="MBTI: " style="border:none; background:transparent;"></w2:textbox>
-                		<xf:checkcombobox allOption="" chooseOption="" displayMode="label" id="checkcombobox2"
-                			style="width:200px;height:32px;" submenuSize="auto" ref="">
-                			<xf:choices>
-                				<xf:item>
-                					<xf:label><![CDATA[abcd]]></xf:label>
-                					<xf:value><![CDATA[1]]></xf:value>
-                				</xf:item>
-                				<xf:item>
-                					<xf:label><![CDATA[bacc]]></xf:label>
-                					<xf:value><![CDATA[2]]></xf:value>
-                				</xf:item>
-                				<xf:item>
-                					<xf:label><![CDATA[abds]]></xf:label>
-                					<xf:value><![CDATA[3]]></xf:value>
-                				</xf:item>
-                				<xf:item>
-                					<xf:label><![CDATA[fesd]]></xf:label>
-                					<xf:value><![CDATA[4]]></xf:value>
-                				</xf:item>
-                				<xf:item>
-                					<xf:label><![CDATA[fegh]]></xf:label>
-                					<xf:value><![CDATA[5]]></xf:value>
-                				</xf:item>
-                				<xf:item>
-                					<xf:label><![CDATA[awsf]]></xf:label>
-                					<xf:value><![CDATA[6]]></xf:value>
-                				</xf:item>
-                			</xf:choices>
-                		</xf:checkcombobox>
-                		<xf:select1 id="" chooseOption="false" style="width: 148px;height: 21px;" submenuSize="auto" allOption="false"
+                		<xf:select1 id="" chooseOption="false" style="width:200px;height:32px;" submenuSize="auto" allOption="false"
                 			disabled="false" direction="auto" appearance="minimal" disabledClass="w2selectbox_disabled">
                 		</xf:select1>
                 	</xf:group>
@@ -354,8 +357,7 @@ scwin.sbm_scoutVo_submitdone = function (e) {
                     <xf:trigger class="btn-scout-all"
                         style="background-color:#28a745; color:white; border:none; padding:8px 16px; border-radius:4px; margin-right:10px;"
                         type="button" id="scout_all_btn" ev:onclick="scwin.scoutSelected">
-                        <xf:label><![CDATA[🎯 일괄 스카웃 제안]]></xf:label>
-                    </xf:trigger>
+                        <xf:label><![CDATA[일괄 스카웃 제안]]></xf:label>                  </xf:trigger>
                 </xf:group>
             </xf:group>
 
