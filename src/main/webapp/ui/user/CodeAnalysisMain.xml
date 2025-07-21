@@ -1,143 +1,398 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<html xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:ev="http://www.w3.org/2001/xml-events"
-    xmlns:w2="http://www.inswave.com/websquare" 
-    xmlns:xf="http://www.w3.org/2002/xforms">
-    
-    <head meta_screenName="weaveType 코드 분석">
-        <w2:type>COMPONENT</w2:type>
-        <w2:buildDate/>
-        <w2:MSA/>
-        <xf:model>
-            <w2:dataCollection baseNode="map">
-                <w2:dataMap baseNode="map" id="dma_codeFiles">
-                    <w2:keyInfo>
-                        <w2:key id="modelFile" name="모델파일" dataType="text" value=""></w2:key>
-                        <w2:key id="controllerFile" name="컨트롤러파일" dataType="text" value=""></w2:key>
-                        <w2:key id="serviceFile" name="서비스파일" dataType="text" value=""></w2:key>
-                        <w2:key id="repositoryFile" name="레포지토리파일" dataType="text" value=""></w2:key>
-                        <w2:key id="modelFileName" name="모델파일명" dataType="text" value=""></w2:key>
-                        <w2:key id="controllerFileName" name="컨트롤러파일명" dataType="text" value=""></w2:key>
-                        <w2:key id="serviceFileName" name="서비스파일명" dataType="text" value=""></w2:key>
-                        <w2:key id="repositoryFileName" name="레포지토리파일명" dataType="text" value=""></w2:key>
-                    </w2:keyInfo>
-                </w2:dataMap>
-            </w2:dataCollection>
-            <w2:workflowCollection></w2:workflowCollection>
-            <xf:submission id="sbm_codeAnalyze" 
-                ref='data:json,{"id":"dma_codeFiles"}' 
-                target="" 
-                action="/InsWebApp/CA0001Analyze.pwkjson" 
-                method="post"
-                mediatype="application/json" 
-                encoding="UTF-8" 
-                instance="" 
-                replace="" 
-                errorHandler="" 
-                customHandler="" 
-                mode="asynchronous"
-                processMsg="코드 분석 중입니다..." 
-                ev:submit="" 
-                ev:submitdone="scwin.sbm_codeAnalyze_submitdone" 
-                ev:submiterror="scwin.sbm_codeAnalyze_submiterror" 
-                abortTrigger="">
-            </xf:submission>
-        </xf:model>
-        <w2:layoutInfo/>
-        <w2:publicInfo method=""/>
-        
-        <script type="text/javascript"><![CDATA[
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare"
+	xmlns:xf="http://www.w3.org/2002/xforms">
+
+	<head meta_screenName="weaveType 코드 분석">
+		<w2:type>COMPONENT</w2:type>
+		<w2:buildDate />
+		<w2:MSA />
+		<xf:model>
+			<w2:dataCollection baseNode="map">
+				<w2:dataMap baseNode="map" id="dma_codeFiles">
+					<w2:keyInfo>
+						<w2:key id="modelFile" name="모델파일" dataType="text" value=""></w2:key>
+						<w2:key id="controllerFile" name="컨트롤러파일" dataType="text" value=""></w2:key>
+						<w2:key id="serviceFile" name="서비스파일" dataType="text" value=""></w2:key>
+						<w2:key id="repositoryFile" name="레포지토리파일" dataType="text" value=""></w2:key>
+						<w2:key id="modelFileName" name="모델파일명" dataType="text" value=""></w2:key>
+						<w2:key id="controllerFileName" name="컨트롤러파일명" dataType="text" value=""></w2:key>
+						<w2:key id="serviceFileName" name="서비스파일명" dataType="text" value=""></w2:key>
+						<w2:key id="repositoryFileName" name="레포지토리파일명" dataType="text" value=""></w2:key>
+					</w2:keyInfo>
+				</w2:dataMap>
+			</w2:dataCollection>
+			<w2:workflowCollection></w2:workflowCollection>
+			<xf:submission id="sbm_codeAnalyze" ref='data:json,{"id":"dma_codeFiles"}' target=""
+				action="/InsWebApp/CA0001Analyze.pwkjson" method="post" mediatype="application/json" encoding="UTF-8" instance="" replace=""
+				errorHandler="" customHandler="" mode="asynchronous" processMsg="코드 분석 중입니다..." ev:submit=""
+				ev:submitdone="scwin.sbm_codeAnalyze_submitdone" ev:submiterror="scwin.sbm_codeAnalyze_submiterror" abortTrigger="">
+			</xf:submission>
+		</xf:model>
+		<w2:layoutInfo />
+		<w2:publicInfo method="" />
+
+		<script type="text/javascript"><![CDATA[
+            // 업로드된 파일들을 저장할 전역 변수
+            scwin.uploadedFiles = [];
+            
             scwin.onpageload = function() {
                 console.log("코드분석 메인 페이지 로드됨");
                 
-                // 파일 업로드 이벤트 설정
-                scwin.initializeFileUploads();
+                // 멀티 파일 업로드 이벤트 설정
+                scwin.initializeMultiFileUpload();
             };
             
-            // 파일 업로드 초기화
-            scwin.initializeFileUploads = function() {
-                var fileInputs = ['modelFileInput', 'controllerFileInput', 'serviceFileInput', 'repositoryFileInput'];
+            // 멀티 파일 업로드 초기화
+            scwin.initializeMultiFileUpload = function() {
+                var fileInput = document.getElementById('multiFileInput');
+                if (fileInput) {
+                    fileInput.addEventListener('change', function(e) {
+                        scwin.handleMultiFileUpload(e);
+                    });
+                }
                 
-                fileInputs.forEach(function(inputId) {
-                    var inputElement = document.getElementById(inputId);
-                    if (inputElement) {
-                        inputElement.addEventListener('change', function(e) {
-                            scwin.handleFileUpload(e, inputId);
-                        });
-                    }
-                });
+                // 드래그 앤 드롭 이벤트 설정
+                var uploadArea = document.querySelector('.upload-area');
+                if (uploadArea) {
+                    uploadArea.addEventListener('dragover', function(e) {
+                        e.preventDefault();
+                        uploadArea.classList.add('drag-over');
+                    });
+                    
+                    uploadArea.addEventListener('dragleave', function(e) {
+                        e.preventDefault();
+                        uploadArea.classList.remove('drag-over');
+                    });
+                    
+                    uploadArea.addEventListener('drop', function(e) {
+                        e.preventDefault();
+                        uploadArea.classList.remove('drag-over');
+                        
+                        var files = e.dataTransfer.files;
+                        scwin.processFiles(files);
+                    });
+                }
+                
+                // 파일 목록 컨테이너에 이벤트 위임 설정
+                setTimeout(function() {
+                    scwin.initializeFileListEvents();
+                }, 100);
             };
             
-            // 파일 업로드 핸들러
-            scwin.handleFileUpload = function(event, inputId) {
-                var file = event.target.files[0];
-                if (!file) return;
+            // 파일 목록 이벤트 위임 초기화
+            scwin.initializeFileListEvents = function() {
+                var fileListContainer = document.querySelector('.file-list');
+                if (fileListContainer && !fileListContainer._eventDelegationAdded) {
+                    fileListContainer.addEventListener('click', function(e) {
+                        var target = e.target;
+                        var button = null;
+                        var index = -1;
+                        
+                        // 클릭된 요소가 버튼이거나 버튼 내부 요소인지 확인
+                        var currentElement = target;
+                        var depth = 0;
+                        while (currentElement && depth < 5) {
+                            if (currentElement.classList) {
+                                if (currentElement.classList.contains('btn-change-type')) {
+                                    button = currentElement;
+                                    break;
+                                } else if (currentElement.classList.contains('btn-remove')) {
+                                    button = currentElement;
+                                    break;
+                                }
+                            }
+                            currentElement = currentElement.parentNode;
+                            depth++;
+                        }
+                        
+                        if (button) {
+                            // 파일 아이템에서 인덱스 찾기
+                            var fileItem = button.closest('.file-item');
+                            if (fileItem) {
+                                var allFileItems = fileListContainer.querySelectorAll('.file-item');
+                                for (var i = 0; i < allFileItems.length; i++) {
+                                    if (allFileItems[i] === fileItem) {
+                                        index = i;
+                                        break;
+                                    }
+                                }
+                            }
+                            
+                            if (index >= 0) {
+                                if (button.classList.contains('btn-change-type')) {
+                                    console.log('파일 타입 변경 클릭됨:', index);
+                                    scwin.changeFileType(index);
+                                } else if (button.classList.contains('btn-remove')) {
+                                    console.log('파일 삭제 클릭됨:', index);
+                                    scwin.removeFile(index);
+                                }
+                            }
+                            
+                            e.preventDefault();
+                            e.stopPropagation();
+                        }
+                    });
+                    
+                    fileListContainer._eventDelegationAdded = true;
+                    console.log('파일 목록 이벤트 위임 설정 완료');
+                }
+            };
+            
+            // 멀티 파일 업로드 핸들러
+            scwin.handleMultiFileUpload = function(event) {
+                var files = event.target.files;
+                scwin.processFiles(files);
+            };
+            
+            // 파일들 처리
+            scwin.processFiles = function(files) {
+                if (files.length === 0) return;
                 
+                console.log('선택된 파일 수:', files.length);
+                
+                // 기존 파일 목록 초기화
+                scwin.uploadedFiles = [];
+                scwin.clearDataMap();
+                
+                // 각 파일 처리
+                for (var i = 0; i < files.length; i++) {
+                    scwin.processFile(files[i], i);
+                }
+            };
+            
+            // 개별 파일 처리
+            scwin.processFile = function(file, index) {
                 // 파일 유효성 검사
-                
-                // 파일 크기 검사 (50KB)
                 if (file.size > 50 * 1024) {
-                    alert('파일 크기는 50KB를 초과할 수 없습니다.');
-                    event.target.value = '';
+                    alert('파일 크기는 50KB를 초과할 수 없습니다: ' + file.name);
                     return;
                 }
+                
+                // 파일 타입 자동 분류
+                var fileType = scwin.classifyFileType(file.name);
                 
                 // 파일 읽기
                 var reader = new FileReader();
                 reader.onload = function(e) {
                     var fileContent = e.target.result;
-                    var fileType = inputId.replace('FileInput', '');
                     
-                    // dataMap에 파일 내용과 이름 저장
-                    dma_codeFiles.set(fileType + 'File', fileContent);
-                    dma_codeFiles.set(fileType + 'FileName', file.name);
+                    // 파일 정보 저장
+                    var fileInfo = {
+                        name: file.name,
+                        type: fileType,
+                        content: fileContent,
+                        size: file.size
+                    };
+                    
+                    scwin.uploadedFiles.push(fileInfo);
+                    
+                    // DataMap에 저장
+                    scwin.saveToDataMap(fileInfo);
                     
                     // UI 업데이트
-                    scwin.updateFileCard(fileType, file.name);
+                    scwin.updateFileList();
+                    
+                    console.log('파일 처리 완료:', file.name, '타입:', fileType);
+                    
+                    // 이벤트 위임 재설정 (새로운 요소가 추가되었으므로)
+                    setTimeout(function() {
+                        scwin.initializeFileListEvents();
+                    }, 50);
                 };
                 reader.readAsText(file);
             };
             
-            // 파일 카드 UI 업데이트
-            scwin.updateFileCard = function(fileType, fileName) {
-                var cardElement = document.querySelector('.' + fileType + '-card');
-                if (cardElement) {
-                    var statusElement = cardElement.querySelector('.file-status');
-                    if (statusElement) {
-                        statusElement.textContent = fileName;
-                        statusElement.style.color = '#007bff';
+            // 파일 타입 자동 분류 (언어 중립적 범용 시스템)
+            scwin.classifyFileType = function(fileName) {
+                var lowerName = fileName.toLowerCase();
+                var extension = fileName.split('.').pop().toLowerCase();
+                
+                // Frontend Code 분류 (UI/화면 관련)
+                if (lowerName.includes('component') || lowerName.includes('view') || lowerName.includes('ui') || 
+                    lowerName.includes('page') || lowerName.includes('screen') || lowerName.includes('template') ||
+                    lowerName.includes('widget') || lowerName.includes('layout') || lowerName.includes('form') ||
+                    extension === 'jsx' || extension === 'tsx' || extension === 'vue' || 
+                    extension === 'html' || extension === 'css' || extension === 'scss' || extension === 'sass') {
+                    return 'controller'; // Frontend → controllerFile 매핑
+                }
+                
+                // Backend Code 분류 (서버/API/로직 관련)
+                else if (lowerName.includes('server') || lowerName.includes('api') || lowerName.includes('service') || 
+                         lowerName.includes('controller') || lowerName.includes('handler') || lowerName.includes('router') ||
+                         lowerName.includes('endpoint') || lowerName.includes('logic') || lowerName.includes('business') ||
+                         lowerName.includes('processor') || lowerName.includes('manager')) {
+                    return 'service'; // Backend → serviceFile 매핑
+                }
+                
+                // Data Code 분류 (데이터 모델/구조 관련)
+                else if (lowerName.includes('model') || lowerName.includes('entity') || lowerName.includes('schema') || 
+                         lowerName.includes('dto') || lowerName.includes('vo') || lowerName.includes('struct') ||
+                         lowerName.includes('interface') || lowerName.includes('type') || lowerName.includes('class') ||
+                         lowerName.includes('data') || lowerName.includes('domain') || lowerName.includes('bean')) {
+                    return 'model'; // Data → modelFile 매핑
+                }
+                
+                // Utility Code 분류 (유틸리티/헬퍼/기타)
+                else if (lowerName.includes('util') || lowerName.includes('helper') || lowerName.includes('common') || 
+                         lowerName.includes('shared') || lowerName.includes('tool') || lowerName.includes('lib') ||
+                         lowerName.includes('config') || lowerName.includes('constant') || lowerName.includes('enum') ||
+                         lowerName.includes('repository') || lowerName.includes('dao') || lowerName.includes('mapper') ||
+                         lowerName.includes('test') || lowerName.includes('spec')) {
+                    return 'repository'; // Utility → repositoryFile 매핑
+                }
+                
+                // 확장자 기반 추가 분류
+                else {
+                    // 프론트엔드 확장자
+                    if (extension === 'js' && (lowerName.includes('react') || lowerName.includes('angular') || lowerName.includes('client'))) {
+                        return 'controller'; // Frontend
                     }
-                    
-                    // 체크 아이콘 표시
-                    var iconElement = cardElement.querySelector('.upload-icon');
-                    if (iconElement) {
-                        iconElement.textContent = '✅';
+                    // 백엔드 확장자
+                    else if (extension === 'py' || extension === 'rb' || extension === 'php' || extension === 'go' || 
+                             extension === 'rs' || extension === 'kt' || extension === 'swift') {
+                        return 'service'; // Backend
+                    }
+                    // 데이터 관련 확장자
+                    else if (extension === 'sql' || extension === 'json' || extension === 'xml' || extension === 'yaml' || extension === 'yml') {
+                        return 'model'; // Data
+                    }
+                    // 기본값은 파일 순서에 따라 배정 (중복 방지)
+                    else {
+                        var typeOrder = ['model', 'service', 'controller', 'repository']; // Data, Backend, Frontend, Utility 순서
+                        var existingTypes = scwin.uploadedFiles.map(function(f) { return f.type; });
+                        
+                        for (var i = 0; i < typeOrder.length; i++) {
+                            if (existingTypes.indexOf(typeOrder[i]) === -1) {
+                                return typeOrder[i];
+                            }
+                        }
+                        
+                        return 'model'; // 모든 타입이 할당되었으면 Data Code로 기본 설정
                     }
                 }
             };
             
-            // 카드 클릭 핸들러
-            scwin.handleCardClick = function(fileType) {
-                var inputElement = document.getElementById(fileType + 'FileInput');
-                if (inputElement) {
-                    inputElement.click();
+            // DataMap에 파일 정보 저장
+            scwin.saveToDataMap = function(fileInfo) {
+                // 해당 타입의 기존 파일이 있으면 덮어쓰기
+                dma_codeFiles.set(fileInfo.type + 'File', fileInfo.content);
+                dma_codeFiles.set(fileInfo.type + 'FileName', fileInfo.name);
+            };
+            
+            // DataMap 초기화
+            scwin.clearDataMap = function() {
+                var fileTypes = ['model', 'controller', 'service', 'repository'];
+                fileTypes.forEach(function(type) {
+                    dma_codeFiles.set(type + 'File', '');
+                    dma_codeFiles.set(type + 'FileName', '');
+                });
+            };
+            
+            // 파일 목록 UI 업데이트
+            scwin.updateFileList = function() {
+                var fileListContainer = document.querySelector('.file-list');
+                if (!fileListContainer) return;
+                
+                // 기존 목록 초기화
+                fileListContainer.innerHTML = '';
+                
+                if (scwin.uploadedFiles.length === 0) {
+                    fileListContainer.innerHTML = '<div class="no-files">업로드된 파일이 없습니다</div>';
+                    return;
+                }
+                
+                // 파일 목록 생성
+                scwin.uploadedFiles.forEach(function(fileInfo, index) {
+                    var fileItem = document.createElement('div');
+                    fileItem.className = 'file-item';
+                    
+                    var typeLabel = scwin.getTypeLabel(fileInfo.type);
+                    var sizeKB = Math.round(fileInfo.size / 1024 * 100) / 100;
+                    
+                    fileItem.innerHTML = 
+                        '<div class="file-info">' +
+                            '<div class="file-name">' + fileInfo.name + '</div>' +
+                            '<div class="file-details">' +
+                                '<span class="file-type">' + typeLabel + '</span>' +
+                                '<span class="file-size">' + sizeKB + 'KB</span>' +
+                            '</div>' +
+                        '</div>' +
+                        '<div class="file-actions">' +
+                            '<button class="btn-change-type" type="button" title="파일 타입 변경">' +
+                                '<span class="change-icon">������</span>' +
+                            '</button>' +
+                            '<button class="btn-remove" type="button" title="파일 삭제">' +
+                                '<span class="remove-icon">❌</span>' +
+                            '</button>' +
+                        '</div>';
+                    
+                    fileListContainer.appendChild(fileItem);
+                });
+            };
+            
+            // 파일 타입 라벨 가져오기 (범용적 명칭)
+            scwin.getTypeLabel = function(type) {
+                var typeLabels = {
+                    'model': 'Data Code (Model/Schema)',
+                    'controller': 'Frontend Code (UI/View)', 
+                    'service': 'Backend Code (API/Logic)',
+                    'repository': 'Utility Code (Helper/Config)'
+                };
+                return typeLabels[type] || type;
+            };
+            
+            // 파일 타입 변경
+            scwin.changeFileType = function(index) {
+                var fileInfo = scwin.uploadedFiles[index];
+                var types = ['model', 'controller', 'service', 'repository'];
+                var typeLabels = ['Data Code', 'Frontend Code', 'Backend Code', 'Utility Code'];
+                
+                var currentIndex = types.indexOf(fileInfo.type);
+                var nextIndex = (currentIndex + 1) % types.length;
+                
+                // 기존 타입에서 제거
+                dma_codeFiles.set(fileInfo.type + 'File', '');
+                dma_codeFiles.set(fileInfo.type + 'FileName', '');
+                
+                // 새 타입으로 설정
+                fileInfo.type = types[nextIndex];
+                scwin.saveToDataMap(fileInfo);
+                
+                // UI 업데이트
+                scwin.updateFileList();
+                
+                console.log('파일 타입 변경:', fileInfo.name, '→', fileInfo.type);
+            };
+            
+            // 파일 제거
+            scwin.removeFile = function(index) {
+                var fileInfo = scwin.uploadedFiles[index];
+                
+                // DataMap에서 제거
+                dma_codeFiles.set(fileInfo.type + 'File', '');
+                dma_codeFiles.set(fileInfo.type + 'FileName', '');
+                
+                // 배열에서 제거
+                scwin.uploadedFiles.splice(index, 1);
+                
+                // UI 업데이트
+                scwin.updateFileList();
+                
+                console.log('파일 제거:', fileInfo.name);
+            };
+            
+            // 업로드 영역 클릭 핸들러
+            scwin.handleUploadAreaClick = function() {
+                var fileInput = document.getElementById('multiFileInput');
+                if (fileInput) {
+                    fileInput.click();
                 }
             };
             
             // 다음 버튼 클릭
             scwin.btn_next_onclick = function() {
                 // 최소 하나의 파일이 업로드되었는지 확인
-                var hasFile = false;
-                var fileTypes = ['model', 'controller', 'service', 'repository'];
-                
-                for (var i = 0; i < fileTypes.length; i++) {
-                    if (dma_codeFiles.get(fileTypes[i] + 'File')) {
-                        hasFile = true;
-                        break;
-                    }
-                }
-                
-                if (!hasFile) {
+                if (scwin.uploadedFiles.length === 0) {
                     alert('최소 하나 이상의 파일을 업로드해주세요.');
                     return;
                 }
@@ -420,36 +675,9 @@
             scwin.goToUserDetail = function() {
                 location.href = "/InsWebApp/websquare/websquare.html?w2xPath=/InsWebApp/ui/user/UserDetail.xml";
             };
-            
-            // 파일 삭제
-            scwin.removeFile = function(fileType) {
-                dma_codeFiles.set(fileType + 'File', '');
-                dma_codeFiles.set(fileType + 'FileName', '');
-                
-                // UI 초기화
-                var cardElement = document.querySelector('.' + fileType + '-card');
-                if (cardElement) {
-                    var statusElement = cardElement.querySelector('.file-status');
-                    if (statusElement) {
-                        statusElement.textContent = '파일을 선택해주세요';
-                        statusElement.style.color = '#999';
-                    }
-                    
-                    var iconElement = cardElement.querySelector('.upload-icon');
-                    if (iconElement) {
-                        iconElement.textContent = '������';
-                    }
-                }
-                
-                // 파일 입력 초기화
-                var inputElement = document.getElementById(fileType + 'FileInput');
-                if (inputElement) {
-                    inputElement.value = '';
-                }
-            };
         ]]></script>
-        
-        <style type="text/css"><![CDATA[
+
+		<style type="text/css"><![CDATA[
             .main-container {
                 background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
                 min-height: 100vh;
@@ -487,82 +715,202 @@
                 line-height: 1.5;
             }
             
-            .file-upload-grid {
-                display: grid;
-                grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-                gap: 30px;
-                width: 100%;
-                margin-bottom: 50px;
-            }
-            
-            .file-card {
-                background: white;
-                border-radius: 16px;
-                padding: 30px;
+            .info-box {
+                background: #e7f3ff;
+                border: 1px solid #b3d9ff;
+                border-radius: 8px;
+                padding: 16px;
+                margin-bottom: 30px;
                 text-align: center;
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-                transition: all 0.3s ease;
+                width: 100%;
+                max-width: 600px;
+            }
+            
+            .info-text {
+                color: #0066cc;
+                font-size: 14px;
+                margin: 0;
+            }
+            
+            /* 멀티 업로드 영역 스타일 */
+            .upload-container {
+                width: 100%;
+                max-width: 600px;
+                margin-bottom: 30px;
+            }
+            
+            .upload-area {
+                background: white;
+                border: 3px dashed #007bff;
+                border-radius: 16px;
+                padding: 40px;
+                text-align: center;
                 cursor: pointer;
-                border: 2px solid transparent;
+                transition: all 0.3s ease;
                 position: relative;
-                overflow: hidden;
+                min-height: 200px;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
             }
             
-            .file-card::before {
-                content: '';
-                position: absolute;
-                top: 0;
-                left: 0;
-                right: 0;
-                bottom: 0;
-                background: linear-gradient(135deg, rgba(0, 123, 255, 0.05), rgba(0, 123, 255, 0));
-                opacity: 0;
-                transition: opacity 0.3s ease;
+            .upload-area:hover {
+                border-color: #0056b3;
+                background: #f8f9ff;
+                transform: translateY(-2px);
+                box-shadow: 0 8px 24px rgba(0, 123, 255, 0.15);
             }
             
-            .file-card:hover {
-                transform: translateY(-5px);
-                box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-                border-color: #007bff;
-            }
-            
-            .file-card:hover::before {
-                opacity: 1;
+            .upload-area.drag-over {
+                border-color: #28a745;
+                background: #f8fff8;
             }
             
             .upload-icon {
-                font-size: 48px;
-                margin-bottom: 16px;
-                display: block;
-                transition: transform 0.3s ease;
+                font-size: 64px;
+                margin-bottom: 20px;
+                color: #007bff;
             }
             
-            .file-card:hover .upload-icon {
-                transform: scale(1.1);
-            }
-            
-            .card-title {
-                font-size: 20px;
+            .upload-title {
+                font-size: 24px;
                 font-weight: bold;
                 color: #333;
                 margin-bottom: 12px;
             }
             
-            .card-description {
-                font-size: 14px;
+            .upload-description {
+                font-size: 16px;
                 color: #666;
-                margin-bottom: 16px;
-                line-height: 1.4;
+                margin-bottom: 20px;
+                line-height: 1.5;
             }
             
-            .file-status {
-                font-size: 12px;
-                color: #999;
-                font-style: italic;
+            .upload-button {
+                background: linear-gradient(45deg, #007bff, #0056b3);
+                color: white;
+                border: none;
+                padding: 12px 32px;
+                border-radius: 25px;
+                font-size: 16px;
+                font-weight: bold;
+                cursor: pointer;
+                transition: all 0.3s ease;
+            }
+            
+            .upload-button:hover {
+                background: linear-gradient(45deg, #0056b3, #004494);
+                transform: translateY(-1px);
             }
             
             .file-input-hidden {
                 display: none;
+            }
+            
+            /* 파일 목록 스타일 */
+            .file-list-container {
+                width: 100%;
+                max-width: 600px;
+                margin-bottom: 30px;
+            }
+            
+            .file-list-title {
+                font-size: 20px;
+                font-weight: bold;
+                color: #333;
+                margin-bottom: 16px;
+                text-align: center;
+            }
+            
+            .file-list {
+                background: white;
+                border-radius: 12px;
+                padding: 20px;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+                min-height: 100px;
+            }
+            
+            .no-files {
+                text-align: center;
+                color: #999;
+                font-style: italic;
+                padding: 40px;
+            }
+            
+            .file-item {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 12px 16px;
+                border: 1px solid #e9ecef;
+                border-radius: 8px;
+                margin-bottom: 8px;
+                transition: all 0.2s ease;
+            }
+            
+            .file-item:hover {
+                background: #f8f9fa;
+                border-color: #007bff;
+            }
+            
+            .file-item:last-child {
+                margin-bottom: 0;
+            }
+            
+            .file-info {
+                flex: 1;
+            }
+            
+            .file-name {
+                font-weight: bold;
+                color: #333;
+                margin-bottom: 4px;
+            }
+            
+            .file-details {
+                display: flex;
+                gap: 12px;
+                font-size: 12px;
+                color: #666;
+            }
+            
+            .file-type {
+                background: #007bff;
+                color: white;
+                padding: 2px 8px;
+                border-radius: 12px;
+                font-size: 11px;
+            }
+            
+            .file-size {
+                color: #999;
+            }
+            
+            .file-actions {
+                display: flex;
+                gap: 8px;
+            }
+            
+            .btn-change-type, .btn-remove {
+                background: none;
+                border: none;
+                cursor: pointer;
+                padding: 4px 8px;
+                border-radius: 4px;
+                transition: background 0.2s ease;
+            }
+            
+            .btn-change-type:hover {
+                background: #e7f3ff;
+            }
+            
+            .btn-remove:hover {
+                background: #ffe7e7;
+            }
+            
+            .change-icon, .remove-icon {
+                font-size: 14px;
             }
             
             .action-buttons {
@@ -594,37 +942,6 @@
                 background: #ccc;
                 cursor: not-allowed;
                 box-shadow: none;
-            }
-            
-            .model-card {
-                border-top: 4px solid #28a745;
-            }
-            
-            .controller-card {
-                border-top: 4px solid #ffc107;
-            }
-            
-            .service-card {
-                border-top: 4px solid #17a2b8;
-            }
-            
-            .repository-card {
-                border-top: 4px solid #dc3545;
-            }
-            
-            .info-box {
-                background: #e7f3ff;
-                border: 1px solid #b3d9ff;
-                border-radius: 8px;
-                padding: 16px;
-                margin-bottom: 30px;
-                text-align: center;
-            }
-            
-            .info-text {
-                color: #0066cc;
-                font-size: 14px;
-                margin: 0;
             }
             
             /* 결과 섹션 스타일 */
@@ -781,16 +1098,29 @@
             }
             
             @media (max-width: 768px) {
-                .file-upload-grid {
-                    grid-template-columns: 1fr;
-                }
-                
                 .main-title {
                     font-size: 28px;
                 }
                 
                 .sub-title {
                     font-size: 16px;
+                }
+                
+                .upload-area {
+                    padding: 30px 20px;
+                    min-height: 150px;
+                }
+                
+                .upload-icon {
+                    font-size: 48px;
+                }
+                
+                .upload-title {
+                    font-size: 20px;
+                }
+                
+                .upload-description {
+                    font-size: 14px;
                 }
                 
                 .result-type-code {
@@ -806,112 +1136,99 @@
                 }
             }
         ]]></style>
-    </head>
-    
-    <body ev:onpageload="scwin.onpageload">
-        <w2:wframe src="../common/Header.xml" id="headerFrame" />
-        <xf:group class="main-container">
-            <xf:group class="content-area">
-                <!-- 업로드 섹션 -->
-                <xf:group class="upload-section">
-                <xf:group class="page-header">
-                    <w2:textbox class="main-title" label="자신이 작성한 코드를 분석해드립니다" tagname="h1"></w2:textbox>
-                    <w2:textbox class="sub-title" label="당신의 코드를 통해 강점/약점을 파악해보세요" tagname="p"></w2:textbox>
-                </xf:group>
-                
-                <xf:group class="info-box">
-                    <w2:textbox class="info-text" label="💡 다양한 언어 파일 업로드 가능, 파일당 최대 50KB" tagname="p"></w2:textbox>
-                </xf:group>
-                
-                <xf:group class="file-upload-grid">
-                    <!-- Model 파일 업로드 -->
-                    <xf:group class="file-card model-card" ev:onclick="scwin.handleCardClick('model')">
-                        <w2:textbox class="upload-icon" label="📁" tagname="span"></w2:textbox>
-                        <w2:textbox class="card-title" label="Data Code (e.g., Model/Entity)" tagname="div"></w2:textbox>
-                        <w2:textbox class="card-description" label="데이터 구조나 모델 관련 코드" tagname="div"></w2:textbox>
-                        <w2:textbox class="file-status" label="파일을 선택해주세요" tagname="div"></w2:textbox>
-                        <input type="file" id="modelFileInput" class="file-input-hidden" />
-                    </xf:group>
-                    
-                    <!-- Controller 파일 업로드 -->
-                    <xf:group class="file-card controller-card" ev:onclick="scwin.handleCardClick('controller')">
-                        <w2:textbox class="upload-icon" label="📁" tagname="span"></w2:textbox>
-                        <w2:textbox class="card-title" label="Control Code (e.g., Controller/API)" tagname="div"></w2:textbox>
-                        <w2:textbox class="card-description" label="제어 로직이나 API 처리 코드" tagname="div"></w2:textbox>
-                        <w2:textbox class="file-status" label="파일을 선택해주세요" tagname="div"></w2:textbox>
-                        <input type="file" id="controllerFileInput" class="file-input-hidden" />
-                    </xf:group>
-                    
-                    <!-- Service 파일 업로드 -->
-                    <xf:group class="file-card service-card" ev:onclick="scwin.handleCardClick('service')">
-                        <w2:textbox class="upload-icon" label="📁" tagname="span"></w2:textbox>
-                        <w2:textbox class="card-title" label="Logic Code (e.g., Service/Business)" tagname="div"></w2:textbox>
-                        <w2:textbox class="card-description" label="비즈니스 로직 처리 코드" tagname="div"></w2:textbox>
-                        <w2:textbox class="file-status" label="파일을 선택해주세요" tagname="div"></w2:textbox>
-                        <input type="file" id="serviceFileInput" class="file-input-hidden" />
-                    </xf:group>
-                    
-                    <!-- Repository 파일 업로드 -->
-                    <xf:group class="file-card repository-card" ev:onclick="scwin.handleCardClick('repository')">
-                        <w2:textbox class="upload-icon" label="📁" tagname="span"></w2:textbox>
-                        <w2:textbox class="card-title" label="Access Code (e.g., Repository/DAO)" tagname="div"></w2:textbox>
-                        <w2:textbox class="card-description" label="데이터 액세스나 저장소 관련 코드" tagname="div"></w2:textbox>
-                        <w2:textbox class="file-status" label="파일을 선택해주세요" tagname="div"></w2:textbox>
-                        <input type="file" id="repositoryFileInput" class="file-input-hidden" />
-                    </xf:group>
-                </xf:group>
-                
-                <xf:group class="action-buttons">
-                    <xf:trigger class="btn-next" ev:onclick="scwin.btn_next_onclick">
-                        <xf:label>다음</xf:label>
-                    </xf:trigger>
-                    </xf:group>
-                </xf:group>
-                
-                <!-- 결과 섹션 -->
-                <xf:group class="result-section" style="display: none;">
-                    <xf:group class="result-header">
-                        <w2:textbox class="result-title" label="분석 결과" tagname="h1"></w2:textbox>
-                        <w2:textbox class="result-subtitle" label="당신의 weaveType은..." tagname="p"></w2:textbox>
-                    </xf:group>
-                    
-                    <xf:group class="result-card">
-                        <w2:textbox class="result-type-code" label="AR" tagname="div"></w2:textbox>
-                        <w2:textbox class="result-type-name" label="개선형 아키텍트" tagname="div"></w2:textbox>
-                        <w2:textbox class="result-type-desc" label="기존 코드를 체계적으로 개선하고 최적화하는 개발자" tagname="div"></w2:textbox>
-                        <w2:textbox class="result-language" label="Detected Language: Unknown" tagname="div" style="font-size: 16px; color: #666; margin-bottom: 16px;"></w2:textbox>
-                    </xf:group>
-                    
-                    <xf:group class="score-section">
-                        <w2:textbox class="score-title" label="상세 점수" tagname="div"></w2:textbox>
-                        
-                        <xf:group class="score-grid">
-                            <xf:group class="score-item">
-                                <w2:textbox class="score-label" label="개발 스타일" tagname="div"></w2:textbox>
-                                <w2:textbox class="score-development-style" label="0점" tagname="div"></w2:textbox>
-                                <w2:textbox class="development-style-type" label="분석 중..." tagname="div" style="font-size: 12px; color: #666; margin-top: 4px;"></w2:textbox>
-                            </xf:group>
-                            
-                            <xf:group class="score-item">
-                                <w2:textbox class="score-label" label="개발자 선호도" tagname="div"></w2:textbox>
-                                <w2:textbox class="score-developer-preference" label="0점" tagname="div"></w2:textbox>
-                                <w2:textbox class="developer-preference-type" label="분석 중..." tagname="div" style="font-size: 12px; color: #666; margin-top: 4px;"></w2:textbox>
-                            </xf:group>
-                        </xf:group>
-                        
-                        <xf:group class="confidence-section">
-                            <w2:textbox class="confidence-label" label="분석 신뢰도" tagname="div"></w2:textbox>
-                            <w2:textbox class="score-confidence" label="0%" tagname="div"></w2:textbox>
-                        </xf:group>
-                    </xf:group>
-                    
-                    <xf:group class="result-buttons">
-                        <xf:trigger class="btn-restart" ev:onclick="scwin.goToUserDetail">
-                            <xf:label>프로필로 이동</xf:label>
-                        </xf:trigger>
-                    </xf:group>
-                </xf:group>
-            </xf:group>
-        </xf:group>
-    </body>
+	</head>
+
+	<body ev:onpageload="scwin.onpageload">
+		<w2:wframe src="../common/Header.xml" id="headerFrame" />
+		<xf:group class="main-container">
+			<xf:group class="content-area">
+				<!-- 업로드 섹션 -->
+				<xf:group class="upload-section">
+					<xf:group class="page-header">
+						<w2:textbox class="main-title" label="다양한 언어의 코드를 분석해드립니다" tagname="h1"></w2:textbox>
+						<w2:textbox class="sub-title" label="Java, Python, JavaScript 등 어떤 언어든 분석 가능합니다" tagname="p"></w2:textbox>
+					</xf:group>
+
+					<xf:group class="info-box">
+						<w2:textbox class="info-text" label="💡 다양한 언어 지원, 여러 파일 동시 업로드, 파일당 최대 50KB, 드래그 앤 드롭 지원" tagname="p"></w2:textbox>
+					</xf:group>
+
+					<!-- 멀티 파일 업로드 영역 -->
+					<xf:group class="upload-container">
+						<xf:group class="upload-area" ev:onclick="scwin.handleUploadAreaClick()">
+							<w2:textbox class="upload-icon" label="📁" tagname="div"></w2:textbox>
+							<w2:textbox class="upload-title" label="코드 파일 업로드" tagname="div"></w2:textbox>
+							<w2:textbox class="upload-description" label="여러 파일을 선택하거나 드래그 앤 드롭으로 업로드하세요" tagname="div"></w2:textbox>
+							<xf:trigger class="upload-button">
+								<xf:label>파일 선택</xf:label>
+							</xf:trigger>
+							<input type="file" id="multiFileInput" class="file-input-hidden" multiple="multiple"
+								accept=".java,.js,.ts,.py,.cpp,.c,.cs,.php,.rb,.go,.kt,.swift,.scala,.rs,.jsx,.tsx,.vue,.html,.css,.scss,.sass,.sql,.json,.xml,.yaml,.yml,.sh,.bat,.ps1,.r,.m,.pl,.lua,.dart" />
+						</xf:group>
+					</xf:group>
+
+					<!-- 파일 목록 표시 영역 -->
+					<xf:group class="file-list-container">
+						<w2:textbox class="file-list-title" label="업로드된 파일 목록" tagname="div"></w2:textbox>
+						<xf:group class="file-list">
+							<w2:textbox class="no-files" label="업로드된 파일이 없습니다" tagname="div"></w2:textbox>
+						</xf:group>
+					</xf:group>
+
+					<xf:group class="action-buttons">
+						<xf:trigger class="btn-next" ev:onclick="scwin.btn_next_onclick">
+							<xf:label>다음</xf:label>
+						</xf:trigger>
+					</xf:group>
+				</xf:group>
+
+				<!-- 결과 섹션 -->
+				<xf:group class="result-section" style="display: none;">
+					<xf:group class="result-header">
+						<w2:textbox class="result-title" label="분석 결과" tagname="h1"></w2:textbox>
+						<w2:textbox class="result-subtitle" label="당신의 weaveType은..." tagname="p"></w2:textbox>
+					</xf:group>
+
+					<xf:group class="result-card">
+						<w2:textbox class="result-type-code" label="AR" tagname="div"></w2:textbox>
+						<w2:textbox class="result-type-name" label="개선형 아키텍트" tagname="div"></w2:textbox>
+						<w2:textbox class="result-type-desc" label="기존 코드를 체계적으로 개선하고 최적화하는 개발자" tagname="div"></w2:textbox>
+						<w2:textbox class="result-language" label="Detected Language: Unknown" tagname="div"
+							style="font-size: 16px; color: #666; margin-bottom: 16px;"></w2:textbox>
+					</xf:group>
+
+					<xf:group class="score-section">
+						<w2:textbox class="score-title" label="상세 점수" tagname="div"></w2:textbox>
+
+						<xf:group class="score-grid">
+							<xf:group class="score-item">
+								<w2:textbox class="score-label" label="개발 스타일" tagname="div"></w2:textbox>
+								<w2:textbox class="score-development-style" label="0점" tagname="div"></w2:textbox>
+								<w2:textbox class="development-style-type" label="분석 중..." tagname="div"
+									style="font-size: 12px; color: #666; margin-top: 4px;"></w2:textbox>
+							</xf:group>
+
+							<xf:group class="score-item">
+								<w2:textbox class="score-label" label="개발자 선호도" tagname="div"></w2:textbox>
+								<w2:textbox class="score-developer-preference" label="0점" tagname="div"></w2:textbox>
+								<w2:textbox class="developer-preference-type" label="분석 중..." tagname="div"
+									style="font-size: 12px; color: #666; margin-top: 4px;"></w2:textbox>
+							</xf:group>
+						</xf:group>
+
+						<xf:group class="confidence-section">
+							<w2:textbox class="confidence-label" label="분석 신뢰도" tagname="div"></w2:textbox>
+							<w2:textbox class="score-confidence" label="0%" tagname="div"></w2:textbox>
+						</xf:group>
+					</xf:group>
+
+					<xf:group class="result-buttons">
+						<xf:trigger class="btn-restart" ev:onclick="scwin.goToUserDetail">
+							<xf:label>프로필로 이동</xf:label>
+						</xf:trigger>
+					</xf:group>
+				</xf:group>
+			</xf:group>
+		</xf:group>
+	</body>
 </html> 
