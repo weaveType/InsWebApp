@@ -189,6 +189,7 @@
             			<w2:key dataType="text" name="페이지_건수" id="pageSize" defaultValue="10"></w2:key>
             			<w2:key dataType="text" name="공고_id" id="jobPostingId"></w2:key>
             			<w2:key dataType="text" name="스카웃_상태" id="scoutStatus" defaultValue="NOT_SCOUTED"></w2:key>
+            			<w2:key dataType="text" name="Mbti_필터" id="mbtiMatchFilter"></w2:key>
             		</w2:keyInfo>
             	</w2:dataMap>
             </w2:dataCollection>
@@ -322,6 +323,7 @@ scwin.w2selectbox_disabled_onselected = function () {
 scwin.sbm_scoutVo_submitdone = function (e) {
 
 };
+
 ]]></script>
     </head>
     <body ev:onpageload="scwin.onpageload">
@@ -370,7 +372,7 @@ scwin.sbm_scoutVo_submitdone = function (e) {
                         <xf:select1 id="w2selectbox_disabled" chooseOption=""
                             style="width: 180px;height: 32px;"
                             submenuSize="auto" allOption="" disabled="false" direction="auto" appearance="minimal" disabledClass="w2selectbox_disabled"
-                            chooseOptionLabel="모든 MBTI" ref="" ev:onselected="scwin.w2selectbox_disabled_onselected" class="SelectBox">
+                            chooseOptionLabel="모든 MBTI" ref="" ev:onselected="scwin.w2selectbox_disabled_onselected" class="SelectBox" ev:onchange="scwin.w2selectbox_disabled_onchange">
                             <xf:choices>
                                 <xf:item>
                                     <xf:label><![CDATA[모든 MBTI]]></xf:label>
