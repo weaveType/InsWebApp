@@ -1907,56 +1907,56 @@ scwin.btnCancel_onclick = function (e) {
                                     <!-- 선호 경력 -->
                                     <xf:group class="info-tag-item">
                                         <w2:textbox class="info-tag-label" label="선호 경력"></w2:textbox>
-                                        <w2:select class="edit-select" ref="data:dmp_postEdit.experienceLevel" style="flex: 1;">
+                                        <xf:select1 class="edit-select" chooseOption="경력 선택" appearance="minimal" ref="data:dmp_postEdit.experienceLevel" style="flex: 1;">
                                             <xf:choices>
-                                                <xf:item><xf:label>상관없음</xf:label><xf:value>any</xf:value></xf:item>
-                                                <xf:item><xf:label>신입 (0년)</xf:label><xf:value>new</xf:value></xf:item>
-                                                <xf:item><xf:label>1-2년</xf:label><xf:value>junior</xf:value></xf:item>
-                                                <xf:item><xf:label>3-5년</xf:label><xf:value>mid</xf:value></xf:item>
-                                                <xf:item><xf:label>5년 이상</xf:label><xf:value>senior</xf:value></xf:item>
+                                                <xf:item><xf:label><![CDATA[상관없음]]></xf:label><xf:value><![CDATA[any]]></xf:value></xf:item>
+                                                <xf:item><xf:label><![CDATA[신입 (0년)]]></xf:label><xf:value><![CDATA[new]]></xf:value></xf:item>
+                                                <xf:item><xf:label><![CDATA[1-2년]]></xf:label><xf:value><![CDATA[junior]]></xf:value></xf:item>
+                                                <xf:item><xf:label><![CDATA[3-5년]]></xf:label><xf:value><![CDATA[mid]]></xf:value></xf:item>
+                                                <xf:item><xf:label><![CDATA[5년 이상]]></xf:label><xf:value><![CDATA[senior]]></xf:value></xf:item>
                                             </xf:choices>
-                                        </w2:select>
+                                        </xf:select1>
                                     </xf:group>
                                     
                                     <!-- 예상 연봉범위 -->
                                     <xf:group class="info-tag-item">
                                         <w2:textbox class="info-tag-label" label="예상 연봉범위"></w2:textbox>
-                                        <w2:select class="edit-select" ref="data:dmp_postEdit.salaryRange" style="flex: 1;">
+                                        <xf:select1 class="edit-select" chooseOption="연봉 선택" appearance="minimal" ref="data:dmp_postEdit.salaryRange" style="flex: 1;">
                                             <xf:choices>
-                                                <xf:item><xf:label>2,500만원 미만</xf:label><xf:value>under25</xf:value></xf:item>
-                                                <xf:item><xf:label>2,500-3,500만원</xf:label><xf:value>25to35</xf:value></xf:item>
-                                                <xf:item><xf:label>3,500-5,000만원</xf:label><xf:value>35to50</xf:value></xf:item>
-                                                <xf:item><xf:label>5,000만원 이상</xf:label><xf:value>over50</xf:value></xf:item>
+                                                <xf:item><xf:label><![CDATA[2,500만원 미만]]></xf:label><xf:value><![CDATA[under25]]></xf:value></xf:item>
+                                                <xf:item><xf:label><![CDATA[2,500-3,500만원]]></xf:label><xf:value><![CDATA[25to35]]></xf:value></xf:item>
+                                                <xf:item><xf:label><![CDATA[3,500-5,000만원]]></xf:label><xf:value><![CDATA[35to50]]></xf:value></xf:item>
+                                                <xf:item><xf:label><![CDATA[5,000만원 이상]]></xf:label><xf:value><![CDATA[over50]]></xf:value></xf:item>
                                             </xf:choices>
-                                        </w2:select>
+                                        </xf:select1>
                                     </xf:group>
                                     
                                     <!-- 근무 지역 -->
                                     <xf:group class="info-tag-item">
                                         <w2:textbox class="info-tag-label" label="근무 지역"></w2:textbox>
-                                        <w2:select class="edit-select" ref="data:dmp_postEdit.location" style="flex: 1;">
+                                        <xf:select1 class="edit-select" chooseOption="지역 선택" appearance="minimal" ref="data:dmp_postEdit.location" style="flex: 1;">
                                             <xf:choices>
-                                                <xf:item><xf:label>서울</xf:label><xf:value>서울</xf:value></xf:item>
-                                                <xf:item><xf:label>경기</xf:label><xf:value>경기</xf:value></xf:item>
-                                                <xf:item><xf:label>인천</xf:label><xf:value>인천</xf:value></xf:item>
-                                                <xf:item><xf:label>부산</xf:label><xf:value>부산</xf:value></xf:item>
-                                                <xf:item><xf:label>대구</xf:label><xf:value>대구</xf:value></xf:item>
-                                                <xf:item><xf:label>대전</xf:label><xf:value>대전</xf:value></xf:item>
-                                                <xf:item><xf:label>광주</xf:label><xf:value>광주</xf:value></xf:item>
+                                                <xf:item><xf:label><![CDATA[서울]]></xf:label><xf:value><![CDATA[서울]]></xf:value></xf:item>
+                                                <xf:item><xf:label><![CDATA[경기]]></xf:label><xf:value><![CDATA[경기]]></xf:value></xf:item>
+                                                <xf:item><xf:label><![CDATA[인천]]></xf:label><xf:value><![CDATA[인천]]></xf:value></xf:item>
+                                                <xf:item><xf:label><![CDATA[부산]]></xf:label><xf:value><![CDATA[부산]]></xf:value></xf:item>
+                                                <xf:item><xf:label><![CDATA[대구]]></xf:label><xf:value><![CDATA[대구]]></xf:value></xf:item>
+                                                <xf:item><xf:label><![CDATA[대전]]></xf:label><xf:value><![CDATA[대전]]></xf:value></xf:item>
+                                                <xf:item><xf:label><![CDATA[광주]]></xf:label><xf:value><![CDATA[광주]]></xf:value></xf:item>
                                             </xf:choices>
-                                        </w2:select>
+                                        </xf:select1>
                                     </xf:group>
                                     
                                     <!-- 근무 형태 -->
                                     <xf:group class="info-tag-item">
                                         <w2:textbox class="info-tag-label" label="근무 형태"></w2:textbox>
-                                        <w2:select class="edit-select" ref="data:dmp_postEdit.workType" style="flex: 1;">
+                                        <xf:select1 class="edit-select" chooseOption="형태 선택" appearance="minimal" ref="data:dmp_postEdit.workType" style="flex: 1;">
                                             <xf:choices>
-                                                <xf:item><xf:label>원격 근무</xf:label><xf:value>remote</xf:value></xf:item>
-                                                <xf:item><xf:label>출근 근무</xf:label><xf:value>onsite</xf:value></xf:item>
-                                                <xf:item><xf:label>하이브리드</xf:label><xf:value>hybrid</xf:value></xf:item>
+                                                <xf:item><xf:label><![CDATA[원격 근무]]></xf:label><xf:value><![CDATA[remote]]></xf:value></xf:item>
+                                                <xf:item><xf:label><![CDATA[출근 근무]]></xf:label><xf:value><![CDATA[onsite]]></xf:value></xf:item>
+                                                <xf:item><xf:label><![CDATA[하이브리드]]></xf:label><xf:value><![CDATA[hybrid]]></xf:value></xf:item>
                                             </xf:choices>
-                                        </w2:select>
+                                        </xf:select1>
                                     </xf:group>
                                 </xf:group>
                             </xf:group>
