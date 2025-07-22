@@ -281,7 +281,7 @@ scwin.sbm_applicationHistoryList_submiterror = function (e) {
 
 // 통계 데이터로부터 UI 업데이트
 scwin.updateStatsFromData = function () {
-    var totalCount = dlt_applications.getRowCount();
+    var totalCount = 0;
     var waitingCount = 0;
     var acceptedCount = 0;
     var rejectedCount = 0;
@@ -292,8 +292,9 @@ scwin.updateStatsFromData = function () {
         for (var i = 0; i < statsCount; i++) {
             var statusType = dlt_applicationStatsVo.getCellData(i, "statusType");
             var count = dlt_applicationStatsVo.getCellData(i, "statusCount");
-
-            if (statusType === "PENDING") {
+            if(statusType === "TOTAL"){
+                totalCount = count;
+            } else if  (statusType === "PENDING") {
                 waitingCount = count;
             } else if (statusType === "ACCEPTED") {
                 acceptedCount = count;
