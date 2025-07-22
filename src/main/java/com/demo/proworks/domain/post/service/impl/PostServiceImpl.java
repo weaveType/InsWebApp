@@ -449,4 +449,47 @@ public class PostServiceImpl implements PostService {
 		postDAO.insertScoutRequest(scoutUserVo);
 	}
 
+	/**
+	 * 사용자의 특정 공고 지원 상태를 확인한다.
+	 *
+	 * @process 1. JobApplicationVo를 생성하여 파라미터 설정
+	 *          2. DAO를 통해 지원 여부 확인
+	 *          3. 결과 반환 (0: 지원하지 않음, 1 이상: 지원함)
+	 * 
+	 * @param jobPostingId 공고 ID
+	 * @param accountId 사용자 계정 ID  
+	 * @return 지원 여부 (true: 지원함, false: 지원하지 않음)
+	 * @throws Exception
+	 */
+	@Override
+	public boolean checkApplicationStatus(int jobPostingId, int accountId) throws Exception {
+		System.out.println("=== 지원 상태 확인 서비스 시작 ===");
+		System.out.println("공고 ID: " + jobPostingId);
+		System.out.println("사용자 ID: " + accountId);
+		
+		try {
+			// JobApplicationVo 생성하여 파라미터 설정
+			JobApplicationVo jobApplicationVo = new JobApplicationVo();
+			jobApplicationVo.setJobPostingId(jobPostingId);
+			jobApplicationVo.setAccountId(accountId);
+			
+			// DAO를 통해 지원 여부 확인
+			int applicationCount = postDAO.selectApplicationCount(jobApplicationVo);
+			
+			boolean isApplied = applicationCount > 0;
+			
+			System.out.println("지원 건수: " + applicationCount);
+			System.out.println("지원 여부: " + isApplied);
+			System.out.println("✅ 지원 상태 확인 완료");
+			
+			return isApplied;
+			
+		} catch (Exception e) {
+			System.err.println("❌ 지원 상태 확인 중 오류 - jobPostingId: " + jobPostingId + ", accountId: " + accountId);
+			System.err.println("오류 내용: " + e.getMessage());
+			e.printStackTrace();
+			return false;
+		}
+	}
+
 }
