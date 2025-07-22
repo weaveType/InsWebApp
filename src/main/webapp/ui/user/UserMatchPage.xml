@@ -374,14 +374,14 @@ scwin.sbm_scoutList_submitdone = function (e) {
 											<w2:textbox id="txt_company_name"></w2:textbox>
 										</span>
 										<span style="margin-right: 8px;">에서 </span>
-										<span style="">
+										<span style="font-weight: 600; color: #333; margin-right: 8px; font-weight: bold;">
 											<w2:textbox id="txt_experience_level"></w2:textbox>
 										</span>
 										<span style="margin-right: 8px;"> 개발자를 찾는 </span>
 										<span style="font-weight: 600; color: #333; margin-right: 8px; font-weight: bold;">
 											<w2:textbox id="txt_job_title"></w2:textbox>
 										</span>
-										<span style="margin-right: 8px;"> 에 당신을 알아보고 싶어합니다.</span>
+										<span style="margin-right: 8px;"> 공고에서 당신을 스카웃하고 싶어 합니다.</span>
 									</xf:group>
 									<xf:group id="grp_tags_container" class="dev-type-tag-container" style="margin-top: 10px;">
 										<w2:textbox id="tag1" class="dev-type-tag" style="display:none;"></w2:textbox>

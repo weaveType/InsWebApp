@@ -388,7 +388,8 @@ SELECT
     u_company.name as name,
     p.preferred_developer_types as preferredDeveloperTypes, 
     p.title as title,
-    p.experience_level as experienceLevel
+    p.experience_level as experienceLevel,
+    p.job_posting_id as jobPostingId
 FROM scout_requests sr
 INNER JOIN posts p ON sr.job_posting_id = p.job_posting_id
 INNER JOIN companys c ON p.company_id = c.company_id
