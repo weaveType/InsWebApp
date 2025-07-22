@@ -23,13 +23,13 @@
         INSERT INTO survey_responses (
             user_id,
             responses,
-            create_at,
-            update_at
+            created_at,
+            updated_at
         ) VALUES (
             #{userId},
             #{responses},
-            #{createAt},
-            #{updateAt}
+            #{createdAt},
+            #{updatedAt}
         )
     </insert>
 
@@ -38,7 +38,7 @@
         UPDATE survey_responses
         SET 
             responses = #{responses},
-            update_at = #{updateAt}
+            updated_at = #{updatedAt}
         WHERE user_id = #{userId}
     </update>
 
@@ -48,11 +48,11 @@
             response_id AS responseId,
             user_id AS userId,
             responses,
-            create_at AS createAt,
-            update_at AS updateAt
+            created_at AS createdAt,
+            updated_at AS updatedAt
         FROM survey_responses
         WHERE user_id = #{userId} AND is_deleted = 0
-        ORDER BY create_at DESC 
+        ORDER BY created_at DESC 
         LIMIT 1
     </select>
 
@@ -144,7 +144,7 @@
         SELECT 
             response_id,
             user_id,
-            create_at
+            created_at
         FROM survey_responses
         WHERE user_id = #{userId} AND is_deleted = 0
         LIMIT 1
@@ -156,11 +156,11 @@
             response_id,
             user_id,
             responses,
-            create_at,
-            update_at
+            created_at,
+            updated_at
         FROM survey_responses
         WHERE user_id = #{userId} AND is_deleted = 0
-        ORDER BY create_at DESC
+        ORDER BY created_at DESC
         LIMIT 1
     </select>
     

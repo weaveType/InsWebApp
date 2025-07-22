@@ -147,8 +147,8 @@ public class SurveyServiceImpl implements SurveyService {
             }
             
             responseVo.setResponses(responsesJson);
-            responseVo.setCreateAt(new Timestamp(System.currentTimeMillis()));
-            responseVo.setUpdateAt(new Timestamp(System.currentTimeMillis()));
+            responseVo.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+            responseVo.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
             
             try {
                 AppLog.debug("=== DB 저장 직전 responseVo 상태: userId=" + responseVo.getUserId() + " ===");
