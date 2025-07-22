@@ -22,7 +22,7 @@
 						<w2:key id="pageIndex" name="페이지번호" dataType="number"></w2:key>
 						<w2:key id="pageSize" name="페이지크기" dataType="number"></w2:key>
 						<w2:key id="userId" name="사용자ID" dataType="number"></w2:key>
-						<w2:key id="applicationStatus" name="상태" dataType="text"></w2:key>
+						<w2:key id="scoutStatus" name="상태" dataType="text"></w2:key>
 					</w2:keyInfo>
 				</w2:dataMap>
 			</w2:dataCollection>
@@ -128,12 +128,12 @@
 
             /* 반응형 처리 */
             @media (max-width: 768px) {
-                .application-row {
+                .scout-row {
                     padding: 15px !important;
                     margin-bottom: 10px !important;
                 }
                 
-                .application-row span {
+                .scout-row span {
                     font-size: 14px !important;
                 }
             }
@@ -164,9 +164,9 @@ scwin.init = function () {
 scwin.init();
 
 // 지원현황 데이터를 generator에 바인딩하는 함수
-scwin.bindApplicationData = function () {
+scwin.bindScoutData = function () {
     // 기존 내용 제거
-    gen_applications.removeAll();
+    gen_scouts.removeAll();
 
     // DataList에서 데이터 가져오기
     var rowCount = dlt_scoutListVo.getRowCount();
@@ -178,26 +178,25 @@ scwin.bindApplicationData = function () {
 
     for (var i = 0; i < rowCount; i++) {
         // 새로운 아이템 추가
-        gen_applications.insertChild();
+        gen_scouts.insertChild();
 
         // 데이터 가져오기
-        var name = dlt_applicationListVo.getCellData(i, "name") || "";
-        var title = dlt_applicationListVo.getCellData(i, "title") || "";
-        var experienceLevel = dlt_applicationListVo.getCellData(i, "experienceLevel") || "";
-        var preferredDeveloperTypesRaw = dlt_applicationListVo.getCellData(i, "preferredDeveloperTypes") || "";
+        var name = dlt_scoutListVo.getCellData(i, "name") || "";
+        var title = dlt_scoutListVo.getCellData(i, "title") || "";
+        var experienceLevel = dlt_scoutListVo.getCellData(i, "experienceLevel") || "";
+        var preferredDeveloperTypesRaw = dlt_scoutListVo.getCellData(i, "preferredDeveloperTypes") || "";
 
         // 각 컴포넌트에 값 설정
-        var txt_company_name = gen_applications.getChild(i, "txt_company_name");
-        var txt_job_title = gen_applications.getChild(i, "txt_job_title");
-        var txt_experience_level = gen_applications.getChild(i, "txt_experience_level");
+        var txt_company_name = gen_scouts.getChild(i, "txt_company_name");
+        var txt_job_title = gen_scouts.getChild(i, "txt_job_title");
+        var txt_experience_level = gen_scouts.getChild(i, "txt_experience_level");
 
         if (txt_company_name) txt_company_name.setValue(name);
         if (txt_job_title) txt_job_title.setValue(title);
         if (txt_experience_level) txt_experience_level.setValue(experienceLevel);
 
-        // Helper function to escape HTML special characters
         function escapeHtml(text) {
-            var div = document.createElement('div');
+            var div = document.createElement('xf:group');
             div.appendChild(document.createTextNode(text));
             return div.innerHTML;
         }
@@ -206,7 +205,7 @@ scwin.bindApplicationData = function () {
         try {
             var preferredDeveloperTypes = JSON.parse(preferredDeveloperTypesRaw || '[]');
             for (var j = 1; j <= 4; j++) {
-                var tag = gen_applications.getChild(i, "tag" + j);
+                var tag = gen_scouts.getChild(i, "tag" + j);
                 if (j <= preferredDeveloperTypes.length) {
                     tag.setValue(escapeHtml(preferredDeveloperTypes[j - 1])); // Apply escaping here
                     tag.show();
@@ -218,7 +217,7 @@ scwin.bindApplicationData = function () {
             console.error("preferredDeveloperTypes 파싱 오류: ", preferredDeveloperTypesRaw, err);
             // 파싱 실패 시 모든 태그 숨김
             for (var j = 1; j <= 4; j++) {
-                gen_applications.getChild(i, "tag" + j).hide();
+                gen_scouts.getChild(i, "tag" + j).hide();
             }
         }
 
@@ -233,28 +232,28 @@ scwin.sbm_scoutList_submiterror = function (e) {
 };
 
 // 필터링
-scwin.filterApplications = function (status) {
+scwin.filterscouts = function (status) {
     // 검색 조건 설정
     if (status !== '') {
-        dmp_searchParam.set("applicationStatus", status);
+        dmp_searchParam.set("scoutStatus", status);
     } else {
-        dmp_searchParam.set("applicationStatus", '');
+        dmp_searchParam.set("scoutStatus", '');
     }
 
     // 지원현황 목록 재조회
-    $c.sbm.execute($p, sbm_applicationHistoryList);
+    $c.sbm.execute($p, sbm_scoutHistoryList);
 };
 
 // 상태별 클래스 적용
 scwin.applyStatusClasses = function () {
-    var totalCount = dlt_applicationListVo.getRowCount();
+    var totalCount = dlt_scoutListVo.getRowCount();
 
     setTimeout(function () {
-        var cards = document.querySelectorAll('.application-card');
+        var cards = document.querySelectorAll('.scout-card');
         var statusBadges = document.querySelectorAll('.status-badge');
 
         for (var i = 0; i < cards.length && i < totalCount; i++) {
-            var experienceLevel = dlt_applicationListVo.getCellData(i, "experienceLevel");
+            var experienceLevel = dlt_scoutListVo.getCellData(i, "experienceLevel");
             var card = cards[i];
             var badge = statusBadges[i];
 
@@ -273,12 +272,12 @@ scwin.applyStatusClasses = function () {
 };
 
 // 지원현황 상세보기
-scwin.showApplicationDetail = function (rowIndex) {
-    var name = dlt_applicationListVo.getCellData(rowIndex, "name");
-    var title = dlt_applicationListVo.getCellData(rowIndex, "title");
-    var experienceLevel = dlt_applicationListVo.getCellData(rowIndex, "experienceLevel");
-    var preferredDeveloperTypes = dlt_applicationListVo.getCellData(rowIndex, "preferredDeveloperTypes");
-    var jobPostingId = dlt_applicationListVo.getCellData(rowIndex, "jobPostingId");
+scwin.showScoutDetail = function (rowIndex) {
+    var name = dlt_scoutListVo.getCellData(rowIndex, "name");
+    var title = dlt_scoutListVo.getCellData(rowIndex, "title");
+    var experienceLevel = dlt_scoutListVo.getCellData(rowIndex, "experienceLevel");
+    var preferredDeveloperTypes = dlt_scoutListVo.getCellData(rowIndex, "preferredDeveloperTypes");
+    var jobPostingId = dlt_scoutListVo.getCellData(rowIndex, "jobPostingId");
 
     var detailMessage = "=== 지원 상세 정보 ===\n\n";
     detailMessage += "회사명: " + name + "\n";
@@ -293,10 +292,10 @@ scwin.showApplicationDetail = function (rowIndex) {
 };
 
 // 지원현황 행 클릭 이벤트 핸들러
-scwin.handleApplicationRowClick = function (e) {
+scwin.handleScoutRowClick = function (e) {
     var index = this.getGeneratedIndex();
     if (typeof index === 'number' && index >= 0) {
-        scwin.showApplicationDetail(index);
+        scwin.showScoutDetail(index);
     } else {
         console.error("유효한 인덱스를 가져올 수 없습니다.");
     }
@@ -304,29 +303,29 @@ scwin.handleApplicationRowClick = function (e) {
 
 scwin.sbm_scoutList_submitdone = function (e) {
     try {
+        debugger;
         var res = e.responseJSON;
         console.log("=== 전체 응답 데이터 ===", res);
 
-        if (res && res.applicationListVoList) {
-            console.log("=== applicationListVoList 데이터 ===", res.applicationListVoList);
-            console.log("=== 배열 길이 ===", res.applicationListVoList.length);
+        if (res && res.scoutListVoList) {
+            console.log("=== scoutListVoList 데이터 ===", res.scoutListVoList);
+            console.log("=== 배열 길이 ===", res.scoutListVoList.length);
 
-            dlt_applicationListVo.setJSON(res.applicationListVoList);
+            dlt_scoutListVo.setJSON(res.scoutListVoList);
             console.log("=== dataList 설정 완료 ===");
-            console.log("=== dataList 행 수 ===", dlt_applicationListVo.getRowCount());
+            console.log("=== dataList 행 수 ===", dlt_scoutListVo.getRowCount());
 
             // 수동으로 generator에 데이터 바인딩
-            scwin.bindApplicationData();
+            scwin.bindScoutData();
 
             // 빈 상태 표시/숨김 처리
             var emptyState = document.getElementById('empty_state');
-            if (res.applicationListVoList.length === 0) {
+            if (res.scoutListVoList.length === 0) {
                 if (emptyState) emptyState.style.display = 'block';
             } else {
                 if (emptyState) emptyState.style.display = 'none';
             }
         } else {
-            console.log("=== applicationListVoList가 없습니다 ===");
             console.log("=== res 구조 ===", res);
         }
 
@@ -364,12 +363,12 @@ scwin.sbm_scoutList_submitdone = function (e) {
 					</section>
 
 					<!-- 지원현황 카드들 -->
-					<section class="applications-section">
-						<xf:group class="applications-grid">
-							<w2:generator id="gen_applications" style="">
+					<section class="scouts-section">
+						<xf:group class="scouts-grid">
+							<w2:generator id="scouts" style="">
 								<xf:group
 									style="padding: 20px; margin-bottom: 15px; border: 1px solid #e8e8e8; border-radius: 8px; background-color: white; cursor: pointer;"
-									class="application-row" ev:onclick="scwin.handleApplicationRowClick">
+									class="scout-row" ev:onclick="scwin.handlescoutRowClick">
 									<xf:group style="display: flex; align-items: center; font-size: 16px; color: #333; flex-wrap: wrap;">
 										<span style="font-weight: bold; color: #4285f4; margin-right: 8px;">
 											<w2:textbox id="txt_company_name"></w2:textbox>
