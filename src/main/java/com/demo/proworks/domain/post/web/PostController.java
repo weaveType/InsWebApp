@@ -539,7 +539,7 @@ public class PostController {
 	@ElService(key = "POS0001Detail")
 	@RequestMapping(value = "POS0001Detail")
 	@ElDescription(sub = "공고정보 상세 조회 (유저용)", desc = "유저가 공고 상세정보를 조회한다.")
-	public PostVo selectPostDetail(PostVo postVo) throws Exception {
+	public PostVo selectPostDetail(PostVo postVo, HttpServletRequest request) throws Exception {
 
 		System.out.println("=== 공고 상세 조회 (유저용) ===");
 		System.out.println("조회할 공고 ID: " + postVo.getJobPostingId());
@@ -550,6 +550,34 @@ public class PostController {
 		if (selectPostVo != null) {
 			System.out.println("조회된 공고 제목: " + selectPostVo.getTitle());
 			System.out.println("조회된 공고 회사: " + selectPostVo.getCompanyId());
+
+			// 현재 로그인한 사용자 정보 가져오기
+			try {
+				ProworksUserHeader userHeader = (ProworksUserHeader) ControllerContextUtil.getUserHeader();
+				if (userHeader != null) {
+					int currentUserId = userHeader.getAccountId();
+					int jobPostingId = Integer.parseInt(selectPostVo.getJobPostingId());
+					
+					System.out.println("로그인한 사용자 ID: " + currentUserId);
+					System.out.println("공고 지원 상태 확인 시작...");
+					
+					// 지원 상태 확인
+					boolean isApplied = postService.checkApplicationStatus(jobPostingId, currentUserId);
+					
+					// 지원 상태를 PostVo에 설정 (Y/N 형태로)
+					selectPostVo.setIsApplied(isApplied ? "Y" : "N");
+					
+					System.out.println("지원 상태 확인 결과: " + (isApplied ? "지원함" : "지원하지 않음"));
+				} else {
+					System.out.println("비로그인 사용자 - 지원 상태 N으로 설정");
+					selectPostVo.setIsApplied("N");
+				}
+			} catch (Exception e) {
+				System.err.println("지원 상태 확인 중 오류: " + e.getMessage());
+				e.printStackTrace();
+				// 오류 발생 시 지원하지 않은 것으로 설정
+				selectPostVo.setIsApplied("N");
+			}
 
 			// 해당 공고의 기술스택 목록도 함께 조회하여 JSON으로 설정
 			try {

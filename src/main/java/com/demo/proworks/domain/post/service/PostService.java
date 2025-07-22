@@ -185,4 +185,14 @@ public interface PostService {
 	 * @throws 	Exception							
 	 */
 	public List<ApplicationListVo> getApplicationHistoryList(ApplicationSearchVo applicationSearchVo) throws Exception;
+  
+  /*
+	 * 사용자의 특정 공고 지원 상태를 확인한다.
+	 * 
+	 * @param jobPostingId 공고 ID
+	 * @param accountId 사용자 계정 ID  
+	 * @return 지원 여부 (true: 지원함, false: 지원하지 않음)
+	 * @throws Exception
+	 */
+	public boolean checkApplicationStatus(int jobPostingId, int accountId) throws Exception;
 }

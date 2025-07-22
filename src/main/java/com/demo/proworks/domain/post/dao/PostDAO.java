@@ -232,6 +232,16 @@ public class PostDAO extends com.demo.proworks.cmmn.dao.ProworksDefaultAbstractD
 	 */
 	public List<ApplicationListVo> getApplicationHistoryList(ApplicationSearchVo applicationSearchVo) throws Exception {
 		return (List<ApplicationListVo>) list("com.demo.proworks.domain.post.getApplicationHistoryList", applicationSearchVo);
+    
+  /*
+	 * 사용자의 특정 공고 지원 여부를 확인한다.
+	 *
+	 * @param jobApplicationVo 지원 정보 (jobPostingId, accountId 포함)
+	 * @return 지원 횟수 (0: 지원하지 않음, 1 이상: 지원함)
+	 * @throws ElException
+	 */
+	public int selectApplicationCount(JobApplicationVo jobApplicationVo) throws ElException {
+		return (Integer) selectByPk("com.demo.proworks.domain.post.selectApplicationCount", jobApplicationVo);
 	}
 
 }

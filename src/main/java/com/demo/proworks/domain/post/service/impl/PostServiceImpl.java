@@ -464,9 +464,41 @@ public class PostServiceImpl implements PostService {
 	 */
 	public List<ApplicationListVo> getApplicationHistoryList(ApplicationSearchVo applicationSearchVo) throws Exception {
 		List<ApplicationListVo> result = postDAO.getApplicationHistoryList(applicationSearchVo);
-
-		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> applicationSearchVo : " + applicationSearchVo.toString());		
-		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> result : " + result.toString());
 		return result;
+	}
+  
+  /*
+	 * 사용자의 특정 공고 지원 상태를 확인한다.
+	 *
+	 * @process 1. JobApplicationVo를 생성하여 파라미터 설정
+	 *          2. DAO를 통해 지원 여부 확인
+	 *          3. 결과 반환 (0: 지원하지 않음, 1 이상: 지원함)
+	 * 
+	 * @param jobPostingId 공고 ID
+	 * @param accountId 사용자 계정 ID  
+	 * @return 지원 여부 (true: 지원함, false: 지원하지 않음)
+	 * @throws Exception
+	 */
+	@Override
+	public boolean checkApplicationStatus(int jobPostingId, int accountId) throws Exception {
+		
+		try {
+			// JobApplicationVo 생성하여 파라미터 설정
+			JobApplicationVo jobApplicationVo = new JobApplicationVo();
+			jobApplicationVo.setJobPostingId(jobPostingId);
+			jobApplicationVo.setAccountId(accountId);
+			
+			// DAO를 통해 지원 여부 확인
+			int applicationCount = postDAO.selectApplicationCount(jobApplicationVo);
+			
+			boolean isApplied = applicationCount > 0;
+			
+			return isApplied;
+			
+		} catch (Exception e) {
+			System.err.println("오류 내용: " + e.getMessage());
+			e.printStackTrace();
+			return false;
+		}
 	}
 }
