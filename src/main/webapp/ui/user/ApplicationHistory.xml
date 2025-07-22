@@ -1,64 +1,59 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<html xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:ev="http://www.w3.org/2001/xml-events"
-    xmlns:w2="http://www.inswave.com/websquare" 
-    xmlns:xf="http://www.w3.org/2002/xforms">
-    
-    <head meta_screenName="지원현황">
-        <w2:type>COMPONENT</w2:type>
-        <w2:buildDate/>
-        <w2:MSA/>
-        <xf:model>
-            <w2:dataCollection baseNode="map">
-                <w2:dataList baseNode="list" repeatNode="map" id="dlt_applications" saveRemovedData="true">
-                    <w2:columnInfo>
-                        <w2:column id="applicationId" name="지원ID" dataType="number"></w2:column>
-                        <w2:column id="userId" name="사용자ID" dataType="number"></w2:column>
-                        <w2:column id="company" name="회사명" dataType="text"></w2:column>
-                        <w2:column id="position" name="포지션" dataType="text"></w2:column>
-                        <w2:column id="applicationDate" name="지원일자" dataType="text"></w2:column>
-                        <w2:column id="status" name="상태" dataType="text"></w2:column>
-                        <w2:column id="result" name="결과" dataType="text"></w2:column>
-                        <w2:column id="logo" name="로고" dataType="text"></w2:column>
-                        <w2:column id="jobPostingId" name="공고ID" dataType="number"></w2:column>
-                    </w2:columnInfo>
-                </w2:dataList>
-                <w2:dataList baseNode="list" repeatNode="map" id="dlt_applicationStats" saveRemovedData="true">
-                    <w2:columnInfo>
-                        <w2:column id="statusType" name="상태타입" dataType="text"></w2:column>
-                        <w2:column id="statusCount" name="상태개수" dataType="number"></w2:column>
-                    </w2:columnInfo>
-                </w2:dataList>
-                <w2:dataMap baseNode="map" id="dmp_searchParam">
-                    <w2:keyInfo>
-                        <w2:key id="pageIndex" name="페이지번호" dataType="number"></w2:key>
-                        <w2:key id="pageSize" name="페이지크기" dataType="number"></w2:key>
-                        <w2:key id="userId" name="사용자ID" dataType="number"></w2:key>
-                        <w2:key id="status" name="상태" dataType="text"></w2:key>
-                    </w2:keyInfo>
-                </w2:dataMap>
-            </w2:dataCollection>
-            <xf:submission id="sbm_applicationHistoryList" action="/InsWebApp/USApplicationHistoryList.pwkjson" method="post" 
-                mediatype="application/json" ref='data:json,{"id":"dmp_searchParam", "key":"applicationHistoryVo"}' 
-                target='data:json,{"id":"dlt_applications", "key":"elData.applicationHistoryList"}' 
-                encoding="UTF-8" instance="" replace="" errorHandler="" customHandler="" 
-                mode="asynchronous" processMsg="지원현황 조회중..." 
-                ev:submit="" ev:submitdone="scwin.sbm_applicationHistoryList_submitdone" 
-                ev:submiterror="scwin.sbm_applicationHistoryList_submiterror" abortTrigger="">
-            </xf:submission>
-            <xf:submission id="sbm_applicationStats" action="/InsWebApp/USApplicationHistoryList.pwkjson" method="post" 
-                mediatype="application/json" ref='data:json,{"id":"dmp_searchParam", "key":"applicationHistoryVo"}' 
-                target='data:json,{"id":"dlt_applicationStats", "key":"elData.applicationStatsList"}' 
-                encoding="UTF-8" instance="" replace="" errorHandler="" customHandler="" 
-                mode="asynchronous" processMsg="" 
-                ev:submit="" ev:submitdone="scwin.sbm_applicationStats_submitdone" 
-                ev:submiterror="" abortTrigger="">
-            </xf:submission>
-        </xf:model>
-        <w2:layoutInfo/>
-        <w2:publicInfo method=""/>
-        
-        <style type="text/css"><![CDATA[
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare"
+	xmlns:xf="http://www.w3.org/2002/xforms">
+
+	<head meta_screenName="지원현황">
+		<w2:type>COMPONENT</w2:type>
+		<w2:buildDate />
+		<w2:MSA />
+		<xf:model>
+			<w2:dataCollection baseNode="map">
+				<w2:dataList baseNode="list" repeatNode="map" id="dlt_applications" saveRemovedData="true">
+					<w2:columnInfo>
+						<w2:column id="applicationId" name="지원ID" dataType="number"></w2:column>
+						<w2:column id="userId" name="사용자ID" dataType="number"></w2:column>
+						<w2:column id="company" name="회사명" dataType="text"></w2:column>
+						<w2:column id="position" name="포지션" dataType="text"></w2:column>
+						<w2:column id="applicationDate" name="지원일자" dataType="text"></w2:column>
+						<w2:column id="status" name="상태" dataType="text"></w2:column>
+						<w2:column id="result" name="결과" dataType="text"></w2:column>
+						<w2:column id="logo" name="로고" dataType="text"></w2:column>
+						<w2:column id="jobPostingId" name="공고ID" dataType="number"></w2:column>
+					</w2:columnInfo>
+				</w2:dataList>
+				<w2:dataList baseNode="list" repeatNode="map" id="dlt_applicationStats" saveRemovedData="true">
+					<w2:columnInfo>
+						<w2:column id="statusType" name="상태타입" dataType="text"></w2:column>
+						<w2:column id="statusCount" name="상태개수" dataType="number"></w2:column>
+					</w2:columnInfo>
+				</w2:dataList>
+				<w2:dataMap baseNode="map" id="dmp_searchParam">
+					<w2:keyInfo>
+						<w2:key id="pageIndex" name="페이지번호" dataType="number"></w2:key>
+						<w2:key id="pageSize" name="페이지크기" dataType="number"></w2:key>
+						<w2:key id="userId" name="사용자ID" dataType="number"></w2:key>
+						<w2:key id="applicationStatus" name="상태" dataType="text"></w2:key>
+					</w2:keyInfo>
+				</w2:dataMap>
+			</w2:dataCollection>
+			<xf:submission id="sbm_applicationHistoryList" action="/InsWebApp/USApplicationHistoryList.pwkjson" method="post"
+				mediatype="application/json" ref='data:json,{"id":"dmp_searchParam", "key":"applicationHistoryVo"}'
+				target='data:json,{"id":"dlt_applications", "key":"elData.applicationHistoryList"}' encoding="UTF-8" instance="" replace=""
+				errorHandler="" customHandler="" mode="asynchronous" processMsg="지원현황 조회중..." ev:submit=""
+				ev:submitdone="scwin.sbm_applicationHistoryList_submitdone" ev:submiterror="scwin.sbm_applicationHistoryList_submiterror"
+				abortTrigger="">
+			</xf:submission>
+			<xf:submission id="sbm_applicationStats" action="/InsWebApp/US0001Cnt.pwkjson" method="post"
+				mediatype="application/json" ref='data:json,{"id":"", "key":""}'
+				target='data:json,{"id":"dlt_applicationStats", "key":"elData.applicationStatsList"}' encoding="UTF-8" instance="" replace=""
+				errorHandler="" customHandler="" mode="asynchronous" processMsg="" ev:submit="" ev:submitdone="scwin.sbm_applicationStats_submitdone"
+				ev:submiterror="" abortTrigger="">
+			</xf:submission>
+		</xf:model>
+		<w2:layoutInfo />
+		<w2:publicInfo method="" />
+
+		<style type="text/css"><![CDATA[
 
             .main-wrap {
                 width: 100%;
@@ -82,394 +77,116 @@
                 overflow-y: auto;
             }
 
-            /* 지원현황 페이지 헤더 */
+            /* 페이지 헤더 */
             .page-header {
-                background-color: white;
-                border-radius: 12px;
-                padding: min(30px, 4vw);
-                margin-bottom: 24px;
-                box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                flex-wrap: wrap;
-                gap: 20px;
-            }
-
-            .page-info {
-                display: flex;
-                align-items: center;
-                gap: 20px;
-                flex: 1;
-                min-width: 0;
-            }
-
-            .page-icon {
-                width: 80px;
-                height: 80px;
-                border-radius: 50%;
-                background: linear-gradient(135deg, #f093fb, #f5576c);
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                color: white;
-                font-size: clamp(32px, 4vw, 40px);
-                flex-shrink: 0;
-            }
-
-            .page-details h1 {
-                font-size: clamp(24px, 4vw, 28px);
-                font-weight: bold;
-                color: #333;
-                margin: 0 0 8px 0;
-            }
-
-            .page-description {
-                font-size: clamp(14px, 2vw, 16px);
-                color: #666;
-                line-height: 1.5;
-            }
-
-            /* 통계 카드 */
-            .stats-grid {
-                display: grid;
-                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-                gap: 20px;
                 margin-bottom: 30px;
             }
 
-            .stat-card {
-                background: linear-gradient(135deg, #667eea, #764ba2);
-                color: white;
-                padding: 24px;
+            .page-info h1 {
+                font-size: 28px;
+                font-weight: bold;
+                color: #333;
+                margin-bottom: 8px;
+            }
+
+            .page-description {
+                color: #666;
+                font-size: 16px;
+            }
+
+            /* 통계 카드 섹션 */
+            .stats-grid {
+                display: flex;
+                background-color: white;
                 border-radius: 12px;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+                margin-bottom: 30px;
+                overflow: hidden;
+            }
+
+            .stat-card {
+                flex: 1;
+                padding: 40px 30px;
                 text-align: center;
-                box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
-                transition: transform 0.2s ease;
+                position: relative;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                min-height: 120px;
             }
 
-            .stat-card:hover {
-                transform: translateY(-2px);
-            }
-
-            .stat-card.waiting {
-                background: linear-gradient(135deg, #f093fb, #f5576c);
-                box-shadow: 0 4px 15px rgba(240, 147, 251, 0.3);
-            }
-
-            .stat-card.accepted {
-                background: linear-gradient(135deg, #4facfe, #00f2fe);
-                box-shadow: 0 4px 15px rgba(79, 172, 254, 0.3);
-            }
-
-            .stat-card.rejected {
-                background: linear-gradient(135deg, #fa709a, #fee140);
-                box-shadow: 0 4px 15px rgba(250, 112, 154, 0.3);
+            .stat-card:not(:last-child)::after {
+                content: '';
+                position: absolute;
+                right: 0;
+                top: 20%;
+                bottom: 20%;
+                width: 1px;
+                background-color: #e8e8e8;
             }
 
             .stat-number {
+                display: block;
                 font-size: 36px;
                 font-weight: bold;
                 margin-bottom: 8px;
-                display: block;
+                color: #888;
+                transition: color 0.2s ease;
             }
 
             .stat-label {
+                display: block;
                 font-size: 14px;
-                opacity: 0.9;
+                color: #888;
+                font-weight: 500;
+                transition: color 0.2s ease;
             }
 
-            /* 필터 탭 */
-            .filter-section {
-                background-color: white;
-                border-radius: 12px;
-                padding: 20px;
-                margin-bottom: 24px;
-                box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-            }
-
-            .filter-tabs {
-                display: flex;
-                gap: 8px;
-                flex-wrap: wrap;
-            }
-
-            .filter-tab {
-                padding: 8px 16px;
-                border: 1px solid #e0e0e0;
-                background: white;
-                border-radius: 20px;
-                cursor: pointer;
-                font-size: 14px;
-                transition: all 0.2s ease;
-                color: #666;
-            }
-
-            .filter-tab.active {
-                background: linear-gradient(135deg, #667eea, #764ba2);
-                color: white;
-                border-color: #667eea;
-            }
-
-            .filter-tab:hover:not(.active) {
-                background-color: #f8f9fa;
-                color: #333;
-            }
-
-            /* 지원현황 카드들 */
-            .applications-section {
-                background-color: white;
-                border-radius: 12px;
-                padding: 24px;
-                box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-            }
-
-            .applications-grid {
-                display: grid;
-                gap: 20px;
-            }
-
-            .application-card {
-                background: #f8f9fa;
-                border-radius: 12px;
-                padding: 24px;
-                border-left: 4px solid #e0e0e0;
-                transition: all 0.3s ease;
-                position: relative;
-            }
-
-            .application-card:hover {
-                transform: translateY(-2px);
-                box-shadow: 0 4px 16px rgba(0,0,0,0.1);
-            }
-
-            .application-card.pending {
-                border-left-color: #f093fb;
-            }
-
-            .application-card.accepted {
-                border-left-color: #4facfe;
-            }
-
-            .application-card.rejected {
-                border-left-color: #fa709a;
-            }
-
-            .card-header {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                margin-bottom: 16px;
-            }
-
-            .company-info {
-                display: flex;
-                align-items: center;
-                gap: 12px;
-            }
-
-            .company-logo {
-                width: 48px;
-                height: 48px;
-                border-radius: 8px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-size: 24px;
-                background-color: white;
-                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            }
-
-            .company-details {
-                flex: 1;
-            }
-
-            .company-name {
-                font-size: 18px;
-                font-weight: bold;
-                color: #333;
-                margin-bottom: 4px;
-            }
-
-            .position-name {
-                font-size: 14px;
-                color: #666;
-            }
-
-            .application-date {
-                font-size: 14px;
-                color: #999;
-            }
-
-            .card-body {
-                display: flex;
-                align-items: center;
-                gap: 12px;
-                margin-bottom: 20px;
-            }
-
-            .status-badge {
-                padding: 6px 12px;
-                border-radius: 20px;
-                font-size: 12px;
-                font-weight: 600;
-                text-align: center;
-                min-width: 80px;
-            }
-
-            .status-pending {
-                background-color: #fff3cd;
-                color: #856404;
-                border: 1px solid #ffeaa7;
-            }
-
-            .status-accepted {
-                background-color: #d4edda;
-                color: #155724;
-                border: 1px solid #c3e6cb;
-            }
-
-            .status-rejected {
-                background-color: #f8d7da;
-                color: #721c24;
-                border: 1px solid #f5c6cb;
-            }
-
-            .result-text {
-                flex: 1;
-                font-size: 14px;
-                color: #333;
-            }
-
-            .card-actions {
-                display: flex;
-                gap: 10px;
-                justify-content: flex-end;
-            }
-
-            .btn-detail, .btn-review {
-                padding: 8px 16px;
-                border: none;
-                border-radius: 6px;
-                font-size: 14px;
+            /* 클릭 가능한 카드 스타일 */
+            .stat-card {
                 cursor: pointer;
                 transition: background-color 0.2s ease;
             }
 
-            .btn-detail {
-                background-color: #6c757d;
-                color: white;
+            .stat-card:hover {
+                background-color: #f8f9fa;
             }
 
-            .btn-detail:hover {
-                background-color: #5a6268;
+            /* 활성화된 카드는 파란색 */
+            .stat-card.active .stat-number,
+            .stat-card.active .stat-label {
+                color: #4285f4 !important;
             }
 
-            .btn-review {
-                background-color: #007bff;
-                color: white;
-            }
-
-            .btn-review:hover {
-                background-color: #0056b3;
+            .stat-card.active:hover {
+                background-color: #f0f4ff;
             }
 
             /* 반응형 디자인 */
-            @media (max-width: 1024px) {
-                .main-container {
+            @media (max-width: 768px) {
+                .stats-grid {
                     flex-direction: column;
                 }
-
-                .sidebar {
-                    width: 100%;
-                    padding: 20px;
-                    border-right: none;
-                    border-bottom: 1px solid #e0e0e0;
+                
+                .stat-card {
+                    padding: 30px 20px;
                 }
-
-                .sidebar-menu {
-                    display: grid;
-                    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-                    gap: 20px;
+                
+                .stat-card:not(:last-child)::after {
+                    display: none;
                 }
-
-                .stats-grid {
-                    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+                
+                .stat-card:not(:last-child) {
+                    border-bottom: 1px solid #e8e8e8;
                 }
+            }
+            
+            /* 반응형 디자인 */
+            @media (max-width: 1024px) {
             }
 
             @media (max-width: 768px) {
-                .header {
-                    height: 60px;
-                    padding: 0 15px;
-                }
-                
-                .header-left, .header-right {
-                    padding-top: 13px;
-                }
-
-                .nav-link {
-                    display: none;
-                }
-
-                .sidebar, .main-content {
-                    padding: 15px;
-                }
-
-                .page-header {
-                    flex-direction: column;
-                    text-align: center;
-                    gap: 15px;
-                }
-
-                .page-info {
-                    flex-direction: column;
-                    text-align: center;
-                }
-
-                .stats-grid {
-                    grid-template-columns: repeat(2, 1fr);
-                    gap: 15px;
-                }
-
-                .stat-number {
-                    font-size: 28px;
-                }
-
-                .application-card {
-                    padding: 16px;
-                }
-
-                .card-header {
-                    flex-direction: column;
-                    align-items: flex-start;
-                    gap: 8px;
-                }
-
-                .card-actions {
-                    flex-direction: column;
-                }
-
-                .filter-tabs {
-                    flex-wrap: wrap;
-                }
-
-                .sidebar-menu {
-                    grid-template-columns: 1fr;
-                    gap: 0;
-                }
-
-                .menu-category {
-                    margin-bottom: 20px;
-                }
-            }
-
-            /* 로딩 효과 */
-            .loading {
-                text-align: center;
-                padding: 40px;
-                color: #666;
-                font-size: 16px;
             }
 
             /* 빈 상태 */
@@ -495,8 +212,8 @@
                 color: #ccc;
             }
         ]]></style>
-        
-        <script lazy="false" type="text/javascript"><![CDATA[
+
+		<script lazy="false" type="text/javascript"><![CDATA[
 scwin.onpageload = function() {
     // 검색 조건 초기화
     dmp_searchParam.set("pageIndex", 1);
@@ -504,6 +221,12 @@ scwin.onpageload = function() {
     
     // 지원현황 목록 조회
     scwin.loadApplicationHistory();
+    
+    // 통계 데이터 조회
+    $c.sbm.execute($p, sbm_applicationStats);
+    
+    // 초기 통계 카드 설정
+    scwin.initializeStatCards();
 };
 
 // 지원현황 목록 로드
@@ -529,7 +252,6 @@ scwin.sbm_applicationHistoryList_submitdone = function(e) {
             
             // UI 업데이트
             scwin.applyStatusClasses();
-            scwin.setupFilterTabs();
         }
     } catch(err) {
         console.error("지원현황 조회 오류:", err);
@@ -593,6 +315,44 @@ scwin.updateStatsFromData = function() {
     }, 100);
 };
 
+// 통계 카드 선택 및 필터링
+scwin.selectStatCard = function(cardElement, filterType) {
+    // 모든 통계 카드에서 active 클래스 제거
+    total_applications.removeClass('active');
+    in_progress_applications.removeClass('active');
+    accepted_applications.removeClass('active');
+    rejected_applications.removeClass('active');
+    
+    // 클릭된 카드에 active 클래스 추가
+    cardElement.addClass('active');
+    
+    // 해당 필터 적용
+    scwin.filterApplications(filterType);
+};
+
+// 초기 통계 카드 설정
+scwin.initializeStatCards = function() {
+    setTimeout(function() {
+        var firstStatCard = document.querySelector('.stat-card');
+        if (firstStatCard) {
+            firstStatCard.addClass('active');
+        }
+    }, 100);
+};
+
+// 필터링
+scwin.filterApplications = function(type) {
+    // 검색 조건 설정
+    if (type !== 'all') {
+        dmp_searchParam.set("status", type);
+    } else {
+        dmp_searchParam.set("status", "");
+    }
+    
+    // 다시 조회
+    scwin.loadApplicationHistory();
+};
+
 // 상태별 클래스 적용
 scwin.applyStatusClasses = function() {
     var totalCount = dlt_applications.getRowCount();
@@ -620,39 +380,6 @@ scwin.applyStatusClasses = function() {
     }, 100);
 };
 
-// 필터 탭 설정
-scwin.setupFilterTabs = function() {
-    setTimeout(function() {
-        var tabs = document.querySelectorAll('.filter-tab');
-        if (tabs.length > 0) {
-            tabs[0].classList.add('active');
-        }
-    }, 100);
-};
-
-// 필터링
-scwin.filterApplications = function(type) {
-    // 검색 조건 설정
-    if (type !== 'all') {
-        dmp_searchParam.set("status", type);
-    } else {
-        dmp_searchParam.set("status", "");
-    }
-    
-    // 다시 조회
-    scwin.loadApplicationHistory();
-    
-    // 탭 active 클래스 변경
-    var tabs = document.querySelectorAll('.filter-tab');
-    tabs.forEach(function(tab) {
-        tab.classList.remove('active');
-    });
-    
-    if (event && event.target) {
-        event.target.classList.add('active');
-    }
-};
-
 // 지원현황 상세보기
 scwin.showApplicationDetail = function(rowIndex) {
     var company = dlt_applications.getCellData(rowIndex, "company");
@@ -671,21 +398,7 @@ scwin.showApplicationDetail = function(rowIndex) {
     detailMessage += "\n해당 공고 페이지로 이동하시겠습니까?";
     
     if (confirm(detailMessage)) {
-        // 실제로는 공고 상세 페이지로 이동
         alert("공고 ID " + jobPostingId + " 페이지로 이동합니다.");
-    }
-};
-
-// 후기 작성
-scwin.writeReview = function(rowIndex) {
-    var company = dlt_applications.getCellData(rowIndex, "company");
-    var position = dlt_applications.getCellData(rowIndex, "position");
-    
-    var reviewMessage = company + " " + position + " 포지션에 대한 후기를 작성하시겠습니까?";
-    
-    if (confirm(reviewMessage)) {
-        alert("후기 작성 페이지로 이동합니다.");
-        // 실제로는 후기 작성 페이지로 이동하는 코드 구현
     }
 };
 
@@ -693,100 +406,103 @@ scwin.writeReview = function(rowIndex) {
 scwin.refreshData = function() {
     scwin.loadApplicationHistory();
 };
+
+scwin.total_applications_onclick = function (e) {
+    scwin.selectStatCard(this, 'all');
+};
+
+scwin.in_progress_applications_onclick = function (e) {
+    scwin.selectStatCard(this, 'pending');
+};
+
+scwin.accepted_applications_onclick = function (e) {
+    scwin.selectStatCard(this, 'accepted');
+};
+
+scwin.rejected_applications_onclick = function (e) {
+    scwin.selectStatCard(this, 'rejected');
+};
 ]]></script>
-    </head>
-    
-    <body ev:onpageload="scwin.onpageload">
-        <xf:group class="main-wrap">
+	</head>
 
-            <!-- 메인 컨테이너 -->
-            <xf:group class="main-container">
-                <!-- 사이드바 -->
+	<body ev:onpageload="scwin.onpageload">
+		<xf:group class="main-wrap">
 
-                <!-- 메인 콘텐츠 -->
-                <main class="main-content">
-                    <!-- 지원현황 페이지 헤더 -->
-                    <section class="page-header">
-                        <div class="page-info">
-                            <div class="page-icon">📄</div>
-                            <div class="page-details">
-                                <h1>지원 현황</h1>
-                                <div class="page-description">지원한 기업들의 현황을 확인하고 관리하세요.</div>
-                            </div>
-                        </div>
-                    </section>
+			<!-- 메인 컨테이너 -->
+			<xf:group class="main-container">
+				<!-- 사이드바 -->
 
-                    <!-- 지원현황 통계 -->
-                    <section class="stats-grid">
-                        <div class="stat-card">
-                            <span class="stat-number" id="totalApplications">0</span>
-                            <span class="stat-label">총 지원</span>
-                        </div>
-                        <div class="stat-card waiting">
-                            <span class="stat-number" id="waitingApplications">0</span>
-                            <span class="stat-label">진행 중</span>
-                        </div>
-                        <div class="stat-card accepted">
-                            <span class="stat-number" id="acceptedApplications">0</span>
-                            <span class="stat-label">합격</span>
-                        </div>
-                        <div class="stat-card rejected">
-                            <span class="stat-number" id="rejectedApplications">0</span>
-                            <span class="stat-label">불합격</span>
-                        </div>
-                    </section>
+				<!-- 메인 콘텐츠 -->
+				<main class="main-content">
+					<!-- 지원현황 페이지 헤더 -->
+					<section class="page-header">
+						<xf:group class="page-info">
+							<xf:group class="page-details">
+								<h1>지원 현황</h1>
+								<xf:group class="page-description">지원한 기업들의 현황을 확인하고 관리하세요.</xf:group>
+							</xf:group>
+						</xf:group>
+					</section>
 
-                    <!-- 필터 탭 -->
-                    <section class="filter-section">
-                        <div class="filter-tabs">
-                            <button class="filter-tab" onclick="scwin.filterApplications('all')">전체</button>
-                            <button class="filter-tab" onclick="scwin.filterApplications('pending')">진행중</button>
-                            <button class="filter-tab" onclick="scwin.filterApplications('accepted')">합격</button>
-                            <button class="filter-tab" onclick="scwin.filterApplications('rejected')">불합격</button>
-                        </div>
-                    </section>
+					<!-- 지원현황 통계 -->
+					<section class="stats-grid">
+						<xf:group class="stat-card" id="total_applications" ev:onclick="scwin.total_applications_onclick">
+							<span class="stat-number" id="totalApplications">0</span>
+							<span class="stat-label">총 지원</span>
+						</xf:group>
+						<xf:group class="stat-card" id="in_progress_applications" ev:onclick="scwin.in_progress_applications_onclick">
+							<span class="stat-number" id="waitingApplications">0</span>
+							<span class="stat-label">진행 중</span>
+						</xf:group>
+						<xf:group class="stat-card" id="accepted_applications" ev:onclick="scwin.accepted_applications_onclick">
+							<span class="stat-number" id="acceptedApplications">0</span>
+							<span class="stat-label">합격</span>
+						</xf:group>
+						<xf:group class="stat-card" id="rejected_applications" ev:onclick="scwin.rejected_applications_onclick">
+							<span class="stat-number" id="rejectedApplications">0</span>
+							<span class="stat-label">불합격</span>
+						</xf:group>
+					</section>
 
-                    <!-- 지원현황 카드들 -->
-                    <section class="applications-section">
-                        <div class="applications-grid">
-                            <w2:generator id="gen_applications" dataList="data:dlt_applications" style="">
-                                <div class="application-card">
-                                    <div class="card-header">
-                                        <div class="company-info">
-                                            <div class="company-logo">
-                                                <w2:textbox ref="data:dlt_applications.logo"></w2:textbox>
-                                            </div>
-                                            <div class="company-details">
-                                                <div class="company-name">
-                                                    <w2:textbox ref="data:dlt_applications.company"></w2:textbox>
-                                                </div>
-                                                <div class="position-name">
-                                                    <w2:textbox ref="data:dlt_applications.position"></w2:textbox>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="application-date">
-                                            <w2:textbox ref="data:dlt_applications.applicationDate"></w2:textbox>
-                                        </div>
-                                    </div>
-                                    <div class="card-body">
-                                        <w2:textbox class="status-badge" ref="data:dlt_applications.status"></w2:textbox>
-                                        <div class="result-text">
-                                            <w2:textbox ref="data:dlt_applications.result"></w2:textbox>
-                                        </div>
-                                    </div>
-                                    <div class="card-actions">
-                                        <button class="btn-detail" onclick="scwin.showApplicationDetail(%%_rowIndex%%)">상세보기</button>
-                                        <w2:generator id="gen_review_btn" dataList="data:dlt_applications" condition="data:dlt_applications.status=='최종합격'">
-                                            <button class="btn-review" onclick="scwin.writeReview(%%_rowIndex%%)">후기작성</button>
-                                        </w2:generator>
-                                    </div>
-                                </div>
-                            </w2:generator>
-                        </div>
-                    </section>
-                </main>
-            </xf:group>
-        </xf:group>
-    </body>
+					<!-- 필터 탭 -->
+					<section class="filter-section">
+					</section>
+
+					<!-- 지원현황 카드들 -->
+					<section class="applications-section">
+						<xf:group class="applications-grid">
+							<w2:generator id="gen_applications" dataList="data:dlt_applications" style="">
+								<xf:group class="application-card">
+									<xf:group class="card-header">
+										<xf:group class="company-info">
+											<xf:group class="company-logo">
+												<w2:textbox ref="data:dlt_applications.logo"></w2:textbox>
+											</xf:group>
+											<xf:group class="company-details">
+												<xf:group class="company-name">
+													<w2:textbox ref="data:dlt_applications.company"></w2:textbox>
+												</xf:group>
+												<xf:group class="position-name">
+													<w2:textbox ref="data:dlt_applications.position"></w2:textbox>
+												</xf:group>
+											</xf:group>
+										</xf:group>
+										<xf:group class="application-date">
+											<w2:textbox ref="data:dlt_applications.applicationDate"></w2:textbox>
+										</xf:group>
+									</xf:group>
+									<xf:group class="card-body">
+										<w2:textbox class="status-badge" ref="data:dlt_applications.status"></w2:textbox>
+										<xf:group class="result-text">
+											<w2:textbox ref="data:dlt_applications.result"></w2:textbox>
+										</xf:group>
+									</xf:group>
+								</xf:group>
+							</w2:generator>
+						</xf:group>
+					</section>
+				</main>
+			</xf:group>
+		</xf:group>
+	</body>
 </html>
