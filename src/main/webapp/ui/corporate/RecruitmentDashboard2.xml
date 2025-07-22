@@ -208,30 +208,6 @@
                 margin-top: 40px;
             }
             
-            /* 공고 관리 그리드 스타일 */
-            .gvwbox {
-                background: #f8f9fa;
-                border-radius: 12px;
-                padding: 10px;
-            }
-            
-            .gvw {
-                border: 1px solid #e3e6ea;
-                border-radius: 8px;
-                overflow: hidden;
-            }
-            
-            .gvw .w2grid_head {
-                background: linear-gradient(135deg, #667eea, #764ba2);
-                color: white;
-                font-weight: 600;
-            }
-            
-            .gvw .w2grid_body tr:hover {
-                background-color: #f0f4ff;
-                cursor: pointer;
-            }
-            
             .btn_cm {
                 padding: 8px 16px;
                 border-radius: 6px;
@@ -323,8 +299,7 @@
                 }
             }
         ]]></style>
-        <script lazy="false" type="text/javascript"><![CDATA[
-scwin.onpageload = function () {
+        <script lazy="false" type="text/javascript"><![CDATA[scwin.onpageload = function () {
     var userInfoStr = WebSquare.cookie.getCookie("userInfo");
     var userInfo = JSON.parse(userInfoStr);
 
@@ -399,28 +374,36 @@ scwin.loadPostList = function () {
  * 공고 목록 조회 완료
  */
 scwin.sbm_postList_submitdone = function (e) {
-    console.log("=== 공고 목록 조회 완료 ===");
-    console.log("응답 데이터:", e.responseJSON);
 
-    // error 수신시
     var elData = e.responseJSON.elData;
     var elHeader = e.responseJSON.elHeader;
+
     if (elHeader == null || elHeader == "" || elHeader == "undefined" || elHeader.resSuc == false) {
         console.error("공고 목록 조회 에러:", elHeader);
         alert(`에러코드 : ${elHeader.resCode}\n에러메시지 : ${elHeader.resMsg}`);
         return false;
     }
 
-    // ✅ 공고정보 dataMap 초기화 (새로운 목록 조회 시 이전 선택 해제)
+    // 공고정보 dataMap 초기화
     dmp_postVoDetail.setEmptyValue();
-    console.log("선택된 공고 정보 초기화 완료");
 
     // 총 레코드 수 업데이트
     spn_listCnt.setLabel(elData.totalCount);
 
-    // 데이터를 그리드에 셋팅
-    dlt_postVoList.setJSON(elData.postVoList);
-    console.log("✅ GridView에 데이터 바인딩 완료 - 총 " + dlt_postVoList.getRowCount() + "개");
+    // 데이터를 generator에 셋팅
+    gen_postList.removeAll(); // 기존 항목 모두 삭제
+    if (elData.postVoList && elData.postVoList.length > 0) {
+        elData.postVoList.forEach(function(post, index) {
+            gen_postList.insertChild();
+            gen_postList.getChild(index, 'title').setValue(post.title);
+            gen_postList.getChild(index, 'title').setUserData('userData1', post.jobPostingId); // ID 저장
+            gen_postList.getChild(index, 'location').setValue(post.location);
+            gen_postList.getChild(index, 'preferredDeveloperTypes').setValue(post.preferredDeveloperTypes);
+            gen_postList.getChild(index, 'status').setValue(scwin.getStatusText(post.status));
+            gen_postList.getChild(index, 'postedAt').setValue(scwin.formatDate(post.postedAt));
+            gen_postList.getChild(index, 'expiresAt').setValue(scwin.formatDate(post.expiresAt));
+        });
+    }
 
     // 페이지 네비게이터 업데이트
     var totalPageCount = Math.ceil(elData.totalCount / dmp_postVo.get("pageSize"));
@@ -429,45 +412,13 @@ scwin.sbm_postList_submitdone = function (e) {
     // 통계 업데이트 (활성 공고 수)
     tbx_activeJobs.setValue(elData.totalCount);
 
-    // 데이터 확인 로그
-    for (var i = 0; i < Math.min(dlt_postVoList.getRowCount(), 3); i++) {
-        console.log("공고 " + (i + 1) + ":");
-        console.log("- ID:", dlt_postVoList.getCellData(i, "jobPostingId"));
-        console.log("- 제목:", dlt_postVoList.getCellData(i, "title"));
-        console.log("- 상태:", dlt_postVoList.getCellData(i, "status"));
-    }
-
-    console.log("������ 삭제하려면: 1) 행 클릭하여 공고 선택 → 2) 삭제 버튼 클릭");
 };
 
-/**
- * GridView 행 클릭 이벤트 (공고 상세 페이지로 이동)
- */
-scwin.grd_postList_oncellclick = function (row, col) {
-    console.log("=== 공고 행 클릭 ===");
-    console.log("선택된 행:", row);
-
-    if (row < 0) return;
-
-    // ✅ 표준 패턴: 그리드 데이터를 detail DataMap에 직접 복사
-    dmp_postVoDetail.setJSON(dlt_postVoList.getRowJSON(row));
-
-    var postData = dmp_postVoDetail.getJSON();
-    console.log("선택된 공고 데이터:", postData);
-
-    // ✅ 선택된 행 정보를 UI에서 확인할 수 있도록 표시
-    console.log("✅ 공고 선택됨 - ID: " + postData.jobPostingId + ", 제목: " + postData.title);
-
-    // 공고 상세 페이지로 이동
-    scwin.openPostDetail(postData.jobPostingId);
-};
 
 /**
- * 공고 상세보기 페이지로 이동 (문제시 여기 수정)
+ * 공고 상세보기 페이지로 이동
  */
 scwin.openPostDetail = function (jobPostingId) {
-    console.log("=== 공고 상세보기 시작 ===");
-    console.log("클릭된 공고 ID:", jobPostingId);
 
     if (!jobPostingId || jobPostingId.trim() === "") {
         console.error("공고 ID가 없습니다.");
@@ -477,24 +428,20 @@ scwin.openPostDetail = function (jobPostingId) {
 
     try {
         // 웹스퀘어 환경에서 pageFrame 방식으로 파라미터 전달
-        if ($p.parent() && $p.parent().pf_main) {
-            console.log("pageFrame을 통한 이동:", jobPostingId);
-            $p.parent().pf_main.setSrc("ui/post/PostDetail.xml", {
-                dataObject: {
-                    jobPostingId: jobPostingId
-                }
-            });
-        } else {
-            // 대안 방법: URL 방식
-            console.log("URL 방식으로 이동:", jobPostingId);
-            var detailUrl = "../post/PostDetail.xml?jobPostingId=" + encodeURIComponent(jobPostingId);
-            $p.url(detailUrl);
-        }
-        console.log("✅ 페이지 이동 요청 완료");
+        var detailUrl = "../post/PostDetail.xml?jobPostingId=" + encodeURIComponent(jobPostingId);
+        $p.url(detailUrl);
     } catch (error) {
         console.error("❌ 페이지 이동 중 오류:", error);
         alert("페이지 이동 중 오류가 발생했습니다: " + error.message);
     }
+};
+
+/**
+ * generator에서 공고 제목 클릭 시 상세 페이지로 이동
+ */
+scwin.openPostDetailByGenerator = function (e) {
+    var jobPostingId = e.json.userData1; // generator의 userData1에 저장된 jobPostingId 가져오기
+    scwin.openPostDetail(jobPostingId);
 };
 
 /**
@@ -503,7 +450,7 @@ scwin.openPostDetail = function (jobPostingId) {
 scwin.showPostDetail = function () {
     var postData = dmp_postVoDetail.getJSON();
 
-    var message = "������ 공고 상세 정보\n\n" +
+    var message = " 공고 상세 정보\n\n" +
         "ID: " + (postData.jobPostingId || "정보없음") + "\n" +
         "제목: " + (postData.title || "정보없음") + "\n" +
         "설명: " + (postData.description || "정보없음") + "\n" +
@@ -513,135 +460,6 @@ scwin.showPostDetail = function () {
         "경력수준: " + (postData.experienceLevel || "정보없음") + "\n" +
         "급여범위: " + (postData.salaryRange || "정보없음") + "\n\n" +
         "수정하시겠습니까?";
-
-    // 수정 여부 확인
-    if (confirm(message)) {
-        scwin.showEditForm(postData);
-    }
-};
-
-/**
- * 수정 폼 표시 (간단한 prompt 버전)
- */
-scwin.showEditForm = function (postData) {
-    console.log("=== 수정 모드 ===");
-    console.log("기존 데이터:", postData);
-
-    var newTitle = prompt("공고 제목을 수정하세요:", postData.title || "");
-    if (newTitle === null) return; // 취소한 경우
-
-    var newDescription = prompt("공고 설명을 수정하세요:", postData.description || "");
-    if (newDescription === null) return; // 취소한 경우
-
-    var newLocation = prompt("근무 지역을 수정하세요:", postData.location || "");
-    if (newLocation === null) return; // 취소한 경우
-
-    // ✅ 기존 데이터를 모두 유지하면서 수정된 부분만 변경
-    var updateData = {
-        jobPostingId: postData.jobPostingId,				// 필수: 공고 ID
-        companyId: postData.companyId,						// 필수: 회사 ID  
-        title: newTitle,									// 수정: 제목
-        description: newDescription,						// 수정: 설명
-        location: newLocation,								// 수정: 지역
-        // 기존 값들 유지
-        requiredSkills: postData.requiredSkills || "",
-        experienceLevel: postData.experienceLevel || "",
-        salaryRange: postData.salaryRange || "",
-        workType: postData.workType || "",
-        preferredDeveloperTypes: postData.preferredDeveloperTypes || "",
-        expiresAt: postData.expiresAt || "",
-        postedAt: postData.postedAt || "",
-        status: postData.status || "active",
-        selectedTechStackNames: postData.selectedTechStackNames || "[]"
-    };
-
-    console.log("전송할 수정 데이터:", updateData);
-
-    // 수정 확인
-    if (confirm("수정된 내용을 저장하시겠습니까?")) {
-        // ✅ 전체 데이터를 dmp_postVoDetail에 설정
-        dmp_postVoDetail.setJSON(updateData);
-
-        // 수정 요청
-        $c.sbm.execute($p, sbm_updatePostVo);
-    }
-};
-
-/**
- * 공고 수정 완료
- */
-scwin.sbm_updatePost_submitdone = function (e) {
-    console.log("=== 공고 수정 완료 ===");
-    console.log("수정 응답:", e.responseJSON);
-
-    var elHeader = e.responseJSON.elHeader;
-    if (elHeader == null || elHeader == "" || elHeader == "undefined" || elHeader.resSuc == false) {
-        console.error("공고 수정 에러:", elHeader);
-        alert(`수정 에러\n에러코드 : ${elHeader.resCode}\n에러메시지 : ${elHeader.resMsg}`);
-        return false;
-    }
-
-    alert("공고가 성공적으로 수정되었습니다!");
-
-    // 목록 새로고침
-    scwin.loadPostList();
-};
-
-/**
- * 삭제 버튼 클릭 - 웹스퀘어 표준 패턴 적용
- */
-scwin.btn_delete_onclick = function () {
-    console.log("=== 삭제 버튼 클릭 ===");
-
-    // ✅ 웹스퀘어 표준 패턴: DataMap에 설정된 데이터 확인
-    var postData = dmp_postVoDetail.getJSON();
-
-    // 선택된 공고가 없는 경우
-    if (!postData || !postData.jobPostingId) {
-        alert("삭제할 공고를 먼저 선택해주세요.\n(목록에서 행을 클릭하여 공고를 선택하세요)");
-        return;
-    }
-
-    console.log("삭제 대상 - ID:", postData.jobPostingId, "제목:", postData.title);
-
-    // ✅ 소프트 삭제 확인 메시지
-    var confirmMsg = "'" + (postData.title || "선택된 공고") + "' 공고를 삭제하시겠습니까?\n\n" +
-        "※ 삭제된 공고는 목록에서 보이지 않게 됩니다.\n" +
-        "※ 소프트 삭제 방식으로 데이터베이스에서 완전히 삭제되지는 않습니다.";
-
-    if (confirm(confirmMsg)) {
-        // 삭제 요청 전 로그
-        console.log("소프트 삭제 요청 - 전송 데이터:", postData);
-
-        // 삭제 요청
-        $c.sbm.execute($p, sbm_deletePostVo);
-    }
-};
-
-/**
- * 공고 소프트 삭제 완료
- */
-scwin.sbm_deletePost_submitdone = function (e) {
-    console.log("=== 공고 소프트 삭제 완료 ===");
-    console.log("삭제 응답:", e.responseJSON);
-
-    var elHeader = e.responseJSON.elHeader;
-    if (elHeader == null || elHeader == "" || elHeader == "undefined" || elHeader.resSuc == false) {
-        console.error("공고 삭제 에러:", elHeader);
-        alert(`삭제 에러\n에러코드 : ${elHeader.resCode}\n에러메시지 : ${elHeader.resMsg}`);
-        return false;
-    }
-
-    // ✅ 소프트 삭제 완료 메시지
-    alert("공고가 성공적으로 삭제되었습니다!\n\n" +
-        "※ 소프트 삭제 방식으로 처리되어 목록에서 보이지 않습니다.\n" +
-        "※ 데이터베이스에서는 is_deleted=1로 표시되었습니다.");
-
-    // 선택된 공고 정보 초기화
-    dmp_postVoDetail.setEmptyValue();
-
-    // 목록 새로고침 (삭제된 공고는 더 이상 보이지 않음)
-    scwin.loadPostList();
 };
 
 /**
@@ -656,94 +474,11 @@ scwin.pgl_postList_onclick = function (idx) {
     $c.sbm.execute($p, sbm_selectPostVoList);
 };
 
-/**
- * 새로고침 버튼 클릭
- */
-scwin.btn_refresh_onclick = function () {
-    console.log("=== 새로고침 ===");
-    scwin.loadPostList();
-};
-
-// =========================
-// 기존 기능들
-// =========================
-
 // 새 공고 작성 버튼 클릭
 scwin.btn_newJob_onclick = function (e) {
-
-    // $p.url("PostCreate.xml");
     $p.url("../post/PostCreate.xml");
 
 };
-
-// 채용 통계 클릭
-scwin.grp_quickAnalytics_onclick = function (e) {
-    // 통계 페이지로 이동
-    $p.url("RecruitmentStatistics.xml");
-};
-
-// 인재 스카우트 클릭
-scwin.grp_quickScout_onclick = function (e) {
-    // scout.xml로 이동
-    $p.url("Scout.xml");
-};
-
-scwin.btn_create_posting_onclick = function (e) {
-
-};
-
-scwin.btn_recruitment_statistics_onclick = function (e) {
-    $p.url("RecruitmentStatistics.xml");
-};
-
-// 기업정보 수정페이지 
-scwin.btn_update_company_onclick = function (e) {
-    try {
-        if ($p.parent().pf_main) {
-            $p.parent().pf_main.setSrc("../corporate/CorporateUpdate.xml");
-        } else {
-            $p.url("../corporate/CorporateUpdate.xml");
-        }
-    } catch (e) {
-        $p.url("../corporate/CorporateLogin.xml");
-    }
-};
-
-scwin.btn_delete_company_onclick = function (e) {
-    var valInfo = [
-        { id: "companyId", mandatory: true }
-
-    ];
-
-    if ($c.data.validateGroup(grp_corporateInfo, valInfo) === true) {
-        var promise = $c.win.confirm("삭제하시겠습니까?");
-        promise.then(function (result) {
-            if (result) {
-                $c.sbm.execute(sbm_deleteCorporateVo);
-            }
-        })
-    }
-};
-
-scwin.sbm_deleteCorporateVo_submitdone = function (e) {
-
-    // error 수신시
-    var elHeader = e.responseJSON.elHeader;
-    if (elHeader == null || elHeader == "" || elHeader == "undefiend" || elHeader.resSuc == false) {
-        $c.win.alert(`에러코드 : ${elHeader.resCode}\n에러메시지 : ${elHeader.resMsg}`);
-        return false;
-    } else {
-        // 삭제되었습니다. msg 출력
-        $c.win.alert("삭제되었습니다.");
-    }
-
-    // 재조회
-    // scwin.btn_search_onclick();
-};
-
-// =========================
-// 유틸리티 함수들
-// =========================
 
 /**
  * 근무형태 한글 변환
@@ -801,36 +536,24 @@ scwin.formatDate = function (dateString) {
         	<xf:group class="stats-container" id="">
         		<!-- 총 지원자 -->
         		<xf:group class="stat-card" id="">
-        			<xf:group class="stat-icon blue" id="">
-        				<w2:span label="👥"></w2:span>
-        			</xf:group>
         			<w2:textbox id="tbx_totalApplicants" label="0" class="stat-value"></w2:textbox>
         			<w2:textbox id="" label="총 지원자" class="stat-label"></w2:textbox>
         		</xf:group>
 
         		<!-- 활성 공고 -->
         		<xf:group class="stat-card" id="">
-        			<xf:group class="stat-icon green" id="">
-        				<w2:span label="📋"></w2:span>
-        			</xf:group>
         			<w2:textbox id="tbx_activeJobs" label="0" class="stat-value"></w2:textbox>
         			<w2:textbox id="" label="활성 공고" class="stat-label"></w2:textbox>
         		</xf:group>
 
         		<!-- 면접 대기 -->
         		<xf:group class="stat-card" id="">
-        			<xf:group class="stat-icon orange" id="">
-        				<w2:span label="⏰"></w2:span>
-        			</xf:group>
         			<w2:textbox id="tbx_pendingInterview" label="0" class="stat-value"></w2:textbox>
         			<w2:textbox id="" label="면접 대기" class="stat-label"></w2:textbox>
         		</xf:group>
 
         		<!-- 최종 합격 -->
         		<xf:group class="stat-card" id="">
-        			<xf:group class="stat-icon purple" id="">
-        				<w2:span label="✅"></w2:span>
-        			</xf:group>
         			<w2:textbox id="tbx_finalAccepted" label="0" class="stat-value"></w2:textbox>
         			<w2:textbox id="" label="최종 합격" class="stat-label"></w2:textbox>
         		</xf:group>
@@ -855,45 +578,38 @@ scwin.formatDate = function (dateString) {
         				<w2:span class="num" id="spn_listCnt" label="0" ref="" style=""></w2:span>
         				<w2:span id="" label="건" style=""></w2:span>
         			</xf:group>
-        			<xf:group class="rt" id="" style="">
-        				<xf:trigger class="btn_cm edit" id="btn_refresh" style="" type="button" ev:onclick="scwin.btn_refresh_onclick">
-        					<xf:label><![CDATA[새로고침]]></xf:label>
-        				</xf:trigger>
-        				<xf:trigger class="btn_cm del" id="btn_delete" style="" type="button" ev:onclick="scwin.btn_delete_onclick">
-        					<xf:label><![CDATA[삭제]]></xf:label>
-        				</xf:trigger>
-        			</xf:group>
         		</xf:group>
 
         		<!-- 공고 목록 GridView -->
         		<xf:group adaptiveThreshold="" class="gvwbox" id="" style="margin-top: 15px;">
-        			<w2:gridView autoFit="allColumn" checkReadOnlyOnPasteEnable="" class="gvw" dataList="data:dlt_postVoList"
-        				defaultCellHeight="26" focusMode="row" id="grd_postList" scrollByColumn="false" scrollByColumnAdaptive="false"
-        				style="height: 300px;" visibleRowNum="10" ev:oncellclick="scwin.grd_postList_oncellclick" readOnly="true">
-        				<w2:caption style="" id="caption1" value="📋 채용공고 목록 (행을 클릭하여 공고를 선택한 후 수정/삭제 가능)"></w2:caption>
-        				<w2:header style="" id="header1">
-        					<w2:row style="" id="row1">
-        						<w2:column width="80" inputType="text" style="" id="column1" value="공고ID" displayMode="label"></w2:column>
-        						<w2:column width="250" inputType="text" style="" id="column2" value="제목" displayMode="label"></w2:column>
-        						<w2:column width="200" inputType="text" style="" id="column3" value="설명" displayMode="label"></w2:column>
-        						<w2:column width="100" inputType="text" style="" id="column4" value="지역" displayMode="label"></w2:column>
-        						<w2:column width="100" inputType="text" style="" id="column5" value="근무형태" displayMode="label"></w2:column>
-        						<w2:column width="80" inputType="text" style="" id="column6" value="상태" displayMode="label"></w2:column>
-        						<w2:column width="100" inputType="text" style="" id="column7" value="등록일" displayMode="label"></w2:column>
-        					</w2:row>
-        				</w2:header>
-        				<w2:gBody style="" id="gBody1">
-        					<w2:row style="" id="row2">
-        						<w2:column width="80" inputType="text" style="" id="jobPostingId" value="" displayMode="label"></w2:column>
-        						<w2:column width="250" inputType="text" style="" id="title" value="" displayMode="label"></w2:column>
-        						<w2:column width="200" inputType="text" style="" id="description" value="" displayMode="label"></w2:column>
-        						<w2:column width="100" inputType="text" style="" id="location" value="" displayMode="label"></w2:column>
-        						<w2:column width="100" inputType="text" style="" id="workType" value="" displayMode="label"></w2:column>
-        						<w2:column width="80" inputType="text" style="" id="status" value="" displayMode="label"></w2:column>
-        						<w2:column width="100" inputType="text" style="" id="postedAt" value="" displayMode="label"></w2:column>
-        					</w2:row>
-        				</w2:gBody>
-        			</w2:gridView>
+        			<xf:group class="w2tb tbl-header" style="grid-template-columns: 2fr 1.5fr 2fr 1fr 1fr 1fr;" id="">
+        				<w2:textbox class="w2tb_th" label="공고 제목"></w2:textbox>
+        				<w2:textbox class="w2tb_th" label="근무지"></w2:textbox>
+        				<w2:textbox class="w2tb_th" label="선호 개발자 유형"></w2:textbox>
+        				<w2:textbox class="w2tb_th" label="상태"></w2:textbox>
+        				<w2:textbox class="w2tb_th" label="게시일"></w2:textbox>
+        				<w2:textbox class="w2tb_th" label="마감일"></w2:textbox>
+        			</xf:group>
+        			<w2:generator id="gen_postList" style="display:grid; grid-template-columns: 2fr 1.5fr 2fr 1fr 1fr 1fr; border-bottom: 1px solid #e0e0e0;">
+        				<xf:group class="w2tb_td" style="padding: 12px 10px; border-top: 1px solid #e0e0e0; display: flex; align-items: center;">
+        					<w2:textbox id="title" class="txtC" style="font-weight: 500; color: #333; cursor: pointer;" ev:onclick="scwin.openPostDetailByGenerator"></w2:textbox>
+        				</xf:group>
+        				<xf:group class="w2tb_td" style="padding: 12px 10px; border-top: 1px solid #e0e0e0; display: flex; align-items: center;">
+        					<w2:textbox id="location" class="txtC" style="color: #555;"></w2:textbox>
+        				</xf:group>
+        				<xf:group class="w2tb_td" style="padding: 12px 10px; border-top: 1px solid #e0e0e0; display: flex; align-items: center;">
+        					<w2:textbox id="preferredDeveloperTypes" class="txtC" style="color: #555;"></w2:textbox>
+        				</xf:group>
+        				<xf:group class="w2tb_td" style="padding: 12px 10px; border-top: 1px solid #e0e0e0; display: flex; align-items: center;">
+        					<w2:textbox id="status" class="txtC" style="color: #555;"></w2:textbox>
+        				</xf:group>
+        				<xf:group class="w2tb_td" style="padding: 12px 10px; border-top: 1px solid #e0e0e0; display: flex; align-items: center;">
+        					<w2:textbox id="postedAt" class="txtC" style="color: #555;"></w2:textbox>
+        				</xf:group>
+        				<xf:group class="w2tb_td" style="padding: 12px 10px; border-top: 1px solid #e0e0e0; display: flex; align-items: center;">
+        					<w2:textbox id="expiresAt" class="txtC" style="color: #555;"></w2:textbox>
+        				</xf:group>
+        			</w2:generator>
         		</xf:group>
 
         		<!-- 페이징 -->
