@@ -37,8 +37,10 @@ import com.demo.proworks.domain.user.vo.ScoutVo;
 import com.demo.proworks.domain.user.vo.TechStackVo;
 import com.demo.proworks.domain.user.vo.ScoutListVo;
 import com.demo.proworks.domain.user.vo.ApplicationHistoryVo;
+import com.demo.proworks.domain.user.vo.ApplicationStatsListVo;
 import com.demo.proworks.domain.user.vo.ApplicationHistoryListVo;
 import com.demo.proworks.cmmn.ProworksUserHeader;
+import com.demo.proworks.common.vo.AccountIdVo;
 import com.inswave.elfw.util.ControllerContextUtil;
 
 import com.inswave.elfw.annotation.ElDescription;
@@ -1829,18 +1831,17 @@ public class UserController {
 	}
 
 	/**
-	 * 지원현황을 삭제한다.
+	 * 지원현황 count를 가져온다.
 	 *
-	 * @param applicationHistoryVo 지원현황 정보
-	 * @return 삭제 결과
+	 * @param AccountIdVo 로그인한 User Id
+	 * @return 총 지원, 진행중, 합격, 불합격 공고 Count
 	 * @throws Exception
 	 */
 	@ElService(key = "US0001Cnt")
 	@RequestMapping(value = "US0001Cnt")
 	@ElDescription(sub = "지원현황 삭제", desc = "지원현황을 삭제한다.")
-	public int getApplicationStats(ApplicationHistoryVo applicationHistoryVo) throws Exception {
-//		return userService.getApplicationStats(applicationHistoryVo);
-		return 1;
+	public ApplicationStatsListVo getApplicationStats(AccountIdVo accountIdVo) throws Exception {
+		return userService.getApplicationStats(accountIdVo);
 	}
 
 	/*

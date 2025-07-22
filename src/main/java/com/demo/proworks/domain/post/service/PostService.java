@@ -2,6 +2,7 @@ package com.demo.proworks.domain.post.service;
 
 import java.util.List;
 
+import com.demo.proworks.common.vo.AccountIdVo;
 import com.demo.proworks.domain.post.vo.JobApplicationVo;
 import com.demo.proworks.domain.post.vo.MainPostingListVo;
 import com.demo.proworks.domain.post.vo.PostMatchVo;
@@ -9,6 +10,7 @@ import com.demo.proworks.domain.post.vo.PostVo;
 import com.demo.proworks.domain.post.vo.ScoutUserVo;
 import com.demo.proworks.domain.post.vo.SendEmailVo;
 import com.demo.proworks.domain.post.vo.TechStackVo;
+import com.demo.proworks.domain.user.vo.ApplicationStatsListVo;
 
 /**
  * @subject : 공고정보 관련 처리를 담당하는 인터페이스
@@ -172,4 +174,5 @@ public interface PostService {
 	 * @throws Exception
 	 */
 	public void insertScoutRequest(ScoutUserVo scoutUserVo) throws Exception;
+
 }

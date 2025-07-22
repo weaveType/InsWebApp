@@ -18,7 +18,9 @@ import com.demo.proworks.domain.user.vo.ScoutVo;
 import com.demo.proworks.domain.user.vo.UserInfoVo;
 import com.demo.proworks.domain.user.vo.UserVo;
 import com.demo.proworks.domain.user.vo.ApplicationHistoryVo;
+import com.demo.proworks.domain.user.vo.ApplicationStatsListVo;
 import com.demo.proworks.common.enumType.DevMbti;
+import com.demo.proworks.common.vo.AccountIdVo;
 import com.demo.proworks.domain.user.dao.UserDAO;
 
 /**
@@ -406,5 +408,23 @@ public class UserDAO extends com.demo.proworks.cmmn.dao.ProworksDefaultAbstractD
 	 */
 	public int getScoutUserCount(ScoutVo vo) throws Exception {
 		return (Integer) selectByPk("com.demo.proworks.domain.user.getScoutUserCount", vo);
+	}
+
+	/**
+	 * 지원현황 count를 가져온다.
+	 *
+	 * @param AccountIdVo 로그인한 User Id
+	 * @return 총 지원, 진행중, 합격, 불합격 공고 Count
+	 * @throws Exception
+	 */
+	public ApplicationStatsListVo getApplicationStats(AccountIdVo vo) throws Exception {
+		// List<ApplicationStatusVo>를 조회하여 ApplicationStatsListVo에 설정
+		List<com.demo.proworks.domain.user.vo.ApplicationStatusVo> statusList = 
+			(List<com.demo.proworks.domain.user.vo.ApplicationStatusVo>) list("com.demo.proworks.domain.user.getApplicationStats", vo);
+		
+		ApplicationStatsListVo result = new ApplicationStatsListVo();
+		result.setApplicationStatusVo(statusList);
+		
+		return result;
 	}
 }

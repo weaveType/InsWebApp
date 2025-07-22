@@ -17,7 +17,9 @@ import com.demo.proworks.domain.user.vo.ScoutVo;
 import com.demo.proworks.domain.user.vo.UserInfoVo;
 import com.demo.proworks.domain.user.vo.UserVo;
 import com.demo.proworks.domain.user.vo.ApplicationHistoryVo;
+import com.demo.proworks.domain.user.vo.ApplicationStatsListVo;
 import com.demo.proworks.common.enumType.DevMbti;
+import com.demo.proworks.common.vo.AccountIdVo;
 import com.demo.proworks.domain.user.dao.UserDAO;
 import com.demo.proworks.domain.post.dao.PostDAO;
 import org.mindrot.jbcrypt.BCrypt;
@@ -428,5 +430,16 @@ public class UserServiceImpl implements UserService {
 	 */
 	public int deleteApplicationHistory(ApplicationHistoryVo applicationHistoryVo) throws Exception {
 		return userDAO.deleteApplicationHistory(applicationHistoryVo);
+	}
+
+	/**
+	 * 지원현황 count를 가져온다.
+	 *
+	 * @param AccountIdVo 로그인한 User Id
+	 * @return 총 지원, 진행중, 합격, 불합격 공고 Count
+	 * @throws Exception
+	 */
+	public ApplicationStatsListVo getApplicationStats(AccountIdVo accountIdVo) throws Exception {
+		return userDAO.getApplicationStats(accountIdVo);
 	}
 }

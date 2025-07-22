@@ -17,11 +17,13 @@ import com.demo.proworks.domain.post.vo.PostMatchVo;
 import com.demo.proworks.domain.post.vo.PostVo;
 import com.demo.proworks.domain.post.vo.ScoutUserVo;
 import com.demo.proworks.domain.post.vo.TechStackVo;
+import com.demo.proworks.domain.user.vo.ApplicationStatsListVo;
 import com.demo.proworks.domain.post.vo.MainPostingListVo;
 import com.demo.proworks.domain.post.vo.MainPostingVo;
 import com.demo.proworks.domain.post.vo.SendEmailVo;
 import com.demo.proworks.domain.post.dao.PostDAO;
 import com.demo.proworks.common.service.EmailService;
+import com.demo.proworks.common.vo.AccountIdVo;
 
 /**
  * @subject : 공고정보 관련 처리를 담당하는 ServiceImpl
@@ -448,5 +450,4 @@ public class PostServiceImpl implements PostService {
 	public void insertScoutRequest(ScoutUserVo scoutUserVo) throws Exception {
 		postDAO.insertScoutRequest(scoutUserVo);
 	}
-
 }
