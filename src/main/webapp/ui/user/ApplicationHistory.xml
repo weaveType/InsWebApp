@@ -39,7 +39,7 @@
 			</w2:dataCollection>
 			<xf:submission id="sbm_applicationHistoryList" action="/InsWebApp/POS0007List.pwkjson" method="post"
 				mediatype="application/json" ref='data:json,{"id":"dmp_searchParam", "key":"applicationSearchVo"}'
-				target='data:json,{"id":"dlt_applicationListVo", "key":"elData.applicationHistoryList"}' encoding="UTF-8" instance="" replace=""
+				target='data:json,{"id":"dlt_applicationListVo", "key":"applicationListVoList"}' encoding="UTF-8" instance="" replace=""
 				errorHandler="" customHandler="" mode="asynchronous" processMsg="지원현황 조회중..." ev:submit=""
 				ev:submitdone="scwin.sbm_applicationHistoryList_submitdone" ev:submiterror="scwin.sbm_applicationHistoryList_submiterror"
 				abortTrigger="">
@@ -212,6 +212,28 @@
                 font-size: 14px;
                 color: #ccc;
             }
+
+            /* 지원현황 리스트 스타일 */
+            .application-row:hover {
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
+                transform: translateY(-1px);
+            }
+
+            .applications-grid {
+                background-color: transparent;
+            }
+
+            /* 반응형 처리 */
+            @media (max-width: 768px) {
+                .application-row {
+                    padding: 15px !important;
+                    margin-bottom: 10px !important;
+                }
+                
+                .application-row span {
+                    font-size: 14px !important;
+                }
+            }
         ]]></style>
 
 		<script lazy="false" type="text/javascript"><![CDATA[
@@ -249,21 +271,30 @@ scwin.init();
 scwin.sbm_applicationHistoryList_submitdone = function (e) {
     try {
         var res = e.responseJSON;
-        if (res && res.elData) {
-            // 지원현황 목록 설정
-            if (res.elData.applicationHistoryList) {
-                dlt_applicationListVo.setJSON(res.elData.applicationHistoryList);
+        console.log("=== 전체 응답 데이터 ===", res);
+        
+        if (res && res.applicationListVoList) {
+            console.log("=== applicationListVoList 데이터 ===", res.applicationListVoList);
+            console.log("=== 배열 길이 ===", res.applicationListVoList.length);
+            
+            dlt_applicationListVo.setJSON(res.applicationListVoList);
+            console.log("=== dataList 설정 완료 ===");
+            console.log("=== dataList 행 수 ===", dlt_applicationListVo.getRowCount());
+            
+            // 빈 상태 표시/숨김 처리
+            var emptyState = document.getElementById('empty_state');
+            if (res.applicationListVoList.length === 0) {
+                if (emptyState) emptyState.style.display = 'block';
+            } else {
+                if (emptyState) emptyState.style.display = 'none';
             }
-
-            // 통계 데이터 설정
-            if (res.elData.applicationStatsList) {
-                dlt_applicationStatsVo.setJSON(res.elData.applicationStatsList);
-                scwin.updateStatsFromData();
-            }
-
-            // UI 업데이트
-            scwin.applyStatusClasses();
+        } else {
+            console.log("=== applicationListVoList가 없습니다 ===");
+            console.log("=== res 구조 ===", res);
         }
+
+        // UI 업데이트
+        scwin.applyStatusClasses();
     } catch (err) {
         console.error("지원현황 조회 오류:", err);
         alert("지원현황 조회 중 오류가 발생했습니다.");
@@ -484,33 +515,26 @@ scwin.sbm_applicationStats_submitdone = function (e) {
 					<section class="applications-section">
 						<xf:group class="applications-grid">
 							<w2:generator id="gen_applications" dataList="data:dlt_applicationListVo" style="">
-								<xf:group class="application-card">
-									<xf:group class="card-header">
-										<xf:group class="company-info">
-											<xf:group class="company-details">
-												<xf:group class="company-name">
-													<w2:textbox ref="data:dlt_applicationListVo.name"></w2:textbox>
-												</xf:group>
-												<xf:group class="position-name">
-													<w2:textbox ref="data:dlt_applicationListVo.title"></w2:textbox>
-												</xf:group>
-											</xf:group>
-										</xf:group>
-										<xf:group class="application-date">
-											<!-- 지원일자 필드가 없으므로 공고ID 표시 -->
-											<span>공고ID: </span><w2:textbox ref="data:dlt_applicationListVo.jobPostingId"></w2:textbox>
-										</xf:group>
+								<xf:group style="padding: 20px; margin-bottom: 15px; border: 1px solid #e8e8e8; border-radius: 8px; background-color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.1); cursor: pointer; transition: box-shadow 0.2s ease;" class="application-row">
+									<xf:group style="display: flex; align-items: center; font-size: 16px; color: #333; flex-wrap: wrap;">
+										<span style="font-weight: bold; color: #4285f4; margin-right: 8px;"><w2:textbox ref="data:dlt_applicationListVo.name"></w2:textbox></span>
+										<span style="margin-right: 8px;">의</span>
+										<span style="font-weight: 600; color: #333; margin-right: 8px;"><w2:textbox ref="data:dlt_applicationListVo.title"></w2:textbox></span>
+										<span style="margin-right: 8px;">에서 매칭 제안이 왔어요.</span>
 									</xf:group>
-									<xf:group class="card-body">
-										<xf:group class="status-badge">
-											<w2:textbox ref="data:dlt_applicationListVo.experienceLevel"></w2:textbox>
-										</xf:group>
-										<xf:group class="result-text">
-											<w2:textbox ref="data:dlt_applicationListVo.preferredDeveloperTypes"></w2:textbox>
-										</xf:group>
+									<xf:group style="margin-top: 10px; display: flex; gap: 15px; font-size: 14px; color: #666; flex-wrap: wrap;">
+										<span style="background-color: #f0f4ff; color: #4285f4; padding: 4px 8px; border-radius: 4px; font-size: 12px;">경력: <w2:textbox ref="data:dlt_applicationListVo.experienceLevel"></w2:textbox></span>
+										<span style="color: #999; font-size: 12px;">공고ID: <w2:textbox ref="data:dlt_applicationListVo.jobPostingId"></w2:textbox></span>
 									</xf:group>
 								</xf:group>
 							</w2:generator>
+						</xf:group>
+
+						<!-- 데이터가 없을 때 표시할 메시지 -->
+						<xf:group class="empty-state" style="display: none;" id="empty_state">
+							<span class="empty-icon">📋</span>
+							<div class="empty-text">지원 내역이 없습니다.</div>
+							<div class="empty-subtext">공고에 지원하시면 여기에 표시됩니다.</div>
 						</xf:group>
 					</section>
 				</main>
