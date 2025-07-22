@@ -564,17 +564,35 @@ scwin.calculateStatistics = function (postList) {
     var totalJobs = postList.length;
     var activeJobs = 0;
     var closedJobs = 0;
+    var currentDate = new Date();
+    
+    console.log("현재 시간:", currentDate);
 
-    // 각 상태별로 개수 계산
+    // 각 공고의 만료일을 확인해서 상태 계산
     for (var i = 0; i < postList.length; i++) {
-        var status = postList[i].status;
-        switch (status) {
-            case 'active':
-                activeJobs++;
-                break;
-            case 'closed':
-                closedJobs++;
-                break;
+        var post = postList[i];
+        var expiresAt = post.expiresAt;
+        
+        // 만료일 파싱
+        var expirationDate = null;
+        if (expiresAt) {
+            // ISO 8601 형식의 날짜 처리 (예: 2025-07-21T00:21:37.000Z)
+            expirationDate = new Date(expiresAt);
+        }
+        
+        // 만료 여부 확인
+        var isExpired = expirationDate && expirationDate < currentDate;
+        
+        console.log("공고 ID:", post.jobPostingId, 
+                   "제목:", post.title, 
+                   "만료일:", expiresAt, 
+                   "파싱된 날짜:", expirationDate,
+                   "만료됨:", isExpired);
+        
+        if (isExpired) {
+            closedJobs++;
+        } else {
+            activeJobs++;
         }
     }
 
@@ -583,7 +601,12 @@ scwin.calculateStatistics = function (postList) {
     scwin.animateCounter(tbx_activeJobs, activeJobs);
     scwin.animateCounter(tbx_closedJobs, closedJobs);
 
-    console.log("통계 업데이트 완료:", { totalJobs, activeJobs, closedJobs });
+    console.log("통계 업데이트 완료:", { 
+        totalJobs: totalJobs, 
+        activeJobs: activeJobs, 
+        closedJobs: closedJobs,
+        currentDate: currentDate
+    });
 };
 
 // 카운터 애니메이션
@@ -626,27 +649,45 @@ scwin.sbm_postList_submitdone = function (e) {
     }
     
     var elData = e.responseJSON.elData;
+    var originalPostList = elData.postVoList || [];
+    
+    // 활성 공고만 필터링 (만료되지 않은 공고만)
+    var currentDate = new Date();
+    var activePostList = [];
+    
+    for (var i = 0; i < originalPostList.length; i++) {
+        var post = originalPostList[i];
+        var expirationDate = post.expiresAt ? new Date(post.expiresAt) : null;
+        var isExpired = expirationDate && expirationDate < currentDate;
+        
+        if (!isExpired) {
+            activePostList.push(post);
+        }
+    }
+    
+    console.log("전체 공고:", originalPostList.length, "활성 공고:", activePostList.length);
     
     // 선택된 공고 정보 초기화
     dmp_postVoDetail.setEmptyValue();
     
-    // 총 레코드 수 업데이트
+    // 총 레코드 수 업데이트 (활성 공고만)
     if (spn_listCnt) {
-        spn_listCnt.setLabel(elData.totalCount || 0);
+        spn_listCnt.setLabel(activePostList.length);
     }
     
-    // 데이터를 그리드에 바인딩
-    dlt_postVoList.setJSON(elData.postVoList || []);
+    // 활성 공고만 그리드에 바인딩
+    dlt_postVoList.setJSON(activePostList);
     
-    // 페이지 네비게이터 업데이트
-    if (pgl_postList && elData.totalCount) {
-        var totalPageCount = Math.ceil(elData.totalCount / (dmp_postVo.get("pageSize") || 10));
+    // 페이지 네비게이터 업데이트 (활성 공고 기준)
+    if (pgl_postList && activePostList.length > 0) {
+        var pageSize = dmp_postVo.get("pageSize") || 10;
+        var totalPageCount = Math.ceil(activePostList.length / pageSize);
         pgl_postList.setCount(totalPageCount);
     }
     
-    // 통계 계산 (현재 페이지의 데이터로)
-    if (elData.postVoList && elData.postVoList.length > 0) {
-        scwin.calculateStatistics(elData.postVoList);
+    // 통계 계산 (전체 공고 리스트로, 내부에서 만료 여부 확인)
+    if (originalPostList && originalPostList.length > 0) {
+        scwin.calculateStatistics(originalPostList);
     } else {
         // 데이터가 없으면 0으로 설정
         scwin.animateCounter(tbx_totalJobs, 0);
@@ -654,7 +695,7 @@ scwin.sbm_postList_submitdone = function (e) {
         scwin.animateCounter(tbx_closedJobs, 0);
     }
     
-    console.log("공고 목록 바인딩 완료");
+    console.log("공고 목록 바인딩 완료 - 활성 공고만 표시");
 };
 
 // 애니메이션 효과 적용
@@ -926,9 +967,9 @@ scwin.statCard_closedJobs_onclick = function () {
         			<xf:group class="grid_container" id="">
         				<xf:group class="grid_header_controls" id="">
         					<xf:group class="record_count" id="">
-        						<w2:span id="" label="총"></w2:span>
+        						<w2:span id="" label="활성 공고"></w2:span>
         						<w2:span class="record_number" id="spn_listCnt" label="0"></w2:span>
-        						<w2:span id="" label="개의 공고"></w2:span>
+        						<w2:span id="" label="개 (마감된 공고 제외)"></w2:span>
         					</xf:group>
         					<xf:group class="grid_actions" id="">
         						<xf:trigger class="btn_grid refresh" id="btn_refresh" type="button" ev:onclick="scwin.btn_refresh_onclick">
@@ -945,7 +986,7 @@ scwin.statCard_closedJobs_onclick = function () {
         					defaultCellHeight="35" focusMode="row" id="grd_postList" scrollByColumn="false" 
         					style="height: 400px; border-radius: 12px; border: 1px solid #e2e8f0;" 
         					visibleRowNum="10" ev:oncellclick="scwin.grd_postList_oncellclick" readOnly="true">
-        					<w2:caption style="" id="caption1" value="📌 공고를 클릭하면 상세 정보를 볼 수 있습니다"></w2:caption>
+        					<w2:caption style="" id="caption1" value="📌 활성 공고만 표시됩니다 (마감된 공고는 자동으로 숨김처리)"></w2:caption>
         					<w2:header style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; font-weight: 600;" id="header1">
         						<w2:row style="" id="row1">
         							<w2:column width="100" inputType="text" style="" id="column1" value="공고ID" displayMode="label"></w2:column>
