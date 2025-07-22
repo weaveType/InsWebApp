@@ -436,7 +436,35 @@ scwin.accepted_applications_onclick = function (e) {
 scwin.rejected_applications_onclick = function (e) {
     scwin.selectStatCard(this, 'rejected');
 };
-]]></script>
+
+scwin.sbm_applicationStats_submitdone = function (e) {
+    try {
+        // 1. 서버 응답 데이터 확인
+        var res = e.responseJSON;
+        
+        if (res && res.elData && res.elData.applicationStatusVo) {
+            dlt_applicationStatsVo.setJSON(res.elData.applicationStatusVo);
+
+            var rowCount = dlt_applicationStatsVo.getRowCount();
+            
+            for(var j = 0; j < rowCount; j++){
+                var statusType = dlt_applicationStatsVo.getCellData(j, "statusType");
+                var statusCount = dlt_applicationStatsVo.getCellData(j, "statusCount");
+                console.log("Row " + j + " - statusType:", statusType, "statusCount:", statusCount);
+            }
+            
+            // 5. UI 업데이트 함수 호출
+            scwin.updateStatsFromData();
+            
+        } else {
+            console.warn("응답 데이터 구조가 예상과 다릅니다:", res);
+        }
+        
+    } catch (err) {
+        console.error("통계 데이터 처리 오류:", err);
+        alert("통계 데이터를 처리하는 중 오류가 발생했습니다.");
+    }
+};]]></script>
 	</head>
 
 	<body ev:onpageload="scwin.onpageload">
