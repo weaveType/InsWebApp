@@ -17,6 +17,8 @@ import com.demo.proworks.domain.post.vo.ApplicationSearchVo;
 import com.demo.proworks.domain.post.vo.JobApplicationVo;
 import com.demo.proworks.domain.post.vo.PostMatchVo;
 import com.demo.proworks.domain.post.vo.PostVo;
+import com.demo.proworks.domain.post.vo.ScoutListVo;
+import com.demo.proworks.domain.post.vo.ScoutSearchVo;
 import com.demo.proworks.domain.post.vo.ScoutUserVo;
 import com.demo.proworks.domain.post.vo.TechStackVo;
 import com.demo.proworks.domain.user.vo.ApplicationStatsListVo;
@@ -463,10 +465,19 @@ public class PostServiceImpl implements PostService {
 	 * @throws Exception
 	 */
 	public List<ApplicationListVo> getApplicationHistoryList(ApplicationSearchVo applicationSearchVo) throws Exception {
-		List<ApplicationListVo> result = postDAO.getApplicationHistoryList(applicationSearchVo);
-
-		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> applicationSearchVo : " + applicationSearchVo.toString());		
-		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> result : " + result.toString());
-		return result;
+		return postDAO.getApplicationHistoryList(applicationSearchVo);
 	}
+
+	/**
+	 * 유저에게 매칭신청을 한 공고를 가져온다.
+	 * 
+	 * @param pageIndex 페이지번호, pageSize 페이지크기, userId 사용자ID
+	 * @return jobPostingId 공고 ID, name 회사명, title 공고명, experienceLevel 경력,
+	 *         preferredDeveloperTypes MBTI_JSON_LIST
+	 * @throws Exception
+	 */
+	public List<ScoutListVo> selectScoutCompany(ScoutSearchVo scoutSearchVo) throws Exception {
+		return postDAO.selectScoutCompany(scoutSearchVo);
+	}
+
 }

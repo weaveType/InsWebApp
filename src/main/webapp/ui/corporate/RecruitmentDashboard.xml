@@ -875,8 +875,7 @@ scwin.formatDate = function (dateString) {
         			<w2:gridView autoFit="allColumn" checkReadOnlyOnPasteEnable="" class="gvw" dataList="data:dlt_postVoList"
         				defaultCellHeight="26" focusMode="row" id="grd_postList" scrollByColumn="false" scrollByColumnAdaptive="false"
         				style="height: 300px;" visibleRowNum="10" ev:oncellclick="scwin.grd_postList_oncellclick" readOnly="true">
-        				<w2:caption style="" id="caption1" value="📋 채용공고 목록 (행을 클릭하여 공고를 선택한 후 수정/삭제 가능)"></w2:caption>
-        				<w2:header style="" id="header1">
+        				<w2:caption style="" id="caption1" value="������ 채용공고 목록 (행을 클릭하여 공고를 선택한 후 수정/삭제 가능)"></w2:caption>      				<w2:header style="" id="header1">
         					<w2:row style="" id="row1">
         						<w2:column width="80" inputType="text" style="" id="column1" value="공고ID" displayMode="label"></w2:column>
         						<w2:column width="250" inputType="text" style="" id="column2" value="제목" displayMode="label"></w2:column>

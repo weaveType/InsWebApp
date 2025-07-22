@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.demo.proworks.cmmn.ProworksUserHeader;
 import com.demo.proworks.domain.post.service.PostService;
 import com.demo.proworks.domain.post.vo.PostVo;
+import com.demo.proworks.domain.post.vo.ScoutListVo;
+import com.demo.proworks.domain.post.vo.ScoutSearchVo;
 import com.demo.proworks.domain.post.vo.ScoutUserVo;
 import com.demo.proworks.domain.post.vo.SendEmailInfoListVo;
 import com.demo.proworks.domain.post.vo.SendEmailVo;
@@ -669,4 +671,19 @@ public class PostController {
 	public List<ApplicationListVo> getApplicationHistoryList(ApplicationSearchVo applicationSearchVo) throws Exception {
 		return postService.getApplicationHistoryList(applicationSearchVo);
 	}
+	
+	/**
+	 * 유저에게 매칭신청을 한 공고를 가져온다.
+	 * 
+	 * @param 	pageIndex 페이지번호, pageSize	페이지크기, userId 사용자ID	
+	 * @return 	jobPostingId 공고 ID, name 회사명, title 공고명, experienceLevel 경력, preferredDeveloperTypes MBTI_JSON_LIST
+	 * @throws 	Exception							
+	 */
+	@ElService(key = "POS0008List")
+	@RequestMapping(value = "POS0008List")
+	@ElDescription(sub = "매칭신청 공고 가져오기", desc = "유저에게 매칭신청을 한 공고를 가져온다.")
+	public List<ScoutListVo> selectScoutCompany(ScoutSearchVo scoutSearchVo) throws Exception {
+		return postService.selectScoutCompany(scoutSearchVo);
+	}
+	
 }
