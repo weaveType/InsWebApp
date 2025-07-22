@@ -100,7 +100,6 @@
                 display: flex;
                 background-color: white;
                 border-radius: 12px;
-                box-shadow: 0 2px 8px rgba(0,0,0,0.08);
                 margin-bottom: 30px;
                 overflow: hidden;
             }
@@ -211,17 +210,7 @@
             .empty-state .empty-subtext {
                 font-size: 14px;
                 color: #ccc;
-            }
-
-            /* 지원현황 리스트 스타일 */
-            .application-row:hover {
-                box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
-                transform: translateY(-1px);
-            }
-
-            .applications-grid {
-                background-color: transparent;
-            }
+            }   
 
             /* 반응형 처리 */
             @media (max-width: 768px) {
@@ -546,7 +535,7 @@ scwin.sbm_applicationStats_submitdone = function (e) {
 						</xf:group>
 						<xf:group class="stat-card" id="in_progress_applications" ev:onclick="scwin.in_progress_applications_onclick">
 							<span class="stat-number" id="waitingApplications">0</span>
-							<span class="stat-label">진행 중</span>
+							<span class="stat-label">서류검토</span>
 						</xf:group>
 						<xf:group class="stat-card" id="accepted_applications" ev:onclick="scwin.accepted_applications_onclick">
 							<span class="stat-number" id="acceptedApplications">0</span>
@@ -566,7 +555,7 @@ scwin.sbm_applicationStats_submitdone = function (e) {
 					<section class="applications-section">
 						<xf:group class="applications-grid">
 							<w2:generator id="gen_applications" style="">
-								<xf:group style="padding: 20px; margin-bottom: 15px; border: 1px solid #e8e8e8; border-radius: 8px; background-color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.1); cursor: pointer; transition: box-shadow 0.2s ease;" class="application-row" ev:onclick="scwin.handleApplicationRowClick">
+								<xf:group style="padding: 20px; margin-bottom: 15px; border: 1px solid #e8e8e8; border-radius: 8px; background-color: white; cursor: pointer;" class="application-row" ev:onclick="scwin.handleApplicationRowClick">
 									<xf:group style="display: flex; align-items: center; font-size: 16px; color: #333; flex-wrap: wrap;">
 										<span style="font-weight: bold; color: #4285f4; margin-right: 8px;"><w2:textbox id="txt_company_name"></w2:textbox></span>
 										<span style="margin-right: 8px;">의</span>
@@ -582,9 +571,7 @@ scwin.sbm_applicationStats_submitdone = function (e) {
 						</xf:group>
 
 						<!-- 데이터가 없을 때 표시할 메시지 -->
-						<xf:group class="empty-state" style="display: none;" id="empty_state">
-							<span class="empty-icon">📋</span>
-							<div class="empty-text">지원 내역이 없습니다.</div>
+						<xf:group class="empty-state" style="display: none;" id="empty_state">					<div class="empty-text">지원 내역이 없습니다.</div>
 							<div class="empty-subtext">공고에 지원하시면 여기에 표시됩니다.</div>
 						</xf:group>
 					</section>
