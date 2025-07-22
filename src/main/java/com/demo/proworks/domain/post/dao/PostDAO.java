@@ -232,6 +232,7 @@ public class PostDAO extends com.demo.proworks.cmmn.dao.ProworksDefaultAbstractD
 	 */
 	public List<ApplicationListVo> getApplicationHistoryList(ApplicationSearchVo applicationSearchVo) throws Exception {
 		return (List<ApplicationListVo>) list("com.demo.proworks.domain.post.getApplicationHistoryList", applicationSearchVo);
+	}
     
   /*
 	 * 사용자의 특정 공고 지원 여부를 확인한다.
