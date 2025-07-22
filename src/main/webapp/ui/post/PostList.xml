@@ -761,11 +761,7 @@ scwin.handleImageError = function (img, companyName, companyId) {
         // 회사 로고 실패 → 기본 이미지 시도
         nextImageSrc = '/InsWebApp/images/ws5/default_company.png';
         console.log("회사 로고 실패 → 기본 이미지 시도:", nextImageSrc);
-    } else if (currentSrc.indexOf('/images/ws5/default_company.png') !== -1) {
-        // 기본 이미지도 실패 → 다른 기본 이미지 시도
-        nextImageSrc = '/InsWebApp/images/ws5/logo_inswave_w.png';
-        console.log("기본 이미지 실패 → 대체 기본 이미지 시도:", nextImageSrc);
-    }
+    } 
     
     // 다음 이미지 시도
     if (nextImageSrc && nextImageSrc !== currentSrc) {
