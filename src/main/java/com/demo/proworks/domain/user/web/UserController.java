@@ -1842,4 +1842,159 @@ public class UserController {
 //		return userService.getApplicationStats(applicationHistoryVo);
 		return 1;
 	}
+
+	/*
+	 * 이력서 PDF 파일을 삭제한다.
+	 * 
+	 * @param request HttpServletRequest
+	 * 
+	 * @return 삭제 결과
+	 * 
+	 * @throws Exception
+	 */
+	@ElService(key = "USDeleteResume")
+	@RequestMapping(value = { "USDeleteResume", "USDeleteResume.pwkjson" })
+	@ElDescription(sub = "이력서 삭제", desc = "사용자의 이력서 PDF 파일을 삭제한다.")
+	public Map<String, Object> deleteResumeFile(HttpServletRequest request) throws Exception {
+		System.out.println("=== ProWorks5 이력서 삭제 요청 시작 ===");
+		
+		Map<String, Object> result = new HashMap<>();
+		
+		try {
+			// 사용자 ID 가져오기
+			int userId = 0;
+			
+			// 1. ProworksUserHeader 사용
+			ProworksUserHeader userHeader = null;
+			try {
+				userHeader = (ProworksUserHeader) ControllerContextUtil.getUserHeader();
+				if (userHeader != null) {
+					userId = userHeader.getAccountId();
+					System.out.println("사용자 헤더에서 가져온 사용자 ID: " + userId);
+				}
+			} catch (Exception e) {
+				System.out.println("사용자 헤더 조회 중 오류: " + e.getMessage());
+			}
+			
+			// 2. 요청 파라미터에서 사용자 ID 확인
+			if (userId == 0) {
+				try {
+					String userIdParam = request.getParameter("accountId");
+					if (userIdParam != null && !userIdParam.trim().isEmpty()) {
+						userId = Integer.parseInt(userIdParam);
+						System.out.println("파라미터에서 가져온 사용자 ID: " + userId);
+					}
+				} catch (NumberFormatException e) {
+					System.out.println("사용자 ID 파싱 오류: " + e.getMessage());
+				}
+			}
+			
+			// 3. JSON 요청 본문에서 사용자 ID 확인 (REST 형태 요청)
+			if (userId == 0) {
+				try {
+					BufferedReader reader = request.getReader();
+					StringBuilder sb = new StringBuilder();
+					String line;
+					while ((line = reader.readLine()) != null) {
+						sb.append(line);
+					}
+					String body = sb.toString();
+					System.out.println("요청 본문: " + body);
+					
+					if (body != null && !body.trim().isEmpty()) {
+						// JSON 파싱 시도
+						ObjectMapper objectMapper = new ObjectMapper();
+						JsonNode jsonNode = objectMapper.readTree(body);
+						
+						// accountId 필드 확인
+						if (jsonNode.has("accountId")) {
+							userId = jsonNode.get("accountId").asInt();
+							System.out.println("JSON 요청 본문에서 가져온 사용자 ID: " + userId);
+						}
+					}
+				} catch (Exception e) {
+					System.out.println("JSON 요청 본문 처리 오류: " + e.getMessage());
+				}
+			}
+			
+			// 사용자 ID가 없는 경우 오류 반환
+			if (userId == 0) {
+				throw new IllegalArgumentException("사용자 ID를 찾을 수 없습니다.");
+			}
+			
+			// 사용자 정보 조회
+			UserInfoVo userInfoVo = new UserInfoVo();
+			userInfoVo.setAccountId(userId);
+			UserInfoVo userInfo = userService.selectUserDetail(userInfoVo);
+			
+			if (userInfo == null) {
+				throw new IllegalArgumentException("사용자 정보를 찾을 수 없습니다.");
+			}
+			
+			String resumeFileName = userInfo.getResumeFileName();
+			System.out.println("삭제할 이력서 파일명: " + resumeFileName);
+			
+			// 이력서 파일이 없는 경우
+			if (resumeFileName == null || resumeFileName.trim().isEmpty()) {
+				result.put("result", "success");
+				result.put("message", "삭제할 이력서 파일이 없습니다.");
+				return result;
+			}
+			
+			// 파일 경로가 RESUME_UPLOAD_DIR로 시작하는지 확인 (보안 검사)
+			if (!resumeFileName.startsWith(RESUME_UPLOAD_DIR)) {
+				throw new IllegalArgumentException("잘못된 파일 경로입니다.");
+			}
+			
+			// 상대 경로를 실제 경로로 변환
+			if (resumeFileName.startsWith("/")) {
+				resumeFileName = resumeFileName.substring(1);
+			}
+			
+			// 실제 파일 경로 생성
+			String realPath = request.getSession().getServletContext().getRealPath(resumeFileName);
+			File file = new File(realPath);
+			
+			System.out.println("이력서 파일 실제 경로: " + realPath);
+			
+			boolean fileDeleted = false;
+			
+			// 파일이 존재하면 삭제
+			if (file.exists() && file.isFile()) {
+				fileDeleted = file.delete();
+				System.out.println("파일 삭제 결과: " + (fileDeleted ? "성공" : "실패"));
+			} else {
+				System.out.println("파일이 존재하지 않음: " + realPath);
+				// 파일이 없더라도 DB에서는 삭제 진행
+			}
+			
+			// 사용자 정보에서 이력서 파일명 제거
+			UserVo userVo = new UserVo();
+			userVo.setUserId(userId);
+			userVo.setResumeFileName(""); // 빈 문자열로 설정하여 이력서 파일명 제거
+			
+			// DB에서 이력서 파일명 업데이트
+			int updateResult = userService.updateResumeFileName(userVo);
+			System.out.println("DB 업데이트 결과: " + updateResult);
+			
+			// 결과 설정
+			result.put("result", "success");
+			result.put("fileDeleted", fileDeleted);
+			result.put("dbUpdated", updateResult > 0);
+			result.put("message", "이력서 파일이 성공적으로 삭제되었습니다.");
+			
+		} catch (IllegalArgumentException e) {
+			System.out.println("이력서 삭제 유효성 검사 오류: " + e.getMessage());
+			result.put("result", "fail");
+			result.put("message", e.getMessage());
+		} catch (Exception e) {
+			System.out.println("이력서 삭제 중 오류 발생: " + e.getMessage());
+			e.printStackTrace();
+			result.put("result", "fail");
+			result.put("message", "이력서 삭제 중 오류가 발생했습니다: " + e.getMessage());
+		}
+		
+		System.out.println("=== ProWorks5 이력서 삭제 요청 종료 ===");
+		return result;
+	}
 }

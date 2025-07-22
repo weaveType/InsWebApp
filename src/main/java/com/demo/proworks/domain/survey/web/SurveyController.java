@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpSession;
+import java.util.LinkedHashMap;
 
 /**
  * 설문 관련 처리를 담당하는 컨트롤러
@@ -70,27 +71,32 @@ public class SurveyController {
             
             List<SurveyQuestionVo> questions = surveyService.getActiveQuestions();
             
-            // 질문을 축별로 그룹핑
-            Map<String, List<Map<String, Object>>> groupedQuestions = new HashMap<>();
+            // 축 순서를 보장하기 위한 LinkedHashMap 사용 및 순서 명시
+            Map<String, List<Map<String, Object>>> groupedQuestions = new LinkedHashMap<>();
             
+            // 축 순서를 명시적으로 초기화 (B_A -> R_I -> S_T -> D_F)
+            String[] axisOrder = {"B_A", "R_I", "S_T", "D_F"};
+            for (String axis : axisOrder) {
+                groupedQuestions.put(axis, new ArrayList<>());
+            }
+            
+            // 질문을 축별로 그룹핑 (question_id 순서 보장을 위해 정렬)
             for (SurveyQuestionVo question : questions) {
                 String axis = question.getAxis();
-                if (!groupedQuestions.containsKey(axis)) {
-                    groupedQuestions.put(axis, new ArrayList<>());
+                if (groupedQuestions.containsKey(axis)) {
+                    Map<String, Object> questionMap = new HashMap<>();
+                    questionMap.put("questionId", question.getQuestionId());
+                    questionMap.put("questionText", question.getQuestionText());
+                    questionMap.put("options", question.getOptions());
+                    
+                    groupedQuestions.get(axis).add(questionMap);
                 }
-                
-                Map<String, Object> questionMap = new HashMap<>();
-                questionMap.put("questionId", question.getQuestionId());
-                questionMap.put("questionText", question.getQuestionText());
-                questionMap.put("options", question.getOptions());
-                
-                groupedQuestions.get(axis).add(questionMap);
             }
             
             returnMap.put("questions", groupedQuestions);
             returnMap.put("totalCount", questions.size());
             
-            AppLog.debug("설문 질문 조회 완료 - 총 " + questions.size() + "개");
+            AppLog.debug("설문 질문 조회 완료 - 총 " + questions.size() + "개, 축 순서: " + String.join(" -> ", axisOrder));
             
             return returnMap;
             
