@@ -463,6 +463,8 @@ public class PostServiceImpl implements PostService {
 	 * @throws Exception
 	 */
 	public List<ApplicationListVo> getApplicationHistoryList(ApplicationSearchVo applicationSearchVo) throws Exception {
-		return postDAO.getApplicationHistoryList(applicationSearchVo);
+		List<ApplicationListVo> result = postDAO.getApplicationHistoryList(applicationSearchVo);
+		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> result : " + result.toString());
+		return result;
 	}
 }

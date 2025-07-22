@@ -663,8 +663,8 @@ public class PostController {
 	 * @return 	jobPostingId 공고 ID, name 회사명, title 공고명, experienceLevel 경력, preferredDeveloperTypes MBTI_JSON_LIST
 	 * @throws 	Exception							
 	 */
-	@ElService(key = "POS0006List")
-	@RequestMapping(value = "POS0006List")
+	@ElService(key = "POS0007List")
+	@RequestMapping(value = "POS0007List")
 	@ElDescription(sub = "스카웃 유저 저장", desc = "기업이 스카웃한 유저를 저장한다")
 	public List<ApplicationListVo> getApplicationHistoryList(ApplicationSearchVo applicationSearchVo) throws Exception {
 		return postService.getApplicationHistoryList(applicationSearchVo);

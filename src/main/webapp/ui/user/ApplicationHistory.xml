@@ -37,7 +37,7 @@
 					</w2:keyInfo>
 				</w2:dataMap>
 			</w2:dataCollection>
-			<xf:submission id="sbm_applicationHistoryList" action="/InsWebApp/POS.pwkjson" method="post"
+			<xf:submission id="sbm_applicationHistoryList" action="/InsWebApp/POS0007List.pwkjson" method="post"
 				mediatype="application/json" ref='data:json,{"id":"dmp_searchParam", "key":"applicationSearchVo"}'
 				target='data:json,{"id":"dlt_applicationListVo", "key":"elData.applicationHistoryList"}' encoding="UTF-8" instance="" replace=""
 				errorHandler="" customHandler="" mode="asynchronous" processMsg="지원현황 조회중..." ev:submit=""
@@ -224,11 +224,12 @@ scwin.init = function () {
     // 검색 조건 초기화
     dmp_searchParam.set("pageIndex", 1);
     dmp_searchParam.set("pageSize", 10);
+    
     // cookie에서 accountId 가져오기
-
     scwin.userInfo = $p.parent().dma_userInfoVo.getJSON();
     if (scwin.userInfo && scwin.userInfo.accountId) {
         dmp_accountIdVo.set("accountId", scwin.userInfo.accountId);
+        dmp_searchParam.set("userId", scwin.userInfo.accountId);
     }
 
     // 지원현황 목록 조회
@@ -340,13 +341,16 @@ scwin.initializeStatCards = function () {
 };
 
 // 필터링
-scwin.filterApplications = function (type) {
+scwin.filterApplications = function (status) {
     // 검색 조건 설정
-    if (type !== 'all') {
-        dmp_searchParam.set("applicationStatus", type);
+    if (status !== '') {
+        dmp_searchParam.set("applicationStatus", status);
+    } else {
+        dmp_searchParam.set("applicationStatus", '');
     }
-    $c.sbm.execute($p, dmp_searchParam);
-
+    
+    // 지원현황 목록 재조회
+    $c.sbm.execute($p, sbm_applicationHistoryList);
 };
 
 // 상태별 클래스 적용
@@ -397,19 +401,19 @@ scwin.showApplicationDetail = function (rowIndex) {
 };
 
 scwin.total_applications_onclick = function (e) {
-    scwin.selectStatCard(this, 'all');
+    scwin.selectStatCard(this, '');
 };
 
 scwin.in_progress_applications_onclick = function (e) {
-    scwin.selectStatCard(this, 'pending');
+    scwin.selectStatCard(this, '서류검토');
 };
 
 scwin.accepted_applications_onclick = function (e) {
-    scwin.selectStatCard(this, 'accepted');
+    scwin.selectStatCard(this, '서류합격');
 };
 
 scwin.rejected_applications_onclick = function (e) {
-    scwin.selectStatCard(this, 'rejected');
+    scwin.selectStatCard(this, '불합격');
 };
 
 scwin.sbm_applicationStats_submitdone = function (e) {
@@ -483,10 +487,6 @@ scwin.sbm_applicationStats_submitdone = function (e) {
 								<xf:group class="application-card">
 									<xf:group class="card-header">
 										<xf:group class="company-info">
-											<xf:group class="company-logo">
-												<!-- 로고 필드가 없으므로 기본값 사용 -->
-												<span>🏢</span>
-											</xf:group>
 											<xf:group class="company-details">
 												<xf:group class="company-name">
 													<w2:textbox ref="data:dlt_applicationListVo.name"></w2:textbox>

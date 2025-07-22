@@ -184,5 +184,5 @@ public interface PostService {
 	 * @return 	jobPostingId 공고 ID, name 회사명, title 공고명, experienceLevel 경력, preferredDeveloperTypes MBTI_JSON_LIST
 	 * @throws 	Exception							
 	 */
-	public ApplicationListVo getApplicationHistoryList(ApplicationSearchVo applicationSearchVo) throws Exception;
+	public List<ApplicationListVo> getApplicationHistoryList(ApplicationSearchVo applicationSearchVo) throws Exception;
 }
