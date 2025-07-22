@@ -85,7 +85,7 @@
     </update>
 	
     <select id="selectPost" parameterType="com.demo.proworks.domain.post.vo.PostVo" resultType="com.demo.proworks.domain.post.vo.PostVo">
-    	<!-- 공고정보를 상세 조회한다. (회사명, 이미지 파일명 포함, 소프트 삭제된 공고 제외) -->	
+    	<!-- 공고정보를 상세 조회한다. (회사명, 이미지 파일명 포함, 소프트 삭제된 공고 제외, 마감일 기준 자동 상태 판정) -->	
         SELECT     /* QueryID : com.demo.proworks.domain.post.selectPost */
                p.JOB_POSTING_ID as jobPostingId, 
                p.COMPANY_ID as companyId, 
@@ -98,7 +98,10 @@
                p.PREFERRED_DEVELOPER_TYPES as preferredDeveloperTypes, 
                p.EXPIRES_AT as expiresAt, 
                p.POSTED_AT as postedAt, 
-               p.STATUS as status,
+               CASE 
+                   WHEN p.EXPIRES_AT IS NOT NULL AND p.EXPIRES_AT < NOW() THEN 'closed'
+                   ELSE p.STATUS 
+               END as status,
                p.JOB_IMAGE_FILE_NAME as jobImageFileName,
                u.name as companyName,
                c.industry as industry,
@@ -114,7 +117,7 @@
     </select>
 	
     <select id="selectListPost" parameterType="com.demo.proworks.domain.post.vo.PostVo" resultType="com.demo.proworks.domain.post.vo.PostVo">
-    	<!-- 공고정보 목록을 조회한다. (회사명 포함, 소프트 삭제된 공고 제외) -->
+    	<!-- 공고정보 목록을 조회한다. (회사명 포함, 소프트 삭제된 공고 제외, 마감일 기준 자동 상태 판정) -->
            SELECT    /* QueryID : com.demo.proworks.domain.post.selectListPost */
                p.JOB_POSTING_ID as jobPostingId, 
                p.COMPANY_ID as companyId, 
@@ -127,7 +130,10 @@
                p.PREFERRED_DEVELOPER_TYPES as preferredDeveloperTypes, 
                p.EXPIRES_AT as expiresAt, 
                p.POSTED_AT as postedAt, 
-               p.STATUS as status,
+               CASE 
+                   WHEN p.EXPIRES_AT IS NOT NULL AND p.EXPIRES_AT < NOW() THEN 'closed'
+                   ELSE p.STATUS 
+               END as status,
                p.JOB_IMAGE_FILE_NAME as jobImageFileName,
                u.name as companyName,
                c.industry as industry,
