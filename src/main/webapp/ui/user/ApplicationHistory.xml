@@ -281,6 +281,9 @@ scwin.sbm_applicationHistoryList_submitdone = function (e) {
             console.log("=== dataList 설정 완료 ===");
             console.log("=== dataList 행 수 ===", dlt_applicationListVo.getRowCount());
             
+            // 수동으로 generator에 데이터 바인딩
+            scwin.bindApplicationData();
+            
             // 빈 상태 표시/숨김 처리
             var emptyState = document.getElementById('empty_state');
             if (res.applicationListVoList.length === 0) {
@@ -298,6 +301,44 @@ scwin.sbm_applicationHistoryList_submitdone = function (e) {
     } catch (err) {
         console.error("지원현황 조회 오류:", err);
         alert("지원현황 조회 중 오류가 발생했습니다.");
+    }
+};
+
+// 지원현황 데이터를 generator에 바인딩하는 함수
+scwin.bindApplicationData = function() {
+    // 기존 내용 제거
+    gen_applications.removeAll();
+    
+    // DataList에서 데이터 가져오기
+    var rowCount = dlt_applicationListVo.getRowCount();
+    
+    if (rowCount === 0) {
+        console.log("지원현황 데이터가 없습니다.");
+        return;
+    }
+    
+    for (var i = 0; i < rowCount; i++) {
+        // 새로운 아이템 추가
+        gen_applications.insertChild();
+        
+        // 데이터 가져오기
+        var name = dlt_applicationListVo.getCellData(i, "name") || "";
+        var title = dlt_applicationListVo.getCellData(i, "title") || "";
+        var experienceLevel = dlt_applicationListVo.getCellData(i, "experienceLevel") || "";
+        var jobPostingId = dlt_applicationListVo.getCellData(i, "jobPostingId") || "";
+        
+        // 각 컴포넌트에 값 설정
+        var txt_company_name = gen_applications.getChild(i, "txt_company_name");
+        var txt_job_title = gen_applications.getChild(i, "txt_job_title");
+        var txt_experience_level = gen_applications.getChild(i, "txt_experience_level");
+        var txt_job_posting_id = gen_applications.getChild(i, "txt_job_posting_id");
+        
+        if (txt_company_name) txt_company_name.setValue(name);
+        if (txt_job_title) txt_job_title.setValue(title);
+        if (txt_experience_level) txt_experience_level.setValue(experienceLevel);
+        if (txt_job_posting_id) txt_job_posting_id.setValue(jobPostingId);
+        
+        console.log("바인딩 완료 - 행:", i, "회사명:", name, "공고명:", title);
     }
 };
 
@@ -431,6 +472,16 @@ scwin.showApplicationDetail = function (rowIndex) {
     }
 };
 
+// 지원현황 행 클릭 이벤트 핸들러
+scwin.handleApplicationRowClick = function(e) {
+    var index = this.getGeneratedIndex();
+    if (typeof index === 'number' && index >= 0) {
+        scwin.showApplicationDetail(index);
+    } else {
+        console.error("유효한 인덱스를 가져올 수 없습니다.");
+    }
+};
+
 scwin.total_applications_onclick = function (e) {
     scwin.selectStatCard(this, '');
 };
@@ -514,17 +565,17 @@ scwin.sbm_applicationStats_submitdone = function (e) {
 					<!-- 지원현황 카드들 -->
 					<section class="applications-section">
 						<xf:group class="applications-grid">
-							<w2:generator id="gen_applications" dataList="data:dlt_applicationListVo" style="">
-								<xf:group style="padding: 20px; margin-bottom: 15px; border: 1px solid #e8e8e8; border-radius: 8px; background-color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.1); cursor: pointer; transition: box-shadow 0.2s ease;" class="application-row">
+							<w2:generator id="gen_applications" style="">
+								<xf:group style="padding: 20px; margin-bottom: 15px; border: 1px solid #e8e8e8; border-radius: 8px; background-color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.1); cursor: pointer; transition: box-shadow 0.2s ease;" class="application-row" ev:onclick="scwin.handleApplicationRowClick">
 									<xf:group style="display: flex; align-items: center; font-size: 16px; color: #333; flex-wrap: wrap;">
-										<span style="font-weight: bold; color: #4285f4; margin-right: 8px;"><w2:textbox ref="data:dlt_applicationListVo.name"></w2:textbox></span>
+										<span style="font-weight: bold; color: #4285f4; margin-right: 8px;"><w2:textbox id="txt_company_name"></w2:textbox></span>
 										<span style="margin-right: 8px;">의</span>
-										<span style="font-weight: 600; color: #333; margin-right: 8px;"><w2:textbox ref="data:dlt_applicationListVo.title"></w2:textbox></span>
-										<span style="margin-right: 8px;">에서 매칭 제안이 왔어요.</span>
+										<span style="font-weight: 600; color: #333; margin-right: 8px;"><w2:textbox id="txt_job_title"></w2:textbox></span>
+										<span style="margin-right: 8px;">에 이력서를 지원하셨어요.</span>
 									</xf:group>
 									<xf:group style="margin-top: 10px; display: flex; gap: 15px; font-size: 14px; color: #666; flex-wrap: wrap;">
-										<span style="background-color: #f0f4ff; color: #4285f4; padding: 4px 8px; border-radius: 4px; font-size: 12px;">경력: <w2:textbox ref="data:dlt_applicationListVo.experienceLevel"></w2:textbox></span>
-										<span style="color: #999; font-size: 12px;">공고ID: <w2:textbox ref="data:dlt_applicationListVo.jobPostingId"></w2:textbox></span>
+										<span style="background-color: #f0f4ff; color: #4285f4; padding: 4px 8px; border-radius: 4px; font-size: 12px;">경력: <w2:textbox id="txt_experience_level"></w2:textbox></span>
+										<span style="color: #999; font-size: 12px;">공고ID: <w2:textbox id="txt_job_posting_id"></w2:textbox></span>
 									</xf:group>
 								</xf:group>
 							</w2:generator>
