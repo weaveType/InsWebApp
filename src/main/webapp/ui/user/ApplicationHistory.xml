@@ -39,7 +39,7 @@
 			</w2:dataCollection>
 			<xf:submission id="sbm_applicationHistoryList" action="/InsWebApp/POS.pwkjson" method="post"
 				mediatype="application/json" ref='data:json,{"id":"dmp_searchParam", "key":"applicationSearchVo"}'
-				target='data:json,{"id":"dlt_applications", "key":"elData.applicationHistoryListVo"}' encoding="UTF-8" instance="" replace=""
+				target='data:json,{"id":"dlt_applicationListVo", "key":"elData.applicationHistoryList"}' encoding="UTF-8" instance="" replace=""
 				errorHandler="" customHandler="" mode="asynchronous" processMsg="지원현황 조회중..." ev:submit=""
 				ev:submitdone="scwin.sbm_applicationHistoryList_submitdone" ev:submiterror="scwin.sbm_applicationHistoryList_submiterror"
 				abortTrigger="">
@@ -232,7 +232,7 @@ scwin.init = function () {
     }
 
     // 지원현황 목록 조회
-    //$c.sbm.execute($p, sbm_applicationHistoryList);
+    $c.sbm.execute($p, sbm_applicationHistoryList);
 
     // 통계 데이터 조회
     $c.sbm.execute($p, sbm_applicationStats);
@@ -251,7 +251,7 @@ scwin.sbm_applicationHistoryList_submitdone = function (e) {
         if (res && res.elData) {
             // 지원현황 목록 설정
             if (res.elData.applicationHistoryList) {
-                dlt_applications.setJSON(res.elData.applicationHistoryList);
+                dlt_applicationListVo.setJSON(res.elData.applicationHistoryList);
             }
 
             // 통계 데이터 설정
@@ -351,24 +351,24 @@ scwin.filterApplications = function (type) {
 
 // 상태별 클래스 적용
 scwin.applyStatusClasses = function () {
-    var totalCount = dlt_applications.getRowCount();
+    var totalCount = dlt_applicationListVo.getRowCount();
 
     setTimeout(function () {
         var cards = document.querySelectorAll('.application-card');
         var statusBadges = document.querySelectorAll('.status-badge');
 
         for (var i = 0; i < cards.length && i < totalCount; i++) {
-            var status = dlt_applications.getCellData(i, "status");
+            var experienceLevel = dlt_applicationListVo.getCellData(i, "experienceLevel");
             var card = cards[i];
             var badge = statusBadges[i];
 
-            if (status === "서류통과" || status === "면접진행") {
+            if (experienceLevel === "신입" || experienceLevel === "경력무관") {
                 card.classList.add('pending');
                 if (badge) badge.className = 'status-badge status-pending';
-            } else if (status === "최종합격") {
+            } else if (experienceLevel === "경력") {
                 card.classList.add('accepted');
                 if (badge) badge.className = 'status-badge status-accepted';
-            } else if (status === "불합격") {
+            } else {
                 card.classList.add('rejected');
                 if (badge) badge.className = 'status-badge status-rejected';
             }
@@ -378,19 +378,17 @@ scwin.applyStatusClasses = function () {
 
 // 지원현황 상세보기
 scwin.showApplicationDetail = function (rowIndex) {
-    var company = dlt_applications.getCellData(rowIndex, "company");
-    var position = dlt_applications.getCellData(rowIndex, "position");
-    var status = dlt_applications.getCellData(rowIndex, "status");
-    var result = dlt_applications.getCellData(rowIndex, "result");
-    var applicationDate = dlt_applications.getCellData(rowIndex, "applicationDate");
-    var jobPostingId = dlt_applications.getCellData(rowIndex, "jobPostingId");
+    var name = dlt_applicationListVo.getCellData(rowIndex, "name");
+    var title = dlt_applicationListVo.getCellData(rowIndex, "title");
+    var experienceLevel = dlt_applicationListVo.getCellData(rowIndex, "experienceLevel");
+    var preferredDeveloperTypes = dlt_applicationListVo.getCellData(rowIndex, "preferredDeveloperTypes");
+    var jobPostingId = dlt_applicationListVo.getCellData(rowIndex, "jobPostingId");
 
     var detailMessage = "=== 지원 상세 정보 ===\n\n";
-    detailMessage += "회사명: " + company + "\n";
-    detailMessage += "포지션: " + position + "\n";
-    detailMessage += "지원일자: " + applicationDate + "\n";
-    detailMessage += "상태: " + status + "\n";
-    detailMessage += "결과: " + result + "\n";
+    detailMessage += "회사명: " + name + "\n";
+    detailMessage += "공고명: " + title + "\n";
+    detailMessage += "경력요구사항: " + experienceLevel + "\n";
+    detailMessage += "선호 개발자 유형: " + preferredDeveloperTypes + "\n";
     detailMessage += "\n해당 공고 페이지로 이동하시겠습니까?";
 
     if (confirm(detailMessage)) {
@@ -481,30 +479,34 @@ scwin.sbm_applicationStats_submitdone = function (e) {
 					<!-- 지원현황 카드들 -->
 					<section class="applications-section">
 						<xf:group class="applications-grid">
-							<w2:generator id="gen_applications" dataList="data:dlt_applications" style="">
+							<w2:generator id="gen_applications" dataList="data:dlt_applicationListVo" style="">
 								<xf:group class="application-card">
 									<xf:group class="card-header">
 										<xf:group class="company-info">
 											<xf:group class="company-logo">
-												<w2:textbox ref="data:dlt_applications.logo"></w2:textbox>
+												<!-- 로고 필드가 없으므로 기본값 사용 -->
+												<span>🏢</span>
 											</xf:group>
 											<xf:group class="company-details">
 												<xf:group class="company-name">
-													<w2:textbox ref="data:dlt_applications.company"></w2:textbox>
+													<w2:textbox ref="data:dlt_applicationListVo.name"></w2:textbox>
 												</xf:group>
 												<xf:group class="position-name">
-													<w2:textbox ref="data:dlt_applications.position"></w2:textbox>
+													<w2:textbox ref="data:dlt_applicationListVo.title"></w2:textbox>
 												</xf:group>
 											</xf:group>
 										</xf:group>
 										<xf:group class="application-date">
-											<w2:textbox ref="data:dlt_applications.applicationDate"></w2:textbox>
+											<!-- 지원일자 필드가 없으므로 공고ID 표시 -->
+											<span>공고ID: </span><w2:textbox ref="data:dlt_applicationListVo.jobPostingId"></w2:textbox>
 										</xf:group>
 									</xf:group>
 									<xf:group class="card-body">
-										<w2:textbox class="status-badge" ref="data:dlt_applications.status"></w2:textbox>
+										<xf:group class="status-badge">
+											<w2:textbox ref="data:dlt_applicationListVo.experienceLevel"></w2:textbox>
+										</xf:group>
 										<xf:group class="result-text">
-											<w2:textbox ref="data:dlt_applications.result"></w2:textbox>
+											<w2:textbox ref="data:dlt_applicationListVo.preferredDeveloperTypes"></w2:textbox>
 										</xf:group>
 									</xf:group>
 								</xf:group>

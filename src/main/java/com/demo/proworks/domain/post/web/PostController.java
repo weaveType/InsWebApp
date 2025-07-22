@@ -666,7 +666,7 @@ public class PostController {
 	@ElService(key = "POS0006List")
 	@RequestMapping(value = "POS0006List")
 	@ElDescription(sub = "스카웃 유저 저장", desc = "기업이 스카웃한 유저를 저장한다")
-	public ApplicationListVo getApplicationHistoryList(ApplicationSearchVo applicationSearchVo) throws Exception {
-		postService.getApplicationHistoryList(applicationSearchVo);
+	public List<ApplicationListVo> getApplicationHistoryList(ApplicationSearchVo applicationSearchVo) throws Exception {
+		return postService.getApplicationHistoryList(applicationSearchVo);
 	}
 }

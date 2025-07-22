@@ -462,7 +462,7 @@ public class PostServiceImpl implements PostService {
 	 *         preferredDeveloperTypes MBTI_JSON_LIST
 	 * @throws Exception
 	 */
-	public ApplicationListVo getApplicationHistoryList(ApplicationSearchVo applicationSearchVo) throws Exception {
-		postDAO.getApplicationHistoryList(applicationSearchVo);
+	public List<ApplicationListVo> getApplicationHistoryList(ApplicationSearchVo applicationSearchVo) throws Exception {
+		return postDAO.getApplicationHistoryList(applicationSearchVo);
 	}
 }
