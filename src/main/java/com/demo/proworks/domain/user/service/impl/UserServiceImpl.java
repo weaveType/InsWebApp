@@ -18,6 +18,7 @@ import com.demo.proworks.domain.user.vo.UserInfoVo;
 import com.demo.proworks.domain.user.vo.UserVo;
 import com.demo.proworks.domain.user.vo.ApplicationHistoryVo;
 import com.demo.proworks.domain.user.vo.ApplicationStatsListVo;
+import com.demo.proworks.domain.user.vo.ApplicationStatusVo;
 import com.demo.proworks.common.enumType.DevMbti;
 import com.demo.proworks.common.vo.AccountIdVo;
 import com.demo.proworks.domain.user.dao.UserDAO;
@@ -440,6 +441,11 @@ public class UserServiceImpl implements UserService {
 	 * @throws Exception
 	 */
 	public ApplicationStatsListVo getApplicationStats(AccountIdVo accountIdVo) throws Exception {
-		return userDAO.getApplicationStats(accountIdVo);
+		List<ApplicationStatusVo> ApplicationStatusVoList = userDAO.getApplicationStats(accountIdVo);
+		ApplicationStatsListVo result = new ApplicationStatsListVo();
+		result.setApplicationStatusVo(ApplicationStatusVoList);
+		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> accountIdVo : " + accountIdVo.toString());
+		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> result : " + result.toString());
+		return result;
 	}
 }

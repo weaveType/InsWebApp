@@ -485,7 +485,7 @@ LIMIT #{pageSize} OFFSET ${(pageIndex - 1) * pageSize}
 
 <select id="getApplicationStats" parameterType="com.demo.proworks.common.vo.AccountIdVo"
         resultType="com.demo.proworks.domain.user.vo.ApplicationStatusVo">
-    <!-- 지원현황 통계를 조회한다 (상태별 GROUP BY) -->
+<!-- 지원현황 통계를 조회한다 (상태별 GROUP BY) -->
     SELECT /* QueryID : com.demo.proworks.domain.user.getApplicationStats */
         'TOTAL' as statusType,
         COALESCE(COUNT(*), 0) as statusCount
@@ -498,7 +498,7 @@ LIMIT #{pageSize} OFFSET ${(pageIndex - 1) * pageSize}
         'PENDING' as statusType,
         COALESCE(COUNT(*), 0) as statusCount
     FROM job_applications 
-    WHERE user_id = #{accountId} AND application_status = 'PENDING'
+    WHERE user_id = #{accountId} AND application_status = '서류검토'
     
     UNION ALL
     
@@ -506,7 +506,7 @@ LIMIT #{pageSize} OFFSET ${(pageIndex - 1) * pageSize}
         'ACCEPTED' as statusType,
         COALESCE(COUNT(*), 0) as statusCount
     FROM job_applications 
-    WHERE user_id = #{accountId} AND application_status = 'ACCEPTED'
+    WHERE user_id = #{accountId} AND application_status = '서류합격'
     
     UNION ALL
     
@@ -514,7 +514,7 @@ LIMIT #{pageSize} OFFSET ${(pageIndex - 1) * pageSize}
         'REJECTED' as statusType,
         COALESCE(COUNT(*), 0) as statusCount
     FROM job_applications 
-    WHERE user_id = #{accountId} AND application_status = 'REJECTED'
+    WHERE user_id = #{accountId} AND application_status = '불합격'
 </select>
 
 </mapper>

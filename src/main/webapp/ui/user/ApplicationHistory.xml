@@ -231,6 +231,7 @@ scwin.init = function () {
     // cookie에서 accountId 가져오기
 
     scwin.userInfo = $p.parent().userInfo;
+    console.log("userInfo : " + userInfo);
     if (scwin.userInfo) {
         dmp_accountIdVo.set("accountId", scwin.userInfo.accountId);
     }
