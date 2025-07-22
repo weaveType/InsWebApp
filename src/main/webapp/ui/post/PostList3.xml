@@ -132,7 +132,7 @@
 
             .job-card {
                 width: 250px;
-                height: 250px;
+                height: 280px;
                 background: white;
                 border-radius: 16px;
                 overflow: hidden;
@@ -161,7 +161,7 @@
 
             .job-image {
                 width: 100%;
-                height: 120px;
+                height: 180px;
                 position: relative;
                 overflow: hidden;
                 display: flex;
@@ -199,8 +199,8 @@
             }
 
             .job-content {
-                padding: 16px 18px 14px;
-                height: 140px;
+                padding: 10px 18px 8px;
+                height: 100px;
                 display: flex;
                 flex-direction: column;
                 justify-content: space-between;
@@ -208,14 +208,14 @@
             }
 
             .job-header {
-                margin-bottom: 10px;
+                margin-bottom: 5px;
             }
 
             .job-title {
                 font-size: 15px;
                 font-weight: 700;
                 color: #0f172a;
-                margin-bottom: 6px;
+                margin-bottom: 3px;
                 display: -webkit-box;
                 -webkit-box-orient: vertical;
                 overflow: hidden;
@@ -226,7 +226,7 @@
                 font-size: 13px;
                 color: #4f46e5;
                 font-weight: 700;
-                margin-bottom: 6px;
+                margin-bottom: 3px;
                 cursor: pointer;
                 transition: all 0.3s ease;
                 display: flex;
@@ -439,11 +439,11 @@
                 }
                 
                 .job-image {
-                    height: 40%;
+                    height: 50%;
                 }
                 
                 .job-content {
-                    height: 60%;
+                    height: 50%;
                     padding: 12px 12px 10px;
                 }
                 
@@ -569,7 +569,6 @@ scwin.sbm_selectPostList_submitdone = function (e) {
  * 공고 카드 UI 동적 생성
  */
 scwin.renderJobCards = function () {
-    console.log("=== 공고 카드 UI 생성 ===");
 
     var jobCardsContainer = document.querySelector('.job-cards');
     if (!jobCardsContainer) {
@@ -593,8 +592,6 @@ scwin.renderJobCards = function () {
         var cardElement = scwin.createJobCard(jobData, i);
         jobCardsContainer.appendChild(cardElement);
     }
-
-    console.log("✅ " + rowCount + "개 공고 카드 생성 완료");
 };
 
 /**
@@ -607,18 +604,6 @@ scwin.createJobCard = function (jobData, index) {
     card.setAttribute('data-index', index);
     card.onclick = function () { scwin.openPostDetail(jobData.jobPostingId); };
 
-    // 기술스택 태그 생성
-    var techTags = '';
-    if (jobData.techStackNames) {
-        try {
-            var techArray = JSON.parse(jobData.techStackNames);
-            techTags = techArray.map(function (tech) {
-                return '<span class="tech-tag">' + tech + '</span>';
-            }).join('');
-        } catch (e) {
-            techTags = '<span class="tech-tag">정보없음</span>';
-        }
-    }
 
     // 선호 개발자 유형 태그 생성
     var developerTypeTags = '';
@@ -677,30 +662,7 @@ scwin.createJobCard = function (jobData, index) {
             '<img src="/InsWebApp/images/ws5/default_company.png" alt="' + (jobData.companyName || '회사') + ' 기본 로고" class="company-logo" />') +
         '<span>' + (jobData.companyName || '회사명 정보없음') + '</span>' +
         '</xf:group>' +
-        '<xf:group class="job-description">' +
-        (jobData.description || '설명이 없습니다.') +
-        '</xf:group>' +
-        '<xf:group class="job-meta">' +
-        '<xf:group class="job-meta-item">' +
-        '<span class="job-meta-icon"></span>' +
-        '<span>' + (jobData.location || '지역정보없음') + '</span>' +
-        '</xf:group>' +
-        '<xf:group class="job-meta-item">' +
-        '<span class="job-meta-icon"></span>' +
-        '<span>' + scwin.getExperienceLevelText(jobData.experienceLevel) + '</span>' +
-        '</xf:group>' +
-        '<xf:group class="job-meta-item">' +
-        '<span class="job-meta-icon"></span>' +
-        '<span>' + scwin.getWorkTypeText(jobData.workType) + '</span>' +
-        '</xf:group>' +
-        '</xf:group>' +
-        (techTags ? '<xf:group class="tech-tags">' + techTags + '</xf:group>' : '') +
-        (developerTypeTags ? '<xf:group class="tech-tags">' + developerTypeTags + '</xf:group>' : '') +
-        '<xf:group class="job-footer">' +
-        '<xf:group class="job-salary">' + scwin.getSalaryRangeText(jobData.salaryRange) + '</xf:group>' +
-        '<xf:group class="job-date">' + scwin.formatDate(jobData.postedAt) + '</xf:group>' +
-        '</xf:group>' +
-        '</xf:group>';
+        (developerTypeTags ? '<xf:group class="tech-tags">' + developerTypeTags + '</xf:group>' : '');
 
     return card;
 };
@@ -818,12 +780,6 @@ scwin.handleImageError = function (img, companyName, companyId) {
         img.src = nextImageSrc;
         return;
     }
-    
-    // 모든 이미지 실패 시 텍스트 플레이스홀더로 대체
-    console.log("❌ 모든 이미지 실패 - 텍스트 플레이스홀더 표시");
-    var placeholder = document.createElement('div');
-    placeholder.className = 'job-image-placeholder';
-    placeholder.innerHTML = '<span class="icon">������</span><span>' + (companyName || '회사') + '</span>';
     
     if (img.parentNode) {
         img.parentNode.replaceChild(placeholder, img);
@@ -948,19 +904,6 @@ scwin.filter_tag_onclick = function (tagName) {
     // 필터 적용 후 목록 새로고침
     scwin.loadPostList();
 };
-
-// // 햄버거 메뉴 토글
-// scwin.toggleSideMenu = function () {
-//     var sideMenu = document.getElementById('sideMenu');
-//     var overlay = document.getElementById('sideMenuOverlay');
-
-//     if (sideMenu && sideMenu.classList.contains('open')) {
-//         scwin.closeSideMenu();
-//     } else if (sideMenu && overlay) {
-//         sideMenu.classList.add('open');
-//         overlay.classList.add('open');
-//     }
-// };
 
 scwin.closeSideMenu = function () {
     var sideMenu = document.getElementById('sideMenu');
@@ -1094,14 +1037,6 @@ scwin.sbm_selectDevMbtiList_submitdone = function (e) {
 
     // 공고 카드 UI 동적 생성
     scwin.renderJobCards();
-
-    // 데이터 확인 로그
-    for (var i = 0; i < Math.min(dlt_postList.getRowCount(), 3); i++) {
-        console.log("공고 " + (i + 1) + ":");
-        console.log("- ID:", dlt_postList.getCellData(i, "jobPostingId"));
-        console.log("- 제목:", dlt_postList.getCellData(i, "title"));
-        console.log("- 회사:", dlt_postList.getCellData(i, "companyName"));
-    }
 };
 
 scwin.sbm_applicantList_submitdone = function (e) {
@@ -1116,8 +1051,6 @@ scwin.sbm_applicantList_submitdone = function (e) {
 
 			<!-- 필터 섹션 -->
 			<section class="filter-section">
-				<!-- 메인 필터 드롭다운 -->
-
 				<!-- 필터 태그들 -->
 				<xf:group class="header-container" style="margin-top: 20px;margin-bottom: 20px;">
 					<xf:group class="header-left">
