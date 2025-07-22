@@ -26,37 +26,37 @@
         
         INSERT INTO survey_responses (
             response_id,
-            type_id,
+            user_id,
             responses,
             create_at,
             update_at
         ) VALUES (
             #{responseId},
-            #{typeId},
+            #{userId},
             #{responses},
             NOW(),
             NOW()
         )
     </insert>
     
-    <!-- 설문 응답의 type_id 업데이트 -->
-    <update id="updateSurveyResponseTypeId" parameterType="com.demo.proworks.domain.survey.vo.SurveyResponseVo">
+    <!-- 설문 응답 업데이트 -->
+    <update id="updateSurveyResponse" parameterType="com.demo.proworks.domain.survey.vo.SurveyResponseVo">
         UPDATE survey_responses 
-        SET type_id = #{typeId},
+        SET responses = #{responses},
             update_at = NOW()
-        WHERE response_id = #{responseId}
+        WHERE user_id = #{userId}
     </update>
     
     <!-- 사용자의 최신 설문 응답 조회 -->
     <select id="selectLatestResponse" parameterType="Long" resultType="com.demo.proworks.domain.survey.vo.SurveyResponseVo">
         SELECT 
             response_id AS responseId,
-            type_id AS typeId,
+            user_id AS userId,
             responses,
             create_at AS createAt,
             update_at AS updateAt
         FROM survey_responses
-        WHERE type_id = #{typeId}
+        WHERE user_id = #{userId}
         ORDER BY create_at DESC
         LIMIT 1
     </select>

@@ -40,25 +40,25 @@ public class SurveyDAO extends com.demo.proworks.cmmn.dao.ProworksDefaultAbstrac
     }
     
     /**
-     * 설문 응답의 type_id 업데이트
+     * 설문 응답 업데이트
      * 
-     * @param responseVo 설문 응답 정보 (response_id와 type_id 포함)
+     * @param responseVo 설문 응답 정보 (user_id와 responses 포함)
      * @return 업데이트된 행 수
      * @throws ElException
      */
-    public int updateSurveyResponseTypeId(SurveyResponseVo responseVo) throws ElException {
-        return update("com.demo.proworks.domain.survey.updateSurveyResponseTypeId", responseVo);
+    public int updateSurveyResponse(SurveyResponseVo responseVo) throws ElException {
+        return update("com.demo.proworks.domain.survey.updateSurveyResponse", responseVo);
     }
     
     /**
      * 사용자의 최신 설문 응답 조회
      * 
-     * @param typeId 타입 ID
+     * @param userId 사용자 ID
      * @return 설문 응답 정보
      * @throws ElException
      */
-    public SurveyResponseVo selectLatestResponse(Long typeId) throws ElException {
-        return (SurveyResponseVo) selectByPk("com.demo.proworks.domain.survey.selectLatestResponse", typeId);
+    public SurveyResponseVo selectLatestResponse(Long userId) throws ElException {
+        return (SurveyResponseVo) selectByPk("com.demo.proworks.domain.survey.selectLatestResponse", userId);
     }
     
     /**
