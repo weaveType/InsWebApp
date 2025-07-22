@@ -6,6 +6,8 @@ import java.util.Map;
 import org.springframework.stereotype.Repository;
 
 import com.inswave.elfw.exception.ElException;
+import com.demo.proworks.domain.post.vo.ApplicationListVo;
+import com.demo.proworks.domain.post.vo.ApplicationSearchVo;
 import com.demo.proworks.domain.post.vo.JobApplicationVo;
 import com.demo.proworks.domain.post.vo.MainPostingListVo;
 import com.demo.proworks.domain.post.vo.MainPostingVo;
@@ -212,7 +214,7 @@ public class PostDAO extends com.demo.proworks.cmmn.dao.ProworksDefaultAbstractD
 	}
 
 	/**
-	 * 기업이 스카웃한 유저를 저장한다. 
+	 * 기업이 스카웃한 유저를 저장한다.
 	 *
 	 * @param vo 스카웃 정보
 	 * @throws ElException
@@ -222,6 +224,16 @@ public class PostDAO extends com.demo.proworks.cmmn.dao.ProworksDefaultAbstractD
 	}
 
 	/**
+	 * 유저가 지원한 공고를 가져온다.
+	 * 
+	 * @param applicationSearchVo 페이지번호, 페이지크기, 사용자ID, 이력서 상태
+	 * @return List<ApplicationListVo> 공고 ID, 회사명, 공고명, 경력, MBTI_JSON_LIST
+	 * @throws Exception
+	 */
+	public List<ApplicationListVo> getApplicationHistoryList(ApplicationSearchVo applicationSearchVo) throws Exception {
+		return (List<ApplicationListVo>) list("com.demo.proworks.domain.post.getApplicationHistoryList", applicationSearchVo);
+    
+  /*
 	 * 사용자의 특정 공고 지원 여부를 확인한다.
 	 *
 	 * @param jobApplicationVo 지원 정보 (jobPostingId, accountId 포함)

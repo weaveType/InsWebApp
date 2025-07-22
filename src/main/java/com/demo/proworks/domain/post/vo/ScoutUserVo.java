@@ -16,8 +16,8 @@ public class ScoutUserVo extends com.demo.proworks.cmmn.ProworksCommVO {
     @ElDtoField(logicalName = "공고_ID", physicalName = "jobPostingId", type = "int", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
     private int jobPostingId;
 
-    @ElDtoField(logicalName = "유저_ID_List", physicalName = "accountIdVo", type = "", typeKind = "List", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
-    private java.util.List<com.demo.proworks.domain.post.vo.AccountIdVo> accountIdVo;
+    @ElDtoField(logicalName = "유저 ID_List", physicalName = "accountIdVo", type = "", typeKind = "List", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private java.util.List<com.demo.proworks.common.vo.AccountIdVo> accountIdVo;
 
     @ElVoField(physicalName = "jobPostingId")
     public int getJobPostingId(){
@@ -30,12 +30,12 @@ public class ScoutUserVo extends com.demo.proworks.cmmn.ProworksCommVO {
     }
 
     @ElVoField(physicalName = "accountIdVo")
-    public java.util.List<com.demo.proworks.domain.post.vo.AccountIdVo> getAccountIdVo(){
+    public java.util.List<com.demo.proworks.common.vo.AccountIdVo> getAccountIdVo(){
         return accountIdVo;
     }
 
     @ElVoField(physicalName = "accountIdVo")
-    public void setAccountIdVo(java.util.List<com.demo.proworks.domain.post.vo.AccountIdVo> accountIdVo){
+    public void setAccountIdVo(java.util.List<com.demo.proworks.common.vo.AccountIdVo> accountIdVo){
         this.accountIdVo = accountIdVo;
     }
 
@@ -57,7 +57,7 @@ public class ScoutUserVo extends com.demo.proworks.cmmn.ProworksCommVO {
     @Override
     public void _xStreamEnc() {
         for( int i=0 ; accountIdVo != null && i < accountIdVo.size() ; i++ ) {
-            com.demo.proworks.domain.post.vo.AccountIdVo vo = (com.demo.proworks.domain.post.vo.AccountIdVo)accountIdVo.get(i);
+            com.demo.proworks.common.vo.AccountIdVo vo = (com.demo.proworks.common.vo.AccountIdVo)accountIdVo.get(i);
             vo._xStreamEnc();	 
         }
     }
@@ -66,7 +66,7 @@ public class ScoutUserVo extends com.demo.proworks.cmmn.ProworksCommVO {
     @Override
     public void _xStreamDec() {
         for( int i=0 ; accountIdVo != null && i < accountIdVo.size() ; i++ ) {
-            com.demo.proworks.domain.post.vo.AccountIdVo vo = (com.demo.proworks.domain.post.vo.AccountIdVo)accountIdVo.get(i);
+            com.demo.proworks.common.vo.AccountIdVo vo = (com.demo.proworks.common.vo.AccountIdVo)accountIdVo.get(i);
             vo._xStreamDec();	 
         }
     }

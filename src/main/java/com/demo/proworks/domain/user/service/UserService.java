@@ -3,6 +3,7 @@ package com.demo.proworks.domain.user.service;
 import java.util.List;
 
 import com.demo.proworks.common.enumType.DevMbti;
+import com.demo.proworks.common.vo.AccountIdVo;
 import com.demo.proworks.domain.user.vo.ApplicantDetailVo;
 import com.demo.proworks.domain.user.vo.ApplicantListVo;
 import com.demo.proworks.domain.user.vo.ApplicantVo;
@@ -12,6 +13,7 @@ import com.demo.proworks.domain.user.vo.ScoutVo;
 import com.demo.proworks.domain.user.vo.UserInfoVo;
 import com.demo.proworks.domain.user.vo.UserVo;
 import com.demo.proworks.domain.user.vo.ApplicationHistoryVo;
+import com.demo.proworks.domain.user.vo.ApplicationStatsListVo;
 
 /**
  * @subject : 일반회원 관련 처리를 담당하는 인터페이스
@@ -274,4 +276,14 @@ public interface UserService {
 	 * @throws Exception
 	 */
 	public int deleteApplicationHistory(ApplicationHistoryVo applicationHistoryVo) throws Exception;
+
+	/**
+	 * 지원현황 count를 가져온다.
+	 *
+	 * @param AccountIdVo 로그인한 User Id
+	 * @return 총 지원, 진행중, 합격, 불합격 공고 Count
+	 * @throws Exception
+	 */
+	public ApplicationStatsListVo getApplicationStats(AccountIdVo accountIdVo) throws Exception;
+
 }

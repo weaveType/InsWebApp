@@ -12,16 +12,20 @@ import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
 import com.demo.proworks.domain.post.service.PostService;
+import com.demo.proworks.domain.post.vo.ApplicationListVo;
+import com.demo.proworks.domain.post.vo.ApplicationSearchVo;
 import com.demo.proworks.domain.post.vo.JobApplicationVo;
 import com.demo.proworks.domain.post.vo.PostMatchVo;
 import com.demo.proworks.domain.post.vo.PostVo;
 import com.demo.proworks.domain.post.vo.ScoutUserVo;
 import com.demo.proworks.domain.post.vo.TechStackVo;
+import com.demo.proworks.domain.user.vo.ApplicationStatsListVo;
 import com.demo.proworks.domain.post.vo.MainPostingListVo;
 import com.demo.proworks.domain.post.vo.MainPostingVo;
 import com.demo.proworks.domain.post.vo.SendEmailVo;
 import com.demo.proworks.domain.post.dao.PostDAO;
 import com.demo.proworks.common.service.EmailService;
+import com.demo.proworks.common.vo.AccountIdVo;
 
 /**
  * @subject : 공고정보 관련 처리를 담당하는 ServiceImpl
@@ -450,6 +454,20 @@ public class PostServiceImpl implements PostService {
 	}
 
 	/**
+	 * 유저가 지원한 공고를 가져온다.
+	 * 
+	 * @param pageIndex 페이지번호, pageSize 페이지크기, userId 사용자ID, applicationStatus 이력서
+	 *                  상태
+	 * @return jobPostingId 공고 ID, name 회사명, title 공고명, experienceLevel 경력,
+	 *         preferredDeveloperTypes MBTI_JSON_LIST
+	 * @throws Exception
+	 */
+	public List<ApplicationListVo> getApplicationHistoryList(ApplicationSearchVo applicationSearchVo) throws Exception {
+		List<ApplicationListVo> result = postDAO.getApplicationHistoryList(applicationSearchVo);
+		return result;
+	}
+  
+  /*
 	 * 사용자의 특정 공고 지원 상태를 확인한다.
 	 *
 	 * @process 1. JobApplicationVo를 생성하여 파라미터 설정
@@ -463,9 +481,6 @@ public class PostServiceImpl implements PostService {
 	 */
 	@Override
 	public boolean checkApplicationStatus(int jobPostingId, int accountId) throws Exception {
-		System.out.println("=== 지원 상태 확인 서비스 시작 ===");
-		System.out.println("공고 ID: " + jobPostingId);
-		System.out.println("사용자 ID: " + accountId);
 		
 		try {
 			// JobApplicationVo 생성하여 파라미터 설정
@@ -478,18 +493,12 @@ public class PostServiceImpl implements PostService {
 			
 			boolean isApplied = applicationCount > 0;
 			
-			System.out.println("지원 건수: " + applicationCount);
-			System.out.println("지원 여부: " + isApplied);
-			System.out.println("✅ 지원 상태 확인 완료");
-			
 			return isApplied;
 			
 		} catch (Exception e) {
-			System.err.println("❌ 지원 상태 확인 중 오류 - jobPostingId: " + jobPostingId + ", accountId: " + accountId);
 			System.err.println("오류 내용: " + e.getMessage());
 			e.printStackTrace();
 			return false;
 		}
 	}
-
 }

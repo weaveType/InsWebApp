@@ -483,4 +483,38 @@ LIMIT #{pageSize} OFFSET ${(pageIndex - 1) * pageSize}
     <!-- scoutStatus가 'ALL'인 경우 스카웃 관련 조건 없음 -->
 </select>
 
+<select id="getApplicationStats" parameterType="com.demo.proworks.common.vo.AccountIdVo"
+        resultType="com.demo.proworks.domain.user.vo.ApplicationStatusVo">
+<!-- 지원현황 통계를 조회한다 (상태별 GROUP BY) -->
+    SELECT /* QueryID : com.demo.proworks.domain.user.getApplicationStats */
+        'TOTAL' as statusType,
+        COALESCE(COUNT(*), 0) as statusCount
+    FROM job_applications 
+    WHERE user_id = #{accountId}
+    
+    UNION ALL
+    
+    SELECT 
+        'PENDING' as statusType,
+        COALESCE(COUNT(*), 0) as statusCount
+    FROM job_applications 
+    WHERE user_id = #{accountId} AND application_status = '서류검토'
+    
+    UNION ALL
+    
+    SELECT 
+        'ACCEPTED' as statusType,
+        COALESCE(COUNT(*), 0) as statusCount
+    FROM job_applications 
+    WHERE user_id = #{accountId} AND application_status = '서류합격'
+    
+    UNION ALL
+    
+    SELECT 
+        'REJECTED' as statusType,
+        COALESCE(COUNT(*), 0) as statusCount
+    FROM job_applications 
+    WHERE user_id = #{accountId} AND application_status = '불합격'
+</select>
+
 </mapper>

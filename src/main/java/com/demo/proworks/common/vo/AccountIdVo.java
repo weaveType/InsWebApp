@@ -1,4 +1,4 @@
-package com.demo.proworks.domain.post.vo;
+package com.demo.proworks.common.vo;
 
 import com.inswave.elfw.annotation.ElDto;
 import com.inswave.elfw.annotation.ElDtoField;
@@ -13,7 +13,7 @@ public class AccountIdVo extends com.demo.proworks.cmmn.ProworksCommVO {
     public AccountIdVo(){
     }
 
-    @ElDtoField(logicalName = "유저_ID", physicalName = "accountId", type = "int", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    @ElDtoField(logicalName = "유저 ID", physicalName = "accountId", type = "int", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
     private int accountId;
 
     @ElVoField(physicalName = "accountId")
