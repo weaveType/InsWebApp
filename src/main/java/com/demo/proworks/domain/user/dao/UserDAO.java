@@ -419,7 +419,6 @@ public class UserDAO extends com.demo.proworks.cmmn.dao.ProworksDefaultAbstractD
 	 * @throws Exception
 	 */
 	public List<ApplicationStatusVo> getApplicationStats(AccountIdVo vo) throws Exception {
-		// List<ApplicationStatusVo>를 조회하여 ApplicationStatsListVo에 설정
 		return (List<ApplicationStatusVo>) list("com.demo.proworks.domain.user.getApplicationStats", vo);
 
 	}

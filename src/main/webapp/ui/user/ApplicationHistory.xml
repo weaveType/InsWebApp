@@ -50,7 +50,7 @@
 			</xf:submission>
 			<xf:submission id="sbm_applicationStats" action="/InsWebApp/US0001Cnt.pwkjson" method="post"
 				mediatype="application/json" ref='data:json,{"id":"dmp_accountIdVo","key":"accountIdVo"}'
-				target='data:json,{"id":"dlt_applicationStatsVo","key":"elData.applicationStatsListVo"}' encoding="UTF-8" instance="" replace=""
+				target='data:json,{"id":"dlt_applicationStatsVo","key":"elData.applicationStatusVo"}' encoding="UTF-8" instance="" replace=""
 				errorHandler="" customHandler="" mode="asynchronous" processMsg="" ev:submit="" ev:submitdone="scwin.sbm_applicationStats_submitdone"
 				ev:submiterror="" abortTrigger="">
 			</xf:submission>
@@ -231,7 +231,6 @@ scwin.init = function () {
     // cookie에서 accountId 가져오기
 
     scwin.userInfo = $p.parent().dma_userInfoVo.getJSON();
-    console.log("ApplicationHistory.xml - Received userInfo:", scwin.userInfo);
     if (scwin.userInfo && scwin.userInfo.accountId) {
         dmp_accountIdVo.set("accountId", scwin.userInfo.accountId);
     }
@@ -261,7 +260,7 @@ scwin.sbm_applicationHistoryList_submitdone = function (e) {
 
             // 통계 데이터 설정
             if (res.elData.applicationStatsList) {
-                dlt_applicationStats.setJSON(res.elData.applicationStatsList);
+                dlt_applicationStatsVo.setJSON(res.elData.applicationStatsList);
                 scwin.updateStatsFromData();
             }
 
@@ -288,17 +287,17 @@ scwin.updateStatsFromData = function () {
     var rejectedCount = 0;
 
     // 통계 데이터가 있는 경우 사용
-    var statsCount = dlt_applicationStats.getRowCount();
+    var statsCount = dlt_applicationStatsVo.getRowCount();
     if (statsCount > 0) {
         for (var i = 0; i < statsCount; i++) {
-            var statusType = dlt_applicationStats.getCellData(i, "statusType");
-            var count = dlt_applicationStats.getCellData(i, "statusCount");
+            var statusType = dlt_applicationStatsVo.getCellData(i, "statusType");
+            var count = dlt_applicationStatsVo.getCellData(i, "statusCount");
 
-            if (statusType === "pending") {
+            if (statusType === "PENDING") {
                 waitingCount = count;
-            } else if (statusType === "accepted") {
+            } else if (statusType === "ACCEPTED") {
                 acceptedCount = count;
-            } else if (statusType === "rejected") {
+            } else if (statusType === "REJECTED") {
                 rejectedCount = count;
             }
         }
