@@ -100,9 +100,24 @@ public class SurveyServiceImpl implements SurveyService {
         AppLog.debug("설문 응답 제출 - 타입ID: " + submitVo.getTypeId());
         
         try {
-            // 1. 설문 응답 저장
+            // 1. 사용자 ID 먼저 계산
+            Long userId;
+            try {
+                if (submitVo.getUserId() != null && !submitVo.getUserId().trim().isEmpty()) {
+                    userId = Long.parseLong(submitVo.getUserId());
+                    AppLog.debug("설정된 사용자 ID: " + userId);
+                } else {
+                    throw new Exception("사용자 ID가 제공되지 않았습니다.");
+                }
+            } catch (NumberFormatException e) {
+                AppLog.error("사용자 ID 파싱 실패: " + submitVo.getUserId());
+                throw new Exception("유효하지 않은 사용자 ID입니다: " + submitVo.getUserId());
+            }
+            
+            // 2. 설문 응답 저장
             SurveyResponseVo responseVo = new SurveyResponseVo();
-            AppLog.debug("=== 설문 응답 VO 생성 완료 ===");
+            responseVo.setUserId(userId);  // userId 설정
+            AppLog.debug("=== 설문 응답 VO 생성 완료, userId: " + userId + " ===");
             
             // JSON 직렬화를 안전하게 처리
             String responsesJson;
@@ -191,23 +206,7 @@ public class SurveyServiceImpl implements SurveyService {
             }
             AppLog.debug("코드 분석 점수 조회 완료: " + codeScores);
             
-            // 4. 가중치 적용하여 최종 점수 계산
-            Long userId;
-            try {
-                if (submitVo.getUserId() != null && !submitVo.getUserId().trim().isEmpty()) {
-                    userId = Long.parseLong(submitVo.getUserId());
-                    AppLog.debug("설정된 사용자 ID: " + userId);
-                    
-                    // survey_responses에 userId 설정
-                    responseVo.setUserId(userId);
-                    AppLog.debug("설문 응답에 사용자 ID 설정 완료: " + userId);
-                } else {
-                    throw new Exception("사용자 ID가 제공되지 않았습니다.");
-                }
-            } catch (NumberFormatException e) {
-                AppLog.error("사용자 ID 파싱 실패: " + submitVo.getUserId());
-                throw new Exception("유효하지 않은 사용자 ID입니다: " + submitVo.getUserId());
-            }
+            // 4. 가중치 적용하여 최종 점수 계산 (userId는 이미 위에서 계산됨)
             
             MbtiCalculationResultVo result = calculateFinalMbtiType(surveyScores, codeScores, userId);
             
