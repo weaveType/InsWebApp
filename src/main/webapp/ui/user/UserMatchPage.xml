@@ -168,6 +168,7 @@ scwin.bindScoutData = function () {
     // 기존 내용 제거
     gen_scouts.removeAll();
 
+
     // DataList에서 데이터 가져오기
     var rowCount = dlt_scoutListVo.getRowCount();
 
@@ -303,7 +304,6 @@ scwin.handleScoutRowClick = function (e) {
 
 scwin.sbm_scoutList_submitdone = function (e) {
     try {
-        debugger;
         var res = e.responseJSON;
         console.log("=== 전체 응답 데이터 ===", res);
 
@@ -365,7 +365,7 @@ scwin.sbm_scoutList_submitdone = function (e) {
 					<!-- 지원현황 카드들 -->
 					<section class="scouts-section">
 						<xf:group class="scouts-grid">
-							<w2:generator id="scouts" style="">
+							<w2:generator id="gen_scouts" style="">
 								<xf:group
 									style="padding: 20px; margin-bottom: 15px; border: 1px solid #e8e8e8; border-radius: 8px; background-color: white; cursor: pointer;"
 									class="scout-row" ev:onclick="scwin.handlescoutRowClick">

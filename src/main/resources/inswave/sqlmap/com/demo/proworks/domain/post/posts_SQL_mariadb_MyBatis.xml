@@ -385,27 +385,18 @@
 		resultType="com.demo.proworks.domain.post.vo.ScoutListVo">
 SELECT 
     sr.user_id as userId,
-    u_user.name as name, 
+    u_company.name as name,
     p.preferred_developer_types as preferredDeveloperTypes, 
     p.title as title,
     p.experience_level as experienceLevel
-FROM
-    scout_requests sr
-    INNER JOIN posts p 
-        ON sr.job_posting_id = p.job_posting_id
-    INNER JOIN companys c 
-        ON p.company_id = c.company_id
-    INNER JOIN users u_company 
-        ON c.user_id = u_company.user_id
-    INNER JOIN users u_user
-        ON sr.user_id = u_user.user_id  -- users 테이블을 sr.user_id와 조인
-WHERE 
-    sr.user_id = #{userId}
-    AND p.expires_at > NOW() 
-    AND p.status = 'active'
-    AND (p.is_deleted IS NULL OR p.is_deleted = 0)
-    AND (c.is_deleted IS NULL OR c.is_deleted = 0)
-ORDER BY 
-    sr.created_at DESC
+FROM scout_requests sr
+INNER JOIN posts p ON sr.job_posting_id = p.job_posting_id
+INNER JOIN companys c ON p.company_id = c.company_id
+INNER JOIN users u_company ON c.user_id = u_company.user_id
+WHERE sr.user_id = #{userId}
+AND p.status = 'active'
+AND (p.is_deleted IS NULL OR p.is_deleted = 0)
+AND (c.is_deleted IS NULL OR c.is_deleted = 0)
+ORDER BY sr.created_at DESC
 </select>
 </mapper>
