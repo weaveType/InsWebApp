@@ -93,4 +93,26 @@ public class SurveyDAO extends com.demo.proworks.cmmn.dao.ProworksDefaultAbstrac
     public Map<String, Object> selectCodeAnalysisScores(Long typeId) throws ElException {
         return (Map<String, Object>) selectByPk("com.demo.proworks.domain.survey.selectCodeAnalysisScores", typeId);
     }
+    
+    /**
+     * 코드분석 존재 여부 확인 - 설문조사 선행 조건 체크용
+     * 
+     * @param userId 사용자 ID
+     * @return 코드분석 결과 정보
+     * @throws ElException
+     */
+    public Map<String, Object> checkCodeAnalysisExists(Long userId) throws ElException {
+        return (Map<String, Object>) selectByPk("com.demo.proworks.domain.survey.checkCodeAnalysisExists", userId);
+    }
+    
+    /**
+     * 코드 분석 완료 시 users_mbti_types 테이블에 is_code_checked = 1로 업데이트
+     * 
+     * @param userId 사용자 ID
+     * @return 업데이트 결과
+     * @throws ElException
+     */
+    public int upsertMbtiTypeForCode(Long userId) throws ElException {
+        return update("com.demo.proworks.domain.survey.upsertMbtiTypeForCode", userId);
+    }
 }

@@ -115,9 +115,23 @@
             COALESCE(developer_preference_score, 0) AS developer_preference_score,
             COALESCE(confidence_score, 0.0) AS confidence_score
         FROM code_analyses
-        WHERE type_id = #{typeId}
+        WHERE user_id = #{userId}
         ORDER BY created_at DESC
         LIMIT 1
+    </select>
+    
+    <!-- 코드분석 존재 여부 확인 - 설문조사 선행 조건 체크용 -->
+    <select id="checkCodeAnalysisExists" parameterType="Long" resultType="hashmap">
+        SELECT 
+            ca.analysis_id,
+            ca.user_id,
+            ca.TYPE_CODE,
+            ca.created_at,
+            COUNT(*) as analysis_count
+        FROM code_analyses ca
+        WHERE ca.user_id = #{userId} AND ca.is_deleted = 0
+        GROUP BY ca.user_id
+        HAVING COUNT(*) > 0
     </select>
     
 </mapper>

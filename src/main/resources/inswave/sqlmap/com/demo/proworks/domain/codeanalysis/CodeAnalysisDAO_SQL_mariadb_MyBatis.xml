@@ -7,21 +7,23 @@
     <insert id="insertCodeAnalysisResult" parameterType="com.demo.proworks.domain.codeanalysis.vo.CodeAnalysisResultVo" useGeneratedKeys="true" keyProperty="analysisId">
         <![CDATA[
         INSERT INTO code_analyses (
-            type_id,
+            user_id,
             analysis_result,
             TYPE_CODE,
             development_style_score,
             developer_preference_score,
             confidence_score,
-            language
+            language,
+            comment
         ) VALUES (
-            #{typeId},
+            #{userId},
             #{analysisResult},
             #{typeCode},
             #{developmentStyleScore},
             #{developerPreferenceScore},
             #{confidenceScore},
-            #{language}
+            #{language},
+            #{comment}
         )
         ]]>
     </insert>
@@ -31,15 +33,17 @@
         <![CDATA[
         SELECT
             analysis_id AS analysisId,
-            type_id AS typeId,
+            user_id AS userId,
             analysis_result AS analysisResult,
             TYPE_CODE AS typeCode,
             development_style_score AS developmentStyleScore,
             developer_preference_score AS developerPreferenceScore,
             confidence_score AS confidenceScore,
+            language,
+            comment,
             created_at AS createdAt
         FROM code_analyses
-        WHERE type_id = #{typeId}
+        WHERE user_id = #{userId}
         ORDER BY created_at DESC
         LIMIT 1
         ]]>
@@ -71,15 +75,17 @@
         <![CDATA[
         SELECT
             analysis_id AS analysisId,
-            type_id AS typeId,
+            user_id AS userId,
             analysis_result AS analysisResult,
             TYPE_CODE AS typeCode,
             development_style_score AS developmentStyleScore,
             developer_preference_score AS developerPreferenceScore,
             confidence_score AS confidenceScore,
+            language,
+            comment,
             created_at AS createdAt
         FROM code_analyses
-        WHERE type_id = #{typeId}
+        WHERE user_id = #{userId}
         ORDER BY created_at DESC
         ]]>
     </select>
@@ -105,23 +111,25 @@
         <![CDATA[
         SELECT
             ca.analysis_id,
-            ca.type_id,
+            ca.user_id,
             ca.analysis_result,
             ca.TYPE_CODE,
             ca.development_style_score,
-            ca.collaboration_score,
+            ca.developer_preference_score,
             ca.confidence_score,
+            ca.language,
+            ca.comment,
             ca.created_at,
             dt.type_code as developer_type_code,
-            dt.A_B점수,
-            dt.R_I점수,
-            dt.S_T점수,
-            dt.D_F점수,
-            dt.분석일시,
-            dt.사용자ID
+            dt.A_Bscore,
+            dt.R_Iscore,
+            dt.S_Tscore,
+            dt.D_Fscore,
+            dt.analyed_at,
+            dt.user_id as mbti_user_id
         FROM code_analyses ca
-        LEFT JOIN `개발자 유형` dt ON ca.type_id = dt.type_id
-        WHERE ca.type_id = #{typeId}
+        LEFT JOIN users_mbti_types dt ON ca.user_id = dt.user_id
+        WHERE ca.user_id = #{userId}
         ORDER BY ca.created_at DESC
         ]]>
     </select>
@@ -152,5 +160,23 @@
         AND TYPE_CODE_2 = #{typeCode2}
         ]]>
     </select>
+
+    <!-- 코드 분석 완료 시 users_mbti_types 로우 생성/업데이트 -->
+    <insert id="upsertMbtiTypeForCode" parameterType="Long">
+        <![CDATA[
+        INSERT INTO users_mbti_types (
+            user_id,
+            is_code_checked,
+            analyed_at
+        ) VALUES (
+            #{userId},
+            1,
+            NOW()
+        )
+        ON DUPLICATE KEY UPDATE
+            is_code_checked = 1,
+            analyed_at = NOW()
+        ]]>
+    </insert>
 
 </mapper> 
