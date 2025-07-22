@@ -39,13 +39,12 @@
 			</w2:dataCollection>
 			<xf:submission id="sbm_applicationHistoryList" action="/InsWebApp/POS0007List.pwkjson" method="post"
 				mediatype="application/json" ref='data:json,{"id":"dmp_searchParam", "key":"applicationSearchVo"}'
-				target='data:json,{"id":"dlt_applicationListVo", "key":"applicationListVoList"}' encoding="UTF-8" instance="" replace=""
-				errorHandler="" customHandler="" mode="asynchronous" processMsg="지원현황 조회중..." ev:submit=""
-				ev:submitdone="scwin.sbm_applicationHistoryList_submitdone" ev:submiterror="scwin.sbm_applicationHistoryList_submiterror"
-				abortTrigger="">
+				target='data:json,{"id":"dlt_applicationListVo", "key":"applicationListVoList"}' encoding="UTF-8" instance="" replace="" errorHandler=""
+				customHandler="" mode="asynchronous" processMsg="지원현황 조회중..." ev:submit="" ev:submitdone="scwin.sbm_applicationHistoryList_submitdone"
+				ev:submiterror="scwin.sbm_applicationHistoryList_submiterror" abortTrigger="">
 			</xf:submission>
-			<xf:submission id="sbm_applicationStats" action="/InsWebApp/US0001Cnt.pwkjson" method="post"
-				mediatype="application/json" ref='data:json,{"id":"dmp_accountIdVo","key":"accountIdVo"}'
+			<xf:submission id="sbm_applicationStats" action="/InsWebApp/US0001Cnt.pwkjson" method="post" mediatype="application/json"
+				ref='data:json,{"id":"dmp_accountIdVo","key":"accountIdVo"}'
 				target='data:json,{"id":"dlt_applicationStatsVo","key":"elData.applicationStatusVo"}' encoding="UTF-8" instance="" replace=""
 				errorHandler="" customHandler="" mode="asynchronous" processMsg="" ev:submit="" ev:submitdone="scwin.sbm_applicationStats_submitdone"
 				ev:submiterror="" abortTrigger="">
@@ -212,6 +211,25 @@
                 color: #ccc;
             }   
 
+            /* 개발자 성향 태그 스타일 */
+            .dev-type-tag-container {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 5px;
+                margin-top: 10px;
+            }
+
+            .dev-type-tag {
+                background-color: #e0f7fa; /* Light cyan background */
+                color: #00796b; /* Dark cyan text */
+                padding: 5px 10px;
+                border-radius: 15px;
+                font-size: 12px;
+                font-weight: 500;
+                white-space: nowrap;
+                border: 1px solid #b2ebf2;
+            }
+
             /* 반응형 처리 */
             @media (max-width: 768px) {
                 .application-row {
@@ -314,18 +332,43 @@ scwin.bindApplicationData = function() {
         var name = dlt_applicationListVo.getCellData(i, "name") || "";
         var title = dlt_applicationListVo.getCellData(i, "title") || "";
         var experienceLevel = dlt_applicationListVo.getCellData(i, "experienceLevel") || "";
-        var jobPostingId = dlt_applicationListVo.getCellData(i, "jobPostingId") || "";
+        var preferredDeveloperTypesRaw = dlt_applicationListVo.getCellData(i, "preferredDeveloperTypes") || "";
         
         // 각 컴포넌트에 값 설정
         var txt_company_name = gen_applications.getChild(i, "txt_company_name");
         var txt_job_title = gen_applications.getChild(i, "txt_job_title");
         var txt_experience_level = gen_applications.getChild(i, "txt_experience_level");
-        var txt_job_posting_id = gen_applications.getChild(i, "txt_job_posting_id");
         
         if (txt_company_name) txt_company_name.setValue(name);
         if (txt_job_title) txt_job_title.setValue(title);
         if (txt_experience_level) txt_experience_level.setValue(experienceLevel);
-        if (txt_job_posting_id) txt_job_posting_id.setValue(jobPostingId);
+        
+        // Helper function to escape HTML special characters
+        function escapeHtml(text) {
+            var div = document.createElement('div');
+            div.appendChild(document.createTextNode(text));
+            return div.innerHTML;
+        }
+
+        // MBTI 태그 처리 로직
+        try {
+            var preferredDeveloperTypes = JSON.parse(preferredDeveloperTypesRaw || '[]');
+            for (var j = 1; j <= 4; j++) {
+                var tag = gen_applications.getChild(i, "tag" + j);
+                if (j <= preferredDeveloperTypes.length) {
+                    tag.setValue(escapeHtml(preferredDeveloperTypes[j - 1])); // Apply escaping here
+                    tag.show();
+                } else {
+                    tag.hide();
+                }
+            }
+        } catch (err) {
+            console.error("preferredDeveloperTypes 파싱 오류: ", preferredDeveloperTypesRaw, err);
+            // 파싱 실패 시 모든 태그 숨김
+            for (var j = 1; j <= 4; j++) {
+                gen_applications.getChild(i, "tag" + j).hide();
+            }
+        }
         
         console.log("바인딩 완료 - 행:", i, "회사명:", name, "공고명:", title);
     }
@@ -555,23 +598,36 @@ scwin.sbm_applicationStats_submitdone = function (e) {
 					<section class="applications-section">
 						<xf:group class="applications-grid">
 							<w2:generator id="gen_applications" style="">
-								<xf:group style="padding: 20px; margin-bottom: 15px; border: 1px solid #e8e8e8; border-radius: 8px; background-color: white; cursor: pointer;" class="application-row" ev:onclick="scwin.handleApplicationRowClick">
+								<xf:group
+									style="padding: 20px; margin-bottom: 15px; border: 1px solid #e8e8e8; border-radius: 8px; background-color: white; cursor: pointer;"
+									class="application-row" ev:onclick="scwin.handleApplicationRowClick">
 									<xf:group style="display: flex; align-items: center; font-size: 16px; color: #333; flex-wrap: wrap;">
-										<span style="font-weight: bold; color: #4285f4; margin-right: 8px;"><w2:textbox id="txt_company_name"></w2:textbox></span>
+										<span style="font-weight: bold; color: #4285f4; margin-right: 8px;">
+											<w2:textbox id="txt_company_name"></w2:textbox>
+										</span>
 										<span style="margin-right: 8px;">의</span>
-										<span style="font-weight: 600; color: #333; margin-right: 8px;"><w2:textbox id="txt_job_title"></w2:textbox></span>
-										<span style="margin-right: 8px;">에 이력서를 지원하셨어요.</span>
+										<span style="">
+											<w2:textbox id="txt_experience_level"></w2:textbox>
+										</span>
+										<span style="margin-right: 8px;"> 개발자를 찾는</span>
+										<span style="font-weight: 600; color: #333; margin-right: 8px; font-weight: bold;">
+											<w2:textbox id="txt_job_title"></w2:textbox>
+										</span>
+										<span style="margin-right: 8px;"> 에 이력서를 지원하셨어요.</span>
 									</xf:group>
-									<xf:group style="margin-top: 10px; display: flex; gap: 15px; font-size: 14px; color: #666; flex-wrap: wrap;">
-										<span style="background-color: #f0f4ff; color: #4285f4; padding: 4px 8px; border-radius: 4px; font-size: 12px;">경력: <w2:textbox id="txt_experience_level"></w2:textbox></span>
-										<span style="color: #999; font-size: 12px;">공고ID: <w2:textbox id="txt_job_posting_id"></w2:textbox></span>
+									<xf:group id="grp_tags_container" class="dev-type-tag-container" style="margin-top: 10px;">
+										<w2:textbox id="tag1" class="dev-type-tag" style="display:none;"></w2:textbox>
+										<w2:textbox id="tag2" class="dev-type-tag" style="display:none;"></w2:textbox>
+										<w2:textbox id="tag3" class="dev-type-tag" style="display:none;"></w2:textbox>
+										<w2:textbox id="tag4" class="dev-type-tag" style="display:none;"></w2:textbox>
 									</xf:group>
 								</xf:group>
 							</w2:generator>
 						</xf:group>
 
 						<!-- 데이터가 없을 때 표시할 메시지 -->
-						<xf:group class="empty-state" style="display: none;" id="empty_state">					<div class="empty-text">지원 내역이 없습니다.</div>
+						<xf:group class="empty-state" style="display: none;" id="empty_state">
+							<div class="empty-text">지원 내역이 없습니다.</div>
 							<div class="empty-subtext">공고에 지원하시면 여기에 표시됩니다.</div>
 						</xf:group>
 					</section>
