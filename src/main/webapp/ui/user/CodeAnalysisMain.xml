@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare"
 	xmlns:xf="http://www.w3.org/2002/xforms">
 
-	<head meta_screenName="weaveType 코드 분석">
+	<head meta_screenName="CodeFIT 코드 분석">
 		<w2:type>COMPONENT</w2:type>
 		<w2:buildDate />
 		<w2:MSA />
@@ -1840,7 +1840,7 @@
 				<xf:group class="result-section" style="display: none;">
 					<xf:group class="result-header">
 						<w2:textbox class="result-title" label="분석 결과" tagname="h1"></w2:textbox>
-						<w2:textbox class="result-subtitle" label="당신의 weaveType은..." tagname="p"></w2:textbox>
+						<w2:textbox class="result-subtitle" label="당신의 CodeFIT은..." tagname="p"></w2:textbox>
 					</xf:group>
 					
 					<!-- 설문조사 유도 힌트 박스 -->
@@ -1920,7 +1920,7 @@
 						<!-- 설문조사 연결 섹션 -->
 						<xf:group class="survey-integration-section section-item">
 							<w2:textbox class="survey-title" label="📊 더 정확한 분석을 원하시나요?" tagname="h3"></w2:textbox>
-							<w2:textbox class="survey-description" label="MBTI 기반 개발 성향 설문조사를 통해 코드 분석 결과와 통합된 더욱 정확한 weaveType을 확인하세요!" tagname="p"></w2:textbox>
+							<w2:textbox class="survey-description" label="MBTI 기반 개발 성향 설문조사를 통해 코드 분석 결과와 통합된 더욱 정확한 CodeFIT을 확인하세요!" tagname="p"></w2:textbox>
 							<xf:group class="survey-buttons">
 								<xf:trigger class="btn-survey" ev:onclick="scwin.goToSurvey">
 									<xf:label>설문조사 참여하기</xf:label>

@@ -353,7 +353,7 @@ public class CodeAnalysisServiceImpl implements CodeAnalysisService {
             
             // 요약 정보 생성
             String comment = analysisResult.optString("comment", "코드 분석 완료");
-            String summary = String.format("weaveType: %s (%s, 신뢰도: %.0f%%) - %s", 
+            String summary = String.format("CodeFIT: %s (%s, 신뢰도: %.0f%%) - %s", 
                 analysisResult.getString("type_code"), 
                 language,
                 confidenceScore * 100,
