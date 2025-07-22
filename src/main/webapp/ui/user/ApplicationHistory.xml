@@ -230,9 +230,9 @@ scwin.init = function () {
     dmp_searchParam.set("pageSize", 10);
     // cookie에서 accountId 가져오기
 
-    scwin.userInfo = $p.parent().userInfo;
-    console.log("userInfo : " + userInfo);
-    if (scwin.userInfo) {
+    scwin.userInfo = $p.parent().dma_userInfoVo.getJSON();
+    console.log("ApplicationHistory.xml - Received userInfo:", scwin.userInfo);
+    if (scwin.userInfo && scwin.userInfo.accountId) {
         dmp_accountIdVo.set("accountId", scwin.userInfo.accountId);
     }
 
