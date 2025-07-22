@@ -100,10 +100,9 @@ public class SurveyServiceImpl implements SurveyService {
         AppLog.debug("설문 응답 제출 - 타입ID: " + submitVo.getTypeId());
         
         try {
-            // 1. 설문 응답 저장 (설문 제출 시점에는 타입이 아직 결정되지 않으므로 null로 설정)
+            // 1. 설문 응답 저장
             SurveyResponseVo responseVo = new SurveyResponseVo();
-            responseVo.setTypeId(null);  // Foreign Key 제약조건 위반 방지 - 초기에는 null로 설정
-            AppLog.debug("=== responseVo.typeId 설정 후 확인: " + responseVo.getTypeId() + " ===");
+            AppLog.debug("=== 설문 응답 VO 생성 완료 ===");
             
             // JSON 직렬화를 안전하게 처리
             String responsesJson;
@@ -124,7 +123,7 @@ public class SurveyServiceImpl implements SurveyService {
             responseVo.setUpdateAt(new Timestamp(System.currentTimeMillis()));
             
             try {
-                AppLog.debug("=== DB 저장 직전 responseVo 상태: typeId=" + responseVo.getTypeId() + " ===");
+                AppLog.debug("=== DB 저장 직전 responseVo 상태: userId=" + responseVo.getUserId() + " ===");
                 surveyDAO.insertSurveyResponse(responseVo);
             } catch (Exception ex) {
                 AppLog.error("설문 응답 저장 중 오류", ex);
@@ -198,6 +197,10 @@ public class SurveyServiceImpl implements SurveyService {
                 if (submitVo.getUserId() != null && !submitVo.getUserId().trim().isEmpty()) {
                     userId = Long.parseLong(submitVo.getUserId());
                     AppLog.debug("설정된 사용자 ID: " + userId);
+                    
+                    // survey_responses에 userId 설정
+                    responseVo.setUserId(userId);
+                    AppLog.debug("설문 응답에 사용자 ID 설정 완료: " + userId);
                 } else {
                     throw new Exception("사용자 ID가 제공되지 않았습니다.");
                 }
@@ -206,7 +209,7 @@ public class SurveyServiceImpl implements SurveyService {
                 throw new Exception("유효하지 않은 사용자 ID입니다: " + submitVo.getUserId());
             }
             
-            MbtiCalculationResultVo result = calculateFinalMbtiType(submitVo.getTypeId(), surveyScores, codeScores, userId);
+            MbtiCalculationResultVo result = calculateFinalMbtiType(surveyScores, codeScores, userId);
             
             // 5. 결과 저장
             try {
@@ -214,15 +217,8 @@ public class SurveyServiceImpl implements SurveyService {
                 surveyDAO.upsertMbtiType(result);
                 AppLog.debug("MBTI 결과 저장 성공");
                 
-                // 6. survey_responses의 type_id 업데이트 (MBTI 계산 완료 후)
-                try {
-                    responseVo.setTypeId(result.getTypeId());
-                    surveyDAO.updateSurveyResponseTypeId(responseVo);
-                    AppLog.debug("설문 응답의 type_id 업데이트 완료: " + result.getTypeId());
-                } catch (Exception updateEx) {
-                    AppLog.warn("설문 응답 type_id 업데이트 실패 (비즈니스 로직에는 영향 없음): " + updateEx.getMessage());
-                    // type_id 업데이트 실패해도 전체 프로세스는 성공으로 처리
-                }
+                // 6. 설문 응답과 MBTI 결과가 모두 user_id로 연결되어 처리 완료
+                AppLog.debug("설문 응답과 MBTI 결과 저장 완료 - 사용자 ID: " + result.getUserId());
             } catch (Exception ex) {
                 AppLog.error("MBTI 타입 저장 중 오류", ex);
                 throw new Exception("MBTI 타입 저장 중 오류가 발생했습니다: " + ex.getMessage());
@@ -341,9 +337,8 @@ public class SurveyServiceImpl implements SurveyService {
      * @param codeScores 코드 분석 점수 (-50~+50)
      * @return MBTI 계산 결과
      */
-    private MbtiCalculationResultVo calculateFinalMbtiType(Long typeId, Map<String, Double> surveyScores, Map<String, Object> codeScores, Long userId) {
+    private MbtiCalculationResultVo calculateFinalMbtiType(Map<String, Double> surveyScores, Map<String, Object> codeScores, Long userId) {
         MbtiCalculationResultVo result = new MbtiCalculationResultVo();
-        result.setTypeId(typeId);
         result.setUserId(userId);
         
         // null 체크 - 데이터가 없는 경우 기본값 사용

@@ -24,9 +24,9 @@ public class SurveyResponseVo extends com.demo.proworks.cmmn.ProworksCommVO {
     @ElDtoField(logicalName = "응답 ID", physicalName = "responseId", type = "Long", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "응답 고유 식별자", attr = "")
     private Long responseId;
     
-    /** 타입 ID */
-    @ElDtoField(logicalName = "타입 ID", physicalName = "typeId", type = "Long", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "사용자 MBTI 타입 ID", attr = "")
-    private Long typeId;
+    /** 사용자 ID */
+    @ElDtoField(logicalName = "사용자 ID", physicalName = "userId", type = "Long", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "사용자 고유 식별자", attr = "")
+    private Long userId;
     
     /** 응답 데이터 */
     @ElDtoField(logicalName = "응답 데이터", physicalName = "responses", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "JSON 형식의 응답 데이터", attr = "")
@@ -50,14 +50,14 @@ public class SurveyResponseVo extends com.demo.proworks.cmmn.ProworksCommVO {
         this.responseId = responseId;
     }
 
-    @ElVoField(physicalName = "typeId")
-    public Long getTypeId() {
-        return typeId;
+    @ElVoField(physicalName = "userId")
+    public Long getUserId() {
+        return userId;
     }
 
-    @ElVoField(physicalName = "typeId")
-    public void setTypeId(Long typeId) {
-        this.typeId = typeId;
+    @ElVoField(physicalName = "userId")
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     @ElVoField(physicalName = "responses")
@@ -96,7 +96,7 @@ public class SurveyResponseVo extends com.demo.proworks.cmmn.ProworksCommVO {
         StringBuilder sb = new StringBuilder();
         sb.append("SurveyResponseVo [");
         sb.append("responseId").append("=").append(responseId).append(",");
-        sb.append("typeId").append("=").append(typeId).append(",");
+        sb.append("userId").append("=").append(userId).append(",");
         sb.append("responses").append("=").append(responses).append(",");
         sb.append("createAt").append("=").append(createAt).append(",");
         sb.append("updateAt").append("=").append(updateAt);
