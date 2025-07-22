@@ -444,8 +444,6 @@ public class UserServiceImpl implements UserService {
 		List<ApplicationStatusVo> ApplicationStatusVoList = userDAO.getApplicationStats(accountIdVo);
 		ApplicationStatsListVo result = new ApplicationStatsListVo();
 		result.setApplicationStatusVo(ApplicationStatusVoList);
-		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> accountIdVo : " + accountIdVo.toString());
-		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> result : " + result.toString());
 		return result;
 	}
 }

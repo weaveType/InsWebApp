@@ -3,6 +3,8 @@ package com.demo.proworks.domain.post.service;
 import java.util.List;
 
 import com.demo.proworks.common.vo.AccountIdVo;
+import com.demo.proworks.domain.post.vo.ApplicationListVo;
+import com.demo.proworks.domain.post.vo.ApplicationSearchVo;
 import com.demo.proworks.domain.post.vo.JobApplicationVo;
 import com.demo.proworks.domain.post.vo.MainPostingListVo;
 import com.demo.proworks.domain.post.vo.PostMatchVo;
@@ -175,4 +177,12 @@ public interface PostService {
 	 */
 	public void insertScoutRequest(ScoutUserVo scoutUserVo) throws Exception;
 
+	/**
+	 * 유저가 지원한 공고를 가져온다.
+	 * 
+	 * @param 	pageIndex 페이지번호, pageSize	페이지크기, userId 사용자ID, applicationStatus 이력서 상태				
+	 * @return 	jobPostingId 공고 ID, name 회사명, title 공고명, experienceLevel 경력, preferredDeveloperTypes MBTI_JSON_LIST
+	 * @throws 	Exception							
+	 */
+	public ApplicationListVo getApplicationHistoryList(ApplicationSearchVo applicationSearchVo) throws Exception;
 }

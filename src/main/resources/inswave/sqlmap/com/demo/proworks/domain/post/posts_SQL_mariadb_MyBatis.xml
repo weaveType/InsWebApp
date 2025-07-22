@@ -347,4 +347,66 @@ LIMIT 3;
         </foreach>
     </insert>
 
+
+    <select id="getApplicationHistoryList" parameterType="com.demo.proworks.domain.post.vo.ApplicationSearchVo" resultType="com.demo.proworks.domain.post.vo.ApplicationListVo">
+        <!-- 유저가 지원한 공고 목록을 조회한다. -->
+        SELECT /* QueryID : com.demo.proworks.domain.post.getApplicationHistoryList */
+            p.job_posting_id AS jobPostingId,
+            u.name AS name,
+            p.title AS title,
+            p.experience_level AS experienceLevel,
+            p.preferred_developer_types AS preferredDeveloperTypes
+        FROM job_applications ja
+        INNER JOIN posts p ON ja.job_posting_id = p.job_posting_id
+        INNER JOIN companys c ON p.company_id = c.company_id
+        INNER JOIN users u ON c.user_id = u.user_id
+        WHERE ja.user_id = #{userId}
+        <if test="applicationStatus != null and applicationStatus != ''">
+            AND ja.application_status = #{applicationStatus}
+        </if>
+        AND (p.is_deleted IS NULL OR p.is_deleted = 0)
+        AND (c.is_deleted IS NULL OR c.is_deleted = 0)
+        ORDER BY ja.application_date DESC
+        <if test="pageSize != null and pageSize > 0">
+            LIMIT #{pageSize}
+            <if test="pageIndex != null and pageIndex > 0">
+                OFFSET #{pageIndex}
+            </if>
+        </if>
+    </select>
+
+    <select id="getApplicationHistoryList" parameterType="com.demo.proworks.domain.user.vo.ApplicationHistoryVo" resultType="com.demo.proworks.domain.user.vo.ApplicationHistoryVo">
+        SELECT /* QueryID : com.demo.proworks.domain.post.getApplicationHistoryList */
+            ja.application_id AS applicationId,
+            ja.user_id AS userId,
+            c.name AS company,
+            p.title AS position,
+            DATE_FORMAT(ja.application_date, '%Y-%m-%d') AS applicationDate,
+            ja.application_status AS status,
+            ja.result AS result,
+            c.logo_file_name AS logo,
+            p.job_posting_id AS jobPostingId
+        FROM job_applications ja
+        JOIN posts p ON ja.job_posting_id = p.job_posting_id
+        JOIN companys c ON p.company_id = c.company_id
+        WHERE ja.user_id = #{userId}
+        <if test="applicationStatus != null and applicationStatus != ''">
+            AND ja.application_status = #{applicationStatus}
+        </if>
+        ORDER BY ja.application_date DESC
+        LIMIT #{pageSize} OFFSET #{pageIndex}
+    </select>
+
+    <select id="getApplicationHistoryListCount" parameterType="com.demo.proworks.domain.user.vo.ApplicationHistoryVo" resultType="long">
+        SELECT /* QueryID : com.demo.proworks.domain.post.getApplicationHistoryListCount */
+            COUNT(*)
+        FROM job_applications ja
+        JOIN posts p ON ja.job_posting_id = p.job_posting_id
+        JOIN companys c ON p.company_id = c.company_id
+        WHERE ja.user_id = #{userId}
+        <if test="applicationStatus != null and applicationStatus != ''">
+            AND ja.application_status = #{applicationStatus}
+        </if>
+    </select>
+
 </mapper>

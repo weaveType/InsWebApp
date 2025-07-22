@@ -8,17 +8,13 @@
 		<w2:MSA />
 		<xf:model>
 			<w2:dataCollection baseNode="map">
-				<w2:dataList baseNode="list" repeatNode="map" id="dlt_applications" saveRemovedData="true">
+				<w2:dataList baseNode="list" repeatNode="map" id="dlt_applicationListVo" saveRemovedData="true">
 					<w2:columnInfo>
-						<w2:column id="applicationId" name="지원ID" dataType="number"></w2:column>
-						<w2:column id="userId" name="사용자ID" dataType="number"></w2:column>
-						<w2:column id="company" name="회사명" dataType="text"></w2:column>
-						<w2:column id="position" name="포지션" dataType="text"></w2:column>
-						<w2:column id="applicationDate" name="지원일자" dataType="text"></w2:column>
-						<w2:column id="status" name="상태" dataType="text"></w2:column>
-						<w2:column id="result" name="결과" dataType="text"></w2:column>
-						<w2:column id="logo" name="로고" dataType="text"></w2:column>
+						<w2:column id="name" name="회사명" dataType="text"></w2:column>
 						<w2:column id="jobPostingId" name="공고ID" dataType="number"></w2:column>
+						<w2:column dataType="text" name="공고명" id="title"></w2:column>
+						<w2:column dataType="text" name="경력" id="experienceLevel"></w2:column>
+						<w2:column dataType="text" name="MBTI List" id="preferredDeveloperTypes"></w2:column>
 					</w2:columnInfo>
 				</w2:dataList>
 				<w2:dataList baseNode="list" repeatNode="map" id="dlt_applicationStatsVo" saveRemovedData="true">
@@ -41,9 +37,9 @@
 					</w2:keyInfo>
 				</w2:dataMap>
 			</w2:dataCollection>
-			<xf:submission id="sbm_applicationHistoryList" action="/InsWebApp/USApplicationHistoryList.pwkjson" method="post"
-				mediatype="application/json" ref='data:json,{"id":"dmp_searchParam", "key":"applicationHistoryVo"}'
-				target='data:json,{"id":"dlt_applications", "key":"elData.applicationHistoryList"}' encoding="UTF-8" instance="" replace=""
+			<xf:submission id="sbm_applicationHistoryList" action="/InsWebApp/POS.pwkjson" method="post"
+				mediatype="application/json" ref='data:json,{"id":"dmp_searchParam", "key":"applicationSearchVo"}'
+				target='data:json,{"id":"dlt_applications", "key":"elData.applicationHistoryListVo"}' encoding="UTF-8" instance="" replace=""
 				errorHandler="" customHandler="" mode="asynchronous" processMsg="지원현황 조회중..." ev:submit=""
 				ev:submitdone="scwin.sbm_applicationHistoryList_submitdone" ev:submiterror="scwin.sbm_applicationHistoryList_submiterror"
 				abortTrigger="">
@@ -302,18 +298,6 @@ scwin.updateStatsFromData = function () {
                 rejectedCount = count;
             }
         }
-    } else {
-        // 통계 데이터가 없는 경우 직접 계산
-        for (var i = 0; i < totalCount; i++) {
-            var status = dlt_applications.getCellData(i, "status");
-            if (status === "서류통과" || status === "면접진행") {
-                waitingCount++;
-            } else if (status === "최종합격") {
-                acceptedCount++;
-            } else if (status === "불합격") {
-                rejectedCount++;
-            }
-        }
     }
 
     // 통계 UI 업데이트
@@ -359,13 +343,10 @@ scwin.initializeStatCards = function () {
 scwin.filterApplications = function (type) {
     // 검색 조건 설정
     if (type !== 'all') {
-        dmp_searchParam.set("status", type);
-    } else {
-        dmp_searchParam.set("status", "");
+        dmp_searchParam.set("applicationStatus", type);
     }
+    $c.sbm.execute($p, dmp_searchParam);
 
-    // 다시 조회
-    scwin.loadApplicationHistory();
 };
 
 // 상태별 클래스 적용
@@ -417,11 +398,6 @@ scwin.showApplicationDetail = function (rowIndex) {
     }
 };
 
-// 데이터 새로고침
-scwin.refreshData = function () {
-    scwin.loadApplicationHistory();
-};
-
 scwin.total_applications_onclick = function (e) {
     scwin.selectStatCard(this, 'all');
 };
@@ -440,19 +416,10 @@ scwin.rejected_applications_onclick = function (e) {
 
 scwin.sbm_applicationStats_submitdone = function (e) {
     try {
-        // 1. 서버 응답 데이터 확인
         var res = e.responseJSON;
         
         if (res && res.elData && res.elData.applicationStatusVo) {
             dlt_applicationStatsVo.setJSON(res.elData.applicationStatusVo);
-
-            var rowCount = dlt_applicationStatsVo.getRowCount();
-            
-            for(var j = 0; j < rowCount; j++){
-                var statusType = dlt_applicationStatsVo.getCellData(j, "statusType");
-                var statusCount = dlt_applicationStatsVo.getCellData(j, "statusCount");
-                console.log("Row " + j + " - statusType:", statusType, "statusCount:", statusCount);
-            }
             
             // 5. UI 업데이트 함수 호출
             scwin.updateStatsFromData();

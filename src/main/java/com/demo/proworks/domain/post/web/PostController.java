@@ -17,6 +17,8 @@ import com.demo.proworks.domain.post.vo.PostVo;
 import com.demo.proworks.domain.post.vo.ScoutUserVo;
 import com.demo.proworks.domain.post.vo.SendEmailInfoListVo;
 import com.demo.proworks.domain.post.vo.SendEmailVo;
+import com.demo.proworks.domain.post.vo.ApplicationListVo;
+import com.demo.proworks.domain.post.vo.ApplicationSearchVo;
 import com.demo.proworks.domain.post.vo.JobApplicationVo;
 import com.demo.proworks.domain.post.vo.PostListVo;
 import com.demo.proworks.domain.post.vo.PostMatchVo;
@@ -470,7 +472,7 @@ public class PostController {
 
 		// 수정된 공고 정보 다시 조회해서 반환
 		PostVo updatedPost = postService.selectPost(postVo);
-		
+
 		// 기술스택 정보도 함께 설정
 		try {
 			List<TechStackVo> techStacks = postService.selectTechStacksByPostId(updatedPost.getJobPostingId());
@@ -479,7 +481,7 @@ public class PostController {
 				for (int i = 0; i < techStacks.size(); i++) {
 					techStackNames[i] = techStacks.get(i).getTechStackName();
 				}
-				
+
 				ObjectMapper objectMapper = new ObjectMapper();
 				updatedPost.setSelectedTechStackNames(objectMapper.writeValueAsString(techStackNames));
 			}
@@ -640,9 +642,10 @@ public class PostController {
 	}
 
 	// 공고 이미지 업로드 - WebSquare 기본 업로드 시스템 사용 (기업 업로드 방식과 동일)
-	
+
 	/**
 	 * 기업이 스카웃한 유저를 저장한다.
+	 * 
 	 * @param jobPostingId 공고 ID, accountIds 스카웃 된 User ID List
 	 * @throws Exception
 	 */
@@ -651,5 +654,19 @@ public class PostController {
 	@ElDescription(sub = "스카웃 유저 저장", desc = "기업이 스카웃한 유저를 저장한다")
 	public void insertScoutRequest(ScoutUserVo scoutUserVo) throws Exception {
 		postService.insertScoutRequest(scoutUserVo);
+	}
+
+	/**
+	 * 유저가 지원한 공고를 가져온다.
+	 * 
+	 * @param 	pageIndex 페이지번호, pageSize	페이지크기, userId 사용자ID, applicationStatus 이력서 상태				
+	 * @return 	jobPostingId 공고 ID, name 회사명, title 공고명, experienceLevel 경력, preferredDeveloperTypes MBTI_JSON_LIST
+	 * @throws 	Exception							
+	 */
+	@ElService(key = "POS0006List")
+	@RequestMapping(value = "POS0006List")
+	@ElDescription(sub = "스카웃 유저 저장", desc = "기업이 스카웃한 유저를 저장한다")
+	public ApplicationListVo getApplicationHistoryList(ApplicationSearchVo applicationSearchVo) throws Exception {
+		postService.getApplicationHistoryList(applicationSearchVo);
 	}
 }
