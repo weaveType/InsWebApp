@@ -347,4 +347,14 @@ LIMIT 3;
         </foreach>
     </insert>
 
+    <!-- 특정 사용자의 특정 공고 지원 여부 확인 -->
+    <select id="selectApplicationCount" parameterType="com.demo.proworks.domain.post.vo.JobApplicationVo" resultType="int">
+        <!-- 사용자의 특정 공고 지원 여부를 확인한다. -->
+        SELECT COUNT(*) /* QueryID : com.demo.proworks.domain.post.selectApplicationCount */
+        FROM job_applications 
+        WHERE job_posting_id = #{jobPostingId} 
+          AND user_id = #{accountId}
+          AND (application_status IS NULL OR application_status != 'DELETED')
+    </select>
+
 </mapper>
