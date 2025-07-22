@@ -86,6 +86,12 @@
                         });
                     }
                 } else {
+                    // 최대 5개까지만 선택 가능하도록 제한
+                    if (selectedLocationsList.length >= 5) {
+                        alert("최대 5개까지만 선택 가능합니다.");
+                        return;
+                    }
+                    
                     selectedLocationsList.push(locationName);
                     var elements = document.querySelectorAll('.location-option');
                     if (elements && elements.length > 0) {
@@ -133,7 +139,7 @@
                     });
                 }
                 
-                countDisplay.textContent = selectedLocationsList.length + ' 개 지역 선택됨';
+                countDisplay.textContent = selectedLocationsList.length + ' 개 지역 선택됨 (최대 5개)';
                 dma_location.set("selectedLocations", selectedLocationsList.join(','));
             };
             

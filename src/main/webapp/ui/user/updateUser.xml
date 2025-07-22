@@ -24,6 +24,13 @@
             		</w2:keyInfo>
             	</w2:dataMap>
 
+                <!-- 선택된 지역 리스트 -->
+                <w2:dataList baseNode="list" id="dlt_selectedLocations" repeatNode="map" saveRemovedData="true" style="">
+                    <w2:columnInfo>
+                        <w2:column dataType="text" id="locationName" name="지역명"></w2:column>
+                    </w2:columnInfo>
+                </w2:dataList>
+
             	<!-- 경력 옵션 -->
             	<w2:dataList id="dlt_careerOptions" baseNode="list" repeatNode="map" saveRemovedData="true">
             		<w2:columnInfo>
@@ -310,9 +317,94 @@
             .remove-tag-btn:hover {
                 color: #d32f2f;
             }
+
+            /* 지역 선택 관련 스타일 */
+            .location-container {
+                width: 100%;
+                margin-top: 10px;
+                border-radius: 8px;
+                border: 1px solid #ddd;
+                padding: 15px;
+                background-color: #f8f9fa;
+            }
+
+            .location-header {
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 10px;
+                font-size: 14px;
+                color: #666;
+                font-weight: 600;
+            }
+
+            .location-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+                gap: 8px;
+                margin-bottom: 15px;
+            }
+
+            .location-option {
+                padding: 8px 6px;
+                border: 1px solid #e0e0e0;
+                border-radius: 6px;
+                background-color: #ffffff;
+                cursor: pointer;
+                text-align: center;
+                font-size: 14px;
+                transition: all 0.3s ease;
+                color: #333;
+                user-select: none;
+            }
+
+            .location-option:hover {
+                border-color: #007bff;
+                background-color: #f0f8ff;
+                transform: translateY(-1px);
+            }
+
+            .location-option.selected {
+                border-color: #007bff;
+                background-color: #007bff;
+                color: white;
+            }
+
+            .location-tag-container {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 8px;
+                min-height: 40px;
+            }
+
+            .location-tag {
+                display: flex;
+                align-items: center;
+                background-color: #007bff;
+                color: white;
+                padding: 6px 10px;
+                border-radius: 20px;
+                font-size: 13px;
+                font-weight: 500;
+                gap: 6px;
+            }
+
+            .location-tag-remove {
+                cursor: pointer;
+                font-size: 14px;
+                font-weight: bold;
+                opacity: 0.7;
+                transition: opacity 0.3s ease;
+            }
+
+            .location-tag-remove:hover {
+                opacity: 1;
+            }
         ]]></style>
         
         <script lazy="false" type="text/javascript"><![CDATA[
+// 선택된 지역 배열
+scwin.selectedLocations = [];
+
 scwin.onpageload = function () {
     try {
         // 옵션 데이터 초기화
@@ -453,6 +545,11 @@ scwin.onpageload = function () {
         
         // 파일 업로드를 위한 폼 초기화
         scwin.initResumeUploadForm();
+        
+        // 지역 선택 이벤트 초기화 (DOM이 완전히 로드된 후)
+        setTimeout(function() {
+            scwin.initializeLocationEvents();
+        }, 500);
         
         // 디버깅 정보 추가
         console.log("페이지 로드 완료 - 사용자 ID:", userId);
@@ -678,6 +775,22 @@ scwin.sbm_userDetail_submitdone = function (e) {
 
         if (!dma_userInfoVo.get("bio")) {
             console.log("자기소개 정보가 없습니다.");
+        }
+
+        // 선호 지역 정보 초기화
+        var preferredLocations = dma_userInfoVo.get("preferredLocations");
+        if (preferredLocations) {
+            console.log("선호 지역:", preferredLocations);
+            scwin.selectedLocations = preferredLocations.split(",");
+            // 지역 UI 업데이트
+            setTimeout(function() {
+                scwin.updateLocationDisplay();
+                scwin.highlightSelectedLocations();
+            }, 300);
+        } else {
+            console.log("선호 지역 정보가 없습니다.");
+            scwin.selectedLocations = [];
+            scwin.updateLocationDisplay();
         }
 
     } catch (e) {
@@ -1227,7 +1340,133 @@ scwin.removeTechStack = function (e) {
         dlt_selectTechStacks.removeRow(index);
         scwin.renderSelectedTechStacks(); // UI 업데이트
     }
-};]]></script>
+};
+
+// 지역 선택 토글 함수
+scwin.toggleLocation = function(locationName) {
+    console.log("지역 선택 토글:", locationName);
+    
+    var index = scwin.selectedLocations.indexOf(locationName);
+    
+    if (index > -1) {
+        // 이미 선택된 경우 선택 해제
+        scwin.selectedLocations.splice(index, 1);
+        // UI에서 선택 해제
+        var elements = document.querySelectorAll('.location-option');
+        if (elements && elements.length > 0) {
+            elements.forEach(function(el) {
+                if (el.textContent && el.textContent.trim() === locationName) {
+                    el.classList.remove('selected');
+                }
+            });
+        }
+    } else {
+        // 최대 5개까지만 선택 가능
+        if (scwin.selectedLocations.length >= 5) {
+            alert("최대 5개까지만 선택 가능합니다.");
+            return;
+        }
+        
+        // 선택되지 않은 경우 선택 추가
+        scwin.selectedLocations.push(locationName);
+        // UI에서 선택 표시
+        var elements = document.querySelectorAll('.location-option');
+        if (elements && elements.length > 0) {
+            elements.forEach(function(el) {
+                if (el.textContent && el.textContent.trim() === locationName) {
+                    el.classList.add('selected');
+                }
+            });
+        }
+    }
+    
+    // 선택된 지역 UI와 hidden input 업데이트
+    scwin.updateLocationDisplay();
+};
+
+// 지역 제거 함수
+scwin.removeLocation = function(locationName) {
+    var index = scwin.selectedLocations.indexOf(locationName);
+    if (index > -1) {
+        scwin.selectedLocations.splice(index, 1);
+        
+        // UI에서 선택 해제
+        var elements = document.querySelectorAll('.location-option');
+        if (elements && elements.length > 0) {
+            elements.forEach(function(el) {
+                if (el.textContent && el.textContent.trim() === locationName) {
+                    el.classList.remove('selected');
+                }
+            });
+        }
+        
+        // 선택된 지역 UI와 hidden input 업데이트
+        scwin.updateLocationDisplay();
+    }
+};
+
+// 선택된 지역 표시 업데이트
+scwin.updateLocationDisplay = function() {
+    var container = document.getElementById("selectedLocationTags");
+    var countText = document.getElementById("locationCountText");
+    
+    if (!container || !countText) {
+        console.log("지역 선택 UI 요소를 찾을 수 없습니다.");
+        return;
+    }
+    
+    // 태그 컨테이너 초기화
+    container.innerHTML = '';
+    
+    // 선택된 지역들로 태그 생성
+    if (scwin.selectedLocations && scwin.selectedLocations.length > 0) {
+        scwin.selectedLocations.forEach(function(location) {
+            if (!location) return;
+            
+            var tag = document.createElement('div');
+            tag.className = 'location-tag';
+            tag.innerHTML = location + ' <span class="location-tag-remove" data-location="' + location + '">×</span>';
+            container.appendChild(tag);
+        });
+    }
+    
+    // 선택 개수 표시 업데이트
+    countText.textContent = scwin.selectedLocations.length + "개 선택됨 (최대 5개)";
+    
+    // hidden input 값 업데이트
+    $p.getComponentById("hdn_selectedLocations").setValue(scwin.selectedLocations.join(","));
+    dma_userInfoVo.set("preferredLocations", scwin.selectedLocations.join(","));
+};
+
+// 지역 선택 이벤트 초기화
+scwin.initializeLocationEvents = function() {
+    // 태그 삭제 버튼 이벤트 위임
+    var container = document.getElementById("selectedLocationTags");
+    if (container) {
+        container.addEventListener('click', function(event) {
+            if (event.target && event.target.classList.contains('location-tag-remove')) {
+                var locationName = event.target.getAttribute('data-location');
+                scwin.removeLocation(locationName);
+            }
+        });
+    }
+};
+
+// 선택된 지역 강조 표시
+scwin.highlightSelectedLocations = function() {
+    var options = document.querySelectorAll('.location-option');
+    if (options && options.length > 0) {
+        options.forEach(function(option) {
+            var locationName = option.textContent.trim();
+            if (scwin.selectedLocations.indexOf(locationName) > -1) {
+                option.classList.add('selected');
+            } else {
+                option.classList.remove('selected');
+            }
+        });
+    }
+};
+]]></script>
     </head>
     
     <body ev:onpageload="scwin.onpageload">
@@ -1288,16 +1527,74 @@ scwin.removeTechStack = function (e) {
 
             	<!-- 선호 지역 -->
             	<xf:group class="form-group">
-            		<w2:textbox class="form-label" label="선호 지역"></w2:textbox>
-            		<xf:select1 id="sel_location" ref="data:dma_userInfoVo.preferredLocations" class="form-select" appearance="minimal"
-            			chooseOption="false">
-            			<xf:choices>
-            				<xf:itemset nodeset="data:dlt_locationOptions">
-            					<xf:label ref="label"></xf:label>
-            					<xf:value ref="value"></xf:value>
-            				</xf:itemset>
-            			</xf:choices>
-            		</xf:select1>
+            		<w2:textbox class="form-label" label="선호 지역 (최대 5개)"></w2:textbox>
+            		<!-- 선택된 지역 태그들을 표시할 컨테이너 -->
+            		<xf:group class="location-container">
+            		    <div class="location-header">
+                            <span id="locationCountText">0개 선택됨</span>
+                        </div>
+                        <div class="location-tag-container" id="selectedLocationTags">
+                            <!-- 태그들이 여기에 동적으로 추가됩니다 -->
+                        </div>
+                        <div class="location-grid">
+                            <xf:trigger class="location-option" ev:onclick="scwin.toggleLocation('서울')">
+                                <xf:label>서울</xf:label>
+                            </xf:trigger>
+                            <xf:trigger class="location-option" ev:onclick="scwin.toggleLocation('경기')">
+                                <xf:label>경기</xf:label>
+                            </xf:trigger>
+                            <xf:trigger class="location-option" ev:onclick="scwin.toggleLocation('인천')">
+                                <xf:label>인천</xf:label>
+                            </xf:trigger>
+                            <xf:trigger class="location-option" ev:onclick="scwin.toggleLocation('부산')">
+                                <xf:label>부산</xf:label>
+                            </xf:trigger>
+                            <xf:trigger class="location-option" ev:onclick="scwin.toggleLocation('대구')">
+                                <xf:label>대구</xf:label>
+                            </xf:trigger>
+                            <xf:trigger class="location-option" ev:onclick="scwin.toggleLocation('대전')">
+                                <xf:label>대전</xf:label>
+                            </xf:trigger>
+                            <xf:trigger class="location-option" ev:onclick="scwin.toggleLocation('광주')">
+                                <xf:label>광주</xf:label>
+                            </xf:trigger>
+                            <xf:trigger class="location-option" ev:onclick="scwin.toggleLocation('울산')">
+                                <xf:label>울산</xf:label>
+                            </xf:trigger>
+                            <xf:trigger class="location-option" ev:onclick="scwin.toggleLocation('세종')">
+                                <xf:label>세종</xf:label>
+                            </xf:trigger>
+                            <xf:trigger class="location-option" ev:onclick="scwin.toggleLocation('강원')">
+                                <xf:label>강원</xf:label>
+                            </xf:trigger>
+                            <xf:trigger class="location-option" ev:onclick="scwin.toggleLocation('충북')">
+                                <xf:label>충북</xf:label>
+                            </xf:trigger>
+                            <xf:trigger class="location-option" ev:onclick="scwin.toggleLocation('충남')">
+                                <xf:label>충남</xf:label>
+                            </xf:trigger>
+                            <xf:trigger class="location-option" ev:onclick="scwin.toggleLocation('전북')">
+                                <xf:label>전북</xf:label>
+                            </xf:trigger>
+                            <xf:trigger class="location-option" ev:onclick="scwin.toggleLocation('전남')">
+                                <xf:label>전남</xf:label>
+                            </xf:trigger>
+                            <xf:trigger class="location-option" ev:onclick="scwin.toggleLocation('경북')">
+                                <xf:label>경북</xf:label>
+                            </xf:trigger>
+                            <xf:trigger class="location-option" ev:onclick="scwin.toggleLocation('경남')">
+                                <xf:label>경남</xf:label>
+                            </xf:trigger>
+                            <xf:trigger class="location-option" ev:onclick="scwin.toggleLocation('제주')">
+                                <xf:label>제주</xf:label>
+                            </xf:trigger>
+                            <xf:trigger class="location-option" ev:onclick="scwin.toggleLocation('원격근무')">
+                                <xf:label>원격근무</xf:label>
+                            </xf:trigger>
+                        </div>
+                    </xf:group>
+                    <!-- 선택된 지역들을 저장할 히든 인풋 -->
+                    <xf:input style="display:none;" id="hdn_selectedLocations" ref="data:dma_userInfoVo.preferredLocations"></xf:input>
             	</xf:group>
 
             	<!-- 희망연봉 -->
