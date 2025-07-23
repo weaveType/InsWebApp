@@ -57,518 +57,532 @@
 		<w2:publicInfo method="" />
 
 		<script type="text/javascript"><![CDATA[
-            // 설문 질문 데이터 저장소 (JavaScript 객체로 관리)
-            scwin.surveyQuestions = {};
-            scwin.userAnswers = {};
-            
-            scwin.onpageload = function() {
-                console.log("설문 분석 메인 페이지 로드됨");
-                
-                // 사용자 권한 체크 (기업 사용자 접근 차단)
-                if (!scwin.checkUserPermission()) {
-                    return; // 권한이 없으면 더 이상 진행하지 않음
-                }
-                
-                // 설문 질문 조회
-                scwin.loadSurveyQuestions();
-            };
-            
-            // 사용자 권한 체크 함수
-            scwin.checkUserPermission = function() {
-                try {
-                    // 쿠키에서 userInfo 가져오기
-                    var userInfo = scwin.getUserInfoFromCookie();
-                    console.log("권한 체크용 userInfo:", userInfo);
-                    
-                    if (userInfo === null) {
-                        console.warn("사용자 정보를 가져올 수 없음");
-                        alert("사용자 정보를 확인할 수 없습니다. 다시 로그인해 주세요.");
-                        $p.url("../common/MainPage.xml");
-                        return false;
-                    }
-                    
-                    if (userInfo && userInfo.role === "COMPANY") {
-                        // 기업 사용자인 경우 접근 차단
-                        console.log("기업 사용자 접근 차단");
-                        alert("죄송합니다. 개발자 유형 검사는 개인 사용자만 이용 가능합니다.\n기업 회원은 채용 공고 등록 및 관리 기능을 이용하실 수 있습니다.");
-                        
-                        // 메인 페이지로 리다이렉트
-                        $p.url("../common/MainPage.xml");
-                        return false;
-                    }
-                    
-                    console.log("개인 사용자 접근 허용 - role:", userInfo.role);
-                    return true; // 개인 사용자는 접근 허용
-                } catch (error) {
-                    console.error("사용자 권한 체크 중 오류:", error);
-                    // 오류 발생 시 안전하게 메인 페이지로 리다이렉트
-                    alert("사용자 정보를 확인할 수 없습니다. 다시 로그인해 주세요.");
-                    $p.url("../common/MainPage.xml");
-                    return false;
-                }
-            };
-            
-            // 쿠키에서 사용자 정보 파싱 함수 (PostDetail.xml과 동일한 방식)
-            scwin.getUserInfoFromCookie = function() {
-                try {
-                    var userInfoCookieStr = WebSquare.cookie.getCookie("userInfo");
-                    console.log("WebSquare.cookie로 가져온 userInfo:", userInfoCookieStr);
-                    
-                    if (userInfoCookieStr && userInfoCookieStr.trim() !== "") {
-                        var userInfo = JSON.parse(userInfoCookieStr);
-                        console.log("쿠키에서 추출한 사용자 정보:", userInfo);
-                        return userInfo;
-                    }
-                    return null;
-                } catch (error) {
-                    console.error("사용자 정보 쿠키 파싱 오류:", error);
-                    return null;
-                }
-            };
-            
-            // 설문 질문 로드
-            scwin.loadSurveyQuestions = function() {
-                console.log("설문 질문 조회 시작");
-                $c.sbm.execute(sbm_getQuestions);
-            };
-            
-            // 설문 질문 조회 성공 콜백
-            scwin.sbm_getQuestions_submitdone = function(e) {
-                console.log("설문 질문 조회 성공:", e.responseJSON);
-                
-                var response = e.responseJSON;
-                if (response && response.questions) {
-                    // 질문 데이터 저장
-                    scwin.surveyQuestions = response.questions;
-                    
-                    // UI 렌더링
-                    scwin.renderSurveyQuestions();
-                    
-                    // 진행률 초기화
-                    scwin.updateProgress();
-                    
-                    console.log("설문 질문 렌더링 완료");
-                } else {
-                    console.error("설문 질문 데이터가 없습니다:", response);
-                    $c.win.alert("설문 질문을 불러오는데 실패했습니다.");
-                }
-            };
-            
-            // 설문 질문 조회 실패 콜백
-            scwin.sbm_getQuestions_submiterror = function(e) {
-                console.error("설문 질문 조회 실패:", e);
-                $c.win.alert("설문 질문을 불러오는데 실패했습니다.");
-            };
-            
-            // 설문 문항 UI 렌더링
-            scwin.renderSurveyQuestions = function() {
-                var questionContainer = document.querySelector('.question-container');
-                if (!questionContainer) return;
-                
-                var html = '';
-                var axisNames = {
-                    'B_A': { name: 'Builder vs Architect', desc: '개발 스타일' },
-                    'R_I': { name: 'Refactor vs Innovate', desc: '기술 성향' },
-                    'S_T': { name: 'Solo vs Team', desc: '협업 방식' },
-                    'D_F': { name: 'Debug vs Feature', desc: '작업 선호' }
-                };
-                
-                // 축 순서를 명시적으로 지정해서 렌더링 (B_A -> R_I -> S_T -> D_F)
-                var axisOrder = ['B_A', 'R_I', 'S_T', 'D_F'];
-                
-                for (var i = 0; i < axisOrder.length; i++) {
-                    var axis = axisOrder[i];
-                    var questions = scwin.surveyQuestions[axis];
-                    var axisInfo = axisNames[axis] || { name: axis, desc: '' };
-                    
-                    // 축에 질문이 없으면 건너뛰기
-                    if (!questions || questions.length === 0) {
-                        console.warn('축 ' + axis + '에 질문이 없습니다.');
-                        continue;
-                    }
-                    
-                    html += '<div class="axis-section">';
-                    html += '<div class="axis-header">';
-                    html += '<h3 class="axis-title">' + axisInfo.name + '</h3>';
-                    html += '<p class="axis-desc">' + axisInfo.desc + '</p>';
-                    html += '</div>';
-                    
-                    // 해당 축의 질문들
-                    for (var q = 0; q < questions.length; q++) {
-                        var question = questions[q];
-                        
-                        html += '<div class="question-card" data-question-id="' + question.questionId + '">';
-                        html += '<div class="question-number">Q' + question.questionId + '</div>';
-                        html += '<div class="question-text">' + question.questionText + '</div>';
-                        html += '<div class="answer-options">';
-                        
-                        // 7점 척도 라디오 버튼
-                        for (var j = 1; j <= 7; j++) {
-                            var label = '';
-                            if (j === 1) label = '전혀 그렇지 않다';
-                            else if (j === 4) label = '보통이다';
-                            else if (j === 7) label = '매우 그렇다';
-                            
-                            html += '<label class="option-label">';
-                            html += '<input type="radio" name="question_' + question.questionId + '" value="' + j + '" data-question-id="' + question.questionId + '" data-value="' + j + '">';
-                            html += '<span class="option-number">' + j + '</span>';
-                            html += '<span class="option-text">' + label + '</span>';
-                            html += '</label>';
-                        }
-                        
-                        html += '</div>';
-                        html += '</div>';
-                    }
-                    
-                    html += '</div>'; // axis-section 닫기
-                }
-                
-                questionContainer.innerHTML = html;
-                
-                // 이벤트 리스너 바인딩
-                scwin.bindAnswerEvents();
-                
-                // 스크롤 이벤트 추가
-                scwin.addScrollEvent();
-            };
-            
-            // 답변 이벤트 바인딩
-            scwin.bindAnswerEvents = function() {
-                console.log("이벤트 바인딩 시작");
-                var radioButtons = document.querySelectorAll('input[type="radio"][data-question-id]');
-                console.log("라디오 버튼 개수:", radioButtons.length);
-                
-                for (var i = 0; i < radioButtons.length; i++) {
-                    radioButtons[i].addEventListener('change', function(event) {
-                        console.log("라디오 버튼 클릭됨");
-                        var questionId = parseInt(event.target.getAttribute('data-question-id'));
-                        var value = parseInt(event.target.getAttribute('data-value'));
-                        console.log("questionId:", questionId, "value:", value);
-                        scwin.handleAnswerChange(questionId, value);
-                    });
-                }
-                console.log("이벤트 바인딩 완료");
-            };
-            
-            // 답변 변경 핸들러
-            scwin.handleAnswerChange = function(questionId, value) {
-                // 사용자 답변 저장
-                scwin.userAnswers[questionId] = value;
-                
-                // 진행률 업데이트
-                scwin.updateProgress();
-                
-                console.log("답변 변경됨 - 질문 " + questionId + ": " + value);
-            };
-            
-            // 진행률 업데이트
-            scwin.updateProgress = function() {
-                var totalQuestions = scwin.getTotalQuestionCount();
-                var answeredQuestions = Object.keys(scwin.userAnswers).length;
-                
-                var progress = totalQuestions > 0 ? Math.round((answeredQuestions / totalQuestions) * 100) : 0;
-                
-                // 진행률 바 업데이트
-                var progressBar = document.querySelector('.progress-fill');
-                var progressText = document.querySelector('.progress-text');
-                
-                if (progressBar) {
-                    progressBar.style.width = progress + '%';
-                }
-                if (progressText) {
-                    progressText.textContent = answeredQuestions + ' / ' + totalQuestions + ' 완료 (' + progress + '%)';
-                }
-                
-                // 완료 버튼 활성화/비활성화
-                var submitBtn = document.querySelector('.btn-submit');
-                if (submitBtn) {
-                    if (progress === 100) {
-                        submitBtn.disabled = false;
-                        submitBtn.classList.remove('disabled');
-                    } else {
-                        submitBtn.disabled = true;
-                        submitBtn.classList.add('disabled');
-                    }
-                }
-            };
-            
-            // 전체 질문 수 계산
-            scwin.getTotalQuestionCount = function() {
-                var total = 0;
-                for (var axis in scwin.surveyQuestions) {
-                    total += scwin.surveyQuestions[axis].length;
-                }
-                return total;
-            };
-            
-            // 스크롤 이벤트 추가 (현재 보고있는 섹션 하이라이트)
-            scwin.addScrollEvent = function() {
-                var sections = document.querySelectorAll('.axis-section');
-                var navItems = document.querySelectorAll('.progress-axis');
-                
-                window.addEventListener('scroll', function() {
-                    var current = '';
-                    sections.forEach(function(section) {
-                        var sectionTop = section.offsetTop;
-                        if (window.pageYOffset >= (sectionTop - 200)) {
-                            var axisHeader = section.querySelector('.axis-title');
-                            if (axisHeader) {
-                                current = axisHeader.textContent;
-                            }
-                        }
-                    });
-                    
-                    navItems.forEach(function(item) {
-                        item.classList.remove('active');
-                        if (item.textContent.includes(current.split(' ')[0])) {
-                            item.classList.add('active');
-                        }
-                    });
-                });
-            };
-            
-            // 설문 제출
-            scwin.btn_submit_onclick = function() {
-                // 모든 문항에 답변했는지 확인
-                var totalQuestions = scwin.getTotalQuestionCount();
-                var answeredQuestions = Object.keys(scwin.userAnswers).length;
-                
-                if (answeredQuestions < totalQuestions) {
-                    $c.win.alert("아직 답변하지 않은 문항이 있습니다.");
-                    return;
-                }
-                
-                // 응답 데이터 준비
-                var answers = [];
-                for (var questionId in scwin.userAnswers) {
-                    answers.push({
-                        questionId: parseInt(questionId),
-                        answerValue: scwin.userAnswers[questionId]
-                    });
-                }
-                
-                // DataMap에 설정
-                dma_surveySubmit.set("answers", JSON.stringify(answers));
-                
-                console.log("설문 제출 데이터:", answers);
-                
-                // Submission 실행
-                $c.sbm.execute(sbm_submitSurvey);
-            };
-            
-            // 설문 제출 성공 콜백
-            scwin.sbm_submitSurvey_submitdone = function(e) {
-                console.log("설문 제출 성공:", e.responseJSON);
-                
-                var response = e.responseJSON;
-                if (response && response.typeCode) {
-                    // 결과 표시
-                    scwin.displaySurveyResult(response);
-                } else {
-                    console.error("분석 결과 데이터가 없습니다:", response);
-                    $c.win.alert("설문 분석에 실패했습니다.");
-                }
-            };
-            
-            // 설문 제출 실패 콜백
-            scwin.sbm_submitSurvey_submiterror = function(e) {
-                console.error("설문 제출 실패:", e);
-                $c.win.alert("설문 분석 중 오류가 발생했습니다.");
-            };
-            
-            // 설문 결과 표시
-            scwin.displaySurveyResult = function(result) {
-                console.log("설문 결과 표시:", result);
-                
-                // 유형 정의
-                var typeDefinitions = {
-                    'AITF': { name: '혁신적 팀 아키텍트', desc: '새로운 기술로 팀과 함께 혁신적인 기능을 설계하는 개발자' },
-                    'AITD': { name: '미래지향 팀 디버거', desc: '새로운 기술로 팀과 함께 안정적인 시스템을 구축하는 개발자' },
-                    'AISF': { name: '창의적 솔로 아키텍트', desc: '혁신적 설계를 통해 독창적인 기능을 개발하는 개발자' },
-                    'AISD': { name: '혁신적 설계 전문가', desc: '새로운 기술로 안정적이고 혁신적인 설계를 하는 개발자' },
-                    'ARTF': { name: '구조적 팀 빌더', desc: '검증된 기술로 팀과 함께 견고한 기능을 구축하는 개발자' },
-                    'ARTD': { name: '완벽주의 팀 디버거', desc: '체계적 접근으로 팀과 함께 완벽한 시스템을 만드는 개발자' },
-                    'ARSF': { name: '균형잡힌 솔로 아키텍트', desc: '체계적 설계로 개인의 강점을 발휘하는 개발자' },
-                    'ARSD': { name: '체계적 리팩터 마스터', desc: '기존 시스템을 체계적으로 개선하는 개발자' },
-                    'BITF': { name: '혁신적 팀 크리에이터', desc: '새로운 기술로 팀과 함께 빠르게 기능을 구현하는 개발자' },
-                    'BITD': { name: '실험적 팀 문제 해결사', desc: '새로운 방법으로 팀과 함께 문제를 해결하는 개발자' },
-                    'BISF': { name: '창의적 스피드 러너', desc: '혁신적 방법으로 빠르게 기능을 구현하는 개발자' },
-                    'BISD': { name: '혁신적 솔로 디버거', desc: '새로운 접근법으로 독립적으로 문제를 해결하는 개발자' },
-                    'BRTF': { name: '빠른 팀 기능 개발자', desc: '검증된 방법으로 팀과 함께 실용적인 기능을 개발하는 개발자' },
-                    'BRTD': { name: '신뢰성 있는 팀 디버거', desc: '안정적 방법으로 팀과 함께 문제를 해결하는 개발자' },
-                    'BRSF': { name: '민첩한 기능 빌더', desc: '실용적 접근으로 빠르게 기능을 구현하는 개발자' },
-                    'BRSD': { name: '실용적 안정성 추구자', desc: '검증된 방법으로 안정적인 솔루션을 만드는 개발자' }
-                };
-                
-                var typeCode = result.typeCode || 'ARTF';
-                var typeInfo = typeDefinitions[typeCode] || typeDefinitions['ARTF'];
-                
-                // 이미지 경로 설정
-                var imagePath = '/InsWebApp/images/ws5/mbti/png/' + typeCode + '.png';
-                var mbtiImageEl = document.querySelector('#mbtiResultImage');
-                if (mbtiImageEl) {
-                    mbtiImageEl.src = imagePath;
-                }
-                
-                // 설문 섹션 숨기기
-                var surveySection = document.querySelector('.survey-section');
-                if (surveySection) surveySection.style.display = 'none';
-                
-                // 결과 섹션 보이기
-                var resultSection = document.querySelector('.result-section');
-                if (resultSection) {
-                    resultSection.style.display = 'block';
-                    
-                    // 결과 섹션으로 부드럽게 스크롤 (약간의 딜레이 후)
-                    setTimeout(function() {
-                        resultSection.scrollIntoView({ 
-                            behavior: 'smooth', 
-                            block: 'start' 
-                        });
-                        
-                        // 추가 여백을 위해 약간 더 위로 스크롤
-                        setTimeout(function() {
-                            window.scrollBy({
-                                top: -50, // 50px 위로 추가 스크롤
-                                behavior: 'smooth'
-                            });
-                        }, 800); // 첫 번째 스크롤 완료 후
-                    }, 300); // 결과 표시 후 300ms 딜레이
-                }
-                
-                // 결과 데이터 설정
-                var typeCodeEl = document.querySelector('.result-type-code');
-                if (typeCodeEl) typeCodeEl.textContent = typeCode;
-                
-                var typeNameEl = document.querySelector('.result-type-name');
-                if (typeNameEl) typeNameEl.textContent = typeInfo.name;
-                
-                var typeDescEl = document.querySelector('.result-type-desc');
-                if (typeDescEl) typeDescEl.textContent = typeInfo.desc;
-                
-                // 점수를 시각적 바 차트로 표시
-                if (result.scores) {
-                    var scores = result.scores;
-                    
-                    // 점수를 퍼센트로 변환하는 함수 (-50~+50을 0~100%로)
-                    function scoreToPercentage(score) {
-                        return Math.max(0, Math.min(100, (score + 50)));
-                    }
-                    
-                    // 순차적 애니메이션을 위한 함수
-                    function animateBar(fillEl, indicatorEl, resultEl, percentage, score, leftLabel, rightLabel, leftColor, rightColor, delay) {
-                        setTimeout(function() {
-                            if (fillEl) {
-                                fillEl.style.width = percentage + '%';
-                            }
-                            if (indicatorEl) {
-                                indicatorEl.style.left = percentage + '%';
-                            }
-                            
-                            // 결과 텍스트 업데이트
-                            setTimeout(function() {
-                                if (resultEl) {
-                                    var intensity = Math.abs(score);
-                                    var intensityText = '';
-                                    if (intensity < 10) intensityText = '약간';
-                                    else if (intensity < 25) intensityText = '보통';
-                                    else if (intensity < 40) intensityText = '강한';
-                                    else intensityText = '매우 강한';
-                                    
-                                    if (score >= 0) {
-                                        resultEl.textContent = intensityText + ' ' + rightLabel + ' 성향';
-                                        resultEl.style.color = rightColor;
-                                    } else {
-                                        resultEl.textContent = intensityText + ' ' + leftLabel + ' 성향';
-                                        resultEl.style.color = leftColor;
-                                    }
-                                    
-                                    // 결과 카드 애니메이션
-                                    resultEl.style.animation = 'resultFadeIn 0.6s ease-out forwards';
-                                }
-                            }, 800); // 바 애니메이션 후 결과 표시
-                        }, delay);
-                    }
-                    
-                    // 각 축별 애니메이션 실행 (순차적)
-                    
-                    // B/A 축 (+: Architect, -: Builder)
-                    var abScore = scores['A_B'] || 0;
-                    var abPercentage = scoreToPercentage(abScore);
-                    animateBar(
-                        document.querySelector('.score-bar-ab'),
-                        document.querySelector('.score-indicator-ab'),
-                        document.querySelector('.ab-result'),
-                        abPercentage, abScore, 'Builder', 'Architect', '#6366f1', '#a855f7', 200
-                    );
-                    
-                    // R/I 축 (+: Innovate, -: Refactor)
-                    var riScore = scores['R_I'] || 0;
-                    var riPercentage = scoreToPercentage(riScore);
-                    animateBar(
-                        document.querySelector('.score-bar-ri'),
-                        document.querySelector('.score-indicator-ri'),
-                        document.querySelector('.ri-result'),
-                        riPercentage, riScore, 'Refactor', 'Innovate', '#4f46e5', '#9333ea', 500
-                    );
-                    
-                    // S/T 축 (+: Team, -: Solo)
-                    var stScore = scores['S_T'] || 0;
-                    var stPercentage = scoreToPercentage(stScore);
-                    animateBar(
-                        document.querySelector('.score-bar-st'),
-                        document.querySelector('.score-indicator-st'),
-                        document.querySelector('.st-result'),
-                        stPercentage, stScore, 'Solo', 'Team', '#3730a3', '#7c2d92', 800
-                    );
-                    
-                    // D/F 축 (+: Feature, -: Debug)
-                    var dfScore = scores['D_F'] || 0;
-                    var dfPercentage = scoreToPercentage(dfScore);
-                    animateBar(
-                        document.querySelector('.score-bar-df'),
-                        document.querySelector('.score-indicator-df'),
-                        document.querySelector('.df-result'),
-                        dfPercentage, dfScore, 'Debug', 'Feature', '#1e40af', '#581c87', 1100
-                    );
-                }
-                
-                console.log('설문 결과 표시 완료:', typeCode, typeInfo.name);
-            };
-            
-            // 다시하기
-            scwin.btn_restart_onclick = function() {
-                // 모든 응답 초기화
-                scwin.userAnswers = {};
-                
-                // 라디오 버튼 초기화
-                var radioButtons = document.querySelectorAll('input[type="radio"]');
-                radioButtons.forEach(function(radio) {
-                    radio.checked = false;
-                });
-                
-                // 결과 섹션 숨기기
-                var resultSection = document.querySelector('.result-section');
-                if (resultSection) resultSection.style.display = 'none';
-                
-                // 설문 섹션 보이기
-                var surveySection = document.querySelector('.survey-section');
-                if (surveySection) surveySection.style.display = 'block';
-                
-                // 진행률 초기화
-                scwin.updateProgress();
-                
-                // 맨 위로 스크롤
-                window.scrollTo(0, 0);
-            };
-            
-            // 개인정보 수정으로 이동
-            scwin.goToUserDetail = function() {
-                $p.url("../user/UserDetail.xml");
-            };
-            
+// 설문 질문 데이터 저장소 (JavaScript 객체로 관리)
+scwin.surveyQuestions = {};
+scwin.userAnswers = {};
 
-        ]]></script>
+scwin.onpageload = function () {
+    console.log("설문 분석 메인 페이지 로드됨");
+
+    // 사용자 권한 체크 (기업 사용자 접근 차단)
+    if (!scwin.checkUserPermission()) {
+        return; // 권한이 없으면 더 이상 진행하지 않음
+    }
+
+    // 설문 질문 조회
+    scwin.loadSurveyQuestions();
+};
+
+// 사용자 권한 체크 함수
+scwin.checkUserPermission = function () {
+    try {
+        // 쿠키에서 userInfo 가져오기
+        var userInfo = scwin.getUserInfoFromCookie();
+        console.log("권한 체크용 userInfo:", userInfo);
+
+        if (userInfo === null) {
+            console.warn("사용자 정보를 가져올 수 없음");
+            alert("사용자 정보를 확인할 수 없습니다. 다시 로그인해 주세요.");
+            $p.url("../common/MainPage.xml");
+            return false;
+        }
+
+        if (userInfo && userInfo.role === "COMPANY") {
+            // 기업 사용자인 경우 접근 차단
+            console.log("기업 사용자 접근 차단");
+            alert("죄송합니다. 개발자 유형 검사는 개인 사용자만 이용 가능합니다.\n기업 회원은 채용 공고 등록 및 관리 기능을 이용하실 수 있습니다.");
+
+            // 메인 페이지로 리다이렉트
+            $p.url("../common/MainPage.xml");
+            return false;
+        }
+
+        console.log("개인 사용자 접근 허용 - role:", userInfo.role);
+        return true; // 개인 사용자는 접근 허용
+    } catch (error) {
+        console.error("사용자 권한 체크 중 오류:", error);
+        // 오류 발생 시 안전하게 메인 페이지로 리다이렉트
+        alert("사용자 정보를 확인할 수 없습니다. 다시 로그인해 주세요.");
+        $p.url("../common/MainPage.xml");
+        return false;
+    }
+};
+
+// 쿠키에서 사용자 정보 파싱 함수 (PostDetail.xml과 동일한 방식)
+scwin.getUserInfoFromCookie = function () {
+    try {
+        var userInfoCookieStr = WebSquare.cookie.getCookie("userInfo");
+        console.log("WebSquare.cookie로 가져온 userInfo:", userInfoCookieStr);
+
+        if (userInfoCookieStr && userInfoCookieStr.trim() !== "") {
+            var userInfo = JSON.parse(userInfoCookieStr);
+            console.log("쿠키에서 추출한 사용자 정보:", userInfo);
+            return userInfo;
+        }
+        return null;
+    } catch (error) {
+        console.error("사용자 정보 쿠키 파싱 오류:", error);
+        return null;
+    }
+};
+
+// 설문 질문 로드
+scwin.loadSurveyQuestions = function () {
+    console.log("설문 질문 조회 시작");
+    $c.sbm.execute(sbm_getQuestions);
+};
+
+// 설문 질문 조회 성공 콜백
+scwin.sbm_getQuestions_submitdone = function (e) {
+
+    var response = e.responseJSON;
+    if (response && response.questions) {
+        // 질문 데이터 저장
+        scwin.surveyQuestions = response.questions;
+
+        // UI 렌더링
+        scwin.renderSurveyQuestions();
+
+        // 진행률 초기화
+        scwin.updateProgress();
+
+        console.log("설문 질문 렌더링 완료");
+    } else {
+        console.error("설문 질문 데이터가 없습니다:", response);
+        $c.win.alert("설문 질문을 불러오는데 실패했습니다.");
+    }
+};
+
+// 설문 질문 조회 실패 콜백
+scwin.sbm_getQuestions_submiterror = function (e) {
+    console.error("설문 질문 조회 실패:", e);
+    $c.win.alert("설문 질문을 불러오는데 실패했습니다.");
+};
+
+// 설문 문항 UI 렌더링
+scwin.renderSurveyQuestions = function () {
+    var questionContainer = document.querySelector('.question-container');
+    if (!questionContainer) return;
+
+    var html = '';
+    var axisNames = {
+        'B_A': { name: 'Builder vs Architect', desc: '개발 스타일' },
+        'R_I': { name: 'Refactor vs Innovate', desc: '기술 성향' },
+        'S_T': { name: 'Solo vs Team', desc: '협업 방식' },
+        'D_F': { name: 'Debug vs Feature', desc: '작업 선호' }
+    };
+
+    // 축 순서를 명시적으로 지정해서 렌더링 (B_A -> R_I -> S_T -> D_F)
+    var axisOrder = ['B_A', 'R_I', 'S_T', 'D_F'];
+
+    for (var i = 0; i < axisOrder.length; i++) {
+        var axis = axisOrder[i];
+        var questions = scwin.surveyQuestions[axis];
+        var axisInfo = axisNames[axis] || { name: axis, desc: '' };
+
+        // 축에 질문이 없으면 건너뛰기
+        if (!questions || questions.length === 0) {
+            console.warn('축 ' + axis + '에 질문이 없습니다.');
+            continue;
+        }
+
+        html += '<div class="axis-section">';
+        html += '<div class="axis-header">';
+        html += '<h3 class="axis-title">' + axisInfo.name + '</h3>';
+        html += '<p class="axis-desc">' + axisInfo.desc + '</p>';
+        html += '</div>';
+
+        // 해당 축의 질문들
+        for (var q = 0; q < questions.length; q++) {
+            var question = questions[q];
+
+            html += '<div class="question-card" data-question-id="' + question.questionId + '">';
+            html += '<div class="question-number">Q' + question.questionId + '</div>';
+            html += '<div class="question-text">' + question.questionText + '</div>';
+            html += '<div class="answer-options">';
+
+            // 7점 척도 라디오 버튼
+            for (var j = 1; j <= 7; j++) {
+                var label = '';
+                if (j === 1) label = '전혀 그렇지 않다';
+                else if (j === 4) label = '보통이다';
+                else if (j === 7) label = '매우 그렇다';
+
+                html += '<label class="option-label">';
+                html += '<input type="radio" name="question_' + question.questionId + '" value="' + j + '" data-question-id="' + question.questionId + '" data-value="' + j + '">';
+                html += '<span class="option-number">' + j + '</span>';
+                html += '<span class="option-text">' + label + '</span>';
+                html += '</label>';
+            }
+
+            html += '</div>';
+            html += '</div>';
+        }
+
+        html += '</div>'; // axis-section 닫기
+    }
+
+    questionContainer.innerHTML = html;
+
+    // 이벤트 리스너 바인딩
+    scwin.bindAnswerEvents();
+
+    // 스크롤 이벤트 추가
+    scwin.addScrollEvent();
+};
+
+// 답변 이벤트 바인딩
+scwin.bindAnswerEvents = function () {
+    console.log("이벤트 바인딩 시작");
+    var radioButtons = document.querySelectorAll('input[type="radio"][data-question-id]');
+    console.log("라디오 버튼 개수:", radioButtons.length);
+
+    for (var i = 0; i < radioButtons.length; i++) {
+        radioButtons[i].addEventListener('change', function (event) {
+            console.log("라디오 버튼 클릭됨");
+            var questionId = parseInt(event.target.getAttribute('data-question-id'));
+            var value = parseInt(event.target.getAttribute('data-value'));
+            console.log("questionId:", questionId, "value:", value);
+            scwin.handleAnswerChange(questionId, value);
+        });
+    }
+};
+
+// 답변 변경 핸들러
+scwin.handleAnswerChange = function (questionId, value) {
+    // 사용자 답변 저장
+    scwin.userAnswers[questionId] = value;
+
+    // 진행률 업데이트
+    scwin.updateProgress();
+
+    console.log("답변 변경됨 - 질문 " + questionId + ": " + value);
+};
+
+// 진행률 업데이트
+scwin.updateProgress = function () {
+    var totalQuestions = scwin.getTotalQuestionCount();
+    var answeredQuestions = Object.keys(scwin.userAnswers).length;
+
+    var progress = totalQuestions > 0 ? Math.round((answeredQuestions / totalQuestions) * 100) : 0;
+
+    // 진행률 바 업데이트
+    var progressBar = document.querySelector('.progress-fill');
+    var progressText = document.querySelector('.progress-text');
+
+    if (progressBar) {
+        progressBar.style.width = progress + '%';
+    }
+    if (progressText) {
+        progressText.textContent = answeredQuestions + ' / ' + totalQuestions + ' 완료 (' + progress + '%)';
+    }
+
+    // 완료 버튼 활성화/비활성화
+    var submitBtn = document.querySelector('.btn-submit');
+    if (submitBtn) {
+        if (progress === 100) {
+            submitBtn.disabled = false;
+            submitBtn.classList.remove('disabled');
+        } else {
+            submitBtn.disabled = true;
+            submitBtn.classList.add('disabled');
+        }
+    }
+};
+
+// 전체 질문 수 계산
+scwin.getTotalQuestionCount = function () {
+    var total = 0;
+    for (var axis in scwin.surveyQuestions) {
+        total += scwin.surveyQuestions[axis].length;
+    }
+    return total;
+};
+
+// 스크롤 이벤트 추가 (현재 보고있는 섹션 하이라이트)
+scwin.addScrollEvent = function () {
+    var sections = document.querySelectorAll('.axis-section');
+    var navItems = document.querySelectorAll('.progress-axis');
+
+    window.addEventListener('scroll', function () {
+        var current = '';
+        sections.forEach(function (section) {
+            var sectionTop = section.offsetTop;
+            if (window.pageYOffset >= (sectionTop - 200)) {
+                var axisHeader = section.querySelector('.axis-title');
+                if (axisHeader) {
+                    current = axisHeader.textContent;
+                }
+            }
+        });
+
+        navItems.forEach(function (item) {
+            item.classList.remove('active');
+            if (item.textContent.includes(current.split(' ')[0])) {
+                item.classList.add('active');
+            }
+        });
+    });
+};
+
+// 설문 제출
+scwin.btn_submit_onclick = function () {
+    // 모든 문항에 답변했는지 확인
+    var totalQuestions = scwin.getTotalQuestionCount();
+    var answeredQuestions = Object.keys(scwin.userAnswers).length;
+
+    if (answeredQuestions < totalQuestions) {
+        $c.win.alert("아직 답변하지 않은 문항이 있습니다.");
+        return;
+    }
+
+    // 응답 데이터 준비
+    var answers = [];
+    for (var questionId in scwin.userAnswers) {
+        answers.push({
+            questionId: parseInt(questionId),
+            answerValue: scwin.userAnswers[questionId]
+        });
+    }
+
+    // DataMap에 설정
+    dma_surveySubmit.set("answers", JSON.stringify(answers));
+
+    console.log("설문 제출 데이터:", answers);
+
+    // Submission 실행
+    $c.sbm.execute(sbm_submitSurvey);
+};
+
+// 설문 제출 성공 콜백
+scwin.sbm_submitSurvey_submitdone = function (e) {
+    console.log("설문 제출 성공:", e.responseJSON);
+
+    var response = e.responseJSON;
+    if (response && response.typeCode) {
+        // 결과 표시
+        scwin.displaySurveyResult(response);
+
+        var userInfoCookieStr = WebSquare.cookie.getCookie("userInfo");
+        var userInfo = JSON.parse(userInfoCookieStr);
+
+        // MBTI 정보 추가/업데이트
+        userInfo.mbti = response.typeCode;
+
+        // 쿠키에 다시 저장
+        var updatedUserInfoStr = JSON.stringify(userInfo);
+        WebSquare.cookie.setCookie("userInfo", updatedUserInfoStr);
+
+        console.log("MBTI 정보가 쿠키에 저장되었습니다:", mbtiValue);
+        console.log("업데이트된 userInfo:", userInfo);
+
+        console.log("이벤트 바인딩 완료");
+        debugger;
+    } else {
+        console.error("분석 결과 데이터가 없습니다:", response.typeCode);
+        $c.win.alert("설문 분석에 실패했습니다.");
+    }
+};
+
+// 설문 제출 실패 콜백
+scwin.sbm_submitSurvey_submiterror = function (e) {
+    console.error("설문 제출 실패:", e);
+    $c.win.alert("설문 분석 중 오류가 발생했습니다.");
+};
+
+// 설문 결과 표시
+scwin.displaySurveyResult = function (result) {
+    console.log("설문 결과 표시:", result);
+
+    // 유형 정의
+    var typeDefinitions = {
+        'AITF': { name: '혁신적 팀 아키텍트', desc: '새로운 기술로 팀과 함께 혁신적인 기능을 설계하는 개발자' },
+        'AITD': { name: '미래지향 팀 디버거', desc: '새로운 기술로 팀과 함께 안정적인 시스템을 구축하는 개발자' },
+        'AISF': { name: '창의적 솔로 아키텍트', desc: '혁신적 설계를 통해 독창적인 기능을 개발하는 개발자' },
+        'AISD': { name: '혁신적 설계 전문가', desc: '새로운 기술로 안정적이고 혁신적인 설계를 하는 개발자' },
+        'ARTF': { name: '구조적 팀 빌더', desc: '검증된 기술로 팀과 함께 견고한 기능을 구축하는 개발자' },
+        'ARTD': { name: '완벽주의 팀 디버거', desc: '체계적 접근으로 팀과 함께 완벽한 시스템을 만드는 개발자' },
+        'ARSF': { name: '균형잡힌 솔로 아키텍트', desc: '체계적 설계로 개인의 강점을 발휘하는 개발자' },
+        'ARSD': { name: '체계적 리팩터 마스터', desc: '기존 시스템을 체계적으로 개선하는 개발자' },
+        'BITF': { name: '혁신적 팀 크리에이터', desc: '새로운 기술로 팀과 함께 빠르게 기능을 구현하는 개발자' },
+        'BITD': { name: '실험적 팀 문제 해결사', desc: '새로운 방법으로 팀과 함께 문제를 해결하는 개발자' },
+        'BISF': { name: '창의적 스피드 러너', desc: '혁신적 방법으로 빠르게 기능을 구현하는 개발자' },
+        'BISD': { name: '혁신적 솔로 디버거', desc: '새로운 접근법으로 독립적으로 문제를 해결하는 개발자' },
+        'BRTF': { name: '빠른 팀 기능 개발자', desc: '검증된 방법으로 팀과 함께 실용적인 기능을 개발하는 개발자' },
+        'BRTD': { name: '신뢰성 있는 팀 디버거', desc: '안정적 방법으로 팀과 함께 문제를 해결하는 개발자' },
+        'BRSF': { name: '민첩한 기능 빌더', desc: '실용적 접근으로 빠르게 기능을 구현하는 개발자' },
+        'BRSD': { name: '실용적 안정성 추구자', desc: '검증된 방법으로 안정적인 솔루션을 만드는 개발자' }
+    };
+
+    var typeCode = result.typeCode || 'ARTF';
+    var typeInfo = typeDefinitions[typeCode] || typeDefinitions['ARTF'];
+
+    // 이미지 경로 설정
+    var imagePath = '/InsWebApp/images/ws5/mbti/png/' + typeCode + '.png';
+    var mbtiImageEl = document.querySelector('#mbtiResultImage');
+    if (mbtiImageEl) {
+        mbtiImageEl.src = imagePath;
+    }
+
+    // 설문 섹션 숨기기
+    var surveySection = document.querySelector('.survey-section');
+    if (surveySection) surveySection.style.display = 'none';
+
+    // 결과 섹션 보이기
+    var resultSection = document.querySelector('.result-section');
+    if (resultSection) {
+        resultSection.style.display = 'block';
+
+        // 결과 섹션으로 부드럽게 스크롤 (약간의 딜레이 후)
+        setTimeout(function () {
+            resultSection.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+
+            // 추가 여백을 위해 약간 더 위로 스크롤
+            setTimeout(function () {
+                window.scrollBy({
+                    top: -50, // 50px 위로 추가 스크롤
+                    behavior: 'smooth'
+                });
+            }, 800); // 첫 번째 스크롤 완료 후
+        }, 300); // 결과 표시 후 300ms 딜레이
+    }
+
+    // 결과 데이터 설정
+    var typeCodeEl = document.querySelector('.result-type-code');
+    if (typeCodeEl) typeCodeEl.textContent = typeCode;
+
+    var typeNameEl = document.querySelector('.result-type-name');
+    if (typeNameEl) typeNameEl.textContent = typeInfo.name;
+
+    var typeDescEl = document.querySelector('.result-type-desc');
+    if (typeDescEl) typeDescEl.textContent = typeInfo.desc;
+
+    // 점수를 시각적 바 차트로 표시
+    if (result.scores) {
+        var scores = result.scores;
+
+        // 점수를 퍼센트로 변환하는 함수 (-50~+50을 0~100%로)
+        function scoreToPercentage(score) {
+            return Math.max(0, Math.min(100, (score + 50)));
+        }
+
+        // 순차적 애니메이션을 위한 함수
+        function animateBar(fillEl, indicatorEl, resultEl, percentage, score, leftLabel, rightLabel, leftColor, rightColor, delay) {
+            setTimeout(function () {
+                if (fillEl) {
+                    fillEl.style.width = percentage + '%';
+                }
+                if (indicatorEl) {
+                    indicatorEl.style.left = percentage + '%';
+                }
+
+                // 결과 텍스트 업데이트
+                setTimeout(function () {
+                    if (resultEl) {
+                        var intensity = Math.abs(score);
+                        var intensityText = '';
+                        if (intensity < 10) intensityText = '약간';
+                        else if (intensity < 25) intensityText = '보통';
+                        else if (intensity < 40) intensityText = '강한';
+                        else intensityText = '매우 강한';
+
+                        if (score >= 0) {
+                            resultEl.textContent = intensityText + ' ' + rightLabel + ' 성향';
+                            resultEl.style.color = rightColor;
+                        } else {
+                            resultEl.textContent = intensityText + ' ' + leftLabel + ' 성향';
+                            resultEl.style.color = leftColor;
+                        }
+
+                        // 결과 카드 애니메이션
+                        resultEl.style.animation = 'resultFadeIn 0.6s ease-out forwards';
+                    }
+                }, 800); // 바 애니메이션 후 결과 표시
+            }, delay);
+        }
+
+        // 각 축별 애니메이션 실행 (순차적)
+
+        // B/A 축 (+: Architect, -: Builder)
+        var abScore = scores['A_B'] || 0;
+        var abPercentage = scoreToPercentage(abScore);
+        animateBar(
+            document.querySelector('.score-bar-ab'),
+            document.querySelector('.score-indicator-ab'),
+            document.querySelector('.ab-result'),
+            abPercentage, abScore, 'Builder', 'Architect', '#6366f1', '#a855f7', 200
+        );
+
+        // R/I 축 (+: Innovate, -: Refactor)
+        var riScore = scores['R_I'] || 0;
+        var riPercentage = scoreToPercentage(riScore);
+        animateBar(
+            document.querySelector('.score-bar-ri'),
+            document.querySelector('.score-indicator-ri'),
+            document.querySelector('.ri-result'),
+            riPercentage, riScore, 'Refactor', 'Innovate', '#4f46e5', '#9333ea', 500
+        );
+
+        // S/T 축 (+: Team, -: Solo)
+        var stScore = scores['S_T'] || 0;
+        var stPercentage = scoreToPercentage(stScore);
+        animateBar(
+            document.querySelector('.score-bar-st'),
+            document.querySelector('.score-indicator-st'),
+            document.querySelector('.st-result'),
+            stPercentage, stScore, 'Solo', 'Team', '#3730a3', '#7c2d92', 800
+        );
+
+        // D/F 축 (+: Feature, -: Debug)
+        var dfScore = scores['D_F'] || 0;
+        var dfPercentage = scoreToPercentage(dfScore);
+        animateBar(
+            document.querySelector('.score-bar-df'),
+            document.querySelector('.score-indicator-df'),
+            document.querySelector('.df-result'),
+            dfPercentage, dfScore, 'Debug', 'Feature', '#1e40af', '#581c87', 1100
+        );
+    }
+
+    console.log('설문 결과 표시 완료:', typeCode, typeInfo.name);
+};
+
+// 다시하기
+scwin.btn_restart_onclick = function () {
+    // 모든 응답 초기화
+    scwin.userAnswers = {};
+
+    // 라디오 버튼 초기화
+    var radioButtons = document.querySelectorAll('input[type="radio"]');
+    radioButtons.forEach(function (radio) {
+        radio.checked = false;
+    });
+
+    // 결과 섹션 숨기기
+    var resultSection = document.querySelector('.result-section');
+    if (resultSection) resultSection.style.display = 'none';
+
+    // 설문 섹션 보이기
+    var surveySection = document.querySelector('.survey-section');
+    if (surveySection) surveySection.style.display = 'block';
+
+    // 진행률 초기화
+    scwin.updateProgress();
+
+    // 맨 위로 스크롤
+    window.scrollTo(0, 0);
+};
+
+// 개인정보 수정으로 이동
+scwin.goToUserDetail = function () {
+    $p.url("../user/UserDetail.xml");
+};
+
+
+]]></script>
 
 		<style type="text/css"><![CDATA[
             .main-container {

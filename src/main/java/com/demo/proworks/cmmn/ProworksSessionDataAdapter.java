@@ -106,5 +106,4 @@ public class ProworksSessionDataAdapter extends SessionDataAdapter {
 
 		return userHeader;
 	}
-
 }
