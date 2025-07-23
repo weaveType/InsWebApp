@@ -242,7 +242,7 @@ scwin.getJobPostingId = function () {
 
     if (!jobPostingId) {
         alert("잘못된 접근입니다. jobPostingId가 없습니다.");
-        $p.back();  // 또는 다른 URL로 리다이렉트
+        $p.url("../common/MainPage.xml");  // 또는 다른 URL로 리다이렉트
         return;
     }
 
@@ -616,7 +616,7 @@ scwin.openResumePreview = function(rowIndex) {
             				<w2:column displayMode="label" id="column8" inputType="text" style="height:40px;" value="포지션" width="150"></w2:column>
             				<w2:column displayMode="label" id="column5" inputType="text" style="height:40px;" value="이력서" width="150"></w2:column>
             				<w2:column displayMode="label" id="column6" inputType="text" style="height:40px;" value="mbti" width="80"></w2:column>
-            				<w2:column displayMode="label" id="column7" inputType="text" style="height:40px;" value="기술스택" width="*"></w2:column>
+            				<w2:column displayMode="label" id="column7" inputType="text" style="height:40px;" value="기술스택" width="*" useFilter="true"></w2:column>
             			</w2:row>
             		</w2:header>
             		<w2:gBody id="gBody2" style="">
