@@ -35,8 +35,36 @@ public class CodeAnalysisServiceImpl implements CodeAnalysisService {
     @Value("${gemini.api.key}")
     private String geminiApiKey;
     
-    @Value("${gemini.model.name:gemini-2.0-flash-001}")
+    @Value("${gemini.model.name}")
     private String modelName;
+    
+    // 새로 추가된 프로퍼티 값들을 주입
+    @Value("${gemini.request.temperature}")
+    private double temperature;
+    
+    @Value("${gemini.request.top-k}")
+    private int topK;
+    
+    @Value("${gemini.request.top-p}")
+    private double topP;
+    
+    @Value("${gemini.request.max-output-tokens}")
+    private int maxOutputTokens;
+    
+    @Value("${gemini.request.response-mime-type}")
+    private String responseMimeType;
+    
+    @Value("${gemini.retry.max-attempts}")
+    private int maxRetryAttempts;
+    
+    @Value("${gemini.retry.initial-interval}")
+    private int retryInitialInterval;
+    
+    @Value("${gemini.log.request}")
+    private boolean logRequest;
+    
+    @Value("${gemini.log.response}")
+    private boolean logResponse;
     
     @Resource(name = "codeAnalysisDAO")
     private CodeAnalysisDAO codeAnalysisDAO;
@@ -173,13 +201,13 @@ public class CodeAnalysisServiceImpl implements CodeAnalysisService {
             contents.put(content);
             requestBody.put("contents", contents);
             
-            // Generation 설정 추가 - 더 안정적인 설정
+            // Generation 설정 추가 - 프로퍼티에서 주입받은 값 사용
             JSONObject generationConfig = new JSONObject();
-            generationConfig.put("temperature", 0.3);  // 더 일관된 응답을 위해 낮춤
-            generationConfig.put("topK", 20);          // 더 집중된 응답
-            generationConfig.put("topP", 0.8);         // 더 예측 가능한 응답
-            generationConfig.put("maxOutputTokens", 2048);  // 상세 분석을 위해 토큰 수 증가
-            generationConfig.put("responseMimeType", "application/json");
+            generationConfig.put("temperature", temperature);
+            generationConfig.put("topK", topK);
+            generationConfig.put("topP", topP);
+            generationConfig.put("maxOutputTokens", maxOutputTokens);
+            generationConfig.put("responseMimeType", responseMimeType);
             
             // 새로운 응답 스키마 (detailed_analysis 포함)
             JSONObject responseSchema = new JSONObject();
@@ -226,8 +254,15 @@ public class CodeAnalysisServiceImpl implements CodeAnalysisService {
             generationConfig.put("responseSchema", responseSchema);
             requestBody.put("generationConfig", generationConfig);
             
-            AppLog.debug("API 요청 URL: " + apiUrl);
-            AppLog.debug("API 요청 본문 길이: " + requestBody.toString().length());
+            // 요청 로깅
+            if (logRequest) {
+                AppLog.debug("API 요청 URL: " + apiUrl);
+                AppLog.debug("API 요청 본문 길이: " + requestBody.toString().length());
+                AppLog.debug("API 요청 파라미터: temperature=" + temperature + 
+                          ", topK=" + topK + 
+                          ", topP=" + topP + 
+                          ", maxOutputTokens=" + maxOutputTokens);
+            }
             
             // HTTP 헤더 설정
             HttpHeaders headers = new HttpHeaders();
@@ -235,17 +270,56 @@ public class CodeAnalysisServiceImpl implements CodeAnalysisService {
             
             HttpEntity<String> entity = new HttpEntity<>(requestBody.toString(), headers);
             
-            // API 호출
-            ResponseEntity<String> response = restTemplate.exchange(apiUrl, HttpMethod.POST, entity, String.class);
+            // 재시도 로직 추가
+            int attempts = 0;
+            Exception lastException = null;
+            int currentRetryInterval = retryInitialInterval;
             
-            AppLog.debug("API 응답 상태: " + response.getStatusCode());
-            AppLog.debug("API 응답 길이: " + (response.getBody() != null ? response.getBody().length() : 0));
-            
-            if (response.getStatusCode() == HttpStatus.OK) {
-                return response.getBody();
-            } else {
-                throw new Exception("Gemini API 호출 실패: " + response.getStatusCode());
+            while (attempts < maxRetryAttempts) {
+                try {
+                    // API 호출
+                    ResponseEntity<String> response = restTemplate.exchange(apiUrl, HttpMethod.POST, entity, String.class);
+                    
+                    // 응답 로깅
+                    if (logResponse && response.getBody() != null) {
+                        AppLog.debug("API 응답 상태: " + response.getStatusCode());
+                        AppLog.debug("API 응답 길이: " + (response.getBody() != null ? response.getBody().length() : 0));
+                        // 응답이 너무 길 수 있으므로 처음 일부분만 로깅
+                        if (response.getBody().length() > 500) {
+                            AppLog.debug("API 응답 내용 (처음 500자): " + response.getBody().substring(0, 500) + "...");
+                        } else {
+                            AppLog.debug("API 응답 내용: " + response.getBody());
+                        }
+                    }
+                    
+                    if (response.getStatusCode() == HttpStatus.OK) {
+                        return response.getBody();
+                    } else {
+                        throw new Exception("Gemini API 호출 실패: " + response.getStatusCode());
+                    }
+                } catch (Exception e) {
+                    lastException = e;
+                    attempts++;
+                    
+                    if (attempts < maxRetryAttempts) {
+                        AppLog.warn("Gemini API 호출 실패 (" + attempts + "/" + maxRetryAttempts + "), " + 
+                                  currentRetryInterval + "ms 후 재시도: " + e.getMessage());
+                        try {
+                            Thread.sleep(currentRetryInterval);
+                            // 백오프 간격 증가 (지수 백오프)
+                            currentRetryInterval *= 2;
+                        } catch (InterruptedException ie) {
+                            Thread.currentThread().interrupt();
+                            throw new Exception("재시도 대기 중 중단됨", ie);
+                        }
+                    }
+                }
             }
+            
+            // 모든 재시도 실패
+            AppLog.error("Gemini REST API 호출 실패 (" + attempts + "번 시도 후)", lastException);
+            throw new Exception("Gemini API 호출 중 오류가 발생했습니다 (" + attempts + "번 시도): " + 
+                             (lastException != null ? lastException.getMessage() : "알 수 없는 오류"), lastException);
             
         } catch (Exception e) {
             AppLog.error("Gemini REST API 호출 중 오류 발생", e);
