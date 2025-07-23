@@ -20,6 +20,9 @@ public class CodeAnalysisResultVo extends com.demo.proworks.cmmn.ProworksCommVO 
     @ElDtoField(logicalName = "타입ID", physicalName = "typeId", type = "Long", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
     private Long typeId;
 
+    @ElDtoField(logicalName = "사용자ID", physicalName = "userId", type = "Long", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private Long userId;
+
     @ElDtoField(logicalName = "분석결과", physicalName = "analysisResult", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
     private String analysisResult;
 
@@ -41,6 +44,9 @@ public class CodeAnalysisResultVo extends com.demo.proworks.cmmn.ProworksCommVO 
     @ElDtoField(logicalName = "언어", physicalName = "language", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
     private String language;
 
+    @ElDtoField(logicalName = "코멘트", physicalName = "comment", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private String comment;
+
     @ElVoField(physicalName = "analysisId")
     public Long getAnalysisId(){
         return this.analysisId;
@@ -59,6 +65,16 @@ public class CodeAnalysisResultVo extends com.demo.proworks.cmmn.ProworksCommVO 
     @ElVoField(physicalName = "typeId")
     public void setTypeId(Long typeId){
         this.typeId = typeId;
+    }
+
+    @ElVoField(physicalName = "userId")
+    public Long getUserId(){
+        return this.userId;
+    }
+
+    @ElVoField(physicalName = "userId")
+    public void setUserId(Long userId){
+        this.userId = userId;
     }
 
     @ElVoField(physicalName = "analysisResult")
@@ -131,19 +147,31 @@ public class CodeAnalysisResultVo extends com.demo.proworks.cmmn.ProworksCommVO 
         this.language = language;
     }
 
+    @ElVoField(physicalName = "comment")
+    public String getComment(){
+        return this.comment;
+    }
+
+    @ElVoField(physicalName = "comment")
+    public void setComment(String comment){
+        this.comment = comment;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("CodeAnalysisResultVo [");
         sb.append("analysisId").append("=").append(analysisId).append(",");
         sb.append("typeId").append("=").append(typeId).append(",");
+        sb.append("userId").append("=").append(userId).append(",");
         sb.append("analysisResult").append("=").append(analysisResult).append(",");
         sb.append("typeCode").append("=").append(typeCode).append(",");
         sb.append("developmentStyleScore").append("=").append(developmentStyleScore).append(",");
         sb.append("developerPreferenceScore").append("=").append(developerPreferenceScore).append(",");
-        sb.append("confidenceScore").append("=").append(confidenceScore);
-        sb.append("createdAt").append("=").append(createdAt);
+        sb.append("confidenceScore").append("=").append(confidenceScore).append(",");
+        sb.append("createdAt").append("=").append(createdAt).append(",");
         sb.append("language").append("=").append(language).append(",");
+        sb.append("comment").append("=").append(comment);
         sb.append("]");
         return sb.toString();
     }
