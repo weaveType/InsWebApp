@@ -56,4 +56,15 @@ public class CodeAnalysisDAO extends com.demo.proworks.cmmn.dao.ProworksDefaultA
     public int deleteCodeAnalysisResult(Long codeAnalysisId) throws ElException {
         return delete("com.demo.proworks.domain.codeanalysis.dao.CodeAnalysisDAO.deleteCodeAnalysisResult", codeAnalysisId);
     }
+    
+    /**
+     * 코드 분석 완료 시 users_mbti_types 테이블에 is_code_checked = 1로 업데이트
+     * 
+     * @param userId 사용자 ID
+     * @return 업데이트 결과
+     * @throws ElException
+     */
+    public int upsertMbtiTypeForCode(Long userId) throws ElException {
+        return insert("com.demo.proworks.domain.codeanalysis.dao.CodeAnalysisDAO.upsertMbtiTypeForCode", userId);
+    }
 } 

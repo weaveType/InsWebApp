@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.demo.proworks.domain.survey">
+
+    <!-- 활성화된 설문 질문 목록 조회 -->
+    <select id="selectActiveQuestions" resultType="com.demo.proworks.domain.survey.vo.SurveyQuestionVo">
+        SELECT 
+            question_id AS questionId,
+            axis,
+            question_text AS questionText,
+            options,
+            is_active AS isActive
+        FROM survey_questions
+        WHERE is_active = 1 AND is_deleted = 0
+        ORDER BY question_id
+    </select>
+
+    <!-- 설문 응답 저장 -->
+    <insert id="insertSurveyResponse" parameterType="com.demo.proworks.domain.survey.vo.SurveyResponseVo" useGeneratedKeys="true" keyProperty="responseId">
+        INSERT INTO survey_responses (
+            user_id,
+            responses,
+            created_at,
+            updated_at
+        ) VALUES (
+            #{userId},
+            #{responses},
+            #{createdAt},
+            #{updatedAt}
+        )
+    </insert>
+
+    <!-- 설문 응답 업데이트 -->
+    <update id="updateSurveyResponse" parameterType="com.demo.proworks.domain.survey.vo.SurveyResponseVo">
+        UPDATE survey_responses
+        SET 
+            responses = #{responses},
+            updated_at = #{updatedAt}
+        WHERE user_id = #{userId}
+    </update>
+
+    <!-- 사용자의 최신 설문 응답 조회 -->
+    <select id="selectLatestResponse" parameterType="Long" resultType="com.demo.proworks.domain.survey.vo.SurveyResponseVo">
+        SELECT 
+            response_id AS responseId,
+            user_id AS userId,
+            responses,
+            created_at AS createdAt,
+            updated_at AS updatedAt
+        FROM survey_responses
+        WHERE user_id = #{userId} AND is_deleted = 0
+        ORDER BY created_at DESC 
+        LIMIT 1
+    </select>
+
+    <!-- MBTI 타입 정보 저장/업데이트 (UPSERT) -->
+    <insert id="upsertMbtiType" parameterType="com.demo.proworks.domain.survey.vo.MbtiCalculationResultVo">
+        INSERT INTO users_mbti_types (
+            user_id,
+            type_code,
+            A_Bscore,
+            R_Iscore,
+            S_Tscore,
+            D_Fscore,
+            is_mbti_checked,
+            is_code_checked,
+            analyed_at
+        ) VALUES (
+            #{userId},
+            #{typeCode},
+            #{ABScore},
+            #{RIScore},
+            #{STScore},
+            #{DFScore},
+            1,
+            (SELECT CASE 
+                WHEN EXISTS(SELECT 1 FROM code_analyses WHERE user_id = #{userId} AND is_deleted = 0) 
+                THEN 1 ELSE 0 
+            END),
+            NOW()
+        )
+        ON DUPLICATE KEY UPDATE
+            type_code = VALUES(type_code),
+            A_Bscore = VALUES(A_Bscore),
+            R_Iscore = VALUES(R_Iscore),
+            S_Tscore = VALUES(S_Tscore),
+            D_Fscore = VALUES(D_Fscore),
+            is_mbti_checked = 1,
+            is_code_checked = (SELECT CASE 
+                WHEN EXISTS(SELECT 1 FROM code_analyses WHERE user_id = #{userId} AND is_deleted = 0) 
+                THEN 1 ELSE is_code_checked 
+            END),
+            analyed_at = NOW()
+    </insert>
+
+    <!-- 사용자의 MBTI 타입 조회 -->
+    <select id="selectMbtiType" parameterType="Long" resultType="com.demo.proworks.domain.survey.vo.MbtiCalculationResultVo">
+        SELECT 
+            type_id AS typeId,
+            user_id AS userId,
+            type_code AS typeCode,
+            A_Bscore AS ABScore,
+            R_Iscore AS RIScore,
+            S_Tscore AS STScore,
+            D_Fscore AS DFScore,
+            is_mbti_checked AS isMbtiChecked,
+            is_code_checked AS isCodeChecked,
+            analyed_at AS analyzedAt
+        FROM users_mbti_types
+        WHERE user_id = #{userId} AND is_deleted = 0
+    </select>
+
+    <!-- 코드분석 존재 여부 확인 - 설문조사 선행 조건 체크용 -->
+    <select id="checkCodeAnalysisExists" parameterType="Long" resultType="java.util.HashMap">
+        SELECT 
+            ca.analysis_id,
+            ca.user_id,
+            ca.TYPE_CODE,
+            ca.created_at,
+            COUNT(*) as analysis_count
+        FROM code_analyses ca
+        WHERE ca.user_id = #{userId} AND ca.is_deleted = 0
+        GROUP BY ca.user_id
+        HAVING COUNT(*) > 0
+    </select>
+    
+    <!-- 코드 분석 점수 조회 (설문조사와 통합 계산용) -->
+    <select id="selectCodeAnalysisScores" parameterType="Long" resultType="java.util.HashMap">
+        SELECT 
+            development_style_score,
+            developer_preference_score,
+            confidence_score
+        FROM code_analyses
+        WHERE user_id = #{userId} AND is_deleted = 0
+        ORDER BY created_at DESC
+        LIMIT 1
+    </select>
+
+    <!-- 설문조사 응답 존재 여부 확인 -->
+    <select id="checkSurveyResponseExists" parameterType="Long" resultType="java.util.HashMap">
+        SELECT 
+            response_id,
+            user_id,
+            created_at
+        FROM survey_responses
+        WHERE user_id = #{userId} AND is_deleted = 0
+        LIMIT 1
+    </select>
+    
+    <!-- 최신 설문조사 응답 조회 -->
+    <select id="selectLatestSurveyResponse" parameterType="Long" resultType="java.util.HashMap">
+        SELECT 
+            response_id,
+            user_id,
+            responses,
+            created_at,
+            updated_at
+        FROM survey_responses
+        WHERE user_id = #{userId} AND is_deleted = 0
+        ORDER BY created_at DESC
+        LIMIT 1
+    </select>
+    
+    <!-- users_mbti_types의 is_code_checked 상태 업데이트 -->
+    <update id="updateCodeCheckedStatus" parameterType="java.util.HashMap">
+        UPDATE users_mbti_types 
+        SET is_code_checked = #{isCodeChecked},
+            analyed_at = NOW()
+        WHERE user_id = #{userId}
+    </update>
+    
+    <!-- 코드 분석 완료 시 users_mbti_types 로우 생성/업데이트 -->
+    <insert id="upsertMbtiTypeForCode" parameterType="Long">
+        INSERT INTO users_mbti_types (
+            user_id,
+            is_code_checked,
+            analyed_at
+        ) VALUES (
+            #{userId},
+            1,
+            NOW()
+        )
+        ON DUPLICATE KEY UPDATE
+            is_code_checked = 1,
+            analyed_at = NOW()
+    </insert>
+
+</mapper> 

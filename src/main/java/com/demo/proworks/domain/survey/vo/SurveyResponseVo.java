@@ -33,12 +33,12 @@ public class SurveyResponseVo extends com.demo.proworks.cmmn.ProworksCommVO {
     private String responses;
     
     /** 생성일시 */
-    @ElDtoField(logicalName = "생성일시", physicalName = "createAt", type = "Timestamp", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "응답 생성 일시", attr = "")
-    private Timestamp createAt;
+    @ElDtoField(logicalName = "생성일시", physicalName = "createdAt", type = "Timestamp", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "응답 생성 일시", attr = "")
+    private Timestamp createdAt;
     
     /** 수정일시 */
-    @ElDtoField(logicalName = "수정일시", physicalName = "updateAt", type = "Timestamp", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "응답 수정 일시", attr = "")
-    private Timestamp updateAt;
+    @ElDtoField(logicalName = "수정일시", physicalName = "updatedAt", type = "Timestamp", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "응답 수정 일시", attr = "")
+    private Timestamp updatedAt;
 
     @ElVoField(physicalName = "responseId")
     public Long getResponseId() {
@@ -71,24 +71,24 @@ public class SurveyResponseVo extends com.demo.proworks.cmmn.ProworksCommVO {
         this.responses = responses;
     }
 
-    @ElVoField(physicalName = "createAt")
-    public Timestamp getCreateAt() {
-        return createAt;
+    @ElVoField(physicalName = "createdAt")
+    public Timestamp getCreatedAt() {
+        return createdAt;
     }
 
-    @ElVoField(physicalName = "createAt")
-    public void setCreateAt(Timestamp createAt) {
-        this.createAt = createAt;
+    @ElVoField(physicalName = "createdAt")
+    public void setCreatedAt(Timestamp createdAt) {
+        this.createdAt = createdAt;
     }
 
-    @ElVoField(physicalName = "updateAt")
-    public Timestamp getUpdateAt() {
-        return updateAt;
+    @ElVoField(physicalName = "updatedAt")
+    public Timestamp getUpdatedAt() {
+        return updatedAt;
     }
 
-    @ElVoField(physicalName = "updateAt")
-    public void setUpdateAt(Timestamp updateAt) {
-        this.updateAt = updateAt;
+    @ElVoField(physicalName = "updatedAt")
+    public void setUpdatedAt(Timestamp updatedAt) {
+        this.updatedAt = updatedAt;
     }
 
     @Override
@@ -98,8 +98,8 @@ public class SurveyResponseVo extends com.demo.proworks.cmmn.ProworksCommVO {
         sb.append("responseId").append("=").append(responseId).append(",");
         sb.append("userId").append("=").append(userId).append(",");
         sb.append("responses").append("=").append(responses).append(",");
-        sb.append("createAt").append("=").append(createAt).append(",");
-        sb.append("updateAt").append("=").append(updateAt);
+        sb.append("createdAt").append("=").append(createdAt).append(",");
+        sb.append("updatedAt").append("=").append(updatedAt);
         sb.append("]");
         return sb.toString();
     }
