@@ -513,7 +513,8 @@ scwin.initTechStackFilter = function () {
     // 기술스택 목록 정렬
     techStackList.sort();
 
-    // MultiSelectBox에 옵션 추가
+    // checkcombobox에 옵션 추가
+    // msb_techStackFilter.clear(); // 기존 아이템 초기화
     for (var k = 0; k < techStackList.length; k++) {
         msb_techStackFilter.addItem(techStackList[k], techStackList[k]);
     }
@@ -522,8 +523,18 @@ scwin.initTechStackFilter = function () {
 // 기술스택 필터 적용 함수
 scwin.applyTechStackFilter = function () {
     var selectedTechStacks = msb_techStackFilter.getValue();
+    console.log("selectedTechStacks from checkcombobox:", selectedTechStacks);
 
-    if (!selectedTechStacks || selectedTechStacks === "") {
+    var selectedArray = [];
+    if (typeof selectedTechStacks === 'string' && selectedTechStacks !== "") {
+        selectedArray = selectedTechStacks.split(",").map(function(item) { return item.trim().toLowerCase(); });
+    } else if (Array.isArray(selectedTechStacks)) {
+        selectedArray = selectedTechStacks.map(function(item) { return item.trim().toLowerCase(); });
+    }
+    // Convert selectedArray to a Set for efficient lookups
+    var selectedTechSet = new Set(selectedArray);
+
+    if (selectedTechSet.size === 0) {
         // 선택된 기술스택이 없으면 모든 행 표시
         var rowCount = dlt_scoutListVo.getRowCount();
         for (var i = 0; i < rowCount; i++) {
@@ -532,8 +543,6 @@ scwin.applyTechStackFilter = function () {
         return;
     }
 
-    // 선택된 기술스택 배열
-    var selectedArray = selectedTechStacks.split(",");
     var dataList = dlt_scoutListVo;
     var rowCount = dataList.getRowCount();
 
@@ -543,18 +552,17 @@ scwin.applyTechStackFilter = function () {
         var showRow = false;
 
         if (techStackData && techStackData.trim() !== "") {
-            var rowTechStacks = techStackData.split(",");
+            // Prepare rowTechStacks: split, trim, and lowercase all at once
+            var rowTechStacks = techStackData.split(",").map(function(item) { return item.trim().toLowerCase(); });
+            // Convert rowTechStacks to a Set for efficient lookups
+            var rowTechSet = new Set(rowTechStacks);
 
-            // 선택된 기술스택 중 하나라도 포함되어 있으면 표시
-            for (var j = 0; j < selectedArray.length; j++) {
-                var selectedTech = selectedArray[j].trim();
-                for (var k = 0; k < rowTechStacks.length; k++) {
-                    if (rowTechStacks[k].trim() === selectedTech) {
-                        showRow = true;
-                        break;
-                    }
+            // Check if any selected tech stack is present in the row's tech stacks
+            for (let selectedTech of selectedTechSet) {
+                if (rowTechSet.has(selectedTech)) {
+                    showRow = true;
+                    break; // Found a match, no need to check other selectedTechs for this row
                 }
-                if (showRow) break;
             }
         }
 
@@ -569,7 +577,7 @@ scwin.applyTechStackFilter = function () {
 
 // 기술스택 필터 초기화 버튼 (선택사항)
 scwin.btn_resetFilter_onclick = function () {
-    msb_techStackFilter.setText("");
+    msb_techStackFilter.setValue(""); // checkcombobox의 선택 초기화
     var rowCount = dlt_scoutListVo.getRowCount();
     for (var i = 0; i < rowCount; i++) {
         gridView1.setRowVisible(i, true);
@@ -645,10 +653,9 @@ scwin.btn_resetFilter_onclick = function () {
 								</xf:item>
 							</xf:choices>
 						</xf:select1>
-						<xf:select id="msb_techStackFilter" appearance="minimal" style="width: 150px;height: 64px;" class=""
-							ev:onviewchange="scwin.applyTechStackFilter">
-						</xf:select>
-						<xf:select id="" appearance="minimal" style="width: 150px;height: 64px;"></xf:select>
+						<w2:checkcombobox id="msb_techStackFilter" appearance="minimal" style="width: 150px;height: 32px;" class=""
+							chooseOption="true" chooseOptionLabel="기술스택 선택" ev:onchange="scwin.applyTechStackFilter">
+						</w2:checkcombobox>
 					</xf:group>
 
 					<xf:group class="button-group" style="display:flex; align-items:center; gap:10px;">
