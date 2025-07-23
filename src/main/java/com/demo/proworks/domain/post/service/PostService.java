@@ -9,6 +9,8 @@ import com.demo.proworks.domain.post.vo.JobApplicationVo;
 import com.demo.proworks.domain.post.vo.MainPostingListVo;
 import com.demo.proworks.domain.post.vo.PostMatchVo;
 import com.demo.proworks.domain.post.vo.PostVo;
+import com.demo.proworks.domain.post.vo.ScoutListVo;
+import com.demo.proworks.domain.post.vo.ScoutSearchVo;
 import com.demo.proworks.domain.post.vo.ScoutUserVo;
 import com.demo.proworks.domain.post.vo.SendEmailVo;
 import com.demo.proworks.domain.post.vo.TechStackVo;
@@ -180,18 +182,36 @@ public interface PostService {
 	/**
 	 * 유저가 지원한 공고를 가져온다.
 	 * 
-	 * @param 	pageIndex 페이지번호, pageSize	페이지크기, userId 사용자ID, applicationStatus 이력서 상태				
+	 * @param pageIndex 페이지번호, pageSize 페이지크기, userId 사용자ID, applicationStatus 이력서
+	 *                  상태
+	 * @return jobPostingId 공고 ID, name 회사명, title 공고명, experienceLevel 경력,
+	 *         preferredDeveloperTypes MBTI_JSON_LIST
+	 * @throws Exception
+	 */
+	public List<ApplicationListVo> getApplicationHistoryList(ApplicationSearchVo applicationSearchVo) throws Exception;
+
+	/**
+	 * 유저에게 매칭신청을 한 공고를 가져온다.
+	 *
+	 * @param 	pageIndex 페이지번호, pageSize	페이지크기, userId 사용자ID
 	 * @return 	jobPostingId 공고 ID, name 회사명, title 공고명, experienceLevel 경력, preferredDeveloperTypes MBTI_JSON_LIST
 	 * @throws 	Exception							
 	 */
-	public List<ApplicationListVo> getApplicationHistoryList(ApplicationSearchVo applicationSearchVo) throws Exception;
-  
-  /*
+	public List<ScoutListVo> selectScoutCompany(ScoutSearchVo scoutSearchVo) throws Exception;
+	
+	
+		/*
 	 * 사용자의 특정 공고 지원 상태를 확인한다.
-	 * 
+	 *
+	 * @process 1. JobApplicationVo를 생성하여 파라미터 설정 2. DAO를 통해 지원 여부 확인 3. 결과 반환 (0:
+	 * 지원하지 않음, 1 이상: 지원함)
+	 *
 	 * @param jobPostingId 공고 ID
-	 * @param accountId 사용자 계정 ID  
+	 * 
+	 * @param accountId 사용자 계정 ID
+	 * 
 	 * @return 지원 여부 (true: 지원함, false: 지원하지 않음)
+	 * 
 	 * @throws Exception
 	 */
 	public boolean checkApplicationStatus(int jobPostingId, int accountId) throws Exception;

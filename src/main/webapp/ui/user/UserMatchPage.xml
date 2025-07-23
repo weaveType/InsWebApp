@@ -1,331 +1,406 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<html xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:ev="http://www.w3.org/2001/xml-events"
-    xmlns:w2="http://www.inswave.com/websquare" 
-    xmlns:xf="http://www.w3.org/2002/xforms">
-    
-    <head meta_screenName="매칭제안">
-        <w2:type>COMPONENT</w2:type>
-        <w2:buildDate/>
-        <w2:MSA/>
-        <xf:model>
-            <w2:dataCollection baseNode="map">
-            	<w2:dataList baseNode="list" repeatNode="map" id="dlt_matchOffers" saveRemovedData="true">
-            		<w2:columnInfo>
-            			<w2:column id="company" name="회사명" dataType="text"></w2:column>
-            			<w2:column id="jobTitle" name="공고제목" dataType="text"></w2:column>
-            			<w2:column id="position" name="포지션" dataType="text"></w2:column>
-            			<w2:column id="location" name="근무지역" dataType="text"></w2:column>
-            			<w2:column id="salary" name="연봉" dataType="text"></w2:column>
-            			<w2:column id="experience" name="경력" dataType="text"></w2:column>
-            			<w2:column id="status" name="상태" dataType="text"></w2:column>
-            			<w2:column id="logo" name="로고" dataType="text"></w2:column>
-            			<w2:column id="jobPostingId" name="공고ID" dataType="text"></w2:column>
-            			<w2:column id="companyId" name="회사ID" dataType="text"></w2:column>
-            		</w2:columnInfo>
-            	</w2:dataList>
-            	<w2:dataMap baseNode="map" id="dataMap1">
-            		<w2:keyInfo></w2:keyInfo>
-            	</w2:dataMap>
-            </w2:dataCollection>
-        </xf:model>
-        <w2:layoutInfo/>
-        <w2:publicInfo method=""/>
-        
-        <style type="text/css"><![CDATA[
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare"
+	xmlns:xf="http://www.w3.org/2002/xforms">
 
+	<head meta_screenName="매칭제안">
+		<w2:type>COMPONENT</w2:type>
+		<w2:buildDate />
+		<w2:MSA />
+		<xf:model>
+			<w2:dataCollection baseNode="map">
+				<w2:dataList baseNode="list" repeatNode="map" id="dlt_scoutListVo" saveRemovedData="true">
+					<w2:columnInfo>
+						<w2:column id="name" name="회사명" dataType="text"></w2:column>
+						<w2:column id="jobPostingId" name="공고ID" dataType="number"></w2:column>
+						<w2:column dataType="text" name="공고명" id="title"></w2:column>
+						<w2:column dataType="text" name="경력" id="experienceLevel"></w2:column>
+						<w2:column dataType="text" name="MBTI List" id="preferredDeveloperTypes"></w2:column>
+					</w2:columnInfo>
+				</w2:dataList>
+				<w2:dataMap baseNode="map" id="dmp_searchParam">
+					<w2:keyInfo>
+						<w2:key id="pageIndex" name="페이지번호" dataType="number"></w2:key>
+						<w2:key id="pageSize" name="페이지크기" dataType="number"></w2:key>
+						<w2:key id="userId" name="사용자ID" dataType="number"></w2:key>
+						<w2:key id="scoutStatus" name="상태" dataType="text"></w2:key>
+					</w2:keyInfo>
+				</w2:dataMap>
+			</w2:dataCollection>
+			<xf:submission id="sbm_scoutList" action="/InsWebApp/POS0008List.pwkjson" method="post"
+				mediatype="application/json" ref='data:json,{"id":"dmp_searchParam", "key":"scoutSearchVo"}'
+				target='data:json,{"id":"dlt_scoutListVo", "key":"scoutListVoList"}' encoding="UTF-8" instance="" replace="" errorHandler=""
+				customHandler="" mode="asynchronous" processMsg="매칭을 원하는 기업 조회중..." ev:submit="" ev:submitdone="scwin.sbm_scoutList_submitdone"
+				ev:submiterror="scwin.sbm_scoutList_submiterror" abortTrigger="">
+			</xf:submission>
+		</xf:model>
+		<w2:layoutInfo />
+		<w2:publicInfo method="" />
+
+		<style type="text/css"><![CDATA[
+
+            .main-wrap {
+                width: 100%;
+                background-color: #ffffff;
+                font-family: "Malgun Gothic", "맑은 고딕", sans-serif;
+            }
+            
+            /* 메인 레이아웃 */
+            .main-container {
+                display: flex;
+                min-height: calc(100vh - 70px);
+                max-width: 1400px;
+                margin: 0 auto;
+                background-color: #f8f9fa;
+            }
+
+            /* 메인 콘텐츠 */
+            .main-content {
+                flex: 1;
+                padding: min(30px, 4vw);
+                overflow-y: auto;
+            }
+
+            /* 페이지 헤더 */
+            .page-header {
+                margin-bottom: 30px;
+            }
+
+            .page-info h1 {
+                font-size: 28px;
+                font-weight: bold;
+                color: #333;
+                margin-bottom: 8px;
+            }
+
+            .page-description {
+                color: #666;
+                font-size: 16px;
+            }
+
+            /* 반응형 디자인 */
+            @media (max-width: 1024px) {
+            }
+
+            @media (max-width: 768px) {
+            }
+
+            /* 빈 상태 */
+            .empty-state {
+                text-align: center;
+                padding: 60px 20px;
+                color: #999;
+            }
+
+            .empty-state .empty-icon {
+                font-size: 48px;
+                margin-bottom: 16px;
+                display: block;
+            }
+
+            .empty-state .empty-text {
+                font-size: 16px;
+                margin-bottom: 8px;
+            }
+
+            .empty-state .empty-subtext {
+                font-size: 14px;
+                color: #ccc;
+            }   
+
+            /* 개발자 성향 태그 스타일 */
+            .dev-type-tag-container {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 5px;
+                margin-top: 10px;
+            }
+
+            .dev-type-tag {
+                background-color: #e0f7fa; /* Light cyan background */
+                color: #00796b; /* Dark cyan text */
+                padding: 5px 10px;
+                border-radius: 15px;
+                font-size: 12px;
+                font-weight: 500;
+                white-space: nowrap;
+                border: 1px solid #b2ebf2;
+            }
+
+            /* 반응형 처리 */
+            @media (max-width: 768px) {
+                .scout-row {
+                    padding: 15px !important;
+                    margin-bottom: 10px !important;
+                }
+                
+                .scout-row span {
+                    font-size: 14px !important;
+                }
+            }
         ]]></style>
-        
-        <script lazy="false" type="text/javascript"><![CDATA[
-scwin.onpageload = function() {
-    // 페이지 로드 시 통계 계산 및 카드 렌더링
-    scwin.calculateStats();
-    scwin.applyStatusClasses();
-    scwin.setupFilterTabs();
+
+		<script lazy="false" type="text/javascript"><![CDATA[
+scwin.onpageload = function () {
+    scwin.init();
 };
 
-// 통계 계산
-scwin.calculateStats = function() {
-    var totalCount = dlt_matchOffers.getRowCount();
-    var newCount = 0;
-    var viewedCount = 0;
-    var interestedCount = 0;
-    
-    for (var i = 0; i < totalCount; i++) {
-        var status = dlt_matchOffers.getCellData(i, "status");
-        if (status === "NEW") {
-            newCount++;
-        } else if (status === "VIEWED") {
-            viewedCount++;
-        } else if (status === "INTERESTED") {
-            interestedCount++;
-        }
+// 초기화 함수
+scwin.init = function () {
+    // 검색 조건 초기화
+    dmp_searchParam.set("pageIndex", 1);
+    dmp_searchParam.set("pageSize", 10);
+
+    // cookie에서 accountId 가져오기
+    scwin.userInfo = $p.parent().dma_userInfoVo.getJSON();
+    if (scwin.userInfo && scwin.userInfo.accountId) {
+        dmp_searchParam.set("userId", scwin.userInfo.accountId);
     }
-    
-    // 통계 표시
-    setTimeout(function() {
-        var totalElement = document.getElementById('totalMatches');
-        var newElement = document.getElementById('newMatches');
-        var viewedElement = document.getElementById('viewedMatches');
-        var interestedElement = document.getElementById('interestedMatches');
-        
-        if (totalElement) totalElement.textContent = totalCount;
-        if (newElement) newElement.textContent = newCount;
-        if (viewedElement) viewedElement.textContent = viewedCount;
-        if (interestedElement) interestedElement.textContent = interestedCount;
-    }, 100);
+
+    // 지원현황 목록 조회
+    $c.sbm.execute($p, sbm_scoutList);
+};
+
+// pageFrame에서 즉시 실행
+scwin.init();
+
+// 지원현황 데이터를 generator에 바인딩하는 함수
+scwin.bindScoutData = function () {
+    // 기존 내용 제거
+    gen_scouts.removeAll();
+
+
+    // DataList에서 데이터 가져오기
+    var rowCount = dlt_scoutListVo.getRowCount();
+
+    if (rowCount === 0) {
+        console.log("지원현황 데이터가 없습니다.");
+        return;
+    }
+
+    for (var i = 0; i < rowCount; i++) {
+        // 새로운 아이템 추가
+        gen_scouts.insertChild();
+
+        // 데이터 가져오기
+        var name = dlt_scoutListVo.getCellData(i, "name") || "";
+        var title = dlt_scoutListVo.getCellData(i, "title") || "";
+        var experienceLevel = dlt_scoutListVo.getCellData(i, "experienceLevel") || "";
+        var preferredDeveloperTypesRaw = dlt_scoutListVo.getCellData(i, "preferredDeveloperTypes") || "";
+
+        // 각 컴포넌트에 값 설정
+        var txt_company_name = gen_scouts.getChild(i, "txt_company_name");
+        var txt_job_title = gen_scouts.getChild(i, "txt_job_title");
+        var txt_experience_level = gen_scouts.getChild(i, "txt_experience_level");
+
+        if (txt_company_name) txt_company_name.setValue(name);
+        if (txt_job_title) txt_job_title.setValue(title);
+        if (txt_experience_level) txt_experience_level.setValue(experienceLevel);
+
+        function escapeHtml(text) {
+            var div = document.createElement('xf:group');
+            div.appendChild(document.createTextNode(text));
+            return div.innerHTML;
+        }
+
+        // MBTI 태그 처리 로직
+        try {
+            var preferredDeveloperTypes = JSON.parse(preferredDeveloperTypesRaw || '[]');
+            for (var j = 1; j <= 4; j++) {
+                var tag = gen_scouts.getChild(i, "tag" + j);
+                if (j <= preferredDeveloperTypes.length) {
+                    tag.setValue(escapeHtml(preferredDeveloperTypes[j - 1])); // Apply escaping here
+                    tag.show();
+                } else {
+                    tag.hide();
+                }
+            }
+        } catch (err) {
+            console.error("preferredDeveloperTypes 파싱 오류: ", preferredDeveloperTypesRaw, err);
+            // 파싱 실패 시 모든 태그 숨김
+            for (var j = 1; j <= 4; j++) {
+                gen_scouts.getChild(i, "tag" + j).hide();
+            }
+        }
+
+        console.log("바인딩 완료 - 행:", i, "회사명:", name, "공고명:", title);
+    }
+};
+
+// 지원현황 목록 조회 오류
+scwin.sbm_scoutList_submiterror = function (e) {
+    console.error("지원현황 조회 실패:", e);
+    alert("지원현황을 불러오는데 실패했습니다.");
+};
+
+// 필터링
+scwin.filterscouts = function (status) {
+    // 검색 조건 설정
+    if (status !== '') {
+        dmp_searchParam.set("scoutStatus", status);
+    } else {
+        dmp_searchParam.set("scoutStatus", '');
+    }
+
+    // 지원현황 목록 재조회
+    $c.sbm.execute($p, sbm_scoutHistoryList);
 };
 
 // 상태별 클래스 적용
-scwin.applyStatusClasses = function() {
-    var totalCount = dlt_matchOffers.getRowCount();
-    
-    setTimeout(function() {
-        var cards = document.querySelectorAll('.match-card');
+scwin.applyStatusClasses = function () {
+    var totalCount = dlt_scoutListVo.getRowCount();
+
+    setTimeout(function () {
+        var cards = document.querySelectorAll('.scout-card');
         var statusBadges = document.querySelectorAll('.status-badge');
-        
+
         for (var i = 0; i < cards.length && i < totalCount; i++) {
-            var status = dlt_matchOffers.getCellData(i, "status");
+            var experienceLevel = dlt_scoutListVo.getCellData(i, "experienceLevel");
             var card = cards[i];
             var badge = statusBadges[i];
-            
-            // 카드 클래스 적용
-            if (status === "NEW") {
-                card.classList.add('new');
-                if (badge) {
-                    badge.className = 'status-badge status-new';
-                    badge.textContent = 'NEW';
-                }
-            } else if (status === "VIEWED") {
-                card.classList.add('viewed');
-                if (badge) {
-                    badge.className = 'status-badge status-viewed';
-                    badge.textContent = '확인함';
-                }
-            } else if (status === "INTERESTED") {
-                card.classList.add('interested');
-                if (badge) {
-                    badge.className = 'status-badge status-interested';
-                    badge.textContent = '관심표시';
-                }
+
+            if (experienceLevel === "신입" || experienceLevel === "경력무관") {
+                card.classList.add('pending');
+                if (badge) badge.className = 'status-badge status-pending';
+            } else if (experienceLevel === "경력") {
+                card.classList.add('accepted');
+                if (badge) badge.className = 'status-badge status-accepted';
+            } else {
+                card.classList.add('rejected');
+                if (badge) badge.className = 'status-badge status-rejected';
             }
         }
     }, 100);
 };
 
-// 필터 탭 설정
-scwin.setupFilterTabs = function() {
-    setTimeout(function() {
-        var tabs = document.querySelectorAll('.filter-tab');
-        if (tabs.length > 0) {
-            tabs[0].classList.add('active');
-        }
-    }, 100);
-};
+// 지원현황 상세보기
+scwin.showScoutDetail = function (rowIndex) {
+    var name = dlt_scoutListVo.getCellData(rowIndex, "name");
+    var title = dlt_scoutListVo.getCellData(rowIndex, "title");
+    var experienceLevel = dlt_scoutListVo.getCellData(rowIndex, "experienceLevel");
+    var preferredDeveloperTypes = dlt_scoutListVo.getCellData(rowIndex, "preferredDeveloperTypes");
+    var jobPostingId = dlt_scoutListVo.getCellData(rowIndex, "jobPostingId");
 
-// 필터링
-scwin.filterMatches = function(type) {
-    // 모든 탭에서 active 클래스 제거
-    var tabs = document.querySelectorAll('.filter-tab');
-    tabs.forEach(function(tab) {
-        tab.classList.remove('active');
-    });
-    
-    // 클릭된 탭에 active 클래스 추가
-    event.target.classList.add('active');
-    
-    // 카드 필터링
-    var cards = document.querySelectorAll('.match-card');
-    var totalCount = dlt_matchOffers.getRowCount();
-    
-    for (var i = 0; i < cards.length && i < totalCount; i++) {
-        var card = cards[i];
-        var status = dlt_matchOffers.getCellData(i, "status");
-        var shouldShow = false;
-        
-        switch(type) {
-            case 'all':
-                shouldShow = true;
-                break;
-            case 'new':
-                shouldShow = (status === "NEW");
-                break;
-            case 'viewed':
-                shouldShow = (status === "VIEWED");
-                break;
-            case 'interested':
-                shouldShow = (status === "INTERESTED");
-                break;
-        }
-        
-        card.style.display = shouldShow ? 'block' : 'none';
+    var detailMessage = "=== 지원 상세 정보 ===\n\n";
+    detailMessage += "회사명: " + name + "\n";
+    detailMessage += "공고명: " + title + "\n";
+    detailMessage += "경력요구사항: " + experienceLevel + "\n";
+    detailMessage += "선호 개발자 유형: " + preferredDeveloperTypes + "\n";
+    detailMessage += "\n해당 공고 페이지로 이동하시겠습니까?";
+
+    if (confirm(detailMessage)) {
+        alert("공고 ID " + jobPostingId + " 페이지로 이동합니다.");
     }
 };
 
-// 매칭제안 상세보기
-scwin.viewMatchDetail = function(rowIndex) {
-    var company = dlt_matchOffers.getCellData(rowIndex, "company");
-    var jobTitle = dlt_matchOffers.getCellData(rowIndex, "jobTitle");
-    var position = dlt_matchOffers.getCellData(rowIndex, "position");
-    var location = dlt_matchOffers.getCellData(rowIndex, "location");
-    var salary = dlt_matchOffers.getCellData(rowIndex, "salary");
-    var experience = dlt_matchOffers.getCellData(rowIndex, "experience");
-    var postId = dlt_matchOffers.getCellData(rowIndex, "postId");
-    
-    // 상태를 VIEWED로 변경
-    dlt_matchOffers.setCellData(rowIndex, "status", "VIEWED");
-    
-    // 공고 상세 페이지로 이동 (실제로는 해당 페이지로 이동)
-    var detailMessage = "=== 매칭 제안 상세 정보 ===\n\n";
-    detailMessage += "회사명: " + company + "\n";
-    detailMessage += "공고제목: " + jobTitle + "\n";
-    detailMessage += "포지션: " + position + "\n";
-    detailMessage += "근무지역: " + location + "\n";
-    detailMessage += "연봉: " + salary + "\n";
-    detailMessage += "경력: " + experience + "\n";
-    detailMessage += "\n해당 공고 페이지로 이동합니다.";
-    
-    alert(detailMessage);
-    
-    // 통계 재계산 및 UI 업데이트
-    scwin.calculateStats();
-    scwin.applyStatusClasses();
+// 지원현황 행 클릭 이벤트 핸들러
+scwin.handleScoutRowClick = function (e) {
+    var index = this.getGeneratedIndex();
+    if (typeof index === 'number' && index >= 0) {
+        scwin.showScoutDetail(index);
+    } else {
+        console.error("유효한 인덱스를 가져올 수 없습니다.");
+    }
 };
 
-// 지원하기
-scwin.applyToJob = function(rowIndex) {
-    var company = dlt_matchOffers.getCellData(rowIndex, "company");
-    var jobTitle = dlt_matchOffers.getCellData(rowIndex, "jobTitle");
-    var postId = dlt_matchOffers.getCellData(rowIndex, "postId");
-    
-    // 상태를 INTERESTED로 변경
-    dlt_matchOffers.setCellData(rowIndex, "status", "INTERESTED");
-    
-    var confirmMessage = company + "의 '" + jobTitle + "' 포지션에 지원하시겠습니까?";
-    
-    if (confirm(confirmMessage)) {
-        alert("지원이 완료되었습니다!");
-        
-        // 통계 재계산 및 UI 업데이트
-        scwin.calculateStats();
+scwin.sbm_scoutList_submitdone = function (e) {
+    try {
+        var res = e.responseJSON;
+        console.log("=== 전체 응답 데이터 ===", res);
+
+        if (res && res.scoutListVoList) {
+            console.log("=== scoutListVoList 데이터 ===", res.scoutListVoList);
+            console.log("=== 배열 길이 ===", res.scoutListVoList.length);
+
+            dlt_scoutListVo.setJSON(res.scoutListVoList);
+            console.log("=== dataList 설정 완료 ===");
+            console.log("=== dataList 행 수 ===", dlt_scoutListVo.getRowCount());
+
+            // 수동으로 generator에 데이터 바인딩
+            scwin.bindScoutData();
+
+            // 빈 상태 표시/숨김 처리
+            var emptyState = document.getElementById('empty_state');
+            if (res.scoutListVoList.length === 0) {
+                if (emptyState) emptyState.style.display = 'block';
+            } else {
+                if (emptyState) emptyState.style.display = 'none';
+            }
+        } else {
+            console.log("=== res 구조 ===", res);
+        }
+
+        // UI 업데이트
         scwin.applyStatusClasses();
-        
-        // 실제로는 지원 API 호출
+    } catch (err) {
+        console.error("지원현황 조회 오류:", err);
+        alert("지원현황 조회 중 오류가 발생했습니다.");
     }
-};
-
-// 매칭제안 카드 클릭 시 상세보기
-scwin.onMatchCardClick = function(rowIndex) {
-    scwin.viewMatchDetail(rowIndex);
-};
-
-// 검색 기능
-scwin.searchMatches = function(searchText) {
-    if (!searchText || searchText.trim() === "") {
-        scwin.filterMatches('all');
-        return;
-    }
-    
-    var cards = document.querySelectorAll('.match-card');
-    var totalCount = dlt_matchOffers.getRowCount();
-    
-    for (var i = 0; i < cards.length && i < totalCount; i++) {
-        var card = cards[i];
-        var company = dlt_matchOffers.getCellData(i, "company");
-        var jobTitle = dlt_matchOffers.getCellData(i, "jobTitle");
-        var position = dlt_matchOffers.getCellData(i, "position");
-        
-        var shouldShow = company.toLowerCase().includes(searchText.toLowerCase()) || 
-                        jobTitle.toLowerCase().includes(searchText.toLowerCase()) ||
-                        position.toLowerCase().includes(searchText.toLowerCase());
-        
-        card.style.display = shouldShow ? 'block' : 'none';
-    }
-};
-
-// 데이터 새로고침
-scwin.refreshData = function() {
-    // 실제 환경에서는 서버에서 데이터를 다시 가져오는 로직
-    scwin.calculateStats();
-    scwin.applyStatusClasses();
-    alert("새로운 매칭제안을 확인했습니다.");
 };
 ]]></script>
-    </head>
-    
-    <body ev:onpageload="scwin.onpageload">
-        <xf:group class="main-wrap">
+	</head>
 
-            <!-- 메인 컨테이너 -->
-            <xf:group class="main-container">
-                <!-- 메인 콘텐츠 -->
-                <main class="main-content">
-                    <!-- 매칭제안 페이지 헤더 -->
-                    <section class="page-header">
-                        <div class="page-info">                          <div class="page-details">
-                                <h1>매칭 제안</h1>
-                                <div class="page-description">기업에서 보낸 매칭 제안을 확인하고 관심있는 공고에 지원해보세요.</div>
-                            </div>
-                        </div>
-                    </section>
+	<body ev:onpageload="scwin.onpageload">
+		<xf:group class="main-wrap">
 
-                    <!-- 매칭제안 통계 -->
-                    <section class="stats-grid">
-                    </section>
+			<!-- 메인 컨테이너 -->
+			<xf:group class="main-container">
+				<!-- 사이드바 -->
 
-                    <!-- 필터 탭 -->
-                    <section class="filter-section">
-                    </section>
+				<!-- 메인 콘텐츠 -->
+				<main class="main-content">
+					<!-- 지원현황 페이지 헤더 -->
+					<section class="page-header">
+						<xf:group class="page-info">
+							<xf:group class="page-details">
+								<h1>매칭 현황</h1>
+								<xf:group class="page-description">해당 기업이 당신을 알아보고 싶어합니다.</xf:group>
+							</xf:group>
+						</xf:group>
+					</section>
 
-                    <!-- 매칭제안 카드들 -->
-                    <section class="matches-section">
-                        <div class="matches-grid">
-                            <w2:generator id="gen_matches" dataList="data:dlt_matchOffers" style="">
-                                <div class="match-card" onclick="scwin.onMatchCardClick(%%_rowIndex%%)">
-                                    <div class="status-badge"></div>
-                                    
-                                    <div class="card-header">
-                                        <div class="company-info">
-                                            <div class="company-logo">
-                                                <w2:textbox ref="data:dlt_matchOffers.logo"></w2:textbox>
-                                            </div>
-                                            <div class="company-details">
-                                                <div class="company-name">
-                                                    <w2:textbox ref="data:dlt_matchOffers.company"></w2:textbox>
-                                                </div>
-                                                <div class="job-title">
-                                                    <w2:textbox ref="data:dlt_matchOffers.jobTitle"></w2:textbox>
-                                                </div>
-                                                <div class="position-name">
-                                                    <w2:textbox ref="data:dlt_matchOffers.position"></w2:textbox>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="card-body">
-                                        <div class="info-item">
-                                            <div class="info-value">
-                                                <w2:textbox ref="data:dlt_matchOffers.location"></w2:textbox>
-                                            </div>
-                                        </div>
-                                        <div class="info-item">
-                                            <div class="info-value">
-                                                <w2:textbox ref="data:dlt_matchOffers.salary"></w2:textbox>
-                                            </div>
-                                        </div>
-                                        <div class="info-item">
-                                            <div class="info-value">
-                                                <w2:textbox ref="data:dlt_matchOffers.experience"></w2:textbox>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </w2:generator>
-                        </div>
-                    </section>
-                </main>
-            </xf:group>
-        </xf:group>
-    </body>
+					<!-- 필터 탭 -->
+					<section class="filter-section">
+					</section>
+
+					<!-- 지원현황 카드들 -->
+					<section class="scouts-section">
+						<xf:group class="scouts-grid">
+							<w2:generator id="gen_scouts" style="">
+								<xf:group
+									style="padding: 20px; margin-bottom: 15px; border: 1px solid #e8e8e8; border-radius: 8px; background-color: white; cursor: pointer;"
+									class="scout-row" ev:onclick="scwin.handlescoutRowClick">
+									<xf:group style="display: flex; align-items: center; font-size: 16px; color: #333; flex-wrap: wrap;">
+										<span style="font-weight: bold; color: #4285f4; margin-right: 8px;">
+											<w2:textbox id="txt_company_name"></w2:textbox>
+										</span>
+										<span style="margin-right: 8px;">에서 </span>
+										<span style="font-weight: 600; color: #333; margin-right: 8px; font-weight: bold;">
+											<w2:textbox id="txt_experience_level"></w2:textbox>
+										</span>
+										<span style="margin-right: 8px;"> 개발자를 찾는 </span>
+										<span style="font-weight: 600; color: #333; margin-right: 8px; font-weight: bold;">
+											<w2:textbox id="txt_job_title"></w2:textbox>
+										</span>
+										<span style="margin-right: 8px;"> 공고에서 당신을 스카웃하고 싶어 합니다.</span>
+									</xf:group>
+									<xf:group id="grp_tags_container" class="dev-type-tag-container" style="margin-top: 10px;">
+										<w2:textbox id="tag1" class="dev-type-tag" style="display:none;"></w2:textbox>
+										<w2:textbox id="tag2" class="dev-type-tag" style="display:none;"></w2:textbox>
+										<w2:textbox id="tag3" class="dev-type-tag" style="display:none;"></w2:textbox>
+										<w2:textbox id="tag4" class="dev-type-tag" style="display:none;"></w2:textbox>
+									</xf:group>
+								</xf:group>
+							</w2:generator>
+						</xf:group>
+
+						<!-- 데이터가 없을 때 표시할 메시지 -->
+						<xf:group class="empty-state" style="display: none;" id="empty_state">
+							<div class="empty-text">지원 내역이 없습니다.</div>
+							<div class="empty-subtext">공고에 지원하시면 여기에 표시됩니다.</div>
+						</xf:group>
+					</section>
+				</main>
+			</xf:group>
+		</xf:group>
+	</body>
 </html>

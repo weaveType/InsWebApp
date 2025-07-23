@@ -85,20 +85,23 @@
     </update>
 	
     <select id="selectPost" parameterType="com.demo.proworks.domain.post.vo.PostVo" resultType="com.demo.proworks.domain.post.vo.PostVo">
-    	<!-- 공고정보를 상세 조회한다. (회사명, 이미지 파일명 포함, 소프트 삭제된 공고 제외) -->	
+    	<!-- 공고정보를 상세 조회한다. (회사명, 이미지 파일명 포함, 소프트 삭제된 공고 제외, 마감일 기준 자동 상태 판정) -->
         SELECT     /* QueryID : com.demo.proworks.domain.post.selectPost */
-               p.JOB_POSTING_ID as jobPostingId, 
-               p.COMPANY_ID as companyId, 
-               p.TITLE as title, 
-               p.DESCRIPTION as description, 
-               p.EXPERIENCE_LEVEL as experienceLevel, 
-               p.SALARY_RANGE as salaryRange, 
-               p.LOCATION as location, 
-               p.WORK_TYPE as workType, 
-               p.PREFERRED_DEVELOPER_TYPES as preferredDeveloperTypes, 
-               p.EXPIRES_AT as expiresAt, 
-               p.POSTED_AT as postedAt, 
-               p.STATUS as status,
+               p.JOB_POSTING_ID as jobPostingId,
+               p.COMPANY_ID as companyId,
+               p.TITLE as title,
+               p.DESCRIPTION as description,
+               p.EXPERIENCE_LEVEL as experienceLevel,
+               p.SALARY_RANGE as salaryRange,
+               p.LOCATION as location,
+               p.WORK_TYPE as workType,
+               p.PREFERRED_DEVELOPER_TYPES as preferredDeveloperTypes,
+               p.EXPIRES_AT as expiresAt,
+               p.POSTED_AT as postedAt,
+               CASE
+                   WHEN p.EXPIRES_AT IS NOT NULL AND p.EXPIRES_AT &lt; NOW() THEN 'closed'
+                   ELSE p.STATUS
+               END as status,
                p.JOB_IMAGE_FILE_NAME as jobImageFileName,
                u.name as companyName,
                c.industry as industry,
@@ -110,24 +113,27 @@
         WHERE p.JOB_POSTING_ID = #{jobPostingId}
         AND (p.IS_DELETED IS NULL OR p.IS_DELETED = 0)
         AND (c.is_deleted IS NULL OR c.is_deleted = 0)
-			
+
     </select>
-	
+
     <select id="selectListPost" parameterType="com.demo.proworks.domain.post.vo.PostVo" resultType="com.demo.proworks.domain.post.vo.PostVo">
-    	<!-- 공고정보 목록을 조회한다. (회사명 포함, 소프트 삭제된 공고 제외) -->
+    	<!-- 공고정보 목록을 조회한다. (회사명 포함, 소프트 삭제된 공고 제외, 마감일 기준 자동 상태 판정) -->
            SELECT    /* QueryID : com.demo.proworks.domain.post.selectListPost */
-               p.JOB_POSTING_ID as jobPostingId, 
-               p.COMPANY_ID as companyId, 
-               p.TITLE as title, 
-               p.DESCRIPTION as description, 
-               p.EXPERIENCE_LEVEL as experienceLevel, 
-               p.SALARY_RANGE as salaryRange, 
-               p.LOCATION as location, 
-               p.WORK_TYPE as workType, 
-               p.PREFERRED_DEVELOPER_TYPES as preferredDeveloperTypes, 
-               p.EXPIRES_AT as expiresAt, 
-               p.POSTED_AT as postedAt, 
-               p.STATUS as status,
+               p.JOB_POSTING_ID as jobPostingId,
+               p.COMPANY_ID as companyId,
+               p.TITLE as title,
+               p.DESCRIPTION as description,
+               p.EXPERIENCE_LEVEL as experienceLevel,
+               p.SALARY_RANGE as salaryRange,
+               p.LOCATION as location,
+               p.WORK_TYPE as workType,
+               p.PREFERRED_DEVELOPER_TYPES as preferredDeveloperTypes,
+               p.EXPIRES_AT as expiresAt,
+               p.POSTED_AT as postedAt,
+               CASE
+                   WHEN p.EXPIRES_AT IS NOT NULL AND p.EXPIRES_AT &lt; NOW() THEN 'closed'
+                   ELSE p.STATUS
+               END as status,
                p.JOB_IMAGE_FILE_NAME as jobImageFileName,
                u.name as companyName,
                c.industry as industry,
@@ -378,13 +384,33 @@ LIMIT 3;
     <select id="getApplicationHistoryListCount" parameterType="com.demo.proworks.domain.user.vo.ApplicationHistoryVo" resultType="long">
 SELECT /* QueryID : com.demo.proworks.domain.post.getApplicationHistoryListCount */
 
+	</select>
+
+	<select id="selectScoutCompany" parameterType="com.demo.proworks.domain.post.vo.ScoutSearchVo"
+		resultType="com.demo.proworks.domain.post.vo.ScoutListVo">
+SELECT
+    sr.user_id as userId,
+    u_company.name as name,
+    p.preferred_developer_types as preferredDeveloperTypes,
+    p.title as title,
+    p.experience_level as experienceLevel,
+    p.job_posting_id as jobPostingId
+FROM scout_requests sr
+INNER JOIN posts p ON sr.job_posting_id = p.job_posting_id
+INNER JOIN companys c ON p.company_id = c.company_id
+INNER JOIN users u_company ON c.user_id = u_company.user_id
+WHERE sr.user_id = #{userId}
+AND p.status = 'active'
+AND (p.is_deleted IS NULL OR p.is_deleted = 0)
+AND (c.is_deleted IS NULL OR c.is_deleted = 0)
+ORDER BY sr.created_at DESC
 </select>
     <!-- 특정 사용자의 특정 공고 지원 여부 확인 -->
     <select id="selectApplicationCount" parameterType="com.demo.proworks.domain.post.vo.JobApplicationVo" resultType="int">
         <!-- 사용자의 특정 공고 지원 여부를 확인한다. -->
         SELECT COUNT(*) /* QueryID : com.demo.proworks.domain.post.selectApplicationCount */
-        FROM job_applications 
-        WHERE job_posting_id = #{jobPostingId} 
+        FROM job_applications
+        WHERE job_posting_id = #{jobPostingId}
           AND user_id = #{accountId}
           AND (application_status IS NULL OR application_status != 'DELETED')
     </select>

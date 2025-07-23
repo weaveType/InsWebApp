@@ -71,7 +71,6 @@ public class ProworksSessionDataAdapter extends SessionDataAdapter {
 			userHeader.setUserId(String.valueOf(resUserVo.getUserId()));
 			userHeader.setName(resUserVo.getName());
 			userHeader.setAccountId(resUserVo.getUserId());
-			System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> resUserVo : " + resUserVo.toString());
 			int roleId = resUserVo.getRoleId();
 			int userId = resUserVo.getUserId();
 			switch (roleId) {
