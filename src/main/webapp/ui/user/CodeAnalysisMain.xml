@@ -411,7 +411,7 @@
                                 '<span class="change-icon">✏️</span>' +
                             '</button>' +
                             '<button class="btn-remove" type="button" title="파일 삭제">' +
-                                '<span class="remove-icon">🗑️</span>' +
+                                '<span class="remove-icon">������️</span>' +
                             '</button>' +
                         '</div>';
                     
@@ -716,7 +716,7 @@
                     if (suggestions.length > 0) {
                         suggestionsHtml = '<ul class="suggestions-list">';
                         for (var i = 0; i < suggestions.length; i++) {
-                            suggestionsHtml += '<li class="suggestion-item"><span class="suggestion-icon">💡</span>' + suggestions[i] + '</li>';
+                            suggestionsHtml += '<li class="suggestion-item"><span class="suggestion-icon">������</span>' + suggestions[i] + '</li>';
                         }
                         suggestionsHtml += '</ul>';
                     } else {
@@ -796,7 +796,7 @@
                             '<div class="loading-overlay">' +
                                 '<div class="loading-content">' +
                                     '<div class="loading-spinner"></div>' +
-                                    '<div class="loading-text">🚀 분석 진행 중</div>' +
+                                    '<div class="loading-text">������ 분석 진행 중</div>' +
                                     '<div class="loading-subtext">AI가 빠르게 코드를 분석하고 있어요!</div>' +
                                 '</div>' +
                             '</div>';

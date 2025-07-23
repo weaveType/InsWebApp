@@ -72,64 +72,43 @@
         <style type="text/css"><![CDATA[
 /* 전체 컨테이너 스타일 */
 .main-container {
-    background-color: #f8fafc;
+    background-color: #ffffff;
     min-height: 100vh;
     padding: 40px 20px;
+    max-width: 500px;
+    margin: 0 auto;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
-.content-container {
-    max-width: 800px;
-    margin: 0 auto;
-    background-color: #ffffff;
-    border-radius: 16px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-    overflow: hidden;
-}
-
-/* 페이지 헤더 */
-.page-header {
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    color: white;
-    padding: 40px;
+/* 페이지 제목 스타일 */
+.page-title {
     text-align: center;
+    margin-bottom: 60px;
 }
 
 .main-title {
-    font-size: 32px;
+    font-size: 28px;
     font-weight: 700;
-    margin: 0 0 12px 0;
+    color: #333;
+    margin: 0;
+    letter-spacing: -0.5px;
 }
 
 .page-subtitle {
-    font-size: 16px;
-    opacity: 0.9;
-    margin: 0;
+    font-size: 14px;
+    color: #6b7280;
+    margin: 8px 0 0 0;
 }
 
-/* 폼 섹션 */
-.form-section {
-    padding: 40px;
-    border-bottom: 1px solid #e2e8f0;
+/* 폼 컨테이너 */
+.form-container {
+    width: 100%;
 }
 
-.form-section:last-child {
-    border-bottom: none;
-}
-
-.section-title {
-    font-size: 20px;
-    font-weight: 600;
-    color: #2d3748;
-    margin: 0 0 24px 0;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-/* 폼 요소들 */
+/* 폼 그룹 스타일 */
 .form-group {
-    margin-bottom: 24px;
+    margin-bottom: 32px;
+    position: relative;
 }
 
 .form-group.half {
@@ -146,52 +125,124 @@
     display: block;
     font-size: 16px;
     font-weight: 600;
-    color: #2d3748;
-    margin-bottom: 8px;
+    color: #333;
+    margin-bottom: 12px;
+    letter-spacing: -0.3px;
 }
 
+/* 필수 항목 표시 스타일 */
 .form-label.required::after {
     content: " *";
-    color: #e53e3e;
+    color: #dc2626;
+    font-weight: bold;
 }
 
-.form-input, .form-select, .form-textarea {
+/* 입력 필드 스타일 */
+.form-input {
     width: 100%;
-    padding: 12px 16px;
-    border: 2px solid #e2e8f0;
-    border-radius: 8px;
+    height: 56px;
+    padding: 0 16px;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
     font-size: 16px;
-    color: #2d3748;
+    color: #333;
     background-color: #ffffff;
-    transition: border-color 0.2s ease;
+    transition: all 0.2s ease;
     box-sizing: border-box;
 }
 
-.form-input:focus, .form-select:focus, .form-textarea:focus {
+.form-input:focus {
     outline: none;
-    border-color: #667eea;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
+.form-input::placeholder {
+    color: #9ca3af;
+    font-weight: 400;
+}
+
+/* 텍스트 영역 스타일 */
 .form-textarea {
-    height: 120px;
+    width: 100%;
+    min-height: 120px;
+    padding: 16px;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    font-size: 16px;
+    color: #333;
+    background-color: #ffffff;
+    font-family: inherit;
     resize: vertical;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+}
+
+.form-textarea:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.form-textarea::placeholder {
+    color: #9ca3af;
+    font-weight: 400;
 }
 
 /* 기술스택 관련 스타일 */
 .techstack-input-container {
     display: flex;
-    gap: 10px;
-    position: relative;
+    gap: 8px;
+    align-items: center;
 }
 
-/* 기술스택 그리드 - 빈 상태와 태그 표시 상태 모두 지원 */
+.techstack-input {
+    flex: 1;
+    height: 56px;
+    padding: 0 16px;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    font-size: 16px;
+    color: #333;
+    background-color: #ffffff;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+}
+
+.techstack-input:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.btn-add-techstack {
+    height: 56px;
+    padding: 0 20px;
+    border: 2px solid #3b82f6;
+    border-radius: 12px;
+    background-color: #3b82f6;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.btn-add-techstack:hover {
+    background-color: #2563eb;
+    border-color: #2563eb;
+}
+
+/* 기술스택 그리드 */
 .techstack-grid {
     min-height: 80px;
     padding: 20px;
-    border: 2px dashed #e2e8f0;
-    border-radius: 8px;
-    background: #f7fafc;
-    margin-bottom: 20px;
+    border: 2px dashed #d1d5db;
+    border-radius: 12px;
+    background: #f9fafb;
+    margin-top: 16px;
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
@@ -199,117 +250,38 @@
     align-content: flex-start;
 }
 
-/* 빈 상태일 때 중앙 정렬 */
 .techstack-grid.empty {
     justify-content: center;
     align-items: center;
     text-align: center;
 }
 
-.techstack-card {
-    padding: 12px 16px;
-    border: 2px solid #e2e8f0;
-    background: white;
-    border-radius: 8px;
-    text-align: center;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    min-height: 44px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.techstack-card:hover {
-    border-color: #667eea;
-    background-color: #f8fafc;
-}
-
-.techstack-card.selected {
-    background: #667eea;
-    border-color: #667eea;
-    color: white;
-}
-
-.techstack-card label {
+.empty-message {
+    color: #9ca3af;
     font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    margin: 0;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.techstack-suggestions {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 60px;
-    background: white;
-    border: 1px solid #e2e8f0;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    max-height: 200px;
-    overflow-y: auto;
-    z-index: 100;
-}
-
-.suggestion-item {
-    padding: 12px 16px;
-    cursor: pointer;
-    border-bottom: 1px solid #f7fafc;
-    transition: background-color 0.2s ease;
-}
-
-.suggestion-item:hover {
-    background-color: #f7fafc;
-}
-
-.suggestion-item:last-child {
-    border-bottom: none;
-}
-
-.btn-add-techstack {
-    height: 48px;
-    padding: 0 20px;
-    background: #667eea;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-weight: 600;
-    cursor: pointer;
-    white-space: nowrap;
-}
-
-.btn-add-techstack:hover {
-    background: #5a67d8;
+    line-height: 1.5;
+    text-align: center;
+    width: 100%;
 }
 
 /* 선택된 기술스택 태그 */
-.selected-techstack-container {
-    margin-top: 16px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-}
-
 .techstack-tag {
     display: inline-flex;
     align-items: center;
-    background: #e6fffa;
-    border: 1px solid #81e6d9;
-    color: #234e52;
-    padding: 6px 12px;
+    background: #eff6ff;
+    border: 1px solid #3b82f6;
+    color: #1e40af;
+    padding: 8px 12px;
     border-radius: 20px;
     font-size: 14px;
     gap: 8px;
+    font-weight: 500;
 }
 
 .techstack-remove-btn {
     background: none;
     border: none;
-    color: #234e52;
+    color: #1e40af;
     cursor: pointer;
     font-size: 16px;
     line-height: 1;
@@ -323,89 +295,106 @@
 }
 
 .techstack-remove-btn:hover {
-    background: rgba(35, 78, 82, 0.1);
+    background: rgba(30, 64, 175, 0.1);
 }
 
-.empty-message {
-    color: #718096;
+/* 자동완성 제안 */
+.techstack-suggestions {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 80px;
+    background: white;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 100;
+    margin-top: 4px;
+}
+
+.suggestion-item {
+    padding: 12px 16px;
+    cursor: pointer;
+    border-bottom: 1px solid #f3f4f6;
+    transition: background-color 0.2s ease;
     font-size: 14px;
-    line-height: 1.5;
-    text-align: center;
-    width: 100%;
+}
+
+.suggestion-item:hover {
+    background-color: #f3f4f6;
+}
+
+.suggestion-item:last-child {
+    border-bottom: none;
 }
 
 /* 성향 선택 버튼들 */
 .personality-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+    grid-template-columns: repeat(4, 1fr);
     gap: 8px;
     margin-top: 12px;
 }
 
 .personality-btn {
-    padding: 8px 12px;
-    border: 2px solid #e2e8f0;
+    padding: 12px 16px;
+    border: 2px solid #e5e7eb;
     background: white;
-    border-radius: 8px;
+    border-radius: 12px;
     font-size: 14px;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s ease;
     text-align: center;
+    min-height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .personality-btn:hover {
-    border-color: #667eea;
+    border-color: #3b82f6;
 }
 
 .personality-btn.selected {
-    background: #667eea;
-    border-color: #667eea;
+    background: #3b82f6;
+    border-color: #3b82f6;
     color: white;
 }
 
-.personality-counter {
-    position: absolute;
-    top: 0;
-    right: 0;
-    background: #667eea;
-    color: white;
-    padding: 4px 8px;
-    border-radius: 12px;
-    font-size: 12px;
-    font-weight: 600;
-}
-
-/* 업로드 관련 스타일 */
+/* 파일 업로드 스타일 */
 .upload-container {
-    border: 2px dashed #e2e8f0;
-    border-radius: 8px;
+    border: 2px dashed #d1d5db;
+    border-radius: 12px;
     padding: 20px;
-    background-color: #f8fafc;
+    background-color: #f9fafb;
     text-align: center;
     transition: all 0.2s ease;
 }
 
 .upload-container.file-selected {
-    border-color: #667eea;
-    background-color: #f0f8ff;
+    border-color: #3b82f6;
+    background-color: #eff6ff;
 }
 
 .upload-label {
     display: block;
     font-size: 14px;
-    color: #718096;
+    color: #6b7280;
     margin-bottom: 12px;
 }
 
+/* 업로드된 파일 정보 표시 */
 .file-info {
     margin-top: 8px;
     padding: 8px 12px;
-    background-color: #e6fffa;
-    border: 1px solid #81e6d9;
+    background-color: #f0f9ff;
+    border: 1px solid #0ea5e9;
     border-radius: 8px;
     font-size: 14px;
-    color: #234e52;
+    color: #0369a1;
     display: none;
 }
 
@@ -413,20 +402,44 @@
     display: block;
 }
 
+.file-name {
+    font-weight: 600;
+}
+
+/* 체크박스 스타일 */
+.checkbox-group {
+    margin: 40px 0;
+}
+
+.checkbox-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 16px;
+    font-size: 14px;
+    color: #333;
+}
+
+.checkbox-item input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    margin-right: 12px;
+    accent-color: #3b82f6;
+}
+
 /* 버튼 스타일 */
 .button-container {
     display: flex;
     gap: 12px;
-    margin-top: 40px;
+    margin-top: 60px;
 }
 
 .btn-cancel {
     flex: 1;
-    height: 48px;
-    border: 2px solid #e2e8f0;
-    border-radius: 8px;
+    height: 56px;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
     background-color: #ffffff;
-    color: #718096;
+    color: #6b7280;
     font-size: 16px;
     font-weight: 600;
     cursor: pointer;
@@ -434,16 +447,16 @@
 }
 
 .btn-cancel:hover {
-    border-color: #cbd5e0;
-    color: #4a5568;
+    border-color: #d1d5db;
+    color: #374151;
 }
 
 .btn-primary {
-    flex: 2;
-    height: 48px;
+    flex: 1;
+    height: 56px;
     border: none;
-    border-radius: 8px;
-    background: linear-gradient(135deg, #667eea, #764ba2);
+    border-radius: 12px;
+    background-color: #3b82f6;
     color: #ffffff;
     font-size: 16px;
     font-weight: 600;
@@ -452,28 +465,48 @@
 }
 
 .btn-primary:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3);
+    background-color: #2563eb;
+}
+
+.btn-primary:disabled {
+    background-color: #e5e7eb;
+    color: #9ca3af;
+    cursor: not-allowed;
 }
 
 .help-text {
-    font-size: 14px;
-    color: #718096;
-    margin-top: 4px;
+    font-size: 12px;
+    color: #888;
+    margin-top: 5px;
+}
+
+/* 섹션 관련 스타일 (기존 PostCreate에서 필요한 경우) */
+.form-section {
+    margin-bottom: 40px;
+}
+
+.section-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #333;
+    margin: 0 0 24px 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
 }
 
 /* 반응형 디자인 */
-@media (max-width: 768px) {
+@media (max-width: 480px) {
     .main-container {
         padding: 20px 16px;
     }
     
-    .page-header {
-        padding: 30px 20px;
+    .main-title {
+        font-size: 24px;
     }
     
-    .form-section {
-        padding: 30px 20px;
+    .form-group {
+        margin-bottom: 28px;
     }
     
     .form-row {
@@ -482,7 +515,7 @@
     }
     
     .personality-grid {
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: repeat(2, 1fr);
     }
 }
 ]]></style>
@@ -1769,42 +1802,42 @@ scwin.sbm_insertPost_submitdone = function(e) {
                 </xf:group>
 
                 <!-- 기본 정보 섹션 -->
-                <section class="form-section">
-                    <w2:textbox class="section-title" label="📝 기본 정보"></w2:textbox>
-                    
-                    <xf:group class="form-group">
-                        <w2:textbox class="form-label required" label="공고 제목"></w2:textbox>
-                        <xf:input class="form-input" placeholder="매력적인 공고 제목을 입력해주세요" ref="data:dmp_postVo.title"></xf:input>
-                    </xf:group>
-                    
-                    <xf:group class="form-row">
-                        <xf:group class="form-group half">
-                            <w2:textbox class="form-label required" label="근무 지역"></w2:textbox>
-                            <xf:select1 class="form-select" chooseOption="지역 선택" appearance="minimal" ref="data:dmp_postVo.location">
-                                <xf:choices>
-                                    <xf:item><xf:label><![CDATA[서울]]></xf:label><xf:value><![CDATA[서울]]></xf:value></xf:item>
-                                    <xf:item><xf:label><![CDATA[경기]]></xf:label><xf:value><![CDATA[경기]]></xf:value></xf:item>
-                                    <xf:item><xf:label><![CDATA[인천]]></xf:label><xf:value><![CDATA[인천]]></xf:value></xf:item>
-                                    <xf:item><xf:label><![CDATA[부산]]></xf:label><xf:value><![CDATA[부산]]></xf:value></xf:item>
-                                    <xf:item><xf:label><![CDATA[대구]]></xf:label><xf:value><![CDATA[대구]]></xf:value></xf:item>
-                                    <xf:item><xf:label><![CDATA[대전]]></xf:label><xf:value><![CDATA[대전]]></xf:value></xf:item>
-                                    <xf:item><xf:label><![CDATA[광주]]></xf:label><xf:value><![CDATA[광주]]></xf:value></xf:item>
-                                </xf:choices>
-                            </xf:select1>
-                        </xf:group>
-                        
-                        <xf:group class="form-group half">
-                            <w2:textbox class="form-label required" label="근무 형태"></w2:textbox>
-                            <xf:select1 class="form-select" chooseOption="형태 선택" appearance="minimal" ref="data:dmp_postVo.workType">
-                                <xf:choices>
-                                    <xf:item><xf:label><![CDATA[원격 근무]]></xf:label><xf:value><![CDATA[remote]]></xf:value></xf:item>
-                                    <xf:item><xf:label><![CDATA[출근 근무]]></xf:label><xf:value><![CDATA[onsite]]></xf:value></xf:item>
-                                    <xf:item><xf:label><![CDATA[하이브리드]]></xf:label><xf:value><![CDATA[hybrid]]></xf:value></xf:item>
-                                </xf:choices>
-                            </xf:select1>
-                        </xf:group>
-                    </xf:group>
-                </section>
+<section class="form-section">
+    <w2:textbox class="section-title" label="기본 정보"></w2:textbox>
+    
+    <xf:group class="form-group">
+        <w2:textbox class="form-label required" label="공고 제목"></w2:textbox>
+        <xf:input class="form-input" placeholder="매력적인 공고 제목을 입력해주세요" ref="data:dmp_postVo.title"></xf:input>
+    </xf:group>
+    
+    <xf:group class="form-row">
+        <xf:group class="form-group half">
+            <w2:textbox class="form-label required" label="근무 지역"></w2:textbox>
+            <xf:select1 class="form-select" chooseOption="지역 선택" appearance="minimal" ref="data:dmp_postVo.location" style="width: 100%; height: 56px; padding: 0 16px; border: 2px solid #e5e7eb; border-radius: 12px; font-size: 16px; color: #333; background-color: #ffffff; transition: all 0.2s ease; box-sizing: border-box;">
+                <xf:choices>
+                    <xf:item><xf:label><![CDATA[서울]]></xf:label><xf:value><![CDATA[서울]]></xf:value></xf:item>
+                    <xf:item><xf:label><![CDATA[경기]]></xf:label><xf:value><![CDATA[경기]]></xf:value></xf:item>
+                    <xf:item><xf:label><![CDATA[인천]]></xf:label><xf:value><![CDATA[인천]]></xf:value></xf:item>
+                    <xf:item><xf:label><![CDATA[부산]]></xf:label><xf:value><![CDATA[부산]]></xf:value></xf:item>
+                    <xf:item><xf:label><![CDATA[대구]]></xf:label><xf:value><![CDATA[대구]]></xf:value></xf:item>
+                    <xf:item><xf:label><![CDATA[대전]]></xf:label><xf:value><![CDATA[대전]]></xf:value></xf:item>
+                    <xf:item><xf:label><![CDATA[광주]]></xf:label><xf:value><![CDATA[광주]]></xf:value></xf:item>
+                </xf:choices>
+            </xf:select1>
+        </xf:group>
+        
+        <xf:group class="form-group half">
+            <w2:textbox class="form-label required" label="근무 형태"></w2:textbox>
+            <xf:select1 class="form-select" chooseOption="형태 선택" appearance="minimal" ref="data:dmp_postVo.workType" style="width: 100%; height: 56px; padding: 0 16px; border: 2px solid #e5e7eb; border-radius: 12px; font-size: 16px; color: #333; background-color: #ffffff; transition: all 0.2s ease; box-sizing: border-box;">
+                <xf:choices>
+                    <xf:item><xf:label><![CDATA[원격 근무]]></xf:label><xf:value><![CDATA[remote]]></xf:value></xf:item>
+                    <xf:item><xf:label><![CDATA[출근 근무]]></xf:label><xf:value><![CDATA[onsite]]></xf:value></xf:item>
+                    <xf:item><xf:label><![CDATA[하이브리드]]></xf:label><xf:value><![CDATA[hybrid]]></xf:value></xf:item>
+                </xf:choices>
+            </xf:select1>
+        </xf:group>
+    </xf:group>
+</section>
 
                 <!-- 기술스택 섹션 -->
                 <section class="form-section">
