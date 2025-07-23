@@ -49,6 +49,9 @@ public class MbtiCalculationResultVo extends com.demo.proworks.cmmn.ProworksComm
     @ElDtoField(logicalName = "분석 일시", physicalName = "analyzedAt", type = "java.sql.Timestamp", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "분석 완료 일시", attr = "")
     private java.sql.Timestamp analyzedAt;
 
+    private String codeAnalysisComment;
+    private String codeAnalysisDetail;
+
     @ElVoField(physicalName = "typeId")
     public Long getTypeId(){
         return typeId;
@@ -171,6 +174,11 @@ public class MbtiCalculationResultVo extends com.demo.proworks.cmmn.ProworksComm
     public void setAnalyzedAt(java.sql.Timestamp analyzedAt){
         this.analyzedAt = analyzedAt;
     }
+
+    public String getCodeAnalysisComment() { return codeAnalysisComment; }
+    public void setCodeAnalysisComment(String codeAnalysisComment) { this.codeAnalysisComment = codeAnalysisComment; }
+    public String getCodeAnalysisDetail() { return codeAnalysisDetail; }
+    public void setCodeAnalysisDetail(String codeAnalysisDetail) { this.codeAnalysisDetail = codeAnalysisDetail; }
 
     @Override
     public String toString() {

@@ -7,6 +7,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.inswave.elfw.log.AppLog;
+import com.demo.proworks.domain.codeanalysis.dao.CodeAnalysisDAO;
+import com.demo.proworks.domain.codeanalysis.vo.CodeAnalysisResultVo;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,6 +32,9 @@ public class SurveyServiceImpl implements SurveyService {
     
     @Resource(name = "surveyDAO")
     private SurveyDAO surveyDAO;
+    
+    @Resource(name = "codeAnalysisDAO")
+    private CodeAnalysisDAO codeAnalysisDAO;
     
     // ObjectMapper를 static으로 설정하여 안전하게 처리
     private static final ObjectMapper objectMapper;
@@ -222,6 +227,13 @@ public class SurveyServiceImpl implements SurveyService {
             // 4. 가중치 적용하여 최종 점수 계산 (userId는 이미 위에서 계산됨)
             
             MbtiCalculationResultVo result = calculateFinalMbtiType(surveyScores, codeScores, userId);
+            
+            // 코드 분석 결과 조회
+            CodeAnalysisResultVo codeResult = codeAnalysisDAO.selectLatestCodeAnalysisResult(userId);
+            String codeComment = codeResult != null ? codeResult.getComment() : null;
+            String codeDetail = codeResult != null ? codeResult.getAnalysisResult() : null;
+            result.setCodeAnalysisComment(codeComment);
+            result.setCodeAnalysisDetail(codeDetail);
             
             // 5. 결과 저장
             try {
