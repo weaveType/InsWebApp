@@ -282,8 +282,6 @@ scwin.onScoutStatusFilterChange = function (e) {
     }
 };
 
-
-
 // 쿠키에서 사용자 가져오기
 scwin.getUserInfoByCookie = function () {
     var userInfoCookie = WebSquare.cookie.getCookie("userInfo");
@@ -301,7 +299,7 @@ scwin.getUserInfoByCookie = function () {
 }
 
 
-// 일괄 스카웃 제안 - ApplicantManagement.xml 스타일로 단순화
+// 일괄 스카웃 제안
 scwin.scoutSelected = function () {
     var checkedRows = gridView1.getCheckedJSON("chk");
     if (checkedRows.length === 0) {
@@ -316,15 +314,9 @@ scwin.scoutSelected = function () {
 
     var jobPostingId = dmp_scoutVo.get("jobPostingId");
 
-    console.log("전송할 데이터:");
-    console.log("jobPostingId:", jobPostingId);
-    console.log("accountIdVoList:", accountIdVoList);
-
     // dmp_scoutRequest에 데이터 설정
     dmp_scoutRequest.set("jobPostingId", jobPostingId);
     dmp_scoutRequest.set("accountIdVo", accountIdVoList);
-
-    console.log("최종 전송 데이터:", dmp_scoutRequest.getJSON());
 
     $c.sbm.execute(sbm_scoutDevelopers);
 };
@@ -533,14 +525,17 @@ scwin.applyTechStackFilter = function () {
 
     if (!selectedTechStacks || selectedTechStacks === "") {
         // 선택된 기술스택이 없으면 모든 행 표시
-        grd_scout.clearFilter();
+        var rowCount = dlt_scoutListVo.getRowCount();
+        for (var i = 0; i < rowCount; i++) {
+            gridView1.setRowVisible(i, true);
+        }
         return;
     }
 
     // 선택된 기술스택 배열
     var selectedArray = selectedTechStacks.split(",");
-    var dataList = grd_scout.getDataList();
-    var rowCount = dataList.getTotalRow();
+    var dataList = dlt_scoutListVo;
+    var rowCount = dataList.getRowCount();
 
     // 필터링 로직
     for (var i = 0; i < rowCount; i++) {
@@ -565,9 +560,9 @@ scwin.applyTechStackFilter = function () {
 
         // 행 표시/숨김 설정
         if (showRow) {
-            grd_scout.setRowVisible(i, true);
+            gridView1.setRowVisible(i, true);
         } else {
-            grd_scout.setRowVisible(i, false);
+            gridView1.setRowVisible(i, false);
         }
     }
 };
@@ -575,7 +570,10 @@ scwin.applyTechStackFilter = function () {
 // 기술스택 필터 초기화 버튼 (선택사항)
 scwin.btn_resetFilter_onclick = function () {
     msb_techStackFilter.setText("");
-    grd_scout.clearFilter();
+    var rowCount = dlt_scoutListVo.getRowCount();
+    for (var i = 0; i < rowCount; i++) {
+        gridView1.setRowVisible(i, true);
+    }
 };
 ]]></script>
 	</head>
@@ -647,7 +645,10 @@ scwin.btn_resetFilter_onclick = function () {
 								</xf:item>
 							</xf:choices>
 						</xf:select1>
-						<xf:select id="msb_techStackFilter" appearance="minimal" style="width: 150px;height: 64px;" class=""></xf:select>
+						<xf:select id="msb_techStackFilter" appearance="minimal" style="width: 150px;height: 64px;" class=""
+							ev:onviewchange="scwin.applyTechStackFilter">
+						</xf:select>
+						<xf:select id="" appearance="minimal" style="width: 150px;height: 64px;"></xf:select>
 					</xf:group>
 
 					<xf:group class="button-group" style="display:flex; align-items:center; gap:10px;">
