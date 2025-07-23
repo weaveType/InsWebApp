@@ -114,7 +114,20 @@ public class SurveyServiceImpl implements SurveyService {
                 throw new Exception("유효하지 않은 사용자 ID입니다: " + submitVo.getUserId());
             }
             
-            // 2. 설문 응답 저장
+            // 2. 코드분석 선행 체크 - 코드분석이 완료되어야만 설문조사 가능
+            try {
+                Map<String, Object> codeAnalysisCheck = surveyDAO.checkCodeAnalysisExists(userId);
+                if (codeAnalysisCheck == null || codeAnalysisCheck.isEmpty()) {
+                    AppLog.warn("코드분석이 완료되지 않은 사용자의 설문조사 시도: " + userId);
+                    throw new Exception("설문조사를 진행하기 전에 먼저 코드분석을 완료해주세요.");
+                }
+                AppLog.debug("코드분석 선행 조건 확인 완료 - 사용자ID: " + userId);
+            } catch (Exception codeCheckEx) {
+                AppLog.error("코드분석 존재 여부 체크 중 오류", codeCheckEx);
+                throw new Exception("코드분석 선행 조건 확인 중 오류가 발생했습니다: " + codeCheckEx.getMessage());
+            }
+            
+            // 3. 설문 응답 저장
             SurveyResponseVo responseVo = new SurveyResponseVo();
             responseVo.setUserId(userId);  // userId 설정
             AppLog.debug("=== 설문 응답 VO 생성 완료, userId: " + userId + " ===");
@@ -134,8 +147,8 @@ public class SurveyServiceImpl implements SurveyService {
             }
             
             responseVo.setResponses(responsesJson);
-            responseVo.setCreateAt(new Timestamp(System.currentTimeMillis()));
-            responseVo.setUpdateAt(new Timestamp(System.currentTimeMillis()));
+            responseVo.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+            responseVo.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
             
             try {
                 AppLog.debug("=== DB 저장 직전 responseVo 상태: userId=" + responseVo.getUserId() + " ===");

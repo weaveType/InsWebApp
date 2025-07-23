@@ -108,8 +108,13 @@ public class CodeAnalysisServiceImpl implements CodeAnalysisService {
             // 결과 VO 생성
             CodeAnalysisResultVo resultVo = new CodeAnalysisResultVo();
             
-            // typeId는 NULL로 설정 (독립적인 코드분석 테이블)
-            resultVo.setTypeId(null);
+            // 실제 사용자 ID 설정 (requestVo에서 가져오거나 기본값 사용)
+            Long actualUserId = requestVo.getTypeId();
+            if (actualUserId == null) {
+                // 기본 사용자 ID 설정 (테스트용)
+                actualUserId = 1L;
+            }
+            resultVo.setUserId(actualUserId);
             
             // 전체 분석 결과 저장 (새로운 JSON 구조)
             String typeCode = parsedResult.getString("typeCode");
@@ -120,9 +125,13 @@ public class CodeAnalysisServiceImpl implements CodeAnalysisService {
             resultVo.setDeveloperPreferenceScore(parsedResult.getInt("developerPreferenceScore"));
             resultVo.setConfidenceScore(parsedResult.getDouble("confidenceScore"));
             resultVo.setCreatedAt(new Date());
-            resultVo.setLanguage(detectedLanguage);
+            resultVo.setLanguage(parsedResult.getString("language"));
             
-            AppLog.debug("결과 VO 생성 완료 - 타입: " + resultVo.getTypeCode());
+            // 코멘트 설정 (분석 결과 요약)
+            String comment = parsedResult.optString("comment", "코드 분석이 완료되었습니다.");
+            resultVo.setComment(comment);
+            
+            AppLog.debug("결과 VO 생성 완료 - 타입: " + resultVo.getTypeCode() + ", 사용자ID: " + resultVo.getUserId());
             
             // 결과 저장
             AppLog.debug("데이터베이스 저장 시작...");
@@ -169,10 +178,10 @@ public class CodeAnalysisServiceImpl implements CodeAnalysisService {
             generationConfig.put("temperature", 0.3);  // 더 일관된 응답을 위해 낮춤
             generationConfig.put("topK", 20);          // 더 집중된 응답
             generationConfig.put("topP", 0.8);         // 더 예측 가능한 응답
-            generationConfig.put("maxOutputTokens", 1024);  // 토큰 수 대폭 감소
+            generationConfig.put("maxOutputTokens", 2048);  // 상세 분석을 위해 토큰 수 증가
             generationConfig.put("responseMimeType", "application/json");
             
-            // 새로운 응답 스키마
+            // 새로운 응답 스키마 (detailed_analysis 포함)
             JSONObject responseSchema = new JSONObject();
             responseSchema.put("type", "object");
             JSONObject properties = new JSONObject();
@@ -184,8 +193,35 @@ public class CodeAnalysisServiceImpl implements CodeAnalysisService {
             properties.put("comment", new JSONObject().put("type", "string"));
             properties.put("language", new JSONObject().put("type", "string"));
             
+            // detailed_analysis 구조 정의
+            JSONObject detailedAnalysis = new JSONObject();
+            detailedAnalysis.put("type", "object");
+            JSONObject detailedProperties = new JSONObject();
+            
+            detailedProperties.put("reasoning", new JSONObject().put("type", "string"));
+            
+            // code_patterns 배열 구조
+            JSONObject codePattern = new JSONObject();
+            codePattern.put("type", "object");
+            JSONObject patternProperties = new JSONObject();
+            patternProperties.put("pattern", new JSONObject().put("type", "string"));
+            patternProperties.put("description", new JSONObject().put("type", "string"));
+            patternProperties.put("evidence", new JSONObject().put("type", "array").put("items", new JSONObject().put("type", "string")));
+            patternProperties.put("impact_score", new JSONObject().put("type", "integer").put("minimum", 1).put("maximum", 10));
+            codePattern.put("properties", patternProperties);
+            codePattern.put("required", new JSONArray().put("pattern").put("description").put("evidence").put("impact_score"));
+            
+            detailedProperties.put("code_patterns", new JSONObject().put("type", "array").put("items", codePattern));
+            detailedProperties.put("strengths", new JSONObject().put("type", "array").put("items", new JSONObject().put("type", "string")));
+            detailedProperties.put("suggestions", new JSONObject().put("type", "array").put("items", new JSONObject().put("type", "string")));
+            
+            detailedAnalysis.put("properties", detailedProperties);
+            detailedAnalysis.put("required", new JSONArray().put("reasoning").put("code_patterns").put("strengths").put("suggestions"));
+            
+            properties.put("detailed_analysis", detailedAnalysis);
+            
             responseSchema.put("properties", properties);
-            responseSchema.put("required", new JSONArray().put("type_code").put("development_style_score").put("developer_preference_score").put("confidence_score").put("comment").put("language"));
+            responseSchema.put("required", new JSONArray().put("type_code").put("development_style_score").put("developer_preference_score").put("confidence_score").put("comment").put("language").put("detailed_analysis"));
             
             generationConfig.put("responseSchema", responseSchema);
             requestBody.put("generationConfig", generationConfig);
@@ -218,7 +254,7 @@ public class CodeAnalysisServiceImpl implements CodeAnalysisService {
     }
     
     /**
-     * Gemini API 응답 파싱 (단순화 및 안정성 개선)
+     * Gemini API 응답 파싱 (상세 분석 정보 포함)
      */
     private JSONObject parseGeminiResponse(String response) throws Exception {
         try {
@@ -313,20 +349,99 @@ public class CodeAnalysisServiceImpl implements CodeAnalysisService {
             
             // 언어 정보
             String language = analysisResult.optString("language", "java");
+            result.put("language", language);
             
             // 요약 정보 생성
             String comment = analysisResult.optString("comment", "코드 분석 완료");
-            String summary = String.format("weaveType: %s (%s, 신뢰도: %.0f%%) - %s", 
+            String summary = String.format("CodeFIT: %s (%s, 신뢰도: %.0f%%) - %s", 
                 analysisResult.getString("type_code"), 
                 language,
                 confidenceScore * 100,
                 comment);
             result.put("summary", summary);
             
-            // 전체 응답도 저장
-            result.put("fullAnalysis", analysisResult.toString());
+            // comment를 result 객체에 추가 (DB 저장용)
+            result.put("comment", comment);
             
-            AppLog.debug("파싱 완료 - 타입: " + result.getString("typeCode") + ", 신뢰도: " + result.getDouble("confidenceScore"));
+            // 상세 분석 정보 처리
+            JSONObject detailedAnalysisResult = new JSONObject();
+            
+            AppLog.debug("=== 상세 분석 파싱 시작 ===");
+            AppLog.debug("analysisResult 구조 확인:");
+            AppLog.debug("- has detailed_analysis: " + analysisResult.has("detailed_analysis"));
+            if (analysisResult.has("detailed_analysis")) {
+                AppLog.debug("- detailed_analysis 내용: " + analysisResult.getJSONObject("detailed_analysis").toString());
+            }
+            
+            // 전체 analysisResult 로깅 (문제 진단용)
+            AppLog.debug("전체 analysisResult: " + analysisResult.toString());
+            
+            if (analysisResult.has("detailed_analysis")) {
+                JSONObject detailedAnalysis = analysisResult.getJSONObject("detailed_analysis");
+                AppLog.debug("detailed_analysis 객체 획득 성공");
+                
+                // 분석 근거
+                if (detailedAnalysis.has("reasoning")) {
+                    String reasoning = detailedAnalysis.getString("reasoning");
+                    detailedAnalysisResult.put("reasoning", reasoning);
+                    AppLog.debug("reasoning 설정 완료: " + reasoning.substring(0, Math.min(50, reasoning.length())) + "...");
+                } else {
+                    AppLog.warn("reasoning 필드가 없음");
+                }
+                
+                // 코드 패턴 분석
+                if (detailedAnalysis.has("code_patterns")) {
+                    JSONArray patterns = detailedAnalysis.getJSONArray("code_patterns");
+                    detailedAnalysisResult.put("code_patterns", patterns);
+                    AppLog.debug("code_patterns 설정 완료 - 개수: " + patterns.length());
+                } else {
+                    AppLog.warn("code_patterns 필드가 없음");
+                }
+                
+                // 강점
+                if (detailedAnalysis.has("strengths")) {
+                    JSONArray strengths = detailedAnalysis.getJSONArray("strengths");
+                    detailedAnalysisResult.put("strengths", strengths);
+                    AppLog.debug("strengths 설정 완료 - 개수: " + strengths.length());
+                } else {
+                    AppLog.warn("strengths 필드가 없음");
+                }
+                
+                // 개선 제안
+                if (detailedAnalysis.has("suggestions")) {
+                    JSONArray suggestions = detailedAnalysis.getJSONArray("suggestions");
+                    detailedAnalysisResult.put("suggestions", suggestions);
+                    AppLog.debug("suggestions 설정 완료 - 개수: " + suggestions.length());
+                } else {
+                    AppLog.warn("suggestions 필드가 없음");
+                }
+                
+                AppLog.debug("상세 분석 정보 파싱 완료 - 총 필드 수: " + detailedAnalysisResult.length());
+                
+            } else {
+                // detailed_analysis가 없는 경우 기본값 설정
+                AppLog.error("❌ detailed_analysis 필드가 전체 응답에 없습니다!");
+                AppLog.error("사용 가능한 필드들: " + String.join(", ", analysisResult.keySet().toArray(new String[0])));
+                
+                detailedAnalysisResult.put("reasoning", "코드 구조와 패턴을 분석하여 개발 스타일을 도출했습니다.");
+                detailedAnalysisResult.put("code_patterns", new JSONArray());
+                detailedAnalysisResult.put("strengths", new JSONArray());
+                detailedAnalysisResult.put("suggestions", new JSONArray());
+                AppLog.debug("detailed_analysis 필드가 없어 기본값으로 설정");
+            }
+            
+            // 전체 응답을 JSON 형태로 저장 (상세 분석 포함)
+            JSONObject fullAnalysisJson = new JSONObject();
+            fullAnalysisJson.put("basic_analysis", analysisResult);
+            fullAnalysisJson.put("detailed_analysis", detailedAnalysisResult);
+            fullAnalysisJson.put("language", language);
+            fullAnalysisJson.put("comment", comment);
+            
+            result.put("fullAnalysis", fullAnalysisJson.toString());
+            
+            AppLog.debug("파싱 완료 - 타입: " + result.getString("typeCode") + 
+                        ", 신뢰도: " + result.getDouble("confidenceScore") + 
+                        ", 상세분석: " + (detailedAnalysisResult.length() > 0 ? "포함" : "없음"));
             
             return result;
             
@@ -339,11 +454,26 @@ public class CodeAnalysisServiceImpl implements CodeAnalysisService {
     @Override
     public void saveAnalysisResult(CodeAnalysisResultVo resultVo) throws Exception {
         try {
+            // 1. 코드 분석 결과 저장
             int result = codeAnalysisDAO.insertCodeAnalysisResult(resultVo);
             if (result <= 0) {
                 throw new Exception("코드 분석 결과 저장에 실패했습니다.");
             }
             AppLog.debug("코드 분석 결과 저장 완료 - ID: " + resultVo.getAnalysisId());
+            
+            // 2. users_mbti_types 테이블에 is_code_checked = 1로 업데이트
+            try {
+                int mbtiResult = codeAnalysisDAO.upsertMbtiTypeForCode(resultVo.getUserId());
+                if (mbtiResult > 0) {
+                    AppLog.debug("users_mbti_types 테이블 업데이트 완료 - 사용자ID: " + resultVo.getUserId() + ", is_code_checked = 1");
+                } else {
+                    AppLog.warn("users_mbti_types 테이블 업데이트 실패 - 사용자ID: " + resultVo.getUserId());
+                }
+            } catch (Exception mbtiEx) {
+                AppLog.error("users_mbti_types 업데이트 중 오류 (분석 결과는 저장됨): " + mbtiEx.getMessage(), mbtiEx);
+                // 분석 결과는 이미 저장되었으므로 예외를 던지지 않고 로그만 남김
+            }
+            
         } catch (ElException e) {
             AppLog.error("코드 분석 결과 저장 중 DAO 오류 발생", e);
             throw new Exception("코드 분석 결과 저장 중 데이터베이스 오류가 발생했습니다: " + e.getMessage(), e);
@@ -367,7 +497,7 @@ public class CodeAnalysisServiceImpl implements CodeAnalysisService {
     }
     
     /**
-     * 새로운 분석 프롬프트 생성 (developer_preference_score 기반)
+     * 새로운 분석 프롬프트 생성 (상세 분석 포함)
      */
     private String buildAnalysisPrompt(String language) {
         StringBuilder prompt = new StringBuilder();
@@ -474,20 +604,71 @@ public class CodeAnalysisServiceImpl implements CodeAnalysisService {
         prompt.append("      \"developer_preference_score\": \"integer (-50 to 50)\",\n");
         prompt.append("      \"confidence_score\": \"integer (0 to 100)\",\n");
         prompt.append("      \"comment\": \"string (Korean language preferred)\",\n");
-        prompt.append("      \"language\": \"string (java, python, javascript, etc.)\"\n");
+        prompt.append("      \"language\": \"string (java, python, javascript, etc.)\",\n");
+        prompt.append("      \"detailed_analysis\": {\n");
+        prompt.append("        \"reasoning\": \"string (Korean) - 분석 결과의 근거와 이유를 상세히 설명\",\n");
+        prompt.append("        \"code_patterns\": [\n");
+        prompt.append("          {\n");
+        prompt.append("            \"pattern\": \"string - 패턴명\",\n");
+        prompt.append("            \"description\": \"string (Korean) - 패턴 설명\",\n");
+        prompt.append("            \"evidence\": [\"array of strings (Korean) - 구체적인 증거들\"],\n");
+        prompt.append("            \"impact_score\": \"integer (1-10) - 분석 결과에 미친 영향도\"\n");
+        prompt.append("          }\n");
+        prompt.append("        ],\n");
+        prompt.append("        \"strengths\": [\"array of strings (Korean) - 개발자의 강점들\"],\n");
+        prompt.append("        \"suggestions\": [\"array of strings (Korean) - 개선 제안사항들\"]\n");
+        prompt.append("      }\n");
         prompt.append("    }\n");
         prompt.append("  }\n");
         prompt.append("}\n\n");
         
         prompt.append("Based on the above analysis framework, analyze the provided " + language + " code and return ONLY a JSON response in this exact format:\n\n");
+        
+        prompt.append("**EXAMPLE OUTPUT (DO NOT COPY - ANALYZE THE ACTUAL CODE PROVIDED BELOW):**\n");
         prompt.append("{\n");
         prompt.append("  \"type_code\": \"BR\",\n");
         prompt.append("  \"development_style_score\": -25,\n");
         prompt.append("  \"developer_preference_score\": 15,\n");
         prompt.append("  \"confidence_score\": 75,\n");
-        prompt.append("  \"comment\": \"실용적이고 빠른 구현을 선호하며, 기존 코드 개선에 집중하는 개발자\",\n");
-        prompt.append("  \"language\": \"java\"\n");
+        prompt.append("  \"comment\": \"의존성 주입과 빌더 패턴을 활용하여 실용적인 구현을 선호하며, 코드 안정성과 유지보수성을 중시하는 개발자입니다.\",\n");
+        prompt.append("  \"language\": \"java\",\n");
+        prompt.append("  \"detailed_analysis\": {\n");
+        prompt.append("    \"reasoning\": \"코드에서 생성자 기반 의존성 주입, 유효성 검사 메서드 분리, 빌더 패턴 활용 등 안정적이고 체계적인 구현 패턴을 확인했습니다. 특히 validateUserRequest 메서드를 통해 입력값 검증을 별도로 분리하여 책임을 명확히 하고, 예외 처리를 구체적으로 구현한 점에서 코드 품질을 중시하는 개발자임을 알 수 있습니다.\",\n");
+        prompt.append("    \"code_patterns\": [\n");
+        prompt.append("      {\n");
+        prompt.append("        \"pattern\": \"Constructor Dependency Injection\",\n");
+        prompt.append("        \"description\": \"생성자를 통한 의존성 주입 패턴\",\n");
+        prompt.append("        \"evidence\": [\"final 키워드를 사용한 불변 필드\", \"생성자에서 의존성 주입\", \"순환 참조 방지\"],\n");
+        prompt.append("        \"impact_score\": 9\n");
+        prompt.append("      },\n");
+        prompt.append("      {\n");
+        prompt.append("        \"pattern\": \"Input Validation Separation\",\n");
+        prompt.append("        \"description\": \"입력값 검증 로직의 메서드 분리\",\n");
+        prompt.append("        \"evidence\": [\"validateUserRequest 메서드 분리\", \"구체적인 예외 메시지\", \"단계적 검증 로직\"],\n");
+        prompt.append("        \"impact_score\": 8\n");
+        prompt.append("      },\n");
+        prompt.append("      {\n");
+        prompt.append("        \"pattern\": \"Builder Pattern Usage\",\n");
+        prompt.append("        \"description\": \"객체 생성을 위한 빌더 패턴 활용\",\n");
+        prompt.append("        \"evidence\": [\"User.builder() 사용\", \"메서드 체이닝\", \"가독성 있는 객체 생성\"],\n");
+        prompt.append("        \"impact_score\": 7\n");
+        prompt.append("      }\n");
+        prompt.append("    ],\n");
+        prompt.append("    \"strengths\": [\"의존성 관리가 체계적임\", \"예외 처리가 구체적이고 명확함\", \"메서드 분리를 통한 책임 분산\", \"코드 가독성이 뛰어남\", \"불변성을 고려한 설계\"],\n");
+        prompt.append("    \"suggestions\": [\"이메일 유효성 검사를 정규식으로 개선 고려\", \"로깅 추가로 디버깅 편의성 향상\", \"단위 테스트 커버리지 확대\"]\n");
+        prompt.append("  }\n");
         prompt.append("}\n\n");
+        
+        // 더 강화된 지시문
+        prompt.append("**🚨 CRITICAL ANALYSIS REQUIREMENTS - MUST FOLLOW:**\n");
+        prompt.append("1. **ANALYZE THE ACTUAL CODE** - Do not use generic placeholder text\n");
+        prompt.append("2. **detailed_analysis.reasoning** - MUST explain specific code elements you observed\n");
+        prompt.append("3. **detailed_analysis.code_patterns** - MUST identify at least 2-3 REAL patterns with concrete evidence\n");
+        prompt.append("4. **detailed_analysis.strengths** - MUST list at least 3-5 specific strengths from the code\n");
+        prompt.append("5. **detailed_analysis.suggestions** - MUST provide at least 2-3 actionable improvement suggestions\n");
+        prompt.append("6. **All Korean text** - reasoning, pattern descriptions, strengths, suggestions must be in Korean\n");
+        prompt.append("7. **Evidence arrays** - Each code pattern must have specific code evidence, not generic statements\n\n");
+        prompt.append("**CODE TO ANALYZE (PROVIDE DETAILED ANALYSIS OF THIS SPECIFIC CODE):**\n\n");
         
         return prompt.toString();
     }

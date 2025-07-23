@@ -61,8 +61,8 @@ public class CodeAnalysisController {
             // CodeAnalysisRequestVo 생성 및 데이터 설정
             CodeAnalysisRequestVo requestVo = new CodeAnalysisRequestVo();
             
-            if (jsonNode.has("typeId")) {
-                requestVo.setTypeId(jsonNode.get("typeId").asLong());
+            if (jsonNode.has("userId")) {
+                requestVo.setTypeId(jsonNode.get("userId").asLong());
             }
             if (jsonNode.has("modelFile")) {
                 requestVo.setModelFile(jsonNode.get("modelFile").asText());
@@ -138,11 +138,11 @@ public class CodeAnalysisController {
             JsonNode jsonNode = objectMapper.readTree(jsonData);
             
             Long typeId = null;
-            if (jsonNode.has("typeId")) {
-                typeId = jsonNode.get("typeId").asLong();
+            if (jsonNode.has("userId")) {
+                typeId = jsonNode.get("userId").asLong();
             }
             
-            AppLog.debug("코드 분석 결과 조회 - 타입ID: " + typeId);
+            AppLog.debug("코드 분석 결과 조회 - 사용자ID: " + typeId);
             
             CodeAnalysisResultVo result = codeAnalysisService.getAnalysisResult(typeId);
             

@@ -40,6 +40,15 @@ public class MbtiCalculationResultVo extends com.demo.proworks.cmmn.ProworksComm
     @ElDtoField(logicalName = "사용자 ID", physicalName = "userId", type = "Long", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "사용자 ID", attr = "")
     private Long userId;
 
+    @ElDtoField(logicalName = "MBTI 체크 여부", physicalName = "isMbtiChecked", type = "boolean", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "MBTI 설문조사 완료 여부", attr = "")
+    private boolean isMbtiChecked;
+
+    @ElDtoField(logicalName = "코드 체크 여부", physicalName = "isCodeChecked", type = "boolean", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "코드 분석 완료 여부", attr = "")
+    private boolean isCodeChecked;
+
+    @ElDtoField(logicalName = "분석 일시", physicalName = "analyzedAt", type = "java.sql.Timestamp", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "분석 완료 일시", attr = "")
+    private java.sql.Timestamp analyzedAt;
+
     @ElVoField(physicalName = "typeId")
     public Long getTypeId(){
         return typeId;
@@ -133,6 +142,36 @@ public class MbtiCalculationResultVo extends com.demo.proworks.cmmn.ProworksComm
         this.userId = userId;
     }
 
+    @ElVoField(physicalName = "isMbtiChecked")
+    public boolean getIsMbtiChecked(){
+        return isMbtiChecked;
+    }
+
+    @ElVoField(physicalName = "isMbtiChecked")
+    public void setIsMbtiChecked(boolean isMbtiChecked){
+        this.isMbtiChecked = isMbtiChecked;
+    }
+
+    @ElVoField(physicalName = "isCodeChecked")
+    public boolean getIsCodeChecked(){
+        return isCodeChecked;
+    }
+
+    @ElVoField(physicalName = "isCodeChecked")
+    public void setIsCodeChecked(boolean isCodeChecked){
+        this.isCodeChecked = isCodeChecked;
+    }
+
+    @ElVoField(physicalName = "analyzedAt")
+    public java.sql.Timestamp getAnalyzedAt(){
+        return analyzedAt;
+    }
+
+    @ElVoField(physicalName = "analyzedAt")
+    public void setAnalyzedAt(java.sql.Timestamp analyzedAt){
+        this.analyzedAt = analyzedAt;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -145,7 +184,10 @@ public class MbtiCalculationResultVo extends com.demo.proworks.cmmn.ProworksComm
         sb.append("dFScore").append("=").append(dFScore).append(",");
         sb.append("typeName").append("=").append(typeName).append(",");
         sb.append("typeDescription").append("=").append(typeDescription).append(",");
-        sb.append("userId").append("=").append(userId);
+        sb.append("userId").append("=").append(userId).append(",");
+        sb.append("isMbtiChecked").append("=").append(isMbtiChecked).append(",");
+        sb.append("isCodeChecked").append("=").append(isCodeChecked).append(",");
+        sb.append("analyzedAt").append("=").append(analyzedAt);
         sb.append("]");
         return sb.toString();
 
