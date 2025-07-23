@@ -336,65 +336,51 @@ LIMIT #{pageSize} OFFSET ${(pageIndex - 1) * pageSize}
 </select>
 	<select id="getScoutUsersByPostId" resultType="com.demo.proworks.domain.user.vo.ScoutDetailVo"
 		parameterType="com.demo.proworks.domain.user.vo.ScoutVo">
-SELECT
-false AS chk,
-u.name AS name,
-ui.career AS career,
-ui.current_position AS currentPosition,
-GROUP_CONCAT(ts.tech_stack_name SEPARATOR ', ') AS techStack,
-umt.type_code AS typeCode,
-ui.resume_file_name AS resumeFileName,
-u.email AS email,
-u.user_id AS accountId,
-IFNULL(MAX(compat.match_cnt), 0) as mbtiMatchScore
-FROM
-users u
-JOIN
-users_info ui ON u.user_id = ui.user_id
-LEFT JOIN
-users_mbti_types umt ON u.user_id = umt.user_id
-LEFT JOIN
-job_applications ja ON u.user_id = ja.user_id AND ja.job_posting_id = #{jobPostingId}
-LEFT JOIN
-scout_requests sr ON u.user_id = sr.user_id AND sr.job_posting_id = #{jobPostingId}
-LEFT JOIN
-users_tech_stack_relation tsr ON u.user_id = tsr.user_id
-LEFT JOIN
-tech_stack ts ON tsr.tech_stack_id = ts.tech_stack_id
-<if test="companyMbti != null and companyMbti != ''">
-LEFT JOIN JSON_TABLE(
-    #{companyMbti},
-    "$[*]" COLUMNS(company_mbti CHAR(4) PATH "$")
-) jt ON JSON_VALID(#{companyMbti}) AND jt.company_mbti IS NOT NULL
-LEFT JOIN mbti_compat compat ON compat.code1 = umt.type_code 
-    AND compat.code2 = jt.company_mbti
-</if>
-WHERE
-ja.user_id IS NULL
-AND umt.type_code IS NOT NULL  <!-- MBTI가 있는 사용자만 필터링 -->
-<if test="scoutStatus == 'NOT_SCOUTED'">
-AND sr.user_id IS NULL
-</if>
-<if test="scoutStatus == 'SCOUTED'">
-AND sr.user_id IS NOT NULL
-</if>
-<!-- scoutStatus가 'ALL'인 경우 스카웃 관련 조건 없음 -->
-GROUP BY
-u.user_id,
-u.name,
-ui.career,
-ui.current_position,
-umt.type_code,
-ui.resume_file_name,
-u.email
+SELECT main_query.*
+FROM (
+    -- 1. 먼저 사용자별로 그룹화하여 필요한 모든 값을 계산한다
+    SELECT
+        false AS chk,
+        u.name AS name,
+        ui.career AS career,
+        ui.current_position AS currentPosition,
+        GROUP_CONCAT(DISTINCT ts.tech_stack_name SEPARATOR ', ') AS techStack,
+        umt.type_code AS typeCode,
+        ui.resume_file_name AS resumeFileName,
+        u.email AS email,
+        u.user_id AS accountId,
+        -- 스칼라 서브쿼리로 mbtiMatchScore를 계산
+        (
+            SELECT IFNULL(MAX(compat.match_cnt), 0)
+            FROM JSON_TABLE(
+                #{companyMbti},
+                "$[*]" COLUMNS(company_mbti CHAR(4) PATH "$")
+            ) jt
+            JOIN mbti_compat compat ON compat.code1 = umt.type_code 
+                                   AND compat.code2 = jt.company_mbti
+            WHERE JSON_VALID(#{companyMbti}) AND jt.company_mbti IS NOT NULL
+        ) AS mbtiMatchScore
+    FROM users u
+    JOIN users_info ui ON u.user_id = ui.user_id
+    LEFT JOIN users_mbti_types umt ON u.user_id = umt.user_id
+    LEFT JOIN job_applications ja ON u.user_id = ja.user_id AND ja.job_posting_id = #{jobPostingId}
+    LEFT JOIN scout_requests sr ON u.user_id = sr.user_id AND sr.job_posting_id = #{jobPostingId}
+    LEFT JOIN users_tech_stack_relation tsr ON u.user_id = tsr.user_id
+    LEFT JOIN tech_stack ts ON tsr.tech_stack_id = ts.tech_stack_id
+    WHERE ja.user_id IS NULL
+        AND umt.type_code IS NOT NULL
+        <if test="scoutStatus == 'NOT_SCOUTED'">AND sr.user_id IS NULL</if>
+        <if test="scoutStatus == 'SCOUTED'">AND sr.user_id IS NOT NULL</if>
+    GROUP BY u.user_id, u.name, ui.career, ui.current_position, umt.type_code, ui.resume_file_name, u.email
+) AS main_query
+-- 2. 계산된 mbtiMatchScore를 이용해 바깥에서 필터링한다
 <if test="mbtiMatchFilter != null and mbtiMatchFilter != '' and mbtiMatchFilter != '0'">
-HAVING IFNULL(MAX(compat.match_cnt), 0) >= CAST(#{mbtiMatchFilter} AS UNSIGNED)
+WHERE main_query.mbtiMatchScore >= CAST(#{mbtiMatchFilter} AS UNSIGNED)
 </if>
+-- 3. 최종 결과를 정렬하고 페이징한다
 ORDER BY
-<if test="companyMbti != null and companyMbti != ''">
-mbtiMatchScore DESC,
-</if>
-u.user_id DESC
+    <if test="companyMbti != null and companyMbti != ''">main_query.mbtiMatchScore DESC,</if>
+    main_query.accountId DESC
 LIMIT #{pageSize} OFFSET ${(pageIndex - 1) * pageSize}
 </select>
 	<select id="selectMatchingChecked" parameterType="com.demo.proworks.domain.user.vo.MatchingCheckedVo"

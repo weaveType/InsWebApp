@@ -729,18 +729,6 @@ scwin.resetForm = function () {
 
 				<!-- 동의 체크박스 -->
 				<xf:group class="checkbox-group">
-					<xf:select appearance="full" ev:onchange="scwin.agreement_onchange" id="checkbox2" selection="multiple" style="width: 100%;">
-						<xf:choices>
-							<xf:item>
-								<xf:label><![CDATA[[필수] 개인정보 및 수집동의]]></xf:label>
-								<xf:value><![CDATA[agree_required]]></xf:value>
-							</xf:item>
-							<xf:item>
-								<xf:label><![CDATA[[선택] 마케팅 수신동의]]></xf:label>
-								<xf:value><![CDATA[agree_marketing]]></xf:value>
-							</xf:item>
-						</xf:choices>
-					</xf:select>
 				</xf:group>
 
 				<!-- 버튼 그룹 -->
