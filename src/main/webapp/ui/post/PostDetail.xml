@@ -41,6 +41,7 @@
         				<w2:key dataType="text" id="selectedTechStackNames" name="selected_tech_stack_names"></w2:key>
         				<w2:key dataType="text" id="preferredDeveloperTypes" name="preferred_developer_types"></w2:key>
         				<w2:key dataType="text" id="jobImageFileName" name="job_image_file_name"></w2:key>
+        				<w2:key dataType="text" id="isApplied" name="is_applied"></w2:key>
         			</w2:keyInfo>
         			<w2:data use="false"></w2:data>
         		</w2:dataMap>
@@ -64,6 +65,7 @@
         				<w2:key dataType="text" id="selectedTechStackNames" name="selected_tech_stack_names"></w2:key>
         				<w2:key dataType="text" id="preferredDeveloperTypes" name="preferred_developer_types"></w2:key>
         				<w2:key dataType="text" id="jobImageFileName" name="job_image_file_name"></w2:key>
+        				<w2:key dataType="text" id="isApplied" name="is_applied"></w2:key>
         			</w2:keyInfo>
         			<w2:data use="false"></w2:data>
         		</w2:dataMap>
@@ -280,6 +282,18 @@
 
             .btn-apply:hover {
                 background-color: #2a5bd6;
+            }
+
+            .btn-apply.btn-applied {
+                background-color: #6c757d !important;
+                cursor: not-allowed !important;
+                opacity: 0.7 !important;
+            }
+
+            .btn-apply.btn-applied:hover {
+                background-color: #6c757d !important;
+                transform: none !important;
+                box-shadow: none !important;
             }
 
             /* 기업 사용자용 버튼 스타일 */
@@ -931,6 +945,70 @@ scwin.onpageload = function () {
 };
 
 /**
+ * 지원 상태에 따른 지원하기 버튼 상태 업데이트
+ */
+scwin.updateApplyButtonState = function () {
+    console.log("=== 지원 버튼 상태 업데이트 ===");
+    
+    var isApplied = dmp_postDetail.get("isApplied");
+    console.log("지원 상태:", isApplied);
+    
+    // 문자열로 올 수 있으므로 확실하게 boolean 변환
+    var appliedStatus = (isApplied === true || isApplied === "true" || isApplied === "Y");
+    
+    if (appliedStatus) {
+        // 이미 지원한 경우 - 버튼 비활성화 및 텍스트 변경
+        console.log("✅ 이미 지원한 공고 - 버튼 비활성화");
+        
+        // 버튼 텍스트 변경
+        var applyLabel = btnApply.getChildren()[0]; // xf:label 요소
+        if (applyLabel && applyLabel.setLabel) {
+            applyLabel.setLabel("✅ 지원완료");
+        }
+        
+        // 버튼 비활성화
+        btnApply.setDisabled(true);
+        
+        // 스타일 클래스 추가 (이미 지원한 상태 표시)
+        btnApply.addClass("btn-applied");
+        
+        // hover 효과 제거를 위한 추가 스타일 적용
+        var btnElement = document.getElementById("btnApply");
+        if (btnElement) {
+            btnElement.style.backgroundColor = "#6c757d";
+            btnElement.style.cursor = "not-allowed";
+            btnElement.style.opacity = "0.7";
+        }
+        
+    } else {
+        // 아직 지원하지 않은 경우 - 버튼 활성화
+        console.log("❌ 아직 지원하지 않은 공고 - 버튼 활성화");
+        
+        // 버튼 텍스트 원복
+        var applyLabel = btnApply.getChildren()[0]; // xf:label 요소
+        if (applyLabel && applyLabel.setLabel) {
+            applyLabel.setLabel("지원하기");
+        }
+        
+        // 버튼 활성화
+        btnApply.setDisabled(false);
+        
+        // 스타일 클래스 제거
+        btnApply.removeClass("btn-applied");
+        
+        // 원본 스타일 복구
+        var btnElement = document.getElementById("btnApply");
+        if (btnElement) {
+            btnElement.style.backgroundColor = "#36f";
+            btnElement.style.cursor = "pointer";
+            btnElement.style.opacity = "1";
+        }
+    }
+    
+    console.log("지원 버튼 상태 업데이트 완료");
+};
+
+/**
  * 공고 상세 조회 완료 콜백
  */
 scwin.sbm_selectPostDetail_submitdone = function (e) {
@@ -996,10 +1074,77 @@ scwin.sbm_selectPostDetail_submitdone = function (e) {
         // 권한 확인 및 UI 업데이트
         scwin.checkUserPermissionAndUpdateUI();
 
+        // 지원 상태 확인 및 지원 버튼 상태 업데이트
+        scwin.updateApplyButtonState();
+
     } catch (error) {
         console.error("데이터 바인딩 중 오류:", error);
         alert("데이터를 화면에 표시하는 중 오류가 발생했습니다.");
     }
+};
+
+/**
+ * 지원 상태에 따른 지원하기 버튼 상태 업데이트
+ */
+scwin.updateApplyButtonState = function () {
+    console.log("=== 지원 버튼 상태 업데이트 ===");
+    
+    var isApplied = dmp_postDetail.get("isApplied");
+    console.log("지원 상태:", isApplied);
+    
+    // 문자열로 올 수 있으므로 확실하게 boolean 변환
+    var appliedStatus = (isApplied === true || isApplied === "true" || isApplied === "Y");
+    
+    if (appliedStatus) {
+        // 이미 지원한 경우 - 버튼 비활성화 및 텍스트 변경
+        console.log("✅ 이미 지원한 공고 - 버튼 비활성화");
+        
+        // 버튼 텍스트 변경
+        var applyLabel = btnApply.getChildren()[0]; // xf:label 요소
+        if (applyLabel && applyLabel.setLabel) {
+            applyLabel.setLabel("✅ 지원완료");
+        }
+        
+        // 버튼 비활성화
+        btnApply.setDisabled(true);
+        
+        // 스타일 클래스 추가 (이미 지원한 상태 표시)
+        btnApply.addClass("btn-applied");
+        
+        // hover 효과 제거를 위한 추가 스타일 적용
+        var btnElement = document.getElementById("btnApply");
+        if (btnElement) {
+            btnElement.style.backgroundColor = "#6c757d";
+            btnElement.style.cursor = "not-allowed";
+            btnElement.style.opacity = "0.7";
+        }
+        
+    } else {
+        // 아직 지원하지 않은 경우 - 버튼 활성화
+        console.log("❌ 아직 지원하지 않은 공고 - 버튼 활성화");
+        
+        // 버튼 텍스트 원복
+        var applyLabel = btnApply.getChildren()[0]; // xf:label 요소
+        if (applyLabel && applyLabel.setLabel) {
+            applyLabel.setLabel("지원하기");
+        }
+        
+        // 버튼 활성화
+        btnApply.setDisabled(false);
+        
+        // 스타일 클래스 제거
+        btnApply.removeClass("btn-applied");
+        
+        // 원본 스타일 복구
+        var btnElement = document.getElementById("btnApply");
+        if (btnElement) {
+            btnElement.style.backgroundColor = "#36f";
+            btnElement.style.cursor = "pointer";
+            btnElement.style.opacity = "1";
+        }
+    }
+    
+    console.log("지원 버튼 상태 업데이트 완료");
 };
 
 /**
@@ -1027,6 +1172,70 @@ scwin.updateUI = function () {
     }, 500);
 
     console.log("✅ UI 업데이트 완료 (이미지는 비동기 처리 중)");
+};
+
+/**
+ * 지원 상태에 따른 지원하기 버튼 상태 업데이트
+ */
+scwin.updateApplyButtonState = function () {
+    console.log("=== 지원 버튼 상태 업데이트 ===");
+    
+    var isApplied = dmp_postDetail.get("isApplied");
+    console.log("지원 상태:", isApplied);
+    
+    // 문자열로 올 수 있으므로 확실하게 boolean 변환
+    var appliedStatus = (isApplied === true || isApplied === "true" || isApplied === "Y");
+    
+    if (appliedStatus) {
+        // 이미 지원한 경우 - 버튼 비활성화 및 텍스트 변경
+        console.log("✅ 이미 지원한 공고 - 버튼 비활성화");
+        
+        // 버튼 텍스트 변경
+        var applyLabel = btnApply.getChildren()[0]; // xf:label 요소
+        if (applyLabel && applyLabel.setLabel) {
+            applyLabel.setLabel("✅ 지원완료");
+        }
+        
+        // 버튼 비활성화
+        btnApply.setDisabled(true);
+        
+        // 스타일 클래스 추가 (이미 지원한 상태 표시)
+        btnApply.addClass("btn-applied");
+        
+        // hover 효과 제거를 위한 추가 스타일 적용
+        var btnElement = document.getElementById("btnApply");
+        if (btnElement) {
+            btnElement.style.backgroundColor = "#6c757d";
+            btnElement.style.cursor = "not-allowed";
+            btnElement.style.opacity = "0.7";
+        }
+        
+    } else {
+        // 아직 지원하지 않은 경우 - 버튼 활성화
+        console.log("❌ 아직 지원하지 않은 공고 - 버튼 활성화");
+        
+        // 버튼 텍스트 원복
+        var applyLabel = btnApply.getChildren()[0]; // xf:label 요소
+        if (applyLabel && applyLabel.setLabel) {
+            applyLabel.setLabel("지원하기");
+        }
+        
+        // 버튼 활성화
+        btnApply.setDisabled(false);
+        
+        // 스타일 클래스 제거
+        btnApply.removeClass("btn-applied");
+        
+        // 원본 스타일 복구
+        var btnElement = document.getElementById("btnApply");
+        if (btnElement) {
+            btnElement.style.backgroundColor = "#36f";
+            btnElement.style.cursor = "pointer";
+            btnElement.style.opacity = "1";
+        }
+    }
+    
+    console.log("지원 버튼 상태 업데이트 완료");
 };
 
 /**
@@ -1110,6 +1319,70 @@ scwin.updateMainImageWithRetry = function(retryCount) {
 };
 
 /**
+ * 지원 상태에 따른 지원하기 버튼 상태 업데이트
+ */
+scwin.updateApplyButtonState = function () {
+    console.log("=== 지원 버튼 상태 업데이트 ===");
+    
+    var isApplied = dmp_postDetail.get("isApplied");
+    console.log("지원 상태:", isApplied);
+    
+    // 문자열로 올 수 있으므로 확실하게 boolean 변환
+    var appliedStatus = (isApplied === true || isApplied === "true" || isApplied === "Y");
+    
+    if (appliedStatus) {
+        // 이미 지원한 경우 - 버튼 비활성화 및 텍스트 변경
+        console.log("✅ 이미 지원한 공고 - 버튼 비활성화");
+        
+        // 버튼 텍스트 변경
+        var applyLabel = btnApply.getChildren()[0]; // xf:label 요소
+        if (applyLabel && applyLabel.setLabel) {
+            applyLabel.setLabel("✅ 지원완료");
+        }
+        
+        // 버튼 비활성화
+        btnApply.setDisabled(true);
+        
+        // 스타일 클래스 추가 (이미 지원한 상태 표시)
+        btnApply.addClass("btn-applied");
+        
+        // hover 효과 제거를 위한 추가 스타일 적용
+        var btnElement = document.getElementById("btnApply");
+        if (btnElement) {
+            btnElement.style.backgroundColor = "#6c757d";
+            btnElement.style.cursor = "not-allowed";
+            btnElement.style.opacity = "0.7";
+        }
+        
+    } else {
+        // 아직 지원하지 않은 경우 - 버튼 활성화
+        console.log("❌ 아직 지원하지 않은 공고 - 버튼 활성화");
+        
+        // 버튼 텍스트 원복
+        var applyLabel = btnApply.getChildren()[0]; // xf:label 요소
+        if (applyLabel && applyLabel.setLabel) {
+            applyLabel.setLabel("지원하기");
+        }
+        
+        // 버튼 활성화
+        btnApply.setDisabled(false);
+        
+        // 스타일 클래스 제거
+        btnApply.removeClass("btn-applied");
+        
+        // 원본 스타일 복구
+        var btnElement = document.getElementById("btnApply");
+        if (btnElement) {
+            btnElement.style.backgroundColor = "#36f";
+            btnElement.style.cursor = "pointer";
+            btnElement.style.opacity = "1";
+        }
+    }
+    
+    console.log("지원 버튼 상태 업데이트 완료");
+};
+
+/**
  * 이미지 로딩 오류 처리 함수 (CreateCompany 방식 참고)
  */
 scwin.handleImageLoadError = function(imgElement, companyName, imagePaths) {
@@ -1147,6 +1420,70 @@ scwin.handleImageLoadError = function(imgElement, companyName, imagePaths) {
 };
 
 /**
+ * 지원 상태에 따른 지원하기 버튼 상태 업데이트
+ */
+scwin.updateApplyButtonState = function () {
+    console.log("=== 지원 버튼 상태 업데이트 ===");
+    
+    var isApplied = dmp_postDetail.get("isApplied");
+    console.log("지원 상태:", isApplied);
+    
+    // 문자열로 올 수 있으므로 확실하게 boolean 변환
+    var appliedStatus = (isApplied === true || isApplied === "true" || isApplied === "Y");
+    
+    if (appliedStatus) {
+        // 이미 지원한 경우 - 버튼 비활성화 및 텍스트 변경
+        console.log("✅ 이미 지원한 공고 - 버튼 비활성화");
+        
+        // 버튼 텍스트 변경
+        var applyLabel = btnApply.getChildren()[0]; // xf:label 요소
+        if (applyLabel && applyLabel.setLabel) {
+            applyLabel.setLabel("✅ 지원완료");
+        }
+        
+        // 버튼 비활성화
+        btnApply.setDisabled(true);
+        
+        // 스타일 클래스 추가 (이미 지원한 상태 표시)
+        btnApply.addClass("btn-applied");
+        
+        // hover 효과 제거를 위한 추가 스타일 적용
+        var btnElement = document.getElementById("btnApply");
+        if (btnElement) {
+            btnElement.style.backgroundColor = "#6c757d";
+            btnElement.style.cursor = "not-allowed";
+            btnElement.style.opacity = "0.7";
+        }
+        
+    } else {
+        // 아직 지원하지 않은 경우 - 버튼 활성화
+        console.log("❌ 아직 지원하지 않은 공고 - 버튼 활성화");
+        
+        // 버튼 텍스트 원복
+        var applyLabel = btnApply.getChildren()[0]; // xf:label 요소
+        if (applyLabel && applyLabel.setLabel) {
+            applyLabel.setLabel("지원하기");
+        }
+        
+        // 버튼 활성화
+        btnApply.setDisabled(false);
+        
+        // 스타일 클래스 제거
+        btnApply.removeClass("btn-applied");
+        
+        // 원본 스타일 복구
+        var btnElement = document.getElementById("btnApply");
+        if (btnElement) {
+            btnElement.style.backgroundColor = "#36f";
+            btnElement.style.cursor = "pointer";
+            btnElement.style.opacity = "1";
+        }
+    }
+    
+    console.log("지원 버튼 상태 업데이트 완료");
+};
+
+/**
  * 메타 정보 업데이트
  */
 scwin.updateJobMeta = function () {
@@ -1164,6 +1501,70 @@ scwin.updateJobMeta = function () {
     }
 
     console.log("메타 정보 업데이트:", metaText);
+};
+
+/**
+ * 지원 상태에 따른 지원하기 버튼 상태 업데이트
+ */
+scwin.updateApplyButtonState = function () {
+    console.log("=== 지원 버튼 상태 업데이트 ===");
+    
+    var isApplied = dmp_postDetail.get("isApplied");
+    console.log("지원 상태:", isApplied);
+    
+    // 문자열로 올 수 있으므로 확실하게 boolean 변환
+    var appliedStatus = (isApplied === true || isApplied === "true" || isApplied === "Y");
+    
+    if (appliedStatus) {
+        // 이미 지원한 경우 - 버튼 비활성화 및 텍스트 변경
+        console.log("✅ 이미 지원한 공고 - 버튼 비활성화");
+        
+        // 버튼 텍스트 변경
+        var applyLabel = btnApply.getChildren()[0]; // xf:label 요소
+        if (applyLabel && applyLabel.setLabel) {
+            applyLabel.setLabel("✅ 지원완료");
+        }
+        
+        // 버튼 비활성화
+        btnApply.setDisabled(true);
+        
+        // 스타일 클래스 추가 (이미 지원한 상태 표시)
+        btnApply.addClass("btn-applied");
+        
+        // hover 효과 제거를 위한 추가 스타일 적용
+        var btnElement = document.getElementById("btnApply");
+        if (btnElement) {
+            btnElement.style.backgroundColor = "#6c757d";
+            btnElement.style.cursor = "not-allowed";
+            btnElement.style.opacity = "0.7";
+        }
+        
+    } else {
+        // 아직 지원하지 않은 경우 - 버튼 활성화
+        console.log("❌ 아직 지원하지 않은 공고 - 버튼 활성화");
+        
+        // 버튼 텍스트 원복
+        var applyLabel = btnApply.getChildren()[0]; // xf:label 요소
+        if (applyLabel && applyLabel.setLabel) {
+            applyLabel.setLabel("지원하기");
+        }
+        
+        // 버튼 활성화
+        btnApply.setDisabled(false);
+        
+        // 스타일 클래스 제거
+        btnApply.removeClass("btn-applied");
+        
+        // 원본 스타일 복구
+        var btnElement = document.getElementById("btnApply");
+        if (btnElement) {
+            btnElement.style.backgroundColor = "#36f";
+            btnElement.style.cursor = "pointer";
+            btnElement.style.opacity = "1";
+        }
+    }
+    
+    console.log("지원 버튼 상태 업데이트 완료");
 };
 
 /**
@@ -1191,6 +1592,70 @@ scwin.updateTechStackTags = function () {
     } else if (tagsContainer) {
         tagsContainer.innerHTML = '<span class="tag">기술스택 정보 없음</span>';
     }
+};
+
+/**
+ * 지원 상태에 따른 지원하기 버튼 상태 업데이트
+ */
+scwin.updateApplyButtonState = function () {
+    console.log("=== 지원 버튼 상태 업데이트 ===");
+    
+    var isApplied = dmp_postDetail.get("isApplied");
+    console.log("지원 상태:", isApplied);
+    
+    // 문자열로 올 수 있으므로 확실하게 boolean 변환
+    var appliedStatus = (isApplied === true || isApplied === "true" || isApplied === "Y");
+    
+    if (appliedStatus) {
+        // 이미 지원한 경우 - 버튼 비활성화 및 텍스트 변경
+        console.log("✅ 이미 지원한 공고 - 버튼 비활성화");
+        
+        // 버튼 텍스트 변경
+        var applyLabel = btnApply.getChildren()[0]; // xf:label 요소
+        if (applyLabel && applyLabel.setLabel) {
+            applyLabel.setLabel("✅ 지원완료");
+        }
+        
+        // 버튼 비활성화
+        btnApply.setDisabled(true);
+        
+        // 스타일 클래스 추가 (이미 지원한 상태 표시)
+        btnApply.addClass("btn-applied");
+        
+        // hover 효과 제거를 위한 추가 스타일 적용
+        var btnElement = document.getElementById("btnApply");
+        if (btnElement) {
+            btnElement.style.backgroundColor = "#6c757d";
+            btnElement.style.cursor = "not-allowed";
+            btnElement.style.opacity = "0.7";
+        }
+        
+    } else {
+        // 아직 지원하지 않은 경우 - 버튼 활성화
+        console.log("❌ 아직 지원하지 않은 공고 - 버튼 활성화");
+        
+        // 버튼 텍스트 원복
+        var applyLabel = btnApply.getChildren()[0]; // xf:label 요소
+        if (applyLabel && applyLabel.setLabel) {
+            applyLabel.setLabel("지원하기");
+        }
+        
+        // 버튼 활성화
+        btnApply.setDisabled(false);
+        
+        // 스타일 클래스 제거
+        btnApply.removeClass("btn-applied");
+        
+        // 원본 스타일 복구
+        var btnElement = document.getElementById("btnApply");
+        if (btnElement) {
+            btnElement.style.backgroundColor = "#36f";
+            btnElement.style.cursor = "pointer";
+            btnElement.style.opacity = "1";
+        }
+    }
+    
+    console.log("지원 버튼 상태 업데이트 완료");
 };
 
 /**
@@ -1223,6 +1688,70 @@ scwin.updateDeveloperTypeTags = function () {
 };
 
 /**
+ * 지원 상태에 따른 지원하기 버튼 상태 업데이트
+ */
+scwin.updateApplyButtonState = function () {
+    console.log("=== 지원 버튼 상태 업데이트 ===");
+    
+    var isApplied = dmp_postDetail.get("isApplied");
+    console.log("지원 상태:", isApplied);
+    
+    // 문자열로 올 수 있으므로 확실하게 boolean 변환
+    var appliedStatus = (isApplied === true || isApplied === "true" || isApplied === "Y");
+    
+    if (appliedStatus) {
+        // 이미 지원한 경우 - 버튼 비활성화 및 텍스트 변경
+        console.log("✅ 이미 지원한 공고 - 버튼 비활성화");
+        
+        // 버튼 텍스트 변경
+        var applyLabel = btnApply.getChildren()[0]; // xf:label 요소
+        if (applyLabel && applyLabel.setLabel) {
+            applyLabel.setLabel("✅ 지원완료");
+        }
+        
+        // 버튼 비활성화
+        btnApply.setDisabled(true);
+        
+        // 스타일 클래스 추가 (이미 지원한 상태 표시)
+        btnApply.addClass("btn-applied");
+        
+        // hover 효과 제거를 위한 추가 스타일 적용
+        var btnElement = document.getElementById("btnApply");
+        if (btnElement) {
+            btnElement.style.backgroundColor = "#6c757d";
+            btnElement.style.cursor = "not-allowed";
+            btnElement.style.opacity = "0.7";
+        }
+        
+    } else {
+        // 아직 지원하지 않은 경우 - 버튼 활성화
+        console.log("❌ 아직 지원하지 않은 공고 - 버튼 활성화");
+        
+        // 버튼 텍스트 원복
+        var applyLabel = btnApply.getChildren()[0]; // xf:label 요소
+        if (applyLabel && applyLabel.setLabel) {
+            applyLabel.setLabel("지원하기");
+        }
+        
+        // 버튼 활성화
+        btnApply.setDisabled(false);
+        
+        // 스타일 클래스 제거
+        btnApply.removeClass("btn-applied");
+        
+        // 원본 스타일 복구
+        var btnElement = document.getElementById("btnApply");
+        if (btnElement) {
+            btnElement.style.backgroundColor = "#36f";
+            btnElement.style.cursor = "pointer";
+            btnElement.style.opacity = "1";
+        }
+    }
+    
+    console.log("지원 버튼 상태 업데이트 완료");
+};
+
+/**
  * 기타 정보 태그 업데이트
  */
 scwin.updateInfoTags = function () {
@@ -1242,6 +1771,70 @@ scwin.updateInfoTags = function () {
 
         infoContainer.innerHTML = infoHtml;
     }
+};
+
+/**
+ * 지원 상태에 따른 지원하기 버튼 상태 업데이트
+ */
+scwin.updateApplyButtonState = function () {
+    console.log("=== 지원 버튼 상태 업데이트 ===");
+    
+    var isApplied = dmp_postDetail.get("isApplied");
+    console.log("지원 상태:", isApplied);
+    
+    // 문자열로 올 수 있으므로 확실하게 boolean 변환
+    var appliedStatus = (isApplied === true || isApplied === "true" || isApplied === "Y");
+    
+    if (appliedStatus) {
+        // 이미 지원한 경우 - 버튼 비활성화 및 텍스트 변경
+        console.log("✅ 이미 지원한 공고 - 버튼 비활성화");
+        
+        // 버튼 텍스트 변경
+        var applyLabel = btnApply.getChildren()[0]; // xf:label 요소
+        if (applyLabel && applyLabel.setLabel) {
+            applyLabel.setLabel("✅ 지원완료");
+        }
+        
+        // 버튼 비활성화
+        btnApply.setDisabled(true);
+        
+        // 스타일 클래스 추가 (이미 지원한 상태 표시)
+        btnApply.addClass("btn-applied");
+        
+        // hover 효과 제거를 위한 추가 스타일 적용
+        var btnElement = document.getElementById("btnApply");
+        if (btnElement) {
+            btnElement.style.backgroundColor = "#6c757d";
+            btnElement.style.cursor = "not-allowed";
+            btnElement.style.opacity = "0.7";
+        }
+        
+    } else {
+        // 아직 지원하지 않은 경우 - 버튼 활성화
+        console.log("❌ 아직 지원하지 않은 공고 - 버튼 활성화");
+        
+        // 버튼 텍스트 원복
+        var applyLabel = btnApply.getChildren()[0]; // xf:label 요소
+        if (applyLabel && applyLabel.setLabel) {
+            applyLabel.setLabel("지원하기");
+        }
+        
+        // 버튼 활성화
+        btnApply.setDisabled(false);
+        
+        // 스타일 클래스 제거
+        btnApply.removeClass("btn-applied");
+        
+        // 원본 스타일 복구
+        var btnElement = document.getElementById("btnApply");
+        if (btnElement) {
+            btnElement.style.backgroundColor = "#36f";
+            btnElement.style.cursor = "pointer";
+            btnElement.style.opacity = "1";
+        }
+    }
+    
+    console.log("지원 버튼 상태 업데이트 완료");
 };
 
 /**
@@ -1287,6 +1880,70 @@ scwin.btnApply_onclick = function (e) {
 };
 
 /**
+ * 지원 상태에 따른 지원하기 버튼 상태 업데이트
+ */
+scwin.updateApplyButtonState = function () {
+    console.log("=== 지원 버튼 상태 업데이트 ===");
+    
+    var isApplied = dmp_postDetail.get("isApplied");
+    console.log("지원 상태:", isApplied);
+    
+    // 문자열로 올 수 있으므로 확실하게 boolean 변환
+    var appliedStatus = (isApplied === true || isApplied === "true" || isApplied === "Y");
+    
+    if (appliedStatus) {
+        // 이미 지원한 경우 - 버튼 비활성화 및 텍스트 변경
+        console.log("✅ 이미 지원한 공고 - 버튼 비활성화");
+        
+        // 버튼 텍스트 변경
+        var applyLabel = btnApply.getChildren()[0]; // xf:label 요소
+        if (applyLabel && applyLabel.setLabel) {
+            applyLabel.setLabel("✅ 지원완료");
+        }
+        
+        // 버튼 비활성화
+        btnApply.setDisabled(true);
+        
+        // 스타일 클래스 추가 (이미 지원한 상태 표시)
+        btnApply.addClass("btn-applied");
+        
+        // hover 효과 제거를 위한 추가 스타일 적용
+        var btnElement = document.getElementById("btnApply");
+        if (btnElement) {
+            btnElement.style.backgroundColor = "#6c757d";
+            btnElement.style.cursor = "not-allowed";
+            btnElement.style.opacity = "0.7";
+        }
+        
+    } else {
+        // 아직 지원하지 않은 경우 - 버튼 활성화
+        console.log("❌ 아직 지원하지 않은 공고 - 버튼 활성화");
+        
+        // 버튼 텍스트 원복
+        var applyLabel = btnApply.getChildren()[0]; // xf:label 요소
+        if (applyLabel && applyLabel.setLabel) {
+            applyLabel.setLabel("지원하기");
+        }
+        
+        // 버튼 활성화
+        btnApply.setDisabled(false);
+        
+        // 스타일 클래스 제거
+        btnApply.removeClass("btn-applied");
+        
+        // 원본 스타일 복구
+        var btnElement = document.getElementById("btnApply");
+        if (btnElement) {
+            btnElement.style.backgroundColor = "#36f";
+            btnElement.style.cursor = "pointer";
+            btnElement.style.opacity = "1";
+        }
+    }
+    
+    console.log("지원 버튼 상태 업데이트 완료");
+};
+
+/**
  * 공고 삭제 완료 콜백
  */
 scwin.sbm_deletePost_submitdone = function (e) {
@@ -1321,6 +1978,70 @@ scwin.sbm_deletePost_submitdone = function (e) {
 // =========================
 
 /**
+ * 지원 상태에 따른 지원하기 버튼 상태 업데이트
+ */
+scwin.updateApplyButtonState = function () {
+    console.log("=== 지원 버튼 상태 업데이트 ===");
+    
+    var isApplied = dmp_postDetail.get("isApplied");
+    console.log("지원 상태:", isApplied);
+    
+    // 문자열로 올 수 있으므로 확실하게 boolean 변환
+    var appliedStatus = (isApplied === true || isApplied === "true" || isApplied === "Y");
+    
+    if (appliedStatus) {
+        // 이미 지원한 경우 - 버튼 비활성화 및 텍스트 변경
+        console.log("✅ 이미 지원한 공고 - 버튼 비활성화");
+        
+        // 버튼 텍스트 변경
+        var applyLabel = btnApply.getChildren()[0]; // xf:label 요소
+        if (applyLabel && applyLabel.setLabel) {
+            applyLabel.setLabel("✅ 지원완료");
+        }
+        
+        // 버튼 비활성화
+        btnApply.setDisabled(true);
+        
+        // 스타일 클래스 추가 (이미 지원한 상태 표시)
+        btnApply.addClass("btn-applied");
+        
+        // hover 효과 제거를 위한 추가 스타일 적용
+        var btnElement = document.getElementById("btnApply");
+        if (btnElement) {
+            btnElement.style.backgroundColor = "#6c757d";
+            btnElement.style.cursor = "not-allowed";
+            btnElement.style.opacity = "0.7";
+        }
+        
+    } else {
+        // 아직 지원하지 않은 경우 - 버튼 활성화
+        console.log("❌ 아직 지원하지 않은 공고 - 버튼 활성화");
+        
+        // 버튼 텍스트 원복
+        var applyLabel = btnApply.getChildren()[0]; // xf:label 요소
+        if (applyLabel && applyLabel.setLabel) {
+            applyLabel.setLabel("지원하기");
+        }
+        
+        // 버튼 활성화
+        btnApply.setDisabled(false);
+        
+        // 스타일 클래스 제거
+        btnApply.removeClass("btn-applied");
+        
+        // 원본 스타일 복구
+        var btnElement = document.getElementById("btnApply");
+        if (btnElement) {
+            btnElement.style.backgroundColor = "#36f";
+            btnElement.style.cursor = "pointer";
+            btnElement.style.opacity = "1";
+        }
+    }
+    
+    console.log("지원 버튼 상태 업데이트 완료");
+};
+
+/**
  * 경력수준 한글 변환
  */
 scwin.getExperienceLevelText = function (experienceLevel) {
@@ -1330,6 +2051,70 @@ scwin.getExperienceLevelText = function (experienceLevel) {
         case 'senior': return '시니어·3년+';
         default: return experienceLevel || '정보없음';
     }
+};
+
+/**
+ * 지원 상태에 따른 지원하기 버튼 상태 업데이트
+ */
+scwin.updateApplyButtonState = function () {
+    console.log("=== 지원 버튼 상태 업데이트 ===");
+    
+    var isApplied = dmp_postDetail.get("isApplied");
+    console.log("지원 상태:", isApplied);
+    
+    // 문자열로 올 수 있으므로 확실하게 boolean 변환
+    var appliedStatus = (isApplied === true || isApplied === "true" || isApplied === "Y");
+    
+    if (appliedStatus) {
+        // 이미 지원한 경우 - 버튼 비활성화 및 텍스트 변경
+        console.log("✅ 이미 지원한 공고 - 버튼 비활성화");
+        
+        // 버튼 텍스트 변경
+        var applyLabel = btnApply.getChildren()[0]; // xf:label 요소
+        if (applyLabel && applyLabel.setLabel) {
+            applyLabel.setLabel("✅ 지원완료");
+        }
+        
+        // 버튼 비활성화
+        btnApply.setDisabled(true);
+        
+        // 스타일 클래스 추가 (이미 지원한 상태 표시)
+        btnApply.addClass("btn-applied");
+        
+        // hover 효과 제거를 위한 추가 스타일 적용
+        var btnElement = document.getElementById("btnApply");
+        if (btnElement) {
+            btnElement.style.backgroundColor = "#6c757d";
+            btnElement.style.cursor = "not-allowed";
+            btnElement.style.opacity = "0.7";
+        }
+        
+    } else {
+        // 아직 지원하지 않은 경우 - 버튼 활성화
+        console.log("❌ 아직 지원하지 않은 공고 - 버튼 활성화");
+        
+        // 버튼 텍스트 원복
+        var applyLabel = btnApply.getChildren()[0]; // xf:label 요소
+        if (applyLabel && applyLabel.setLabel) {
+            applyLabel.setLabel("지원하기");
+        }
+        
+        // 버튼 활성화
+        btnApply.setDisabled(false);
+        
+        // 스타일 클래스 제거
+        btnApply.removeClass("btn-applied");
+        
+        // 원본 스타일 복구
+        var btnElement = document.getElementById("btnApply");
+        if (btnElement) {
+            btnElement.style.backgroundColor = "#36f";
+            btnElement.style.cursor = "pointer";
+            btnElement.style.opacity = "1";
+        }
+    }
+    
+    console.log("지원 버튼 상태 업데이트 완료");
 };
 
 /**
@@ -1345,6 +2130,70 @@ scwin.getWorkTypeText = function (workType) {
 };
 
 /**
+ * 지원 상태에 따른 지원하기 버튼 상태 업데이트
+ */
+scwin.updateApplyButtonState = function () {
+    console.log("=== 지원 버튼 상태 업데이트 ===");
+    
+    var isApplied = dmp_postDetail.get("isApplied");
+    console.log("지원 상태:", isApplied);
+    
+    // 문자열로 올 수 있으므로 확실하게 boolean 변환
+    var appliedStatus = (isApplied === true || isApplied === "true" || isApplied === "Y");
+    
+    if (appliedStatus) {
+        // 이미 지원한 경우 - 버튼 비활성화 및 텍스트 변경
+        console.log("✅ 이미 지원한 공고 - 버튼 비활성화");
+        
+        // 버튼 텍스트 변경
+        var applyLabel = btnApply.getChildren()[0]; // xf:label 요소
+        if (applyLabel && applyLabel.setLabel) {
+            applyLabel.setLabel("✅ 지원완료");
+        }
+        
+        // 버튼 비활성화
+        btnApply.setDisabled(true);
+        
+        // 스타일 클래스 추가 (이미 지원한 상태 표시)
+        btnApply.addClass("btn-applied");
+        
+        // hover 효과 제거를 위한 추가 스타일 적용
+        var btnElement = document.getElementById("btnApply");
+        if (btnElement) {
+            btnElement.style.backgroundColor = "#6c757d";
+            btnElement.style.cursor = "not-allowed";
+            btnElement.style.opacity = "0.7";
+        }
+        
+    } else {
+        // 아직 지원하지 않은 경우 - 버튼 활성화
+        console.log("❌ 아직 지원하지 않은 공고 - 버튼 활성화");
+        
+        // 버튼 텍스트 원복
+        var applyLabel = btnApply.getChildren()[0]; // xf:label 요소
+        if (applyLabel && applyLabel.setLabel) {
+            applyLabel.setLabel("지원하기");
+        }
+        
+        // 버튼 활성화
+        btnApply.setDisabled(false);
+        
+        // 스타일 클래스 제거
+        btnApply.removeClass("btn-applied");
+        
+        // 원본 스타일 복구
+        var btnElement = document.getElementById("btnApply");
+        if (btnElement) {
+            btnElement.style.backgroundColor = "#36f";
+            btnElement.style.cursor = "pointer";
+            btnElement.style.opacity = "1";
+        }
+    }
+    
+    console.log("지원 버튼 상태 업데이트 완료");
+};
+
+/**
  * 급여범위 한글 변환
  */
 scwin.getSalaryRangeText = function (salaryRange) {
@@ -1355,6 +2204,70 @@ scwin.getSalaryRangeText = function (salaryRange) {
         case 'over50': return '5,000만원+';
         default: return salaryRange || '협의';
     }
+};
+
+/**
+ * 지원 상태에 따른 지원하기 버튼 상태 업데이트
+ */
+scwin.updateApplyButtonState = function () {
+    console.log("=== 지원 버튼 상태 업데이트 ===");
+    
+    var isApplied = dmp_postDetail.get("isApplied");
+    console.log("지원 상태:", isApplied);
+    
+    // 문자열로 올 수 있으므로 확실하게 boolean 변환
+    var appliedStatus = (isApplied === true || isApplied === "true" || isApplied === "Y");
+    
+    if (appliedStatus) {
+        // 이미 지원한 경우 - 버튼 비활성화 및 텍스트 변경
+        console.log("✅ 이미 지원한 공고 - 버튼 비활성화");
+        
+        // 버튼 텍스트 변경
+        var applyLabel = btnApply.getChildren()[0]; // xf:label 요소
+        if (applyLabel && applyLabel.setLabel) {
+            applyLabel.setLabel("✅ 지원완료");
+        }
+        
+        // 버튼 비활성화
+        btnApply.setDisabled(true);
+        
+        // 스타일 클래스 추가 (이미 지원한 상태 표시)
+        btnApply.addClass("btn-applied");
+        
+        // hover 효과 제거를 위한 추가 스타일 적용
+        var btnElement = document.getElementById("btnApply");
+        if (btnElement) {
+            btnElement.style.backgroundColor = "#6c757d";
+            btnElement.style.cursor = "not-allowed";
+            btnElement.style.opacity = "0.7";
+        }
+        
+    } else {
+        // 아직 지원하지 않은 경우 - 버튼 활성화
+        console.log("❌ 아직 지원하지 않은 공고 - 버튼 활성화");
+        
+        // 버튼 텍스트 원복
+        var applyLabel = btnApply.getChildren()[0]; // xf:label 요소
+        if (applyLabel && applyLabel.setLabel) {
+            applyLabel.setLabel("지원하기");
+        }
+        
+        // 버튼 활성화
+        btnApply.setDisabled(false);
+        
+        // 스타일 클래스 제거
+        btnApply.removeClass("btn-applied");
+        
+        // 원본 스타일 복구
+        var btnElement = document.getElementById("btnApply");
+        if (btnElement) {
+            btnElement.style.backgroundColor = "#36f";
+            btnElement.style.cursor = "pointer";
+            btnElement.style.opacity = "1";
+        }
+    }
+    
+    console.log("지원 버튼 상태 업데이트 완료");
 };
 
 /**
@@ -1372,6 +2285,70 @@ scwin.getUserInfoFromCookie = function () {
         console.error("사용자 정보 쿠키 파싱 오류:", error);
     }
     return null;
+};
+
+/**
+ * 지원 상태에 따른 지원하기 버튼 상태 업데이트
+ */
+scwin.updateApplyButtonState = function () {
+    console.log("=== 지원 버튼 상태 업데이트 ===");
+    
+    var isApplied = dmp_postDetail.get("isApplied");
+    console.log("지원 상태:", isApplied);
+    
+    // 문자열로 올 수 있으므로 확실하게 boolean 변환
+    var appliedStatus = (isApplied === true || isApplied === "true" || isApplied === "Y");
+    
+    if (appliedStatus) {
+        // 이미 지원한 경우 - 버튼 비활성화 및 텍스트 변경
+        console.log("✅ 이미 지원한 공고 - 버튼 비활성화");
+        
+        // 버튼 텍스트 변경
+        var applyLabel = btnApply.getChildren()[0]; // xf:label 요소
+        if (applyLabel && applyLabel.setLabel) {
+            applyLabel.setLabel("✅ 지원완료");
+        }
+        
+        // 버튼 비활성화
+        btnApply.setDisabled(true);
+        
+        // 스타일 클래스 추가 (이미 지원한 상태 표시)
+        btnApply.addClass("btn-applied");
+        
+        // hover 효과 제거를 위한 추가 스타일 적용
+        var btnElement = document.getElementById("btnApply");
+        if (btnElement) {
+            btnElement.style.backgroundColor = "#6c757d";
+            btnElement.style.cursor = "not-allowed";
+            btnElement.style.opacity = "0.7";
+        }
+        
+    } else {
+        // 아직 지원하지 않은 경우 - 버튼 활성화
+        console.log("❌ 아직 지원하지 않은 공고 - 버튼 활성화");
+        
+        // 버튼 텍스트 원복
+        var applyLabel = btnApply.getChildren()[0]; // xf:label 요소
+        if (applyLabel && applyLabel.setLabel) {
+            applyLabel.setLabel("지원하기");
+        }
+        
+        // 버튼 활성화
+        btnApply.setDisabled(false);
+        
+        // 스타일 클래스 제거
+        btnApply.removeClass("btn-applied");
+        
+        // 원본 스타일 복구
+        var btnElement = document.getElementById("btnApply");
+        if (btnElement) {
+            btnElement.style.backgroundColor = "#36f";
+            btnElement.style.cursor = "pointer";
+            btnElement.style.opacity = "1";
+        }
+    }
+    
+    console.log("지원 버튼 상태 업데이트 완료");
 };
 
 /**
@@ -1420,6 +2397,70 @@ scwin.checkUserPermissionAndUpdateUI = function () {
 };
 
 /**
+ * 지원 상태에 따른 지원하기 버튼 상태 업데이트
+ */
+scwin.updateApplyButtonState = function () {
+    console.log("=== 지원 버튼 상태 업데이트 ===");
+    
+    var isApplied = dmp_postDetail.get("isApplied");
+    console.log("지원 상태:", isApplied);
+    
+    // 문자열로 올 수 있으므로 확실하게 boolean 변환
+    var appliedStatus = (isApplied === true || isApplied === "true" || isApplied === "Y");
+    
+    if (appliedStatus) {
+        // 이미 지원한 경우 - 버튼 비활성화 및 텍스트 변경
+        console.log("✅ 이미 지원한 공고 - 버튼 비활성화");
+        
+        // 버튼 텍스트 변경
+        var applyLabel = btnApply.getChildren()[0]; // xf:label 요소
+        if (applyLabel && applyLabel.setLabel) {
+            applyLabel.setLabel("✅ 지원완료");
+        }
+        
+        // 버튼 비활성화
+        btnApply.setDisabled(true);
+        
+        // 스타일 클래스 추가 (이미 지원한 상태 표시)
+        btnApply.addClass("btn-applied");
+        
+        // hover 효과 제거를 위한 추가 스타일 적용
+        var btnElement = document.getElementById("btnApply");
+        if (btnElement) {
+            btnElement.style.backgroundColor = "#6c757d";
+            btnElement.style.cursor = "not-allowed";
+            btnElement.style.opacity = "0.7";
+        }
+        
+    } else {
+        // 아직 지원하지 않은 경우 - 버튼 활성화
+        console.log("❌ 아직 지원하지 않은 공고 - 버튼 활성화");
+        
+        // 버튼 텍스트 원복
+        var applyLabel = btnApply.getChildren()[0]; // xf:label 요소
+        if (applyLabel && applyLabel.setLabel) {
+            applyLabel.setLabel("지원하기");
+        }
+        
+        // 버튼 활성화
+        btnApply.setDisabled(false);
+        
+        // 스타일 클래스 제거
+        btnApply.removeClass("btn-applied");
+        
+        // 원본 스타일 복구
+        var btnElement = document.getElementById("btnApply");
+        if (btnElement) {
+            btnElement.style.backgroundColor = "#36f";
+            btnElement.style.cursor = "pointer";
+            btnElement.style.opacity = "1";
+        }
+    }
+    
+    console.log("지원 버튼 상태 업데이트 완료");
+};
+
+/**
  * 일반 사용자 UI 표시 (지원하기, 북마크)
  */
 scwin.showGeneralUserUI = function () {
@@ -1433,6 +2474,70 @@ scwin.showGeneralUserUI = function () {
     btnDelete.hide();
     btnApplicantDetails.hide();
     btnScout.hide();
+};
+
+/**
+ * 지원 상태에 따른 지원하기 버튼 상태 업데이트
+ */
+scwin.updateApplyButtonState = function () {
+    console.log("=== 지원 버튼 상태 업데이트 ===");
+    
+    var isApplied = dmp_postDetail.get("isApplied");
+    console.log("지원 상태:", isApplied);
+    
+    // 문자열로 올 수 있으므로 확실하게 boolean 변환
+    var appliedStatus = (isApplied === true || isApplied === "true" || isApplied === "Y");
+    
+    if (appliedStatus) {
+        // 이미 지원한 경우 - 버튼 비활성화 및 텍스트 변경
+        console.log("✅ 이미 지원한 공고 - 버튼 비활성화");
+        
+        // 버튼 텍스트 변경
+        var applyLabel = btnApply.getChildren()[0]; // xf:label 요소
+        if (applyLabel && applyLabel.setLabel) {
+            applyLabel.setLabel("✅ 지원완료");
+        }
+        
+        // 버튼 비활성화
+        btnApply.setDisabled(true);
+        
+        // 스타일 클래스 추가 (이미 지원한 상태 표시)
+        btnApply.addClass("btn-applied");
+        
+        // hover 효과 제거를 위한 추가 스타일 적용
+        var btnElement = document.getElementById("btnApply");
+        if (btnElement) {
+            btnElement.style.backgroundColor = "#6c757d";
+            btnElement.style.cursor = "not-allowed";
+            btnElement.style.opacity = "0.7";
+        }
+        
+    } else {
+        // 아직 지원하지 않은 경우 - 버튼 활성화
+        console.log("❌ 아직 지원하지 않은 공고 - 버튼 활성화");
+        
+        // 버튼 텍스트 원복
+        var applyLabel = btnApply.getChildren()[0]; // xf:label 요소
+        if (applyLabel && applyLabel.setLabel) {
+            applyLabel.setLabel("지원하기");
+        }
+        
+        // 버튼 활성화
+        btnApply.setDisabled(false);
+        
+        // 스타일 클래스 제거
+        btnApply.removeClass("btn-applied");
+        
+        // 원본 스타일 복구
+        var btnElement = document.getElementById("btnApply");
+        if (btnElement) {
+            btnElement.style.backgroundColor = "#36f";
+            btnElement.style.cursor = "pointer";
+            btnElement.style.opacity = "1";
+        }
+    }
+    
+    console.log("지원 버튼 상태 업데이트 완료");
 };
 
 /**
@@ -1485,8 +2590,98 @@ scwin.btnDelete_onclick = function (e) {
 };
 
 scwin.sbm_insertJobApplication_submitdone = function (e) {
-    // 공고지원 후 추가기능
+    console.log("=== 공고 지원 응답 수신 ===");
+    console.log("응답 데이터:", e.responseJSON);
 
+    var elData = e.responseJSON.elData;
+    var elHeader = e.responseJSON.elHeader;
+
+    // 에러 체크
+    if (elHeader == null || elHeader == "" || elHeader == "undefined" || elHeader.resSuc == false) {
+        console.error("공고 지원 에러:", elHeader);
+        var errorMsg = "지원서 제출에 실패했습니다.";
+        if (elHeader && elHeader.resMsg) {
+            errorMsg += "\n" + elHeader.resMsg;
+        }
+        alert(errorMsg);
+        return false;
+    }
+
+    console.log("✅ 공고 지원 성공");
+    alert("지원서가 성공적으로 제출되었습니다!");
+
+    // 지원 상태를 true로 업데이트
+    dmp_postDetail.set("isApplied", true);
+    console.log("지원 상태를 true로 업데이트 완료");
+
+    // 지원 버튼 상태 업데이트
+    scwin.updateApplyButtonState();
+
+    console.log("지원 완료 처리 완료");
+};
+
+/**
+ * 지원 상태에 따른 지원하기 버튼 상태 업데이트
+ */
+scwin.updateApplyButtonState = function () {
+    console.log("=== 지원 버튼 상태 업데이트 ===");
+    
+    var isApplied = dmp_postDetail.get("isApplied");
+    console.log("지원 상태:", isApplied);
+    
+    // 문자열로 올 수 있으므로 확실하게 boolean 변환
+    var appliedStatus = (isApplied === true || isApplied === "true" || isApplied === "Y");
+    
+    if (appliedStatus) {
+        // 이미 지원한 경우 - 버튼 비활성화 및 텍스트 변경
+        console.log("✅ 이미 지원한 공고 - 버튼 비활성화");
+        
+        // 버튼 텍스트 변경
+        var applyLabel = btnApply.getChildren()[0]; // xf:label 요소
+        if (applyLabel && applyLabel.setLabel) {
+            applyLabel.setLabel("✅ 지원완료");
+        }
+        
+        // 버튼 비활성화
+        btnApply.setDisabled(true);
+        
+        // 스타일 클래스 추가 (이미 지원한 상태 표시)
+        btnApply.addClass("btn-applied");
+        
+        // hover 효과 제거를 위한 추가 스타일 적용
+        var btnElement = document.getElementById("btnApply");
+        if (btnElement) {
+            btnElement.style.backgroundColor = "#6c757d";
+            btnElement.style.cursor = "not-allowed";
+            btnElement.style.opacity = "0.7";
+        }
+        
+    } else {
+        // 아직 지원하지 않은 경우 - 버튼 활성화
+        console.log("❌ 아직 지원하지 않은 공고 - 버튼 활성화");
+        
+        // 버튼 텍스트 원복
+        var applyLabel = btnApply.getChildren()[0]; // xf:label 요소
+        if (applyLabel && applyLabel.setLabel) {
+            applyLabel.setLabel("지원하기");
+        }
+        
+        // 버튼 활성화
+        btnApply.setDisabled(false);
+        
+        // 스타일 클래스 제거
+        btnApply.removeClass("btn-applied");
+        
+        // 원본 스타일 복구
+        var btnElement = document.getElementById("btnApply");
+        if (btnElement) {
+            btnElement.style.backgroundColor = "#36f";
+            btnElement.style.cursor = "pointer";
+            btnElement.style.opacity = "1";
+        }
+    }
+    
+    console.log("지원 버튼 상태 업데이트 완료");
 };
 
 /**
@@ -1546,6 +2741,70 @@ scwin.btnScout_onclick = function (e) {
 // ==================== 편집 모드 관련 함수들 ====================
 
 /**
+ * 지원 상태에 따른 지원하기 버튼 상태 업데이트
+ */
+scwin.updateApplyButtonState = function () {
+    console.log("=== 지원 버튼 상태 업데이트 ===");
+    
+    var isApplied = dmp_postDetail.get("isApplied");
+    console.log("지원 상태:", isApplied);
+    
+    // 문자열로 올 수 있으므로 확실하게 boolean 변환
+    var appliedStatus = (isApplied === true || isApplied === "true" || isApplied === "Y");
+    
+    if (appliedStatus) {
+        // 이미 지원한 경우 - 버튼 비활성화 및 텍스트 변경
+        console.log("✅ 이미 지원한 공고 - 버튼 비활성화");
+        
+        // 버튼 텍스트 변경
+        var applyLabel = btnApply.getChildren()[0]; // xf:label 요소
+        if (applyLabel && applyLabel.setLabel) {
+            applyLabel.setLabel("✅ 지원완료");
+        }
+        
+        // 버튼 비활성화
+        btnApply.setDisabled(true);
+        
+        // 스타일 클래스 추가 (이미 지원한 상태 표시)
+        btnApply.addClass("btn-applied");
+        
+        // hover 효과 제거를 위한 추가 스타일 적용
+        var btnElement = document.getElementById("btnApply");
+        if (btnElement) {
+            btnElement.style.backgroundColor = "#6c757d";
+            btnElement.style.cursor = "not-allowed";
+            btnElement.style.opacity = "0.7";
+        }
+        
+    } else {
+        // 아직 지원하지 않은 경우 - 버튼 활성화
+        console.log("❌ 아직 지원하지 않은 공고 - 버튼 활성화");
+        
+        // 버튼 텍스트 원복
+        var applyLabel = btnApply.getChildren()[0]; // xf:label 요소
+        if (applyLabel && applyLabel.setLabel) {
+            applyLabel.setLabel("지원하기");
+        }
+        
+        // 버튼 활성화
+        btnApply.setDisabled(false);
+        
+        // 스타일 클래스 제거
+        btnApply.removeClass("btn-applied");
+        
+        // 원본 스타일 복구
+        var btnElement = document.getElementById("btnApply");
+        if (btnElement) {
+            btnElement.style.backgroundColor = "#36f";
+            btnElement.style.cursor = "pointer";
+            btnElement.style.opacity = "1";
+        }
+    }
+    
+    console.log("지원 버튼 상태 업데이트 완료");
+};
+
+/**
  * 편집 모드 진입
  */
 scwin.enterEditMode = function () {
@@ -1568,6 +2827,70 @@ scwin.enterEditMode = function () {
 };
 
 /**
+ * 지원 상태에 따른 지원하기 버튼 상태 업데이트
+ */
+scwin.updateApplyButtonState = function () {
+    console.log("=== 지원 버튼 상태 업데이트 ===");
+    
+    var isApplied = dmp_postDetail.get("isApplied");
+    console.log("지원 상태:", isApplied);
+    
+    // 문자열로 올 수 있으므로 확실하게 boolean 변환
+    var appliedStatus = (isApplied === true || isApplied === "true" || isApplied === "Y");
+    
+    if (appliedStatus) {
+        // 이미 지원한 경우 - 버튼 비활성화 및 텍스트 변경
+        console.log("✅ 이미 지원한 공고 - 버튼 비활성화");
+        
+        // 버튼 텍스트 변경
+        var applyLabel = btnApply.getChildren()[0]; // xf:label 요소
+        if (applyLabel && applyLabel.setLabel) {
+            applyLabel.setLabel("✅ 지원완료");
+        }
+        
+        // 버튼 비활성화
+        btnApply.setDisabled(true);
+        
+        // 스타일 클래스 추가 (이미 지원한 상태 표시)
+        btnApply.addClass("btn-applied");
+        
+        // hover 효과 제거를 위한 추가 스타일 적용
+        var btnElement = document.getElementById("btnApply");
+        if (btnElement) {
+            btnElement.style.backgroundColor = "#6c757d";
+            btnElement.style.cursor = "not-allowed";
+            btnElement.style.opacity = "0.7";
+        }
+        
+    } else {
+        // 아직 지원하지 않은 경우 - 버튼 활성화
+        console.log("❌ 아직 지원하지 않은 공고 - 버튼 활성화");
+        
+        // 버튼 텍스트 원복
+        var applyLabel = btnApply.getChildren()[0]; // xf:label 요소
+        if (applyLabel && applyLabel.setLabel) {
+            applyLabel.setLabel("지원하기");
+        }
+        
+        // 버튼 활성화
+        btnApply.setDisabled(false);
+        
+        // 스타일 클래스 제거
+        btnApply.removeClass("btn-applied");
+        
+        // 원본 스타일 복구
+        var btnElement = document.getElementById("btnApply");
+        if (btnElement) {
+            btnElement.style.backgroundColor = "#36f";
+            btnElement.style.cursor = "pointer";
+            btnElement.style.opacity = "1";
+        }
+    }
+    
+    console.log("지원 버튼 상태 업데이트 완료");
+};
+
+/**
  * 편집 모드 종료
  */
 scwin.exitEditMode = function () {
@@ -1586,6 +2909,70 @@ scwin.exitEditMode = function () {
     dmp_postEdit.clear();
 
     console.log("✅ 편집 모드 종료 완료");
+};
+
+/**
+ * 지원 상태에 따른 지원하기 버튼 상태 업데이트
+ */
+scwin.updateApplyButtonState = function () {
+    console.log("=== 지원 버튼 상태 업데이트 ===");
+    
+    var isApplied = dmp_postDetail.get("isApplied");
+    console.log("지원 상태:", isApplied);
+    
+    // 문자열로 올 수 있으므로 확실하게 boolean 변환
+    var appliedStatus = (isApplied === true || isApplied === "true" || isApplied === "Y");
+    
+    if (appliedStatus) {
+        // 이미 지원한 경우 - 버튼 비활성화 및 텍스트 변경
+        console.log("✅ 이미 지원한 공고 - 버튼 비활성화");
+        
+        // 버튼 텍스트 변경
+        var applyLabel = btnApply.getChildren()[0]; // xf:label 요소
+        if (applyLabel && applyLabel.setLabel) {
+            applyLabel.setLabel("✅ 지원완료");
+        }
+        
+        // 버튼 비활성화
+        btnApply.setDisabled(true);
+        
+        // 스타일 클래스 추가 (이미 지원한 상태 표시)
+        btnApply.addClass("btn-applied");
+        
+        // hover 효과 제거를 위한 추가 스타일 적용
+        var btnElement = document.getElementById("btnApply");
+        if (btnElement) {
+            btnElement.style.backgroundColor = "#6c757d";
+            btnElement.style.cursor = "not-allowed";
+            btnElement.style.opacity = "0.7";
+        }
+        
+    } else {
+        // 아직 지원하지 않은 경우 - 버튼 활성화
+        console.log("❌ 아직 지원하지 않은 공고 - 버튼 활성화");
+        
+        // 버튼 텍스트 원복
+        var applyLabel = btnApply.getChildren()[0]; // xf:label 요소
+        if (applyLabel && applyLabel.setLabel) {
+            applyLabel.setLabel("지원하기");
+        }
+        
+        // 버튼 활성화
+        btnApply.setDisabled(false);
+        
+        // 스타일 클래스 제거
+        btnApply.removeClass("btn-applied");
+        
+        // 원본 스타일 복구
+        var btnElement = document.getElementById("btnApply");
+        if (btnElement) {
+            btnElement.style.backgroundColor = "#36f";
+            btnElement.style.cursor = "pointer";
+            btnElement.style.opacity = "1";
+        }
+    }
+    
+    console.log("지원 버튼 상태 업데이트 완료");
 };
 
 /**
@@ -1617,6 +3004,70 @@ scwin.copyDataForEdit = function () {
 };
 
 /**
+ * 지원 상태에 따른 지원하기 버튼 상태 업데이트
+ */
+scwin.updateApplyButtonState = function () {
+    console.log("=== 지원 버튼 상태 업데이트 ===");
+    
+    var isApplied = dmp_postDetail.get("isApplied");
+    console.log("지원 상태:", isApplied);
+    
+    // 문자열로 올 수 있으므로 확실하게 boolean 변환
+    var appliedStatus = (isApplied === true || isApplied === "true" || isApplied === "Y");
+    
+    if (appliedStatus) {
+        // 이미 지원한 경우 - 버튼 비활성화 및 텍스트 변경
+        console.log("✅ 이미 지원한 공고 - 버튼 비활성화");
+        
+        // 버튼 텍스트 변경
+        var applyLabel = btnApply.getChildren()[0]; // xf:label 요소
+        if (applyLabel && applyLabel.setLabel) {
+            applyLabel.setLabel("✅ 지원완료");
+        }
+        
+        // 버튼 비활성화
+        btnApply.setDisabled(true);
+        
+        // 스타일 클래스 추가 (이미 지원한 상태 표시)
+        btnApply.addClass("btn-applied");
+        
+        // hover 효과 제거를 위한 추가 스타일 적용
+        var btnElement = document.getElementById("btnApply");
+        if (btnElement) {
+            btnElement.style.backgroundColor = "#6c757d";
+            btnElement.style.cursor = "not-allowed";
+            btnElement.style.opacity = "0.7";
+        }
+        
+    } else {
+        // 아직 지원하지 않은 경우 - 버튼 활성화
+        console.log("❌ 아직 지원하지 않은 공고 - 버튼 활성화");
+        
+        // 버튼 텍스트 원복
+        var applyLabel = btnApply.getChildren()[0]; // xf:label 요소
+        if (applyLabel && applyLabel.setLabel) {
+            applyLabel.setLabel("지원하기");
+        }
+        
+        // 버튼 활성화
+        btnApply.setDisabled(false);
+        
+        // 스타일 클래스 제거
+        btnApply.removeClass("btn-applied");
+        
+        // 원본 스타일 복구
+        var btnElement = document.getElementById("btnApply");
+        if (btnElement) {
+            btnElement.style.backgroundColor = "#36f";
+            btnElement.style.cursor = "pointer";
+            btnElement.style.opacity = "1";
+        }
+    }
+    
+    console.log("지원 버튼 상태 업데이트 완료");
+};
+
+/**
  * 편집 모드 UI 전환
  */
 scwin.toggleEditMode = function (isEdit) {
@@ -1636,6 +3087,70 @@ scwin.toggleEditMode = function (isEdit) {
     }
 
     console.log("편집 모드 UI 전환 완료");
+};
+
+/**
+ * 지원 상태에 따른 지원하기 버튼 상태 업데이트
+ */
+scwin.updateApplyButtonState = function () {
+    console.log("=== 지원 버튼 상태 업데이트 ===");
+    
+    var isApplied = dmp_postDetail.get("isApplied");
+    console.log("지원 상태:", isApplied);
+    
+    // 문자열로 올 수 있으므로 확실하게 boolean 변환
+    var appliedStatus = (isApplied === true || isApplied === "true" || isApplied === "Y");
+    
+    if (appliedStatus) {
+        // 이미 지원한 경우 - 버튼 비활성화 및 텍스트 변경
+        console.log("✅ 이미 지원한 공고 - 버튼 비활성화");
+        
+        // 버튼 텍스트 변경
+        var applyLabel = btnApply.getChildren()[0]; // xf:label 요소
+        if (applyLabel && applyLabel.setLabel) {
+            applyLabel.setLabel("✅ 지원완료");
+        }
+        
+        // 버튼 비활성화
+        btnApply.setDisabled(true);
+        
+        // 스타일 클래스 추가 (이미 지원한 상태 표시)
+        btnApply.addClass("btn-applied");
+        
+        // hover 효과 제거를 위한 추가 스타일 적용
+        var btnElement = document.getElementById("btnApply");
+        if (btnElement) {
+            btnElement.style.backgroundColor = "#6c757d";
+            btnElement.style.cursor = "not-allowed";
+            btnElement.style.opacity = "0.7";
+        }
+        
+    } else {
+        // 아직 지원하지 않은 경우 - 버튼 활성화
+        console.log("❌ 아직 지원하지 않은 공고 - 버튼 활성화");
+        
+        // 버튼 텍스트 원복
+        var applyLabel = btnApply.getChildren()[0]; // xf:label 요소
+        if (applyLabel && applyLabel.setLabel) {
+            applyLabel.setLabel("지원하기");
+        }
+        
+        // 버튼 활성화
+        btnApply.setDisabled(false);
+        
+        // 스타일 클래스 제거
+        btnApply.removeClass("btn-applied");
+        
+        // 원본 스타일 복구
+        var btnElement = document.getElementById("btnApply");
+        if (btnElement) {
+            btnElement.style.backgroundColor = "#36f";
+            btnElement.style.cursor = "pointer";
+            btnElement.style.opacity = "1";
+        }
+    }
+    
+    console.log("지원 버튼 상태 업데이트 완료");
 };
 
 /**
@@ -1689,6 +3204,70 @@ scwin.validateEditData = function () {
 };
 
 /**
+ * 지원 상태에 따른 지원하기 버튼 상태 업데이트
+ */
+scwin.updateApplyButtonState = function () {
+    console.log("=== 지원 버튼 상태 업데이트 ===");
+    
+    var isApplied = dmp_postDetail.get("isApplied");
+    console.log("지원 상태:", isApplied);
+    
+    // 문자열로 올 수 있으므로 확실하게 boolean 변환
+    var appliedStatus = (isApplied === true || isApplied === "true" || isApplied === "Y");
+    
+    if (appliedStatus) {
+        // 이미 지원한 경우 - 버튼 비활성화 및 텍스트 변경
+        console.log("✅ 이미 지원한 공고 - 버튼 비활성화");
+        
+        // 버튼 텍스트 변경
+        var applyLabel = btnApply.getChildren()[0]; // xf:label 요소
+        if (applyLabel && applyLabel.setLabel) {
+            applyLabel.setLabel("✅ 지원완료");
+        }
+        
+        // 버튼 비활성화
+        btnApply.setDisabled(true);
+        
+        // 스타일 클래스 추가 (이미 지원한 상태 표시)
+        btnApply.addClass("btn-applied");
+        
+        // hover 효과 제거를 위한 추가 스타일 적용
+        var btnElement = document.getElementById("btnApply");
+        if (btnElement) {
+            btnElement.style.backgroundColor = "#6c757d";
+            btnElement.style.cursor = "not-allowed";
+            btnElement.style.opacity = "0.7";
+        }
+        
+    } else {
+        // 아직 지원하지 않은 경우 - 버튼 활성화
+        console.log("❌ 아직 지원하지 않은 공고 - 버튼 활성화");
+        
+        // 버튼 텍스트 원복
+        var applyLabel = btnApply.getChildren()[0]; // xf:label 요소
+        if (applyLabel && applyLabel.setLabel) {
+            applyLabel.setLabel("지원하기");
+        }
+        
+        // 버튼 활성화
+        btnApply.setDisabled(false);
+        
+        // 스타일 클래스 제거
+        btnApply.removeClass("btn-applied");
+        
+        // 원본 스타일 복구
+        var btnElement = document.getElementById("btnApply");
+        if (btnElement) {
+            btnElement.style.backgroundColor = "#36f";
+            btnElement.style.cursor = "pointer";
+            btnElement.style.opacity = "1";
+        }
+    }
+    
+    console.log("지원 버튼 상태 업데이트 완료");
+};
+
+/**
  * 필드 오류 표시
  */
 scwin.showFieldError = function (errorId, message) {
@@ -1703,6 +3282,70 @@ scwin.showFieldError = function (errorId, message) {
 };
 
 /**
+ * 지원 상태에 따른 지원하기 버튼 상태 업데이트
+ */
+scwin.updateApplyButtonState = function () {
+    console.log("=== 지원 버튼 상태 업데이트 ===");
+    
+    var isApplied = dmp_postDetail.get("isApplied");
+    console.log("지원 상태:", isApplied);
+    
+    // 문자열로 올 수 있으므로 확실하게 boolean 변환
+    var appliedStatus = (isApplied === true || isApplied === "true" || isApplied === "Y");
+    
+    if (appliedStatus) {
+        // 이미 지원한 경우 - 버튼 비활성화 및 텍스트 변경
+        console.log("✅ 이미 지원한 공고 - 버튼 비활성화");
+        
+        // 버튼 텍스트 변경
+        var applyLabel = btnApply.getChildren()[0]; // xf:label 요소
+        if (applyLabel && applyLabel.setLabel) {
+            applyLabel.setLabel("✅ 지원완료");
+        }
+        
+        // 버튼 비활성화
+        btnApply.setDisabled(true);
+        
+        // 스타일 클래스 추가 (이미 지원한 상태 표시)
+        btnApply.addClass("btn-applied");
+        
+        // hover 효과 제거를 위한 추가 스타일 적용
+        var btnElement = document.getElementById("btnApply");
+        if (btnElement) {
+            btnElement.style.backgroundColor = "#6c757d";
+            btnElement.style.cursor = "not-allowed";
+            btnElement.style.opacity = "0.7";
+        }
+        
+    } else {
+        // 아직 지원하지 않은 경우 - 버튼 활성화
+        console.log("❌ 아직 지원하지 않은 공고 - 버튼 활성화");
+        
+        // 버튼 텍스트 원복
+        var applyLabel = btnApply.getChildren()[0]; // xf:label 요소
+        if (applyLabel && applyLabel.setLabel) {
+            applyLabel.setLabel("지원하기");
+        }
+        
+        // 버튼 활성화
+        btnApply.setDisabled(false);
+        
+        // 스타일 클래스 제거
+        btnApply.removeClass("btn-applied");
+        
+        // 원본 스타일 복구
+        var btnElement = document.getElementById("btnApply");
+        if (btnElement) {
+            btnElement.style.backgroundColor = "#36f";
+            btnElement.style.cursor = "pointer";
+            btnElement.style.opacity = "1";
+        }
+    }
+    
+    console.log("지원 버튼 상태 업데이트 완료");
+};
+
+/**
  * 필드 오류 숨김
  */
 scwin.hideFieldError = function (errorId) {
@@ -1710,6 +3353,70 @@ scwin.hideFieldError = function (errorId) {
     if (errorElement) {
         errorElement.style.display = 'none';
     }
+};
+
+/**
+ * 지원 상태에 따른 지원하기 버튼 상태 업데이트
+ */
+scwin.updateApplyButtonState = function () {
+    console.log("=== 지원 버튼 상태 업데이트 ===");
+    
+    var isApplied = dmp_postDetail.get("isApplied");
+    console.log("지원 상태:", isApplied);
+    
+    // 문자열로 올 수 있으므로 확실하게 boolean 변환
+    var appliedStatus = (isApplied === true || isApplied === "true" || isApplied === "Y");
+    
+    if (appliedStatus) {
+        // 이미 지원한 경우 - 버튼 비활성화 및 텍스트 변경
+        console.log("✅ 이미 지원한 공고 - 버튼 비활성화");
+        
+        // 버튼 텍스트 변경
+        var applyLabel = btnApply.getChildren()[0]; // xf:label 요소
+        if (applyLabel && applyLabel.setLabel) {
+            applyLabel.setLabel("✅ 지원완료");
+        }
+        
+        // 버튼 비활성화
+        btnApply.setDisabled(true);
+        
+        // 스타일 클래스 추가 (이미 지원한 상태 표시)
+        btnApply.addClass("btn-applied");
+        
+        // hover 효과 제거를 위한 추가 스타일 적용
+        var btnElement = document.getElementById("btnApply");
+        if (btnElement) {
+            btnElement.style.backgroundColor = "#6c757d";
+            btnElement.style.cursor = "not-allowed";
+            btnElement.style.opacity = "0.7";
+        }
+        
+    } else {
+        // 아직 지원하지 않은 경우 - 버튼 활성화
+        console.log("❌ 아직 지원하지 않은 공고 - 버튼 활성화");
+        
+        // 버튼 텍스트 원복
+        var applyLabel = btnApply.getChildren()[0]; // xf:label 요소
+        if (applyLabel && applyLabel.setLabel) {
+            applyLabel.setLabel("지원하기");
+        }
+        
+        // 버튼 활성화
+        btnApply.setDisabled(false);
+        
+        // 스타일 클래스 제거
+        btnApply.removeClass("btn-applied");
+        
+        // 원본 스타일 복구
+        var btnElement = document.getElementById("btnApply");
+        if (btnElement) {
+            btnElement.style.backgroundColor = "#36f";
+            btnElement.style.cursor = "pointer";
+            btnElement.style.opacity = "1";
+        }
+    }
+    
+    console.log("지원 버튼 상태 업데이트 완료");
 };
 
 /**
@@ -1730,6 +3437,70 @@ scwin.setLoadingState = function (isLoading) {
         cancelBtn.setDisabled(false);
         console.log("로딩 완료 - 버튼 활성화");
     }
+};
+
+/**
+ * 지원 상태에 따른 지원하기 버튼 상태 업데이트
+ */
+scwin.updateApplyButtonState = function () {
+    console.log("=== 지원 버튼 상태 업데이트 ===");
+    
+    var isApplied = dmp_postDetail.get("isApplied");
+    console.log("지원 상태:", isApplied);
+    
+    // 문자열로 올 수 있으므로 확실하게 boolean 변환
+    var appliedStatus = (isApplied === true || isApplied === "true" || isApplied === "Y");
+    
+    if (appliedStatus) {
+        // 이미 지원한 경우 - 버튼 비활성화 및 텍스트 변경
+        console.log("✅ 이미 지원한 공고 - 버튼 비활성화");
+        
+        // 버튼 텍스트 변경
+        var applyLabel = btnApply.getChildren()[0]; // xf:label 요소
+        if (applyLabel && applyLabel.setLabel) {
+            applyLabel.setLabel("✅ 지원완료");
+        }
+        
+        // 버튼 비활성화
+        btnApply.setDisabled(true);
+        
+        // 스타일 클래스 추가 (이미 지원한 상태 표시)
+        btnApply.addClass("btn-applied");
+        
+        // hover 효과 제거를 위한 추가 스타일 적용
+        var btnElement = document.getElementById("btnApply");
+        if (btnElement) {
+            btnElement.style.backgroundColor = "#6c757d";
+            btnElement.style.cursor = "not-allowed";
+            btnElement.style.opacity = "0.7";
+        }
+        
+    } else {
+        // 아직 지원하지 않은 경우 - 버튼 활성화
+        console.log("❌ 아직 지원하지 않은 공고 - 버튼 활성화");
+        
+        // 버튼 텍스트 원복
+        var applyLabel = btnApply.getChildren()[0]; // xf:label 요소
+        if (applyLabel && applyLabel.setLabel) {
+            applyLabel.setLabel("지원하기");
+        }
+        
+        // 버튼 활성화
+        btnApply.setDisabled(false);
+        
+        // 스타일 클래스 제거
+        btnApply.removeClass("btn-applied");
+        
+        // 원본 스타일 복구
+        var btnElement = document.getElementById("btnApply");
+        if (btnElement) {
+            btnElement.style.backgroundColor = "#36f";
+            btnElement.style.cursor = "pointer";
+            btnElement.style.opacity = "1";
+        }
+    }
+    
+    console.log("지원 버튼 상태 업데이트 완료");
 };
 
 /**
@@ -1759,6 +3530,70 @@ scwin.btnSave_onclick = function (e) {
             scwin.setLoadingState(false);
         }
     }
+};
+
+/**
+ * 지원 상태에 따른 지원하기 버튼 상태 업데이트
+ */
+scwin.updateApplyButtonState = function () {
+    console.log("=== 지원 버튼 상태 업데이트 ===");
+    
+    var isApplied = dmp_postDetail.get("isApplied");
+    console.log("지원 상태:", isApplied);
+    
+    // 문자열로 올 수 있으므로 확실하게 boolean 변환
+    var appliedStatus = (isApplied === true || isApplied === "true" || isApplied === "Y");
+    
+    if (appliedStatus) {
+        // 이미 지원한 경우 - 버튼 비활성화 및 텍스트 변경
+        console.log("✅ 이미 지원한 공고 - 버튼 비활성화");
+        
+        // 버튼 텍스트 변경
+        var applyLabel = btnApply.getChildren()[0]; // xf:label 요소
+        if (applyLabel && applyLabel.setLabel) {
+            applyLabel.setLabel("✅ 지원완료");
+        }
+        
+        // 버튼 비활성화
+        btnApply.setDisabled(true);
+        
+        // 스타일 클래스 추가 (이미 지원한 상태 표시)
+        btnApply.addClass("btn-applied");
+        
+        // hover 효과 제거를 위한 추가 스타일 적용
+        var btnElement = document.getElementById("btnApply");
+        if (btnElement) {
+            btnElement.style.backgroundColor = "#6c757d";
+            btnElement.style.cursor = "not-allowed";
+            btnElement.style.opacity = "0.7";
+        }
+        
+    } else {
+        // 아직 지원하지 않은 경우 - 버튼 활성화
+        console.log("❌ 아직 지원하지 않은 공고 - 버튼 활성화");
+        
+        // 버튼 텍스트 원복
+        var applyLabel = btnApply.getChildren()[0]; // xf:label 요소
+        if (applyLabel && applyLabel.setLabel) {
+            applyLabel.setLabel("지원하기");
+        }
+        
+        // 버튼 활성화
+        btnApply.setDisabled(false);
+        
+        // 스타일 클래스 제거
+        btnApply.removeClass("btn-applied");
+        
+        // 원본 스타일 복구
+        var btnElement = document.getElementById("btnApply");
+        if (btnElement) {
+            btnElement.style.backgroundColor = "#36f";
+            btnElement.style.cursor = "pointer";
+            btnElement.style.opacity = "1";
+        }
+    }
+    
+    console.log("지원 버튼 상태 업데이트 완료");
 };
 
 /**
@@ -2001,6 +3836,70 @@ scwin.btnCancel_onclick = function (e) {
         }, 1000);
 
         /**
+ * 지원 상태에 따른 지원하기 버튼 상태 업데이트
+ */
+scwin.updateApplyButtonState = function () {
+    console.log("=== 지원 버튼 상태 업데이트 ===");
+    
+    var isApplied = dmp_postDetail.get("isApplied");
+    console.log("지원 상태:", isApplied);
+    
+    // 문자열로 올 수 있으므로 확실하게 boolean 변환
+    var appliedStatus = (isApplied === true || isApplied === "true" || isApplied === "Y");
+    
+    if (appliedStatus) {
+        // 이미 지원한 경우 - 버튼 비활성화 및 텍스트 변경
+        console.log("✅ 이미 지원한 공고 - 버튼 비활성화");
+        
+        // 버튼 텍스트 변경
+        var applyLabel = btnApply.getChildren()[0]; // xf:label 요소
+        if (applyLabel && applyLabel.setLabel) {
+            applyLabel.setLabel("✅ 지원완료");
+        }
+        
+        // 버튼 비활성화
+        btnApply.setDisabled(true);
+        
+        // 스타일 클래스 추가 (이미 지원한 상태 표시)
+        btnApply.addClass("btn-applied");
+        
+        // hover 효과 제거를 위한 추가 스타일 적용
+        var btnElement = document.getElementById("btnApply");
+        if (btnElement) {
+            btnElement.style.backgroundColor = "#6c757d";
+            btnElement.style.cursor = "not-allowed";
+            btnElement.style.opacity = "0.7";
+        }
+        
+    } else {
+        // 아직 지원하지 않은 경우 - 버튼 활성화
+        console.log("❌ 아직 지원하지 않은 공고 - 버튼 활성화");
+        
+        // 버튼 텍스트 원복
+        var applyLabel = btnApply.getChildren()[0]; // xf:label 요소
+        if (applyLabel && applyLabel.setLabel) {
+            applyLabel.setLabel("지원하기");
+        }
+        
+        // 버튼 활성화
+        btnApply.setDisabled(false);
+        
+        // 스타일 클래스 제거
+        btnApply.removeClass("btn-applied");
+        
+        // 원본 스타일 복구
+        var btnElement = document.getElementById("btnApply");
+        if (btnElement) {
+            btnElement.style.backgroundColor = "#36f";
+            btnElement.style.cursor = "pointer";
+            btnElement.style.opacity = "1";
+        }
+    }
+    
+    console.log("지원 버튼 상태 업데이트 완료");
+};
+
+/**
          * 추가 정보 섹션 업데이트
          */
         scwin.updateAdditionalInfo = function() {
