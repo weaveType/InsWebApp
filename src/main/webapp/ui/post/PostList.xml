@@ -12,7 +12,7 @@
 				<w2:dataMap baseNode="map" id="dmp_postVo" style="">
 					<w2:keyInfo>
 						<w2:key dataType="text" id="pageIndex" name="페이지_번호" defaultValue="1"></w2:key>
-						<w2:key dataType="text" id="pageSize" name="페이지_건수" defaultValue="20"></w2:key>
+						<w2:key dataType="text" id="pageSize" name="페이지_건수" defaultValue="12"></w2:key>
 					</w2:keyInfo>
 					<w2:data use="false"></w2:data>
 				</w2:dataMap>
@@ -50,7 +50,7 @@
 				<w2:dataMap baseNode="map" id="dmp_postMatchVo">
 					<w2:keyInfo>
 						<w2:key dataType="text" name="페이지_번호" id="pageIndex" defaultValue="1"></w2:key>
-						<w2:key defaultValue="20" dataType="text" name="페이지_건수" id="pageSize"></w2:key>
+						<w2:key defaultValue="12" dataType="text" name="페이지_건수" id="pageSize"></w2:key>
 						<w2:key defaultValue="0" dataType="text" name="MBTI_매칭_필터" id="mbtiMatchFilter"></w2:key>
 						<w2:key defaultValue="ZZZZ" dataType="text" name="유저_MBTI" id="userMbti"></w2:key>
 					</w2:keyInfo>
@@ -561,7 +561,6 @@ scwin.sbm_selectPostList_submitdone = function (e) {
  * 공고 카드 UI 동적 생성
  */
 scwin.renderJobCards = function () {
-
     var jobCardsContainer = document.querySelector('.job-cards');
     if (!jobCardsContainer) {
         console.error("job-cards 컨테이너를 찾을 수 없습니다.");
@@ -571,15 +570,21 @@ scwin.renderJobCards = function () {
     // 기존 카드들 제거
     jobCardsContainer.innerHTML = '';
 
-    var rowCount = dlt_postList.getRowCount();
+    var totalRowCount = dlt_postList.getRowCount();
+    var pageIndex = parseInt(dmp_postVo.get("pageIndex"));
+    var pageSize = parseInt(dmp_postVo.get("pageSize"));
 
-    if (rowCount === 0) {
+    if (totalRowCount === 0) {
         scwin.showEmptyState();
         return;
     }
 
-    // 각 공고에 대해 카드 생성
-    for (var i = 0; i < rowCount; i++) {
+    // 현재 페이지에 해당하는 데이터의 시작 및 끝 인덱스 계산
+    var startIndex = (pageIndex - 1) * pageSize;
+    var endIndex = Math.min(startIndex + pageSize, totalRowCount);
+
+    // 각 공고에 대해 카드 생성 (현재 페이지 범위 내에서)
+    for (var i = startIndex; i < endIndex; i++) {
         var jobData = dlt_postList.getRowJSON(i);
         var cardElement = scwin.createJobCard(jobData, i);
         jobCardsContainer.appendChild(cardElement);
@@ -855,8 +860,8 @@ scwin.pgl_postList_onclick = function (idx) {
 
     // 페이지 번호 세팅
     dmp_postVo.set("pageIndex", idx);
-    // 서버통신 - 공고목록 조회
-    scwin.loadPostList();
+    // 공고 카드 UI 동적 생성 (현재 페이지 데이터만 렌더링)
+    scwin.renderJobCards();
 };
 
 // =========================
