@@ -364,9 +364,9 @@
             }
 
             .tag.dev-type-tag {
-                background: linear-gradient(135deg, #e8f5e8, #f1f8e9);
-                color: #2e7d32;
-                border: 1px solid #c8e6c9;
+                background-color: #e0f7fa; /* Light cyan background */
+                color: #00796b; /* Dark cyan text */
+                border: 1px solid #b2ebf2;
             }
 
             /* 기타 정보 태그들 */
@@ -3629,7 +3629,7 @@ scwin.btnCancel_onclick = function (e) {
 					<section class="job-content">
 						<!-- 상세 설명 -->
 						<xf:group class="content-section">
-							<w2:textbox class="section-title" label="상세 설명"></w2:textbox>
+							<w2:textbox class="section-title" label="상세 설명" style="margin-top: 0px;"></w2:textbox>
 
 							<!-- 읽기 모드: 상세 설명 표시 -->
 							<w2:textbox class="section-content hide-on-edit" ref="data:dmp_postDetail.description"></w2:textbox>
