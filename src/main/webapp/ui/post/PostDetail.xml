@@ -308,6 +308,35 @@
                 margin-bottom: 16px;
                 padding-bottom: 8px;
                 display: inline-block;
+                position: relative;
+            }
+
+            /* MBTI 정보 버튼 스타일 */
+            .mbti-info-button {
+                display: inline-block;
+                width: 20px;
+                height: 20px;
+                border-radius: 50%;
+                background-color: #666;
+                color: white;
+                font-size: 12px;
+                font-weight: bold;
+                text-align: center;
+                line-height: 20px;
+                margin-left: 8px;
+                cursor: pointer;
+                border: none;
+                transition: all 0.2s ease;
+                vertical-align: middle;
+            }
+
+            .mbti-info-button:hover {
+                background-color: #36f;
+                transform: scale(1.1);
+            }
+
+            .mbti-info-button:active {
+                transform: scale(0.95);
             }
 
             .section-content {
@@ -3300,6 +3329,24 @@ scwin.hideFieldError = function (errorId) {
 };
 
 /**
+ * MBTI 예시 페이지로 이동하는 함수
+ */
+scwin.goToMbtiExample = function() {
+    console.log("MBTI 예시 페이지로 이동");
+    try {
+        if ($p.parent() && $p.parent().pf_main) {
+            $p.parent().pf_main.setSrc("MbtiExample.xml");
+        } else {
+            $p.url("../common/MbtiExample.xml");
+        }
+    } catch (e) {
+        console.error("페이지 이동 중 오류:", e);
+        // 직접 URL로 이동 시도
+        $p.url("MbtiExample.xml");
+    }
+};
+
+/**
  * 지원 상태에 따른 지원하기 버튼 상태 업데이트
  */
 scwin.updateApplyButtonState = function () {
@@ -3669,7 +3716,12 @@ scwin.btnCancel_onclick = function (e) {
 
 						<!-- 선호 성향 -->
 						<xf:group class="content-section">
-							<w2:textbox class="section-title" label="성향"></w2:textbox>
+							<w2:textbox class="section-title" label="성향">
+							</w2:textbox>
+                            
+								<xf:trigger id="btn_mbti_info" class="mbti-info-button" ev:onclick="scwin.goToMbtiExample">
+									<xf:label>?</xf:label>
+								</xf:trigger>
 
 							<!-- 읽기 모드: 선호 성향 표시 -->
 							<xf:group class="tags dev-type-tags hide-on-edit">
