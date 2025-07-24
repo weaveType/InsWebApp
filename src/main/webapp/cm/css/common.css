@@ -392,9 +392,6 @@
 .sub_contents {
     padding: 25px; /* Increased padding */
     background-color: #ffffff; /* White background */
-    border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); /* Soft shadow */
-    border: 1px solid #e0e0e0; /* Light border */
 }
 .poptxt {
     margin-bottom: 25px; /* Increased margin */
@@ -408,22 +405,29 @@
 }
 .btnbox {
     text-align: center;
-    margin-top: 25px; /* Increased margin */
+    margin-top: 40px; /* 더 많은 간격으로 하단 이동 */
+    display: flex;
+    justify-content: center;
+    gap: 10px;
 }
-.btn_cm {
-    background-color: #007bff; /* Blue button */
+/* Alert dialog button override - higher specificity */
+.btnbox .btn_cm {
+    background-color: #36f; /* btnApply 색상 */
     color: white;
     border: none;
-    padding: 10px 25px; /* Increased padding */
-    border-radius: 5px;
-    font-size: 15px; /* Adjusted font size */
+    padding: 12px 20px;
+    border-radius: 25px; /* btnApply 둥근 모서리 */
+    font-size: 16px;
+    font-weight: 600;
     cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-    margin: 0 5px; /* Space between buttons */
+    margin: 0;
+    line-height: 1; /* line-height 정상화 */
+    display: inline-flex; /* flexbox로 정렬 */
+    align-items: center; /* 수직 중앙 정렬 */
+    justify-content: center; /* 수평 중앙 정렬 */
 }
-.btn_cm:hover {
-    background-color: #0056b3; /* Darker blue on hover */
-    transform: translateY(-1px); /* Slight lift effect */
+.btnbox .btn_cm:hover {
+    background-color: #2a5bd6; /* btnApply 호버 색상 */
 }
 .btn_cm.active {
     /* No specific active style for now, can be added later if needed */
