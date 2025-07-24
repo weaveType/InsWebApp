@@ -304,6 +304,7 @@
                 font-size: clamp(18px, 3vw, 20px);
                 font-weight: 600;
                 color: #333;
+                margin-top: 60px;
                 margin-bottom: 16px;
                 padding-bottom: 8px;
                 display: inline-block;
@@ -326,7 +327,7 @@
                 display: flex;
                 flex-wrap: wrap;
                 gap: 8px;
-                margin: 16px 0;
+                margin: 0; /* section-title과의 간격 중복을 피하기 위해 마진 제거 */
             }
 
             /* 기술스택과 선호 성향 섹션 구분 */
@@ -334,7 +335,7 @@
                 display: flex;
                 flex-wrap: wrap;
                 gap: 8px;
-                margin: 16px 0;
+                margin: 0; /* section-title과의 간격 중복을 피하기 위해 마진 제거 */
                 width: 100%;
                 clear: both;
             }
@@ -373,18 +374,13 @@
                 display: grid;
                 grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
                 gap: 12px;
-                margin: 20px 0;
+                margin: 0; /* section-title과의 간격 중복을 피하기 위해 마진 제거 */
             }
 
             .info-tag-item {
                 display: flex;
                 align-items: center;
-                gap: 8px;
                 padding: 12px 16px;
-                background: white;
-                border: 1px solid #e1e5e9;
-                border-radius: 8px;
-                transition: all 0.2s ease;
             }
 
             .info-tag-item:hover {
@@ -395,7 +391,15 @@
             .info-tag-label {
                 font-weight: 600;
                 color: #36f;
-                min-width: 60px;
+                /* min-width 속성 제거 */
+                white-space: nowrap; /* 라벨이 길어져도 줄바꿈되지 않도록 */
+            }
+
+            .info-tag-label::after {
+                content: ":"; /* 콜론 추가 */
+                margin-left: 4px; /* 콜론 뒤 간격 */
+                margin-right: 8px; /* 값 앞 간격 */
+                color: #333; /* 콜론 색상 */
             }
 
             .info-tag-value {
