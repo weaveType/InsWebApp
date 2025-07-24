@@ -1,0 +1,956 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ev="http://www.w3.org/2001/xml-events"
+    xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
+    <head>
+        <w2:type>COMPONENT</w2:type>
+        <w2:buildDate/>
+        <w2:MSA/>
+        <xf:model>
+            <w2:dataCollection baseNode="map">
+                <w2:dataMap baseNode="map" id="dmp_mbti">
+                    <w2:keyInfo>
+                        <w2:key id="currentIndex" name="현재인덱스" dataType="number" defaultValue="0"></w2:key>
+                        <w2:key id="totalCount" name="총개수" dataType="number" defaultValue="16"></w2:key>
+                    </w2:keyInfo>
+                </w2:dataMap>
+            </w2:dataCollection>
+            <w2:workflowCollection/>
+        </xf:model>
+        <w2:layoutInfo/>
+        <w2:publicInfo method=""/>
+        <script lazy="false" type="text/javascript"><![CDATA[
+scwin.onpageload = function() {
+    console.log("MBTI 페이지 로드됨");
+    
+    // MBTI 타입 정의
+    scwin.mbtiTypes = [
+        {
+            type: "ARTF",
+            title: "구조적 팀 빌더",
+            description: "체계적이고 완벽한 설계를 추구하면서 기존 코드를 개선하고 최적화합니다. 팀과의 소통과 협업을 중요시하며, 새로운 기능을 창의적으로 개발하는 것을 즐깁니다.",
+            characteristics: ["체계적인 설계 추구", "코드 개선 및 최적화", "팀워크 중시", "창의적 기능 개발"],
+            image: "/InsWebApp/images/ws5/mbti/png/ARTF.png"
+        },
+        {
+            type: "ARTD",
+            title: "체계적 팀 디버거",
+            description: "완벽한 설계를 추구하며 기존 코드를 개선합니다. 팀과의 협업을 통해 버그를 발견하고 해결하는 데 보람을 느낍니다.",
+            characteristics: ["체계적 접근", "코드 리팩토링", "협업 중시", "버그 해결 전문"],
+            image: "/InsWebApp/images/ws5/mbti/png/ARTD.png"
+        },
+        {
+            type: "ARSF",
+            title: "완벽주의 솔로 창작자",
+            description: "체계적이고 완벽한 설계를 추구하며 혼자서 집중하여 일합니다. 기존 코드를 개선하면서 새로운 기능을 창의적으로 개발합니다.",
+            characteristics: ["완벽한 설계", "독립적 작업", "코드 개선", "창의적 개발"],
+            image: "/InsWebApp/images/ws5/mbti/png/ARSF.png"
+        },
+        {
+            type: "ARSD",
+            title: "체계적 솔로 수정자",
+            description: "완벽한 설계를 추구하며 개인적으로 일하는 것을 선호합니다. 기존 코드를 개선하고 버그를 찾아 해결하는 데 집중합니다.",
+            characteristics: ["체계적 설계", "독립적 작업", "코드 최적화", "버그 수정"],
+            image: "/InsWebApp/images/ws5/mbti/png/ARSD.png"
+        },
+        {
+            type: "AITF",
+            title: "혁신적 팀 개척자",
+            description: "체계적인 설계를 추구하면서 새로운 기술에 과감하게 도전합니다. 팀과 협업하며 새로운 기능을 창의적으로 개발합니다.",
+            characteristics: ["체계적 설계", "신기술 도입", "팀 협업", "혁신적 개발"],
+            image: "/InsWebApp/images/ws5/mbti/png/AITF.png"
+        },
+        {
+            type: "AITD",
+            title: "미래지향 팀 디버거",
+            description: "완벽한 설계를 추구하며 새로운 기술로 팀과 함께 안정적인 시스템을 구축합니다. 버그를 발견하고 해결하는 과정을 즐깁니다.",
+            characteristics: ["체계적 접근", "신기술 활용", "팀워크", "시스템 안정화"],
+            image: "/InsWebApp/images/ws5/mbti/png/AITD.png"
+        },
+        {
+            type: "AISF",
+            title: "혁신적 솔로 창작자",
+            description: "체계적인 설계를 추구하며 새로운 기술에 도전합니다. 혼자서 집중하여 창의적인 기능을 개발하는 것을 선호합니다.",
+            characteristics: ["완벽한 설계", "신기술 탐구", "독립적 작업", "창의적 개발"],
+            image: "/InsWebApp/images/ws5/mbti/png/AISF.png"
+        },
+        {
+            type: "AISD",
+            title: "혁신적 솔로 해결사",
+            description: "체계적인 설계와 새로운 기술을 추구하며 혼자서 일합니다. 버그를 발견하고 해결하는 데 집중합니다.",
+            characteristics: ["체계적 설계", "신기술 도입", "독립적 작업", "문제 해결"],
+            image: "/InsWebApp/images/ws5/mbti/png/AISD.png"
+        },
+        {
+            type: "BRTF",
+            title: "실용적 팀 개선자",
+            description: "빠른 구현과 실용성을 선호하며 기존 코드를 개선합니다. 팀과 협업하여 새로운 기능을 창의적으로 개발합니다.",
+            characteristics: ["빠른 구현", "코드 개선", "팀 협업", "실용적 개발"],
+            image: "/InsWebApp/images/ws5/mbti/png/BRTF.png"
+        },
+        {
+            type: "BRTD",
+            title: "실용적 팀 수정자",
+            description: "빠른 구현을 추구하며 기존 코드를 개선합니다. 팀과 함께 버그를 발견하고 해결하는 데 집중합니다.",
+            characteristics: ["빠른 구현", "코드 최적화", "팀워크", "버그 수정"],
+            image: "/InsWebApp/images/ws5/mbti/png/BRTD.png"
+        },
+        {
+            type: "BRSF",
+            title: "실용적 솔로 창작자",
+            description: "빠른 구현과 실용성을 추구하며 혼자서 일합니다. 기존 코드를 개선하면서 새로운 기능을 개발합니다.",
+            characteristics: ["빠른 구현", "독립적 작업", "코드 개선", "기능 개발"],
+            image: "/InsWebApp/images/ws5/mbti/png/BRSF.png"
+        },
+        {
+            type: "BRSD",
+            title: "실용적 안정성 추구자",
+            description: "빠른 구현과 실용성을 선호하며 검증된 방법으로 안정적인 솔루션을 만듭니다. 혼자서 버그를 해결하는 데 집중합니다.",
+            characteristics: ["실용적 접근", "안정성 추구", "독립적 작업", "버그 해결"],
+            image: "/InsWebApp/images/ws5/mbti/png/BRSD.png"
+        },
+        {
+            type: "BITF",
+            title: "창의적 스피드 러너",
+            description: "빠른 구현을 추구하며 새로운 기술에 도전합니다. 팀과 협업하여 혁신적인 기능을 빠르게 개발합니다.",
+            characteristics: ["빠른 구현", "신기술 도입", "팀 협업", "혁신적 개발"],
+            image: "/InsWebApp/images/ws5/mbti/png/BITF.png"
+        },
+        {
+            type: "BITD",
+            title: "혁신적 팀 해결사",
+            description: "빠른 구현과 새로운 기술을 추구하며 팀과 함께 일합니다. 버그를 빠르게 발견하고 해결합니다.",
+            characteristics: ["빠른 구현", "신기술 활용", "팀워크", "빠른 디버깅"],
+            image: "/InsWebApp/images/ws5/default_mbti.png" // 기본 이미지 사용
+        },
+        {
+            type: "BISF",
+            title: "혁신적 스피드 개발자",
+            description: "빠른 구현과 새로운 기술을 추구하며 혼자서 일합니다. 혁신적인 방법으로 빠르게 기능을 구현합니다.",
+            characteristics: ["빠른 구현", "신기술 탐구", "독립적 작업", "혁신적 개발"],
+            image: "/InsWebApp/images/ws5/mbti/png/BISF.png"
+        },
+        {
+            type: "BISD",
+            title: "빠른 문제 해결사",
+            description: "빠른 구현과 새로운 기술을 추구하며 혼자서 일합니다. 버그를 빠르게 발견하고 해결하는 데 집중합니다.",
+            characteristics: ["빠른 구현", "신기술 도입", "독립적 작업", "빠른 문제해결"],
+            image: "/InsWebApp/images/ws5/mbti/png/BISD.png"
+        }
+    ];
+    
+    // 초기화
+    scwin.init();
+    
+    // 휠 이벤트 리스너 추가
+    scwin.addWheelListener();
+    
+    // 키보드 이벤트 리스너 추가
+    scwin.addKeyboardListener();
+    
+    // 터치 이벤트 리스너 추가
+    scwin.addTouchListener();
+    
+    // 네비게이션 도트 생성
+    scwin.createNavigationDots();
+    
+    // 첫 번째 섹션 표시
+    scwin.showSection(0);
+};
+
+// 초기화 함수
+scwin.init = function() {
+    scwin.isAnimating = false;
+    scwin.currentSection = 0;
+    scwin.touchStartY = 0;
+    scwin.touchEndY = 0;
+};
+
+// 휠 이벤트 리스너
+scwin.addWheelListener = function() {
+    var container = document.querySelector('.mbti-container');
+    if (container) {
+        container.addEventListener('wheel', function(e) {
+            e.preventDefault();
+            
+            if (scwin.isAnimating) return;
+            
+            if (e.deltaY > 0) {
+                // 아래로 스크롤
+                scwin.nextSection();
+            } else {
+                // 위로 스크롤
+                scwin.prevSection();
+            }
+        }, { passive: false });
+    }
+};
+
+// 키보드 이벤트 리스너
+scwin.addKeyboardListener = function() {
+    document.addEventListener('keydown', function(e) {
+        if (scwin.isAnimating) return;
+        
+        switch(e.key) {
+            case 'ArrowDown':
+            case 'PageDown':
+                e.preventDefault();
+                scwin.nextSection();
+                break;
+            case 'ArrowUp':
+            case 'PageUp':
+                e.preventDefault();
+                scwin.prevSection();
+                break;
+            case 'Home':
+                e.preventDefault();
+                scwin.goToSection(0);
+                break;
+            case 'End':
+                e.preventDefault();
+                scwin.goToSection(scwin.mbtiTypes.length - 1);
+                break;
+        }
+    });
+};
+
+// 터치 이벤트 리스너 추가
+scwin.addTouchListener = function() {
+    var container = document.querySelector('.mbti-container');
+    if (container) {
+        container.addEventListener('touchstart', function(e) {
+            scwin.touchStartY = e.touches[0].clientY;
+        }, { passive: true });
+        
+        container.addEventListener('touchend', function(e) {
+            scwin.touchEndY = e.changedTouches[0].clientY;
+            scwin.handleSwipe();
+        }, { passive: true });
+    }
+};
+
+// 스와이프 처리
+scwin.handleSwipe = function() {
+    if (scwin.isAnimating) return;
+    
+    var diff = scwin.touchStartY - scwin.touchEndY;
+    var threshold = 50;
+    
+    if (Math.abs(diff) > threshold) {
+        if (diff > 0) {
+            // 위로 스와이프 (다음 섹션)
+            scwin.nextSection();
+        } else {
+            // 아래로 스와이프 (이전 섹션)
+            scwin.prevSection();
+        }
+    }
+};
+
+// 네비게이션 도트 생성
+scwin.createNavigationDots = function() {
+    var navContainer = document.querySelector('.mbti-navigation');
+    if (!navContainer) return;
+    
+    scwin.mbtiTypes.forEach(function(mbti, index) {
+        var dot = document.createElement('div');
+        dot.className = 'nav-dot';
+        dot.setAttribute('data-index', index);
+        dot.setAttribute('title', mbti.type + ' - ' + mbti.title);
+        
+        // 도트 내부에 텍스트 추가
+        var text = document.createElement('span');
+        text.className = 'nav-text';
+        text.textContent = mbti.type;
+        dot.appendChild(text);
+        
+        dot.addEventListener('click', function() {
+            scwin.goToSection(index);
+        });
+        
+        navContainer.appendChild(dot);
+    });
+};
+
+// 다음 섹션으로 이동
+scwin.nextSection = function() {
+    if (scwin.currentSection < scwin.mbtiTypes.length - 1) {
+        scwin.goToSection(scwin.currentSection + 1);
+    }
+};
+
+// 이전 섹션으로 이동
+scwin.prevSection = function() {
+    if (scwin.currentSection > 0) {
+        scwin.goToSection(scwin.currentSection - 1);
+    }
+};
+
+// 특정 섹션으로 이동
+scwin.goToSection = function(index) {
+    if (scwin.isAnimating || index === scwin.currentSection) return;
+    if (index < 0 || index >= scwin.mbtiTypes.length) return;
+    
+    scwin.isAnimating = true;
+    scwin.currentSection = index;
+    
+    // 섹션 표시
+    scwin.showSection(index);
+    
+    // 네비게이션 도트 업데이트
+    scwin.updateNavigation();
+    
+    // 애니메이션 종료 후 플래그 해제
+    setTimeout(function() {
+        scwin.isAnimating = false;
+    }, 800);
+};
+
+// 섹션 표시
+scwin.showSection = function(index) {
+    var mbti = scwin.mbtiTypes[index];
+    
+    // 모든 섹션 숨기기
+    var sections = document.querySelectorAll('.mbti-section');
+    sections.forEach(function(section) {
+        section.classList.remove('active');
+    });
+    
+    // 현재 섹션 활성화
+    var currentSection = document.getElementById('mbti-section-' + index);
+    if (currentSection) {
+        currentSection.classList.add('active');
+    }
+    
+    // 배경색 변경 (선택사항)
+    scwin.updateBackgroundColor(index);
+};
+
+// 배경색 업데이트
+scwin.updateBackgroundColor = function(index) {
+    var colors = [
+        '#f5f5f5', '#fafafa', '#f0f0f0', '#f8f8f8',
+        '#f5f5f5', '#fafafa', '#f0f0f0', '#f8f8f8',
+        '#f5f5f5', '#fafafa', '#f0f0f0', '#f8f8f8',
+        '#f5f5f5', '#fafafa', '#f0f0f0', '#f8f8f8'
+    ];
+    
+    var container = document.querySelector('.mbti-wrapper');
+    if (container) {
+        container.style.backgroundColor = colors[index % colors.length];
+    }
+};
+
+// 네비게이션 업데이트
+scwin.updateNavigation = function() {
+    var dots = document.querySelectorAll('.nav-dot');
+    dots.forEach(function(dot, index) {
+        if (index === scwin.currentSection) {
+            dot.classList.add('active');
+        } else {
+            dot.classList.remove('active');
+        }
+    });
+};
+]]></script>
+        <style type="text/css"><![CDATA[
+/* 전체 컨테이너 */
+.mbti-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    background-color: #f5f5f5;
+    transition: background-color 0.8s ease;
+}
+
+.mbti-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+/* 섹션 스타일 */
+.mbti-section {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transform: translateY(100vh);
+    transition: all 0.8s cubic-bezier(0.645, 0.045, 0.355, 1.000);
+    visibility: hidden;
+}
+
+.mbti-section.active {
+    opacity: 1;
+    transform: translateY(0);
+    visibility: visible;
+}
+
+/* 섹션 내용 */
+.section-content {
+    max-width: 1200px;
+    width: 90%;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 60px;
+    padding: 40px;
+}
+
+/* 왼쪽 정보 영역 */
+.mbti-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.mbti-type {
+    font-size: 80px;
+    font-weight: 900;
+    color: #333;
+    margin-bottom: 20px;
+    letter-spacing: 2px;
+    line-height: 1;
+}
+
+.mbti-title {
+    font-size: 36px;
+    font-weight: 700;
+    color: #555;
+    margin-bottom: 30px;
+    line-height: 1.2;
+}
+
+.mbti-description {
+    font-size: 18px;
+    color: #666;
+    line-height: 1.8;
+    margin-bottom: 40px;
+    text-align: justify;
+}
+
+.mbti-characteristics {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.characteristic-item {
+    padding: 12px 0;
+    font-size: 16px;
+    color: #777;
+    position: relative;
+    padding-left: 30px;
+}
+
+.characteristic-item:before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    color: #4CAF50;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+/* 오른쪽 이미지 영역 */
+.mbti-image-container {
+    flex: 0 0 400px;
+    height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mbti-image {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 10px 30px rgba(0,0,0,0.1));
+    transition: transform 0.3s ease;
+}
+
+.mbti-image:hover {
+    transform: scale(1.05);
+}
+
+/* 네비게이션 바 */
+.mbti-navigation {
+    position: fixed;
+    right: 30px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.nav-dot {
+    width: 50px;
+    height: 50px;
+    border-radius: 25px;
+    background-color: rgba(255, 255, 255, 0.9);
+    border: 2px solid #ddd;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.nav-dot:hover {
+    transform: scale(1.1);
+    border-color: #999;
+    background-color: #fff;
+}
+
+.nav-dot.active {
+    background-color: #333;
+    border-color: #333;
+    transform: scale(1.2);
+}
+
+.nav-dot.active .nav-text {
+    color: #fff;
+}
+
+.nav-text {
+    font-size: 12px;
+    font-weight: 700;
+    color: #666;
+    transition: color 0.3s ease;
+    text-align: center;
+    line-height: 1;
+}
+
+/* 각 MBTI 타입별 강조 색상 */
+.mbti-section[data-type^="A"] .mbti-type { color: #2196F3; }
+.mbti-section[data-type^="B"] .mbti-type { color: #FF5722; }
+.mbti-section[data-type*="R"] .characteristic-item:before { color: #9C27B0; }
+.mbti-section[data-type*="I"] .characteristic-item:before { color: #00BCD4; }
+.mbti-section[data-type*="T"] .characteristic-item:before { color: #FFC107; }
+.mbti-section[data-type*="S"] .characteristic-item:before { color: #4CAF50; }
+.mbti-section[data-type*="F"] .characteristic-item:before { color: #E91E63; }
+.mbti-section[data-type*="D"] .characteristic-item:before { color: #795548; }
+
+/* 반응형 디자인 */
+@media (max-width: 1024px) {
+    .section-content {
+        flex-direction: column;
+        text-align: center;
+        gap: 40px;
+    }
+    
+    .mbti-image-container {
+        flex: none;
+        width: 100%;
+        max-width: 350px;
+        height: 350px;
+    }
+    
+    .mbti-type {
+        font-size: 60px;
+    }
+    
+    .mbti-title {
+        font-size: 28px;
+    }
+    
+    .mbti-description {
+        font-size: 16px;
+        text-align: center;
+    }
+    
+    .mbti-characteristics {
+        text-align: left;
+        max-width: 400px;
+        margin: 0 auto;
+    }
+}
+
+@media (max-width: 768px) {
+    .mbti-navigation {
+        right: 15px;
+        gap: 10px;
+    }
+    
+    .nav-dot {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .nav-text {
+        font-size: 10px;
+    }
+    
+    .section-content {
+        padding: 20px;
+    }
+    
+    .mbti-type {
+        font-size: 48px;
+        margin-bottom: 15px;
+    }
+    
+    .mbti-title {
+        font-size: 24px;
+        margin-bottom: 20px;
+    }
+    
+    .mbti-description {
+        font-size: 14px;
+        margin-bottom: 30px;
+    }
+    
+    .characteristic-item {
+        font-size: 14px;
+        padding: 10px 0;
+    }
+    
+    .mbti-image-container {
+        max-width: 280px;
+        height: 280px;
+    }
+}
+
+@media (max-width: 480px) {
+    .mbti-navigation {
+        flex-direction: row;
+        flex-wrap: wrap;
+        bottom: 20px;
+        right: 50%;
+        transform: translateX(50%);
+        top: auto;
+        max-width: 300px;
+        justify-content: center;
+    }
+    
+    .nav-dot {
+        width: 35px;
+        height: 35px;
+    }
+    
+    .mbti-type {
+        font-size: 36px;
+    }
+    
+    .mbti-title {
+        font-size: 20px;
+    }
+    
+    .mbti-image-container {
+        max-width: 200px;
+        height: 200px;
+    }
+}
+]]></style>
+    </head>
+    <body ev:onpageload="scwin.onpageload">
+        <xf:group class="mbti-wrapper">
+            <xf:group class="mbti-container">
+                <!-- MBTI 섹션들 -->
+                <xf:group class="mbti-section active" id="mbti-section-0" data-type="ARTF">
+                    <xf:group class="section-content">
+                        <xf:group class="mbti-info">
+                            <w2:textbox class="mbti-type" label="ARTF"></w2:textbox>
+                            <w2:textbox class="mbti-title" label="구조적 팀 빌더"></w2:textbox>
+                            <w2:textbox class="mbti-description" label="체계적이고 완벽한 설계를 추구하면서 기존 코드를 개선하고 최적화합니다. 팀과의 소통과 협업을 중요시하며, 새로운 기능을 창의적으로 개발하는 것을 즐깁니다."></w2:textbox>
+                            <xf:group tagname="ul" class="mbti-characteristics">
+                                <w2:textbox tagname="li" class="characteristic-item" label="체계적인 설계 추구"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="코드 개선 및 최적화"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="팀워크 중시"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="창의적 기능 개발"></w2:textbox>
+                            </xf:group>
+                        </xf:group>
+                        <xf:group class="mbti-image-container">
+                            <xf:image class="mbti-image" src="/InsWebApp/images/ws5/mbti/png/ARTF.png"></xf:image>
+                        </xf:group>
+                    </xf:group>
+                </xf:group>
+
+                <xf:group class="mbti-section" id="mbti-section-1" data-type="ARTD">
+                    <xf:group class="section-content">
+                        <xf:group class="mbti-info">
+                            <w2:textbox class="mbti-type" label="ARTD"></w2:textbox>
+                            <w2:textbox class="mbti-title" label="체계적 팀 디버거"></w2:textbox>
+                            <w2:textbox class="mbti-description" label="완벽한 설계를 추구하며 기존 코드를 개선합니다. 팀과의 협업을 통해 버그를 발견하고 해결하는 데 보람을 느낍니다."></w2:textbox>
+                            <xf:group tagname="ul" class="mbti-characteristics">
+                                <w2:textbox tagname="li" class="characteristic-item" label="체계적 접근"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="코드 리팩토링"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="협업 중시"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="버그 해결 전문"></w2:textbox>
+                            </xf:group>
+                        </xf:group>
+                        <xf:group class="mbti-image-container">
+                            <xf:image class="mbti-image" src="/InsWebApp/images/ws5/mbti/png/ARTD.png"></xf:image>
+                        </xf:group>
+                    </xf:group>
+                </xf:group>
+                <xf:group class="mbti-section" id="mbti-section-2" data-type="ARSF">
+                    <xf:group class="section-content">
+                        <xf:group class="mbti-info">
+                            <w2:textbox class="mbti-type" label="ARSF"></w2:textbox>
+                            <w2:textbox class="mbti-title" label="완벽주의 솔로 창작자"></w2:textbox>
+                            <w2:textbox class="mbti-description" label="체계적이고 완벽한 설계를 추구하며 혼자서 집중하여 일합니다. 기존 코드를 개선하면서 새로운 기능을 창의적으로 개발합니다."></w2:textbox>
+                            <xf:group tagname="ul" class="mbti-characteristics">
+                                <w2:textbox tagname="li" class="characteristic-item" label="완벽한 설계"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="독립적 작업"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="코드 개선"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="창의적 개발"></w2:textbox>
+                            </xf:group>
+                        </xf:group>
+                        <xf:group class="mbti-image-container">
+                            <xf:image class="mbti-image" src="/InsWebApp/images/ws5/mbti/png/ARSF.png"></xf:image>
+                        </xf:group>
+                    </xf:group>
+                </xf:group>
+                <xf:group class="mbti-section" id="mbti-section-3" data-type="ARSD">
+                    <xf:group class="section-content">
+                        <xf:group class="mbti-info">
+                            <w2:textbox class="mbti-type" label="ARSD"></w2:textbox>
+                            <w2:textbox class="mbti-title" label="체계적 솔로 수정자"></w2:textbox>
+                            <w2:textbox class="mbti-description" label="완벽한 설계를 추구하며 개인적으로 일하는 것을 선호합니다. 기존 코드를 개선하고 버그를 찾아 해결하는 데 집중합니다."></w2:textbox>
+                            <xf:group tagname="ul" class="mbti-characteristics">
+                                <w2:textbox tagname="li" class="characteristic-item" label="체계적 설계"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="독립적 작업"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="코드 최적화"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="버그 수정"></w2:textbox>
+                            </xf:group>
+                        </xf:group>
+                        <xf:group class="mbti-image-container">
+                            <xf:image class="mbti-image" src="/InsWebApp/images/ws5/mbti/png/ARSD.png"></xf:image>
+                        </xf:group>
+                    </xf:group>
+                </xf:group>
+                <xf:group class="mbti-section" id="mbti-section-4" data-type="AITF">
+                    <xf:group class="section-content">
+                        <xf:group class="mbti-info">
+                            <w2:textbox class="mbti-type" label="AITF"></w2:textbox>
+                            <w2:textbox class="mbti-title" label="혁신적 팀 개척자"></w2:textbox>
+                            <w2:textbox class="mbti-description" label="체계적인 설계를 추구하면서 새로운 기술에 과감하게 도전합니다. 팀과 협업하며 새로운 기능을 창의적으로 개발합니다."></w2:textbox>
+                            <xf:group tagname="ul" class="mbti-characteristics">
+                                <w2:textbox tagname="li" class="characteristic-item" label="체계적 설계"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="신기술 도입"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="팀 협업"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="혁신적 개발"></w2:textbox>
+                            </xf:group>
+                        </xf:group>
+                        <xf:group class="mbti-image-container">
+                            <xf:image class="mbti-image" src="/InsWebApp/images/ws5/mbti/png/AITF.png"></xf:image>
+                        </xf:group>
+                    </xf:group>
+                </xf:group>
+                <xf:group class="mbti-section" id="mbti-section-5" data-type="AITD">
+                    <xf:group class="section-content">
+                        <xf:group class="mbti-info">
+                            <w2:textbox class="mbti-type" label="AITD"></w2:textbox>
+                            <w2:textbox class="mbti-title" label="미래지향 팀 디버거"></w2:textbox>
+                            <w2:textbox class="mbti-description" label="완벽한 설계를 추구하며 새로운 기술로 팀과 함께 안정적인 시스템을 구축합니다. 버그를 발견하고 해결하는 과정을 즐깁니다."></w2:textbox>
+                            <xf:group tagname="ul" class="mbti-characteristics">
+                                <w2:textbox tagname="li" class="characteristic-item" label="체계적 접근"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="신기술 활용"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="팀워크"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="시스템 안정화"></w2:textbox>
+                            </xf:group>
+                        </xf:group>
+                        <xf:group class="mbti-image-container">
+                            <xf:image class="mbti-image" src="/InsWebApp/images/ws5/mbti/png/AITD.png"></xf:image>
+                        </xf:group>
+                    </xf:group>
+                </xf:group>
+                <xf:group class="mbti-section" id="mbti-section-6" data-type="AISF">
+                    <xf:group class="section-content">
+                        <xf:group class="mbti-info">
+                            <w2:textbox class="mbti-type" label="AISF"></w2:textbox>
+                            <w2:textbox class="mbti-title" label="혁신적 솔로 창작자"></w2:textbox>
+                            <w2:textbox class="mbti-description" label="체계적인 설계를 추구하며 새로운 기술에 도전합니다. 혼자서 집중하여 창의적인 기능을 개발하는 것을 선호합니다."></w2:textbox>
+                            <xf:group tagname="ul" class="mbti-characteristics">
+                                <w2:textbox tagname="li" class="characteristic-item" label="완벽한 설계"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="신기술 탐구"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="독립적 작업"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="창의적 개발"></w2:textbox>
+                            </xf:group>
+                        </xf:group>
+                        <xf:group class="mbti-image-container">
+                            <xf:image class="mbti-image" src="/InsWebApp/images/ws5/mbti/png/AISF.png"></xf:image>
+                        </xf:group>
+                    </xf:group>
+                </xf:group>
+                <xf:group class="mbti-section" id="mbti-section-7" data-type="AISD">
+                    <xf:group class="section-content">
+                        <xf:group class="mbti-info">
+                            <w2:textbox class="mbti-type" label="AISD"></w2:textbox>
+                            <w2:textbox class="mbti-title" label="혁신적 솔로 해결사"></w2:textbox>
+                            <w2:textbox class="mbti-description" label="체계적인 설계와 새로운 기술을 추구하며 혼자서 일합니다. 버그를 발견하고 해결하는 데 집중합니다."></w2:textbox>
+                            <xf:group tagname="ul" class="mbti-characteristics">
+                                <w2:textbox tagname="li" class="characteristic-item" label="체계적 설계"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="신기술 도입"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="독립적 작업"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="문제 해결"></w2:textbox>
+                            </xf:group>
+                        </xf:group>
+                        <xf:group class="mbti-image-container">
+                            <xf:image class="mbti-image" src="/InsWebApp/images/ws5/mbti/png/AISD.png"></xf:image>
+                        </xf:group>
+                    </xf:group>
+                </xf:group>
+                <xf:group class="mbti-section" id="mbti-section-8" data-type="BRTF">
+                    <xf:group class="section-content">
+                        <xf:group class="mbti-info">
+                            <w2:textbox class="mbti-type" label="BRTF"></w2:textbox>
+                            <w2:textbox class="mbti-title" label="실용적 팀 개선자"></w2:textbox>
+                            <w2:textbox class="mbti-description" label="빠른 구현과 실용성을 선호하며 기존 코드를 개선합니다. 팀과 협업하여 새로운 기능을 창의적으로 개발합니다."></w2:textbox>
+                            <xf:group tagname="ul" class="mbti-characteristics">
+                                <w2:textbox tagname="li" class="characteristic-item" label="빠른 구현"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="코드 개선"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="팀 협업"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="실용적 개발"></w2:textbox>
+                            </xf:group>
+                        </xf:group>
+                        <xf:group class="mbti-image-container">
+                            <xf:image class="mbti-image" src="/InsWebApp/images/ws5/mbti/png/BRTF.png"></xf:image>
+                        </xf:group>
+                    </xf:group>
+                </xf:group>
+                <xf:group class="mbti-section" id="mbti-section-9" data-type="BRTD">
+                    <xf:group class="section-content">
+                        <xf:group class="mbti-info">
+                            <w2:textbox class="mbti-type" label="BRTD"></w2:textbox>
+                            <w2:textbox class="mbti-title" label="실용적 팀 수정자"></w2:textbox>
+                            <w2:textbox class="mbti-description" label="빠른 구현을 추구하며 기존 코드를 개선합니다. 팀과 함께 버그를 발견하고 해결하는 데 집중합니다."></w2:textbox>
+                            <xf:group tagname="ul" class="mbti-characteristics">
+                                <w2:textbox tagname="li" class="characteristic-item" label="빠른 구현"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="코드 최적화"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="팀워크"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="버그 수정"></w2:textbox>
+                            </xf:group>
+                        </xf:group>
+                        <xf:group class="mbti-image-container">
+                            <xf:image class="mbti-image" src="/InsWebApp/images/ws5/mbti/png/BRTD.png"></xf:image>
+                        </xf:group>
+                    </xf:group>
+                </xf:group>
+                <xf:group class="mbti-section" id="mbti-section-10" data-type="BRSF">
+                    <xf:group class="section-content">
+                        <xf:group class="mbti-info">
+                            <w2:textbox class="mbti-type" label="BRSF"></w2:textbox>
+                            <w2:textbox class="mbti-title" label="실용적 솔로 창작자"></w2:textbox>
+                            <w2:textbox class="mbti-description" label="빠른 구현과 실용성을 추구하며 혼자서 일합니다. 기존 코드를 개선하면서 새로운 기능을 개발합니다."></w2:textbox>
+                            <xf:group tagname="ul" class="mbti-characteristics">
+                                <w2:textbox tagname="li" class="characteristic-item" label="빠른 구현"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="독립적 작업"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="코드 개선"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="기능 개발"></w2:textbox>
+                            </xf:group>
+                        </xf:group>
+                        <xf:group class="mbti-image-container">
+                            <xf:image class="mbti-image" src="/InsWebApp/images/ws5/mbti/png/BRSF.png"></xf:image>
+                        </xf:group>
+                    </xf:group>
+                </xf:group>
+                <xf:group class="mbti-section" id="mbti-section-11" data-type="BRSD">
+                    <xf:group class="section-content">
+                        <xf:group class="mbti-info">
+                            <w2:textbox class="mbti-type" label="BRSD"></w2:textbox>
+                            <w2:textbox class="mbti-title" label="실용적 안정성 추구자"></w2:textbox>
+                            <w2:textbox class="mbti-description" label="빠른 구현과 실용성을 선호하며 검증된 방법으로 안정적인 솔루션을 만듭니다. 혼자서 버그를 해결하는 데 집중합니다."></w2:textbox>
+                            <xf:group tagname="ul" class="mbti-characteristics">
+                                <w2:textbox tagname="li" class="characteristic-item" label="실용적 접근"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="안정성 추구"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="독립적 작업"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="버그 해결"></w2:textbox>
+                            </xf:group>
+                        </xf:group>
+                        <xf:group class="mbti-image-container">
+                            <xf:image class="mbti-image" src="/InsWebApp/images/ws5/mbti/png/BRSD.png"></xf:image>
+                        </xf:group>
+                    </xf:group>
+                </xf:group>
+                <xf:group class="mbti-section" id="mbti-section-12" data-type="BITF">
+                    <xf:group class="section-content">
+                        <xf:group class="mbti-info">
+                            <w2:textbox class="mbti-type" label="BITF"></w2:textbox>
+                            <w2:textbox class="mbti-title" label="창의적 스피드 러너"></w2:textbox>
+                            <w2:textbox class="mbti-description" label="빠른 구현을 추구하며 새로운 기술에 도전합니다. 팀과 협업하여 혁신적인 기능을 빠르게 개발합니다."></w2:textbox>
+                            <xf:group tagname="ul" class="mbti-characteristics">
+                                <w2:textbox tagname="li" class="characteristic-item" label="빠른 구현"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="신기술 도입"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="팀 협업"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="혁신적 개발"></w2:textbox>
+                            </xf:group>
+                        </xf:group>
+                        <xf:group class="mbti-image-container">
+                            <xf:image class="mbti-image" src="/InsWebApp/images/ws5/mbti/png/BITF.png"></xf:image>
+                        </xf:group>
+                    </xf:group>
+                </xf:group>
+                <xf:group class="mbti-section" id="mbti-section-13" data-type="BITD">
+                    <xf:group class="section-content">
+                        <xf:group class="mbti-info">
+                            <w2:textbox class="mbti-type" label="BITD"></w2:textbox>
+                            <w2:textbox class="mbti-title" label="혁신적 팀 해결사"></w2:textbox>
+                            <w2:textbox class="mbti-description" label="빠른 구현과 새로운 기술을 추구하며 팀과 함께 일합니다. 버그를 빠르게 발견하고 해결합니다."></w2:textbox>
+                            <xf:group tagname="ul" class="mbti-characteristics">
+                                <w2:textbox tagname="li" class="characteristic-item" label="빠른 구현"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="신기술 활용"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="팀워크"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="빠른 디버깅"></w2:textbox>
+                            </xf:group>
+                        </xf:group>
+                        <xf:group class="mbti-image-container">
+                            <xf:image class="mbti-image" src="/InsWebApp/images/ws5/default_mbti.png"></xf:image>
+                        </xf:group>
+                    </xf:group>
+                </xf:group>
+                <xf:group class="mbti-section" id="mbti-section-14" data-type="BISF">
+                    <xf:group class="section-content">
+                        <xf:group class="mbti-info">
+                            <w2:textbox class="mbti-type" label="BISF"></w2:textbox>
+                            <w2:textbox class="mbti-title" label="혁신적 스피드 개발자"></w2:textbox>
+                            <w2:textbox class="mbti-description" label="빠른 구현과 새로운 기술을 추구하며 혼자서 일합니다. 혁신적인 방법으로 빠르게 기능을 구현합니다."></w2:textbox>
+                            <xf:group tagname="ul" class="mbti-characteristics">
+                                <w2:textbox tagname="li" class="characteristic-item" label="빠른 구현"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="신기술 탐구"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="독립적 작업"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="혁신적 개발"></w2:textbox>
+                            </xf:group>
+                        </xf:group>
+                        <xf:group class="mbti-image-container">
+                            <xf:image class="mbti-image" src="/InsWebApp/images/ws5/mbti/png/BISF.png"></xf:image>
+                        </xf:group>
+                    </xf:group>
+                </xf:group>
+                <xf:group class="mbti-section" id="mbti-section-15" data-type="BISD">
+                    <xf:group class="section-content">
+                        <xf:group class="mbti-info">
+                            <w2:textbox class="mbti-type" label="BISD"></w2:textbox>
+                            <w2:textbox class="mbti-title" label="빠른 문제 해결사"></w2:textbox>
+                            <w2:textbox class="mbti-description" label="빠른 구현과 새로운 기술을 추구하며 혼자서 일합니다. 버그를 빠르게 발견하고 해결하는 데 집중합니다."></w2:textbox>
+                            <xf:group tagname="ul" class="mbti-characteristics">
+                                <w2:textbox tagname="li" class="characteristic-item" label="빠른 구현"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="신기술 도입"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="독립적 작업"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="빠른 문제해결"></w2:textbox>
+                            </xf:group>
+                        </xf:group>
+                        <xf:group class="mbti-image-container">
+                            <xf:image class="mbti-image" src="/InsWebApp/images/ws5/mbti/png/BISD.png"></xf:image>
+                        </xf:group>
+                    </xf:group>
+                </xf:group>
+            </xf:group>
+            <!-- 네비게이션 -->
+            <xf:group class="mbti-navigation"></xf:group>
+        </xf:group>
+    </body>
+</html>
