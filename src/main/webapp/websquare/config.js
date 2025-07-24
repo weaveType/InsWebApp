@@ -76,10 +76,10 @@ export default {
       "@value": "true"
     },
     "processMsgHeight": {
-      "@value": "81"
+      "@value": "180"
     },
     "processMsgWidth": {
-      "@value": "295"
+      "@value": "350"
     },
     "processMsgBackground": {
       "@backgroundColor": "#112233",

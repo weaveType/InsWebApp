@@ -126,27 +126,15 @@ scwin.smb_selectMatchingChecked_submitdone = function (e) {
     var isMbtiChecked = dmp_matchingCheckedVo.get("isMbtiChecked");
     var isCodeChecked = dmp_matchingCheckedVo.get("isCodeChecked");
 
-    console.log("isMbtiChecked:", isMbtiChecked);
-    console.log("isCodeChecked:", isCodeChecked);
-
-    // 여기에 isMbtiChecked와 isCodeChecked 값에 따라 UI를 업데이트하는 로직을 추가합니다.
-    // 예: 특정 아이콘의 표시 여부, 텍스트 변경 등
-    // 예시: 성향분석 완료 여부에 따라 카드 2의 스타일 변경
     if (isMbtiChecked) {
-        card2.addClass("completed"); // 'completed' 클래스 추가 (CSS에서 정의 필요)
-        // txb_mbti_status.setValue("완료");
+        card2.addClass("completed"); 
     } else {
         card2.removeClass("completed");
-        // txb_mbti_status.setValue("미완료");
     }
-
-    // 예시: 코드분석 완료 여부에 따라 카드 3의 스타일 변경
     if (isCodeChecked) {
         card3.addClass("completed");
-        // txb_code_status.setValue("완료");
     } else {
         card3.removeClass("completed");
-        // txb_code_status.setValue("미완료");
     }
 
     // 프로필 완성도 업데이트
@@ -301,15 +289,10 @@ createCompanyList = function () {
         var hasLogo = companyData.logoFileName && companyData.logoFileName.trim() !== '';
         var imgSrc = hasLogo ? logoBase + companyData.logoFileName : defaultLogo;
         img_company_logo.setSrc(imgSrc);
-        // onerror 처리는 WebSquare image 컴포넌트의 속성으로 처리하거나, 직접 DOM 접근이 필요할 수 있습니다.
-        // 현재 WebSquare image 컴포넌트의 onerror 속성 지원 여부를 확인해야 합니다.
-        // 임시로, 이미지 로드 실패 시 기본 이미지로 대체하는 로직은 WebSquare 컴포넌트 자체의 기능에 의존합니다.
 
         // 회사명 설정
         txt_company_name.setValue(companyData.name);
 
-        // 호버 효과는 CSS로 처리하는 것이 좋습니다.
-        // 클릭 이벤트는 generator 내부의 trigger 컴포넌트에서 처리됩니다.
     }
 
 };
@@ -367,6 +350,32 @@ scwin.sbm_selectPostingList_submitdone = function (e) {
         }
     }
 };
+
+/**
+ * 매칭 제안 클릭 이벤트
+ */
+scwin.matchingProposal_onclick = function(e) {
+    try {
+        // WebSquare $p.url을 사용하여 UserDetail.xml 호출하면서 파라미터 전달
+        var param = { "executeFunction": "menu_interest_onclick" };
+        $p.url("/InsWebApp/ui/user/UserDetail.xml", {"param": param});
+    } catch (ex) {
+        $c.win.alert("페이지 이동 중 오류가 발생했습니다.");
+    }
+};
+
+/**
+ * 지원 현황 클릭 이벤트  
+ */
+scwin.applicationStatus_onclick = function(e) {
+    try {
+        // WebSquare $p.url을 사용하여 UserDetail.xml 호출하면서 파라미터 전달
+        var param = { "executeFunction": "menu_history_onclick" };
+        $p.url("/InsWebApp/ui/user/UserDetail.xml", {"param": param});
+    } catch (ex) {
+        $c.win.alert("페이지 이동 중 오류가 발생했습니다.");
+    }
+};
 ]]></script>
 		<style type="text/css"><![CDATA[
 
@@ -387,7 +396,9 @@ scwin.sbm_selectPostingList_submitdone = function (e) {
 
             .hero-left {
                 flex: 1;
-                min-width: 0;
+                min-width: 400px; /* ad-area 최소 너비와 일치 */
+                display: flex;
+                justify-content: center; /* ad-area가 중앙에 배치되도록 */
             }
 
             .hero-right {
@@ -398,6 +409,7 @@ scwin.sbm_selectPostingList_submitdone = function (e) {
             .ad-area {
                 width: 100%;
                 min-height: 350px;
+                min-width: 400px; /* login-area와 동일한 최소 너비 */
                 background-color: #667eea;
                 border-radius: 10px;
                 cursor: pointer;
@@ -760,6 +772,14 @@ scwin.sbm_selectPostingList_submitdone = function (e) {
                 .hero-container {
                     flex-direction: column;
                     gap: 20px;
+                    align-items: center; /* 전체 컨테이너에서 중앙 정렬 */
+                }
+
+                .hero-left {
+                    min-width: 0; /* 태블릿에서는 최소 너비 제한 해제 */
+                    width: 100%; /* 전체 너비 사용 */
+                    max-width: 400px; /* 최대 너비 제한 */
+                    justify-content: center; /* 중앙 정렬 유지 */
                 }
 
                 .hero-right {
@@ -809,8 +829,13 @@ scwin.sbm_selectPostingList_submitdone = function (e) {
                     padding: 40px 15px;
                 }
 
+                .hero-left {
+                    min-width: 0; /* 모바일에서도 최소 너비 제한 해제 */
+                }
+
                 .ad-area {
                     min-height: 280px;
+                    min-width: 0; /* 모바일에서는 최소 너비 해제 */
                     padding: 40px 15px;
                 }
 
@@ -839,6 +864,34 @@ scwin.sbm_selectPostingList_submitdone = function (e) {
                 .section-subtitle {
                     margin-top: -10px;
                     margin-bottom: 20px;
+                }
+            }
+
+            /* 374px 이하에서만 매칭제안, 지원현황 줄바꿈 */
+            @media (max-width: 374px) {
+                .stats-section {
+                    grid-template-columns: 1fr; /* 374px 이하에서만 1열로 변경 */
+                    gap: 10px;
+                }
+            }
+
+            /* 480px에서 374px까지는 2열 유지 강제 */
+            @media (min-width: 375px) and (max-width: 480px) {
+                .stats-section {
+                    grid-template-columns: 1fr 1fr !important; /* 강제로 2열 유지 */
+                    gap: 8px; /* 간격 줄여서 공간 확보 */
+                }
+                
+                .stats-item {
+                    padding: 5px; /* 패딩 줄여서 공간 확보 */
+                }
+                
+                .stats-number {
+                    font-size: 20px; /* 폰트 크기 줄임 */
+                }
+                
+                .stats-label {
+                    font-size: 11px; /* 폰트 크기 줄임 */
                 }
             }
 
@@ -1100,12 +1153,12 @@ scwin.sbm_selectPostingList_submitdone = function (e) {
 							<!-- 통계 영역 -->
 							<xf:group class="stats-section">
 								<xf:group class="stats-item">
-									<w2:textbox class="stats-number" id="txb_matching_count" label="0"></w2:textbox>
-									<w2:textbox class="stats-label" label="매칭 제안"></w2:textbox>
+									<w2:textbox class="stats-number" id="txb_matching_count" label="0" ev:onclick="scwin.matchingProposal_onclick" style="cursor: pointer;"></w2:textbox>
+									<w2:textbox class="stats-label" label="매칭 제안" ev:onclick="scwin.matchingProposal_onclick" style="cursor: pointer;"></w2:textbox>
 								</xf:group>
 								<xf:group class="stats-item">
-									<w2:textbox class="stats-number" id="txb_application_count" label="0"></w2:textbox>
-									<w2:textbox class="stats-label" label="지원현황"></w2:textbox>
+									<w2:textbox class="stats-number" id="txb_application_count" label="0" ev:onclick="scwin.applicationStatus_onclick" style="cursor: pointer;"></w2:textbox>
+									<w2:textbox class="stats-label" label="지원현황" ev:onclick="scwin.applicationStatus_onclick" style="cursor: pointer;"></w2:textbox>
 								</xf:group>
 							</xf:group>
 						</xf:group>
