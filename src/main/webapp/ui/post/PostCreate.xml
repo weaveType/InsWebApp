@@ -1787,6 +1787,11 @@ scwin.sbm_insertPost_submitdone = function(e) {
     alert("공고가 성공적으로 등록되었습니다!");
     $p.url("../corporate/RecruitmentDashboard.xml");
 };
+
+// ... existing code ...
+window.scwin = window.scwin || {};
+window.scwin.removeTechStackByName = scwin.removeTechStackByName;
+// ... existing code ...
 ]]></script>
     </head>
     
