@@ -141,7 +141,7 @@ scwin.createNavigationDots = function () {
     if (!navContainer) return;
 
     scwin.mbtiTypes.forEach(function (mbti, index) {
-        var dot = document.createElement('div');
+        var dot = document.createElement('fx:group');
         dot.className = 'nav-dot';
         dot.setAttribute('data-index', index);
         dot.setAttribute('title', mbti.type + ' - ' + mbti.title);
@@ -251,19 +251,13 @@ scwin.updateNavigation = function () {
     });
 };
 
-scwin.btn_back_ondblclick = function (e) {
-    try {
-        // WebSquare에서는 브라우저 히스토리 사용
-        window.history.back();
-    } catch (e) {
-        console.log("뒤로가기 실패:", e);
-        // 뒤로가기 실패 시 메인으로 이동
-        scwin.btn_home_onclick();
-    }
-};
-
 scwin.btn_home_onclick = function (e) {
     $p.url("MainPage.xml");
+};
+
+scwin.btn_back_onclick = function (e) {
+    history.back();
+    
 };
 ]]></script>
         <style type="text/css"><![CDATA[
@@ -944,7 +938,7 @@ scwin.btn_home_onclick = function (e) {
             
             <!-- 하단 버튼들 -->
             <xf:group class="bottom-buttons">
-                <w2:textbox class="btn-back" tagname="button" label="뒤로가기" onclick="scwin.goBack()" id="btn_back" ev:ondblclick="scwin.btn_back_ondblclick"></w2:textbox>
+                <w2:textbox class="btn-back" tagname="button" label="뒤로가기" onclick="scwin.goBack()" id="btn_back" ev:ondblclick="scwin.btn_back_ondblclick" ev:onclick="scwin.btn_back_onclick"></w2:textbox>
                 <w2:textbox class="btn-home" tagname="button" label="메인으로" onclick="scwin.goHome()" id="btn_home" ev:onclick="scwin.btn_home_onclick"></w2:textbox>
             </xf:group>
         </xf:group>
