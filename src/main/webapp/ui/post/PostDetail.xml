@@ -1,108 +1,105 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<html xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:ev="http://www.w3.org/2001/xml-events"
-    xmlns:w2="http://www.inswave.com/websquare" 
-    xmlns:xf="http://www.w3.org/2002/xforms">
-    
-    <head meta_screenName="채용공고 상세">
-        <w2:type>COMPONENT</w2:type>
-        <w2:buildDate/>
-        <w2:MSA/>
-        <xf:model>
-        	<w2:dataCollection baseNode="map">
-        		<!-- 공고 상세 조회용 파라미터 -->
-        		<w2:dataMap baseNode="map" id="dmp_postParam" style="">
-        			<w2:keyInfo>
-        				<w2:key dataType="text" id="jobPostingId" name="공고_ID"></w2:key>
-        			</w2:keyInfo>
-        			<w2:data use="false"></w2:data>
-        		</w2:dataMap>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare"
+	xmlns:xf="http://www.w3.org/2002/xforms">
 
-        		<!-- 공고 상세 정보 -->
-        		<w2:dataMap baseNode="map" id="dmp_postDetail" style="">
-        			<w2:keyInfo>
-        				<w2:key dataType="text" id="jobPostingId" name="job_posting_id"></w2:key>
-        				<w2:key dataType="text" id="companyId" name="company_id"></w2:key>
-        				<w2:key dataType="text" id="title" name="title"></w2:key>
-        				<w2:key dataType="text" id="description" name="description"></w2:key>
-        				<w2:key dataType="text" id="requirements" name="requirements"></w2:key>
-        				<w2:key dataType="text" id="preferred" name="preferred"></w2:key>
-        				<w2:key dataType="text" id="benefits" name="benefits"></w2:key>
-        				<w2:key dataType="text" id="experienceLevel" name="experience_level"></w2:key>
-        				<w2:key dataType="text" id="salaryRange" name="salary_range"></w2:key>
-        				<w2:key dataType="text" id="location" name="location"></w2:key>
-        				<w2:key dataType="text" id="workType" name="work_type"></w2:key>
-        				<w2:key dataType="text" id="expiresAt" name="expires_at"></w2:key>
-        				<w2:key dataType="text" id="postedAt" name="posted_at"></w2:key>
-        				<w2:key dataType="text" id="status" name="status"></w2:key>
-        				<w2:key dataType="text" id="companyName" name="company_name"></w2:key>
-        				<w2:key dataType="text" id="industry" name="industry"></w2:key>
-        				<w2:key dataType="text" id="empCount" name="emp_count"></w2:key>
-        				<w2:key dataType="text" id="selectedTechStackNames" name="selected_tech_stack_names"></w2:key>
-        				<w2:key dataType="text" id="preferredDeveloperTypes" name="preferred_developer_types"></w2:key>
-        				<w2:key dataType="text" id="jobImageFileName" name="job_image_file_name"></w2:key>
-        				<w2:key dataType="text" id="isApplied" name="is_applied"></w2:key>
-        			</w2:keyInfo>
-        			<w2:data use="false"></w2:data>
-        		</w2:dataMap>
-        		<w2:dataMap baseNode="map" id="dmp_jobApplicationVo">
-        			<w2:keyInfo>
-        				<w2:key dataType="number" name="공고 ID" id="jobPostingId"></w2:key>
-        				<w2:key dataType="number" name="지원자 ID" id="accountId"></w2:key>
-        			</w2:keyInfo>
-        		</w2:dataMap>
-        		
-        		<!-- 공고 수정용 데이터 -->
-        		<w2:dataMap baseNode="map" id="dmp_postEdit" style="">
-        			<w2:keyInfo>
-        				<w2:key dataType="text" id="jobPostingId" name="job_posting_id"></w2:key>
-        				<w2:key dataType="text" id="title" name="title"></w2:key>
-        				<w2:key dataType="text" id="description" name="description"></w2:key>
-        				<w2:key dataType="text" id="experienceLevel" name="experience_level"></w2:key>
-        				<w2:key dataType="text" id="salaryRange" name="salary_range"></w2:key>
-        				<w2:key dataType="text" id="location" name="location"></w2:key>
-        				<w2:key dataType="text" id="workType" name="work_type"></w2:key>
-        				<w2:key dataType="text" id="selectedTechStackNames" name="selected_tech_stack_names"></w2:key>
-        				<w2:key dataType="text" id="preferredDeveloperTypes" name="preferred_developer_types"></w2:key>
-        				<w2:key dataType="text" id="jobImageFileName" name="job_image_file_name"></w2:key>
-        				<w2:key dataType="text" id="isApplied" name="is_applied"></w2:key>
-        			</w2:keyInfo>
-        			<w2:data use="false"></w2:data>
-        		</w2:dataMap>
-        	</w2:dataCollection>
-        	<w2:workflowCollection />
+	<head meta_screenName="채용공고 상세">
+		<w2:type>COMPONENT</w2:type>
+		<w2:buildDate />
+		<w2:MSA />
+		<xf:model>
+			<w2:dataCollection baseNode="map">
+				<!-- 공고 상세 조회용 파라미터 -->
+				<w2:dataMap baseNode="map" id="dmp_postParam" style="">
+					<w2:keyInfo>
+						<w2:key dataType="text" id="jobPostingId" name="공고_ID"></w2:key>
+					</w2:keyInfo>
+					<w2:data use="false"></w2:data>
+				</w2:dataMap>
 
-        	<!-- 공고 상세 조회 Submission -->
-        	<xf:submission id="sbm_selectPostDetail" ref='data:json,{"id":"dmp_postParam","key":"postVo"}'
-        		target='data:json,{"id":"dmp_postDetail","key":"elData"}' action="/InsWebApp/POS0001Detail.pwkjson" method="post"
-        		mediatype="application/json" encoding="UTF-8" instance="" replace="" errorHandler="" customHandler="" mode="asynchronous"
-        		processMsg="공고 상세정보를 조회중입니다." ev:submit="" ev:submitdone="scwin.sbm_selectPostDetail_submitdone" ev:submiterror=""
-        		abortTrigger="">
-        	</xf:submission>
+				<!-- 공고 상세 정보 -->
+				<w2:dataMap baseNode="map" id="dmp_postDetail" style="">
+					<w2:keyInfo>
+						<w2:key dataType="text" id="jobPostingId" name="job_posting_id"></w2:key>
+						<w2:key dataType="text" id="companyId" name="company_id"></w2:key>
+						<w2:key dataType="text" id="title" name="title"></w2:key>
+						<w2:key dataType="text" id="description" name="description"></w2:key>
+						<w2:key dataType="text" id="requirements" name="requirements"></w2:key>
+						<w2:key dataType="text" id="preferred" name="preferred"></w2:key>
+						<w2:key dataType="text" id="benefits" name="benefits"></w2:key>
+						<w2:key dataType="text" id="experienceLevel" name="experience_level"></w2:key>
+						<w2:key dataType="text" id="salaryRange" name="salary_range"></w2:key>
+						<w2:key dataType="text" id="location" name="location"></w2:key>
+						<w2:key dataType="text" id="workType" name="work_type"></w2:key>
+						<w2:key dataType="text" id="expiresAt" name="expires_at"></w2:key>
+						<w2:key dataType="text" id="postedAt" name="posted_at"></w2:key>
+						<w2:key dataType="text" id="status" name="status"></w2:key>
+						<w2:key dataType="text" id="companyName" name="company_name"></w2:key>
+						<w2:key dataType="text" id="industry" name="industry"></w2:key>
+						<w2:key dataType="text" id="empCount" name="emp_count"></w2:key>
+						<w2:key dataType="text" id="selectedTechStackNames" name="selected_tech_stack_names"></w2:key>
+						<w2:key dataType="text" id="preferredDeveloperTypes" name="preferred_developer_types"></w2:key>
+						<w2:key dataType="text" id="jobImageFileName" name="job_image_file_name"></w2:key>
+						<w2:key dataType="text" id="isApplied" name="is_applied"></w2:key>
+					</w2:keyInfo>
+					<w2:data use="false"></w2:data>
+				</w2:dataMap>
+				<w2:dataMap baseNode="map" id="dmp_jobApplicationVo">
+					<w2:keyInfo>
+						<w2:key dataType="number" name="공고 ID" id="jobPostingId"></w2:key>
+						<w2:key dataType="number" name="지원자 ID" id="accountId"></w2:key>
+					</w2:keyInfo>
+				</w2:dataMap>
 
-        	<!-- 공고 삭제 Submission -->
-        	<xf:submission id="sbm_deletePost" ref='data:json,{"id":"dmp_postParam","key":"postVo"}' target=""
-        		action="/InsWebApp/POS0001Del.pwkjson" method="post" mediatype="application/json" encoding="UTF-8" instance="" replace=""
-        		errorHandler="" customHandler="" mode="asynchronous" processMsg="공고를 삭제중입니다." ev:submit=""
-        		ev:submitdone="scwin.sbm_deletePost_submitdone" ev:submiterror="" abortTrigger="">
-        	</xf:submission>
-        	<xf:submission id="sbm_insertJobApplication" action="/InsWebApp/POS0001JAPL.pwkjson" method="post" mediatype="application/json"
-        		ref='data:json,{"id":"dmp_jobApplicationVo","key":"jobApplicationVo"}' target="" encoding="UTF-8" instance="" replace=""
-        		errorHandler="" customHandler="" mode="asynchronous" processMsg="이력서 지원중.." ev:submit="" ev:submitdone="scwin.sbm_insertJobApplication_submitdone" ev:submiterror=""
-        		abortTrigger="">
-        	</xf:submission>
-        	
-        	<!-- 공고 수정 Submission -->
-        	<xf:submission id="sbm_updatePost" ref='data:json,{"id":"dmp_postEdit","key":"postVo"}' target='data:json,{"id":"dmp_postDetail","key":"elData"}'
-        		action="/InsWebApp/POS0001Upd.pwkjson" method="post" mediatype="application/json" encoding="UTF-8" instance="" replace=""
-        		errorHandler="" customHandler="" mode="asynchronous" processMsg="공고를 수정중입니다." ev:submit=""
-        		ev:submitdone="scwin.sbm_updatePost_submitdone" ev:submiterror="" abortTrigger="">
-        	</xf:submission>
-        </xf:model>
-        <w2:layoutInfo/>
-        <w2:publicInfo method=""/>
+				<!-- 공고 수정용 데이터 -->
+				<w2:dataMap baseNode="map" id="dmp_postEdit" style="">
+					<w2:keyInfo>
+						<w2:key dataType="text" id="jobPostingId" name="job_posting_id"></w2:key>
+						<w2:key dataType="text" id="title" name="title"></w2:key>
+						<w2:key dataType="text" id="description" name="description"></w2:key>
+						<w2:key dataType="text" id="experienceLevel" name="experience_level"></w2:key>
+						<w2:key dataType="text" id="salaryRange" name="salary_range"></w2:key>
+						<w2:key dataType="text" id="location" name="location"></w2:key>
+						<w2:key dataType="text" id="workType" name="work_type"></w2:key>
+						<w2:key dataType="text" id="selectedTechStackNames" name="selected_tech_stack_names"></w2:key>
+						<w2:key dataType="text" id="preferredDeveloperTypes" name="preferred_developer_types"></w2:key>
+						<w2:key dataType="text" id="jobImageFileName" name="job_image_file_name"></w2:key>
+						<w2:key dataType="text" id="isApplied" name="is_applied"></w2:key>
+					</w2:keyInfo>
+					<w2:data use="false"></w2:data>
+				</w2:dataMap>
+			</w2:dataCollection>
+			<w2:workflowCollection />
 
-        <style type="text/css"><![CDATA[
+			<!-- 공고 상세 조회 Submission -->
+			<xf:submission id="sbm_selectPostDetail" ref='data:json,{"id":"dmp_postParam","key":"postVo"}'
+				target='data:json,{"id":"dmp_postDetail","key":"elData"}' action="/InsWebApp/POS0001Detail.pwkjson" method="post"
+				mediatype="application/json" encoding="UTF-8" instance="" replace="" errorHandler="" customHandler="" mode="asynchronous"
+				processMsg="공고 상세정보를 조회중입니다." ev:submit="" ev:submitdone="scwin.sbm_selectPostDetail_submitdone" ev:submiterror="" abortTrigger="">
+			</xf:submission>
+
+			<!-- 공고 삭제 Submission -->
+			<xf:submission id="sbm_deletePost" ref='data:json,{"id":"dmp_postParam","key":"postVo"}' target=""
+				action="/InsWebApp/POS0001Del.pwkjson" method="post" mediatype="application/json" encoding="UTF-8" instance="" replace=""
+				errorHandler="" customHandler="" mode="asynchronous" processMsg="공고를 삭제중입니다." ev:submit=""
+				ev:submitdone="scwin.sbm_deletePost_submitdone" ev:submiterror="" abortTrigger="">
+			</xf:submission>
+			<xf:submission id="sbm_insertJobApplication" action="/InsWebApp/POS0001JAPL.pwkjson" method="post"
+				mediatype="application/json" ref='data:json,{"id":"dmp_jobApplicationVo","key":"jobApplicationVo"}' target="" encoding="UTF-8"
+				instance="" replace="" errorHandler="" customHandler="" mode="asynchronous" processMsg="이력서 지원중.." ev:submit=""
+				ev:submitdone="scwin.sbm_insertJobApplication_submitdone" ev:submiterror="" abortTrigger="">
+			</xf:submission>
+
+			<!-- 공고 수정 Submission -->
+			<xf:submission id="sbm_updatePost" ref='data:json,{"id":"dmp_postEdit","key":"postVo"}'
+				target='data:json,{"id":"dmp_postDetail","key":"elData"}' action="/InsWebApp/POS0001Upd.pwkjson" method="post"
+				mediatype="application/json" encoding="UTF-8" instance="" replace="" errorHandler="" customHandler="" mode="asynchronous"
+				processMsg="공고를 수정중입니다." ev:submit="" ev:submitdone="scwin.sbm_updatePost_submitdone" ev:submiterror="" abortTrigger="">
+			</xf:submission>
+		</xf:model>
+		<w2:layoutInfo />
+		<w2:publicInfo method="" />
+
+		<style type="text/css"><![CDATA[
             /* 기본 설정 */
             * {
                 box-sizing: border-box;
@@ -188,7 +185,6 @@
                 right: 0;
                 bottom: 0;
                 background: rgba(0, 0, 0, 0.3);
-                z-index: 1;
             }
 
             .main-image w2\\:textbox {
@@ -198,43 +194,11 @@
                 text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
             }
 
-            .sub-image {
-                border-radius: 6px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                color: white;
-                font-weight: bold;
-                font-size: clamp(14px, 2.5vw, 16px);
-                text-align: center;
-                padding: 10px;
-                position: relative;
-                overflow: hidden;
-            }
-
-            .sub-image::before {
-                content: '';
-                position: absolute;
-                top: 0;
-                left: 0;
-                right: 0;
-                bottom: 0;
-                background: rgba(0, 0, 0, 0.2);
-                z-index: 1;
-            }
-
-            .sub-image w2\\:textbox {
+            .main-image img { /* 이미지 태그 추가 */
                 position: relative;
                 z-index: 2;
-                text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-            }
-
-            .sub-image:nth-child(2) {
-                background: linear-gradient(135deg, #6b46c1, #9333ea);
-            }
-
-            .sub-image:nth-child(3) {
-                background: linear-gradient(135deg, #f97316, #ea580c);
+                max-width: 100%;  /* 화면에 맞게 크기 조절 */
+                height: auto;     /* 비율 유지 */
             }
 
             /* 공고 정보 섹션 */
@@ -522,10 +486,6 @@
                     height: 200px;
                 }
 
-                .sub-image {
-                    height: 150px;
-                }
-
                 .info-tags {
                     grid-template-columns: 1fr 1fr;
                 }
@@ -573,7 +533,7 @@
                     gap: 10px;
                 }
 
-                .main-image, .sub-image {
+                .main-image {
                     height: clamp(150px, 25vw, 180px);
                 }
 
@@ -612,7 +572,7 @@
                     gap: 8px;
                 }
 
-                .main-image, .sub-image {
+                .main-image {
                     height: 140px;
                 }
 
@@ -875,7 +835,7 @@
             }
         ]]></style>
 
-        <script lazy="false" type="text/javascript"><![CDATA[
+		<script lazy="false" type="text/javascript"><![CDATA[
 
 // ==================== 편집 모드 관련 전역 변수 ====================
 scwin.isEditMode = false;  // 편집 모드 상태
@@ -3608,227 +3568,277 @@ scwin.btnCancel_onclick = function (e) {
     }
 };
 ]]></script>
-    </head>
+	</head>
 
-    <body ev:onpageload="scwin.onpageload">
-        <w2:wframe src="../common/Header.xml" id="headerFrame" />
-        <xf:group class="main-wrap">
+	<body ev:onpageload="scwin.onpageload">
+		<w2:wframe src="../common/Header.xml" id="headerFrame" />
+		<xf:group class="main-wrap">
 
-            <!-- 메인 컨텐츠 -->
-            <main class="container">
-                <!-- 편집 모드 표시기 (편집 모드에서만 표시) -->
-                <xf:group class="edit-mode-indicator edit-only" id="editModeIndicator">
-                    <w2:textbox label="✏️ 공고 편집 모드 - 내용을 수정한 후 저장 버튼을 눌러주세요"></w2:textbox>
-                </xf:group>
+			<!-- 메인 컨텐츠 -->
+			<main class="container">
+				<!-- 편집 모드 표시기 (편집 모드에서만 표시) -->
+				<xf:group class="edit-mode-indicator edit-only" id="editModeIndicator">
+					<w2:textbox label="✏️ 공고 편집 모드 - 내용을 수정한 후 저장 버튼을 눌러주세요"></w2:textbox>
+				</xf:group>
 
-                <xf:group class="main-content">
-                    <!-- 회사 이미지 갤러리 -->
-                    <section class="company-images">
-                        <xf:group class="image-gallery">
-                            <xf:group class="main-image" id="main-image-container">
-                                <!-- 이미지 또는 회사명이 JavaScript로 동적 설정됩니다 -->
-                            </xf:group>
-                            <xf:group class="sub-image">
-                                <w2:textbox label="채용 진행중"></w2:textbox>
-                            </xf:group>
-                            <xf:group class="sub-image">
-                                <w2:textbox ref="data:dmp_postDetail.industry"></w2:textbox>
-                            </xf:group>
-                        </xf:group>
-                    </section>
+				<xf:group class="main-content">
+					<!-- 회사 이미지 갤러리 -->
+					<section class="company-images">
+						<xf:group class="image-gallery">
+							<xf:group class="main-image" id="main-image-container" style="width: 200%;">
+								<!-- 이미지 또는 회사명이 JavaScript로 동적 설정됩니다 -->
+							</xf:group>
+						</xf:group>
+					</section>
 
-                    <!-- 공고 헤더 -->
-                    <section class="job-header">
-                        <div class="job-meta">공고 정보 로딩중...</div>
-                        
-                        <!-- 읽기 모드: 제목 표시 -->
-                        <w2:textbox class="job-title hide-on-edit" ref="data:dmp_postDetail.title"></w2:textbox>
-                        
-                        <!-- 편집 모드: 제목 입력 -->
-                        <xf:group class="edit-only">
-                            <w2:input class="edit-input edit-title-input required-field" ref="data:dmp_postEdit.title" 
-                                placeholder="공고 제목을 입력해주세요 (필수)" maxlength="100" style="margin-bottom: 10px;">
-                            </w2:input>
-                            <xf:group class="error-message" id="titleError" style="display:none;">
-                                <w2:textbox label="제목은 필수 입력사항입니다."></w2:textbox>
-                            </xf:group>
-                        </xf:group>
+					<!-- 공고 헤더 -->
+					<section class="job-header">
+						<div class="job-meta">공고 정보 로딩중...</div>
 
-                        <xf:group class="job-actions">
-                        	<!-- 일반 사용자용 버튼들 -->
-                        	<xf:trigger class="btn-apply hide-on-edit" id="btnApply" type="button" ev:onclick="scwin.btnApply_onclick">
-                        		<xf:label>지원하기</xf:label>
-                        	</xf:trigger>
+						<!-- 읽기 모드: 제목 표시 -->
+						<w2:textbox class="job-title hide-on-edit" ref="data:dmp_postDetail.title"></w2:textbox>
 
-                        	<!-- 기업 사용자용 버튼들 (작성자 본인만) - 읽기 모드 -->
-                        	<xf:trigger class="btn-edit hide-on-edit" id="btnEdit" type="button" ev:onclick="scwin.btnEdit_onclick"
-                        		style="display:none;">
-                        		<xf:label>수정하기</xf:label>
-                        	</xf:trigger>
-                        	<xf:trigger class="btn-delete hide-on-edit" id="btnDelete" type="button" ev:onclick="scwin.btnDelete_onclick"
-                        		style="display:none;">
-                        		<xf:label>삭제하기</xf:label>
-                        	</xf:trigger>
-                        	<xf:trigger class="btn-applicant_details hide-on-edit" id="btnApplicantDetails" type="button" style=""
-                        		ev:onclick="scwin.btnApplicantDetails_onclick">
-                        		<xf:label>지원자 보기</xf:label>
-                        	</xf:trigger>
-                        	<xf:trigger class="btn-scout hide-on-edit" id="btnScout" style=""
-                        		type="button" ev:onclick="scwin.btnScout_onclick">
-                        		<xf:label>매칭 제안하기</xf:label>
-                        	</xf:trigger>
+						<!-- 편집 모드: 제목 입력 -->
+						<xf:group class="edit-only">
+							<w2:input class="edit-input edit-title-input required-field" ref="data:dmp_postEdit.title" placeholder="공고 제목을 입력해주세요 (필수)"
+								maxlength="100" style="margin-bottom: 10px;">
+							</w2:input>
+							<xf:group class="error-message" id="titleError" style="display:none;">
+								<w2:textbox label="제목은 필수 입력사항입니다."></w2:textbox>
+							</xf:group>
+						</xf:group>
 
-                        	<!-- 편집 모드 버튼들 (편집 모드에서만 표시) -->
-                        	<xf:trigger class="btn-save edit-only" id="btnSave" type="button" ev:onclick="scwin.btnSave_onclick">
-                        		<xf:label>💾 저장하기</xf:label>
-                        	</xf:trigger>
-                        	<xf:trigger class="btn-cancel edit-only" id="btnCancel" type="button" ev:onclick="scwin.btnCancel_onclick">
-                        		<xf:label>❌ 취소</xf:label>
-                        	</xf:trigger>
-                        </xf:group>
-                    </section>
+						<xf:group class="job-actions">
+							<!-- 일반 사용자용 버튼들 -->
+							<xf:trigger class="btn-apply hide-on-edit" id="btnApply" type="button" ev:onclick="scwin.btnApply_onclick">
+								<xf:label>지원하기</xf:label>
+							</xf:trigger>
 
-                    <!-- 공고 내용 -->
-                    <section class="job-content">
-                        <!-- 상세 설명 -->
-                        <xf:group class="content-section">
-                            <w2:textbox class="section-title required-field" label="상세 설명"></w2:textbox>
-                            
-                            <!-- 읽기 모드: 상세 설명 표시 -->
-                            <w2:textbox class="section-content hide-on-edit" ref="data:dmp_postDetail.description"></w2:textbox>
-                            
-                            <!-- 편집 모드: 상세 설명 입력 -->
-                            <xf:group class="edit-only">
-                                <w2:textarea class="edit-textarea edit-content-textarea required-field" ref="data:dmp_postEdit.description" 
-                                    placeholder="우리 회사에서 함께 일하고 싶은 개발자의 특징이나 역량을 구체적으로 설명해주세요 (필수)" maxlength="2000" rows="6">
-                                </w2:textarea>
-                                <xf:group class="error-message" id="descriptionError" style="display:none;">
-                                    <w2:textbox label="상세 설명은 필수 입력사항입니다."></w2:textbox>
-                                </xf:group>
-                            </xf:group>
-                        </xf:group>
+							<!-- 기업 사용자용 버튼들 (작성자 본인만) - 읽기 모드 -->
+							<xf:trigger class="btn-edit hide-on-edit" id="btnEdit" type="button" ev:onclick="scwin.btnEdit_onclick"
+								style="display:none;">
+								<xf:label>수정하기</xf:label>
+							</xf:trigger>
+							<xf:trigger class="btn-delete hide-on-edit" id="btnDelete" type="button" ev:onclick="scwin.btnDelete_onclick"
+								style="display:none;">
+								<xf:label>삭제하기</xf:label>
+							</xf:trigger>
+							<xf:trigger class="btn-applicant_details hide-on-edit" id="btnApplicantDetails" type="button" style=""
+								ev:onclick="scwin.btnApplicantDetails_onclick">
+								<xf:label>지원자 보기</xf:label>
+							</xf:trigger>
+							<xf:trigger class="btn-scout hide-on-edit" id="btnScout" style="" type="button" ev:onclick="scwin.btnScout_onclick">
+								<xf:label>매칭 제안하기</xf:label>
+							</xf:trigger>
 
-                        <!-- 기술스택 -->
-                        <xf:group class="content-section">
-                            <w2:textbox class="section-title" label="💻 기술스택"></w2:textbox>
-                            
-                            <!-- 읽기 모드: 기술스택 표시 -->
-                            <xf:group class="tags tech-tags hide-on-edit">
-                                <!-- 기술스택 태그들이 JavaScript로 동적 생성됩니다 -->
-                                <div class="loading-content">
-                                    <div class="loading-spinner"></div>
-                                    기술스택 정보 로딩중...
-                                </div>
-                            </xf:group>
-                            
-                            <!-- 편집 모드: 기술스택 편집 (읽기 전용 - 복잡함) -->
-                            <xf:group class="edit-only">
-                                <w2:textbox class="help-text" label="기술스택 편집은 현재 지원되지 않습니다. 필요 시 새 공고를 등록해주세요."></w2:textbox>
-                                <xf:group class="tags tech-tags">
-                                    <!-- 현재 기술스택들을 읽기 전용으로 표시 -->
-                                </xf:group>
-                            </xf:group>
-                        </xf:group>
+							<!-- 편집 모드 버튼들 (편집 모드에서만 표시) -->
+							<xf:trigger class="btn-save edit-only" id="btnSave" type="button" ev:onclick="scwin.btnSave_onclick">
+								<xf:label>💾 저장하기</xf:label>
+							</xf:trigger>
+							<xf:trigger class="btn-cancel edit-only" id="btnCancel" type="button" ev:onclick="scwin.btnCancel_onclick">
+								<xf:label>❌ 취소</xf:label>
+							</xf:trigger>
+						</xf:group>
+					</section>
 
-                        <!-- 선호 성향 -->
-                        <xf:group class="content-section">
-                            <w2:textbox class="section-title" label="🎯 선호 성향"></w2:textbox>
-                            
-                            <!-- 읽기 모드: 선호 성향 표시 -->
-                            <xf:group class="tags dev-type-tags hide-on-edit">
-                                <!-- 성향 태그들이 JavaScript로 동적 생성됩니다 -->
-                                <div class="loading-content">
-                                    <div class="loading-spinner"></div>
-                                    성향 정보 로딩중...
-                                </div>
-                            </xf:group>
-                            
-                            <!-- 편집 모드: 선호 성향 편집 (읽기 전용 - 복잡함) -->
-                            <xf:group class="edit-only">
-                                <w2:textbox class="help-text" label="선호 성향 편집은 현재 지원되지 않습니다. 필요 시 새 공고를 등록해주세요."></w2:textbox>
-                                <xf:group class="tags dev-type-tags">
-                                    <!-- 현재 선호 성향들을 읽기 전용으로 표시 -->
-                                </xf:group>
-                            </xf:group>
-                        </xf:group>
+					<!-- 공고 내용 -->
+					<section class="job-content">
+						<!-- 상세 설명 -->
+						<xf:group class="content-section">
+							<w2:textbox class="section-title required-field" label="상세 설명"></w2:textbox>
 
-                        <!-- 추가 정보 -->
-                        <xf:group class="content-section">
-                            <w2:textbox class="section-title" label="추가 정보"></w2:textbox>
-                            
-                            <!-- 읽기 모드: 추가 정보 표시 -->
-                            <xf:group class="info-tags hide-on-edit">
-                                <!-- 기타 정보가 JavaScript로 동적 생성됩니다 -->
-                                <div class="loading-content">
-                                    <div class="loading-spinner"></div>
-                                    정보 로딩중...
-                                </div>
-                            </xf:group>
-                            
-                            <!-- 편집 모드: 추가 정보 입력 (PostCreate와 동일한 구조) -->
-                            <xf:group class="edit-only">
-                                <xf:group class="form-row">
-                                    <xf:group class="form-group half">
-                                        <w2:textbox class="form-label" label="선호 경력"></w2:textbox>
-                                        <xf:select1 class="form-select" chooseOption="경력 선택" appearance="minimal" ref="data:dmp_postEdit.experienceLevel">
-                                            <xf:choices>
-                                                <xf:item><xf:label><![CDATA[상관없음]]></xf:label><xf:value><![CDATA[any]]></xf:value></xf:item>
-                                                <xf:item><xf:label><![CDATA[신입 (0년)]]></xf:label><xf:value><![CDATA[new]]></xf:value></xf:item>
-                                                <xf:item><xf:label><![CDATA[1-2년]]></xf:label><xf:value><![CDATA[junior]]></xf:value></xf:item>
-                                                <xf:item><xf:label><![CDATA[3-5년]]></xf:label><xf:value><![CDATA[mid]]></xf:value></xf:item>
-                                                <xf:item><xf:label><![CDATA[5년 이상]]></xf:label><xf:value><![CDATA[senior]]></xf:value></xf:item>
-                                            </xf:choices>
-                                        </xf:select1>
-                                    </xf:group>
-                                    
-                                    <xf:group class="form-group half">
-                                        <w2:textbox class="form-label" label="예상 연봉범위"></w2:textbox>
-                                        <xf:select1 class="form-select" chooseOption="연봉 선택" appearance="minimal" ref="data:dmp_postEdit.salaryRange">
-                                            <xf:choices>
-                                                <xf:item><xf:label><![CDATA[2,500만원 미만]]></xf:label><xf:value><![CDATA[under25]]></xf:value></xf:item>
-                                                <xf:item><xf:label><![CDATA[2,500-3,500만원]]></xf:label><xf:value><![CDATA[25to35]]></xf:value></xf:item>
-                                                <xf:item><xf:label><![CDATA[3,500-5,000만원]]></xf:label><xf:value><![CDATA[35to50]]></xf:value></xf:item>
-                                                <xf:item><xf:label><![CDATA[5,000만원 이상]]></xf:label><xf:value><![CDATA[over50]]></xf:value></xf:item>
-                                            </xf:choices>
-                                        </xf:select1>
-                                    </xf:group>
-                                </xf:group>
-                                
-                                <xf:group class="form-row">
-                                    <xf:group class="form-group half">
-                                        <w2:textbox class="form-label" label="근무 지역"></w2:textbox>
-                                        <xf:select1 class="form-select" chooseOption="지역 선택" appearance="minimal" ref="data:dmp_postEdit.location">
-                                            <xf:choices>
-                                                <xf:item><xf:label><![CDATA[서울]]></xf:label><xf:value><![CDATA[서울]]></xf:value></xf:item>
-                                                <xf:item><xf:label><![CDATA[경기]]></xf:label><xf:value><![CDATA[경기]]></xf:value></xf:item>
-                                                <xf:item><xf:label><![CDATA[인천]]></xf:label><xf:value><![CDATA[인천]]></xf:value></xf:item>
-                                                <xf:item><xf:label><![CDATA[부산]]></xf:label><xf:value><![CDATA[부산]]></xf:value></xf:item>
-                                                <xf:item><xf:label><![CDATA[대구]]></xf:label><xf:value><![CDATA[대구]]></xf:value></xf:item>
-                                                <xf:item><xf:label><![CDATA[대전]]></xf:label><xf:value><![CDATA[대전]]></xf:value></xf:item>
-                                                <xf:item><xf:label><![CDATA[광주]]></xf:label><xf:value><![CDATA[광주]]></xf:value></xf:item>
-                                            </xf:choices>
-                                        </xf:select1>
-                                    </xf:group>
-                                    
-                                    <xf:group class="form-group half">
-                                        <w2:textbox class="form-label" label="근무 형태"></w2:textbox>
-                                        <xf:select1 class="form-select" chooseOption="형태 선택" appearance="minimal" ref="data:dmp_postEdit.workType">
-                                            <xf:choices>
-                                                <xf:item><xf:label><![CDATA[원격 근무]]></xf:label><xf:value><![CDATA[remote]]></xf:value></xf:item>
-                                                <xf:item><xf:label><![CDATA[출근 근무]]></xf:label><xf:value><![CDATA[onsite]]></xf:value></xf:item>
-                                                <xf:item><xf:label><![CDATA[하이브리드]]></xf:label><xf:value><![CDATA[hybrid]]></xf:value></xf:item>
-                                            </xf:choices>
-                                        </xf:select1>
-                                    </xf:group>
-                                </xf:group>
-                            </xf:group>
-                        </xf:group>
-                    </section>
-                </xf:group>
-            </main>
-        </xf:group>
+							<!-- 읽기 모드: 상세 설명 표시 -->
+							<w2:textbox class="section-content hide-on-edit" ref="data:dmp_postDetail.description"></w2:textbox>
 
-        <script type="text/javascript"><![CDATA[
+							<!-- 편집 모드: 상세 설명 입력 -->
+							<xf:group class="edit-only">
+								<w2:textarea class="edit-textarea edit-content-textarea required-field" ref="data:dmp_postEdit.description"
+									placeholder="우리 회사에서 함께 일하고 싶은 개발자의 특징이나 역량을 구체적으로 설명해주세요 (필수)" maxlength="2000" rows="6">
+								</w2:textarea>
+								<xf:group class="error-message" id="descriptionError" style="display:none;">
+									<w2:textbox label="상세 설명은 필수 입력사항입니다."></w2:textbox>
+								</xf:group>
+							</xf:group>
+						</xf:group>
+
+						<!-- 기술스택 -->
+						<xf:group class="content-section">
+							<w2:textbox class="section-title" label=""></w2:textbox>
+
+							<!-- 읽기 모드: 기술스택 표시 -->
+							<xf:group class="tags tech-tags hide-on-edit">
+								<!-- 기술스택 태그들이 JavaScript로 동적 생성됩니다 -->
+								<div class="loading-content">
+									<div class="loading-spinner"></div>
+									기술스택 정보 로딩중...
+								</div>
+							</xf:group>
+
+							<!-- 편집 모드: 기술스택 편집 (읽기 전용 - 복잡함) -->
+							<xf:group class="edit-only">
+								<w2:textbox class="help-text" label="기술스택 편집은 현재 지원되지 않습니다. 필요 시 새 공고를 등록해주세요."></w2:textbox>
+								<xf:group class="tags tech-tags">
+									<!-- 현재 기술스택들을 읽기 전용으로 표시 -->
+								</xf:group>
+							</xf:group>
+						</xf:group>
+
+						<!-- 선호 성향 -->
+						<xf:group class="content-section">
+							<w2:textbox class="section-title" label="향"></w2:textbox>
+
+							<!-- 읽기 모드: 선호 성향 표시 -->
+							<xf:group class="tags dev-type-tags hide-on-edit">
+								<!-- 성향 태그들이 JavaScript로 동적 생성됩니다 -->
+								<div class="loading-content">
+									<div class="loading-spinner"></div>
+									성향 정보 로딩중...
+								</div>
+							</xf:group>
+
+							<!-- 편집 모드: 선호 성향 편집 (읽기 전용 - 복잡함) -->
+							<xf:group class="edit-only">
+								<w2:textbox class="help-text" label="선호 성향 편집은 현재 지원되지 않습니다. 필요 시 새 공고를 등록해주세요."></w2:textbox>
+								<xf:group class="tags dev-type-tags">
+									<!-- 현재 선호 성향들을 읽기 전용으로 표시 -->
+								</xf:group>
+							</xf:group>
+						</xf:group>
+
+						<!-- 추가 정보 -->
+						<xf:group class="content-section">
+							<w2:textbox class="section-title" label="추가 정보"></w2:textbox>
+
+							<!-- 읽기 모드: 추가 정보 표시 -->
+							<xf:group class="info-tags hide-on-edit">
+								<!-- 기타 정보가 JavaScript로 동적 생성됩니다 -->
+								<div class="loading-content">
+									<div class="loading-spinner"></div>
+									정보 로딩중...
+								</div>
+							</xf:group>
+
+							<!-- 편집 모드: 추가 정보 입력 (PostCreate와 동일한 구조) -->
+							<xf:group class="edit-only">
+								<xf:group class="form-row">
+									<xf:group class="form-group half">
+										<w2:textbox class="form-label" label="선호 경력"></w2:textbox>
+										<xf:select1 class="form-select" chooseOption="경력 선택" appearance="minimal" ref="data:dmp_postEdit.experienceLevel">
+											<xf:choices>
+												<xf:item>
+													<xf:label><![CDATA[상관없음]]></xf:label>
+													<xf:value><![CDATA[any]]></xf:value>
+												</xf:item>
+												<xf:item>
+													<xf:label><![CDATA[신입 (0년)]]></xf:label>
+													<xf:value><![CDATA[new]]></xf:value>
+												</xf:item>
+												<xf:item>
+													<xf:label><![CDATA[1-2년]]></xf:label>
+													<xf:value><![CDATA[junior]]></xf:value>
+												</xf:item>
+												<xf:item>
+													<xf:label><![CDATA[3-5년]]></xf:label>
+													<xf:value><![CDATA[mid]]></xf:value>
+												</xf:item>
+												<xf:item>
+													<xf:label><![CDATA[5년 이상]]></xf:label>
+													<xf:value><![CDATA[senior]]></xf:value>
+												</xf:item>
+											</xf:choices>
+										</xf:select1>
+									</xf:group>
+
+									<xf:group class="form-group half">
+										<w2:textbox class="form-label" label="예상 연봉범위"></w2:textbox>
+										<xf:select1 class="form-select" chooseOption="연봉 선택" appearance="minimal" ref="data:dmp_postEdit.salaryRange">
+											<xf:choices>
+												<xf:item>
+													<xf:label><![CDATA[2,500만원 미만]]></xf:label>
+													<xf:value><![CDATA[under25]]></xf:value>
+												</xf:item>
+												<xf:item>
+													<xf:label><![CDATA[2,500-3,500만원]]></xf:label>
+													<xf:value><![CDATA[25to35]]></xf:value>
+												</xf:item>
+												<xf:item>
+													<xf:label><![CDATA[3,500-5,000만원]]></xf:label>
+													<xf:value><![CDATA[35to50]]></xf:value>
+												</xf:item>
+												<xf:item>
+													<xf:label><![CDATA[5,000만원 이상]]></xf:label>
+													<xf:value><![CDATA[over50]]></xf:value>
+												</xf:item>
+											</xf:choices>
+										</xf:select1>
+									</xf:group>
+								</xf:group>
+
+								<xf:group class="form-row">
+									<xf:group class="form-group half">
+										<w2:textbox class="form-label" label="근무 지역"></w2:textbox>
+										<xf:select1 class="form-select" chooseOption="지역 선택" appearance="minimal" ref="data:dmp_postEdit.location">
+											<xf:choices>
+												<xf:item>
+													<xf:label><![CDATA[서울]]></xf:label>
+													<xf:value><![CDATA[서울]]></xf:value>
+												</xf:item>
+												<xf:item>
+													<xf:label><![CDATA[경기]]></xf:label>
+													<xf:value><![CDATA[경기]]></xf:value>
+												</xf:item>
+												<xf:item>
+													<xf:label><![CDATA[인천]]></xf:label>
+													<xf:value><![CDATA[인천]]></xf:value>
+												</xf:item>
+												<xf:item>
+													<xf:label><![CDATA[부산]]></xf:label>
+													<xf:value><![CDATA[부산]]></xf:value>
+												</xf:item>
+												<xf:item>
+													<xf:label><![CDATA[대구]]></xf:label>
+													<xf:value><![CDATA[대구]]></xf:value>
+												</xf:item>
+												<xf:item>
+													<xf:label><![CDATA[대전]]></xf:label>
+													<xf:value><![CDATA[대전]]></xf:value>
+												</xf:item>
+												<xf:item>
+													<xf:label><![CDATA[광주]]></xf:label>
+													<xf:value><![CDATA[광주]]></xf:value>
+												</xf:item>
+											</xf:choices>
+										</xf:select1>
+									</xf:group>
+
+									<xf:group class="form-group half">
+										<w2:textbox class="form-label" label="근무 형태"></w2:textbox>
+										<xf:select1 class="form-select" chooseOption="형태 선택" appearance="minimal" ref="data:dmp_postEdit.workType">
+											<xf:choices>
+												<xf:item>
+													<xf:label><![CDATA[원격 근무]]></xf:label>
+													<xf:value><![CDATA[remote]]></xf:value>
+												</xf:item>
+												<xf:item>
+													<xf:label><![CDATA[출근 근무]]></xf:label>
+													<xf:value><![CDATA[onsite]]></xf:value>
+												</xf:item>
+												<xf:item>
+													<xf:label><![CDATA[하이브리드]]></xf:label>
+													<xf:value><![CDATA[hybrid]]></xf:value>
+												</xf:item>
+											</xf:choices>
+										</xf:select1>
+									</xf:group>
+								</xf:group>
+							</xf:group>
+						</xf:group>
+					</section>
+				</xf:group>
+			</main>
+		</xf:group>
+
+		<script type="text/javascript"><![CDATA[
         // 페이지 로드 후 실행되는 추가 초기화
         setTimeout(function() {
             // 추가 정보 섹션 업데이트
@@ -3906,5 +3916,5 @@ scwin.updateApplyButtonState = function () {
             console.log("추가 정보 섹션 업데이트 완료");
         };
         ]]></script>
-    </body>
+	</body>
 </html>
