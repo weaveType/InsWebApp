@@ -491,9 +491,9 @@ scwin.updateNavigation = function() {
     top: 50%;
     transform: translateY(-50%);
     z-index: 1000;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px 10px;
 }
 
 .nav-dot {
