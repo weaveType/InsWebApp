@@ -908,7 +908,7 @@ scwin.updateNavigation = function() {
                             </xf:group>
                         </xf:group>
                         <xf:group class="mbti-image-container">
-                            <xf:image class="mbti-image" src="/InsWebApp/images/ws5/default_mbti.png"></xf:image>
+                            <xf:image class="mbti-image" src="/InsWebApp/images/ws5/mbti/png/BITD.png"></xf:image>
                         </xf:group>
                     </xf:group>
                 </xf:group>
