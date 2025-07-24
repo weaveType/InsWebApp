@@ -168,7 +168,7 @@
                 var html = '';
                 var axisNames = {
                     'B_A': { name: 'Builder vs Architect', desc: '개발 스타일' },
-                    'R_I': { name: 'Refactor vs Innovate', desc: '기술 성향' },
+                    'R_I': { name: 'Innovate vs Refactor', desc: '기술 성향 (양수: Refactor, 음수: Innovate)' },
                     'S_T': { name: 'Solo vs Team', desc: '협업 방식' },
                     'D_F': { name: 'Debug vs Feature', desc: '작업 선호' }
                 };
@@ -663,7 +663,7 @@
             scwin.getAxisDisplayName = function(axis) {
                 var names = {
                     'B_A': 'Builder vs Architect',
-                    'R_I': 'Refactor vs Innovate',
+                    'R_I': 'Innovate vs Refactor',
                     'S_T': 'Solo vs Team',
                     'D_F': 'Debug vs Feature'
                 };
@@ -832,14 +832,14 @@
                         abPercentage, abScore, 'Builder', 'Architect', '#6366f1', '#a855f7', 200
                     );
 
-                    // R/I 축 (+: Innovate, -: Refactor)
+                    // R/I 축 (+: Refactor, -: Innovate)
                     var riScore = scores['R_I'] || 0;
                     var riPercentage = scoreToPercentage(riScore);
                     animateBar(
                         document.querySelector('.score-bar-ri'),
                         document.querySelector('.score-indicator-ri'),
                         document.querySelector('.ri-result'),
-                        riPercentage, riScore, 'Refactor', 'Innovate', '#4f46e5', '#9333ea', 500
+                        riPercentage, riScore, 'Innovate', 'Refactor', '#4f46e5', '#9333ea', 500
                     );
 
                     // S/T 축 (+: Team, -: Solo)
@@ -2427,7 +2427,7 @@
 
 						<xf:group class="progress-nav">
 							<w2:textbox class="progress-axis" label="Builder vs Architect" tagname="div"></w2:textbox>
-							<w2:textbox class="progress-axis" label="Refactor vs Innovate" tagname="div"></w2:textbox>
+							<w2:textbox class="progress-axis" label="Innovate vs Refactor" tagname="div"></w2:textbox>
 							<w2:textbox class="progress-axis" label="Solo vs Team" tagname="div"></w2:textbox>
 							<w2:textbox class="progress-axis" label="Debug vs Feature" tagname="div"></w2:textbox>
 						</xf:group>
@@ -2476,17 +2476,17 @@
                                 <w2:textbox class="score-bar-result ab-result" label="분석 중..." tagname="div"></w2:textbox>
                             </xf:group>
 
-                            <!-- Refactor vs Innovate -->
+                            <!-- Innovate vs Refactor -->
                             <xf:group class="score-bar-item">
                                 <w2:textbox class="score-bar-title" label="기술 성향" tagname="div"></w2:textbox>
                                 <xf:group class="score-bar-container">
-                                    <w2:textbox class="left-label" label="Refactor" tagname="div"></w2:textbox>
+                                    <w2:textbox class="left-label" label="Innovate" tagname="div"></w2:textbox>
                                     <xf:group class="score-bar-track">
                                         <w2:textbox class="score-bar-center" label="" tagname="div"></w2:textbox>
                                         <w2:textbox class="score-bar-fill score-bar-ri" label="" tagname="div" style="width: 50%;"></w2:textbox>
                                         <w2:textbox class="score-bar-indicator score-indicator-ri" label="" tagname="div" style="left: 50%;"></w2:textbox>
                                     </xf:group>
-                                    <w2:textbox class="right-label" label="Innovate" tagname="div"></w2:textbox>
+                                    <w2:textbox class="right-label" label="Refactor" tagname="div"></w2:textbox>
                                 </xf:group>
                                 <w2:textbox class="score-bar-result ri-result" label="분석 중..." tagname="div"></w2:textbox>
                             </xf:group>

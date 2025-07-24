@@ -443,7 +443,7 @@ public class SurveyServiceImpl implements SurveyService {
         // 타입 코드 결정 (0점 기준으로 분류)
         StringBuilder typeCode = new StringBuilder();
         typeCode.append(finalBA >= 0 ? "A" : "B");  // +: Architect, -: Builder
-        typeCode.append(finalRI >= 0 ? "I" : "R");  // +: Innovate, -: Refactor
+        typeCode.append(finalRI >= 0 ? "R" : "I");  // +: Refactor, -: Innovate (코드분석 테이블과 동일하게)
         typeCode.append(finalST >= 0 ? "T" : "S");  // +: Team, -: Solo
         typeCode.append(finalDF >= 0 ? "F" : "D");  // +: Feature, -: Debug
         
