@@ -387,7 +387,9 @@ scwin.sbm_selectPostingList_submitdone = function (e) {
 
             .hero-left {
                 flex: 1;
-                min-width: 0;
+                min-width: 400px; /* ad-area 최소 너비와 일치 */
+                display: flex;
+                justify-content: center; /* ad-area가 중앙에 배치되도록 */
             }
 
             .hero-right {
@@ -398,6 +400,7 @@ scwin.sbm_selectPostingList_submitdone = function (e) {
             .ad-area {
                 width: 100%;
                 min-height: 350px;
+                min-width: 400px; /* login-area와 동일한 최소 너비 */
                 background-color: #667eea;
                 border-radius: 10px;
                 cursor: pointer;
@@ -762,6 +765,11 @@ scwin.sbm_selectPostingList_submitdone = function (e) {
                     gap: 20px;
                 }
 
+                .hero-left {
+                    min-width: 0; /* 태블릿에서는 최소 너비 제한 해제 */
+                    justify-content: center; /* 중앙 정렬 유지 */
+                }
+
                 .hero-right {
                     flex: none;
                     width: 100%;
@@ -809,8 +817,13 @@ scwin.sbm_selectPostingList_submitdone = function (e) {
                     padding: 40px 15px;
                 }
 
+                .hero-left {
+                    min-width: 0; /* 모바일에서도 최소 너비 제한 해제 */
+                }
+
                 .ad-area {
                     min-height: 280px;
+                    min-width: 0; /* 모바일에서는 최소 너비 해제 */
                     padding: 40px 15px;
                 }
 

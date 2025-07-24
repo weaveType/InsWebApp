@@ -72,7 +72,7 @@ scwin.onpageload = function () {
 scwin.logout_onclick = function () {
     // 로그아웃 요청
     $c.win.logout();
-    
+
     // 쿠키 삭제
     WebSquare.cookie.delCookie("userInfo");
 
@@ -117,7 +117,12 @@ scwin.menu1_onclick = function () {
 };
 
 scwin.menu2_onclick = function () {
-    $p.url("/InsWebApp/ui/survey/SurveyMbti.xml");
+    var userInfo = scwin.getUserInfoByCookie();
+    if (!userInfo) {
+        $c.win.alert("사용자 정보를 확인할 수 없습니다. 다시 로그인해 주세요.");
+    } else {
+        $p.url("/InsWebApp/ui/survey/SurveyMbti.xml");
+    }
 };
 
 scwin.menu3_onclick = function () {

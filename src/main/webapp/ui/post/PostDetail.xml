@@ -295,6 +295,44 @@
                 background-color: #c82333;
             }
 
+            /* 지원자 보기 버튼 스타일 */
+            .btn-applicant_details {
+                background-color: #17a2b8;
+                color: white;
+                border: none;
+                padding: 12px 20px;
+                border-radius: 25px;
+                font-size: clamp(14px, 2vw, 16px);
+                font-weight: 600;
+                cursor: pointer;
+                min-width: 80px;
+                white-space: nowrap;
+                transition: background-color 0.2s ease;
+            }
+
+            .btn-applicant_details:hover {
+                background-color: #138496;
+            }
+
+            /* 매칭 제안하기 버튼 스타일 */
+            .btn-scout {
+                background-color: #fd7e14;
+                color: white;
+                border: none;
+                padding: 12px 20px;
+                border-radius: 25px;
+                font-size: clamp(14px, 2vw, 16px);
+                font-weight: 600;
+                cursor: pointer;
+                min-width: 80px;
+                white-space: nowrap;
+                transition: background-color 0.2s ease;
+            }
+
+            .btn-scout:hover {
+                background-color: #e8680a;
+            }
+
             /* 공고 내용 섹션 */
             .job-content {
                 padding: min(40px, 5vw) 0;
