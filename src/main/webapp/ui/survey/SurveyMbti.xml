@@ -356,28 +356,183 @@
                 $c.sbm.execute(sbm_submitSurvey);
             };
             
+            // 탭 전환 함수
+            scwin.switchTab = function(event) {
+                // WebSquare의 복잡한 DOM 구조 때문에 targetTab을 찾는 방법 개선
+                var targetTab = null;
+                var clickedElement = event.target;
+                
+                // 1. WebSquare xf:trigger의 value 속성을 통한 탭 매핑 (우선순위)
+                if (clickedElement && clickedElement.value) {
+                    var buttonValue = clickedElement.value;
+                    console.log('버튼 값:', buttonValue);
+                    
+                    if (buttonValue === '코드 분석 결과') {
+                        targetTab = 'code';
+                    } else if (buttonValue === '설문 답변 분석') {
+                        targetTab = 'survey';
+                    }
+                }
+                
+                // 2. 직접 data-tab 속성 확인
+                if (!targetTab && clickedElement && clickedElement.getAttribute) {
+                    targetTab = clickedElement.getAttribute('data-tab');
+                }
+                
+                // 3. 찾지 못했다면 부모 요소에서 찾기
+                if (!targetTab && clickedElement && clickedElement.parentElement) {
+                    var parent = clickedElement.parentElement;
+                    while (parent && !targetTab) {
+                        if (parent.getAttribute && parent.getAttribute('data-tab')) {
+                            targetTab = parent.getAttribute('data-tab');
+                            break;
+                        }
+                        parent = parent.parentElement;
+                    }
+                }
+                
+                // 4. 여전히 찾지 못했다면 클릭된 요소의 자식에서 찾기
+                if (!targetTab && clickedElement) {
+                    var tabButton = clickedElement.querySelector('.tab-button');
+                    if (tabButton && tabButton.getAttribute) {
+                        targetTab = tabButton.getAttribute('data-tab');
+                    }
+                }
+                
+                // 5. 마지막 방법: 모든 탭 버튼 중에서 현재 포커스된 것 찾기
+                if (!targetTab) {
+                    var tabButtons = document.querySelectorAll('.tab-button');
+                    for (var i = 0; i < tabButtons.length; i++) {
+                        if (tabButtons[i].contains(clickedElement) || tabButtons[i] === clickedElement) {
+                            targetTab = tabButtons[i].getAttribute('data-tab');
+                            break;
+                        }
+                    }
+                }
+                
+                console.log('탭 전환:', targetTab, '클릭된 요소:', clickedElement);
+                
+                // targetTab이 null이면 함수 종료
+                if (!targetTab) {
+                    console.error('탭을 찾을 수 없습니다. 클릭된 요소의 value:', clickedElement ? clickedElement.value : 'undefined');
+                    return;
+                }
+                
+                // 모든 탭 버튼 비활성화
+                var tabButtons = document.querySelectorAll('.tab-button');
+                tabButtons.forEach(function(button) {
+                    button.classList.remove('active');
+                    button.setAttribute('aria-selected', 'false');
+                });
+                
+                // 모든 탭 패널 숨기기
+                var tabPanels = document.querySelectorAll('.tab-panel');
+                tabPanels.forEach(function(panel) {
+                    panel.classList.remove('active');
+                    panel.setAttribute('aria-hidden', 'true');
+                });
+                
+                // 선택된 탭 활성화
+                var targetButton = document.querySelector('.tab-button[data-tab="' + targetTab + '"]');
+                if (targetButton) {
+                    targetButton.classList.add('active');
+                    targetButton.setAttribute('aria-selected', 'true');
+                }
+                
+                // 인덱스 기반으로 탭 패널 찾기 (가장 확실한 방법)
+                var tabPanels = document.querySelectorAll('.tab-panel');
+                var targetPanel = null;
+                
+                if (targetTab === 'code' && tabPanels.length > 0) {
+                    targetPanel = tabPanels[0];
+                } else if (targetTab === 'survey' && tabPanels.length > 1) {
+                    targetPanel = tabPanels[1];
+                }
+                
+                if (targetPanel) {
+                    targetPanel.classList.add('active');
+                    targetPanel.setAttribute('aria-hidden', 'false');
+                    
+                    // 탭 전환 후 스크롤 조정
+                    setTimeout(function() {
+                        targetPanel.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }, 100);
+                }
+            };
+            
+            // 키보드 접근성 지원
+            scwin.handleTabKeydown = function(event) {
+                var tabButtons = document.querySelectorAll('.tab-button');
+                var currentIndex = -1;
+                
+                // 현재 포커스된 탭 버튼 찾기 (WebSquare 렌더링 방식 고려)
+                for (var i = 0; i < tabButtons.length; i++) {
+                    var tabButton = tabButtons[i];
+                    // WebSquare의 input button 요소와 매칭
+                    if (tabButton.contains(event.target) || tabButton === event.target || 
+                        (event.target.tagName === 'INPUT' && event.target.classList.contains('tab-button'))) {
+                        currentIndex = i;
+                        break;
+                    }
+                }
+                
+                if (currentIndex === -1) {
+                    console.warn('현재 포커스된 탭을 찾을 수 없습니다.');
+                    return;
+                }
+                
+                switch(event.key) {
+                    case 'ArrowLeft':
+                        event.preventDefault();
+                        var prevIndex = (currentIndex - 1 + tabButtons.length) % tabButtons.length;
+                        tabButtons[prevIndex].focus();
+                        break;
+                    case 'ArrowRight':
+                        event.preventDefault();
+                        var nextIndex = (currentIndex + 1) % tabButtons.length;
+                        tabButtons[nextIndex].focus();
+                        break;
+                    case 'Home':
+                        event.preventDefault();
+                        tabButtons[0].focus();
+                        break;
+                    case 'End':
+                        event.preventDefault();
+                        tabButtons[tabButtons.length - 1].focus();
+                        break;
+                }
+            };
+            
             // 답변 분석 결과 표시 함수
             scwin.displayAnswerAnalysis = function(result) {
                 console.log('답변 분석 결과 표시:', result);
                 
-                // 답변 분석 섹션이 없으면 생성
-                var answerAnalysisSection = document.querySelector('.answer-analysis-section');
-                if (!answerAnalysisSection) {
-                    var section = document.createElement('div');
-                    section.className = 'answer-analysis-section';
-                    section.innerHTML = `
-                        <div class="answer-analysis-title">설문 답변 분석</div>
-                        <div class="answer-analysis-content"></div>
-                    `;
-                    
-                    // 코드 분석 섹션 다음에 삽입
-                    var codeAnalysisSection = document.querySelector('.code-analysis-section');
-                    if (codeAnalysisSection) {
-                        codeAnalysisSection.parentNode.insertBefore(section, codeAnalysisSection.nextSibling);
-                    }
+                // 설문 답변 분석 탭 패널 찾기 (인덱스 기반)
+                var tabPanels = document.querySelectorAll('.tab-panel');
+                var surveyTabPanel = tabPanels.length > 1 ? tabPanels[1] : null;
+                
+                if (!surveyTabPanel) {
+                    console.error('설문 답변 분석 탭 패널을 찾을 수 없습니다.');
+                    return;
                 }
                 
-                var contentEl = document.querySelector('.answer-analysis-content');
+                // 기존 내용 제거
+                surveyTabPanel.innerHTML = '';
+                
+                // 답변 분석 섹션 생성
+                var section = document.createElement('div');
+                section.className = 'answer-analysis-section';
+                section.innerHTML = `
+                    <div class="answer-analysis-title">설문 답변 분석</div>
+                    <div class="answer-analysis-content"></div>
+                `;
+                
+                surveyTabPanel.appendChild(section);
+                
+                var contentEl = surveyTabPanel.querySelector('.answer-analysis-content');
                 if (!contentEl) return;
                 
                 var html = '';
@@ -494,6 +649,14 @@
                         }, index * 200);
                     });
                 }, 500);
+                
+                // 탭 전환 애니메이션 완료 후 설문 답변 분석 탭으로 자동 전환
+                setTimeout(function() {
+                    var surveyTabButton = document.querySelector('.tab-button[data-tab="survey"]');
+                    if (surveyTabButton) {
+                        surveyTabButton.click();
+                    }
+                }, 1000);
             };
             
             // 축 표시 이름 가져오기
@@ -1467,10 +1630,96 @@
                 border-radius: 8px;
             }
 
+            /* 탭 스타일 */
+            .analysis-tabs {
+                max-width: 800px;
+                margin: 30px auto 40px auto;
+            }
+
+            .tab-buttons {
+                display: flex;
+                gap: 8px;
+                margin-bottom: 30px;
+                background: #f8f9fa;
+                border-radius: 16px;
+                padding: 8px;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            }
+
+            .tab-button {
+                flex: 1;
+                background: transparent;
+                border: none;
+                padding: 16px 24px;
+                border-radius: 12px;
+                font-size: 16px;
+                font-weight: 600;
+                color: #6c757d;
+                cursor: pointer;
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                position: relative;
+                overflow: hidden;
+            }
+
+            .tab-button::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: -100%;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(90deg, 
+                    transparent, 
+                    rgba(255, 255, 255, 0.4),
+                    transparent);
+                transition: left 0.5s ease;
+            }
+
+            .tab-button:hover::before {
+                left: 100%;
+            }
+
+            .tab-button:hover {
+                color: #495057;
+                background: rgba(255, 255, 255, 0.8);
+                transform: translateY(-1px);
+            }
+
+            .tab-button.active {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: white;
+                box-shadow: 0 4px 16px rgba(102, 126, 234, 0.3);
+                transform: translateY(-2px);
+            }
+
+            .tab-button.active:hover {
+                background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+                transform: translateY(-3px);
+                box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+            }
+
+            .tab-content {
+                position: relative;
+                min-height: 400px;
+            }
+
+            .tab-panel {
+                display: none;
+                opacity: 0;
+                transform: translateY(20px);
+                transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+
+            .tab-panel.active {
+                display: block;
+                opacity: 1;
+                transform: translateY(0);
+            }
+
             /* 답변 분석 섹션 스타일 */
             .answer-analysis-section {
                 max-width: 800px;
-                margin: 30px auto 40px auto;
+                margin: 0 auto;
                 text-align: left;
             }
 
@@ -2126,6 +2375,28 @@
                 .result-type-desc {
                     font-size: 16px;
                 }
+                
+                /* 탭 반응형 디자인 */
+                .tab-buttons {
+                    flex-direction: column;
+                    gap: 4px;
+                    padding: 6px;
+                }
+                
+                .tab-button {
+                    padding: 14px 20px;
+                    font-size: 15px;
+                }
+                
+                .tab-content {
+                    min-height: 300px;
+                }
+                
+                .code-analysis-title,
+                .answer-analysis-title {
+                    font-size: 24px;
+                    margin-bottom: 30px;
+                }
             }
         ]]></style>
 	</head>
@@ -2251,11 +2522,32 @@
                             </xf:group>
                         </xf:group>
 
-                        <!-- 코드 분석 코멘트 및 상세 분석 표시 -->
-                        <xf:group class="code-analysis-section">
-                          <w2:textbox class="code-analysis-title" label="코드 분석 AI 코멘트" tagname="h3"></w2:textbox>
-                          <w2:textbox class="code-analysis-comment" label="" tagname="div"></w2:textbox>
-                          <w2:textbox class="code-analysis-detail" label="" tagname="div"></w2:textbox>
+                        <!-- 분석 결과 탭 섹션 -->
+                        <xf:group class="analysis-tabs" role="tablist">
+                          <xf:group class="tab-buttons">
+                            <xf:trigger class="tab-button active" data-tab="code" ev:onclick="scwin.switchTab" ev:onkeydown="scwin.handleTabKeydown" role="tab" aria-selected="true" aria-controls="code-tab">
+                              <xf:label>코드 분석 결과</xf:label>
+                            </xf:trigger>
+                            <xf:trigger class="tab-button" data-tab="survey" ev:onclick="scwin.switchTab" ev:onkeydown="scwin.handleTabKeydown" role="tab" aria-selected="false" aria-controls="survey-tab">
+                              <xf:label>설문 답변 분석</xf:label>
+                            </xf:trigger>
+                          </xf:group>
+                          
+                          <xf:group class="tab-content">
+                            <!-- 코드 분석 탭 -->
+                            <xf:group class="tab-panel active" id="code-tab" data-tab="code" role="tabpanel" aria-hidden="false">
+                              <xf:group class="code-analysis-section">
+                                <w2:textbox class="code-analysis-title" label="코드 분석 AI 코멘트" tagname="h3"></w2:textbox>
+                                <w2:textbox class="code-analysis-comment" label="" tagname="div"></w2:textbox>
+                                <w2:textbox class="code-analysis-detail" label="" tagname="div"></w2:textbox>
+                              </xf:group>
+                            </xf:group>
+                            
+                            <!-- 설문 답변 분석 탭 -->
+                            <xf:group class="tab-panel" id="survey-tab" data-tab="survey" role="tabpanel" aria-hidden="true">
+                              <!-- 답변 분석 내용은 JavaScript에서 동적으로 생성됨 -->
+                            </xf:group>
+                          </xf:group>
                         </xf:group>
 
 
