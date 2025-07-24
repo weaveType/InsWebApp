@@ -20,7 +20,6 @@
         <w2:publicInfo method=""/>
         <script lazy="false" type="text/javascript"><![CDATA[
 scwin.onpageload = function() {
-    console.log("MBTI 페이지 로드됨");
     
     // MBTI 타입 정의
     scwin.mbtiTypes = [
@@ -308,15 +307,19 @@ scwin.goToSection = function(index) {
 // 섹션 표시
 scwin.showSection = function(index) {
     var mbti = scwin.mbtiTypes[index];
+    if (!mbti) {
+        return;
+    }
+    
+    var sections = document.querySelectorAll('.mbti-section');
     
     // 모든 섹션 숨기기
-    var sections = document.querySelectorAll('.mbti-section');
     sections.forEach(function(section) {
         section.classList.remove('active');
     });
     
     // 현재 섹션 활성화
-    var currentSection = document.getElementById('mbti-section-' + index);
+    var currentSection = sections[index];
     if (currentSection) {
         currentSection.classList.add('active');
     }
