@@ -38,6 +38,9 @@ scwin.onpageload = function() {
     
     // 첫 번째 섹션 표시
     scwin.showSection(0);
+    
+    // 네비게이션 초기화
+    scwin.updateNavigation();
 };
 
 // 초기화 함수
@@ -161,6 +164,9 @@ scwin.createNavigationDots = function() {
 scwin.nextSection = function() {
     if (scwin.currentSection < scwin.mbtiTypes.length - 1) {
         scwin.goToSection(scwin.currentSection + 1);
+    } else {
+        // 마지막 섹션에서 첫 번째 섹션으로 이동 (무한스크롤)
+        scwin.goToSection(0);
     }
 };
 
@@ -168,6 +174,9 @@ scwin.nextSection = function() {
 scwin.prevSection = function() {
     if (scwin.currentSection > 0) {
         scwin.goToSection(scwin.currentSection - 1);
+    } else {
+        // 첫 번째 섹션에서 마지막 섹션으로 이동 (무한스크롤)
+        scwin.goToSection(scwin.mbtiTypes.length - 1);
     }
 };
 
