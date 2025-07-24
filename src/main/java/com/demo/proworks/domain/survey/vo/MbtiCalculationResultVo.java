@@ -49,6 +49,21 @@ public class MbtiCalculationResultVo extends com.demo.proworks.cmmn.ProworksComm
     @ElDtoField(logicalName = "분석 일시", physicalName = "analyzedAt", type = "java.sql.Timestamp", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "분석 완료 일시", attr = "")
     private java.sql.Timestamp analyzedAt;
 
+    private String codeAnalysisComment;
+    private String codeAnalysisDetail;
+
+    @ElDtoField(logicalName = "답변 분석 목록", physicalName = "answerAnalyses", type = "com.demo.proworks.domain.survey.vo.AnswerAnalysisVo", typeKind = "List", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "각 답변별 상세 분석 정보", attr = "")
+    private java.util.List<com.demo.proworks.domain.survey.vo.AnswerAnalysisVo> answerAnalyses;
+
+    @ElDtoField(logicalName = "축별 기여도", physicalName = "axisContributions", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "JSON 형식의 축별 기여도 정보", attr = "")
+    private String axisContributions;
+
+    @ElDtoField(logicalName = "답변 패턴", physicalName = "answerPattern", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "답변 패턴 분석 결과", attr = "")
+    private String answerPattern;
+
+    @ElDtoField(logicalName = "주요 인사이트", physicalName = "keyInsights", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "JSON 형식의 주요 인사이트 목록", attr = "")
+    private String keyInsights;
+
     @ElVoField(physicalName = "typeId")
     public Long getTypeId(){
         return typeId;
@@ -170,6 +185,54 @@ public class MbtiCalculationResultVo extends com.demo.proworks.cmmn.ProworksComm
     @ElVoField(physicalName = "analyzedAt")
     public void setAnalyzedAt(java.sql.Timestamp analyzedAt){
         this.analyzedAt = analyzedAt;
+    }
+
+    public String getCodeAnalysisComment() { return codeAnalysisComment; }
+    public void setCodeAnalysisComment(String codeAnalysisComment) { this.codeAnalysisComment = codeAnalysisComment; }
+    public String getCodeAnalysisDetail() { return codeAnalysisDetail; }
+    public void setCodeAnalysisDetail(String codeAnalysisDetail) { this.codeAnalysisDetail = codeAnalysisDetail; }
+
+    @ElVoField(physicalName = "answerAnalyses")
+    public java.util.List<com.demo.proworks.domain.survey.vo.AnswerAnalysisVo> getAnswerAnalyses() {
+        return answerAnalyses;
+    }
+
+    @ElVoField(physicalName = "answerAnalyses")
+    public void setAnswerAnalyses(java.util.List<com.demo.proworks.domain.survey.vo.AnswerAnalysisVo> answerAnalyses) {
+        this.answerAnalyses = answerAnalyses;
+    }
+
+    @ElVoField(physicalName = "axisContributions")
+    public String getAxisContributions() {
+        String ret = this.axisContributions;
+        return ret;
+    }
+
+    @ElVoField(physicalName = "axisContributions")
+    public void setAxisContributions(String axisContributions) {
+        this.axisContributions = axisContributions;
+    }
+
+    @ElVoField(physicalName = "answerPattern")
+    public String getAnswerPattern() {
+        String ret = this.answerPattern;
+        return ret;
+    }
+
+    @ElVoField(physicalName = "answerPattern")
+    public void setAnswerPattern(String answerPattern) {
+        this.answerPattern = answerPattern;
+    }
+
+    @ElVoField(physicalName = "keyInsights")
+    public String getKeyInsights() {
+        String ret = this.keyInsights;
+        return ret;
+    }
+
+    @ElVoField(physicalName = "keyInsights")
+    public void setKeyInsights(String keyInsights) {
+        this.keyInsights = keyInsights;
     }
 
     @Override
