@@ -476,8 +476,7 @@ scwin.applyStatusClasses = function () {
 // 지원현황 공고 이동
 scwin.showApplicationDetail = function (rowIndex) {
     var jobPostingId = dlt_applicationListVo.getCellData(rowIndex, "jobPostingId");
-    // jobPostingId 유효성 검사 및 문자열 변환
-    console.log(jobPostingId);
+    
     if (jobPostingId != null && jobPostingId !== "") {
         $p.url("/InsWebApp/ui/post/PostDetail.xml?jobPostingId=" + String(jobPostingId));
     }
