@@ -366,7 +366,7 @@
                     var section = document.createElement('div');
                     section.className = 'answer-analysis-section';
                     section.innerHTML = `
-                        <div class="answer-analysis-title">������ 설문 답변 분석</div>
+                        <div class="answer-analysis-title">설문 답변 분석</div>
                         <div class="answer-analysis-content"></div>
                     `;
                     
@@ -386,7 +386,7 @@
                 if (result.answerAnalyses && result.answerAnalyses.length > 0) {
                     html += '<div class="answer-item">';
                     html += '<div class="answer-header">';
-                    html += '<h4 class="answer-title">������ 선택한 답변 분석</h4>';
+                    html += '<h4 class="answer-title">선택한 답변 분석</h4>';
                     html += '</div>';
                     
                     result.answerAnalyses.forEach(function(analysis) {
@@ -415,7 +415,7 @@
                         var axisContributions = JSON.parse(result.axisContributions);
                         html += '<div class="answer-item">';
                         html += '<div class="answer-header">';
-                        html += '<h4 class="answer-title">������ 축별 기여도</h4>';
+                        html += '<h4 class="answer-title">축별 기여도</h4>';
                         html += '</div>';
                         
                         for (var axis in axisContributions) {
@@ -450,7 +450,7 @@
                 if (result.answerPattern) {
                     html += '<div class="answer-item">';
                     html += '<div class="answer-header">';
-                    html += '<h4 class="answer-title">������ 답변 패턴 분석</h4>';
+                    html += '<h4 class="answer-title">답변 패턴 분석</h4>';
                     html += '</div>';
                     html += '<div class="pattern-analysis">' + result.answerPattern.replace(/\n/g, '<br>') + '</div>';
                     html += '</div>';
@@ -463,7 +463,7 @@
                         if (keyInsights.length > 0) {
                             html += '<div class="answer-item">';
                             html += '<div class="answer-header">';
-                            html += '<h4 class="answer-title">������ 주요 인사이트</h4>';
+                            html += '<h4 class="answer-title">주요 인사이트</h4>';
                             html += '</div>';
                             html += '<ul class="insights-list">';
                             keyInsights.forEach(function(insight) {
@@ -720,7 +720,7 @@
                             if (detailObj.detailed_analysis.code_patterns && detailObj.detailed_analysis.code_patterns.length > 0) {
                                 html += '<div class="pattern-item">';
                                 html += '<div class="pattern-header">';
-                                html += '<h4 class="pattern-title">������ 발견된 코드 패턴</h4>';
+                                html += '<h4 class="pattern-title">발견된 코드 패턴</h4>';
                                 html += '</div>';
                                 
                                 detailObj.detailed_analysis.code_patterns.forEach(function(pattern) {
@@ -774,12 +774,12 @@
                             if (detailObj.detailed_analysis.suggestions && detailObj.detailed_analysis.suggestions.length > 0) {
                                 html += '<div class="pattern-item">';
                                 html += '<div class="pattern-header">';
-                                html += '<h4 class="pattern-title">������ 개선 제안</h4>';
+                                html += '<h4 class="pattern-title">개선 제안</h4>';
                                 html += '</div>';
                                 html += '<ul class="suggestions-list">';
                                 detailObj.detailed_analysis.suggestions.forEach(function(suggestion) {
                                     html += '<li class="suggestion-item">';
-                                    html += '<span class="suggestion-icon">������</span>';
+                                    html += '<span class="suggestion-icon"></span>';
                                     html += suggestion;
                                     html += '</li>';
                                 });
@@ -1685,8 +1685,9 @@
             }
 
             .insight-item::before {
-                content: '💡';
+                content: '•';
                 font-size: 18px;
+                color: #f59e0b;
             }
 
             /* 새로운 카드 스타일 */
