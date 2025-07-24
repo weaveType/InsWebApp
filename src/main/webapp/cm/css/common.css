@@ -388,3 +388,44 @@
 .fid .wd650.fn {width:650px}
 .fid.fn .wd700,
 .fid .wd700.fn {width:700px}
+/* Custom styles for $c.win.alert */
+.sub_contents {
+    padding: 25px; /* Increased padding */
+    background-color: #ffffff; /* White background */
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); /* Soft shadow */
+    border: 1px solid #e0e0e0; /* Light border */
+}
+.poptxt {
+    margin-bottom: 25px; /* Increased margin */
+    text-align: center;
+}
+.poptxt .tit {
+    font-size: 16px; /* Adjusted font size */
+    color: #333333;
+    line-height: 1.6;
+    word-break: keep-all; /* Prevent breaking words */
+}
+.btnbox {
+    text-align: center;
+    margin-top: 25px; /* Increased margin */
+}
+.btn_cm {
+    background-color: #007bff; /* Blue button */
+    color: white;
+    border: none;
+    padding: 10px 25px; /* Increased padding */
+    border-radius: 5px;
+    font-size: 15px; /* Adjusted font size */
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin: 0 5px; /* Space between buttons */
+}
+.btn_cm:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+    transform: translateY(-1px); /* Slight lift effect */
+}
+.btn_cm.active {
+    /* No specific active style for now, can be added later if needed */
+}
+

@@ -1835,21 +1835,23 @@ scwin.btnBack_onclick = function (e) {
 scwin.btnApply_onclick = function (e) {
     var title = dmp_postDetail.get("title");
 
-    if (confirm(title + " 공고에 지원하시겠습니까?")) {
-        var userInfoCookie = WebSquare.cookie.getCookie("userInfo");
-        if (userInfoCookie) {
-            var jobPostingId = dmp_postDetail.get("jobPostingId");
-            var userInfo = JSON.parse(userInfoCookie);
-            var accountId = userInfo.accountId;
-            console.log(accountId);
-            dmp_jobApplicationVo.set("jobPostingId", jobPostingId);
-            dmp_jobApplicationVo.set("accountId", accountId);
-            $c.sbm.execute($p, sbm_insertJobApplication);
+    $c.win.confirm(title + " 공고에 지원하시겠습니까?", function (ret) {
+        if (ret && ret.clickValue) {
+            var userInfoCookie = WebSquare.cookie.getCookie("userInfo");
+            if (userInfoCookie) {
+                var jobPostingId = dmp_postDetail.get("jobPostingId");
+                var userInfo = JSON.parse(userInfoCookie);
+                var accountId = userInfo.accountId;
+                console.log(accountId);
+                dmp_jobApplicationVo.set("jobPostingId", jobPostingId);
+                dmp_jobApplicationVo.set("accountId", accountId);
+                $c.sbm.execute($p, sbm_insertJobApplication);
+            }
+            else {
+                $c.win.alert("일반 회원으로 로그인 후 이용해주세요.");
+            }
         }
-        else {
-            $c.win.alert("일반 회원으로 로그인 후 이용해주세요.");
-        }
-    }
+    });
 };
 
 /**
@@ -3331,7 +3333,7 @@ scwin.hideFieldError = function (errorId) {
 /**
  * MBTI 예시 페이지로 이동하는 함수
  */
-scwin.goToMbtiExample = function() {
+scwin.goToMbtiExample = function () {
     console.log("MBTI 예시 페이지로 이동");
     try {
         if ($p.parent() && $p.parent().pf_main) {
