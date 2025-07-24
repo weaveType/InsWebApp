@@ -249,8 +249,8 @@ scwin.getJobPostingId = function () {
     var jobPostingId = scwin.getUrlParameter("jobPostingId");
 
     if (!jobPostingId) {
-        alert("잘못된 접근입니다. jobPostingId가 없습니다.");
-        $p.url("../common/MainPage.xml");  // 또는 다른 URL로 리다이렉트
+        $c.win.alert("잘못된 접근입니다. 다시 시도해주세요");
+        $p.url("../common/MainPage.xml");
         return;
     }
 
@@ -303,7 +303,7 @@ scwin.getUserInfoByCookie = function () {
 scwin.scoutSelected = function () {
     var checkedRows = gridView1.getCheckedJSON("chk");
     if (checkedRows.length === 0) {
-        alert("스카웃할 개발자를 선택해주세요.");
+        $c.win.alert("스카웃할 개발자를 선택해주세요.");
         return;
     }
 
@@ -322,7 +322,7 @@ scwin.scoutSelected = function () {
 };
 
 scwin.sbm_scoutDevelopers_submitdone = function (e) {
-    alert("스카웃 제안이 성공적으로 전송되었습니다.");
+    $c.win.alert("스카웃 제안이 성공적으로 전송되었습니다.");
     // 성공 후 그리드 및 관련 데이터 새로고침
     $c.sbm.execute(sbm_selectScoutVo);
 };
@@ -351,7 +351,7 @@ scwin.w2selectbox_disabled_onselected = function () {
     // 쿠키에서 userMbti 가져오기
     var userInfoCookie = WebSquare.cookie.getCookie("userInfo");
     if (!userInfoCookie) {
-        alert("로그인 후 사용가능한 기능입니다.");
+        $c.win.alert("로그인 후 사용가능한 기능입니다.");
         $p.url("../commom/MainPage.xml");
     }
 

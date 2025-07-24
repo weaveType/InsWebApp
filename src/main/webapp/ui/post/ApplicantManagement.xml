@@ -211,11 +211,10 @@ scwin.onpageload = function () {
     dmp_applicantVo.set("jobPostingId", jobPostingId);
     scwin.updateButtonStates(); // 페이지 로드 시 버튼 상태 초기화
     scwin.search();
-    
+
     // 그리드뷰 갱신하기 (customRenderer 적용을 위해)
-    setTimeout(function() {
+    setTimeout(function () {
         if (gridView) {
-            console.log("지원자 관리 페이지 그리드뷰 새로고침");
             gridView.refresh();
         }
     }, 500);
@@ -254,27 +253,15 @@ scwin.onPageChange = function (e) {
 };
 
 scwin.onApplicantListLoad = function (e) {
-    console.log("지원자 목록 조회 완료", e);
-    
+
     if (e.status === 200) {
         var responseData = e.responseJSON;
         if (responseData && responseData.elData) {
             var totalCount = responseData.elData.totalCount;
             pageList1.setTotalRowCount(totalCount);
-            
-            console.log("지원자 상세 데이터:", responseData.elData.applicantDetailVo);
-            
+
             // 데이터 로드 후 커스텀 렌더러 재적용
-            setTimeout(function() {
-                console.log("이력서 필드 렌더링 시작");
-                var rows = gridView.getRowCount();
-                console.log("그리드 행 수:", rows);
-                
-                for (var i = 0; i < rows; i++) {
-                    var resumeFileName = dlt_applicantVoList.getCellData(i, "resumeFileName");
-                    console.log("행 " + i + " 이력서 파일명:", resumeFileName);
-                }
-                
+            setTimeout(function () {
                 // 전체 그리드 새로고침
                 gridView.refresh();
             }, 200);
@@ -351,12 +338,11 @@ scwin.fail_btn_onclick = function (e) {
 };
 
 // 이력서 필드에 대한 formatter 함수 구현 (customRenderer 대신)
-scwin.displayResumeFileName = function(value) {
-    console.log("displayResumeFileName 호출됨, value:", value);
-    
+scwin.displayResumeFileName = function (value) {
+
     // 이력서 파일명이 있는지 확인
     var hasResume = value && value.trim() !== "";
-    
+
     if (hasResume) {
         return "<span class='resume-link-text'>이력서 보기</span>";
     } else {
@@ -365,63 +351,52 @@ scwin.displayResumeFileName = function(value) {
 };
 
 // 그리드 셀 클릭 이벤트 (이력서 컬럼)
-scwin.gridView_oncellclick = function(row, col, colId) {
-    console.log("그리드 셀 클릭: row=" + row + ", col=" + col + ", colId=" + colId);
-    
+scwin.gridView_oncellclick = function (row, col, colId) {
+
     if (colId === "resumeFileName") {
         // 해당 행의 이력서 파일명 확인
         var resumeFileName = dlt_applicantVoList.getCellData(row, "resumeFileName");
-        
+
         // 이력서가 없으면 무시
         if (!resumeFileName || resumeFileName.trim() === "") {
-            console.log("이력서 파일이 없습니다.");
             return;
         }
-        
-        console.log("이력서 미리보기 열기 시도: " + resumeFileName);
         scwin.openResumePreview(row);
     }
 };
 
 // 이력서 미리보기 팝업 열기
-scwin.openResumePreview = function(rowIndex) {
+scwin.openResumePreview = function (rowIndex) {
     try {
-        console.log("이력서 미리보기 팝업 열기 - 행 인덱스:", rowIndex);
-        
+
         // 선택된 행의 데이터 가져오기
         var accountId = dlt_applicantVoList.getCellData(rowIndex, "accountId");
         var userName = dlt_applicantVoList.getCellData(rowIndex, "name");
         var resumeFileName = dlt_applicantVoList.getCellData(rowIndex, "resumeFileName");
-        
-        console.log("선택된 사용자 정보:", {
-            accountId: accountId,
-            userName: userName,
-            resumeFileName: resumeFileName
-        });
-        
+
         // 이력서가 없는 경우
         if (!resumeFileName || resumeFileName.trim() === "") {
             $c.win.alert("등록된 이력서가 없습니다.");
             return;
         }
-        
+
         // 팝업에 전달할 데이터
         var popupData = {
             accountId: accountId,
             userName: userName || "사용자",
             resumeFileName: resumeFileName
         };
-        
+
         // 전역 변수로 파라미터 저장
         window.scwin.paramData = popupData;
-        
+
         // 세션 스토리지에도 저장
         try {
             sessionStorage.setItem("resumePreviewParams", JSON.stringify(popupData));
-        } catch(e) {
+        } catch (e) {
             console.error("세션 스토리지 저장 오류:", e);
         }
-        
+
         // 팝업 옵션
         var popupOptions = {
             id: "resume_preview_popup_" + accountId,
@@ -433,12 +408,9 @@ scwin.openResumePreview = function(rowIndex) {
             resizable: true
         };
         
-        console.log("팝업 데이터:", popupData);
-        console.log("팝업 옵션:", popupOptions);
-        
         // 팝업 열기
         $c.win.openPopup("../common/ResumePreviewPopup.xml", popupOptions, popupData);
-        
+
     } catch (error) {
         console.error("이력서 미리보기 팝업 열기 중 오류:", error);
         $c.win.alert("이력서 미리보기를 열 수 없습니다: " + error.message);

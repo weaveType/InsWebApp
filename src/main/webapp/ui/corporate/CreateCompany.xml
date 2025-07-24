@@ -429,17 +429,17 @@ scwin.biz_reg_number_chk_btn_onclick = function (e) {
 
                 if (info.tax_type &&
                     info.tax_type.indexOf("국세청에 등록되지 않은 사업자등록번호") > -1) {
-                    alert("국세청에 등록되지 않은 사업자등록번호입니다.\n번호를 다시 확인해 주세요.");
+                    $c.win.alert("국세청에 등록되지 않은 사업자등록번호입니다.\n번호를 다시 확인해 주세요.");
                     return;
                 }
-                alert("유효한 사업자등록번호입니다.");
+                $c.win.alert("유효한 사업자등록번호입니다.");
 
             } else {
-                alert("조회 결과가 없습니다. 번호를 확인해 주세요.");
+                $c.win.alert("조회 결과가 없습니다. 번호를 확인해 주세요.");
             }
         },
         error: function (xhr) {
-            alert("조회 중 오류가 발생했습니다.\n잠시 후 다시 시도해 주세요.");
+            $c.win.alert("조회 중 오류가 발생했습니다.\n잠시 후 다시 시도해 주세요.");
         }
     });
 };
@@ -524,7 +524,7 @@ scwin.btn_create_corporate_onclick = function (e) {
     }
 
     if (errors.length > 0) {
-        alert("다음 항목들을 확인해주세요:\n\n" + errors.join("\n"));
+        $c.win.alert("다음 항목들을 확인해주세요:\n\n" + errors.join("\n"));
         return;
     }
 
@@ -543,7 +543,7 @@ scwin.saveData = function () {
     try {
         $c.sbm.execute(sbm_insertCorporateVo);
     } catch (error) {
-        alert("저장 중 오류가 발생했습니다.");
+        $c.win.alert("저장 중 오류가 발생했습니다.");
     }
 
 };
@@ -560,7 +560,7 @@ scwin.sbm_insertCorporateVo_submitdone = function (e) {
         $c.sbm.execute(sbm_login);
     } catch (error) {
         console.error("sbm_insertCorporateVo_submitdone 처리 중 예외 발생:", error);
-        alert("회원가입 후 로그인 처리 중 오류가 발생했습니다.");
+        $c.win.alert("회원가입 후 로그인 처리 중 오류가 발생했습니다.");
         scwin.resetForm();
     }
 };
@@ -579,17 +579,16 @@ scwin.sbm_login_submitdone = function (e) {
         } else {
             // 로그인 실패 (resSuc가 false거나 없음)
             const errMsg = elHeader && elHeader.errMsg ? elHeader.errMsg : "로그인에 실패했습니다.";
-            alert(errMsg);
+            $c.win.alert(errMsg);
         }
     } catch (error) {
-        console.error("submitdone 처리 중 예외 발생:", error);
-        alert("로그인 처리 중 오류가 발생했습니다. 다시 시도해주세요.");
+        $c.win.alert("로그인 처리 중 오류가 발생했습니다. 다시 시도해주세요.");
     }
 }
 
 // 로그인 실패 시 처리
 scwin.sbm_login_submiterror = function (e) {
-    alert("로그인 중 오류가 발생했습니다. 다시 시도해주세요.");
+    $c.win.alert("로그인 중 오류가 발생했습니다. 다시 시도해주세요.");
 };
 
 // 폼 초기화 함수

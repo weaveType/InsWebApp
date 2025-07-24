@@ -915,7 +915,7 @@ scwin.onpageload = function () {
         $c.sbm.execute($p, sbm_selectPostDetail);
     } else {
         console.warn("jobPostingId 파라미터가 없습니다.");
-        alert("잘못된 접근입니다. 공고 목록으로 이동합니다.");
+        $c.win.alert("잘못된 접근입니다. 공고 목록으로 이동합니다.");
         scwin.goBackToList();
     }
 };
@@ -1001,7 +1001,7 @@ scwin.sbm_selectPostDetail_submitdone = function (e) {
         if (elHeader && elHeader.resMsg) {
             errorMsg += "\n" + elHeader.resMsg;
         }
-        alert(errorMsg);
+        $c.win.alert(errorMsg);
 
         // 에러 시 목록으로 돌아가기
         setTimeout(function () {
@@ -1013,7 +1013,7 @@ scwin.sbm_selectPostDetail_submitdone = function (e) {
     // 데이터 존재 여부 체크
     if (!elData) {
         console.error("조회된 데이터가 없습니다.");
-        alert("해당 공고 정보를 찾을 수 없습니다.\n공고가 삭제되었거나 존재하지 않을 수 있습니다.");
+        $c.win.alert("해당 공고 정보를 찾을 수 없습니다.\n공고가 삭제되었거나 존재하지 않을 수 있습니다.");
 
         setTimeout(function () {
             scwin.goBackToList();
@@ -1030,7 +1030,7 @@ scwin.sbm_selectPostDetail_submitdone = function (e) {
     // 비활성화된 공고 체크
     if (elData.status === 'inactive' || elData.status === 'deleted') {
         console.warn("비활성화된 공고입니다.");
-        alert("이 공고는 현재 모집이 중단되었습니다.");
+        $c.win.alert("이 공고는 현재 모집이 중단되었습니다.");
 
         setTimeout(function () {
             scwin.goBackToList();
@@ -1055,7 +1055,7 @@ scwin.sbm_selectPostDetail_submitdone = function (e) {
 
     } catch (error) {
         console.error("데이터 바인딩 중 오류:", error);
-        alert("데이터를 화면에 표시하는 중 오류가 발생했습니다.");
+        $c.win.alert("데이터를 화면에 표시하는 중 오류가 발생했습니다.");
     }
 };
 
@@ -1847,7 +1847,7 @@ scwin.btnApply_onclick = function (e) {
             $c.sbm.execute($p, sbm_insertJobApplication);
         }
         else {
-            alert("일반 회원으로 로그인 후 이용해주세요.");
+            $c.win.alert("일반 회원으로 로그인 후 이용해주세요.");
         }
     }
 };
@@ -1933,12 +1933,12 @@ scwin.sbm_deletePost_submitdone = function (e) {
         if (elHeader && elHeader.resMsg) {
             errorMsg += "\n" + elHeader.resMsg;
         }
-        alert(errorMsg);
+        $c.win.alert(errorMsg);
         return false;
     }
 
     console.log("✅ 공고 삭제 성공");
-    alert("공고가 성공적으로 삭제되었습니다.");
+    $c.win.alert("공고가 성공적으로 삭제되었습니다.");
 
     // 삭제 후 목록으로 이동
     setTimeout(function () {
@@ -2557,7 +2557,7 @@ scwin.btnDelete_onclick = function (e) {
 
         } catch (error) {
             console.error("공고 삭제 오류:", error);
-            alert("공고 삭제 중 오류가 발생했습니다.");
+            $c.win.alert("공고 삭제 중 오류가 발생했습니다.");
         }
     }
 };
@@ -2576,12 +2576,12 @@ scwin.sbm_insertJobApplication_submitdone = function (e) {
         if (elHeader && elHeader.resMsg) {
             errorMsg += "\n" + elHeader.resMsg;
         }
-        alert(errorMsg);
+        $c.win.alert(errorMsg);
         return false;
     }
 
     console.log("✅ 공고 지원 성공");
-    alert("지원서가 성공적으로 제출되었습니다!");
+    $c.win.alert("지원서가 성공적으로 제출되었습니다!");
 
     // 지원 상태를 true로 업데이트
     dmp_postDetail.set("isApplied", true);
@@ -2677,7 +2677,7 @@ scwin.sbm_updatePost_submitdone = function (e) {
         if (elHeader && elHeader.resMsg) {
             errorMsg += "\n" + elHeader.resMsg;
         }
-        alert(errorMsg);
+        $c.win.alert(errorMsg);
         return false;
     }
 
@@ -2695,7 +2695,7 @@ scwin.sbm_updatePost_submitdone = function (e) {
     // 편집 모드 종료
     scwin.exitEditMode();
 
-    alert("공고가 성공적으로 수정되었습니다.");
+    $c.win.alert("공고가 성공적으로 수정되었습니다.");
 };
 
 scwin.btnApplicantDetails_onclick = function (e) {
@@ -2972,7 +2972,7 @@ scwin.copyDataForEdit = function () {
 
     } catch (error) {
         console.error("편집용 데이터 복사 오류:", error);
-        alert("편집 모드로 전환하는 중 오류가 발생했습니다.");
+        $c.win.alert("편집 모드로 전환하는 중 오류가 발생했습니다.");
     }
 };
 
@@ -3170,7 +3170,7 @@ scwin.validateEditData = function () {
     console.log("검증 결과:", hasError ? "실패" : "성공");
     if (hasError) {
         console.log("검증 오류 목록:", errorMessages);
-        alert("입력하신 정보를 확인해주세요:\n" + errorMessages.join("\n"));
+        $c.win.alert("입력하신 정보를 확인해주세요:\n" + errorMessages.join("\n"));
     }
 
     return !hasError;
@@ -3517,7 +3517,7 @@ scwin.btnSave_onclick = function (e) {
             $c.sbm.execute($p, sbm_updatePost);
         } catch (error) {
             console.error("저장 중 오류:", error);
-            alert("저장 중 오류가 발생했습니다.");
+            $c.win.alert("저장 중 오류가 발생했습니다.");
             scwin.setLoadingState(false);
         }
     }

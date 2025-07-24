@@ -21,33 +21,32 @@
         <w2:publicInfo method=""/>
         
         <script type="text/javascript"><![CDATA[
-            scwin.onpageload = function() {
-                console.log("프로필 작성 완료 페이지 로드됨");
-                dma_complete.set("userName", "사용자");
-                
-                // 애니메이션 시작
-                setTimeout(function() {
-                    document.querySelector('.celebration-animation').classList.add('animate');
-                }, 500);
-                
-                // 버튼 활성화 애니메이션
-                setTimeout(function() {
-                    document.querySelector('.btn-start').classList.add('show');
-                }, 1000);
-            };
-            
-            // 서비스 시작 버튼
-            scwin.btn_start_onclick = function() {
-                console.log("서비스 시작");
-                $p.url("../common/MainPage.xml");
-            };
-            
-            // 프로필 수정 버튼 - $p.url 방식
-            scwin.btn_edit_onclick = function() {
-                console.log("프로필 수정");
-                $p.url("ProfileAdditional.xml");
-            };
-        ]]></script>
+scwin.onpageload = function () {
+    dma_complete.set("userName", "사용자");
+
+    // 애니메이션 시작
+    setTimeout(function () {
+        document.querySelector('.celebration-animation').classList.add('animate');
+    }, 500);
+
+    // 버튼 활성화 애니메이션
+    setTimeout(function () {
+        document.querySelector('.btn-start').classList.add('show');
+    }, 1000);
+};
+
+// 서비스 시작 버튼
+scwin.btn_start_onclick = function () {
+    console.log("서비스 시작");
+    $p.url("../common/MainPage.xml");
+};
+
+// 프로필 수정 버튼 - $p.url 방식
+scwin.btn_edit_onclick = function () {
+    console.log("프로필 수정");
+    $p.url("ProfileAdditional.xml");
+};
+]]></script>
         
         <style type="text/css"><![CDATA[
             .main-container {

@@ -254,7 +254,7 @@
             scwin.processFile = function(file, index) {
                 // 파일 유효성 검사
                 if (file.size > 50 * 1024) {
-                    alert('파일 크기는 50KB를 초과할 수 없습니다: ' + file.name);
+                    $c.win.alert('파일 크기는 50KB를 초과할 수 없습니다: ' + file.name);
                     return;
                 }
                 
@@ -485,7 +485,7 @@
             scwin.btn_next_onclick = function() {
                 // 최소 하나의 파일이 업로드되었는지 확인
                 if (scwin.uploadedFiles.length === 0) {
-                    alert('최소 하나 이상의 파일을 업로드해주세요.');
+                    $c.win.alert('최소 하나 이상의 파일을 업로드해주세요.');
                     return;
                 }
                 
@@ -553,7 +553,7 @@
                     var header = response.elHeader;
                     if (header.resSuc === false || header.resCode) {
                         console.error('서버 오류 발생:', header.resMsg);
-                        alert('서버에서 오류가 발생했습니다: ' + header.resMsg + 
+                        $c.win.alert('서버에서 오류가 발생했습니다: ' + header.resMsg + 
                               '\n오류 코드: ' + header.resCode + 
                               '\n서버 로그를 확인하거나 관리자에게 문의하세요.');
                         return;
@@ -570,7 +570,7 @@
                 } else {
                     // 오류 처리
                     var errorMsg = response ? response.message : '알 수 없는 오류가 발생했습니다.';
-                    alert('코드 분석에 실패했습니다: ' + errorMsg);
+                    $c.win.alert('코드 분석에 실패했습니다: ' + errorMsg);
                 }
             };
             
@@ -582,7 +582,7 @@
                 console.error('Error:', error);
                 console.error('Response:', xhr.responseText);
                 
-                alert('서버 통신 중 오류가 발생했습니다: ' + error);
+                $c.win.alert('서버 통신 중 오류가 발생했습니다: ' + error);
             };
             
             // 분석 결과 표시

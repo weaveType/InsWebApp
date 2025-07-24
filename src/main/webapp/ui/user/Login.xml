@@ -176,13 +176,13 @@ scwin.btn_login_onclick = function (e) {
 
     // 유효성 검사
     if (!userId || userId.trim() === "") {
-        alert("아이디를 입력해주세요.");
+        $c.win.alert("아이디를 입력해주세요.");
         inp_userId.focus();
         return;
     }
 
     if (!userPw || userPw.trim() === "") {
-        alert("비밀번호를 입력해주세요.");
+        $c.win.alert("비밀번호를 입력해주세요.");
         inp_userPw.focus();
         return;
     }
@@ -215,12 +215,12 @@ scwin.sbm_login_submitdone = function (e) {
         } else {
             // 로그인 실패 (resSuc가 false거나 없음)
             const errMsg = elHeader && elHeader.errMsg ? elHeader.errMsg : "로그인에 실패했습니다.";
-            alert(errMsg);
+            $c.win.alert(errMsg);
             btn_login.setDisabled(false);
         }
     } catch (error) {
         console.error("submitdone 처리 중 예외 발생:", error);
-        alert("로그인 처리 중 오류가 발생했습니다. 다시 시도해주세요.");
+        $c.win.alert("로그인 처리 중 오류가 발생했습니다. 다시 시도해주세요.");
         btn_login.setDisabled(false);
     }
 }
@@ -228,11 +228,11 @@ scwin.sbm_login_submitdone = function (e) {
 // 로그인 실패 시 처리
 scwin.sbm_login_submiterror = function (e) {
     btn_login.setDisabled(false);
-    alert("로그인 중 오류가 발생했습니다. 다시 시도해주세요.");
+    $c.win.alert("로그인 중 오류가 발생했습니다. 다시 시도해주세요.");
 };
 
 scwin.link_forgot_onclick = function (e) {
-    alert("비밀번호 재설정 기능은 준비 중입니다.");
+    $c.win.alert("비밀번호 재설정 기능은 준비 중입니다.");
 };
 
 scwin.link_signup_onclick = function (e) {

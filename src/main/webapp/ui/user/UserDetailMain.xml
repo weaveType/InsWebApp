@@ -402,15 +402,23 @@ scwin.getUserInfoByCookie = function () {
     return userInfo;
 }
 // 사용자 정보 수정 페이지로 이동
-scwin.btn_userUpdate_onclick = function() {
+scwin.btn_userUpdate_onclick = function () {
     try {
-        console.log("사용자 정보 수정 페이지로 이동");
         $p.url("/InsWebApp/ui/user/updateUser.xml");
     } catch (e) {
         console.error("사용자 정보 수정 페이지 이동 오류:", e);
         alert("페이지 이동 중 오류가 발생했습니다.");
     }
-}]]></script>
+}
+scwin.mbti_button_onclick = function (e) {
+    $p.url("../survey/SurveyMbti.xml");
+};
+
+
+scwin.code_button_onclick = function (e) {
+    $p.url("CodeAnalysisMain.xml");
+};
+]]></script>
 	</head>
 
 	<body ev:onpageload="scwin.onpageload">
@@ -487,7 +495,7 @@ scwin.btn_userUpdate_onclick = function() {
 								</xf:group>
 								<w2:textbox class="action-card-title" label="mbti 성격 검사"></w2:textbox>
 								<w2:textbox class="action-card-subtitle" label="ex : 8가지 성향을 4개의 성향을 알아 낼 수 있습니다"></w2:textbox>
-								<xf:trigger id="mbti_button" class="action-card-button" type="button">
+								<xf:trigger id="mbti_button" class="action-card-button" type="button" ev:onclick="scwin.mbti_button_onclick">
 									<xf:label><![CDATA[시작하기]]></xf:label>
 								</xf:trigger>
 							</xf:group>
@@ -500,7 +508,7 @@ scwin.btn_userUpdate_onclick = function() {
 								</xf:group>
 								<w2:textbox class="action-card-title" label="코드분석"></w2:textbox>
 								<w2:textbox class="action-card-subtitle" label="ex : 8가지 성향을 4개의 성향을 알아 낼 수 있습니다"></w2:textbox>
-								<xf:trigger id="code_button" class="action-card-button" type="button">
+								<xf:trigger id="code_button" class="action-card-button" type="button" ev:onclick="scwin.code_button_onclick">
 									<xf:label><![CDATA[분석하기]]></xf:label>
 								</xf:trigger>
 							</xf:group>

@@ -404,8 +404,7 @@ scwin.onpageload = function () {
 
     // 세션 정보가 없는 경우 처리
     if (!userInfoStr) {
-        console.log("세션에 userInfo가 없습니다!");
-        alert("로그인 정보가 없습니다. 다시 로그인해주세요.");
+        $c.win.alert("로그인 정보가 없습니다. 다시 로그인해주세요.");
         $p.url("../user/Login.xml");
         return;
     }
@@ -415,7 +414,7 @@ scwin.onpageload = function () {
 
         // 권한 확인
         if (userInfo.role !== "COMPANY") {
-            alert("기업 사용자만 접근할 수 있습니다.");
+            $c.win.alert("기업 사용자만 접근할 수 있습니다.");
             $p.url("../common/weaveTypeMain.xml");
             return;
         }
@@ -430,8 +429,7 @@ scwin.onpageload = function () {
         scwin.selectIndustryList();
 
     } catch (e) {
-        console.error("사용자 정보 파싱 오류:", e);
-        alert("사용자 정보를 읽는 중 오류가 발생했습니다.");
+        $c.win.alert("사용자 정보를 읽는 중 오류가 발생했습니다.");
         $p.url("../common/MainPage.xml");
     }
 };
@@ -515,7 +513,7 @@ scwin.btn_create_update_onclick = function (e) {
     }
 
     if (errors.length > 0) {
-        alert("다음 항목들을 확인해주세요:\n\n" + errors.join("\n"));
+        $c.win.alert("다음 항목들을 확인해주세요:\n\n" + errors.join("\n"));
         return;
     }
 
@@ -534,7 +532,7 @@ scwin.saveData = function () {
     try {
         $c.sbm.execute(sbm_updateCorporateVo);
     } catch (error) {
-        alert("저장 중 오류가 발생했습니다.");
+        $c.win.alert("저장 중 오류가 발생했습니다.");
     }
 
 };
@@ -595,7 +593,7 @@ scwin.sbm_selectIndustryList_submitdone = function (e) {
         }
 
     } catch (error) {
-        alert("산업 목록 로드에 실패했습니다.");
+        $c.win.alert("산업 목록 로드에 실패했습니다.");
     }
 };
 scwin.withdrawal_link_onclick = function () {

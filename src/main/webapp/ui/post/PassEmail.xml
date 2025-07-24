@@ -258,15 +258,11 @@ scwin.onpageload = function () {
 
     // 전달받은 데이터 확인 및 설정
     var selectedUsers = $c.data.getParameter("selectedUsers");
-    console.log("전달받은 데이터:", selectedUsers);
 
     if (selectedUsers && selectedUsers.length > 0) {
         // DataList에 전달받은 사용자 데이터 설정
         dlt_sendEmailInfoListVo.setJSON(selectedUsers);
-        console.log(dlt_sendEmailInfoListVo.getAllJSON());
-
     } else {
-        console.warn("전달받은 사용자 데이터가 없습니다.");
         $c.win.alert("전달받은 사용자 데이터가 없습니다.");
     }
 };
@@ -298,7 +294,7 @@ scwin.applyDateToPass = function () {
         var updatedTemplate = template.replace(/\{\{날짜\}\}/g, formattedDate);
         txtPassTemplate.setValue(updatedTemplate);
     } else {
-        alert("날짜를 선택해주세요.");
+        $c.win.alert("날짜를 선택해주세요.");
     }
 };
 
@@ -328,6 +324,7 @@ scwin.sbm_sendPassEmail_submitdone = function (e) {
     } else {
         // 성공 메시지 출력
         $c.win.alert("합격 메일이 성공적으로 발송되었습니다.");
+        $p.closePopup();
     }
 };
 

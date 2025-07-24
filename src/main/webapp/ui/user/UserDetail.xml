@@ -392,8 +392,7 @@ scwin.updateCardStatus = function(e) {
 
 // 오류 처리
 scwin.sbm_userDetail_submiterror = function(e){
-    console.error("사용자 정보 조회 실패:", e);
-    alert("사용자 정보를 불러오는데 실패했습니다.");
+    $c.win.alert("사용자 정보를 불러오는데 실패했습니다.");
 };
 
 // 메뉴 활성화 상태 변경 공통 함수
@@ -423,22 +422,7 @@ scwin.menu_history_onclick = function() {
 scwin.menu_interest_onclick = function() {
     scwin.setActiveMenu(menu_interest);
     contentFrame.setSrc('UserMatchPage.xml');
-};
-
-// MBTI 검사 시작
-scwin.startMbti_onclick = function () {
-    alert("MBTI 성격 검사를 시작합니다.");
-};
-
-// 코드분석 시작
-scwin.startCodeAnalysis_onclick = function () {
-    alert("코드분석을 시작합니다.");
-};
-
-scwin.btn_userUpdate_onclick = function (e) {
-    $p.url("updateUser.xml");
-};
-]]></script>
+};]]></script>
 	</head>
 
 	<body ev:onpageload="scwin.onpageload">

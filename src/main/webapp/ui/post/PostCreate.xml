@@ -528,20 +528,20 @@ scwin.onpageload = function() {
     try {
         var userInfoStr = WebSquare.cookie.getCookie("userInfo");
         if (!userInfoStr) {
-            alert("로그인 정보가 없습니다. 다시 로그인해주세요.");
+            $c.win.alert("로그인 정보가 없습니다. 다시 로그인해주세요.");
             $p.url("../user/Login.xml");
             return;
         }
         
         var userInfo = JSON.parse(userInfoStr);
         if (userInfo.role !== "COMPANY") {
-            alert("기업 사용자만 접근할 수 있습니다.");
+            $c.win.alert("기업 사용자만 접근할 수 있습니다.");
             $p.url("../common/MainPage.xml");
             return;
         }
     } catch (e) {
         console.error("사용자 정보 확인 오류:", e);
-        alert("사용자 정보를 확인할 수 없습니다.");
+        $c.win.alert("사용자 정보를 확인할 수 없습니다.");
         return;
     }
     
@@ -1015,7 +1015,7 @@ scwin.selectSuggestion = function(techStack) {
         
     } else {
         console.log("이미 존재하는 기술스택:", techStack);
-        alert("이미 선택된 기술스택입니다.");
+        $c.win.alert("이미 선택된 기술스택입니다.");
         // 입력 필드 초기화
         input_techstack.setValue("");
     }
@@ -1025,21 +1025,21 @@ scwin.selectSuggestion = function(techStack) {
 scwin.addTechStackFromInput = function() {
     var inputValue = input_techstack.getValue();
     if (!inputValue || inputValue.trim() === "") {
-        alert("기술스택을 입력해주세요.");
+        $c.win.alert("기술스택을 입력해주세요.");
         return;
     }
     
     // 기술스택 정규화
     var normalizedTechStack = scwin.normalizeTechStack(inputValue);
     if (!normalizedTechStack) {
-        alert("지원하지 않는 기술스택입니다.");
+        $c.win.alert("지원하지 않는 기술스택입니다.");
         return;
     }
     
     // 중복 확인
     for (var i = 0; i < dlt_techstack.getRowCount(); i++) {
         if (dlt_techstack.getCellData(i, "techstack") === normalizedTechStack) {
-            alert("이미 선택된 기술스택입니다.");
+            $c.win.alert("이미 선택된 기술스택입니다.");
             return;
         }
     }
@@ -1380,7 +1380,7 @@ scwin.personality_btn_onclick = function (e) {
         
         // 선택되지 않은 버튼을 클릭한 경우 즉시 차단
         if (!isClickedSelected) {
-            alert("최대 " + scwin.maxPersonalities + "개까지만 선택 가능합니다.");
+            $c.win.alert("최대 " + scwin.maxPersonalities + "개까지만 선택 가능합니다.");
             return;
         }
     }
@@ -1560,26 +1560,18 @@ scwin.personality_btn_onclick = function (e) {
     } else {
         // 선택 추가 - 4개 제한 확인
         if (scwin.selectedPersonalities.length >= scwin.maxPersonalities) {
-            alert("최대 " + scwin.maxPersonalities + "개까지만 선택 가능합니다.");
+            $c.win.alert("최대 " + scwin.maxPersonalities + "개까지만 선택 가능합니다.");
             return;
         }
         
-        console.log("=== 선택 추가 시작 ===");
-        
         // 1. 배열에 추가
         scwin.selectedPersonalities.push(personality);
-        console.log("배열에 추가 완료");
-        
         // 2. 데이터리스트에 추가
         var newRowIndex = dlt_personalities.insertRow();
         dlt_personalities.setCellData(newRowIndex, "personality", personality);
-        console.log("데이터리스트에 추가 완료");
         
         // 3. UI 클래스 추가
         btn.classList.add('selected');
-        console.log("UI 클래스 추가 완료");
-        
-        console.log("✅ 성향 선택:", personality);
     }
     
     // 상태 업데이트
@@ -1679,7 +1671,7 @@ scwin.btn_create_post_onclick = function() {
     }
     
     if (errors.length > 0) {
-        alert("다음 항목들을 확인해주세요:\n\n" + errors.join("\n"));
+        $c.win.alert("다음 항목들을 확인해주세요:\n\n" + errors.join("\n"));
         return;
     }
     
@@ -1707,7 +1699,7 @@ scwin.btn_create_post_onclick = function() {
         }
     } catch (e) {
         console.error("❌ 회사 ID 가져오기 실패:", e);
-        alert("회사 정보를 확인할 수 없습니다.\n다시 로그인해주세요.\n\n오류: " + e.message);
+        $c.win.alert("회사 정보를 확인할 수 없습니다.\n다시 로그인해주세요.\n\n오류: " + e.message);
         $p.url("../user/Login.xml");
         return;
     }
@@ -1780,11 +1772,11 @@ scwin.sbm_insertPost_submitdone = function(e) {
     if (!elHeader || elHeader.resSuc === false) {
         var errorCode = elHeader ? elHeader.resCode : "Unknown";
         var errorMsg = elHeader ? elHeader.resMsg : "서버 응답 없음";
-        alert("등록 실패\n코드: " + errorCode + "\n메시지: " + errorMsg);
+        $c.win.alert("등록 실패\n코드: " + errorCode + "\n메시지: " + errorMsg);
         return;
     }
     
-    alert("공고가 성공적으로 등록되었습니다!");
+    $c.win.alert("공고가 성공적으로 등록되었습니다!");
     $p.url("../corporate/RecruitmentDashboard.xml");
 };
 

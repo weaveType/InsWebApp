@@ -22,274 +22,263 @@
         <w2:publicInfo method=""/>
         
         <script type="text/javascript"><![CDATA[
-            scwin.onpageload = function() {
-                console.log("프로필 추가 정보 페이지 로드됨");
-                
-                // 파일 업로드 이벤트 설정
-                scwin.initializeFileUpload();
-                
-                // 텍스트 영역 이벤트 바인딩
-                setTimeout(function() {
-                    var textarea = document.querySelector('.additional-intro-textarea');
-                    if (textarea) {
-                        textarea.addEventListener('input', scwin.updateCharCount);
-                        textarea.addEventListener('keyup', scwin.updateCharCount);
-                    }
-                }, 100);
-            };
-            
-            // 파일 업로드 초기화 (CodeAnalysisMain.xml 방식)
-            scwin.initializeFileUpload = function() {
-                var inputElement = document.getElementById('profileImageInput');
-                if (inputElement) {
-                    inputElement.addEventListener('change', function(e) {
-                        scwin.handleFileUpload(e);
-                    });
-                }
-            };
-            
-            scwin.handleFileUpload = function(event) {
-                var file = event.target.files[0];
-                if (!file) return;
-                
-                // 파일 유형 검사
-                if (!file.type.startsWith('image/')) {
-                    alert('이미지 파일만 업로드 가능합니다.');
-                    return;
-                }
-                
-                // 파일 크기 검사 (5MB)
-                if (file.size > 5 * 1024 * 1024) {
-                    alert('파일 크기는 5MB 이하여야 합니다.');
-                    return;
-                }
-                
-                // 미리보기 이미지 표시 (즉시)
-                var reader = new FileReader();
-                reader.onload = function(e) {
-                    var uploadArea = document.querySelector('.upload-area');
-                    var previewArea = document.querySelector('.preview-area');
-                    var previewImage = document.querySelector('.preview-image');
-                    
-                    if (uploadArea && previewArea && previewImage) {
-                        uploadArea.style.display = 'none';
-                        previewArea.style.display = 'block';
-                        previewImage.src = e.target.result;
-                        console.log("프로필 이미지 미리보기 표시 완료");
-                    }
-                };
-                reader.readAsDataURL(file);
-                
-                // 서버에 실제 파일 업로드
-                scwin.uploadToServer(file);
-            };
-            
-            scwin.uploadToServer = function(file) {
-                console.log("서버 업로드 시작:", file.name);
-                
-                // 현재는 임시로 사용자 ID를 1로 설정 (실제로는 세션에서 가져와야 함)
-                var userId = 1; // TODO: 실제 사용자 ID로 변경
-                
-                var formData = new FormData();
-                formData.append('profileImage', file);
-                formData.append('userId', userId);
-                
-                var xhr = new XMLHttpRequest();
-                xhr.open('POST', '/InsWebApp/USProfileImageUpload.pwkjson', true);
-                
-                xhr.onload = function() {
-                    if (xhr.status === 200) {
-                        try {
-                            var response = JSON.parse(xhr.responseText);
-                            console.log("서버 응답:", response);
-                            
-                            if (response.success) {
-                                console.log("파일 업로드 성공:", response.fileName);
-                                // 데이터 모델에 서버에서 반환된 파일명 저장
-                                dma_profile.set("profileImage", response.fileName);
-                                alert("프로필 이미지가 성공적으로 업로드되었습니다.");
-                            } else {
-                                console.error("업로드 실패:", response.message);
-                                alert("업로드 실패: " + response.message);
-                                scwin.removeImage(); // 실패 시 미리보기 제거
-                            }
-                        } catch (e) {
-                            console.error("응답 파싱 오류:", e);
-                            alert("서버 응답 처리 중 오류가 발생했습니다.");
-                            scwin.removeImage(); // 실패 시 미리보기 제거
-                        }
-                    } else {
-                        console.error("HTTP 오류:", xhr.status);
-                        alert("서버 통신 오류가 발생했습니다.");
-                        scwin.removeImage(); // 실패 시 미리보기 제거
-                    }
-                };
-                
-                xhr.onerror = function() {
-                    console.error("네트워크 오류");
-                    alert("네트워크 오류가 발생했습니다.");
-                    scwin.removeImage(); // 실패 시 미리보기 제거
-                };
-                
-                xhr.send(formData);
-            };
-            
-            scwin.triggerFileUpload = function() {
-                console.log("파일 업로드 트리거 시작");
-                
-                // HTML에 정의된 파일 입력 요소를 직접 클릭
-                var fileInput = document.getElementById('profileImageInput');
-                if (fileInput) {
-                fileInput.click();
-                    console.log("파일 선택 대화상자 열림");
+scwin.onpageload = function () {
+    console.log("프로필 추가 정보 페이지 로드됨");
+
+    // 파일 업로드 이벤트 설정
+    scwin.initializeFileUpload();
+
+    // 텍스트 영역 이벤트 바인딩
+    setTimeout(function () {
+        var textarea = document.querySelector('.additional-intro-textarea');
+        if (textarea) {
+            textarea.addEventListener('input', scwin.updateCharCount);
+            textarea.addEventListener('keyup', scwin.updateCharCount);
+        }
+    }, 100);
+};
+
+// 파일 업로드 초기화 (CodeAnalysisMain.xml 방식)
+scwin.initializeFileUpload = function () {
+    var inputElement = document.getElementById('profileImageInput');
+    if (inputElement) {
+        inputElement.addEventListener('change', function (e) {
+            scwin.handleFileUpload(e);
+        });
+    }
+};
+
+scwin.handleFileUpload = function (event) {
+    var file = event.target.files[0];
+    if (!file) return;
+
+    // 파일 유형 검사
+    if (!file.type.startsWith('image/')) {
+        $c.win.alert('이미지 파일만 업로드 가능합니다.');
+        return;
+    }
+
+    // 파일 크기 검사 (5MB)
+    if (file.size > 5 * 1024 * 1024) {
+        $c.win.alert('파일 크기는 5MB 이하여야 합니다.');
+        return;
+    }
+
+    // 미리보기 이미지 표시 (즉시)
+    var reader = new FileReader();
+    reader.onload = function (e) {
+        var uploadArea = document.querySelector('.upload-area');
+        var previewArea = document.querySelector('.preview-area');
+        var previewImage = document.querySelector('.preview-image');
+
+        if (uploadArea && previewArea && previewImage) {
+            uploadArea.style.display = 'none';
+            previewArea.style.display = 'block';
+            previewImage.src = e.target.result;
+            console.log("프로필 이미지 미리보기 표시 완료");
+        }
+    };
+    reader.readAsDataURL(file);
+
+    // 서버에 실제 파일 업로드
+    scwin.uploadToServer(file);
+};
+
+scwin.uploadToServer = function (file) {
+    console.log("서버 업로드 시작:", file.name);
+
+    // 현재는 임시로 사용자 ID를 1로 설정 (실제로는 세션에서 가져와야 함)
+    var userId = 1; // TODO: 실제 사용자 ID로 변경
+
+    var formData = new FormData();
+    formData.append('profileImage', file);
+    formData.append('userId', userId);
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', '/InsWebApp/USProfileImageUpload.pwkjson', true);
+
+    xhr.onload = function () {
+        if (xhr.status === 200) {
+            try {
+                var response = JSON.parse(xhr.responseText);
+
+                if (response.success) {
+                    // 데이터 모델에 서버에서 반환된 파일명 저장
+                    dma_profile.set("profileImage", response.fileName);
+                    $c.win.alert("프로필 이미지가 성공적으로 업로드되었습니다.");
                 } else {
-                    console.error("파일 입력 요소를 찾을 수 없습니다.");
-                    alert("파일 업로드 기능에 오류가 발생했습니다.");
-                    }
-            };
-            
-            scwin.removeImage = function(event) {
-                // 이벤트 버블링 방지 (부모의 파일 선택 이벤트가 실행되지 않도록)
-                if (event && event.stopPropagation) {
-                    event.stopPropagation();
+                    $c.win.alert("업로드 실패: " + response.message);
+                    scwin.removeImage(); // 실패 시 미리보기 제거
                 }
-                
-                var uploadArea = document.querySelector('.upload-area');
-                var previewArea = document.querySelector('.preview-area');
-                var fileInput = document.getElementById('profileImageInput');
-                
-                if (uploadArea && previewArea) {
-                    uploadArea.style.display = 'flex';
-                    previewArea.style.display = 'none';
-                    
-                    // 파일 입력 초기화
-                    if (fileInput) {
-                        fileInput.value = '';
-                    }
-                    
-                    // 데이터 모델에서 제거
-                    dma_profile.set("profileImage", "");
-                    console.log("프로필 이미지 제거됨");
-                }
-            };
-            
-            scwin.updateCharCount = function(event) {
-                var textarea = event ? event.target : document.querySelector('.additional-intro-textarea');
-                var currentLength = textarea ? textarea.value.length : 0;
-                var maxLength = 300;
-                
-                // 글자 수 표시 업데이트
-                var charCountElement = document.querySelector('.char-count');
-                var charCountById = document.getElementById('additionalIntroCharCount');
-                
-                if (charCountElement) {
-                    charCountElement.textContent = currentLength + '/' + maxLength;
-                }
-                if (charCountById) {
-                    charCountById.textContent = currentLength + '/' + maxLength;
-                }
-                
-                // 최대 길이 제한
-                if (currentLength > maxLength) {
-                    var limitedText = textarea.value.substring(0, maxLength);
-                    if (textarea) {
-                        textarea.value = limitedText;
-                    }
-                    dma_profile.set("bio", limitedText);
-                    
-                    if (charCountElement) {
-                        charCountElement.textContent = '300/300';
-                    }
-                    if (charCountById) {
-                        charCountById.textContent = '300/300';
-                    }
-                }
-            };
-            
-            // 이전 버튼 - $p.url 방식
-            scwin.btn_back_onclick = function() {
-                console.log("경력 입력 페이지로 이동");
-                $p.url("CareerInput.xml");
-            };
-            
-            // 다음 버튼 (완료) - $p.url 방식
-            scwin.btn_next_onclick = function() {
-                // 최신 값으로 데이터 모델 업데이트
-                var textarea = document.querySelector('.additional-intro-textarea');
-                var bio = textarea ? textarea.value : "";
-                dma_profile.set("bio", bio);
-                
-                var profileImage = dma_profile.get("profileImage");
-                
-                console.log("입력된 프로필 정보:", {
-                    profileImage: profileImage,
-                    bio: bio
-                });
-                
-                // 모든 단계에서 입력된 데이터를 수집하여 서버에 전송
-                scwin.submitAllAdditionalInfo();
-            };
-            
-            // 모든 추가 정보를 서버에 전송하는 함수
-            scwin.submitAllAdditionalInfo = function() {
+            } catch (e) {
+                $c.win.alert("서버 응답 처리 중 오류가 발생했습니다.");
+                scwin.removeImage(); // 실패 시 미리보기 제거
+            }
+        } else {
+            $c.win.alert("서버 통신 오류가 발생했습니다.");
+            scwin.removeImage(); // 실패 시 미리보기 제거
+        }
+    };
+
+    xhr.onerror = function () {
+        $c.win.alert("네트워크 오류가 발생했습니다.");
+        scwin.removeImage(); // 실패 시 미리보기 제거
+    };
+
+    xhr.send(formData);
+};
+
+scwin.triggerFileUpload = function () {
+    console.log("파일 업로드 트리거 시작");
+
+    // HTML에 정의된 파일 입력 요소를 직접 클릭
+    var fileInput = document.getElementById('profileImageInput');
+    if (fileInput) {
+        fileInput.click();
+        console.log("파일 선택 대화상자 열림");
+    } else {
+        console.error("파일 입력 요소를 찾을 수 없습니다.");
+        $c.win.alert("파일 업로드 기능에 오류가 발생했습니다.");
+    }
+};
+
+scwin.removeImage = function (event) {
+    // 이벤트 버블링 방지 (부모의 파일 선택 이벤트가 실행되지 않도록)
+    if (event && event.stopPropagation) {
+        event.stopPropagation();
+    }
+
+    var uploadArea = document.querySelector('.upload-area');
+    var previewArea = document.querySelector('.preview-area');
+    var fileInput = document.getElementById('profileImageInput');
+
+    if (uploadArea && previewArea) {
+        uploadArea.style.display = 'flex';
+        previewArea.style.display = 'none';
+
+        // 파일 입력 초기화
+        if (fileInput) {
+            fileInput.value = '';
+        }
+
+        // 데이터 모델에서 제거
+        dma_profile.set("profileImage", "");
+        console.log("프로필 이미지 제거됨");
+    }
+};
+
+scwin.updateCharCount = function (event) {
+    var textarea = event ? event.target : document.querySelector('.additional-intro-textarea');
+    var currentLength = textarea ? textarea.value.length : 0;
+    var maxLength = 300;
+
+    // 글자 수 표시 업데이트
+    var charCountElement = document.querySelector('.char-count');
+    var charCountById = document.getElementById('additionalIntroCharCount');
+
+    if (charCountElement) {
+        charCountElement.textContent = currentLength + '/' + maxLength;
+    }
+    if (charCountById) {
+        charCountById.textContent = currentLength + '/' + maxLength;
+    }
+
+    // 최대 길이 제한
+    if (currentLength > maxLength) {
+        var limitedText = textarea.value.substring(0, maxLength);
+        if (textarea) {
+            textarea.value = limitedText;
+        }
+        dma_profile.set("bio", limitedText);
+
+        if (charCountElement) {
+            charCountElement.textContent = '300/300';
+        }
+        if (charCountById) {
+            charCountById.textContent = '300/300';
+        }
+    }
+};
+
+// 이전 버튼 - $p.url 방식
+scwin.btn_back_onclick = function () {
+    console.log("경력 입력 페이지로 이동");
+    $p.url("CareerInput.xml");
+};
+
+// 다음 버튼 (완료) - $p.url 방식
+scwin.btn_next_onclick = function () {
+    // 최신 값으로 데이터 모델 업데이트
+    var textarea = document.querySelector('.additional-intro-textarea');
+    var bio = textarea ? textarea.value : "";
+    dma_profile.set("bio", bio);
+
+    var profileImage = dma_profile.get("profileImage");
+
+    console.log("입력된 프로필 정보:", {
+        profileImage: profileImage,
+        bio: bio
+    });
+
+    // 모든 단계에서 입력된 데이터를 수집하여 서버에 전송
+    scwin.submitAllAdditionalInfo();
+};
+
+// 모든 추가 정보를 서버에 전송하는 함수
+scwin.submitAllAdditionalInfo = function () {
+    try {
+        // ProfileAdditional 현재 페이지 데이터만 처리 (이전 단계 데이터는 이미 저장됨)
+        var textarea = document.querySelector('.additional-intro-textarea');
+        var bio = textarea ? textarea.value : "";
+        var profileImage = dma_profile.get("profileImage") || "";
+
+        // 현재 페이지 데이터만 서버에 전송 (이전 단계 데이터는 빈 값으로 전송하지 않음)
+        var requestData = {
+            bio: bio,
+            profileImageName: profileImage
+        };
+
+        console.log("현재 페이지 데이터만 서버 전송:", requestData);
+
+        // 서버에 AJAX 요청으로 현재 페이지 데이터만 전송
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/InsWebApp/USUpdateAdditionalInfo.pwkjson', true);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+
+        xhr.onload = function () {
+            if (xhr.status === 200) {
                 try {
-                    // ProfileAdditional 현재 페이지 데이터만 처리 (이전 단계 데이터는 이미 저장됨)
-                    var textarea = document.querySelector('.additional-intro-textarea');
-                    var bio = textarea ? textarea.value : "";
-                    var profileImage = dma_profile.get("profileImage") || "";
-                    
-                    // 현재 페이지 데이터만 서버에 전송 (이전 단계 데이터는 빈 값으로 전송하지 않음)
-                    var requestData = {
-                        bio: bio,
-                        profileImageName: profileImage
-                    };
-                    
-                    console.log("현재 페이지 데이터만 서버 전송:", requestData);
-                    
-                    // 서버에 AJAX 요청으로 현재 페이지 데이터만 전송
-                    var xhr = new XMLHttpRequest();
-                    xhr.open('POST', '/InsWebApp/USUpdateAdditionalInfo.pwkjson', true);
-                    xhr.setRequestHeader('Content-Type', 'application/json');
-                    
-                    xhr.onload = function() {
-                        if (xhr.status === 200) {
-                            try {
-                                var response = JSON.parse(xhr.responseText);
-                                console.log("서버 응답:", response);
-                                
-                                if (response.success) {
-                                    console.log("추가 정보 저장 성공");
-                // 프로필 작성 완료 페이지로 이동
-                $p.url("ProfileComplete.xml");
-                                } else {
-                                    console.error("추가 정보 저장 실패:", response.message);
-                                    alert("정보 저장 중 오류가 발생했습니다: " + response.message);
-                                }
-                            } catch (e) {
-                                console.error("응답 파싱 오류:", e);
-                                alert("서버 응답 처리 중 오류가 발생했습니다.");
-                            }
-                        } else {
-                            console.error("HTTP 오류:", xhr.status);
-                            alert("서버 통신 오류가 발생했습니다.");
-                        }
-                    };
-                    
-                    xhr.onerror = function() {
-                        console.error("네트워크 오류");
-                        alert("네트워크 오류가 발생했습니다.");
-                    };
-                    
-                    xhr.send(JSON.stringify(requestData));
-                    
+                    var response = JSON.parse(xhr.responseText);
+                    console.log("서버 응답:", response);
+
+                    if (response.success) {
+                        console.log("추가 정보 저장 성공");
+                        // 프로필 작성 완료 페이지로 이동
+                        $p.url("ProfileComplete.xml");
+                    } else {
+                        $c.win.alert("정보 저장 중 오류가 발생했습니다: " + response.message);
+                    }
                 } catch (e) {
-                    console.error("데이터 전송 중 오류:", e);
-                    alert("데이터 전송 중 오류가 발생했습니다.");
-                    // 오류가 발생해도 일단 다음 페이지로 이동
-                    $p.url("ProfileComplete.xml");
+                    $c.win.alert("서버 응답 처리 중 오류가 발생했습니다.");
                 }
-            };
-        ]]></script>
+            } else {
+                $c.win.alert("서버 통신 오류가 발생했습니다.");
+            }
+        };
+
+        xhr.onerror = function () {
+            $c.win.alert("네트워크 오류가 발생했습니다.");
+        };
+
+        xhr.send(JSON.stringify(requestData));
+
+    } catch (e) {
+        $c.win.alert("데이터 전송 중 오류가 발생했습니다.");
+        // 오류가 발생해도 일단 다음 페이지로 이동
+        $p.url("ProfileComplete.xml");
+    }
+};
+]]></script>
         
         <style type="text/css"><![CDATA[
             .main-container {

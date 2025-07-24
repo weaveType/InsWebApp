@@ -224,8 +224,7 @@ scwin.bindScoutData = function () {
 
 // 지원현황 목록 조회 오류
 scwin.sbm_scoutList_submiterror = function (e) {
-
-    alert("지원현황을 불러오는데 실패했습니다.");
+    $c.win.alert("지원현황을 불러오는데 실패했습니다.");
 };
 
 // 필터링
@@ -298,12 +297,12 @@ scwin.sbm_scoutList_submitdone = function (e) {
                 if (emptyState) emptyState.style.display = 'none';
             }
         }
-        
+
 
         // UI 업데이트
         scwin.applyStatusClasses();
     } catch (err) {
-        alert("지원현황 조회 중 오류가 발생했습니다.");
+        $c.win.alert("지원현황 조회 중 오류가 발생했습니다.");
     }
 };
 
