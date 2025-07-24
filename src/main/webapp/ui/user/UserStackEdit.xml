@@ -513,13 +513,13 @@ scwin.goBack = function() {
 // 다음 버튼 클릭 (완료)
 scwin.goNext = function() {
     if (scwin.selectedStacksArray.length === 0) {
-        alert("기술스택을 하나 이상 선택해주세요.");
+        $c.win.alert("기술스택을 하나 이상 선택해주세요.");
         return;
     }
     
     // 사용자 정보 업데이트
     console.log("선택된 기술스택:", scwin.selectedStacksArray);
-    alert("기술스택이 성공적으로 업데이트되었습니다!\\n선택된 기술: " + scwin.selectedStacksArray.join(', '));
+    $c.win.alert("기술스택이 성공적으로 업데이트되었습니다!\\n선택된 기술: " + scwin.selectedStacksArray.join(', '));
     
     // 마이페이지로 돌아가기
     $p.url("UserDetail.xml");

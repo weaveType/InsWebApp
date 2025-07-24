@@ -651,11 +651,9 @@
         ]]></style>
         <script lazy="false" type="text/javascript"><![CDATA[
 scwin.onpageload = function () {
-    console.log("=== 채용관리 대시보드 로드 ===");
 
     var userInfoStr = WebSquare.cookie.getCookie("userInfo");
     if (!userInfoStr) {
-        console.warn("사용자 정보가 없습니다. 로그인 페이지로 이동합니다.");
         $p.url("/InsWebApp/ui/common/MainPage.xml");
         return;
     }
@@ -663,7 +661,6 @@ scwin.onpageload = function () {
     try {
         var userInfo = JSON.parse(userInfoStr);
         if (userInfo.role !== "COMPANY") {
-            console.warn("기업 회원이 아닙니다. 메인 페이지로 이동합니다.");
             $p.url("/InsWebApp/ui/common/MainPage.xml");
             return;
         }
@@ -698,7 +695,7 @@ scwin.initializeDashboard = function () {
         scwin.loadPostList();
     } else {
         console.error("회사 ID를 찾을 수 없습니다.");
-        alert("회사 정보를 찾을 수 없습니다. 다시 로그인해주세요.");
+        $c.win.alert("회사 정보를 찾을 수 없습니다. 다시 로그인해주세요.");
     }
 };
 
@@ -789,7 +786,7 @@ scwin.sbm_postList_submitdone = function (e) {
     var elHeader = e.responseJSON.elHeader;
     if (elHeader && elHeader.resSuc === false) {
         console.error("공고 목록 조회 에러:", elHeader);
-        alert(`에러: ${elHeader.resMsg}`);
+        $c.win.alert(`에러: ${elHeader.resMsg}`);
         return false;
     }
 
@@ -1120,7 +1117,7 @@ scwin.openPostDetail = function (jobPostingId) {
     console.log("공고 상세보기:", jobPostingId);
 
     if (!jobPostingId) {
-        alert("공고 정보를 찾을 수 없습니다.");
+        $c.win.alert("공고 정보를 찾을 수 없습니다.");
         return;
     }
 
@@ -1134,7 +1131,7 @@ scwin.openPostDetail = function (jobPostingId) {
         }
     } catch (error) {
         console.error("페이지 이동 오류:", error);
-        alert("페이지 이동 중 오류가 발생했습니다.");
+        $c.win.alert("페이지 이동 중 오류가 발생했습니다.");
     }
 };
 

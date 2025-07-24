@@ -22,47 +22,46 @@
         <w2:publicInfo method="setProgress,showProgress,hideProgress"/>
         
         <script type="text/javascript"><![CDATA[
-        scwin.onpageload = function() {
-            console.log("SignupHeader 컴포넌트 로드됨");
-        };
-        
-        // 진행률 설정 (0-100)
-        scwin.setProgress = function(percent) {
-            dma_header.set("progressPercent", percent);
-            var progressBar = document.querySelector('.header-progress');
-            if (progressBar) {
-                progressBar.style.background = 'linear-gradient(90deg, #007bff 0%, #007bff ' + percent + '%, #e0e0e0 ' + percent + '%, #e0e0e0 100%)';
-            }
-        };
-        
-        // 진행바 표시
-        scwin.showProgress = function(percent) {
-            dma_header.set("showProgress", "true");
-            if (percent !== undefined) {
-                scwin.setProgress(percent);
-            }
-            var progressElement = document.querySelector('.header-progress');
-            if (progressElement) {
-                progressElement.style.display = 'block';
-            }
-        };
-        
-        // 진행바 숨김
-        scwin.hideProgress = function() {
-            dma_header.set("showProgress", "false");
-            var progressElement = document.querySelector('.header-progress');
-            if (progressElement) {
-                progressElement.style.display = 'none';
-            }
-        };
-        
-        // 로고 클릭 시 메인 페이지로 이동
-        scwin.logo_onclick = function() {
-            if (confirm("회원가입을 중단하고 메인 페이지로 이동하시겠습니까?")) {
-                $p.url("../common/MainPage.xml");
-            }
-        };
-        ]]></script>
+scwin.onpageload = function () {
+};
+
+// 진행률 설정 (0-100)
+scwin.setProgress = function (percent) {
+    dma_header.set("progressPercent", percent);
+    var progressBar = document.querySelector('.header-progress');
+    if (progressBar) {
+        progressBar.style.background = 'linear-gradient(90deg, #007bff 0%, #007bff ' + percent + '%, #e0e0e0 ' + percent + '%, #e0e0e0 100%)';
+    }
+};
+
+// 진행바 표시
+scwin.showProgress = function (percent) {
+    dma_header.set("showProgress", "true");
+    if (percent !== undefined) {
+        scwin.setProgress(percent);
+    }
+    var progressElement = document.querySelector('.header-progress');
+    if (progressElement) {
+        progressElement.style.display = 'block';
+    }
+};
+
+// 진행바 숨김
+scwin.hideProgress = function () {
+    dma_header.set("showProgress", "false");
+    var progressElement = document.querySelector('.header-progress');
+    if (progressElement) {
+        progressElement.style.display = 'none';
+    }
+};
+
+// 로고 클릭 시 메인 페이지로 이동
+scwin.logo_onclick = function () {
+    if (confirm("회원가입을 중단하고 메인 페이지로 이동하시겠습니까?")) {
+        $p.url("../common/MainPage.xml");
+    }
+};
+]]></script>
         
         <style type="text/css"><![CDATA[
             .signup-header {

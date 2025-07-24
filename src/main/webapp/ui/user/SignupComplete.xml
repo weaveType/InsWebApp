@@ -21,17 +21,15 @@
         <w2:publicInfo method=""/>
         
         <script type="text/javascript"><![CDATA[
-            scwin.onpageload = function() {
-                console.log("회원가입 완료 페이지 로드됨");
-                dma_complete.set("userName", "사용자");
-            };
-            
-            // 다음 버튼 클릭 - $p.url 방식으로 추가정보 입력으로 이동
-            scwin.btn_next_onclick = function() {
-                console.log("추가정보 입력으로 이동");
-                $p.url("LocationSelect.xml");
-            };
-        ]]></script>
+scwin.onpageload = function () {
+    dma_complete.set("userName", "사용자");
+};
+
+// 다음 버튼 클릭 - $p.url 방식으로 추가정보 입력으로 이동
+scwin.btn_next_onclick = function () {
+    $p.url("LocationSelect.xml");
+};
+]]></script>
         
         <style type="text/css"><![CDATA[
             .main-container {

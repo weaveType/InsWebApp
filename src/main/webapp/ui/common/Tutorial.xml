@@ -22,7 +22,6 @@
         <w2:publicInfo method=""/>
         <script lazy="false" type="text/javascript"><![CDATA[
 scwin.onpageload = function() {
-    console.log("튜토리얼 페이지 로드됨");
     
     // 초기화 함수 실행
     scwin.initializeTutorial();
@@ -277,7 +276,7 @@ scwin.updateProgress = function() {
 scwin.goToSignup = function() {
     var isLoggedIn = dmp_tutorial.get("isLoggedIn");
     if (isLoggedIn === "true") {
-        alert("이미 로그인되어 있습니다!");
+        $c.win.alert("이미 로그인되어 있습니다!");
         return;
     }
     $p.url("../user/Signup.xml");

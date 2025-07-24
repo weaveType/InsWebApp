@@ -19,160 +19,50 @@
         <w2:layoutInfo/>
         <w2:publicInfo method=""/>
         <script lazy="false" type="text/javascript"><![CDATA[
-scwin.onpageload = function() {
-    
-    // MBTI 타입 정의
-    scwin.mbtiTypes = [
-        {
-            type: "ARTF",
-            title: "구조적 팀 빌더",
-            description: "체계적이고 완벽한 설계를 추구하면서 기존 코드를 개선하고 최적화합니다. 팀과의 소통과 협업을 중요시하며, 새로운 기능을 창의적으로 개발하는 것을 즐깁니다.",
-            characteristics: ["체계적인 설계 추구", "코드 개선 및 최적화", "팀워크 중시", "창의적 기능 개발"],
-            image: "/InsWebApp/images/ws5/mbti/png/ARTF.png"
-        },
-        {
-            type: "ARTD",
-            title: "체계적 팀 디버거",
-            description: "완벽한 설계를 추구하며 기존 코드를 개선합니다. 팀과의 협업을 통해 버그를 발견하고 해결하는 데 보람을 느낍니다.",
-            characteristics: ["체계적 접근", "코드 리팩토링", "협업 중시", "버그 해결 전문"],
-            image: "/InsWebApp/images/ws5/mbti/png/ARTD.png"
-        },
-        {
-            type: "ARSF",
-            title: "완벽주의 솔로 창작자",
-            description: "체계적이고 완벽한 설계를 추구하며 혼자서 집중하여 일합니다. 기존 코드를 개선하면서 새로운 기능을 창의적으로 개발합니다.",
-            characteristics: ["완벽한 설계", "독립적 작업", "코드 개선", "창의적 개발"],
-            image: "/InsWebApp/images/ws5/mbti/png/ARSF.png"
-        },
-        {
-            type: "ARSD",
-            title: "체계적 솔로 수정자",
-            description: "완벽한 설계를 추구하며 개인적으로 일하는 것을 선호합니다. 기존 코드를 개선하고 버그를 찾아 해결하는 데 집중합니다.",
-            characteristics: ["체계적 설계", "독립적 작업", "코드 최적화", "버그 수정"],
-            image: "/InsWebApp/images/ws5/mbti/png/ARSD.png"
-        },
-        {
-            type: "AITF",
-            title: "혁신적 팀 개척자",
-            description: "체계적인 설계를 추구하면서 새로운 기술에 과감하게 도전합니다. 팀과 협업하며 새로운 기능을 창의적으로 개발합니다.",
-            characteristics: ["체계적 설계", "신기술 도입", "팀 협업", "혁신적 개발"],
-            image: "/InsWebApp/images/ws5/mbti/png/AITF.png"
-        },
-        {
-            type: "AITD",
-            title: "미래지향 팀 디버거",
-            description: "완벽한 설계를 추구하며 새로운 기술로 팀과 함께 안정적인 시스템을 구축합니다. 버그를 발견하고 해결하는 과정을 즐깁니다.",
-            characteristics: ["체계적 접근", "신기술 활용", "팀워크", "시스템 안정화"],
-            image: "/InsWebApp/images/ws5/mbti/png/AITD.png"
-        },
-        {
-            type: "AISF",
-            title: "혁신적 솔로 창작자",
-            description: "체계적인 설계를 추구하며 새로운 기술에 도전합니다. 혼자서 집중하여 창의적인 기능을 개발하는 것을 선호합니다.",
-            characteristics: ["완벽한 설계", "신기술 탐구", "독립적 작업", "창의적 개발"],
-            image: "/InsWebApp/images/ws5/mbti/png/AISF.png"
-        },
-        {
-            type: "AISD",
-            title: "혁신적 솔로 해결사",
-            description: "체계적인 설계와 새로운 기술을 추구하며 혼자서 일합니다. 버그를 발견하고 해결하는 데 집중합니다.",
-            characteristics: ["체계적 설계", "신기술 도입", "독립적 작업", "문제 해결"],
-            image: "/InsWebApp/images/ws5/mbti/png/AISD.png"
-        },
-        {
-            type: "BRTF",
-            title: "실용적 팀 개선자",
-            description: "빠른 구현과 실용성을 선호하며 기존 코드를 개선합니다. 팀과 협업하여 새로운 기능을 창의적으로 개발합니다.",
-            characteristics: ["빠른 구현", "코드 개선", "팀 협업", "실용적 개발"],
-            image: "/InsWebApp/images/ws5/mbti/png/BRTF.png"
-        },
-        {
-            type: "BRTD",
-            title: "실용적 팀 수정자",
-            description: "빠른 구현을 추구하며 기존 코드를 개선합니다. 팀과 함께 버그를 발견하고 해결하는 데 집중합니다.",
-            characteristics: ["빠른 구현", "코드 최적화", "팀워크", "버그 수정"],
-            image: "/InsWebApp/images/ws5/mbti/png/BRTD.png"
-        },
-        {
-            type: "BRSF",
-            title: "실용적 솔로 창작자",
-            description: "빠른 구현과 실용성을 추구하며 혼자서 일합니다. 기존 코드를 개선하면서 새로운 기능을 개발합니다.",
-            characteristics: ["빠른 구현", "독립적 작업", "코드 개선", "기능 개발"],
-            image: "/InsWebApp/images/ws5/mbti/png/BRSF.png"
-        },
-        {
-            type: "BRSD",
-            title: "실용적 안정성 추구자",
-            description: "빠른 구현과 실용성을 선호하며 검증된 방법으로 안정적인 솔루션을 만듭니다. 혼자서 버그를 해결하는 데 집중합니다.",
-            characteristics: ["실용적 접근", "안정성 추구", "독립적 작업", "버그 해결"],
-            image: "/InsWebApp/images/ws5/mbti/png/BRSD.png"
-        },
-        {
-            type: "BITF",
-            title: "창의적 스피드 러너",
-            description: "빠른 구현을 추구하며 새로운 기술에 도전합니다. 팀과 협업하여 혁신적인 기능을 빠르게 개발합니다.",
-            characteristics: ["빠른 구현", "신기술 도입", "팀 협업", "혁신적 개발"],
-            image: "/InsWebApp/images/ws5/mbti/png/BITF.png"
-        },
-        {
-            type: "BITD",
-            title: "혁신적 팀 해결사",
-            description: "빠른 구현과 새로운 기술을 추구하며 팀과 함께 일합니다. 버그를 빠르게 발견하고 해결합니다.",
-            characteristics: ["빠른 구현", "신기술 활용", "팀워크", "빠른 디버깅"],
-            image: "/InsWebApp/images/ws5/default_mbti.png" // 기본 이미지 사용
-        },
-        {
-            type: "BISF",
-            title: "혁신적 스피드 개발자",
-            description: "빠른 구현과 새로운 기술을 추구하며 혼자서 일합니다. 혁신적인 방법으로 빠르게 기능을 구현합니다.",
-            characteristics: ["빠른 구현", "신기술 탐구", "독립적 작업", "혁신적 개발"],
-            image: "/InsWebApp/images/ws5/mbti/png/BISF.png"
-        },
-        {
-            type: "BISD",
-            title: "빠른 문제 해결사",
-            description: "빠른 구현과 새로운 기술을 추구하며 혼자서 일합니다. 버그를 빠르게 발견하고 해결하는 데 집중합니다.",
-            characteristics: ["빠른 구현", "신기술 도입", "독립적 작업", "빠른 문제해결"],
-            image: "/InsWebApp/images/ws5/mbti/png/BISD.png"
-        }
-    ];
-    
+scwin.onpageload = function () {
+
     // 초기화
     scwin.init();
-    
+
     // 휠 이벤트 리스너 추가
     scwin.addWheelListener();
-    
+
     // 키보드 이벤트 리스너 추가
     scwin.addKeyboardListener();
-    
+
     // 터치 이벤트 리스너 추가
     scwin.addTouchListener();
-    
+
     // 네비게이션 도트 생성
     scwin.createNavigationDots();
-    
+
     // 첫 번째 섹션 표시
     scwin.showSection(0);
+
+    // 네비게이션 초기화
+    scwin.updateNavigation();
 };
 
 // 초기화 함수
-scwin.init = function() {
+scwin.init = function () {
     scwin.isAnimating = false;
     scwin.currentSection = 0;
     scwin.touchStartY = 0;
     scwin.touchEndY = 0;
 };
 
+// MBTI 타입 정의
+scwin.mbtiTypes = [{ type: "ARTF", title: "설계의 마에스트로", description: "완벽한 아키텍처를 바탕으로 팀과 함께 레거시 시스템을 혁신적인 기능으로 탈바꿈시키는 전략가입니다. 코드 리뷰에서는 구조적 개선점을 날카롭게 지적하지만, 동시에 팀원들의 창의적 아이디어를 하나로 엮어내는 마법을 부립니다.", characteristics: ["시스템 전체를 조망하는 통찰력", "레거시 코드 현대화 전문가", "팀 아키텍처 리딩과 멘토링", "기능 설계와 구현의 완벽한 조화"], image: "/InsWebApp/images/ws5/mbti/png/ARTF.png" }, { type: "ARTD", title: "완벽주의 코드 닥터", description: "체계적인 접근으로 기존 코드의 숨겨진 문제점을 찾아내고, 팀과의 협업을 통해 근본적인 해결책을 제시합니다. 버그 리포트를 받으면 단순한 임시방편이 아닌, 시스템 전체의 안정성을 높이는 완전한 치료법을 찾아냅니다.", characteristics: ["근본 원인 분석의 달인", "코드 품질 가디언", "팀 기반 디버깅 프로세스 구축", "예방적 버그 헌팅 시스템"], image: "/InsWebApp/images/ws5/mbti/png/ARTD.png" }, { type: "ARSF", title: "고독한 설계 장인", description: "조용한 공간에서 완벽한 설계 문서와 함께 기존 코드를 예술작품으로 승화시키는 장인입니다. 혼자만의 시간 속에서 새로운 기능의 청사진을 그리고, 한 줄 한 줄 정성스럽게 리팩토링하여 아름다운 코드를 만들어냅니다.", characteristics: ["완벽한 아키텍처 설계", "심미적 코드 리팩토링", "독립적 창작 프로세스", "기능과 구조의 우아한 통합"], image: "/InsWebApp/images/ws5/mbti/png/ARSF.png" }, { type: "ARSD", title: "침묵의 버그 헌터", description: "조용히 홀로 앉아 복잡한 시스템의 미로 같은 코드를 헤쳐나가며, 숨어있는 버그들을 하나씩 찾아내는 탐정입니다. 완벽한 설계 원칙에 따라 체계적으로 문제를 추적하고, 조용하지만 확실한 해결책을 제시합니다.", characteristics: ["체계적 버그 추적 시스템", "독립적 문제 해결 능력", "심층 코드 분석 전문가", "조용하지만 확실한 성과"], image: "/InsWebApp/images/ws5/mbti/png/ARSD.png" }, { type: "AITF", title: "혁신적 팀 빌더", description: "최신 기술 트렌드를 팀에 도입하며, 기존의 틀을 깨뜨리는 혁신적인 기능을 함께 만들어나가는 미래 지향적 리더입니다. 새로운 프레임워크나 도구를 두려워하지 않고, 팀원들과 함께 실험하며 차세대 솔루션을 창조합니다.", characteristics: ["신기술 도입 및 전파", "혁신적 기능 아키텍처 설계", "팀 기반 실험과 학습 문화", "미래 지향적 기술 전략"], image: "/InsWebApp/images/ws5/mbti/png/AITF.png" }, { type: "AITD", title: "차세대 문제 해결사", description: "최신 디버깅 도구와 혁신적인 접근 방식으로 팀과 함께 복잡한 문제들을 해결해나가는 기술 혁신가입니다. AI 도구나 새로운 모니터링 시스템을 활용하여 기존에는 찾기 어려웠던 문제들을 척척 해결해냅니다.", characteristics: ["차세대 디버깅 툴 마스터", "혁신적 문제 해결 방법론", "팀 기반 기술 실험", "미래형 시스템 모니터링"], image: "/InsWebApp/images/ws5/mbti/png/AITD.png" }, { type: "AISF", title: "독창적 혁신가", description: "조용한 연구실에서 최신 기술을 탐구하며, 아무도 시도하지 않은 창의적인 기능을 혼자서 묵묵히 개발해내는 기술 아티스트입니다. 새로운 알고리즘이나 패러다임을 연구하여 독창적인 솔루션을 창조하는 것이 삶의 보람입니다.", characteristics: ["독창적 기술 연구", "혁신적 알고리즘 개발", "개인적 기술 실험실 운영", "미래 지향적 창작 활동"], image: "/InsWebApp/images/ws5/mbti/png/AISF.png" }, { type: "AISD", title: "미래지향 솔로 파이터", description: "최신 기술과 도구를 무기로 삼아 혼자서 복잡한 버그들과 맞서 싸우는 기술 전사입니다. 기계학습 기반 디버깅이나 자동화된 테스팅 도구를 활용하여, 전통적인 방법으로는 해결하기 어려운 문제들을 척척 해결해냅니다.", characteristics: ["AI 기반 버그 디텍션", "자동화된 문제 해결 시스템", "독립적 기술 도구 개발", "미래형 디버깅 워크플로우"], image: "/InsWebApp/images/ws5/mbti/png/AISD.png" }, { type: "BRTF", title: "실전 파이터", description: "빠른 프로토타이핑과 실용적인 접근으로 팀과 함께 기존 시스템을 개선하며 즉시 사용 가능한 기능들을 만들어내는 실전형 개발자입니다. '일단 돌아가게 만들고 나서 개선하자'는 철학으로, 빠른 iteration을 통해 완성도를 높여갑니다.", characteristics: ["빠른 프로토타이핑", "실용적 코드 개선", "팀 기반 빠른 개발", "즉시 배포 가능한 기능 구현"], image: "/InsWebApp/images/ws5/mbti/png/BRTF.png" }, { type: "BRTD", title: "즉석 문제 해결사", description: "빠른 판단력과 실용적인 접근으로 팀과 함께 현장에서 발생하는 문제들을 즉시 해결하는 트러블슈터입니다. 완벽한 해결책보다는 지금 당장 서비스를 살릴 수 있는 현실적인 방법을 찾아내어 위기를 모면시키는 전문가입니다.", characteristics: ["긴급 상황 대응 전문가", "실용적 버그 픽스", "팀 기반 빠른 문제 해결", "현장 중심적 사고"], image: "/InsWebApp/images/ws5/mbti/png/BRTD.png" }, { type: "BRSF", title: "실용주의 크리에이터", description: "혼자서 빠르게 기존 코드를 개선하고 실용적인 새 기능을 척척 만들어내는 원맨 팩토리입니다. 복잡한 설계보다는 '지금 필요한 것'에 집중하여, 사용자가 바로 체감할 수 있는 개선사항들을 연달아 배포합니다.", characteristics: ["빠른 개인 개발 사이클", "실용성 중심 기능 설계", "독립적 코드 개선", "사용자 중심적 사고"], image: "/InsWebApp/images/ws5/mbti/png/BRSF.png" }, { type: "BRSD", title: "고속 버그 킬러", description: "빠른 직감과 경험을 바탕으로 혼자서 버그들을 순식간에 해치우는 디버깅의 달인입니다. 복잡한 분석 도구보다는 예리한 관찰력과 풍부한 경험으로 문제의 핵심을 바로 찾아내어 신속하게 해결합니다.", characteristics: ["직감적 버그 추적", "경험 기반 빠른 진단", "독립적 문제 해결", "실용적 수정 방법"], image: "/InsWebApp/images/ws5/mbti/png/BRSD.png" }, { type: "BITF", title: "창의적 스피드 러너", description: "최신 기술을 빠르게 습득하여 팀과 함께 혁신적인 기능을 신속하게 구현해내는 기술 스프린터입니다. 새로운 프레임워크나 라이브러리가 나오면 바로 적용해보며, 팀원들과 함께 빠른 실험을 통해 놀라운 결과물을 만들어냅니다.", characteristics: ["신기술 빠른 도입", "혁신적 빠른 프로토타이핑", "팀 기반 기술 실험", "스피드 개발 문화 조성"], image: "/InsWebApp/images/ws5/mbti/png/BITF.png" }, { type: "BITD", title: "번개같은 해결사", description: "최신 디버깅 도구와 기법을 활용하여 팀과 함께 복잡한 문제들을 번개처럼 빠르게 해결하는 기술 닌자입니다. 새로운 모니터링 툴이나 분석 기법을 바로 도입하여, 기존에는 며칠 걸렸던 문제들을 몇 시간 만에 해결해냅니다.", characteristics: ["최신 디버깅 툴 활용", "빠른 기술 적응력", "팀 기반 신속 대응", "혁신적 문제 해결 속도"], image: "/InsWebApp/images/ws5/default_mbti.png" }, { type: "BISF", title: "창조적 솔로 러너", description: "최신 기술을 혼자서 탐구하며 독창적이고 혁신적인 기능을 빠르게 구현해내는 기술 아티스트입니다. 새로운 기술 트렌드를 남들보다 빨리 캐치하여, 아무도 생각하지 못한 창의적인 솔루션을 혼자서 뚝딱 만들어냅니다.", characteristics: ["독창적 기술 실험", "빠른 혁신 구현", "개인적 기술 연구", "창의적 솔루션 개발"], image: "/InsWebApp/images/ws5/mbti/png/BISF.png" }, { type: "BISD", title: "플래시 픽서", description: "최신 기술과 도구를 무기로 삼아 혼자서 복잡한 버그들을 순식간에 해결해버리는 기술 닌자입니다. 자동화 스크립트나 AI 도구를 활용하여 전통적인 디버깅으로는 해결하기 어려운 문제들을 번개같이 처리합니다.", characteristics: ["자동화된 버그 디텍션", "혁신적 디버깅 기법", "독립적 고속 문제 해결", "미래형 수정 도구 활용"], image: "/InsWebApp/images/ws5/mbti/png/BISD.png" }];
+
 // 휠 이벤트 리스너
-scwin.addWheelListener = function() {
+scwin.addWheelListener = function () {
     var container = document.querySelector('.mbti-container');
     if (container) {
-        container.addEventListener('wheel', function(e) {
+        container.addEventListener('wheel', function (e) {
             e.preventDefault();
-            
+
             if (scwin.isAnimating) return;
-            
+
             if (e.deltaY > 0) {
                 // 아래로 스크롤
                 scwin.nextSection();
@@ -185,11 +75,11 @@ scwin.addWheelListener = function() {
 };
 
 // 키보드 이벤트 리스너
-scwin.addKeyboardListener = function() {
-    document.addEventListener('keydown', function(e) {
+scwin.addKeyboardListener = function () {
+    document.addEventListener('keydown', function (e) {
         if (scwin.isAnimating) return;
-        
-        switch(e.key) {
+
+        switch (e.key) {
             case 'ArrowDown':
             case 'PageDown':
                 e.preventDefault();
@@ -213,14 +103,14 @@ scwin.addKeyboardListener = function() {
 };
 
 // 터치 이벤트 리스너 추가
-scwin.addTouchListener = function() {
+scwin.addTouchListener = function () {
     var container = document.querySelector('.mbti-container');
     if (container) {
-        container.addEventListener('touchstart', function(e) {
+        container.addEventListener('touchstart', function (e) {
             scwin.touchStartY = e.touches[0].clientY;
         }, { passive: true });
-        
-        container.addEventListener('touchend', function(e) {
+
+        container.addEventListener('touchend', function (e) {
             scwin.touchEndY = e.changedTouches[0].clientY;
             scwin.handleSwipe();
         }, { passive: true });
@@ -228,12 +118,12 @@ scwin.addTouchListener = function() {
 };
 
 // 스와이프 처리
-scwin.handleSwipe = function() {
+scwin.handleSwipe = function () {
     if (scwin.isAnimating) return;
-    
+
     var diff = scwin.touchStartY - scwin.touchEndY;
     var threshold = 50;
-    
+
     if (Math.abs(diff) > threshold) {
         if (diff > 0) {
             // 위로 스와이프 (다음 섹션)
@@ -246,97 +136,103 @@ scwin.handleSwipe = function() {
 };
 
 // 네비게이션 도트 생성
-scwin.createNavigationDots = function() {
+scwin.createNavigationDots = function () {
     var navContainer = document.querySelector('.mbti-navigation');
     if (!navContainer) return;
-    
-    scwin.mbtiTypes.forEach(function(mbti, index) {
-        var dot = document.createElement('div');
+
+    scwin.mbtiTypes.forEach(function (mbti, index) {
+        var dot = document.createElement('fx:group');
         dot.className = 'nav-dot';
         dot.setAttribute('data-index', index);
         dot.setAttribute('title', mbti.type + ' - ' + mbti.title);
-        
+
         // 도트 내부에 텍스트 추가
         var text = document.createElement('span');
         text.className = 'nav-text';
         text.textContent = mbti.type;
         dot.appendChild(text);
-        
-        dot.addEventListener('click', function() {
+
+        dot.addEventListener('click', function () {
             scwin.goToSection(index);
         });
-        
+
         navContainer.appendChild(dot);
     });
 };
 
 // 다음 섹션으로 이동
-scwin.nextSection = function() {
+scwin.nextSection = function () {
     if (scwin.currentSection < scwin.mbtiTypes.length - 1) {
         scwin.goToSection(scwin.currentSection + 1);
+    } else {
+        // 마지막 섹션에서 첫 번째 섹션으로 이동 (무한스크롤)
+        scwin.goToSection(0);
     }
 };
 
 // 이전 섹션으로 이동
-scwin.prevSection = function() {
+scwin.prevSection = function () {
     if (scwin.currentSection > 0) {
         scwin.goToSection(scwin.currentSection - 1);
+    } else {
+        // 첫 번째 섹션에서 마지막 섹션으로 이동 (무한스크롤)
+        scwin.goToSection(scwin.mbtiTypes.length - 1);
     }
 };
 
 // 특정 섹션으로 이동
-scwin.goToSection = function(index) {
+scwin.goToSection = function (index) {
     if (scwin.isAnimating || index === scwin.currentSection) return;
     if (index < 0 || index >= scwin.mbtiTypes.length) return;
-    
+
     scwin.isAnimating = true;
     scwin.currentSection = index;
-    
+
     // 섹션 표시
     scwin.showSection(index);
-    
+
     // 네비게이션 도트 업데이트
     scwin.updateNavigation();
-    
+
     // 애니메이션 종료 후 플래그 해제
-    setTimeout(function() {
+    setTimeout(function () {
         scwin.isAnimating = false;
     }, 800);
 };
 
 // 섹션 표시
-scwin.showSection = function(index) {
+scwin.showSection = function (index) {
     var mbti = scwin.mbtiTypes[index];
     if (!mbti) {
         return;
     }
-    
+
     var sections = document.querySelectorAll('.mbti-section');
-    
+
     // 모든 섹션 숨기기
-    sections.forEach(function(section) {
+    sections.forEach(function (section) {
         section.classList.remove('active');
     });
-    
+
     // 현재 섹션 활성화
     var currentSection = sections[index];
     if (currentSection) {
         currentSection.classList.add('active');
     }
-    
+
     // 배경색 변경 (선택사항)
     scwin.updateBackgroundColor(index);
 };
 
 // 배경색 업데이트
-scwin.updateBackgroundColor = function(index) {
+scwin.updateBackgroundColor = function (index) {
     var colors = [
         '#f5f5f5', '#fafafa', '#f0f0f0', '#f8f8f8',
         '#f5f5f5', '#fafafa', '#f0f0f0', '#f8f8f8',
         '#f5f5f5', '#fafafa', '#f0f0f0', '#f8f8f8',
         '#f5f5f5', '#fafafa', '#f0f0f0', '#f8f8f8'
     ];
-    
+
     var container = document.querySelector('.mbti-wrapper');
     if (container) {
         container.style.backgroundColor = colors[index % colors.length];
@@ -344,15 +240,24 @@ scwin.updateBackgroundColor = function(index) {
 };
 
 // 네비게이션 업데이트
-scwin.updateNavigation = function() {
+scwin.updateNavigation = function () {
     var dots = document.querySelectorAll('.nav-dot');
-    dots.forEach(function(dot, index) {
+    dots.forEach(function (dot, index) {
         if (index === scwin.currentSection) {
             dot.classList.add('active');
         } else {
             dot.classList.remove('active');
         }
     });
+};
+
+scwin.btn_home_onclick = function (e) {
+    $p.url("MainPage.xml");
+};
+
+scwin.btn_back_onclick = function (e) {
+    history.back();
+    
 };
 ]]></script>
         <style type="text/css"><![CDATA[
@@ -491,9 +396,9 @@ scwin.updateNavigation = function() {
     top: 50%;
     transform: translateY(-50%);
     z-index: 1000;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px 10px;
 }
 
 .nav-dot {
@@ -656,6 +561,82 @@ scwin.updateNavigation = function() {
         height: 200px;
     }
 }
+
+/* 하단 버튼 스타일 */
+.bottom-buttons {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1001;
+    display: flex;
+    gap: 20px;
+}
+
+.btn-back, .btn-home {
+    padding: 12px 24px;
+    font-size: 16px;
+    font-weight: 600;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    min-width: 100px;
+}
+
+.btn-back {
+    background-color: #6c757d;
+    color: white;
+}
+
+.btn-back:hover {
+    background-color: #5a6268;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+}
+
+.btn-home {
+    background-color: #007bff;
+    color: white;
+}
+
+.btn-home:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+}
+
+.btn-back:active, .btn-home:active {
+    transform: translateY(0);
+}
+
+/* 모바일 반응형 */
+@media (max-width: 768px) {
+    .bottom-buttons {
+        bottom: 20px;
+        gap: 15px;
+    }
+    
+    .btn-back, .btn-home {
+        padding: 10px 20px;
+        font-size: 14px;
+        min-width: 80px;
+    }
+}
+
+@media (max-width: 480px) {
+    .bottom-buttons {
+        bottom: 15px;
+        gap: 10px;
+    }
+    
+    .btn-back, .btn-home {
+        padding: 8px 16px;
+        font-size: 13px;
+        min-width: 70px;
+    }
+}
 ]]></style>
     </head>
     <body ev:onpageload="scwin.onpageload">
@@ -666,13 +647,13 @@ scwin.updateNavigation = function() {
                     <xf:group class="section-content">
                         <xf:group class="mbti-info">
                             <w2:textbox class="mbti-type" label="ARTF"></w2:textbox>
-                            <w2:textbox class="mbti-title" label="구조적 팀 빌더"></w2:textbox>
-                            <w2:textbox class="mbti-description" label="체계적이고 완벽한 설계를 추구하면서 기존 코드를 개선하고 최적화합니다. 팀과의 소통과 협업을 중요시하며, 새로운 기능을 창의적으로 개발하는 것을 즐깁니다."></w2:textbox>
+                            <w2:textbox class="mbti-title" label="설계의 마에스트로"></w2:textbox>
+                            <w2:textbox class="mbti-description" label="완벽한 아키텍처를 바탕으로 팀과 함께 레거시 시스템을 혁신적인 기능으로 탈바꿈시키는 전략가입니다. 코드 리뷰에서는 구조적 개선점을 날카롭게 지적하지만, 동시에 팀원들의 창의적 아이디어를 하나로 엮어내는 마법을 부립니다."></w2:textbox>
                             <xf:group tagname="ul" class="mbti-characteristics">
-                                <w2:textbox tagname="li" class="characteristic-item" label="체계적인 설계 추구"></w2:textbox>
-                                <w2:textbox tagname="li" class="characteristic-item" label="코드 개선 및 최적화"></w2:textbox>
-                                <w2:textbox tagname="li" class="characteristic-item" label="팀워크 중시"></w2:textbox>
-                                <w2:textbox tagname="li" class="characteristic-item" label="창의적 기능 개발"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="시스템 전체를 조망하는 통찰력"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="레거시 코드 현대화 전문가"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="팀 아키텍처 리딩과 멘토링"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="기능 설계와 구현의 완벽한 조화"></w2:textbox>
                             </xf:group>
                         </xf:group>
                         <xf:group class="mbti-image-container">
@@ -685,13 +666,13 @@ scwin.updateNavigation = function() {
                     <xf:group class="section-content">
                         <xf:group class="mbti-info">
                             <w2:textbox class="mbti-type" label="ARTD"></w2:textbox>
-                            <w2:textbox class="mbti-title" label="체계적 팀 디버거"></w2:textbox>
-                            <w2:textbox class="mbti-description" label="완벽한 설계를 추구하며 기존 코드를 개선합니다. 팀과의 협업을 통해 버그를 발견하고 해결하는 데 보람을 느낍니다."></w2:textbox>
+                            <w2:textbox class="mbti-title" label="완벽주의 코드 닥터"></w2:textbox>
+                            <w2:textbox class="mbti-description" label="체계적인 접근으로 기존 코드의 숨겨진 문제점을 찾아내고, 팀과의 협업을 통해 근본적인 해결책을 제시합니다. 버그 리포트를 받으면 단순한 임시방편이 아닌, 시스템 전체의 안정성을 높이는 완전한 치료법을 찾아냅니다."></w2:textbox>
                             <xf:group tagname="ul" class="mbti-characteristics">
-                                <w2:textbox tagname="li" class="characteristic-item" label="체계적 접근"></w2:textbox>
-                                <w2:textbox tagname="li" class="characteristic-item" label="코드 리팩토링"></w2:textbox>
-                                <w2:textbox tagname="li" class="characteristic-item" label="협업 중시"></w2:textbox>
-                                <w2:textbox tagname="li" class="characteristic-item" label="버그 해결 전문"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="근본 원인 분석의 달인"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="코드 품질 가디언"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="팀 기반 디버깅 프로세스 구축"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="예방적 버그 헌팅 시스템"></w2:textbox>
                             </xf:group>
                         </xf:group>
                         <xf:group class="mbti-image-container">
@@ -703,13 +684,13 @@ scwin.updateNavigation = function() {
                     <xf:group class="section-content">
                         <xf:group class="mbti-info">
                             <w2:textbox class="mbti-type" label="ARSF"></w2:textbox>
-                            <w2:textbox class="mbti-title" label="완벽주의 솔로 창작자"></w2:textbox>
-                            <w2:textbox class="mbti-description" label="체계적이고 완벽한 설계를 추구하며 혼자서 집중하여 일합니다. 기존 코드를 개선하면서 새로운 기능을 창의적으로 개발합니다."></w2:textbox>
+                            <w2:textbox class="mbti-title" label="고독한 설계 장인"></w2:textbox>
+                            <w2:textbox class="mbti-description" label="조용한 공간에서 완벽한 설계 문서와 함께 기존 코드를 예술작품으로 승화시키는 장인입니다. 혼자만의 시간 속에서 새로운 기능의 청사진을 그리고, 한 줄 한 줄 정성스럽게 리팩토링하여 아름다운 코드를 만들어냅니다."></w2:textbox>
                             <xf:group tagname="ul" class="mbti-characteristics">
-                                <w2:textbox tagname="li" class="characteristic-item" label="완벽한 설계"></w2:textbox>
-                                <w2:textbox tagname="li" class="characteristic-item" label="독립적 작업"></w2:textbox>
-                                <w2:textbox tagname="li" class="characteristic-item" label="코드 개선"></w2:textbox>
-                                <w2:textbox tagname="li" class="characteristic-item" label="창의적 개발"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="완벽한 아키텍처 설계"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="심미적 코드 리팩토링"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="독립적 창작 프로세스"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="기능과 구조의 우아한 통합"></w2:textbox>
                             </xf:group>
                         </xf:group>
                         <xf:group class="mbti-image-container">
@@ -721,13 +702,13 @@ scwin.updateNavigation = function() {
                     <xf:group class="section-content">
                         <xf:group class="mbti-info">
                             <w2:textbox class="mbti-type" label="ARSD"></w2:textbox>
-                            <w2:textbox class="mbti-title" label="체계적 솔로 수정자"></w2:textbox>
-                            <w2:textbox class="mbti-description" label="완벽한 설계를 추구하며 개인적으로 일하는 것을 선호합니다. 기존 코드를 개선하고 버그를 찾아 해결하는 데 집중합니다."></w2:textbox>
+                            <w2:textbox class="mbti-title" label="침묵의 버그 헌터"></w2:textbox>
+                            <w2:textbox class="mbti-description" label="조용히 홀로 앉아 복잡한 시스템의 미로 같은 코드를 헤쳐나가며, 숨어있는 버그들을 하나씩 찾아내는 탐정입니다. 완벽한 설계 원칙에 따라 체계적으로 문제를 추적하고, 조용하지만 확실한 해결책을 제시합니다."></w2:textbox>
                             <xf:group tagname="ul" class="mbti-characteristics">
-                                <w2:textbox tagname="li" class="characteristic-item" label="체계적 설계"></w2:textbox>
-                                <w2:textbox tagname="li" class="characteristic-item" label="독립적 작업"></w2:textbox>
-                                <w2:textbox tagname="li" class="characteristic-item" label="코드 최적화"></w2:textbox>
-                                <w2:textbox tagname="li" class="characteristic-item" label="버그 수정"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="체계적 버그 추적 시스템"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="독립적 문제 해결 능력"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="심층 코드 분석 전문가"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="조용하지만 확실한 성과"></w2:textbox>
                             </xf:group>
                         </xf:group>
                         <xf:group class="mbti-image-container">
@@ -739,13 +720,13 @@ scwin.updateNavigation = function() {
                     <xf:group class="section-content">
                         <xf:group class="mbti-info">
                             <w2:textbox class="mbti-type" label="AITF"></w2:textbox>
-                            <w2:textbox class="mbti-title" label="혁신적 팀 개척자"></w2:textbox>
-                            <w2:textbox class="mbti-description" label="체계적인 설계를 추구하면서 새로운 기술에 과감하게 도전합니다. 팀과 협업하며 새로운 기능을 창의적으로 개발합니다."></w2:textbox>
+                            <w2:textbox class="mbti-title" label="혁신적 팀 빌더"></w2:textbox>
+                            <w2:textbox class="mbti-description" label="최신 기술 트렌드를 팀에 도입하며, 기존의 틀을 깨뜨리는 혁신적인 기능을 함께 만들어나가는 미래 지향적 리더입니다. 새로운 프레임워크나 도구를 두려워하지 않고, 팀원들과 함께 실험하며 차세대 솔루션을 창조합니다."></w2:textbox>
                             <xf:group tagname="ul" class="mbti-characteristics">
-                                <w2:textbox tagname="li" class="characteristic-item" label="체계적 설계"></w2:textbox>
-                                <w2:textbox tagname="li" class="characteristic-item" label="신기술 도입"></w2:textbox>
-                                <w2:textbox tagname="li" class="characteristic-item" label="팀 협업"></w2:textbox>
-                                <w2:textbox tagname="li" class="characteristic-item" label="혁신적 개발"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="신기술 도입 및 전파"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="혁신적 기능 아키텍처 설계"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="팀 기반 실험과 학습 문화"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="미래 지향적 기술 전략"></w2:textbox>
                             </xf:group>
                         </xf:group>
                         <xf:group class="mbti-image-container">
@@ -757,13 +738,13 @@ scwin.updateNavigation = function() {
                     <xf:group class="section-content">
                         <xf:group class="mbti-info">
                             <w2:textbox class="mbti-type" label="AITD"></w2:textbox>
-                            <w2:textbox class="mbti-title" label="미래지향 팀 디버거"></w2:textbox>
-                            <w2:textbox class="mbti-description" label="완벽한 설계를 추구하며 새로운 기술로 팀과 함께 안정적인 시스템을 구축합니다. 버그를 발견하고 해결하는 과정을 즐깁니다."></w2:textbox>
+                            <w2:textbox class="mbti-title" label="차세대 문제 해결사"></w2:textbox>
+                            <w2:textbox class="mbti-description" label="최신 디버깅 도구와 혁신적인 접근 방식으로 팀과 함께 복잡한 문제들을 해결해나가는 기술 혁신가입니다. AI 도구나 새로운 모니터링 시스템을 활용하여 기존에는 찾기 어려웠던 문제들을 척척 해결해냅니다."></w2:textbox>
                             <xf:group tagname="ul" class="mbti-characteristics">
-                                <w2:textbox tagname="li" class="characteristic-item" label="체계적 접근"></w2:textbox>
-                                <w2:textbox tagname="li" class="characteristic-item" label="신기술 활용"></w2:textbox>
-                                <w2:textbox tagname="li" class="characteristic-item" label="팀워크"></w2:textbox>
-                                <w2:textbox tagname="li" class="characteristic-item" label="시스템 안정화"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="차세대 디버깅 툴 마스터"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="혁신적 문제 해결 방법론"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="팀 기반 기술 실험"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="미래형 시스템 모니터링"></w2:textbox>
                             </xf:group>
                         </xf:group>
                         <xf:group class="mbti-image-container">
@@ -775,13 +756,13 @@ scwin.updateNavigation = function() {
                     <xf:group class="section-content">
                         <xf:group class="mbti-info">
                             <w2:textbox class="mbti-type" label="AISF"></w2:textbox>
-                            <w2:textbox class="mbti-title" label="혁신적 솔로 창작자"></w2:textbox>
-                            <w2:textbox class="mbti-description" label="체계적인 설계를 추구하며 새로운 기술에 도전합니다. 혼자서 집중하여 창의적인 기능을 개발하는 것을 선호합니다."></w2:textbox>
+                            <w2:textbox class="mbti-title" label="독창적 혁신가"></w2:textbox>
+                            <w2:textbox class="mbti-description" label="조용한 연구실에서 최신 기술을 탐구하며, 아무도 시도하지 않은 창의적인 기능을 혼자서 묵묵히 개발해내는 기술 아티스트입니다. 새로운 알고리즘이나 패러다임을 연구하여 독창적인 솔루션을 창조하는 것이 삶의 보람입니다."></w2:textbox>
                             <xf:group tagname="ul" class="mbti-characteristics">
-                                <w2:textbox tagname="li" class="characteristic-item" label="완벽한 설계"></w2:textbox>
-                                <w2:textbox tagname="li" class="characteristic-item" label="신기술 탐구"></w2:textbox>
-                                <w2:textbox tagname="li" class="characteristic-item" label="독립적 작업"></w2:textbox>
-                                <w2:textbox tagname="li" class="characteristic-item" label="창의적 개발"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="독창적 기술 연구"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="혁신적 알고리즘 개발"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="개인적 기술 실험실 운영"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="미래 지향적 창작 활동"></w2:textbox>
                             </xf:group>
                         </xf:group>
                         <xf:group class="mbti-image-container">
@@ -793,13 +774,13 @@ scwin.updateNavigation = function() {
                     <xf:group class="section-content">
                         <xf:group class="mbti-info">
                             <w2:textbox class="mbti-type" label="AISD"></w2:textbox>
-                            <w2:textbox class="mbti-title" label="혁신적 솔로 해결사"></w2:textbox>
-                            <w2:textbox class="mbti-description" label="체계적인 설계와 새로운 기술을 추구하며 혼자서 일합니다. 버그를 발견하고 해결하는 데 집중합니다."></w2:textbox>
+                            <w2:textbox class="mbti-title" label="미래지향 솔로 파이터"></w2:textbox>
+                            <w2:textbox class="mbti-description" label="최신 기술과 도구를 무기로 삼아 혼자서 복잡한 버그들과 맞서 싸우는 기술 전사입니다. 기계학습 기반 디버깅이나 자동화된 테스팅 도구를 활용하여, 전통적인 방법으로는 해결하기 어려운 문제들을 척척 해결해냅니다."></w2:textbox>
                             <xf:group tagname="ul" class="mbti-characteristics">
-                                <w2:textbox tagname="li" class="characteristic-item" label="체계적 설계"></w2:textbox>
-                                <w2:textbox tagname="li" class="characteristic-item" label="신기술 도입"></w2:textbox>
-                                <w2:textbox tagname="li" class="characteristic-item" label="독립적 작업"></w2:textbox>
-                                <w2:textbox tagname="li" class="characteristic-item" label="문제 해결"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="AI 기반 버그 디텍션"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="자동화된 문제 해결 시스템"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="독립적 기술 도구 개발"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="미래형 디버깅 워크플로우"></w2:textbox>
                             </xf:group>
                         </xf:group>
                         <xf:group class="mbti-image-container">
@@ -811,13 +792,13 @@ scwin.updateNavigation = function() {
                     <xf:group class="section-content">
                         <xf:group class="mbti-info">
                             <w2:textbox class="mbti-type" label="BRTF"></w2:textbox>
-                            <w2:textbox class="mbti-title" label="실용적 팀 개선자"></w2:textbox>
-                            <w2:textbox class="mbti-description" label="빠른 구현과 실용성을 선호하며 기존 코드를 개선합니다. 팀과 협업하여 새로운 기능을 창의적으로 개발합니다."></w2:textbox>
+                            <w2:textbox class="mbti-title" label="실전 파이터"></w2:textbox>
+                            <w2:textbox class="mbti-description" label="빠른 프로토타이핑과 실용적인 접근으로 팀과 함께 기존 시스템을 개선하며 즉시 사용 가능한 기능들을 만들어내는 실전형 개발자입니다. '일단 돌아가게 만들고 나서 개선하자'는 철학으로, 빠른 iteration을 통해 완성도를 높여갑니다."></w2:textbox>
                             <xf:group tagname="ul" class="mbti-characteristics">
-                                <w2:textbox tagname="li" class="characteristic-item" label="빠른 구현"></w2:textbox>
-                                <w2:textbox tagname="li" class="characteristic-item" label="코드 개선"></w2:textbox>
-                                <w2:textbox tagname="li" class="characteristic-item" label="팀 협업"></w2:textbox>
-                                <w2:textbox tagname="li" class="characteristic-item" label="실용적 개발"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="빠른 프로토타이핑"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="실용적 코드 개선"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="팀 기반 빠른 개발"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="즉시 배포 가능한 기능 구현"></w2:textbox>
                             </xf:group>
                         </xf:group>
                         <xf:group class="mbti-image-container">
@@ -829,13 +810,13 @@ scwin.updateNavigation = function() {
                     <xf:group class="section-content">
                         <xf:group class="mbti-info">
                             <w2:textbox class="mbti-type" label="BRTD"></w2:textbox>
-                            <w2:textbox class="mbti-title" label="실용적 팀 수정자"></w2:textbox>
-                            <w2:textbox class="mbti-description" label="빠른 구현을 추구하며 기존 코드를 개선합니다. 팀과 함께 버그를 발견하고 해결하는 데 집중합니다."></w2:textbox>
+                            <w2:textbox class="mbti-title" label="즉석 문제 해결사"></w2:textbox>
+                            <w2:textbox class="mbti-description" label="빠른 판단력과 실용적인 접근으로 팀과 함께 현장에서 발생하는 문제들을 즉시 해결하는 트러블슈터입니다. 완벽한 해결책보다는 지금 당장 서비스를 살릴 수 있는 현실적인 방법을 찾아내어 위기를 모면시키는 전문가입니다."></w2:textbox>
                             <xf:group tagname="ul" class="mbti-characteristics">
-                                <w2:textbox tagname="li" class="characteristic-item" label="빠른 구현"></w2:textbox>
-                                <w2:textbox tagname="li" class="characteristic-item" label="코드 최적화"></w2:textbox>
-                                <w2:textbox tagname="li" class="characteristic-item" label="팀워크"></w2:textbox>
-                                <w2:textbox tagname="li" class="characteristic-item" label="버그 수정"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="긴급 상황 대응 전문가"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="실용적 버그 픽스"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="팀 기반 빠른 문제 해결"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="현장 중심적 사고"></w2:textbox>
                             </xf:group>
                         </xf:group>
                         <xf:group class="mbti-image-container">
@@ -847,13 +828,13 @@ scwin.updateNavigation = function() {
                     <xf:group class="section-content">
                         <xf:group class="mbti-info">
                             <w2:textbox class="mbti-type" label="BRSF"></w2:textbox>
-                            <w2:textbox class="mbti-title" label="실용적 솔로 창작자"></w2:textbox>
-                            <w2:textbox class="mbti-description" label="빠른 구현과 실용성을 추구하며 혼자서 일합니다. 기존 코드를 개선하면서 새로운 기능을 개발합니다."></w2:textbox>
+                            <w2:textbox class="mbti-title" label="실용주의 크리에이터"></w2:textbox>
+                            <w2:textbox class="mbti-description" label="혼자서 빠르게 기존 코드를 개선하고 실용적인 새 기능을 척챩 만들어내는 원맨 팩토리입니다. 복잡한 설계보다는 '지금 필요한 것'에 집중하여, 사용자가 바로 체감할 수 있는 개선사항들을 연달아 배포합니다."></w2:textbox>
                             <xf:group tagname="ul" class="mbti-characteristics">
-                                <w2:textbox tagname="li" class="characteristic-item" label="빠른 구현"></w2:textbox>
-                                <w2:textbox tagname="li" class="characteristic-item" label="독립적 작업"></w2:textbox>
-                                <w2:textbox tagname="li" class="characteristic-item" label="코드 개선"></w2:textbox>
-                                <w2:textbox tagname="li" class="characteristic-item" label="기능 개발"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="빠른 개인 개발 사이클"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="실용성 중심 기능 설계"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="독립적 코드 개선"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="사용자 중심적 사고"></w2:textbox>
                             </xf:group>
                         </xf:group>
                         <xf:group class="mbti-image-container">
@@ -865,13 +846,13 @@ scwin.updateNavigation = function() {
                     <xf:group class="section-content">
                         <xf:group class="mbti-info">
                             <w2:textbox class="mbti-type" label="BRSD"></w2:textbox>
-                            <w2:textbox class="mbti-title" label="실용적 안정성 추구자"></w2:textbox>
-                            <w2:textbox class="mbti-description" label="빠른 구현과 실용성을 선호하며 검증된 방법으로 안정적인 솔루션을 만듭니다. 혼자서 버그를 해결하는 데 집중합니다."></w2:textbox>
+                            <w2:textbox class="mbti-title" label="고속 버그 킬러"></w2:textbox>
+                            <w2:textbox class="mbti-description" label="빠른 직감과 경험을 바탕으로 혼자서 버그들을 순식간에 해치우는 디버깅의 달인입니다. 복잡한 분석 도구보다는 예리한 관찰력과 풍부한 경험으로 문제의 핵심을 바로 찾아내어 신속하게 해결합니다."></w2:textbox>
                             <xf:group tagname="ul" class="mbti-characteristics">
-                                <w2:textbox tagname="li" class="characteristic-item" label="실용적 접근"></w2:textbox>
-                                <w2:textbox tagname="li" class="characteristic-item" label="안정성 추구"></w2:textbox>
-                                <w2:textbox tagname="li" class="characteristic-item" label="독립적 작업"></w2:textbox>
-                                <w2:textbox tagname="li" class="characteristic-item" label="버그 해결"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="직감적 버그 추적"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="경험 기반 빠른 진단"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="독립적 문제 해결"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="실용적 수정 방법"></w2:textbox>
                             </xf:group>
                         </xf:group>
                         <xf:group class="mbti-image-container">
@@ -884,12 +865,12 @@ scwin.updateNavigation = function() {
                         <xf:group class="mbti-info">
                             <w2:textbox class="mbti-type" label="BITF"></w2:textbox>
                             <w2:textbox class="mbti-title" label="창의적 스피드 러너"></w2:textbox>
-                            <w2:textbox class="mbti-description" label="빠른 구현을 추구하며 새로운 기술에 도전합니다. 팀과 협업하여 혁신적인 기능을 빠르게 개발합니다."></w2:textbox>
+                            <w2:textbox class="mbti-description" label="최신 기술을 빠르게 습득하여 팀과 함께 혁신적인 기능을 신속하게 구현해내는 기술 스프린터입니다. 새로운 프레임워크나 라이브러리가 나오면 바로 적용해보며, 팀원들과 함께 빠른 실험을 통해 놀라운 결과물을 만들어냅니다."></w2:textbox>
                             <xf:group tagname="ul" class="mbti-characteristics">
-                                <w2:textbox tagname="li" class="characteristic-item" label="빠른 구현"></w2:textbox>
-                                <w2:textbox tagname="li" class="characteristic-item" label="신기술 도입"></w2:textbox>
-                                <w2:textbox tagname="li" class="characteristic-item" label="팀 협업"></w2:textbox>
-                                <w2:textbox tagname="li" class="characteristic-item" label="혁신적 개발"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="신기술 빠른 도입"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="혁신적 빠른 프로토타이핑"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="팀 기반 기술 실험"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="스피드 개발 문화 조성"></w2:textbox>
                             </xf:group>
                         </xf:group>
                         <xf:group class="mbti-image-container">
@@ -901,13 +882,13 @@ scwin.updateNavigation = function() {
                     <xf:group class="section-content">
                         <xf:group class="mbti-info">
                             <w2:textbox class="mbti-type" label="BITD"></w2:textbox>
-                            <w2:textbox class="mbti-title" label="혁신적 팀 해결사"></w2:textbox>
-                            <w2:textbox class="mbti-description" label="빠른 구현과 새로운 기술을 추구하며 팀과 함께 일합니다. 버그를 빠르게 발견하고 해결합니다."></w2:textbox>
+                            <w2:textbox class="mbti-title" label="번개같은 해결사"></w2:textbox>
+                            <w2:textbox class="mbti-description" label="최신 디버깅 도구와 기법을 활용하여 팀과 함께 복잡한 문제들을 번개처럼 빠르게 해결하는 기술 닌자입니다. 새로운 모니터링 툴이나 분석 기법을 바로 도입하여, 기존에는 며칠 걸렸던 문제들을 몇 시간 만에 해결해냅니다."></w2:textbox>
                             <xf:group tagname="ul" class="mbti-characteristics">
-                                <w2:textbox tagname="li" class="characteristic-item" label="빠른 구현"></w2:textbox>
-                                <w2:textbox tagname="li" class="characteristic-item" label="신기술 활용"></w2:textbox>
-                                <w2:textbox tagname="li" class="characteristic-item" label="팀워크"></w2:textbox>
-                                <w2:textbox tagname="li" class="characteristic-item" label="빠른 디버깅"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="최신 디버깅 툴 활용"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="빠른 기술 적응력"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="팀 기반 신속 대응"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="혁신적 문제 해결 속도"></w2:textbox>
                             </xf:group>
                         </xf:group>
                         <xf:group class="mbti-image-container">
@@ -919,13 +900,13 @@ scwin.updateNavigation = function() {
                     <xf:group class="section-content">
                         <xf:group class="mbti-info">
                             <w2:textbox class="mbti-type" label="BISF"></w2:textbox>
-                            <w2:textbox class="mbti-title" label="혁신적 스피드 개발자"></w2:textbox>
-                            <w2:textbox class="mbti-description" label="빠른 구현과 새로운 기술을 추구하며 혼자서 일합니다. 혁신적인 방법으로 빠르게 기능을 구현합니다."></w2:textbox>
+                            <w2:textbox class="mbti-title" label="창조적 솔로 러너"></w2:textbox>
+                            <w2:textbox class="mbti-description" label="최신 기술을 혼자서 탐구하며 독창적이고 혁신적인 기능을 빠르게 구현해내는 기술 아티스트입니다. 새로운 기술 트렌드를 남들보다 빨리 캐치하여, 아무도 생각하지 못한 창의적인 솔루션을 혼자서 뚵뚵 만들어냅니다."></w2:textbox>
                             <xf:group tagname="ul" class="mbti-characteristics">
-                                <w2:textbox tagname="li" class="characteristic-item" label="빠른 구현"></w2:textbox>
-                                <w2:textbox tagname="li" class="characteristic-item" label="신기술 탐구"></w2:textbox>
-                                <w2:textbox tagname="li" class="characteristic-item" label="독립적 작업"></w2:textbox>
-                                <w2:textbox tagname="li" class="characteristic-item" label="혁신적 개발"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="독창적 기술 실험"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="빠른 혁신 구현"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="개인적 기술 연구"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="창의적 솔루션 개발"></w2:textbox>
                             </xf:group>
                         </xf:group>
                         <xf:group class="mbti-image-container">
@@ -937,13 +918,13 @@ scwin.updateNavigation = function() {
                     <xf:group class="section-content">
                         <xf:group class="mbti-info">
                             <w2:textbox class="mbti-type" label="BISD"></w2:textbox>
-                            <w2:textbox class="mbti-title" label="빠른 문제 해결사"></w2:textbox>
-                            <w2:textbox class="mbti-description" label="빠른 구현과 새로운 기술을 추구하며 혼자서 일합니다. 버그를 빠르게 발견하고 해결하는 데 집중합니다."></w2:textbox>
+                            <w2:textbox class="mbti-title" label="플래시 픽서"></w2:textbox>
+                            <w2:textbox class="mbti-description" label="최신 기술과 도구를 무기로 삼아 혼자서 복잡한 버그들을 순식간에 해결해버리는 기술 닌자입니다. 자동화 스크립트나 AI 도구를 활용하여 전통적인 디버깅으로는 해결하기 어려운 문제들을 번개같이 처리합니다."></w2:textbox>
                             <xf:group tagname="ul" class="mbti-characteristics">
-                                <w2:textbox tagname="li" class="characteristic-item" label="빠른 구현"></w2:textbox>
-                                <w2:textbox tagname="li" class="characteristic-item" label="신기술 도입"></w2:textbox>
-                                <w2:textbox tagname="li" class="characteristic-item" label="독립적 작업"></w2:textbox>
-                                <w2:textbox tagname="li" class="characteristic-item" label="빠른 문제해결"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="자동화된 버그 디텍션"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="혁신적 디버깅 기법"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="독립적 고속 문제 해결"></w2:textbox>
+                                <w2:textbox tagname="li" class="characteristic-item" label="미래형 수정 도구 활용"></w2:textbox>
                             </xf:group>
                         </xf:group>
                         <xf:group class="mbti-image-container">
@@ -954,6 +935,12 @@ scwin.updateNavigation = function() {
             </xf:group>
             <!-- 네비게이션 -->
             <xf:group class="mbti-navigation"></xf:group>
+            
+            <!-- 하단 버튼들 -->
+            <xf:group class="bottom-buttons">
+                <w2:textbox class="btn-back" tagname="button" label="뒤로가기" onclick="scwin.goBack()" id="btn_back" ev:ondblclick="scwin.btn_back_ondblclick" ev:onclick="scwin.btn_back_onclick"></w2:textbox>
+                <w2:textbox class="btn-home" tagname="button" label="메인으로" onclick="scwin.goHome()" id="btn_home" ev:onclick="scwin.btn_home_onclick"></w2:textbox>
+            </xf:group>
         </xf:group>
     </body>
 </html>

@@ -516,7 +516,7 @@ scwin.sbm_selectPostList_submitdone = function (e) {
     var elHeader = e.responseJSON.elHeader;
     if (elHeader == null || elHeader == "" || elHeader == "undefined" || elHeader.resSuc == false) {
         console.error("공고 목록 조회 에러:", elHeader);
-        alert(`에러코드 : ${elHeader.resCode}\n에러메시지 : ${elHeader.resMsg}`);
+        $c.win.alert(`에러코드 : ${elHeader.resCode}\n에러메시지 : ${elHeader.resMsg}`);
         scwin.showEmptyState();
         return false;
     }
@@ -527,12 +527,12 @@ scwin.sbm_selectPostList_submitdone = function (e) {
         var firstPost = elData.postVoList[0];
         console.log("첫 번째 공고 Keys:", Object.keys(firstPost));
         console.log("첫 번째 공고 전체:", firstPost);
-        
+
         // 이미지 관련 필드 검사
         var imageRelatedFields = [];
-        Object.keys(firstPost).forEach(function(key) {
-            if (key.toLowerCase().includes('image') || 
-                key.toLowerCase().includes('file') || 
+        Object.keys(firstPost).forEach(function (key) {
+            if (key.toLowerCase().includes('image') ||
+                key.toLowerCase().includes('file') ||
                 key.toLowerCase().includes('photo') ||
                 key.toLowerCase().includes('picture')) {
                 imageRelatedFields.push(key + ': ' + firstPost[key]);
@@ -626,17 +626,17 @@ scwin.createJobCard = function (jobData, index) {
     // 이미지 경로 결정 (공고 이미지 → 회사 로고 → 기본 이미지 순)
     var imagePath = '';
     var imageAlt = '';
-    
+
     // 1순위: 공고에 업로드된 이미지 (PostCreate에서 설정한 파일)
     if (jobData.jobImageFileName && jobData.jobImageFileName.trim() !== "" && jobData.jobImageFileName !== "null") {
         imagePath = '/InsWebApp/images/company/' + jobData.jobImageFileName;
         imageAlt = (jobData.title || '공고') + ' 이미지';
-    } 
+    }
     // 2순위: 회사 로고 (회사별 개별 로고)
     else if (jobData.logoFileName && jobData.logoFileName.trim() !== "" && jobData.logoFileName !== "null") {
         imagePath = '/InsWebApp/images/company/' + jobData.logoFileName;
         imageAlt = (jobData.companyName || '회사') + ' 로고';
-    } 
+    }
     // 3순위: 기본 이미지
     else {
         imagePath = '/InsWebApp/images/ws5/default_company.png';
@@ -645,7 +645,7 @@ scwin.createJobCard = function (jobData, index) {
 
     // 이미지 HTML 생성 (fallback chain 사용)
     var imageHtml = '<img src="' + imagePath + '" alt="' + imageAlt + '" ' +
-                   'onerror="this.onerror=null;this.src=\'/InsWebApp/images/ws5/default_company.png\';" />';
+        'onerror="this.onerror=null;this.src=\'/InsWebApp/images/ws5/default_company.png\';" />';
 
     card.innerHTML =
         '<xf:group class="job-image">' + imageHtml + '</xf:group>' +
@@ -654,8 +654,8 @@ scwin.createJobCard = function (jobData, index) {
         '<xf:group class="job-title">' + (jobData.title || '제목없음') + '</xf:group>' +
         '</xf:group>' +
         '<xf:group class="job-company" onclick="scwin.viewCompany(event, \'' + jobData.companyId + '\')">' +
-        (jobData.logoFileName && jobData.logoFileName.trim() !== "" && jobData.logoFileName !== "null" ? 
-            '<img src="/InsWebApp/images/company/' + encodeURIComponent(jobData.logoFileName) + '" alt="' + (jobData.companyName || '회사') + ' 로고" class="company-logo" onerror="this.src=\'/InsWebApp/images/ws5/default_company.png\'" />' : 
+        (jobData.logoFileName && jobData.logoFileName.trim() !== "" && jobData.logoFileName !== "null" ?
+            '<img src="/InsWebApp/images/company/' + encodeURIComponent(jobData.logoFileName) + '" alt="' + (jobData.companyName || '회사') + ' 로고" class="company-logo" onerror="this.src=\'/InsWebApp/images/ws5/default_company.png\'" />' :
             '<img src="/InsWebApp/images/ws5/default_company.png" alt="' + (jobData.companyName || '회사') + ' 기본 로고" class="company-logo" />') +
         '<span>' + (jobData.companyName || '회사명 정보없음') + '</span>' +
         '</xf:group>' +
@@ -711,12 +711,10 @@ scwin.showEmptyState = function () {
  * 공고 상세보기
  */
 scwin.openPostDetail = function (jobPostingId) {
-    console.log("=== 공고 상세보기 시작 ===");
-    console.log("클릭된 공고 ID:", jobPostingId);
 
     if (!jobPostingId || jobPostingId.trim() === "") {
         console.error("공고 ID가 없습니다.");
-        alert("선택된 공고의 정보를 찾을 수 없습니다.");
+        $c.win.alert("선택된 공고의 정보를 찾을 수 없습니다.");
         return;
     }
 
@@ -738,7 +736,7 @@ scwin.openPostDetail = function (jobPostingId) {
         console.log("✅ 페이지 이동 요청 완료");
     } catch (error) {
         console.error("❌ 페이지 이동 중 오류:", error);
-        alert("페이지 이동 중 오류가 발생했습니다: " + error.message);
+        $c.win.alert("페이지 이동 중 오류가 발생했습니다: " + error.message);
     }
 };
 
@@ -748,10 +746,10 @@ scwin.openPostDetail = function (jobPostingId) {
 scwin.handleImageError = function (img, companyName, companyId) {
     console.log("❌ 이미지 로딩 실패:", img.src);
     console.log("회사명:", companyName, "회사ID:", companyId);
-    
+
     var currentSrc = img.src;
     var nextImageSrc = '';
-    
+
     // 현재 실패한 이미지 유형 판단 및 다음 우선순위 이미지 설정
     if (currentSrc.indexOf('/images/company/') !== -1 && currentSrc.indexOf('.png') === -1) {
         // 공고 이미지 실패 → 회사 로고 시도
@@ -766,14 +764,14 @@ scwin.handleImageError = function (img, companyName, companyId) {
         // 회사 로고 실패 → 기본 이미지 시도
         nextImageSrc = '/InsWebApp/images/ws5/default_company.png';
         console.log("회사 로고 실패 → 기본 이미지 시도:", nextImageSrc);
-    } 
-    
+    }
+
     // 다음 이미지 시도
     if (nextImageSrc && nextImageSrc !== currentSrc) {
         img.src = nextImageSrc;
         return;
     }
-    
+
     if (img.parentNode) {
         img.parentNode.replaceChild(placeholder, img);
     }
@@ -784,23 +782,23 @@ scwin.handleImageError = function (img, companyName, companyId) {
  */
 scwin.handleSimpleImageError = function (img, companyId) {
     console.log("❌ 이미지 로딩 실패:", img.src);
-    
+
     var currentSrc = img.src;
-    
+
     // 공고 이미지 실패 → 회사 로고 시도
     if (currentSrc.indexOf('/images/company/') !== -1 && currentSrc.indexOf('.png') === -1) {
         if (companyId && companyId.trim() !== '') {
             console.log("공고 이미지 실패 → 회사 로고 시도");
-            img.onerror = function() { 
+            img.onerror = function () {
                 console.log("회사 로고도 실패 → 기본 이미지 시도");
-                this.onerror = null; 
-                this.src = '/InsWebApp/images/ws5/default_company.png'; 
+                this.onerror = null;
+                this.src = '/InsWebApp/images/ws5/default_company.png';
             };
             img.src = '/InsWebApp/images/company/' + companyId + '.png';
             return;
         }
     }
-    
+
     // 그 외 모든 경우 → 기본 이미지
     console.log("기본 이미지로 fallback");
     img.onerror = null;
@@ -977,7 +975,7 @@ scwin.slb_dev_mbti_onselected = function () {
     // 쿠키에서 userMbti 가져오기
     var userInfoCookie = WebSquare.cookie.getCookie("userInfo");
     if (!userInfoCookie) {
-         alert("로그인 후 사용가능한 기능입니다.");
+        $c.win.alert("로그인 후 사용가능한 기능입니다.");
         return; // 함수 종료
     }
 
@@ -991,10 +989,10 @@ scwin.slb_dev_mbti_onselected = function () {
 
     // userInfo.mbti가 존재하는지 확인
     if (userInfo.mbti === 'ZZZZ') {
-        alert("mbti 및 성향검사 후 진행 가능합니다.");
+        $c.win.alert("mbti 및 성향검사 후 진행 가능합니다.");
         return; // 함수 종료
     } else if (userInfo.role === 'COMPANY') {
-        alert("기업회원은 사용 불가능한 기능입니다.");
+        $c.win.alert("기업회원은 사용 불가능한 기능입니다.");
         return; // 함수 종료
     }
 

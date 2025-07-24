@@ -436,17 +436,17 @@ scwin.saveJobInfo = function() {
     var careerLevel = dma_jobInfo.get("careerLevel");
     
     if (!jobCategory) {
-        alert("직무 분야를 선택해주세요.");
+        $c.win.alert("직무 분야를 선택해주세요.");
         return;
     }
     
     if (!careerLevel) {
-        alert("경력 수준을 선택해주세요.");
+        $c.win.alert("경력 수준을 선택해주세요.");
         return;
     }
     
     // 실제 환경에서는 서버에 저장
-    alert("직무/분야 정보가 저장되었습니다.");
+    $c.win.alert("직무/분야 정보가 저장되었습니다.");
     
     // 사용자 상세 페이지로 돌아가기
     $p.url("UserDetail.xml");

@@ -86,7 +86,6 @@
         
         <script type="text/javascript"><![CDATA[
 scwin.onpageload = function () {
-    console.log("회원가입 페이지 로드됨");
     
     // 비밀번호 필드 이벤트 바인딩
     setTimeout(function() {
@@ -116,7 +115,7 @@ scwin.sbm_email_check_submitdone = function (e) {
     
     if (!response) {
         console.error("서버 응답이 없습니다.");
-        alert("서버 통신 중 오류가 발생했습니다.");
+        $c.win.alert("서버 통신 중 오류가 발생했습니다.");
         return;
     }
     
@@ -124,7 +123,7 @@ scwin.sbm_email_check_submitdone = function (e) {
     var elHeader = response.elHeader;
     if (elHeader && elHeader.resSuc === false) {
         console.error("서버 오류:", elHeader.resMsg);
-        alert("서버 오류가 발생했습니다: " + elHeader.resMsg);
+        $c.win.alert("서버 오류가 발생했습니다: " + elHeader.resMsg);
         return;
     }
     
@@ -134,14 +133,14 @@ scwin.sbm_email_check_submitdone = function (e) {
     
     // role 필드로 중복 여부 판단
     if (responseData && responseData.role === "AVAILABLE") {
-        alert("사용 가능한 이메일입니다.");
+        $c.win.alert("사용 가능한 이메일입니다.");
         dma_signup.set("이메일인증여부", "true");
         
         // 이메일 검증 성공 UI 표시
         var verifySuccessElement = document.getElementById("verify_success");
         if (verifySuccessElement) verifySuccessElement.style.display = "block";
     } else if (responseData && responseData.role === "DUPLICATE") {
-        alert("이미 사용 중인 이메일입니다.");
+        $c.win.alert("이미 사용 중인 이메일입니다.");
         dma_signup.set("이메일인증여부", "false");
         
         // 이메일 검증 성공 UI 숨기기
@@ -150,7 +149,7 @@ scwin.sbm_email_check_submitdone = function (e) {
     } else {
         // role 필드가 없거나 예상치 못한 값인 경우
         console.warn("예상치 못한 응답 형식:", responseData);
-        alert("이메일 확인 중 오류가 발생했습니다.");
+        $c.win.alert("이메일 확인 중 오류가 발생했습니다.");
         dma_signup.set("이메일인증여부", "false");
         
         // 이메일 검증 성공 UI 숨기기
@@ -162,14 +161,14 @@ scwin.sbm_email_check_submitdone = function (e) {
 // 이메일 중복 확인 실패 처리
 scwin.sbm_email_check_submiterror = function (e) {
     console.log("이메일 중복 확인 실패:", e);
-    alert("이미 사용 중인 이메일입니다.");
+    $c.win.alert("이미 사용 중인 이메일입니다.");
     dma_signup.set("이메일인증여부", "false");
 };
 
 // 회원가입 성공 처리
 scwin.sbm_register_submitdone = function (e) {
     console.log("회원가입 성공:", e);
-    alert("회원가입이 완료되었습니다!");
+    $c.win.alert("회원가입이 완료되었습니다!");
     // 회원가입 완료 페이지로 이동
     $p.url("SignupComplete.xml");
 };
@@ -177,19 +176,19 @@ scwin.sbm_register_submitdone = function (e) {
 // 회원가입 실패 처리
 scwin.sbm_register_submiterror = function (e) {
     console.log("회원가입 실패:", e);
-    alert("회원가입에 실패했습니다. 다시 시도해주세요.");
+    $c.win.alert("회원가입에 실패했습니다. 다시 시도해주세요.");
 };
 
 // 이메일 중복 확인 버튼 클릭
 scwin.btn_email_verify_onclick = function () {
     var email = dma_signup.get("이메일");
     if (!email || email.trim() === "") {
-        alert("이메일을 입력해주세요.");
+        $c.win.alert("이메일을 입력해주세요.");
         return;
     }
 
     if (!scwin.validateEmail(email)) {
-        alert("올바른 이메일 형식을 입력해주세요.");
+        $c.win.alert("올바른 이메일 형식을 입력해주세요.");
         return;
     }
 
@@ -211,48 +210,48 @@ scwin.btn_signup_onclick = function () {
     var emailVerified = dma_signup.get("이메일인증여부");
 
     if (!name || name.trim() === "") {
-        alert("이름을 입력해주세요.");
+        $c.win.alert("이름을 입력해주세요.");
         return;
     }
 
     if (!birthDate || birthDate.trim() === "") {
-        alert("생년월일을 입력해주세요.");
+        $c.win.alert("생년월일을 입력해주세요.");
         return;
     }
 
     if (!gender || gender.trim() === "") {
-        alert("성별을 선택해주세요.");
+        $c.win.alert("성별을 선택해주세요.");
         return;
     }
 
     if (!phoneNumber || phoneNumber.trim() === "") {
-        alert("휴대폰번호를 입력해주세요.");
+        $c.win.alert("휴대폰번호를 입력해주세요.");
         return;
     }
 
     if (!email || email.trim() === "") {
-        alert("이메일을 입력해주세요.");
+        $c.win.alert("이메일을 입력해주세요.");
         return;
     }
 
     if (!password || password.trim() === "") {
-        alert("비밀번호를 입력해주세요.");
+        $c.win.alert("비밀번호를 입력해주세요.");
         return;
     }
     
     var passwordConfirm = dma_signup.get("비밀번호확인");
     if (!passwordConfirm || passwordConfirm.trim() === "") {
-        alert("비밀번호를 재확인해주세요.");
+        $c.win.alert("비밀번호를 재확인해주세요.");
         return;
     }
     
     if (password !== passwordConfirm) {
-        alert("비밀번호가 일치하지 않습니다. 다시 확인해주세요.");
+        $c.win.alert("비밀번호가 일치하지 않습니다. 다시 확인해주세요.");
         return;
     }
 
     if (emailVerified !== "true") {
-        alert("이메일 중복 확인을 해주세요.");
+        $c.win.alert("이메일 중복 확인을 해주세요.");
         return;
     }
 

@@ -24,12 +24,10 @@
             var selectedLocationsList = [];
             
             scwin.onpageload = function() {
-                console.log("근무지역 선택 페이지 로드됨");
                 scwin.updateSelectedLocationsDisplay();
             };
             
             scwin.toggleLocation = function(locationName) {
-                console.log("선택된 지역:", locationName);
                 var index = selectedLocationsList.indexOf(locationName);
                 
                 if (index > -1) {
@@ -55,8 +53,6 @@
                         });
                     }
                 }
-                
-                console.log("현재 선택된 지역들:", selectedLocationsList);
                 scwin.updateSelectedLocationsDisplay();
             };
             
@@ -73,7 +69,6 @@
                 }
                 
                 if (!container || !countDisplay) {
-                    console.log("DOM 요소를 찾을 수 없습니다. 재시도합니다.");
                     setTimeout(function() {
                         scwin.updateSelectedLocationsDisplay();
                     }, 300);
@@ -105,14 +100,12 @@
             
             // 이전 버튼 - $p.url 방식
             scwin.btn_back_onclick = function() {
-                console.log("회원가입 완료 페이지로 이동");
                 $p.url("SignupComplete.xml");
             };
             
             // 다음 버튼 - $p.url 방식
             scwin.btn_next_onclick = function() {
                 // 플로우 확인을 위해 검증 완화
-                console.log("선택된 지역:", selectedLocationsList);
                 $p.url("SalarySelect.xml");
             };
         ]]></script>

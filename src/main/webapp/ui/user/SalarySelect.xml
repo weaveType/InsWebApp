@@ -43,120 +43,109 @@
         <w2:publicInfo method=""/>
         
         <script type="text/javascript"><![CDATA[
-            scwin.onpageload = function() {
-                console.log("희망 연봉 선택 페이지 로드됨");
-            };
-            
-            scwin.selectSalary = function(salaryRange) {
-                console.log("=== selectSalary 함수 시작 ===");
-                console.log("파라미터:", salaryRange);
-                
-                // 데이터 저장
-                dma_salary.set("selectedSalary", salaryRange);
-                
-                // 직접 DOM 조작
-                console.log("DOM 조작 시작");
-                
-                // 모든 salary-option 클래스에서 selected 제거
-                var allButtons = document.getElementsByClassName('salary-option');
-                console.log("찾은 버튼 수:", allButtons.length);
-                
-                for (var i = 0; i < allButtons.length; i++) {
-                    allButtons[i].classList.remove('selected');
-                }
-                
-                // 클릭된 버튼에 selected 클래스 추가 (이벤트 소스 기반)
-                if (window.event && window.event.srcElement) {
-                    window.event.srcElement.classList.add('selected');
-                    console.log("selected 클래스 추가됨 (srcElement)");
-                } else if (window.event && window.event.target) {
-                    window.event.target.classList.add('selected');
-                    console.log("selected 클래스 추가됨 (target)");
-                } else {
-                    // 대안: 텍스트 기반으로 찾기
-                    var textMap = {
-                        '2000-2500': '2,000만원 ~ 2,500만원',
-                        '2500-3000': '2,500만원 ~ 3,000만원',
-                        '3000-4000': '3,000만원 ~ 4,000만원',
-                        '4000-5000': '4,000만원 ~ 5,000만원',
-                        '5000+': '5,000만원 이상'
-                    };
-                    
-                    var targetText = textMap[salaryRange];
-                    console.log("텍스트로 찾기:", targetText);
-                    
-                    for (var j = 0; j < allButtons.length; j++) {
-                        if (allButtons[j].textContent.trim() === targetText) {
-                            allButtons[j].classList.add('selected');
-                            console.log("텍스트 기반으로 selected 클래스 추가됨");
-                            break;
-                        }
-                    }
-                }
-                
-                console.log("=== selectSalary 함수 완료 ===");
-            };
-            
-            // Function to proceed to next page with server save
-            scwin.goToNextPage = function() {
-                // 연봉이 선택되었는지 확인
-                var selectedSalary = dma_salary.get("selectedSalary");
-                if (!selectedSalary) {
-                    alert("연봉을 선택해주세요.");
-                    return;
-                }
-                
-                // 데이터맵에 데이터 설정 (user_id는 백엔드에서 세션으로 처리)
-                dma_salary.set("salary", selectedSalary);
-                
-                console.log("연봉 데이터 전송:", {
-                    salary: selectedSalary
-                });
-                
-                // 서버에 데이터 저장
-                $c.sbm.execute(sbm_saveSalary);
-            };
-            
-            // Success callback for salary save
-            scwin.sbm_saveSalary_submitdone = function(e) {
-                console.log("Salary save response:", e);
-                
-                var responseData = dma_salary.getJSON();
-                console.log("응답 데이터:", responseData);
-                
-                if (responseData && (responseData.result === "success" || responseData.status === "success")) {
-                    console.log("연봉 정보 저장 성공");
-                    // 다음 페이지로 이동
-                    $p.url("CareerInput.xml");
-                } else {
-                    console.log("연봉 정보 저장 성공 (기본 처리)");
-                    // 응답 구조와 상관없이 다음 페이지로 이동
-                    $p.url("CareerInput.xml");
-                }
-            };
-            
-            // Error callback for salary save
-            scwin.sbm_saveSalary_submiterror = function(e) {
-                console.error("Salary save error:", e);
-                alert("연봉 정보 저장 중 오류가 발생했습니다.");
-            };
+scwin.onpageload = function () {
+};
 
-            // 기존 nextPage 함수를 새로운 함수로 교체
-            scwin.nextPage = function() {
-                scwin.goToNextPage();
-            };
-            
-            // 이전 버튼 - $p.url 방식
-            scwin.btn_back_onclick = function() {
-                console.log("근무지역 선택 페이지로 이동");
-                $p.url("LocationSelect.xml");
-            };
-            
-            // 다음 버튼 - 서버 저장과 함께 페이지 이동
-            scwin.btn_next_onclick = function() {
-                scwin.goToNextPage();
-            };
-        ]]></script>
+scwin.selectSalary = function (salaryRange) {
+
+    // 데이터 저장
+    dma_salary.set("selectedSalary", salaryRange);
+
+    // 모든 salary-option 클래스에서 selected 제거
+    var allButtons = document.getElementsByClassName('salary-option');
+
+    for (var i = 0; i < allButtons.length; i++) {
+        allButtons[i].classList.remove('selected');
+    }
+
+    // 클릭된 버튼에 selected 클래스 추가 (이벤트 소스 기반)
+    if (window.event && window.event.srcElement) {
+        window.event.srcElement.classList.add('selected');
+        console.log("selected 클래스 추가됨 (srcElement)");
+    } else if (window.event && window.event.target) {
+        window.event.target.classList.add('selected');
+        console.log("selected 클래스 추가됨 (target)");
+    } else {
+        // 대안: 텍스트 기반으로 찾기
+        var textMap = {
+            '2000-2500': '2,000만원 ~ 2,500만원',
+            '2500-3000': '2,500만원 ~ 3,000만원',
+            '3000-4000': '3,000만원 ~ 4,000만원',
+            '4000-5000': '4,000만원 ~ 5,000만원',
+            '5000+': '5,000만원 이상'
+        };
+
+        var targetText = textMap[salaryRange];
+        console.log("텍스트로 찾기:", targetText);
+
+        for (var j = 0; j < allButtons.length; j++) {
+            if (allButtons[j].textContent.trim() === targetText) {
+                allButtons[j].classList.add('selected');
+                console.log("텍스트 기반으로 selected 클래스 추가됨");
+                break;
+            }
+        }
+    }
+
+    console.log("=== selectSalary 함수 완료 ===");
+};
+
+// Function to proceed to next page with server save
+scwin.goToNextPage = function () {
+    // 연봉이 선택되었는지 확인
+    var selectedSalary = dma_salary.get("selectedSalary");
+    if (!selectedSalary) {
+        $c.win.alert("연봉을 선택해주세요.");
+        return;
+    }
+
+    // 데이터맵에 데이터 설정 (user_id는 백엔드에서 세션으로 처리)
+    dma_salary.set("salary", selectedSalary);
+
+    console.log("연봉 데이터 전송:", {
+        salary: selectedSalary
+    });
+
+    // 서버에 데이터 저장
+    $c.sbm.execute(sbm_saveSalary);
+};
+
+// Success callback for salary save
+scwin.sbm_saveSalary_submitdone = function (e) {
+    console.log("Salary save response:", e);
+
+    var responseData = dma_salary.getJSON();
+    console.log("응답 데이터:", responseData);
+
+    if (responseData && (responseData.result === "success" || responseData.status === "success")) {
+        // 다음 페이지로 이동
+        $p.url("CareerInput.xml");
+    } else {
+        // 응답 구조와 상관없이 다음 페이지로 이동
+        $p.url("CareerInput.xml");
+    }
+};
+
+// Error callback for salary save
+scwin.sbm_saveSalary_submiterror = function (e) {
+    $c.win.alert("연봉 정보 저장 중 오류가 발생했습니다.");
+};
+
+// 기존 nextPage 함수를 새로운 함수로 교체
+scwin.nextPage = function () {
+    scwin.goToNextPage();
+};
+
+// 이전 버튼 - $p.url 방식
+scwin.btn_back_onclick = function () {
+    $p.url("LocationSelect.xml");
+};
+
+// 다음 버튼 - 서버 저장과 함께 페이지 이동
+scwin.btn_next_onclick = function () {
+    scwin.goToNextPage();
+};
+]]></script>
         
         <style type="text/css"><![CDATA[
             .main-container {

@@ -313,13 +313,12 @@ scwin.goNext = function() {
     var selectedSalary = dma_salary.get("selectedSalary");
     
     if (!selectedSalary || selectedSalary === "") {
-        alert("희망 연봉을 선택해주세요.");
+        $c.win.alert("희망 연봉을 선택해주세요.");
         return;
     }
     
     // 사용자 정보 업데이트 (실제로는 서버로 전송)
-    console.log("선택된 연봉:", selectedSalary);
-    alert("연봉 정보가 업데이트되었습니다!");
+    $c.win.alert("연봉 정보가 업데이트되었습니다!");
     
     // 마이페이지로 돌아가기
     $p.url("UserDetail.xml");

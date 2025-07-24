@@ -43,172 +43,168 @@
         <w2:publicInfo method=""/>
         
         <script type="text/javascript"><![CDATA[
-            var selectedLocationsList = [];
-            
-            scwin.onpageload = function() {
-                console.log("근무지역 선택 페이지 로드됨");
-                scwin.updateSelectedLocationsDisplay();
-                
-                // 이벤트 위임으로 x 버튼 클릭 처리
-                setTimeout(function() {
-                    var container = document.querySelector('.selected-locations-container');
-                    if (!container) {
-                        container = document.getElementById('selectedLocationsContainer');
-                    }
-                    if (container) {
-                        container.addEventListener('click', function(event) {
-                            if (event.target && event.target.classList.contains('location-tag-remove')) {
-                                var locationTag = event.target.closest('.location-tag');
-                                if (locationTag) {
-                                    var locationText = locationTag.textContent.replace(' ×', '').trim();
-                                    scwin.removeLocation(locationText);
-                                }
-                                event.preventDefault();
-                                event.stopPropagation();
-                            }
-                        });
-                    }
-                }, 300);
-            };
-            
-            scwin.toggleLocation = function(locationName) {
-                console.log("선택된 지역:", locationName);
-                var index = selectedLocationsList.indexOf(locationName);
-                
-                if (index > -1) {
-                    selectedLocationsList.splice(index, 1);
-                    var elements = document.querySelectorAll('.location-option');
-                    if (elements && elements.length > 0) {
-                        elements.forEach(function(el) {
-                            if (el && el.textContent && el.classList && el.textContent.trim() === locationName) {
-                                el.classList.remove('selected');
-                            }
-                        });
-                    }
-                } else {
-                    // 최대 5개까지만 선택 가능하도록 제한
-                    if (selectedLocationsList.length >= 5) {
-                        alert("최대 5개까지만 선택 가능합니다.");
-                        return;
-                    }
-                    
-                    selectedLocationsList.push(locationName);
-                    var elements = document.querySelectorAll('.location-option');
-                    if (elements && elements.length > 0) {
-                        elements.forEach(function(el) {
-                            if (el && el.textContent && el.classList && el.textContent.trim() === locationName) {
-                                el.classList.add('selected');
-                            }
-                        });
-                    }
-                }
-                
-                console.log("현재 선택된 지역들:", selectedLocationsList);
-                scwin.updateSelectedLocationsDisplay();
-            };
-            
-            scwin.updateSelectedLocationsDisplay = function() {
-                var container = document.querySelector('.selected-locations-container');
-                var countDisplay = document.querySelector('.selection-count');
-                
-                if (!container) {
-                    container = document.getElementById('selectedLocationsContainer');
-                }
-                if (!countDisplay) {
-                    countDisplay = document.getElementById('selectionCount');
-                }
-                
-                if (!container || !countDisplay) {
-                    console.log("DOM 요소를 찾을 수 없습니다. 재시도합니다.");
-                    setTimeout(function() {
-                        scwin.updateSelectedLocationsDisplay();
-                    }, 300);
-                    return;
-                }
-                
-                container.innerHTML = '';
-                
-                if (selectedLocationsList.length === 0) {
-                    container.innerHTML = '<div class="empty-message">희망하는 근무지역을 알려주세요.</div>';
-                } else {
-                    selectedLocationsList.forEach(function(location) {
-                        var tag = document.createElement('div');
-                        tag.className = 'location-tag';
-                        tag.innerHTML = location + ' <span class="location-tag-remove">×</span>';
-                        container.appendChild(tag);
-                    });
-                }
-                
-                countDisplay.textContent = selectedLocationsList.length + ' 개 지역 선택됨 (최대 5개)';
-                dma_location.set("selectedLocations", selectedLocationsList.join(','));
-            };
-            
-            scwin.removeLocation = function(locationName) {
-                scwin.toggleLocation(locationName);
-            };
-            
-            // Function to proceed to next page with server save
-            scwin.goToNextPage = function() {
-                // 선택된 지역이 있는지 확인
-                if (selectedLocationsList.length === 0) {
-                    alert("최소 1개 이상의 지역을 선택해주세요.");
-                    return;
-                }
-                
-                // 선택된 지역들을 콤마로 구분된 문자열로 변환
-                var locationsString = selectedLocationsList.join(',');
-                
-                // 데이터맵에 데이터 설정 (user_id는 백엔드에서 세션으로 처리)
-                dma_location.set("locations", locationsString);
-                
-                console.log("지역 데이터 전송:", {
-                    locations: locationsString
-                });
-                
-                // 서버에 데이터 저장
-                $c.sbm.execute(sbm_saveLocation);
-            };
-            
-            // Success callback for location save
-            scwin.sbm_saveLocation_submitdone = function(e) {
-                console.log("Location save response:", e);
-                
-                var responseData = dma_location.getJSON();
-                console.log("응답 데이터:", responseData);
-                
-                if (responseData && (responseData.result === "success" || responseData.status === "success")) {
-                    console.log("지역 정보 저장 성공");
-                    // 다음 페이지로 이동
-                    $p.url("SalarySelect.xml");
-                } else {
-                    console.log("지역 정보 저장 성공 (기본 처리)");
-                    // 응답 구조와 상관없이 다음 페이지로 이동
-                    $p.url("SalarySelect.xml");
-                }
-            };
-            
-            // Error callback for location save
-            scwin.sbm_saveLocation_submiterror = function(e) {
-                console.error("Location save error:", e);
-                alert("지역 정보 저장 중 오류가 발생했습니다.");
-            };
+var selectedLocationsList = [];
 
-            // 기존 nextPage 함수를 새로운 함수로 교체
-            scwin.nextPage = function() {
-                scwin.goToNextPage();
-            };
-            
-            // 이전 버튼 - $p.url 방식
-            scwin.btn_back_onclick = function() {
-                console.log("회원가입 완료 페이지로 이동");
-                $p.url("SignupComplete.xml");
-            };
-            
-            // 다음 버튼 - 서버 저장과 함께 페이지 이동
-            scwin.btn_next_onclick = function() {
-                scwin.goToNextPage();
-            };
-        ]]></script>
+scwin.onpageload = function () {
+    console.log("근무지역 선택 페이지 로드됨");
+    scwin.updateSelectedLocationsDisplay();
+
+    // 이벤트 위임으로 x 버튼 클릭 처리
+    setTimeout(function () {
+        var container = document.querySelector('.selected-locations-container');
+        if (!container) {
+            container = document.getElementById('selectedLocationsContainer');
+        }
+        if (container) {
+            container.addEventListener('click', function (event) {
+                if (event.target && event.target.classList.contains('location-tag-remove')) {
+                    var locationTag = event.target.closest('.location-tag');
+                    if (locationTag) {
+                        var locationText = locationTag.textContent.replace(' ×', '').trim();
+                        scwin.removeLocation(locationText);
+                    }
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+            });
+        }
+    }, 300);
+};
+
+scwin.toggleLocation = function (locationName) {
+    console.log("선택된 지역:", locationName);
+    var index = selectedLocationsList.indexOf(locationName);
+
+    if (index > -1) {
+        selectedLocationsList.splice(index, 1);
+        var elements = document.querySelectorAll('.location-option');
+        if (elements && elements.length > 0) {
+            elements.forEach(function (el) {
+                if (el && el.textContent && el.classList && el.textContent.trim() === locationName) {
+                    el.classList.remove('selected');
+                }
+            });
+        }
+    } else {
+        // 최대 5개까지만 선택 가능하도록 제한
+        if (selectedLocationsList.length >= 5) {
+            $c.win.alert("최대 5개까지만 선택 가능합니다.");
+            return;
+        }
+
+        selectedLocationsList.push(locationName);
+        var elements = document.querySelectorAll('.location-option');
+        if (elements && elements.length > 0) {
+            elements.forEach(function (el) {
+                if (el && el.textContent && el.classList && el.textContent.trim() === locationName) {
+                    el.classList.add('selected');
+                }
+            });
+        }
+    }
+
+    console.log("현재 선택된 지역들:", selectedLocationsList);
+    scwin.updateSelectedLocationsDisplay();
+};
+
+scwin.updateSelectedLocationsDisplay = function () {
+    var container = document.querySelector('.selected-locations-container');
+    var countDisplay = document.querySelector('.selection-count');
+
+    if (!container) {
+        container = document.getElementById('selectedLocationsContainer');
+    }
+    if (!countDisplay) {
+        countDisplay = document.getElementById('selectionCount');
+    }
+
+    if (!container || !countDisplay) {
+        console.log("DOM 요소를 찾을 수 없습니다. 재시도합니다.");
+        setTimeout(function () {
+            scwin.updateSelectedLocationsDisplay();
+        }, 300);
+        return;
+    }
+
+    container.innerHTML = '';
+
+    if (selectedLocationsList.length === 0) {
+        container.innerHTML = '<div class="empty-message">희망하는 근무지역을 알려주세요.</div>';
+    } else {
+        selectedLocationsList.forEach(function (location) {
+            var tag = document.createElement('div');
+            tag.className = 'location-tag';
+            tag.innerHTML = location + ' <span class="location-tag-remove">×</span>';
+            container.appendChild(tag);
+        });
+    }
+
+    countDisplay.textContent = selectedLocationsList.length + ' 개 지역 선택됨 (최대 5개)';
+    dma_location.set("selectedLocations", selectedLocationsList.join(','));
+};
+
+scwin.removeLocation = function (locationName) {
+    scwin.toggleLocation(locationName);
+};
+
+// Function to proceed to next page with server save
+scwin.goToNextPage = function () {
+    // 선택된 지역이 있는지 확인
+    if (selectedLocationsList.length === 0) {
+        $c.win.alert("최소 1개 이상의 지역을 선택해주세요.");
+        return;
+    }
+
+    // 선택된 지역들을 콤마로 구분된 문자열로 변환
+    var locationsString = selectedLocationsList.join(',');
+
+    // 데이터맵에 데이터 설정 (user_id는 백엔드에서 세션으로 처리)
+    dma_location.set("locations", locationsString);
+
+    console.log("지역 데이터 전송:", {
+        locations: locationsString
+    });
+
+    // 서버에 데이터 저장
+    $c.sbm.execute(sbm_saveLocation);
+};
+
+// Success callback for location save
+scwin.sbm_saveLocation_submitdone = function (e) {
+    console.log("Location save response:", e);
+
+    var responseData = dma_location.getJSON();
+    console.log("응답 데이터:", responseData);
+
+    if (responseData && (responseData.result === "success" || responseData.status === "success")) {
+        // 다음 페이지로 이동
+        $p.url("SalarySelect.xml");
+    } else {
+        // 응답 구조와 상관없이 다음 페이지로 이동
+        $p.url("SalarySelect.xml");
+    }
+};
+
+// Error callback for location save
+scwin.sbm_saveLocation_submiterror = function (e) {
+    $c.win.alert("지역 정보 저장 중 오류가 발생했습니다.");
+};
+
+// 기존 nextPage 함수를 새로운 함수로 교체
+scwin.nextPage = function () {
+    scwin.goToNextPage();
+};
+
+// 이전 버튼 - $p.url 방식
+scwin.btn_back_onclick = function () {
+    $p.url("SignupComplete.xml");
+};
+
+// 다음 버튼 - 서버 저장과 함께 페이지 이동
+scwin.btn_next_onclick = function () {
+    scwin.goToNextPage();
+};
+]]></script>
         
         <style type="text/css"><![CDATA[
             .main-container {

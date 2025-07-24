@@ -46,168 +46,166 @@
         <w2:publicInfo method=""/>
         
         <script type="text/javascript"><![CDATA[
-            scwin.onpageload = function() {
-                console.log("경력 입력 페이지 로드됨");
-            };
-            
-            scwin.selectCareerType = function(careerType) {
-                console.log("경력 유형 선택:", careerType);
-                dma_career.set("careerType", careerType);
-                
-                // 모든 경력 유형 옵션에서 selected 클래스 제거
-                var careerTypeOptions = document.querySelectorAll('.career-type-option');
-                if (careerTypeOptions && careerTypeOptions.length > 0) {
-                    careerTypeOptions.forEach(function(el) {
-                        if (el && el.classList) {
-                            el.classList.remove('selected');
-                        }
-                    });
-                }
-                
-                // 선택된 경력 유형 옵션에 selected 클래스 추가
-                var selectedElement = event.currentTarget;
-                if (selectedElement && selectedElement.classList) {
-                    selectedElement.classList.add('selected');
-                }
-                
-                // 경력자인 경우 경력 기간 선택 섹션 표시
-                var experienceSection = document.querySelector('.experience-section');
-                if (experienceSection) {
-                    if (careerType === "experienced") {
-                        experienceSection.style.display = "block";
-                    } else {
-                        experienceSection.style.display = "none";
-                        dma_career.set("careerPeriod", "");
-                    }
-                }
-                
-                scwin.validateForm();
-            };
-            
-            scwin.selectCareerPeriod = function(period) {
-                console.log("경력 기간 선택:", period);
-                dma_career.set("careerPeriod", period);
-                
-                // 모든 경력 기간 옵션에서 selected 클래스 제거
-                var periodOptions = document.querySelectorAll('.period-option');
-                if (periodOptions && periodOptions.length > 0) {
-                    periodOptions.forEach(function(el) {
-                        if (el && el.classList) {
-                            el.classList.remove('selected');
-                        }
-                    });
-                }
-                
-                // 선택된 경력 기간 옵션에 selected 클래스 추가
-                var selectedElement = event.currentTarget;
-                if (selectedElement && selectedElement.classList) {
-                    selectedElement.classList.add('selected');
-                }
-                
-                scwin.validateForm();
-            };
-            
+scwin.onpageload = function () {
+};
 
-            
-            scwin.validateForm = function() {
-                var careerType = dma_career.get("careerType");
-                var careerPeriod = dma_career.get("careerPeriod");
-                
-                var isValid = true;
-                
-                // 경력 유형 선택 확인
-                if (!careerType) {
-                    isValid = false;
-                }
-                
-                // 경력자인 경우 경력 기간 선택 확인
-                if (careerType === "experienced" && !careerPeriod) {
-                    isValid = false;
-                }
-                
-                console.log("폼 유효성 검사:", {
-                    careerType: careerType,
-                    careerPeriod: careerPeriod,
-                    isValid: isValid
-                });
-            };
-            
-            // Function to proceed to next page with server save
-            scwin.goToNextPage = function() {
-                // 경력이 선택되었는지 확인
-                var careerType = dma_career.get("careerType");
-                if (!careerType) {
-                    alert("경력을 선택해주세요.");
-                    return;
-                }
-                
-                // 경력자인 경우 경력 기간 선택 확인
-                if (careerType === "experienced") {
-                    var careerPeriod = dma_career.get("careerPeriod");
-                    if (!careerPeriod) {
-                        alert("경력 기간을 선택해주세요.");
-                        return;
-                    }
-                }
-                
-                // 데이터맵에 데이터 설정 (user_id는 백엔드에서 세션으로 처리)
-                // 경력자인 경우 경력 기간을 career 필드에 직접 저장
-                if (careerType === "experienced") {
-                    dma_career.set("career", dma_career.get("careerPeriod"));
-                } else {
-                    dma_career.set("career", "신입");
-                }
-                
-                console.log("경력 데이터 전송:", {
-                    career: dma_career.get("career"),
-                    careerType: dma_career.get("careerType"),
-                    careerPeriod: dma_career.get("careerPeriod")
-                });
-                
-                // 서버에 데이터 저장
-                $c.sbm.execute(sbm_saveCareer);
-            };
-            
-            // Success callback for career save
-            scwin.sbm_saveCareer_submitdone = function(e) {
-                console.log("Career save response:", e);
-                
-                var responseData = dma_career.getJSON();
-                console.log("응답 데이터:", responseData);
-                
-                if (responseData && (responseData.result === "success" || responseData.status === "success")) {
-                    console.log("경력 정보 저장 성공");
-                    // 다음 페이지로 이동
-                    $p.url("ProfileAdditional.xml");
-                } else {
-                    console.log("경력 정보 저장 성공 (기본 처리)");
-                    // 응답 구조와 상관없이 다음 페이지로 이동
-                    $p.url("ProfileAdditional.xml");
-                }
-            };
-            
-            // Error callback for career save
-            scwin.sbm_saveCareer_submiterror = function(e) {
-                console.error("Career save error:", e);
-                alert("경력 정보 저장 중 오류가 발생했습니다.");
-            };
+scwin.selectCareerType = function (careerType) {
+    dma_career.set("careerType", careerType);
 
-            // 기존 nextPage 함수를 새로운 함수로 교체
-            scwin.nextPage = function() {
-                scwin.goToNextPage();
-            };
-            
-            // 이전 버튼 - $p.url 방식
-            scwin.btn_back_onclick = function() {
-                console.log("희망 연봉 선택 페이지로 이동");
-                $p.url("SalarySelect.xml");
-            };
-            
-            // 다음 버튼 - 서버 저장과 함께 페이지 이동
-            scwin.btn_next_onclick = function() {
-                scwin.goToNextPage();
-            };
-        ]]></script>
+    // 모든 경력 유형 옵션에서 selected 클래스 제거
+    var careerTypeOptions = document.querySelectorAll('.career-type-option');
+    if (careerTypeOptions && careerTypeOptions.length > 0) {
+        careerTypeOptions.forEach(function (el) {
+            if (el && el.classList) {
+                el.classList.remove('selected');
+            }
+        });
+    }
+
+    // 선택된 경력 유형 옵션에 selected 클래스 추가
+    var selectedElement = event.currentTarget;
+    if (selectedElement && selectedElement.classList) {
+        selectedElement.classList.add('selected');
+    }
+
+    // 경력자인 경우 경력 기간 선택 섹션 표시
+    var experienceSection = document.querySelector('.experience-section');
+    if (experienceSection) {
+        if (careerType === "experienced") {
+            experienceSection.style.display = "block";
+        } else {
+            experienceSection.style.display = "none";
+            dma_career.set("careerPeriod", "");
+        }
+    }
+
+    scwin.validateForm();
+};
+
+scwin.selectCareerPeriod = function (period) {
+    console.log("경력 기간 선택:", period);
+    dma_career.set("careerPeriod", period);
+
+    // 모든 경력 기간 옵션에서 selected 클래스 제거
+    var periodOptions = document.querySelectorAll('.period-option');
+    if (periodOptions && periodOptions.length > 0) {
+        periodOptions.forEach(function (el) {
+            if (el && el.classList) {
+                el.classList.remove('selected');
+            }
+        });
+    }
+
+    // 선택된 경력 기간 옵션에 selected 클래스 추가
+    var selectedElement = event.currentTarget;
+    if (selectedElement && selectedElement.classList) {
+        selectedElement.classList.add('selected');
+    }
+
+    scwin.validateForm();
+};
+
+
+
+scwin.validateForm = function () {
+    var careerType = dma_career.get("careerType");
+    var careerPeriod = dma_career.get("careerPeriod");
+
+    var isValid = true;
+
+    // 경력 유형 선택 확인
+    if (!careerType) {
+        isValid = false;
+    }
+
+    // 경력자인 경우 경력 기간 선택 확인
+    if (careerType === "experienced" && !careerPeriod) {
+        isValid = false;
+    }
+
+    console.log("폼 유효성 검사:", {
+        careerType: careerType,
+        careerPeriod: careerPeriod,
+        isValid: isValid
+    });
+};
+
+// Function to proceed to next page with server save
+scwin.goToNextPage = function () {
+    // 경력이 선택되었는지 확인
+    var careerType = dma_career.get("careerType");
+    if (!careerType) {
+        $c.win.alert("경력을 선택해주세요.");
+        return;
+    }
+
+    // 경력자인 경우 경력 기간 선택 확인
+    if (careerType === "experienced") {
+        var careerPeriod = dma_career.get("careerPeriod");
+        if (!careerPeriod) {
+            $c.win.alert("경력 기간을 선택해주세요.");
+            return;
+        }
+    }
+
+    // 데이터맵에 데이터 설정 (user_id는 백엔드에서 세션으로 처리)
+    // 경력자인 경우 경력 기간을 career 필드에 직접 저장
+    if (careerType === "experienced") {
+        dma_career.set("career", dma_career.get("careerPeriod"));
+    } else {
+        dma_career.set("career", "신입");
+    }
+
+    console.log("경력 데이터 전송:", {
+        career: dma_career.get("career"),
+        careerType: dma_career.get("careerType"),
+        careerPeriod: dma_career.get("careerPeriod")
+    });
+
+    // 서버에 데이터 저장
+    $c.sbm.execute(sbm_saveCareer);
+};
+
+// Success callback for career save
+scwin.sbm_saveCareer_submitdone = function (e) {
+    console.log("Career save response:", e);
+
+    var responseData = dma_career.getJSON();
+    console.log("응답 데이터:", responseData);
+
+    if (responseData && (responseData.result === "success" || responseData.status === "success")) {
+        console.log("경력 정보 저장 성공");
+        // 다음 페이지로 이동
+        $p.url("ProfileAdditional.xml");
+    } else {
+        console.log("경력 정보 저장 성공 (기본 처리)");
+        // 응답 구조와 상관없이 다음 페이지로 이동
+        $p.url("ProfileAdditional.xml");
+    }
+};
+
+// Error callback for career save
+scwin.sbm_saveCareer_submiterror = function (e) {
+    console.error("Career save error:", e);
+    $c.win.alert("경력 정보 저장 중 오류가 발생했습니다.");
+};
+
+// 기존 nextPage 함수를 새로운 함수로 교체
+scwin.nextPage = function () {
+    scwin.goToNextPage();
+};
+
+// 이전 버튼 - $p.url 방식
+scwin.btn_back_onclick = function () {
+    console.log("희망 연봉 선택 페이지로 이동");
+    $p.url("SalarySelect.xml");
+};
+
+// 다음 버튼 - 서버 저장과 함께 페이지 이동
+scwin.btn_next_onclick = function () {
+    scwin.goToNextPage();
+};
+]]></script>
         
         <style type="text/css"><![CDATA[
             .main-container {
