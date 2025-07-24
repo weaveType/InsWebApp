@@ -253,7 +253,7 @@ scwin.init = function () {
     // 검색 조건 초기화
     dmp_searchParam.set("pageIndex", 1);
     dmp_searchParam.set("pageSize", 10);
-    
+
     // cookie에서 accountId 가져오기
     scwin.userInfo = $p.parent().dma_userInfoVo.getJSON();
     if (scwin.userInfo && scwin.userInfo.accountId) {
@@ -278,19 +278,14 @@ scwin.init();
 scwin.sbm_applicationHistoryList_submitdone = function (e) {
     try {
         var res = e.responseJSON;
-        console.log("=== 전체 응답 데이터 ===", res);
-        
+
         if (res && res.applicationListVoList) {
-            console.log("=== applicationListVoList 데이터 ===", res.applicationListVoList);
-            console.log("=== 배열 길이 ===", res.applicationListVoList.length);
-            
+
             dlt_applicationListVo.setJSON(res.applicationListVoList);
-            console.log("=== dataList 설정 완료 ===");
-            console.log("=== dataList 행 수 ===", dlt_applicationListVo.getRowCount());
-            
+
             // 수동으로 generator에 데이터 바인딩
             scwin.bindApplicationData();
-            
+
             // 빈 상태 표시/숨김 처리
             var emptyState = document.getElementById('empty_state');
             if (res.applicationListVoList.length === 0) {
@@ -298,9 +293,6 @@ scwin.sbm_applicationHistoryList_submitdone = function (e) {
             } else {
                 if (emptyState) emptyState.style.display = 'none';
             }
-        } else {
-            console.log("=== applicationListVoList가 없습니다 ===");
-            console.log("=== res 구조 ===", res);
         }
 
         // UI 업데이트
@@ -312,37 +304,36 @@ scwin.sbm_applicationHistoryList_submitdone = function (e) {
 };
 
 // 지원현황 데이터를 generator에 바인딩하는 함수
-scwin.bindApplicationData = function() {
+scwin.bindApplicationData = function () {
     // 기존 내용 제거
     gen_applications.removeAll();
-    
+
     // DataList에서 데이터 가져오기
     var rowCount = dlt_applicationListVo.getRowCount();
-    
+
     if (rowCount === 0) {
-        console.log("지원현황 데이터가 없습니다.");
         return;
     }
-    
+
     for (var i = 0; i < rowCount; i++) {
         // 새로운 아이템 추가
         gen_applications.insertChild();
-        
+
         // 데이터 가져오기
         var name = dlt_applicationListVo.getCellData(i, "name") || "";
         var title = dlt_applicationListVo.getCellData(i, "title") || "";
         var experienceLevel = dlt_applicationListVo.getCellData(i, "experienceLevel") || "";
         var preferredDeveloperTypesRaw = dlt_applicationListVo.getCellData(i, "preferredDeveloperTypes") || "";
-        
+
         // 각 컴포넌트에 값 설정
         var txt_company_name = gen_applications.getChild(i, "txt_company_name");
         var txt_job_title = gen_applications.getChild(i, "txt_job_title");
         var txt_experience_level = gen_applications.getChild(i, "txt_experience_level");
-        
+
         if (txt_company_name) txt_company_name.setValue(name);
         if (txt_job_title) txt_job_title.setValue(title);
         if (txt_experience_level) txt_experience_level.setValue(experienceLevel);
-        
+
         // Helper function to escape HTML special characters
         function escapeHtml(text) {
             var div = document.createElement('div');
@@ -369,8 +360,6 @@ scwin.bindApplicationData = function() {
                 gen_applications.getChild(i, "tag" + j).hide();
             }
         }
-        
-        console.log("바인딩 완료 - 행:", i, "회사명:", name, "공고명:", title);
     }
 };
 
@@ -393,9 +382,9 @@ scwin.updateStatsFromData = function () {
         for (var i = 0; i < statsCount; i++) {
             var statusType = dlt_applicationStatsVo.getCellData(i, "statusType");
             var count = dlt_applicationStatsVo.getCellData(i, "statusCount");
-            if(statusType === "TOTAL"){
+            if (statusType === "TOTAL") {
                 totalCount = count;
-            } else if  (statusType === "PENDING") {
+            } else if (statusType === "PENDING") {
                 waitingCount = count;
             } else if (statusType === "ACCEPTED") {
                 acceptedCount = count;
@@ -452,7 +441,7 @@ scwin.filterApplications = function (status) {
     } else {
         dmp_searchParam.set("applicationStatus", '');
     }
-    
+
     // 지원현황 목록 재조회
     $c.sbm.execute($p, sbm_applicationHistoryList);
 };
@@ -484,28 +473,17 @@ scwin.applyStatusClasses = function () {
     }, 100);
 };
 
-// 지원현황 상세보기
+// 지원현황 공고 이동
 scwin.showApplicationDetail = function (rowIndex) {
-    var name = dlt_applicationListVo.getCellData(rowIndex, "name");
-    var title = dlt_applicationListVo.getCellData(rowIndex, "title");
-    var experienceLevel = dlt_applicationListVo.getCellData(rowIndex, "experienceLevel");
-    var preferredDeveloperTypes = dlt_applicationListVo.getCellData(rowIndex, "preferredDeveloperTypes");
     var jobPostingId = dlt_applicationListVo.getCellData(rowIndex, "jobPostingId");
-
-    var detailMessage = "=== 지원 상세 정보 ===\n\n";
-    detailMessage += "회사명: " + name + "\n";
-    detailMessage += "공고명: " + title + "\n";
-    detailMessage += "경력요구사항: " + experienceLevel + "\n";
-    detailMessage += "선호 개발자 유형: " + preferredDeveloperTypes + "\n";
-    detailMessage += "\n해당 공고 페이지로 이동하시겠습니까?";
-
-    if (confirm(detailMessage)) {
-        alert("공고 ID " + jobPostingId + " 페이지로 이동합니다.");
+    // jobPostingId 유효성 검사 및 문자열 변환
+    console.log(jobPostingId);
+    if (jobPostingId != null && jobPostingId !== "") {
+        $p.url("/InsWebApp/ui/post/PostDetail.xml?jobPostingId=" + String(jobPostingId));
     }
 };
-
 // 지원현황 행 클릭 이벤트 핸들러
-scwin.handleApplicationRowClick = function(e) {
+scwin.handleApplicationRowClick = function (e) {
     var index = this.getGeneratedIndex();
     if (typeof index === 'number' && index >= 0) {
         scwin.showApplicationDetail(index);
@@ -533,17 +511,17 @@ scwin.rejected_applications_onclick = function (e) {
 scwin.sbm_applicationStats_submitdone = function (e) {
     try {
         var res = e.responseJSON;
-        
+
         if (res && res.elData && res.elData.applicationStatusVo) {
             dlt_applicationStatsVo.setJSON(res.elData.applicationStatusVo);
-            
+
             // 5. UI 업데이트 함수 호출
             scwin.updateStatsFromData();
-            
+
         } else {
             console.warn("응답 데이터 구조가 예상과 다릅니다:", res);
         }
-        
+
     } catch (err) {
         console.error("통계 데이터 처리 오류:", err);
         alert("통계 데이터를 처리하는 중 오류가 발생했습니다.");
