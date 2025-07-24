@@ -355,6 +355,12 @@ public class SurveyController {
             }});
             returnMap.put("codeAnalysisComment", result.getCodeAnalysisComment());
             returnMap.put("codeAnalysisDetail", result.getCodeAnalysisDetail());
+            
+            // 답변 분석 결과 추가
+            returnMap.put("answerAnalyses", result.getAnswerAnalyses());
+            returnMap.put("axisContributions", result.getAxisContributions());
+            returnMap.put("answerPattern", result.getAnswerPattern());
+            returnMap.put("keyInsights", result.getKeyInsights());
 
             AppLog.debug("설문 제출 완료 - 최종 타입: " + result.getTypeCode());
             ProworksUserHeader userHeader = (ProworksUserHeader) ControllerContextUtil.getUserHeader();

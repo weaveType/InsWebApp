@@ -356,6 +356,157 @@
                 $c.sbm.execute(sbm_submitSurvey);
             };
             
+            // 답변 분석 결과 표시 함수
+            scwin.displayAnswerAnalysis = function(result) {
+                console.log('답변 분석 결과 표시:', result);
+                
+                // 답변 분석 섹션이 없으면 생성
+                var answerAnalysisSection = document.querySelector('.answer-analysis-section');
+                if (!answerAnalysisSection) {
+                    var section = document.createElement('div');
+                    section.className = 'answer-analysis-section';
+                    section.innerHTML = `
+                        <div class="answer-analysis-title">������ 설문 답변 분석</div>
+                        <div class="answer-analysis-content"></div>
+                    `;
+                    
+                    // 코드 분석 섹션 다음에 삽입
+                    var codeAnalysisSection = document.querySelector('.code-analysis-section');
+                    if (codeAnalysisSection) {
+                        codeAnalysisSection.parentNode.insertBefore(section, codeAnalysisSection.nextSibling);
+                    }
+                }
+                
+                var contentEl = document.querySelector('.answer-analysis-content');
+                if (!contentEl) return;
+                
+                var html = '';
+                
+                // 답변별 상세 분석
+                if (result.answerAnalyses && result.answerAnalyses.length > 0) {
+                    html += '<div class="answer-item">';
+                    html += '<div class="answer-header">';
+                    html += '<h4 class="answer-title">������ 선택한 답변 분석</h4>';
+                    html += '</div>';
+                    
+                    result.answerAnalyses.forEach(function(analysis) {
+                        var impactClass = analysis.impact === '높음' ? 'high' : analysis.impact === '보통' ? 'medium' : 'low';
+                        
+                        html += '<div class="answer-card ' + impactClass + '">';
+                        html += '<div class="answer-question">';
+                        html += '<span class="question-number">Q' + analysis.questionId + '</span>';
+                        html += '<span class="question-text">' + analysis.questionText + '</span>';
+                        html += '</div>';
+                        html += '<div class="answer-details">';
+                        html += '<div class="answer-value">답변: ' + analysis.answerValue + '점</div>';
+                        html += '<div class="answer-axis">' + analysis.axisDescription + '</div>';
+                        html += '<div class="answer-contribution">기여도: ' + analysis.contribution.toFixed(1) + '점</div>';
+                        html += '<div class="answer-impact">영향도: ' + analysis.impact + '</div>';
+                        html += '</div>';
+                        html += '<div class="answer-reasoning">' + analysis.reasoning + '</div>';
+                        html += '</div>';
+                    });
+                    html += '</div>';
+                }
+                
+                // 축별 기여도
+                if (result.axisContributions) {
+                    try {
+                        var axisContributions = JSON.parse(result.axisContributions);
+                        html += '<div class="answer-item">';
+                        html += '<div class="answer-header">';
+                        html += '<h4 class="answer-title">������ 축별 기여도</h4>';
+                        html += '</div>';
+                        
+                        for (var axis in axisContributions) {
+                            var info = axisContributions[axis];
+                            var axisName = scwin.getAxisDisplayName(axis);
+                            
+                            html += '<div class="axis-contribution-card">';
+                            html += '<div class="axis-name">' + axisName + '</div>';
+                            html += '<div class="axis-stats">';
+                            html += '<div class="stat-item">';
+                            html += '<span class="stat-label">총점:</span>';
+                            html += '<span class="stat-value">' + info.total.toFixed(1) + '점</span>';
+                            html += '</div>';
+                            html += '<div class="stat-item">';
+                            html += '<span class="stat-label">평균:</span>';
+                            html += '<span class="stat-value">' + info.average.toFixed(1) + '점</span>';
+                            html += '</div>';
+                            html += '<div class="stat-item">';
+                            html += '<span class="stat-label">답변 수:</span>';
+                            html += '<span class="stat-value">' + info.count + '개</span>';
+                            html += '</div>';
+                            html += '</div>';
+                            html += '</div>';
+                        }
+                        html += '</div>';
+                    } catch(e) {
+                        console.error('축별 기여도 파싱 오류:', e);
+                    }
+                }
+                
+                // 답변 패턴 분석
+                if (result.answerPattern) {
+                    html += '<div class="answer-item">';
+                    html += '<div class="answer-header">';
+                    html += '<h4 class="answer-title">������ 답변 패턴 분석</h4>';
+                    html += '</div>';
+                    html += '<div class="pattern-analysis">' + result.answerPattern.replace(/\n/g, '<br>') + '</div>';
+                    html += '</div>';
+                }
+                
+                // 주요 인사이트
+                if (result.keyInsights) {
+                    try {
+                        var keyInsights = JSON.parse(result.keyInsights);
+                        if (keyInsights.length > 0) {
+                            html += '<div class="answer-item">';
+                            html += '<div class="answer-header">';
+                            html += '<h4 class="answer-title">������ 주요 인사이트</h4>';
+                            html += '</div>';
+                            html += '<ul class="insights-list">';
+                            keyInsights.forEach(function(insight) {
+                                html += '<li class="insight-item">' + insight + '</li>';
+                            });
+                            html += '</ul>';
+                            html += '</div>';
+                        }
+                    } catch(e) {
+                        console.error('주요 인사이트 파싱 오류:', e);
+                    }
+                }
+                
+                contentEl.innerHTML = html;
+                
+                // 애니메이션 적용
+                setTimeout(function() {
+                    contentEl.querySelectorAll('.answer-item').forEach(function(element, index) {
+                        setTimeout(function() {
+                            element.style.opacity = '0';
+                            element.style.transform = 'translateY(30px)';
+                            element.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
+                            
+                            setTimeout(function() {
+                                element.style.opacity = '1';
+                                element.style.transform = 'translateY(0)';
+                            }, 50);
+                        }, index * 200);
+                    });
+                }, 500);
+            };
+            
+            // 축 표시 이름 가져오기
+            scwin.getAxisDisplayName = function(axis) {
+                var names = {
+                    'B_A': 'Builder vs Architect',
+                    'R_I': 'Refactor vs Innovate',
+                    'S_T': 'Solo vs Team',
+                    'D_F': 'Debug vs Feature'
+                };
+                return names[axis] || axis;
+            };
+            
             // 설문 제출 성공 콜백
             scwin.sbm_submitSurvey_submitdone = function(e) {
                 console.log("설문 제출 성공:", e.responseJSON);
@@ -662,6 +813,9 @@
                         detailEl.innerHTML = '<div class="error-message">코드 분석 결과를 불러올 수 없습니다.</div>';
                     }
                 }
+                
+                // 답변 분석 결과 표시
+                scwin.displayAnswerAnalysis(result);
             };
             
             // 다시하기
@@ -1311,6 +1465,228 @@
                 padding: 30px;
                 background: #f8f9fa;
                 border-radius: 8px;
+            }
+
+            /* 답변 분석 섹션 스타일 */
+            .answer-analysis-section {
+                max-width: 800px;
+                margin: 30px auto 40px auto;
+                text-align: left;
+            }
+
+            .answer-analysis-title {
+                font-size: 28px;
+                font-weight: bold;
+                color: #333;
+                text-align: center;
+                margin-bottom: 40px;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+            }
+
+            .answer-analysis-content {
+                display: flex;
+                flex-direction: column;
+                gap: 25px;
+            }
+
+            .answer-item {
+                background: white;
+                border-radius: 16px;
+                padding: 30px;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+                border: 1px solid rgba(0, 0, 0, 0.05);
+                opacity: 0;
+                transform: translateY(30px);
+                transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+
+            .answer-item.animated {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+            .answer-header {
+                font-size: 20px;
+                font-weight: bold;
+                color: #2d3436;
+                margin-bottom: 20px;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                border-bottom: 2px solid #e9ecef;
+                padding-bottom: 12px;
+            }
+
+            .answer-title {
+                margin: 0;
+            }
+
+            /* 답변 카드 스타일 */
+            .answer-card {
+                background: linear-gradient(135deg, #fff5f5, #fff8f8);
+                border-radius: 12px;
+                padding: 20px;
+                border: 1px solid #ffe6e6;
+                margin-bottom: 16px;
+                transition: all 0.3s ease;
+            }
+
+            .answer-card.high {
+                background: linear-gradient(135deg, #fff0f0, #fff5f5);
+                border-color: #ffcccc;
+            }
+
+            .answer-card.medium {
+                background: linear-gradient(135deg, #fff8f0, #fffaf5);
+                border-color: #ffe6cc;
+            }
+
+            .answer-card.low {
+                background: linear-gradient(135deg, #f0fff0, #f5fff5);
+                border-color: #ccffcc;
+            }
+
+            .answer-card:hover {
+                transform: translateX(8px);
+                box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+            }
+
+            .answer-question {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                margin-bottom: 12px;
+            }
+
+            .question-number {
+                background: #667eea;
+                color: white;
+                padding: 4px 8px;
+                border-radius: 6px;
+                font-size: 12px;
+                font-weight: bold;
+            }
+
+            .question-text {
+                font-weight: bold;
+                color: #2d3436;
+                flex: 1;
+            }
+
+            .answer-details {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+                gap: 8px;
+                margin-bottom: 12px;
+            }
+
+            .answer-value, .answer-axis, .answer-contribution, .answer-impact {
+                font-size: 14px;
+                color: #636e72;
+            }
+
+            .answer-reasoning {
+                background: #f8f9ff;
+                border-radius: 8px;
+                padding: 12px;
+                border-left: 4px solid #667eea;
+                font-size: 14px;
+                color: #495057;
+                line-height: 1.6;
+            }
+
+            /* 축별 기여도 카드 */
+            .axis-contribution-card {
+                background: linear-gradient(135deg, #f0f8ff, #f5faff);
+                border-radius: 12px;
+                padding: 20px;
+                border: 1px solid #e6f3ff;
+                margin-bottom: 12px;
+                transition: all 0.3s ease;
+            }
+
+            .axis-contribution-card:hover {
+                transform: translateX(8px);
+                box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+            }
+
+            .axis-name {
+                font-size: 16px;
+                font-weight: bold;
+                color: #2d3436;
+                margin-bottom: 12px;
+            }
+
+            .axis-stats {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+                gap: 8px;
+            }
+
+            .stat-item {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 8px 12px;
+                background: rgba(255, 255, 255, 0.8);
+                border-radius: 6px;
+            }
+
+            .stat-label {
+                font-size: 12px;
+                color: #666;
+            }
+
+            .stat-value {
+                font-weight: bold;
+                color: #667eea;
+            }
+
+            /* 패턴 분석 */
+            .pattern-analysis {
+                background: #f8f9ff;
+                border-radius: 12px;
+                padding: 20px;
+                border-left: 4px solid #667eea;
+                font-size: 14px;
+                line-height: 1.7;
+                color: #495057;
+            }
+
+            /* 인사이트 리스트 */
+            .insights-list {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+                display: flex;
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .insight-item {
+                background: linear-gradient(135deg, #fff8e1, #fffbf0);
+                border-radius: 8px;
+                padding: 16px;
+                border-left: 4px solid #ffc107;
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                font-size: 15px;
+                color: #8b6e00;
+                transition: all 0.3s ease;
+            }
+
+            .insight-item:hover {
+                transform: translateX(8px);
+                box-shadow: 0 4px 12px rgba(255, 193, 7, 0.15);
+            }
+
+            .insight-item::before {
+                content: '💡';
+                font-size: 18px;
             }
 
             /* 새로운 카드 스타일 */

@@ -194,7 +194,29 @@ public class SurveyServiceImpl implements SurveyService {
             }
             AppLog.debug("설문 점수 계산 완료: " + surveyScores);
             
-            // 3. 코드 분석 점수 조회
+            // 3. 답변 분석 수행
+            List<AnswerAnalysisVo> answerAnalyses;
+            Map<String, Object> axisContributions;
+            String answerPattern;
+            List<String> keyInsights;
+            
+            try {
+                answerAnalyses = analyzeSurveyAnswers(submitVo.getAnswers());
+                axisContributions = calculateAxisContributions(submitVo.getAnswers());
+                answerPattern = analyzeAnswerPattern(submitVo.getAnswers());
+                keyInsights = generateKeyInsights(submitVo.getAnswers());
+                
+                AppLog.debug("답변 분석 완료 - 분석된 답변 수: " + 
+                    (answerAnalyses != null ? answerAnalyses.size() : 0));
+            } catch (Exception analysisEx) {
+                AppLog.error("답변 분석 중 오류 발생", analysisEx);
+                answerAnalyses = new ArrayList<>();
+                axisContributions = new HashMap<>();
+                answerPattern = "분석 중 오류가 발생했습니다.";
+                keyInsights = new ArrayList<>();
+            }
+            
+            // 4. 코드 분석 점수 조회
             Map<String, Object> codeScores;
             try {
                 // 사용자 ID를 Long으로 변환
@@ -234,6 +256,18 @@ public class SurveyServiceImpl implements SurveyService {
             String codeDetail = codeResult != null ? codeResult.getAnalysisResult() : null;
             result.setCodeAnalysisComment(codeComment);
             result.setCodeAnalysisDetail(codeDetail);
+            
+            // 답변 분석 결과 설정
+            try {
+                result.setAnswerAnalyses(answerAnalyses);
+                result.setAxisContributions(objectMapper.writeValueAsString(axisContributions));
+                result.setAnswerPattern(answerPattern);
+                result.setKeyInsights(objectMapper.writeValueAsString(keyInsights));
+                
+                AppLog.debug("답변 분석 결과 설정 완료");
+            } catch (Exception e) {
+                AppLog.error("답변 분석 결과 설정 중 오류", e);
+            }
             
             // 5. 결과 저장
             try {
@@ -468,19 +502,308 @@ public class SurveyServiceImpl implements SurveyService {
      * @return 타입 설명
      */
     private String generateTypeDescription(String typeCode) {
-        // 실제로는 더 상세한 설명을 DB나 설정 파일에서 가져와야 함
-        switch (typeCode) {
-            case "BRSD":
-                return "빠른 구현과 실용성을 선호하며, 기존 코드를 개선하고 개인적으로 일하면서 버그를 발견하고 해결하는 데 보람을 느낍니다.";
-            case "BRSF":
-                return "빠른 구현과 실용성을 선호하며, 기존 코드를 개선하고 개인적으로 일하면서 새로운 기능을 창의적으로 개발하는 것을 즐깁니다.";
-            case "BRTD":
-                return "빠른 구현과 실용성을 선호하며, 기존 코드를 개선하고 소통과 협업을 중요하게 생각하면서 버그를 발견하고 해결하는 데 보람을 느낍니다.";
-            case "BRTF":
-                return "빠른 구현과 실용성을 선호하며, 기존 코드를 개선하고 소통과 협업을 중요하게 생각하면서 새로운 기능을 창의적으로 개발하는 것을 즐깁니다.";
-            // ... 나머지 타입들도 추가
-            default:
-                return "독특한 개발 스타일을 가진 개발자입니다.";
+        // 타입 코드에 따른 설명 생성
+        Map<String, String> descriptions = new HashMap<>();
+        descriptions.put("BRSD", "실용적 안정성 추구자");
+        descriptions.put("BRST", "실용적 체계 추구자");
+        descriptions.put("BRFD", "실용적 혁신 추구자");
+        descriptions.put("BRFT", "실용적 유연성 추구자");
+        descriptions.put("BISD", "혁신적 안정성 추구자");
+        descriptions.put("BIST", "혁신적 체계 추구자");
+        descriptions.put("BIFD", "혁신적 혁신 추구자");
+        descriptions.put("BIFT", "혁신적 유연성 추구자");
+        descriptions.put("ARSD", "개선적 안정성 추구자");
+        descriptions.put("ARST", "개선적 체계 추구자");
+        descriptions.put("ARFD", "개선적 혁신 추구자");
+        descriptions.put("ARFT", "개선적 유연성 추구자");
+        descriptions.put("AISD", "혁신적 안정성 추구자");
+        descriptions.put("AIST", "혁신적 체계 추구자");
+        descriptions.put("AIFD", "혁신적 혁신 추구자");
+        descriptions.put("AIFT", "혁신적 유연성 추구자");
+        
+        return descriptions.getOrDefault(typeCode, "개발자 성향 분석 결과");
+    }
+
+    /**
+     * 설문 답변 분석
+     */
+    private List<AnswerAnalysisVo> analyzeSurveyAnswers(List<QuestionAnswerVo> answers) {
+        List<AnswerAnalysisVo> analyses = new ArrayList<>();
+        
+        if (answers == null || answers.isEmpty()) {
+            return analyses;
         }
+
+        // 질문 정보 조회
+        List<SurveyQuestionVo> questions = surveyDAO.selectActiveQuestions();
+        Map<Long, SurveyQuestionVo> questionMap = new HashMap<>();
+        for (SurveyQuestionVo question : questions) {
+            questionMap.put(question.getQuestionId(), question);
+        }
+
+        // 축별 설명
+        Map<String, String> axisDescriptions = new HashMap<>();
+        axisDescriptions.put("B_A", "Builder vs Architect - 개발 방식 선호도");
+        axisDescriptions.put("R_I", "Refactor vs Innovate - 개선 방식 선호도");
+        axisDescriptions.put("S_T", "Solo vs Team - 협업 방식 선호도");
+        axisDescriptions.put("D_F", "Debug vs Feature - 작업 선호도");
+
+        for (QuestionAnswerVo answer : answers) {
+            AnswerAnalysisVo analysis = new AnswerAnalysisVo();
+            analysis.setQuestionId(answer.getQuestionId());
+            analysis.setAnswerValue(answer.getAnswerValue());
+
+            // 질문 정보 설정
+            SurveyQuestionVo question = questionMap.get(answer.getQuestionId());
+            if (question != null) {
+                analysis.setQuestionText(question.getQuestionText());
+                analysis.setAxis(question.getAxis());
+                analysis.setAxisDescription(axisDescriptions.get(question.getAxis()));
+            }
+
+            // 기여도 계산
+            double contribution = calculateAnswerContribution(answer);
+            analysis.setContribution(contribution);
+
+            // 영향도 수준 결정
+            String impact = determineImpactLevel(contribution);
+            analysis.setImpact(impact);
+
+            // 분석 근거 생성
+            String reasoning = generateAnswerReasoning(answer, question, contribution);
+            analysis.setReasoning(reasoning);
+
+            analyses.add(analysis);
+        }
+
+        return analyses;
+    }
+
+    /**
+     * 답변별 기여도 계산
+     */
+    private double calculateAnswerContribution(QuestionAnswerVo answer) {
+        // 7점 척도에서 중간값(4)을 0으로 하는 편차 계산
+        double deviation = answer.getAnswerValue() - CENTER_OPTION;
+        // 단위 점수로 변환
+        return deviation * UNIT_SCORE;
+    }
+
+    /**
+     * 영향도 수준 결정
+     */
+    private String determineImpactLevel(double contribution) {
+        double absContribution = Math.abs(contribution);
+        if (absContribution >= 10.0) {
+            return "높음";
+        } else if (absContribution >= 5.0) {
+            return "보통";
+        } else {
+            return "낮음";
+        }
+    }
+
+    /**
+     * 답변 분석 근거 생성
+     */
+    private String generateAnswerReasoning(QuestionAnswerVo answer, SurveyQuestionVo question, double contribution) {
+        if (question == null) {
+            return "질문 정보를 찾을 수 없습니다.";
+        }
+
+        String axis = question.getAxis();
+        int value = answer.getAnswerValue();
+        String direction = contribution > 0 ? "강화" : "약화";
+        String axisName = getAxisName(axis);
+
+        if (value >= 6) {
+            return String.format("매우 강한 %s 성향을 보여 %s 축을 %s시킵니다.", axisName, axisName, direction);
+        } else if (value >= 5) {
+            return String.format("강한 %s 성향을 보여 %s 축을 %s시킵니다.", axisName, axisName, direction);
+        } else if (value <= 2) {
+            return String.format("매우 약한 %s 성향을 보여 %s 축을 %s시킵니다.", axisName, axisName, direction);
+        } else if (value <= 3) {
+            return String.format("약한 %s 성향을 보여 %s 축을 %s시킵니다.", axisName, axisName, direction);
+        } else {
+            return String.format("중간 수준의 %s 성향을 보여 %s 축에 중립적 영향을 줍니다.", axisName, axisName);
+        }
+    }
+
+    /**
+     * 축 이름 가져오기
+     */
+    private String getAxisName(String axis) {
+        switch (axis) {
+            case "B_A": return "Builder/Architect";
+            case "R_I": return "Refactor/Innovate";
+            case "S_T": return "Solo/Team";
+            case "D_F": return "Debug/Feature";
+            default: return "Unknown";
+        }
+    }
+
+    /**
+     * 축별 기여도 계산
+     */
+    private Map<String, Object> calculateAxisContributions(List<QuestionAnswerVo> answers) {
+        Map<String, Object> contributions = new HashMap<>();
+        
+        if (answers == null || answers.isEmpty()) {
+            return contributions;
+        }
+
+        Map<String, List<Double>> axisScores = new HashMap<>();
+        axisScores.put("B_A", new ArrayList<>());
+        axisScores.put("R_I", new ArrayList<>());
+        axisScores.put("S_T", new ArrayList<>());
+        axisScores.put("D_F", new ArrayList<>());
+
+        // 질문 정보 조회
+        List<SurveyQuestionVo> questions = surveyDAO.selectActiveQuestions();
+        Map<Long, SurveyQuestionVo> questionMap = new HashMap<>();
+        for (SurveyQuestionVo question : questions) {
+            questionMap.put(question.getQuestionId(), question);
+        }
+
+        // 각 답변을 해당 축에 배정
+        for (QuestionAnswerVo answer : answers) {
+            SurveyQuestionVo question = questionMap.get(answer.getQuestionId());
+            if (question != null) {
+                String axis = question.getAxis();
+                double contribution = calculateAnswerContribution(answer);
+                axisScores.get(axis).add(contribution);
+            }
+        }
+
+        // 축별 총점 계산
+        for (String axis : axisScores.keySet()) {
+            List<Double> scores = axisScores.get(axis);
+            double total = scores.stream().mapToDouble(Double::doubleValue).sum();
+            double average = scores.isEmpty() ? 0.0 : total / scores.size();
+            
+            Map<String, Object> axisInfo = new HashMap<>();
+            axisInfo.put("total", total);
+            axisInfo.put("average", average);
+            axisInfo.put("count", scores.size());
+            axisInfo.put("max", scores.isEmpty() ? 0.0 : scores.stream().mapToDouble(Double::doubleValue).max().orElse(0.0));
+            axisInfo.put("min", scores.isEmpty() ? 0.0 : scores.stream().mapToDouble(Double::doubleValue).min().orElse(0.0));
+            
+            contributions.put(axis, axisInfo);
+        }
+
+        return contributions;
+    }
+
+    /**
+     * 답변 패턴 분석
+     */
+    private String analyzeAnswerPattern(List<QuestionAnswerVo> answers) {
+        if (answers == null || answers.isEmpty()) {
+            return "답변 데이터가 없습니다.";
+        }
+
+        // 극단성 분석
+        int extremeHigh = 0; // 6-7점
+        int extremeLow = 0;  // 1-2점
+        int moderate = 0;    // 3-5점
+
+        for (QuestionAnswerVo answer : answers) {
+            int value = answer.getAnswerValue();
+            if (value >= 6) {
+                extremeHigh++;
+            } else if (value <= 2) {
+                extremeLow++;
+            } else {
+                moderate++;
+            }
+        }
+
+        // 일관성 분석
+        double consistency = (double) moderate / answers.size() * 100;
+
+        // 패턴 설명 생성
+        StringBuilder pattern = new StringBuilder();
+        pattern.append("답변 패턴 분석 결과:\n");
+        pattern.append("• 극단적 높은 답변: ").append(extremeHigh).append("개\n");
+        pattern.append("• 극단적 낮은 답변: ").append(extremeLow).append("개\n");
+        pattern.append("• 중간 수준 답변: ").append(moderate).append("개\n");
+        pattern.append("• 일관성: ").append(String.format("%.1f", consistency)).append("%\n");
+
+        if (extremeHigh > extremeLow) {
+            pattern.append("• 특징: 강한 의견을 가진 확신형 성향이 나타남");
+        } else if (extremeLow > extremeHigh) {
+            pattern.append("• 특징: 보수적인 신중형 성향이 나타남");
+        } else {
+            pattern.append("• 특징: 균형잡힌 성향이 나타남");
+        }
+
+        return pattern.toString();
+    }
+
+    /**
+     * 주요 인사이트 생성
+     */
+    private List<String> generateKeyInsights(List<QuestionAnswerVo> answers) {
+        List<String> insights = new ArrayList<>();
+        
+        if (answers == null || answers.isEmpty()) {
+            insights.add("답변 데이터가 부족하여 인사이트를 생성할 수 없습니다.");
+            return insights;
+        }
+
+        // 질문 정보 조회
+        List<SurveyQuestionVo> questions = surveyDAO.selectActiveQuestions();
+        Map<Long, SurveyQuestionVo> questionMap = new HashMap<>();
+        for (SurveyQuestionVo question : questions) {
+            questionMap.put(question.getQuestionId(), question);
+        }
+
+        // 축별 분석
+        Map<String, List<Double>> axisContributions = new HashMap<>();
+        axisContributions.put("B_A", new ArrayList<>());
+        axisContributions.put("R_I", new ArrayList<>());
+        axisContributions.put("S_T", new ArrayList<>());
+        axisContributions.put("D_F", new ArrayList<>());
+
+        for (QuestionAnswerVo answer : answers) {
+            SurveyQuestionVo question = questionMap.get(answer.getQuestionId());
+            if (question != null) {
+                String axis = question.getAxis();
+                double contribution = calculateAnswerContribution(answer);
+                axisContributions.get(axis).add(contribution);
+            }
+        }
+
+        // 각 축별 인사이트 생성
+        for (String axis : axisContributions.keySet()) {
+            List<Double> contributions = axisContributions.get(axis);
+            if (!contributions.isEmpty()) {
+                double total = contributions.stream().mapToDouble(Double::doubleValue).sum();
+                String axisName = getAxisName(axis);
+                
+                if (total > 10) {
+                    insights.add(String.format("강한 %s 성향이 나타나 체계적인 접근을 선호합니다.", axisName));
+                } else if (total < -10) {
+                    insights.add(String.format("강한 %s 성향이 나타나 유연한 접근을 선호합니다.", axisName));
+                } else {
+                    insights.add(String.format("균형잡힌 %s 성향을 보여 상황에 따라 적응할 수 있습니다.", axisName));
+                }
+            }
+        }
+
+        // 전체적인 인사이트
+        int totalAnswers = answers.size();
+        long highAnswers = answers.stream().filter(a -> a.getAnswerValue() >= 6).count();
+        long lowAnswers = answers.stream().filter(a -> a.getAnswerValue() <= 2).count();
+
+        if (highAnswers > totalAnswers * 0.6) {
+            insights.add("전반적으로 강한 의견을 가진 확신형 성향이 나타납니다.");
+        } else if (lowAnswers > totalAnswers * 0.6) {
+            insights.add("전반적으로 보수적인 신중형 성향이 나타납니다.");
+        } else {
+            insights.add("균형잡힌 성향으로 다양한 상황에 적응할 수 있는 유연성을 보입니다.");
+        }
+
+        return insights;
     }
 }
