@@ -76,7 +76,7 @@ export default {
       "@value": "true"
     },
     "processMsgHeight": {
-      "@value": "150"
+      "@value": "180"
     },
     "processMsgWidth": {
       "@value": "350"
