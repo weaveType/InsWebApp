@@ -551,38 +551,116 @@
 
                 console.log('설문 결과 표시 완료:', typeCode, typeInfo.name);
 
-                // 코드 분석 코멘트 및 상세 분석 표시
+                // 코드 분석 코멘트 및 상세 분석 표시 (CodeAnalysisMain.xml 스타일)
                 var commentEl = document.querySelector('.code-analysis-comment');
                 var detailEl = document.querySelector('.code-analysis-detail');
-                if (commentEl && result.codeAnalysisComment) commentEl.textContent = result.codeAnalysisComment;
+                
+                if (commentEl && result.codeAnalysisComment) {
+                    commentEl.textContent = result.codeAnalysisComment;
+                }
+                
                 if (detailEl && result.codeAnalysisDetail) {
-                  try {
-                    var detailObj = JSON.parse(result.codeAnalysisDetail);
-                    // 패턴, 강점, 개선점 등 시각화 (예시)
-                    var html = '';
-                    if (detailObj.detailed_analysis) {
-                      if (detailObj.detailed_analysis.code_patterns) {
-                        html += '<div><b>코드 패턴</b><ul>';
-                        detailObj.detailed_analysis.code_patterns.forEach(function(p){ html += '<li>' + p.pattern + ': ' + p.description + '</li>'; });
-                        html += '</ul></div>';
-                      }
-                      if (detailObj.detailed_analysis.strengths) {
-                        html += '<div><b>강점</b><ul>';
-                        detailObj.detailed_analysis.strengths.forEach(function(s){ html += '<li>' + s + '</li>'; });
-                        html += '</ul></div>';
-                      }
-                      if (detailObj.detailed_analysis.suggestions) {
-                        html += '<div><b>개선점</b><ul>';
-                        detailObj.detailed_analysis.suggestions.forEach(function(s){ html += '<li>' + s + '</li>'; });
-                        html += '</ul></div>';
-                      }
-                    } else {
-                      html = result.codeAnalysisDetail;
+                    try {
+                        var detailObj = JSON.parse(result.codeAnalysisDetail);
+                        var html = '';
+                        
+                        if (detailObj.detailed_analysis) {
+                            // 코드 패턴 분석
+                            if (detailObj.detailed_analysis.code_patterns && detailObj.detailed_analysis.code_patterns.length > 0) {
+                                html += '<div class="pattern-item">';
+                                html += '<div class="pattern-header">';
+                                html += '<h4 class="pattern-title">������ 발견된 코드 패턴</h4>';
+                                html += '</div>';
+                                
+                                detailObj.detailed_analysis.code_patterns.forEach(function(pattern) {
+                                    var impactScore = pattern.impact_score || 0;
+                                    var impactBars = '';
+                                    for (var k = 0; k < 10; k++) {
+                                        impactBars += '<span class="impact-bar ' + (k < impactScore ? 'filled' : '') + '"></span>';
+                                    }
+                                    
+                                    html += '<div class="pattern-item" style="margin-bottom: 16px;">';
+                                    html += '<div class="pattern-header">';
+                                    html += '<h4 class="pattern-title">' + (pattern.pattern || 'Code Pattern') + '</h4>';
+                                    html += '<div class="pattern-impact">';
+                                    html += '<span class="impact-label">영향도</span>';
+                                    html += '<div class="impact-score">' + impactBars + '</div>';
+                                    html += '<span class="impact-number">' + impactScore + '/10</span>';
+                                    html += '</div>';
+                                    html += '</div>';
+                                    html += '<p class="pattern-description">' + (pattern.description || '') + '</p>';
+                                    
+                                    if (pattern.evidence && pattern.evidence.length > 0) {
+                                        html += '<div class="pattern-evidence"><ul>';
+                                        pattern.evidence.forEach(function(evidence) {
+                                            html += '<li>' + evidence + '</li>';
+                                        });
+                                        html += '</ul></div>';
+                                    }
+                                    html += '</div>';
+                                });
+                                html += '</div>';
+                            }
+                            
+                            // 강점 분석
+                            if (detailObj.detailed_analysis.strengths && detailObj.detailed_analysis.strengths.length > 0) {
+                                html += '<div class="pattern-item">';
+                                html += '<div class="pattern-header">';
+                                html += '<h4 class="pattern-title">⭐ 개발 강점</h4>';
+                                html += '</div>';
+                                html += '<ul class="strengths-list">';
+                                detailObj.detailed_analysis.strengths.forEach(function(strength) {
+                                    html += '<li class="strength-item">';
+                                    html += '<span class="strength-icon">✅</span>';
+                                    html += strength;
+                                    html += '</li>';
+                                });
+                                html += '</ul>';
+                                html += '</div>';
+                            }
+                            
+                            // 개선 제안
+                            if (detailObj.detailed_analysis.suggestions && detailObj.detailed_analysis.suggestions.length > 0) {
+                                html += '<div class="pattern-item">';
+                                html += '<div class="pattern-header">';
+                                html += '<h4 class="pattern-title">������ 개선 제안</h4>';
+                                html += '</div>';
+                                html += '<ul class="suggestions-list">';
+                                detailObj.detailed_analysis.suggestions.forEach(function(suggestion) {
+                                    html += '<li class="suggestion-item">';
+                                    html += '<span class="suggestion-icon">������</span>';
+                                    html += suggestion;
+                                    html += '</li>';
+                                });
+                                html += '</ul>';
+                                html += '</div>';
+                            }
+                        } else {
+                            html = '<div class="error-message">상세 분석 정보를 불러올 수 없습니다.</div>';
+                        }
+                        
+                        detailEl.innerHTML = html;
+                        
+                        // 순차 애니메이션 적용
+                        setTimeout(function() {
+                            detailEl.querySelectorAll('.pattern-item').forEach(function(element, index) {
+                                setTimeout(function() {
+                                    element.style.opacity = '0';
+                                    element.style.transform = 'translateY(30px)';
+                                    element.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
+                                    
+                                    setTimeout(function() {
+                                        element.style.opacity = '1';
+                                        element.style.transform = 'translateY(0)';
+                                    }, 50);
+                                }, index * 200);
+                            });
+                        }, 500);
+                        
+                    } catch(e) {
+                        console.error('코드 분석 결과 파싱 오류:', e);
+                        detailEl.innerHTML = '<div class="error-message">코드 분석 결과를 불러올 수 없습니다.</div>';
                     }
-                    detailEl.innerHTML = html;
-                  } catch(e) {
-                    detailEl.textContent = result.codeAnalysisDetail;
-                  }
                 }
             };
             
@@ -1041,45 +1119,198 @@
                 margin-bottom: 30px;
             }
             
-            /* 코드 분석 코멘트 영역 개선 */
+            /* 코드 분석 결과 스타일 (CodeAnalysisMain.xml 참고) */
             .code-analysis-section {
-                background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-                border-radius: 16px;
-                padding: 35px;
-                margin-top: 30px;
-                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-                border: 1px solid rgba(0, 0, 0, 0.05);
+                max-width: 800px;
+                margin: 30px auto 40px auto;
+                text-align: left;
             }
 
             .code-analysis-title {
-                font-size: 20px;
-                font-weight: 700;
-                color: #2c3e50;
-                margin-bottom: 25px;
+                font-size: 28px;
+                font-weight: bold;
+                color: #333;
                 text-align: center;
-                border-bottom: 2px solid #3498db;
-                padding-bottom: 10px;
+                margin-bottom: 40px;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
             }
 
             .code-analysis-comment {
-                font-size: 16px;
-                line-height: 1.6;
-                color: #34495e;
-                background: rgba(255, 255, 255, 0.8);
-                padding: 20px;
+                background: #f8f9ff;
                 border-radius: 12px;
-                margin-bottom: 20px;
-                border-left: 4px solid #3498db;
+                padding: 20px;
+                border-left: 4px solid #667eea;
+                margin-bottom: 25px;
+                font-size: 16px;
+                line-height: 1.7;
+                color: #495057;
+                font-style: normal;
             }
 
             .code-analysis-detail {
-                font-size: 14px;
-                line-height: 1.7;
-                color: #5a6c7d;
-                background: rgba(255, 255, 255, 0.9);
-                padding: 25px;
+                display: flex;
+                flex-direction: column;
+                gap: 16px;
+            }
+
+            /* 패턴 분석 스타일 */
+            .pattern-item {
+                background: linear-gradient(135deg, #fff5f5, #fff8f8);
                 border-radius: 12px;
-                border: 1px solid rgba(52, 152, 219, 0.2);
+                padding: 20px;
+                border: 1px solid #ffe6e6;
+                transition: all 0.3s ease;
+            }
+
+            .pattern-item:hover {
+                transform: translateX(8px);
+                box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+            }
+
+            .pattern-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 12px;
+            }
+
+            .pattern-title {
+                font-size: 16px;
+                font-weight: bold;
+                color: #2d3436;
+                margin: 0;
+            }
+
+            .pattern-impact {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+
+            .impact-label {
+                font-size: 12px;
+                color: #666;
+                font-weight: 500;
+            }
+
+            .impact-score {
+                display: flex;
+                gap: 2px;
+            }
+
+            .impact-bar {
+                width: 12px;
+                height: 4px;
+                background: #e9ecef;
+                border-radius: 2px;
+            }
+
+            .impact-bar.filled {
+                background: linear-gradient(135deg, #667eea, #764ba2);
+            }
+
+            .impact-number {
+                font-size: 12px;
+                font-weight: bold;
+                color: #667eea;
+            }
+
+            .pattern-description {
+                font-size: 14px;
+                color: #636e72;
+                line-height: 1.6;
+                margin: 0 0 12px 0;
+            }
+
+            .pattern-evidence ul {
+                margin: 0;
+                padding-left: 20px;
+            }
+
+            .pattern-evidence li {
+                font-size: 13px;
+                color: #6c757d;
+                margin-bottom: 4px;
+                line-height: 1.5;
+            }
+
+            /* 강점 분석 스타일 */
+            .strengths-list {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+                display: flex;
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .strength-item {
+                background: linear-gradient(135deg, #f0fff4, #f8fff8);
+                border-radius: 8px;
+                padding: 16px;
+                border-left: 4px solid #28a745;
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                font-size: 15px;
+                color: #2d5016;
+                transition: all 0.3s ease;
+            }
+
+            .strength-item:hover {
+                transform: translateX(8px);
+                box-shadow: 0 4px 12px rgba(40, 167, 69, 0.15);
+            }
+
+            .strength-icon {
+                font-size: 18px;
+                color: #28a745;
+                font-weight: bold;
+            }
+
+            /* 개선 제안 스타일 */
+            .suggestions-list {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+                display: flex;
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .suggestion-item {
+                background: linear-gradient(135deg, #fff8e1, #fffbf0);
+                border-radius: 8px;
+                padding: 16px;
+                border-left: 4px solid #ffc107;
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                font-size: 15px;
+                color: #8b6e00;
+                transition: all 0.3s ease;
+            }
+
+            .suggestion-item:hover {
+                transform: translateX(8px);
+                box-shadow: 0 4px 12px rgba(255, 193, 7, 0.15);
+            }
+
+            .suggestion-icon {
+                font-size: 18px;
+                color: #ffc107;
+            }
+
+            .no-patterns, .no-strengths, .no-suggestions, .error-message {
+                text-align: center;
+                color: #999;
+                font-style: italic;
+                padding: 30px;
+                background: #f8f9fa;
+                border-radius: 8px;
             }
 
             /* 새로운 카드 스타일 */
