@@ -352,24 +352,36 @@
     var userInfoStr = WebSquare.cookie.getCookie("userInfo");
     var userInfo = JSON.parse(userInfoStr);
     dma_userInfoVo.set("accountId", userInfo.accountId);
-    console.log(dma_userInfoVo);
 
+    var executeFunction = $p.getParameter("executeFunction");
+
+    if (executeFunction === "menu_interest_onclick") {
+        // 매칭 호출
+        setTimeout(function () {
+            scwin.menu_interest_onclick();
+        }, 50);
+    } else if (executeFunction === "menu_history_onclick") {
+        // 지원현황 호출
+        setTimeout(function () {
+            scwin.menu_history_onclick();
+        }, 50);
+    }
     // 서버 통신
     $c.sbm.execute($p, sbm_userDetail);
 };
 
 // 사용자 정보 조회 완료 처리
-scwin.updateCardStatus = function(e) {
+scwin.updateCardStatus = function (e) {
     try {
         var res = e.responseJSON;
         if (!res) {
             console.warn("응답 JSON이 없습니다.");
             return;
         }
-        
+
         var data = res.elData || res;
 
-        
+
         if (data) {
             dma_userInfoVo.setJSON(data);
             // 페이지 로드 시 첫 화면으로 UserDetailMain.xml 설정
@@ -385,18 +397,18 @@ scwin.updateCardStatus = function(e) {
         } else {
             menu_profile.addClass("incomplete");
         }
-    } catch(err) {
+    } catch (err) {
         console.error("updateCardStatus 오류:", err);
     }
 };
 
 // 오류 처리
-scwin.sbm_userDetail_submiterror = function(e){
+scwin.sbm_userDetail_submiterror = function (e) {
     $c.win.alert("사용자 정보를 불러오는데 실패했습니다.");
 };
 
 // 메뉴 활성화 상태 변경 공통 함수
-scwin.setActiveMenu = function(activeMenu) {
+scwin.setActiveMenu = function (activeMenu) {
     // 모든 메뉴 비활성화
     menu_profile.removeClass("active");
     menu_history.removeClass("active");
@@ -407,19 +419,19 @@ scwin.setActiveMenu = function(activeMenu) {
 };
 
 // 프로필 메뉴 클릭 이벤트
-scwin.menu_profile_onclick = function() {
+scwin.menu_profile_onclick = function () {
     scwin.setActiveMenu(menu_profile);
     contentFrame.setSrc('UserDetailMain.xml');
 };
 
 // 지원현황 메뉴 클릭 이벤트
-scwin.menu_history_onclick = function() {
+scwin.menu_history_onclick = function () {
     scwin.setActiveMenu(menu_history);
     contentFrame.setSrc('ApplicationHistory.xml');
 };
 
 // 매칭제안 메뉴 클릭 이벤트
-scwin.menu_interest_onclick = function() {
+scwin.menu_interest_onclick = function () {
     scwin.setActiveMenu(menu_interest);
     contentFrame.setSrc('UserMatchPage.xml');
 };]]></script>
