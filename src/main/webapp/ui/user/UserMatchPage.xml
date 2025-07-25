@@ -159,8 +159,6 @@ scwin.init = function () {
     dmp_searchParam.set("pageIndex", 1);
     dmp_searchParam.set("pageSize", 10);
 
-    // 데이터 초기화
-    dlt_scoutListVo.clear(); // 기존 데이터 초기화
 
     // 로딩 상태 및 더 많은 데이터 여부 초기화
     scwin.isLoading = false;

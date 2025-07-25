@@ -21,8 +21,10 @@
             background-color: #ffffff;
             border: 1px solid #007bff; /* Blue border */
             border-radius: 10px;
-            padding: 25px; /* Sufficient padding */
+            padding: 120px 40px; /* Much bigger padding: 120px top/bottom, 40px left/right (restored) */
             box-sizing: border-box; /* Include padding and border in element's total width and height */
+            min-height: 400px; /* Much larger minimum height: 250px -> 400px */
+            min-width: 400px; /* Restored original minimum width */
             /* max-width and max-height removed to let content dictate size within iframe */
             display: flex;
             flex-direction: column;
@@ -33,10 +35,10 @@
             border: 5px solid rgba(0, 123, 255, 0.2); /* Lighter blue for the track */
             border-left-color: #007bff; /* Blue for the spinner */
             border-radius: 50%;
-            width: 50px; /* Ensure width and height are equal for perfect circle */
+            width: 50px; /* Back to original size */
             height: 50px;
             animation: spin 1s linear infinite;
-            margin-bottom: 20px; /* Space below spinner */
+            margin-bottom: 20px; /* Back to original spacing */
         }
         .text {
             font-size: 18px; /* Reverted to 18px */

@@ -513,7 +513,7 @@ scwin.code_button_onclick = function (e) {
 								<!-- 연봉 -->
 								<xf:group class="info-item">
 									<w2:textbox class="info-item-label" label="희망 연봉"></w2:textbox>
-									<w2:textbox class="info-item-value" ref="data:dma_userInfoVo.yearSalary"></w2:textbox>
+									<w2:textbox class="info-item-value" ref="data:dma_userInfoVo.yearSalary" displayFormat="#,###" id="yearSalary_textbox"></w2:textbox>
 								</xf:group>
 
 								<!-- 경력 수준 -->
