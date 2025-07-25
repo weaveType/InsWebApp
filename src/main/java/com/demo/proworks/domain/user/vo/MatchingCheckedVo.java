@@ -22,6 +22,12 @@ public class MatchingCheckedVo extends com.demo.proworks.cmmn.ProworksCommVO {
     @ElDtoField(logicalName = "코드분석 진행여부", physicalName = "isCodeChecked", type = "boolean", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
     private boolean isCodeChecked;
 
+    @ElDtoField(logicalName = "매칭제안수", physicalName = "matchingProposalCount", type = "int", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private int matchingProposalCount;
+
+    @ElDtoField(logicalName = "지원현황수", physicalName = "applicationStatusCount", type = "int", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private int applicationStatusCount;
+
     @ElVoField(physicalName = "accountId")
     public int getAccountId(){
         return accountId;
@@ -52,13 +58,35 @@ public class MatchingCheckedVo extends com.demo.proworks.cmmn.ProworksCommVO {
         this.isCodeChecked = isCodeChecked;
     }
 
+    @ElVoField(physicalName = "matchingProposalCount")
+    public int getMatchingProposalCount(){
+        return matchingProposalCount;
+    }
+
+    @ElVoField(physicalName = "matchingProposalCount")
+    public void setMatchingProposalCount(int matchingProposalCount){
+        this.matchingProposalCount = matchingProposalCount;
+    }
+
+    @ElVoField(physicalName = "applicationStatusCount")
+    public int getApplicationStatusCount(){
+        return applicationStatusCount;
+    }
+
+    @ElVoField(physicalName = "applicationStatusCount")
+    public void setApplicationStatusCount(int applicationStatusCount){
+        this.applicationStatusCount = applicationStatusCount;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("MatchingCheckedVo [");
         sb.append("accountId").append("=").append(accountId).append(",");
         sb.append("isMbtiChecked").append("=").append(isMbtiChecked).append(",");
-        sb.append("isCodeChecked").append("=").append(isCodeChecked);
+        sb.append("isCodeChecked").append("=").append(isCodeChecked).append(",");
+        sb.append("matchingProposalCount").append("=").append(matchingProposalCount).append(",");
+        sb.append("applicationStatusCount").append("=").append(applicationStatusCount);
         sb.append("]");
         return sb.toString();
 

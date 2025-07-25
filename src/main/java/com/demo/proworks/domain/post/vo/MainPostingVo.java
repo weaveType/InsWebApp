@@ -28,6 +28,9 @@ public class MainPostingVo extends com.demo.proworks.cmmn.ProworksCommVO {
     @ElDtoField(logicalName = "공고 ID", physicalName = "jobPostingId", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
     private String jobPostingId;
 
+    @ElDtoField(logicalName = "공고 이미지 파일명", physicalName = "jobImageFileName", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private String jobImageFileName;
+
     @ElVoField(physicalName = "name")
     public String getName(){
         String ret = this.name;
@@ -83,6 +86,17 @@ public class MainPostingVo extends com.demo.proworks.cmmn.ProworksCommVO {
         this.jobPostingId = jobPostingId;
     }
 
+    @ElVoField(physicalName = "jobImageFileName")
+    public String getJobImageFileName(){
+        String ret = this.jobImageFileName;
+        return ret;
+    }
+
+    @ElVoField(physicalName = "jobImageFileName")
+    public void setJobImageFileName(String jobImageFileName){
+        this.jobImageFileName = jobImageFileName;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -91,7 +105,8 @@ public class MainPostingVo extends com.demo.proworks.cmmn.ProworksCommVO {
         sb.append("preferredDeveloperTypes").append("=").append(preferredDeveloperTypes).append(",");
         sb.append("location").append("=").append(location).append(",");
         sb.append("experienceLevel").append("=").append(experienceLevel).append(",");
-        sb.append("jobPostingId").append("=").append(jobPostingId);
+        sb.append("jobPostingId").append("=").append(jobPostingId).append(",");
+        sb.append("jobImageFileName").append("=").append(jobImageFileName);
         sb.append("]");
         return sb.toString();
 

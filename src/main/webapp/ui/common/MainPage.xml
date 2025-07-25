@@ -29,6 +29,9 @@
 						<w2:key dataType="text" name="사용자 계정 ID" id="accountId"></w2:key>
 						<w2:key dataType="text" name="성향분석 체크여부" id="isMbtiChecked"></w2:key>
 						<w2:key dataType="text" name="코드분석 진행여부" id="isCodeChecked"></w2:key>
+						<w2:key dataType="text" name="매칭횟수" id="machingCount"></w2:key>
+						<w2:key dataType="number" name="매칭제안수" id="matchingProposalCount"></w2:key>
+						<w2:key dataType="number" name="지원현황수" id="applicationStatusCount"></w2:key>
 					</w2:keyInfo>
 				</w2:dataMap>
 				<w2:dataList baseNode="list" repeatNode="map" id="dlt_posting_list" saveRemovedData="true">
@@ -38,6 +41,7 @@
 						<w2:column dataType="text" name="지역" id="location"></w2:column>
 						<w2:column dataType="text" name="경력" id="experienceLevel"></w2:column>
 						<w2:column dataType="text" name="공고 ID" id="jobPostingId"></w2:column>
+						<w2:column dataType="text" name="공고 이미지" id="jobImageFileName"></w2:column>
 					</w2:columnInfo>
 				</w2:dataList>
 			</w2:dataCollection>
@@ -125,6 +129,8 @@ scwin.smb_selectMatchingChecked_submitdone = function (e) {
 
     var isMbtiChecked = dmp_matchingCheckedVo.get("isMbtiChecked");
     var isCodeChecked = dmp_matchingCheckedVo.get("isCodeChecked");
+    var matchingProposalCount = dmp_matchingCheckedVo.get("matchingProposalCount") || 0;
+    var applicationStatusCount = dmp_matchingCheckedVo.get("applicationStatusCount") || 0;
 
     if (isMbtiChecked) {
         card2.addClass("completed"); 
@@ -136,6 +142,10 @@ scwin.smb_selectMatchingChecked_submitdone = function (e) {
     } else {
         card3.removeClass("completed");
     }
+
+    // 매칭 제안 수와 지원 현황 수 업데이트
+    txb_matching_proposal_count.setValue(matchingProposalCount);
+    txb_application_status_count.setValue(applicationStatusCount);
 
     // 프로필 완성도 업데이트
     var completeCount = 0;
@@ -177,7 +187,7 @@ scwin.ad_onclick = function (e) {
 
 // 카드 클릭 이벤트
 scwin.card1_onclick = function () {
-    $p.url("../common/Tutorial.xml");
+    $p.url("MbtiExample.xml");
 };
 
 scwin.card2_onclick = function () {
@@ -315,12 +325,22 @@ scwin.sbm_selectPostingList_submitdone = function (e) {
         var location = dlt_posting_list.getCellData(i, "location");
         var experienceLevel = dlt_posting_list.getCellData(i, "experienceLevel");
         var preferredDeveloperTypesRaw = dlt_posting_list.getCellData(i, "preferredDeveloperTypes");
+        var jobImageFileName = dlt_posting_list.getCellData(i, "jobImageFileName");
 
         var txt_name = gen_position_card.getChild(i, "txt_name");
         var txt_title = gen_position_card.getChild(i, "txt_title");
+        var img_job_image = gen_position_card.getChild(i, "img_job_image");
 
         txt_name.setValue(name);
         txt_title.setValue(location + " · " + experienceLevel);
+
+        // 공고 이미지 설정
+        var jobImageBase = '/InsWebApp/images/company/'; // 공고 이미지가 저장된 폴더
+        var defaultJobImage = '/InsWebApp/images/ws5/default_job.png'; // 기본 이미지
+
+        var hasJobImage = jobImageFileName && jobImageFileName.trim() !== '';
+        var jobImgSrc = hasJobImage ? jobImageBase + jobImageFileName : defaultJobImage;
+        img_job_image.setSrc(jobImgSrc);
 
         // Helper function to escape HTML special characters
         function escapeHtml(text) {
@@ -656,7 +676,7 @@ scwin.applicationStatus_onclick = function(e) {
             }
 
             .position-header-dark {
-                background-color: #333;
+                background-color: transparent;
             }
 
             .position-header-blue {
@@ -1153,11 +1173,11 @@ scwin.applicationStatus_onclick = function(e) {
 							<!-- 통계 영역 -->
 							<xf:group class="stats-section">
 								<xf:group class="stats-item">
-									<w2:textbox class="stats-number" id="txb_matching_count" label="0" ev:onclick="scwin.matchingProposal_onclick" style="cursor: pointer;"></w2:textbox>
+									<w2:textbox class="stats-number" id="txb_matching_proposal_count" label="0" ev:onclick="scwin.matchingProposal_onclick" style="cursor: pointer;"></w2:textbox>
 									<w2:textbox class="stats-label" label="매칭 제안" ev:onclick="scwin.matchingProposal_onclick" style="cursor: pointer;"></w2:textbox>
 								</xf:group>
 								<xf:group class="stats-item">
-									<w2:textbox class="stats-number" id="txb_application_count" label="0" ev:onclick="scwin.applicationStatus_onclick" style="cursor: pointer;"></w2:textbox>
+									<w2:textbox class="stats-number" id="txb_application_status_count" label="0" ev:onclick="scwin.applicationStatus_onclick" style="cursor: pointer;"></w2:textbox>
 									<w2:textbox class="stats-label" label="지원현황" ev:onclick="scwin.applicationStatus_onclick" style="cursor: pointer;"></w2:textbox>
 								</xf:group>
 							</xf:group>
@@ -1174,24 +1194,25 @@ scwin.applicationStatus_onclick = function(e) {
 					<!-- 카드 1: 튜토리얼 -->
 					<xf:group class="card card-green" id="card1" ev:onclick="scwin.card1_onclick">
 						<xf:group class="card-icon card-icon-green">
-							<xf:image src="/InsWebApp/images/ws5/main/tutorial.png" style="width: 150px;height: 150px;" id=""></xf:image>
+							<xf:image src="/InsWebApp/images/ws5/mbti/png/BITF.png" style="width: 150px;height: 150px;" id=""></xf:image>
 						</xf:group>
-						<w2:textbox class="card-title" label="튜토리얼"></w2:textbox>
+						<w2:textbox class="card-title" label="성향 유형"></w2:textbox>
 					</xf:group>
 					<!-- 카드 2: 성향 검사 -->
-					<xf:group class="card card-blue" id="card2" ev:onclick="scwin.card2_onclick">
-						<xf:group class="card-icon card-icon-blue">
-							<xf:image src="/InsWebApp/images/ws5/main/mbti_check.png" style="width: 150px;height: 150px;" id=""></xf:image>
-						</xf:group>
-						<w2:textbox class="card-title" label="개발자 성향분석"></w2:textbox>
-					</xf:group>
-                    <!-- 카드 3: 코드 분석 -->
 					<xf:group class="card card-orange" id="card3" ev:onclick="scwin.card3_onclick">
 						<xf:group class="card-icon card-icon-orange">
 							<xf:image src="/InsWebApp/images/ws5/main/code_check.png" style="width: 150px;height: 150px;" id=""></xf:image>
 						</xf:group>
 						<w2:textbox class="card-title" label="코드분석" style=""></w2:textbox>
 					</xf:group>
+					<xf:group class="card card-blue" id="card2" ev:onclick="scwin.card2_onclick">
+						<xf:group class="card-icon card-icon-blue">
+							<xf:image src="/InsWebApp/images/ws5/main/mbti_check.png" style="width: 150px;height: 150px;" id=""></xf:image>
+						</xf:group>
+						<w2:textbox class="card-title" label="개발자 성향분석"></w2:textbox>
+					</xf:group>
+					<!-- 카드 3: 코드 분석 -->
+
 				</xf:group>
 			</xf:group>
 
@@ -1201,7 +1222,9 @@ scwin.applicationStatus_onclick = function(e) {
 
 				<w2:generator id="gen_position_card" class="positions-container">
 						<xf:group class="position-card" style="position: relative;">
-							<xf:group class="position-header position-header-dark"></xf:group>
+							<xf:group class="position-header">
+								<xf:image id="img_job_image" style="width: 100%; height: 100%; object-fit: cover; border-radius: 5px;" />
+							</xf:group>
 							<w2:textbox class="position-company" id="txt_name"></w2:textbox>
 							<w2:textbox class="position-title" id="txt_title"></w2:textbox>
 							<xf:group id="grp_tags_container" class="dev-type-tag-container">

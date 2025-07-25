@@ -52,7 +52,7 @@
     </insert>	
 	
     <update id="updatePost" parameterType="com.demo.proworks.domain.post.vo.PostVo">
-    	<!-- 공고정보를 갱신한다. -->
+<!-- 공고정보를 갱신한다. -->
     	
         UPDATE POSTS    /* QueryID : com.demo.proworks.domain.post.updatePost */      
       	  SET  
@@ -66,13 +66,12 @@
             <if test="location                 != null"> , LOCATION                  = #{location}                  </if>
             <if test="workType                != null"> , WORK_TYPE                 = #{workType}                 </if>
             <if test="preferredDeveloperTypes!= null"> , PREFERRED_DEVELOPER_TYPES = #{preferredDeveloperTypes} </if>
-            <if test="expiresAt               != null"> , EXPIRES_AT                = #{expiresAt}                </if>
             <if test="postedAt                != null"> , POSTED_AT                 = #{postedAt}                 </if>
             <if test="status                   != null"> , STATUS                    = #{status}                    </if>
                  
         WHERE   
-                JOB_POSTING_ID            = #{jobPostingId}           
-    </update>
+                JOB_POSTING_ID            = #{jobPostingId}
+</update>
 	
     <update id="deletePost" parameterType="com.demo.proworks.domain.post.vo.PostVo">
     	<!-- 공고정보를 소프트 삭제한다. (is_deleted = 1로 설정) -->
@@ -330,10 +329,13 @@ SELECT
     p.preferred_developer_types AS preferredDeveloperTypes,
     p.location AS location,
     p.experience_level AS experienceLevel,
-    p.job_posting_id AS jobPostingId
+    p.job_posting_id AS jobPostingId,
+    p.job_image_file_name AS jobImageFileName
 FROM posts p
 JOIN companys c ON p.company_id = c.company_id
 JOIN users u ON c.user_id = u.user_id
+WHERE (p.is_deleted IS NULL OR p.is_deleted = 0)
+AND (c.is_deleted IS NULL OR c.is_deleted = 0)
 ORDER BY p.posted_at DESC
 LIMIT 3;
 </select>
