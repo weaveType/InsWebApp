@@ -385,10 +385,26 @@ LIMIT #{pageSize} OFFSET ${(pageIndex - 1) * pageSize}
 </select>
 	<select id="selectMatchingChecked" parameterType="com.demo.proworks.domain.user.vo.MatchingCheckedVo"
 		resultType="com.demo.proworks.domain.user.vo.MatchingCheckedVo">
-		SELECT is_mbti_checked as isMbtiChecked,
-		is_code_checked as isCodeChecked
-		FROM users_mbti_types
-		where user_id = #{accountId}
+		SELECT 
+			COALESCE(umt.is_mbti_checked, 0) as isMbtiChecked,
+			COALESCE(umt.is_code_checked, 0) as isCodeChecked,
+			COALESCE(scout_count.matching_proposal_count, 0) as matchingProposalCount,
+			COALESCE(application_count.application_status_count, 0) as applicationStatusCount
+		FROM users u
+		LEFT JOIN users_mbti_types umt ON u.user_id = umt.user_id
+		LEFT JOIN (
+			SELECT user_id, COUNT(*) as matching_proposal_count
+			FROM scout_requests 
+			WHERE user_id = #{accountId}
+			GROUP BY user_id
+		) scout_count ON u.user_id = scout_count.user_id
+		LEFT JOIN (
+			SELECT user_id, COUNT(*) as application_status_count
+			FROM job_applications 
+			WHERE user_id = #{accountId}
+			GROUP BY user_id
+		) application_count ON u.user_id = application_count.user_id
+		WHERE u.user_id = #{accountId}
 	</select>
   
 	<update id="updateResumeFileName" parameterType="com.demo.proworks.domain.user.vo.UserVo">

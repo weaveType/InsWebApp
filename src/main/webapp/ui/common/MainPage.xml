@@ -30,8 +30,8 @@
 						<w2:key dataType="text" name="성향분석 체크여부" id="isMbtiChecked"></w2:key>
 						<w2:key dataType="text" name="코드분석 진행여부" id="isCodeChecked"></w2:key>
 						<w2:key dataType="text" name="매칭횟수" id="machingCount"></w2:key>
-						<w2:key dataType="text" name="name5" id="key5"></w2:key>
-						<w2:key dataType="text" name="name6" id="key6"></w2:key>
+						<w2:key dataType="number" name="매칭제안수" id="matchingProposalCount"></w2:key>
+						<w2:key dataType="number" name="지원현황수" id="applicationStatusCount"></w2:key>
 					</w2:keyInfo>
 				</w2:dataMap>
 				<w2:dataList baseNode="list" repeatNode="map" id="dlt_posting_list" saveRemovedData="true">
@@ -128,6 +128,8 @@ scwin.smb_selectMatchingChecked_submitdone = function (e) {
 
     var isMbtiChecked = dmp_matchingCheckedVo.get("isMbtiChecked");
     var isCodeChecked = dmp_matchingCheckedVo.get("isCodeChecked");
+    var matchingProposalCount = dmp_matchingCheckedVo.get("matchingProposalCount") || 0;
+    var applicationStatusCount = dmp_matchingCheckedVo.get("applicationStatusCount") || 0;
 
     if (isMbtiChecked) {
         card2.addClass("completed"); 
@@ -139,6 +141,10 @@ scwin.smb_selectMatchingChecked_submitdone = function (e) {
     } else {
         card3.removeClass("completed");
     }
+
+    // 매칭 제안 수와 지원 현황 수 업데이트
+    txb_matching_proposal_count.setValue(matchingProposalCount);
+    txb_application_status_count.setValue(applicationStatusCount);
 
     // 프로필 완성도 업데이트
     var completeCount = 0;
@@ -1156,11 +1162,11 @@ scwin.applicationStatus_onclick = function(e) {
 							<!-- 통계 영역 -->
 							<xf:group class="stats-section">
 								<xf:group class="stats-item">
-									<w2:textbox class="stats-number" id="txb_matching_count" label="0" ev:onclick="scwin.matchingProposal_onclick" style="cursor: pointer;"></w2:textbox>
+									<w2:textbox class="stats-number" id="txb_matching_proposal_count" label="0" ev:onclick="scwin.matchingProposal_onclick" style="cursor: pointer;"></w2:textbox>
 									<w2:textbox class="stats-label" label="매칭 제안" ev:onclick="scwin.matchingProposal_onclick" style="cursor: pointer;"></w2:textbox>
 								</xf:group>
 								<xf:group class="stats-item">
-									<w2:textbox class="stats-number" id="txb_application_count" label="0" ev:onclick="scwin.applicationStatus_onclick" style="cursor: pointer;"></w2:textbox>
+									<w2:textbox class="stats-number" id="txb_application_status_count" label="0" ev:onclick="scwin.applicationStatus_onclick" style="cursor: pointer;"></w2:textbox>
 									<w2:textbox class="stats-label" label="지원현황" ev:onclick="scwin.applicationStatus_onclick" style="cursor: pointer;"></w2:textbox>
 								</xf:group>
 							</xf:group>
