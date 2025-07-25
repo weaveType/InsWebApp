@@ -41,6 +41,7 @@
 						<w2:column dataType="text" name="지역" id="location"></w2:column>
 						<w2:column dataType="text" name="경력" id="experienceLevel"></w2:column>
 						<w2:column dataType="text" name="공고 ID" id="jobPostingId"></w2:column>
+						<w2:column dataType="text" name="공고 이미지" id="jobImageFileName"></w2:column>
 					</w2:columnInfo>
 				</w2:dataList>
 			</w2:dataCollection>

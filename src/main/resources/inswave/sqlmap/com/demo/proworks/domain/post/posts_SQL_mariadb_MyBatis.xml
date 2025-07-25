@@ -329,10 +329,13 @@ SELECT
     p.preferred_developer_types AS preferredDeveloperTypes,
     p.location AS location,
     p.experience_level AS experienceLevel,
-    p.job_posting_id AS jobPostingId
+    p.job_posting_id AS jobPostingId,
+    p.job_image_file_name AS jobImageFileName
 FROM posts p
 JOIN companys c ON p.company_id = c.company_id
 JOIN users u ON c.user_id = u.user_id
+WHERE (p.is_deleted IS NULL OR p.is_deleted = 0)
+AND (c.is_deleted IS NULL OR c.is_deleted = 0)
 ORDER BY p.posted_at DESC
 LIMIT 3;
 </select>
