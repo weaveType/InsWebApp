@@ -29,6 +29,9 @@
 						<w2:key dataType="text" name="사용자 계정 ID" id="accountId"></w2:key>
 						<w2:key dataType="text" name="성향분석 체크여부" id="isMbtiChecked"></w2:key>
 						<w2:key dataType="text" name="코드분석 진행여부" id="isCodeChecked"></w2:key>
+						<w2:key dataType="text" name="매칭횟수" id="machingCount"></w2:key>
+						<w2:key dataType="text" name="name5" id="key5"></w2:key>
+						<w2:key dataType="text" name="name6" id="key6"></w2:key>
 					</w2:keyInfo>
 				</w2:dataMap>
 				<w2:dataList baseNode="list" repeatNode="map" id="dlt_posting_list" saveRemovedData="true">
