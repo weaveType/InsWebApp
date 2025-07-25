@@ -325,12 +325,22 @@ scwin.sbm_selectPostingList_submitdone = function (e) {
         var location = dlt_posting_list.getCellData(i, "location");
         var experienceLevel = dlt_posting_list.getCellData(i, "experienceLevel");
         var preferredDeveloperTypesRaw = dlt_posting_list.getCellData(i, "preferredDeveloperTypes");
+        var jobImageFileName = dlt_posting_list.getCellData(i, "jobImageFileName");
 
         var txt_name = gen_position_card.getChild(i, "txt_name");
         var txt_title = gen_position_card.getChild(i, "txt_title");
+        var img_job_image = gen_position_card.getChild(i, "img_job_image");
 
         txt_name.setValue(name);
         txt_title.setValue(location + " · " + experienceLevel);
+
+        // 공고 이미지 설정
+        var jobImageBase = '/InsWebApp/images/company/'; // 공고 이미지가 저장된 폴더
+        var defaultJobImage = '/InsWebApp/images/ws5/default_job.png'; // 기본 이미지
+
+        var hasJobImage = jobImageFileName && jobImageFileName.trim() !== '';
+        var jobImgSrc = hasJobImage ? jobImageBase + jobImageFileName : defaultJobImage;
+        img_job_image.setSrc(jobImgSrc);
 
         // Helper function to escape HTML special characters
         function escapeHtml(text) {
@@ -666,7 +676,7 @@ scwin.applicationStatus_onclick = function(e) {
             }
 
             .position-header-dark {
-                background-color: #333;
+                background-color: transparent;
             }
 
             .position-header-blue {
@@ -1212,7 +1222,9 @@ scwin.applicationStatus_onclick = function(e) {
 
 				<w2:generator id="gen_position_card" class="positions-container">
 						<xf:group class="position-card" style="position: relative;">
-							<xf:group class="position-header position-header-dark"></xf:group>
+							<xf:group class="position-header">
+								<xf:image id="img_job_image" style="width: 100%; height: 100%; object-fit: cover; border-radius: 5px;" />
+							</xf:group>
 							<w2:textbox class="position-company" id="txt_name"></w2:textbox>
 							<w2:textbox class="position-title" id="txt_title"></w2:textbox>
 							<xf:group id="grp_tags_container" class="dev-type-tag-container">
