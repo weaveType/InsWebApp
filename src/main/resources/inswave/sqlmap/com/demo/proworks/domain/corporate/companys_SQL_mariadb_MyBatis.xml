@@ -120,7 +120,6 @@ SELECT /* QueryID : com.demo.proworks.domain.corporate.selectCorporateByEmail */
     c.LOGO_FILE_NAME as logoFileName,
     u.NAME as name,
     u.email as email,
-    u.password as password,
     r.role_name as role
 FROM COMPANYS c
 INNER JOIN USERS u ON c.USER_ID = u.USER_ID
