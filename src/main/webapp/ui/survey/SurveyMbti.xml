@@ -534,32 +534,35 @@
                 
                 var html = '';
                 
-                // 답변별 상세 분석
-                if (result.answerAnalyses && result.answerAnalyses.length > 0) {
-                    html += '<div class="answer-item">';
-                    html += '<div class="answer-header">';
-                    html += '<h4 class="answer-title">선택한 답변 분석</h4>';
+                // 체계적인 성향 분석
+                html += '<div class="answer-item">';
+                html += '<div class="answer-header">';
+                html += '<h4 class="answer-title">성향 분석 결과</h4>';
+                html += '</div>';
+                
+                // 축별 성향 분석
+                var axisAnalyses = scwin.generateAxisAnalyses(result);
+                axisAnalyses.forEach(function(axisAnalysis) {
+                    html += '<div class="axis-analysis-card">';
+                    html += '<div class="axis-analysis-header">';
+                    html += '<h5 class="axis-analysis-name">' + axisAnalysis.axisName + '</h5>';
+                    html += '<div class="axis-analysis-tendency">' + axisAnalysis.tendency + '</div>';
                     html += '</div>';
-                    
-                    result.answerAnalyses.forEach(function(analysis) {
-                        var impactClass = analysis.impact === '높음' ? 'high' : analysis.impact === '보통' ? 'medium' : 'low';
-                        
-                        html += '<div class="answer-card ' + impactClass + '">';
-                        html += '<div class="answer-question">';
-                        html += '<span class="question-number">Q' + analysis.questionId + '</span>';
-                        html += '<span class="question-text">' + analysis.questionText + '</span>';
+                    html += '<div class="axis-analysis-content">';
+                    html += '<div class="axis-analysis-score">평균 점수: ' + axisAnalysis.averageScore.toFixed(1) + '점</div>';
+                    html += '<div class="axis-analysis-description">' + axisAnalysis.description + '</div>';
+                    if (axisAnalysis.keyAnswers && axisAnalysis.keyAnswers.length > 0) {
+                        html += '<div class="key-answers">';
+                        html += '<div class="key-answers-title">주요 답변:</div>';
+                        axisAnalysis.keyAnswers.forEach(function(answer) {
+                            html += '<div class="key-answer-item">Q' + answer.questionId + ': ' + answer.analysis + '</div>';
+                        });
                         html += '</div>';
-                        html += '<div class="answer-details">';
-                        html += '<div class="answer-value">답변: ' + analysis.answerValue + '점</div>';
-                        html += '<div class="answer-axis">' + analysis.axisDescription + '</div>';
-                        html += '<div class="answer-contribution">기여도: ' + analysis.contribution.toFixed(1) + '점</div>';
-                        html += '<div class="answer-impact">영향도: ' + analysis.impact + '</div>';
-                        html += '</div>';
-                        html += '<div class="answer-reasoning">' + analysis.reasoning + '</div>';
-                        html += '</div>';
-                    });
+                    }
                     html += '</div>';
-                }
+                    html += '</div>';
+                });
+                html += '</div>';
                 
                 // 축별 기여도
                 if (result.axisContributions) {
@@ -660,6 +663,108 @@
                     'D_F': 'Debug vs Feature'
                 };
                 return names[axis] || axis;
+            };
+            
+            // 축별 성향 분석 생성
+            scwin.generateAxisAnalyses = function(result) {
+                var analyses = [];
+                var axisInfo = {
+                    'B_A': {
+                        name: '개발 스타일',
+                        leftType: 'Builder', rightType: 'Architect',
+                        leftDesc: '빠른 구현과 실용적 해결책을 선호',
+                        rightDesc: '체계적 설계와 확장성을 중시'
+                    },
+                    'R_I': {
+                        name: '기술 접근법',
+                        leftType: 'Innovator', rightType: 'Refactor',
+                        leftDesc: '새로운 기술과 실험적 접근을 선호',
+                        rightDesc: '기존 코드 개선과 안정성을 중시'
+                    },
+                    'S_T': {
+                        name: '협업 방식',
+                        leftType: 'Solo', rightType: 'Team',
+                        leftDesc: '독립적 작업과 개인적 집중을 선호',
+                        rightDesc: '팀워크와 협업적 개발을 중시'
+                    },
+                    'D_F': {
+                        name: '작업 선호도',
+                        leftType: 'Debug', rightType: 'Feature',
+                        leftDesc: '문제 해결과 버그 수정에 집중',
+                        rightDesc: '새로운 기능 개발과 창작 활동 선호'
+                    }
+                };
+                
+                // 각 축별로 분석
+                for (var axis in axisInfo) {
+                    var info = axisInfo[axis];
+                    var axisAnswers = [];
+                    var totalScore = 0;
+                    
+                    // 해당 축의 답변들 수집
+                    if (result.answerAnalyses) {
+                        result.answerAnalyses.forEach(function(answer) {
+                            if (answer.axis === axis) {
+                                axisAnswers.push(answer);
+                                totalScore += answer.answerValue;
+                            }
+                        });
+                    }
+                    
+                    if (axisAnswers.length === 0) continue;
+                    
+                    var averageScore = totalScore / axisAnswers.length;
+                    var tendency, tendencyStrength, description, keyAnswers;
+                    
+                    // 성향 판단
+                    if (averageScore < 3.5) {
+                        var strength = averageScore <= 2 ? '매우 강한' : averageScore <= 3 ? '강한' : '약한';
+                        tendency = strength + ' ' + info.leftType + ' 성향';
+                        description = strength + ' ' + info.leftType + ' 성향을 보입니다. ' + info.leftDesc + '하는 특성을 가지고 있습니다.';
+                    } else if (averageScore > 4.5) {
+                        var strength = averageScore >= 6 ? '매우 강한' : averageScore >= 5 ? '강한' : '약한';
+                        tendency = strength + ' ' + info.rightType + ' 성향';
+                        description = strength + ' ' + info.rightType + ' 성향을 보입니다. ' + info.rightDesc + '하는 특성을 가지고 있습니다.';
+                    } else {
+                        tendency = '균형잡힌 성향';
+                        description = info.leftType + '와 ' + info.rightType + ' 사이의 균형잡힌 성향을 보입니다. 상황에 따라 유연하게 접근하는 특성을 가지고 있습니다.';
+                    }
+                    
+                    // 주요 답변 분석 (극단값들)
+                    keyAnswers = [];
+                    axisAnswers.forEach(function(answer) {
+                        var analysis = '';
+                        if (answer.answerValue <= 2) {
+                            analysis = '매우 강한 ' + info.leftType + ' 성향 (' + answer.answerValue + '점)';
+                        } else if (answer.answerValue === 3) {
+                            analysis = '강한 ' + info.leftType + ' 성향 (' + answer.answerValue + '점)';
+                        } else if (answer.answerValue === 5) {
+                            analysis = '강한 ' + info.rightType + ' 성향 (' + answer.answerValue + '점)';
+                        } else if (answer.answerValue >= 6) {
+                            analysis = '매우 강한 ' + info.rightType + ' 성향 (' + answer.answerValue + '점)';
+                        } else {
+                            analysis = '중립적 성향 (' + answer.answerValue + '점)';
+                        }
+                        
+                        // 극단값만 주요 답변으로 표시
+                        if (answer.answerValue <= 3 || answer.answerValue >= 5) {
+                            keyAnswers.push({
+                                questionId: answer.questionId,
+                                analysis: analysis
+                            });
+                        }
+                    });
+                    
+                    analyses.push({
+                        axisName: info.name,
+                        tendency: tendency,
+                        averageScore: averageScore,
+                        description: description,
+                        keyAnswers: keyAnswers
+                    });
+                }
+                
+                return analyses;
             };
             
             // 설문 제출 성공 콜백
@@ -1898,6 +2003,115 @@
                 font-size: 14px;
                 color: #495057;
                 line-height: 1.6;
+            }
+
+            /* 축별 분석 카드 */
+            .axis-analysis-card {
+                background: linear-gradient(135deg, #f8faff, #ffffff);
+                border-radius: 16px;
+                padding: 24px;
+                border: 1px solid #e3f2fd;
+                margin-bottom: 20px;
+                transition: all 0.3s ease;
+                box-shadow: 0 2px 12px rgba(33, 150, 243, 0.08);
+            }
+
+            .axis-analysis-card:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 20px rgba(33, 150, 243, 0.15);
+            }
+
+            .axis-analysis-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 20px;
+                padding-bottom: 16px;
+                border-bottom: 2px solid #e3f2fd;
+            }
+
+            .axis-analysis-name {
+                font-size: 20px;
+                font-weight: bold;
+                color: #2d3436;
+                margin: 0;
+            }
+
+            .axis-analysis-tendency {
+                background: linear-gradient(135deg, #2196f3, #007bff);
+                color: white;
+                padding: 8px 16px;
+                border-radius: 20px;
+                font-size: 14px;
+                font-weight: 600;
+                box-shadow: 0 2px 8px rgba(33, 150, 243, 0.3);
+            }
+
+            .axis-analysis-content {
+                display: flex;
+                flex-direction: column;
+                gap: 16px;
+            }
+
+            .axis-analysis-score {
+                font-size: 16px;
+                font-weight: 600;
+                color: #2196f3;
+                background: rgba(33, 150, 243, 0.1);
+                padding: 12px 16px;
+                border-radius: 8px;
+                border-left: 4px solid #2196f3;
+            }
+
+            .axis-analysis-description {
+                font-size: 15px;
+                color: #495057;
+                line-height: 1.6;
+                padding: 16px;
+                background: #f8faff;
+                border-radius: 8px;
+                border-left: 3px solid #2196f3;
+            }
+
+            .key-answers {
+                background: #ffffff;
+                border-radius: 12px;
+                padding: 16px;
+                border: 1px solid #e9ecef;
+            }
+
+            .key-answers-title {
+                font-size: 14px;
+                font-weight: bold;
+                color: #333;
+                margin-bottom: 12px;
+                display: flex;
+                align-items: center;
+            }
+
+            .key-answers-title::before {
+                content: "📊";
+                margin-right: 8px;
+            }
+
+            .key-answer-item {
+                background: linear-gradient(135deg, #f0f7ff, #f8faff);
+                padding: 10px 14px;
+                border-radius: 8px;
+                margin-bottom: 8px;
+                font-size: 13px;
+                color: #495057;
+                border-left: 3px solid #2196f3;
+                transition: all 0.2s ease;
+            }
+
+            .key-answer-item:hover {
+                background: linear-gradient(135deg, #e3f2fd, #f0f7ff);
+                transform: translateX(4px);
+            }
+
+            .key-answer-item:last-child {
+                margin-bottom: 0;
             }
 
             /* 축별 기여도 카드 */
