@@ -641,55 +641,8 @@
                     });
                 }, 500);
                 
-                // 설문 답변 분석 탭으로 자동 전환 (개선된 방식)
-                setTimeout(function() {
-                    console.log('자동 탭 전환 시도');
-                    
-                    // 직접 탭 전환 실행 (클릭 이벤트 대신)
-                    var tabButtons = document.querySelectorAll('.tab-button');
-                    var tabPanels = document.querySelectorAll('.tab-panel');
-                    
-                    // 모든 탭 버튼 비활성화
-                    tabButtons.forEach(function(button) {
-                        button.classList.remove('active');
-                        button.setAttribute('aria-selected', 'false');
-                    });
-                    
-                    // 모든 탭 패널 숨기기
-                    tabPanels.forEach(function(panel) {
-                        panel.classList.remove('active');
-                        panel.setAttribute('aria-hidden', 'true');
-                        panel.style.display = 'none';
-                    });
-                    
-                    // 설문 분석 탭 활성화
-                    var surveyTabButton = document.querySelector('.tab-button[data-tab="survey"]');
-                    var surveyTabPanel = tabPanels.length > 1 ? tabPanels[1] : null;
-                    
-                    if (surveyTabButton) {
-                        surveyTabButton.classList.add('active');
-                        surveyTabButton.setAttribute('aria-selected', 'true');
-                        console.log('설문 탭 버튼 활성화됨');
-                    }
-                    
-                    if (surveyTabPanel) {
-                        surveyTabPanel.classList.add('active');
-                        surveyTabPanel.setAttribute('aria-hidden', 'false');
-                        surveyTabPanel.style.display = 'block';
-                        console.log('설문 탭 패널 활성화됨');
-                        
-                        // 부드러운 스크롤
-                        setTimeout(function() {
-                            var tabsContainer = surveyTabPanel.closest('.analysis-tabs');
-                            if (tabsContainer) {
-                                tabsContainer.scrollIntoView({
-                                    behavior: 'smooth',
-                                    block: 'start'
-                                });
-                            }
-                        }, 100);
-                    }
-                }, 1000);
+                // 자동 탭 전환 제거 - 사용자가 원하는 탭을 클릭해서 볼 수 있도록 함
+                console.log('답변 분석 데이터 준비 완료 - 사용자가 탭을 클릭해서 확인할 수 있습니다.');
             };
             
             // 축 표시 이름 가져오기
