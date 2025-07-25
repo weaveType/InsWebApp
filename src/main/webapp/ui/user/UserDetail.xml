@@ -353,6 +353,9 @@
     var userInfo = JSON.parse(userInfoStr);
     dma_userInfoVo.set("accountId", userInfo.accountId);
 
+    // 서버 통신
+    $c.sbm.execute($p, sbm_userDetail);
+
     var executeFunction = $p.getParameter("executeFunction");
 
     if (executeFunction === "menu_interest_onclick") {
@@ -366,8 +369,6 @@
             scwin.menu_history_onclick();
         }, 50);
     }
-    // 서버 통신
-    $c.sbm.execute($p, sbm_userDetail);
 };
 
 // 사용자 정보 조회 완료 처리

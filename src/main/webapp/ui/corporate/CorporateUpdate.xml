@@ -452,8 +452,9 @@ scwin.business_cert_upload_onInputValueChange = function (fileName) {
 // 로고 파일 선택 이벤트
 scwin.logo_upload_onInputValueChange = function (fileName) {
     if (fileName) {
+        var actualFileName = fileName.split(/(\\|\/)/).pop(); // Extract actual file name
         document.getElementById("logo_file_info").style.display = "block";
-        document.getElementById("logo_file_name").textContent = fileName;
+        document.getElementById("logo_file_name").textContent = actualFileName;
 
     } else {
         document.getElementById("logo_file_info").style.display = "none";
@@ -476,7 +477,8 @@ scwin.uploadFiles = function () {
     // 로고 업로드
     if (hasLogo) {
         logo_upload.submit();
-        dmp_corporateVoDetail.set("logoFileName", logo_upload.getValue());
+        var actualLogoFileName = hasLogo.split(/(\\|\/)/).pop();
+        dmp_corporateVoDetail.set("logoFileName", actualLogoFileName);
     }
 
     // 권한 부여

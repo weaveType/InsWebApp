@@ -334,7 +334,7 @@ scwin.txb_login_onclick = function () {
 								<xf:label><![CDATA[코드분석]]></xf:label>
 							</w2:anchor>
 							<w2:anchor class="nav-link" id="anchor2" ev:onclick="scwin.menu2_onclick" outerDiv="false" style="font-size: 16px;">
-								<xf:label><![CDATA[mbti검사]]></xf:label>
+								<xf:label><![CDATA[성향분석]]></xf:label>
 							</w2:anchor>
 							<w2:anchor class="nav-link" id="anchor3" ev:onclick="scwin.menu3_onclick" outerDiv="false" style="font-size: 16px;">
 								<xf:label><![CDATA[기업 둘러보기]]></xf:label>

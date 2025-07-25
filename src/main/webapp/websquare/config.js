@@ -79,7 +79,7 @@ export default {
       "@value": "81"
     },
     "processMsgWidth": {
-      "@value": "295"
+      "@value": "800"
     },
     "processMsgBackground": {
       "@backgroundColor": "#112233",
