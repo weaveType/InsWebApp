@@ -384,7 +384,7 @@
                 
                 // 4. 클릭된 요소가 속한 탭 버튼 찾기
                 if (!targetTab) {
-                    var allTabButtons = document.querySelectorAll('.tab-button');
+                    var allTabButtons = document.querySelectorAll('.tab-button, [data-tab]');
                     for (var i = 0; i < allTabButtons.length; i++) {
                         var tabButton = allTabButtons[i];
                         if (tabButton.contains(clickedElement) || tabButton === clickedElement) {
@@ -408,6 +408,11 @@
                 tabButtons.forEach(function(button) {
                     button.classList.remove('active');
                     button.setAttribute('aria-selected', 'false');
+                    // 스타일 초기화
+                    button.style.background = 'transparent';
+                    button.style.color = '#6c757d';
+                    button.style.boxShadow = 'none';
+                    button.style.transform = 'none';
                 });
                 
                 // 모든 탭 패널 숨기기
@@ -418,13 +423,14 @@
                     panel.style.display = 'none';
                 });
                 
-                // 선택된 탭 버튼 활성화
-                var targetButton = document.querySelector('.tab-button[data-tab="' + targetTab + '"]');
-                if (targetButton) {
-                    targetButton.classList.add('active');
-                    targetButton.setAttribute('aria-selected', 'true');
-                    console.log('탭 버튼 활성화됨:', targetButton);
-                }
+                // 클릭된 요소를 활성화 (가장 확실한 방법)
+                clickedElement.classList.add('active');
+                clickedElement.setAttribute('aria-selected', 'true');
+                clickedElement.style.background = 'linear-gradient(135deg, #2196f3 0%, #007bff 100%)';
+                clickedElement.style.color = 'white';
+                clickedElement.style.boxShadow = '0 4px 16px rgba(33, 150, 243, 0.3)';
+                clickedElement.style.transform = 'translateY(-2px)';
+                console.log('탭 버튼 활성화됨:', clickedElement);
                 
                 // 선택된 탭 패널 활성화 (인덱스 기반으로 더 안전하게)
                 var targetPanel = null;
@@ -1686,7 +1692,8 @@
                 box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
             }
 
-            .tab-button {
+            .tab-button,
+            input[data-tab] {
                 flex: 1;
                 background: transparent;
                 border: none;
@@ -1699,6 +1706,8 @@
                 transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
                 position: relative;
                 overflow: hidden;
+                outline: none;
+                text-align: center;
             }
 
             .tab-button::before {
@@ -1719,23 +1728,27 @@
                 left: 100%;
             }
 
-            .tab-button:hover {
+            .tab-button:hover,
+            input[data-tab]:hover {
                 color: #495057;
                 background: rgba(255, 255, 255, 0.8);
                 transform: translateY(-1px);
             }
 
-            .tab-button.active {
-                background: linear-gradient(135deg, #2196f3 0%, #007bff 100%);
-                color: white;
-                box-shadow: 0 4px 16px rgba(33, 150, 243, 0.3);
-                transform: translateY(-2px);
+            .tab-button.active,
+            input[data-tab].active {
+                background: linear-gradient(135deg, #2196f3 0%, #007bff 100%) !important;
+                color: white !important;
+                box-shadow: 0 4px 16px rgba(33, 150, 243, 0.3) !important;
+                transform: translateY(-2px) !important;
+                border: none !important;
             }
 
-            .tab-button.active:hover {
-                background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
-                transform: translateY(-3px);
-                box-shadow: 0 6px 20px rgba(33, 150, 243, 0.4);
+            .tab-button.active:hover,
+            input[data-tab].active:hover {
+                background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%) !important;
+                transform: translateY(-3px) !important;
+                box-shadow: 0 6px 20px rgba(33, 150, 243, 0.4) !important;
             }
 
             .tab-content {
