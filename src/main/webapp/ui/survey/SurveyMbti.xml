@@ -549,16 +549,7 @@
                     html += '<div class="axis-analysis-tendency">' + axisAnalysis.tendency + '</div>';
                     html += '</div>';
                     html += '<div class="axis-analysis-content">';
-                    html += '<div class="axis-analysis-score">평균 점수: ' + axisAnalysis.averageScore.toFixed(1) + '점</div>';
                     html += '<div class="axis-analysis-description">' + axisAnalysis.description + '</div>';
-                    if (axisAnalysis.keyAnswers && axisAnalysis.keyAnswers.length > 0) {
-                        html += '<div class="key-answers">';
-                        html += '<div class="key-answers-title">주요 답변:</div>';
-                        axisAnalysis.keyAnswers.forEach(function(answer) {
-                            html += '<div class="key-answer-item">Q' + answer.questionId + ': ' + answer.analysis + '</div>';
-                        });
-                        html += '</div>';
-                    }
                     html += '</div>';
                     html += '</div>';
                 });
@@ -607,7 +598,8 @@
                     html += '<div class="answer-header">';
                     html += '<h4 class="answer-title">답변 패턴 분석</h4>';
                     html += '</div>';
-                    html += '<div class="pattern-analysis">' + result.answerPattern.replace(/\n/g, '<br>') + '</div>';
+                    var processedPattern = scwin.processInsightText(result.answerPattern, result);
+                    html += '<div class="pattern-analysis">' + processedPattern.replace(/\n/g, '<br>') + '</div>';
                     html += '</div>';
                 }
                 
@@ -622,7 +614,8 @@
                             html += '</div>';
                             html += '<ul class="insights-list">';
                             keyInsights.forEach(function(insight) {
-                                html += '<li class="insight-item">' + insight + '</li>';
+                                var processedInsight = scwin.processInsightText(insight, result);
+                                html += '<li class="insight-item">' + processedInsight + '</li>';
                             });
                             html += '</ul>';
                             html += '</div>';
@@ -665,106 +658,172 @@
                 return names[axis] || axis;
             };
             
-            // 축별 성향 분석 생성
+            // 축별 성향 분석 생성 (실제 점수 기반)
             scwin.generateAxisAnalyses = function(result) {
                 var analyses = [];
                 var axisInfo = {
-                    'B_A': {
+                    'A_B': {
                         name: '개발 스타일',
                         leftType: 'Builder', rightType: 'Architect',
-                        leftDesc: '빠른 구현과 실용적 해결책을 선호',
-                        rightDesc: '체계적 설계와 확장성을 중시'
+                        leftDesc: '빠른 구현과 실용적 해결책을 선호하며, 당면한 문제를 즉시 해결하는 것을 중시합니다.',
+                        rightDesc: '체계적 설계와 확장성을 중시하며, 장기적인 관점에서 안정적인 구조를 만들어갑니다.'
                     },
                     'R_I': {
                         name: '기술 접근법',
                         leftType: 'Innovator', rightType: 'Refactor',
-                        leftDesc: '새로운 기술과 실험적 접근을 선호',
-                        rightDesc: '기존 코드 개선과 안정성을 중시'
+                        leftDesc: '새로운 기술과 실험적 접근을 선호하며, 혁신적인 솔루션 개발에 흥미를 느낍니다.',
+                        rightDesc: '기존 코드의 개선과 안정성을 중시하며, 검증된 방법으로 점진적 발전을 추구합니다.'
                     },
                     'S_T': {
                         name: '협업 방식',
                         leftType: 'Solo', rightType: 'Team',
-                        leftDesc: '독립적 작업과 개인적 집중을 선호',
-                        rightDesc: '팀워크와 협업적 개발을 중시'
+                        leftDesc: '독립적인 작업을 선호하며, 개인의 집중력과 창의성을 발휘할 때 최고의 성과를 냅니다.',
+                        rightDesc: '팀워크와 협업적 개발을 중시하며, 함께 소통하며 문제를 해결해나가는 것을 선호합니다.'
                     },
                     'D_F': {
                         name: '작업 선호도',
                         leftType: 'Debug', rightType: 'Feature',
-                        leftDesc: '문제 해결과 버그 수정에 집중',
-                        rightDesc: '새로운 기능 개발과 창작 활동 선호'
+                        leftDesc: '문제 해결과 버그 수정에 집중하며, 복잡한 이슈를 분석하고 해결하는 것에서 성취감을 느낍니다.',
+                        rightDesc: '새로운 기능 개발과 창작 활동을 선호하며, 무언가를 새롭게 만들어내는 것에 흥미를 느낍니다.'
                     }
                 };
                 
-                // 각 축별로 분석
-                for (var axis in axisInfo) {
+                // 실제 점수 데이터 사용
+                var scores = result.scores || {};
+                
+                // 각 축별로 분석 생성
+                Object.keys(axisInfo).forEach(function(axis) {
                     var info = axisInfo[axis];
-                    var axisAnswers = [];
-                    var totalScore = 0;
+                    var score = scores[axis] || 0;
+                    var absScore = Math.abs(score);
+                    var tendency, description, strengthLevel;
                     
-                    // 해당 축의 답변들 수집
-                    if (result.answerAnalyses) {
-                        result.answerAnalyses.forEach(function(answer) {
-                            if (answer.axis === axis) {
-                                axisAnswers.push(answer);
-                                totalScore += answer.answerValue;
-                            }
-                        });
+                    // 강도 판단 (절댓값 기준)
+                    if (absScore >= 25) {
+                        strengthLevel = '매우 강한';
+                    } else if (absScore >= 15) {
+                        strengthLevel = '강한';
+                    } else if (absScore >= 5) {
+                        strengthLevel = '약간의';
+                    } else {
+                        strengthLevel = '균형잡힌';
                     }
                     
-                    if (axisAnswers.length === 0) continue;
-                    
-                    var averageScore = totalScore / axisAnswers.length;
-                    var tendency, tendencyStrength, description, keyAnswers;
-                    
-                    // 성향 판단
-                    if (averageScore < 3.5) {
-                        var strength = averageScore <= 2 ? '매우 강한' : averageScore <= 3 ? '강한' : '약한';
-                        tendency = strength + ' ' + info.leftType + ' 성향';
-                        description = strength + ' ' + info.leftType + ' 성향을 보입니다. ' + info.leftDesc + '하는 특성을 가지고 있습니다.';
-                    } else if (averageScore > 4.5) {
-                        var strength = averageScore >= 6 ? '매우 강한' : averageScore >= 5 ? '강한' : '약한';
-                        tendency = strength + ' ' + info.rightType + ' 성향';
-                        description = strength + ' ' + info.rightType + ' 성향을 보입니다. ' + info.rightDesc + '하는 특성을 가지고 있습니다.';
-                    } else {
+                    // 방향과 성향 결정
+                    if (absScore < 5) {
                         tendency = '균형잡힌 성향';
                         description = info.leftType + '와 ' + info.rightType + ' 사이의 균형잡힌 성향을 보입니다. 상황에 따라 유연하게 접근하는 특성을 가지고 있습니다.';
+                    } else if (score > 0) {
+                        // 양수: rightType
+                        tendency = strengthLevel + ' ' + info.rightType + ' 성향';
+                        description = '당신은 ' + strengthLevel + ' ' + info.rightType + ' 성향을 보입니다. ' + info.rightDesc;
+                    } else {
+                        // 음수: leftType  
+                        tendency = strengthLevel + ' ' + info.leftType + ' 성향';
+                        description = '당신은 ' + strengthLevel + ' ' + info.leftType + ' 성향을 보입니다. ' + info.leftDesc;
                     }
-                    
-                    // 주요 답변 분석 (극단값들)
-                    keyAnswers = [];
-                    axisAnswers.forEach(function(answer) {
-                        var analysis = '';
-                        if (answer.answerValue <= 2) {
-                            analysis = '매우 강한 ' + info.leftType + ' 성향 (' + answer.answerValue + '점)';
-                        } else if (answer.answerValue === 3) {
-                            analysis = '강한 ' + info.leftType + ' 성향 (' + answer.answerValue + '점)';
-                        } else if (answer.answerValue === 5) {
-                            analysis = '강한 ' + info.rightType + ' 성향 (' + answer.answerValue + '점)';
-                        } else if (answer.answerValue >= 6) {
-                            analysis = '매우 강한 ' + info.rightType + ' 성향 (' + answer.answerValue + '점)';
-                        } else {
-                            analysis = '중립적 성향 (' + answer.answerValue + '점)';
-                        }
-                        
-                        // 극단값만 주요 답변으로 표시
-                        if (answer.answerValue <= 3 || answer.answerValue >= 5) {
-                            keyAnswers.push({
-                                questionId: answer.questionId,
-                                analysis: analysis
-                            });
-                        }
-                    });
                     
                     analyses.push({
                         axisName: info.name,
                         tendency: tendency,
-                        averageScore: averageScore,
-                        description: description,
-                        keyAnswers: keyAnswers
+                        description: description
                     });
-                }
+                });
                 
                 return analyses;
+            };
+            
+            // 인사이트 텍스트를 명확한 성향으로 변환
+            scwin.processInsightText = function(text, result) {
+                if (!text) return text;
+                
+                var processed = text;
+                
+                // 최종 유형 코드에서 실제 성향 추출  
+                var typeCode = (result && result.typeCode) ? result.typeCode : '';
+                var actualTypes = scwin.getActualTypes(typeCode);
+                
+                // 애매한 축 표현을 명확한 성향으로 변환
+                var conversions = [
+                    // B/A 축 - 실제 성향으로 교체
+                    { 
+                        patterns: ['강한 Builder/Architect 성향', 'Builder/Architect 성향', 'B/A 성향', '강한 B/A'],
+                        replacement: '강한 ' + actualTypes.style + ' 성향'
+                    },
+                    {
+                        patterns: ['강한 Architect/Builder 성향', 'Architect/Builder 성향', 'A/B 성향', '강한 A/B'], 
+                        replacement: '강한 ' + actualTypes.style + ' 성향'
+                    },
+                    
+                    // R/I 축 - 실제 성향으로 교체
+                    {
+                        patterns: ['강한 Refactor/Innovator 성향', 'Refactor/Innovator 성향', 'R/I 성향', '강한 R/I'],
+                        replacement: '강한 ' + actualTypes.tech + ' 성향'
+                    },
+                    {
+                        patterns: ['강한 Innovator/Refactor 성향', 'Innovator/Refactor 성향', 'I/R 성향', '강한 I/R'],
+                        replacement: '강한 ' + actualTypes.tech + ' 성향'
+                    },
+                    
+                    // S/T 축 - 실제 성향으로 교체
+                    {
+                        patterns: ['강한 Solo/Team 성향', 'Solo/Team 성향', 'S/T 성향', '강한 S/T'],
+                        replacement: '강한 ' + actualTypes.collab + ' 성향'
+                    },
+                    {
+                        patterns: ['강한 Team/Solo 성향', 'Team/Solo 성향', 'T/S 성향', '강한 T/S'],
+                        replacement: '강한 ' + actualTypes.collab + ' 성향'
+                    },
+                    
+                    // D/F 축 - 실제 성향으로 교체
+                    {
+                        patterns: ['강한 Debug/Feature 성향', 'Debug/Feature 성향', 'D/F 성향', '강한 D/F'],
+                        replacement: '강한 ' + actualTypes.work + ' 성향'
+                    },
+                    {
+                        patterns: ['강한 Feature/Debug 성향', 'Feature/Debug 성향', 'F/D 성향', '강한 F/D'],
+                        replacement: '강한 ' + actualTypes.work + ' 성향'
+                    }
+                ];
+                
+                // 변환 적용
+                conversions.forEach(function(conversion) {
+                    conversion.patterns.forEach(function(pattern) {
+                        var regex = new RegExp(pattern.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g');
+                        processed = processed.replace(regex, conversion.replacement);
+                    });
+                });
+                
+                // 남은 중복 문제 정리
+                processed = processed.replace(/Builder(\w+)\/Architect/g, 'Builder/Architect');
+                processed = processed.replace(/Architect(\w+)\/Builder/g, 'Architect/Builder');
+                processed = processed.replace(/Solo(\w+)\/Team/g, 'Solo/Team');
+                processed = processed.replace(/Team(\w+)\/Solo/g, 'Team/Solo');
+                processed = processed.replace(/Refactor(\w+)\/Innovator/g, 'Refactor/Innovator');
+                processed = processed.replace(/Innovator(\w+)\/Refactor/g, 'Innovator/Refactor');
+                processed = processed.replace(/Debug(\w+)\/Feature/g, 'Debug/Feature');
+                processed = processed.replace(/Feature(\w+)\/Debug/g, 'Feature/Debug');
+                
+                return processed;
+            };
+            
+            // 유형 코드에서 실제 성향 추출
+            scwin.getActualTypes = function(typeCode) {
+                if (!typeCode || typeCode.length < 4) {
+                    return {
+                        style: 'Builder',
+                        tech: 'Innovator', 
+                        collab: 'Solo',
+                        work: 'Debug'
+                    };
+                }
+                
+                return {
+                    style: typeCode[0] === 'A' ? 'Architect' : 'Builder',
+                    tech: typeCode[1] === 'R' ? 'Refactor' : 'Innovator',
+                    collab: typeCode[2] === 'T' ? 'Team' : 'Solo', 
+                    work: typeCode[3] === 'F' ? 'Feature' : 'Debug'
+                };
             };
             
             // 설문 제출 성공 콜백
@@ -2053,65 +2112,14 @@
                 gap: 16px;
             }
 
-            .axis-analysis-score {
-                font-size: 16px;
-                font-weight: 600;
-                color: #2196f3;
-                background: rgba(33, 150, 243, 0.1);
-                padding: 12px 16px;
-                border-radius: 8px;
-                border-left: 4px solid #2196f3;
-            }
-
             .axis-analysis-description {
-                font-size: 15px;
+                font-size: 16px;
                 color: #495057;
-                line-height: 1.6;
-                padding: 16px;
+                line-height: 1.7;
+                padding: 20px;
                 background: #f8faff;
-                border-radius: 8px;
-                border-left: 3px solid #2196f3;
-            }
-
-            .key-answers {
-                background: #ffffff;
                 border-radius: 12px;
-                padding: 16px;
-                border: 1px solid #e9ecef;
-            }
-
-            .key-answers-title {
-                font-size: 14px;
-                font-weight: bold;
-                color: #333;
-                margin-bottom: 12px;
-                display: flex;
-                align-items: center;
-            }
-
-            .key-answers-title::before {
-                content: "📊";
-                margin-right: 8px;
-            }
-
-            .key-answer-item {
-                background: linear-gradient(135deg, #f0f7ff, #f8faff);
-                padding: 10px 14px;
-                border-radius: 8px;
-                margin-bottom: 8px;
-                font-size: 13px;
-                color: #495057;
-                border-left: 3px solid #2196f3;
-                transition: all 0.2s ease;
-            }
-
-            .key-answer-item:hover {
-                background: linear-gradient(135deg, #e3f2fd, #f0f7ff);
-                transform: translateX(4px);
-            }
-
-            .key-answer-item:last-child {
-                margin-bottom: 0;
+                border-left: 4px solid #2196f3;
             }
 
             /* 축별 기여도 카드 */
