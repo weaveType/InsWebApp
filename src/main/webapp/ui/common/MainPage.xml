@@ -180,7 +180,7 @@ scwin.ad_onclick = function (e) {
 
 // 카드 클릭 이벤트
 scwin.card1_onclick = function () {
-    $p.url("../common/Tutorial.xml");
+    $p.url("MbtiExample.xml");
 };
 
 scwin.card2_onclick = function () {
@@ -1177,24 +1177,25 @@ scwin.applicationStatus_onclick = function(e) {
 					<!-- 카드 1: 튜토리얼 -->
 					<xf:group class="card card-green" id="card1" ev:onclick="scwin.card1_onclick">
 						<xf:group class="card-icon card-icon-green">
-							<xf:image src="/InsWebApp/images/ws5/main/tutorial.png" style="width: 150px;height: 150px;" id=""></xf:image>
+							<xf:image src="/InsWebApp/images/ws5/mbti/png/BITF.png" style="width: 150px;height: 150px;" id=""></xf:image>
 						</xf:group>
-						<w2:textbox class="card-title" label="튜토리얼"></w2:textbox>
+						<w2:textbox class="card-title" label="성향 유형"></w2:textbox>
 					</xf:group>
 					<!-- 카드 2: 성향 검사 -->
-					<xf:group class="card card-blue" id="card2" ev:onclick="scwin.card2_onclick">
-						<xf:group class="card-icon card-icon-blue">
-							<xf:image src="/InsWebApp/images/ws5/main/mbti_check.png" style="width: 150px;height: 150px;" id=""></xf:image>
-						</xf:group>
-						<w2:textbox class="card-title" label="개발자 성향분석"></w2:textbox>
-					</xf:group>
-                    <!-- 카드 3: 코드 분석 -->
 					<xf:group class="card card-orange" id="card3" ev:onclick="scwin.card3_onclick">
 						<xf:group class="card-icon card-icon-orange">
 							<xf:image src="/InsWebApp/images/ws5/main/code_check.png" style="width: 150px;height: 150px;" id=""></xf:image>
 						</xf:group>
 						<w2:textbox class="card-title" label="코드분석" style=""></w2:textbox>
 					</xf:group>
+					<xf:group class="card card-blue" id="card2" ev:onclick="scwin.card2_onclick">
+						<xf:group class="card-icon card-icon-blue">
+							<xf:image src="/InsWebApp/images/ws5/main/mbti_check.png" style="width: 150px;height: 150px;" id=""></xf:image>
+						</xf:group>
+						<w2:textbox class="card-title" label="개발자 성향분석"></w2:textbox>
+					</xf:group>
+					<!-- 카드 3: 코드 분석 -->
+
 				</xf:group>
 			</xf:group>
 
