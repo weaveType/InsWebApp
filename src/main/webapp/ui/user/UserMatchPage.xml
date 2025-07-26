@@ -305,7 +305,7 @@ scwin.sbm_scoutList_submitdone = function (e) {
         console.log("sbm_scoutList_submitdone response:", JSON.stringify(res, null, 2));
 
         if (res && res.scoutListVoList) {
-            var currentData = dlt_scoutListVo.getJSON();
+            var currentData = dlt_scoutListVo.getAllJSON();
             var newData = res.scoutListVoList;
             console.log("New data:", JSON.stringify(newData, null, 2));
 
