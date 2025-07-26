@@ -60,10 +60,19 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
 
+        .pageframe-container {
+            width: 100%;
+            min-height: 300px;
+        }
+
         @media (max-width: 768px) {
             .result-grid {
                 grid-template-columns: 1fr;
                 gap: 20px;
+            }
+            
+            .pageframe-container {
+                min-height: 250px;
             }
         }
         ]]></style>
@@ -82,7 +91,7 @@ scwin.loadResults = function () {
         let isMbtiDone = dma_userInfoVo.get("isMbtiChecked") == 1;
         let isCodeDone = dma_userInfoVo.get("isCodeChecked") == 1;
 
-        // MBTI 결과 로드
+        // MBTI 결과 로드 - 이미지로 표시
         if (isMbtiDone) {
             var userInfo = scwin.getUserInfoByCookie();
             if (userInfo && userInfo.mbti) {
@@ -95,13 +104,14 @@ scwin.loadResults = function () {
             mbti_result_container.hide();
         }
 
-        // 코드분석 결과 로드 (예시)
+        // 코드분석 결과 로드 - PageFrame으로 MBTI 설명 표시
         if (isCodeDone) {
-            // 코드분석 결과 이미지 및 정보 설정
-            const codeImageUrl = "/InsWebApp/images/ws5/code/result.png"; // 실제 경로로 변경 필요
-            code_result_image.setSrc(codeImageUrl);
-            code_result_type.setLabel("분석 완료");
-            code_result_container.show();
+            var userInfo = scwin.getUserInfoByCookie();
+            if (userInfo && userInfo.mbti) {
+                code_result_container.show();
+                // PageFrame에 MBTI 설명 컴포넌트 로드
+                code_pageframe.setSrc("MbtiDescriptionFrame.xml");
+            }
         } else {
             code_result_container.hide();
         }
@@ -140,8 +150,9 @@ scwin.getUserInfoByCookie = function () {
 				<!-- 코드분석 결과 -->
 				<xf:group id="code_result_container" class="result-item">
 					<w2:textbox class="result-title" label="코드 분석 결과"></w2:textbox>
-					<w2:textbox id="code_result_type" class="result-type"></w2:textbox>
-					<xf:image id="code_result_image" src="" class="result-image"></xf:image>
+					<xf:group class="pageframe-container">
+						<w2:pageFrame id="code_pageframe" src="" style="width: 100%; height: 100%; border: none;"></w2:pageFrame>
+					</xf:group>
 				</xf:group>
 			</xf:group>
 		</xf:group>
