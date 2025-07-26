@@ -158,143 +158,9 @@
             text-align: center;
         }
 
-        /* 완료된 액션 카드 스타일 */
-        .action-card.completed {
-            border: 2px solid #28a745; /* 녹색 테두리 */
-            background: linear-gradient(135deg, #f8fff8, #e8f5e8);
-        }
-
-        /* 액션 카드 */
-        .action-cards {
-            display: flex;
-            flex-wrap: nowrap;
-            gap: clamp(8px, 1.5vw, 16px);
-            width: 100%;
-            box-sizing: border-box;
-        }
-
-        .action-card {
-            flex: 1 1 0;
-            min-width: 0;
-            border-radius: 12px;
-            padding: clamp(16px, 3vw, 24px);
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-            box-sizing: border-box;
-        }
-
-        .action-card.incomplete {
-            border: 2px solid #fc8181;
-        }
-
-        .action-card-icon {
-            width: clamp(80px, 12vw, 100px);
-            height: clamp(80px, 12vw, 100px);
-            border-radius: 12px;
-            margin: 0 auto clamp(8px, 1.5vw, 12px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 32px;
-            flex-shrink: 0;
-        }
-
-        .action-card-title {
-            font-size: clamp(13px, 2vw, 15px);
-            font-weight: bold;
-            color: #333;
-            margin-bottom: clamp(4px, 0.8vw, 6px);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .action-card-subtitle {
-            font-size: clamp(10px, 1.4vw, 12px);
-            color: #666;
-            margin-bottom: clamp(8px, 1.5vw, 12px);
-            line-height: 1.2;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .action-card-button {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            padding: clamp(8px, 1.2vw, 10px) clamp(12px, 2vw, 16px);
-            border-radius: 18px;
-            font-size: clamp(11px, 1.4vw, 13px);
-            font-weight: 600;
-            cursor: pointer;
-            transition: background-color 0.2s ease;
-            width: 100%;
-            max-width: clamp(80px, 12vw, 100px);
-            white-space: nowrap;
-        }
-
-        .action-card-button:hover {
-            background-color: #0056b3;
-        }
-
-        .action-card.incomplete .action-card-button {
-            background-color: #dc3545;
-        }
-
-        .action-card.incomplete .action-card-button:hover {
-            background-color: #c82333;
-        }
-
-        .incomplete-badge {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background-color: #dc3545;
-            color: white;
-            font-size: 10px;
-            padding: 4px 8px;
-            border-radius: 8px;
-            font-weight: bold;
-        }
-
-        .completed-badge {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background-color: #28a745;
-            color: white;
-            font-size: 10px;
-            padding: 4px 8px;
-            border-radius: 8px;
-            font-weight: bold;
-        }
-
-        .hidden-button {
-            visibility: hidden;
-        }
 
         /* 반응형 디자인 */
         
-        /* 큰 태블릿 및 작은 데스크톱 */
-        @media (max-width: 1024px) {
-            .action-cards {
-                gap: 12px;
-            }
-            
-            .action-card {
-                padding: 16px;
-            }
-            
-            .action-card-icon {
-                width: clamp(70px, 10vw, 90px);
-                height: clamp(70px, 10vw, 90px);
-            }
-        }
-
         /* 태블릿 */
         @media (max-width: 768px) {
             .profile-header {
@@ -312,34 +178,11 @@
                 grid-template-columns: 1fr;
                 gap: 15px;
             }
-
-            .action-cards {
-                gap: 12px;
-            }
-            
-            .action-card {
-                padding: 18px;
-            }
-            
-            .action-card-icon {
-                width: clamp(60px, 8vw, 80px);
-                height: clamp(60px, 8vw, 80px);
-            }
-            
         }
 
         @media (max-width: 480px) {
             .profile-header, .section {
                 padding: 20px;
-            }
-
-            .action-card {
-                padding: 16px;
-            }
-            
-            .action-card-icon {
-                width: 80px;
-                height: 80px;
             }
 
             .profile-avatar {
@@ -361,69 +204,20 @@ scwin.onpageload = function () {
     }
 };
 
-// 사용자 정보 조회 완료 처리
+// PageFrame을 이용한 동적 콘텐츠 렌더링
 scwin.updateCardStatus = function (userInfoData) {
     try {
         let isMbtiDone = userInfoData.get("isMbtiChecked") == 1;
         let isCodeDone = userInfoData.get("isCodeChecked") == 1;
 
-        // 둘 다 완료되었을 경우
+        // 둘 다 완료되었을 경우 - 결과 페이지 로드
         if (isMbtiDone && isCodeDone) {
-            action_cards_group.hide();
             section_title.setLabel("당신의 성향은...");
-            result_section.show();
-
-            var mbtiType = scwin.getUserInfoByCookie().mbti;
-            if (mbtiType) {
-                const imageUrl = "/InsWebApp/images/ws5/mbti/png/" + mbtiType + ".png";
-                result_image.setSrc(imageUrl);
-                result_mbti_type.setLabel(mbtiType);
-            }
+            pf_content.setSrc("ResultFrame.xml");
         } else {
-            action_cards_group.show();
-            result_section.hide();
-            section_title.show();
+            // 미완료시 액션 카드 페이지 로드
             section_title.setLabel("매칭에 필요한 정보를 입력해주세요.");
-
-            // MBTI 카드 상태 업데이트
-            if (mbti_card) {
-                if (isMbtiDone) {
-                    mbti_card.removeClass("incomplete");
-                    mbti_card.addClass("completed");
-
-                    mbti_badge.setLabel("완료");
-                    mbti_badge.removeClass("incomplete-badge");
-                    mbti_badge.addClass("completed-badge");
-
-                    mbti_button.addClass("hidden-button");
-                } else {
-                    mbti_card.removeClass("completed");
-                    mbti_card.addClass("incomplete");
-                    mbti_badge.setLabel("미완료");
-                    mbti_badge.removeClass("completed-badge");
-                    mbti_badge.addClass("incomplete-badge");
-                    mbti_button.removeClass("hidden-button");
-                }
-            }
-
-            // 코드분석 카드 상태 업데이트
-            if (code_card) {
-                if (isCodeDone) {
-                    code_card.removeClass("incomplete");
-                    code_card.addClass("completed");
-                    code_badge.setLabel("완료");
-                    code_badge.removeClass("incomplete-badge");
-                    code_badge.addClass("completed-badge");
-                    code_button.addClass("hidden-button");
-                } else {
-                    code_card.removeClass("completed");
-                    code_card.addClass("incomplete");
-                    code_badge.setLabel("미완료");
-                    code_badge.removeClass("completed-badge");
-                    code_badge.addClass("incomplete-badge");
-                    code_button.removeClass("hidden-button");
-                }
-            }
+            pf_content.setSrc("ActionCardsFrame.xml");
         }
     } catch (err) {
         console.error("UserDetailMain.xml - updateCardStatus 오류:", err);
@@ -453,13 +247,9 @@ scwin.btn_userUpdate_onclick = function () {
         alert("페이지 이동 중 오류가 발생했습니다.");
     }
 }
-scwin.mbti_button_onclick = function (e) {
-    $p.url("../survey/SurveyMbti.xml");
-};
-
-
-scwin.code_button_onclick = function (e) {
-    $p.url("CodeAnalysisMain.xml");
+// 페이지 새로고침을 위한 함수
+scwin.refreshContent = function() {
+    scwin.updateCardStatus(dma_userInfoVo);
 };
 ]]></script>
 	</head>
@@ -529,37 +319,8 @@ scwin.code_button_onclick = function (e) {
 					<section class="section">
 						<w2:textbox id="section_title" class="section-title" label="매칭에 필요한 정보를 입력해주세요."></w2:textbox>
 
-						<xf:group id="action_cards_group" class="action-cards">
-							<!-- MBTI 성격 검사 카드 -->
-							<xf:group id="mbti_card" class="action-card incomplete" ev:onclick="scwin.startMbti_onclick()">
-								<w2:textbox id="mbti_badge" class="incomplete-badge" label="미완료"></w2:textbox>
-								<xf:group class="action-card-icon" style="">
-									<xf:image src="/InsWebApp/images/ws5/main/mbti_check.png" style="width:100%;height:100%;" id="mbti_image"></xf:image>
-								</xf:group>
-								<w2:textbox class="action-card-title" label="mbti 성격 검사"></w2:textbox>
-								<w2:textbox class="action-card-subtitle" label="ex : 8가지 성향을 4개의 성향을 알아 낼 수 있습니다"></w2:textbox>
-								<xf:trigger id="mbti_button" class="action-card-button" type="button" ev:onclick="scwin.mbti_button_onclick">
-									<xf:label><![CDATA[시작하기]]></xf:label>
-								</xf:trigger>
-							</xf:group>
-
-							<!-- 코드분석 카드 -->
-							<xf:group id="code_card" class="action-card incomplete" ev:onclick="scwin.startCodeAnalysis_onclick()">
-								<w2:textbox id="code_badge" class="incomplete-badge" label="미완료"></w2:textbox>
-								<xf:group class="action-card-icon" style="">
-									<xf:image src="/InsWebApp/images/ws5/main/code_check.png" style="width:100%;height:100%;" id=""></xf:image>
-								</xf:group>
-								<w2:textbox class="action-card-title" label="코드분석"></w2:textbox>
-								<w2:textbox class="action-card-subtitle" label="ex : 8가지 성향을 4개의 성향을 알아 낼 수 있습니다"></w2:textbox>
-								<xf:trigger id="code_button" class="action-card-button" type="button" ev:onclick="scwin.code_button_onclick">
-									<xf:label><![CDATA[분석하기]]></xf:label>
-								</xf:trigger>
-							</xf:group>
-						</xf:group>
-						<xf:group id="result_section" style="display:none; text-align: center; padding: 20px;">
-							<w2:textbox id="result_mbti_type" style="font-size: 28px; font-weight: bold; margin-top: 20px; color: #007bff;"></w2:textbox>
-							<xf:image id="result_image" src="" style="max-width: 400px; width: 100%; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin-top: 20px;"></xf:image>
-						</xf:group>
+						<!-- PageFrame으로 동적 콘텐츠 렌더링 -->
+						<w2:pageFrame id="pf_content" src="" style="width: 100%; min-height: 200px;"></w2:pageFrame>
 					</section>
 				</main>
 			</xf:group>

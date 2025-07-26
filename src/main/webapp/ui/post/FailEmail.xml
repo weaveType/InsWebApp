@@ -1,45 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<html xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:ev="http://www.w3.org/2001/xml-events"
-    xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
-    <head>
-        <w2:type>COMPONENT</w2:type>
-        <w2:buildDate/>
-        <w2:MSA/>
-        <xf:model>
-        	<w2:dataCollection baseNode="map">
-        		<w2:dataList baseNode="list" repeatNode="map" id="dlt_sendEmailInfoListVo" saveRemovedData="true">
-        			<w2:columnInfo>
-        				<w2:column dataType="text" name="이메일" id="email"></w2:column>
-        				<w2:column dataType="text" name="이름" id="name"></w2:column>
-        				<w2:column dataType="text" name="유저 ID" id="accountId"></w2:column>
-        			</w2:columnInfo>
-        		</w2:dataList>
-        		<w2:dataMap baseNode="map" id="dma_sendEmailVo">
-        			<w2:keyInfo>
-        				<w2:key dataType="text" name="합불여부" id="isPassed"></w2:key>
-        				<w2:key dataType="text" name="메일 내용" id="emailContent"></w2:key>
-        				<w2:key dataType="text" name="이메일 정보 리스트" id="sendEmailInfoListVo"></w2:key>
-        			</w2:keyInfo>
-        		</w2:dataMap>
-        	</w2:dataCollection>
-        	<w2:workflowCollection />
-        	<xf:submission id="sbm_sendFailEmail" action="/InsWebApp/POS0001Send.pwkjson" method="post" mediatype="application/json"
-        		ref='data:json,[{"id":"dma_sendEmailVo","key":"sendEmailVo"}]' target="" encoding="UTF-8" instance="" replace="" errorHandler=""
-        		customHandler="" mode="asynchronous" processMsg="메일 전송중" ev:submit="" ev:submitdone="" ev:submiterror="" abortTrigger="">
-        	</xf:submission>
-        </xf:model>
-        <w2:layoutInfo/>
-        <w2:publicInfo method=""/>
-        
-        <style type="text/css"><![CDATA[
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare"
+	xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>COMPONENT</w2:type>
+		<w2:buildDate />
+		<w2:MSA />
+		<xf:model>
+			<w2:dataCollection baseNode="map">
+				<w2:dataList baseNode="list" repeatNode="map" id="dlt_sendEmailInfoListVo" saveRemovedData="true">
+					<w2:columnInfo>
+						<w2:column dataType="text" name="이메일" id="email"></w2:column>
+						<w2:column dataType="text" name="이름" id="name"></w2:column>
+						<w2:column dataType="text" name="유저 ID" id="accountId"></w2:column>
+					</w2:columnInfo>
+				</w2:dataList>
+				<w2:dataMap baseNode="map" id="dma_sendEmailVo">
+					<w2:keyInfo>
+						<w2:key dataType="text" name="합불여부" id="isPassed"></w2:key>
+						<w2:key dataType="text" name="메일 내용" id="emailContent"></w2:key>
+						<w2:key dataType="text" name="이메일 정보 리스트" id="sendEmailInfoListVo"></w2:key>
+					</w2:keyInfo>
+				</w2:dataMap>
+			</w2:dataCollection>
+			<w2:workflowCollection />
+			<xf:submission id="sbm_sendFailEmail" action="/InsWebApp/POS0001Send.pwkjson" method="post" mediatype="application/json"
+				ref='data:json,[{"id":"dma_sendEmailVo","key":"sendEmailVo"}]' target="" encoding="UTF-8" instance="" replace="" errorHandler=""
+				customHandler="" mode="asynchronous" processMsg="메일 전송중" ev:submit="" ev:submitdone="" ev:submiterror="" abortTrigger="">
+			</xf:submission>
+		</xf:model>
+		<w2:layoutInfo />
+		<w2:publicInfo method="" />
+
+		<style type="text/css"><![CDATA[
             /* 전체 컨테이너 스타일 */
-            .main-container {
+.main-container {
                 background-color: #ffffff;
                 min-height: 100vh;
-                padding: 40px 20px;
-                max-width: 500px;
-                margin: 0 auto;
+                padding: 0 20px 40px 20px;
+                width: 100%;
                 font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             }
             
@@ -210,8 +208,8 @@
                 }
             }
         ]]></style>
-        
-        <script lazy="false" type="text/javascript"><![CDATA[
+
+		<script lazy="false" type="text/javascript"><![CDATA[
 scwin.onpageload = function () {
     // 기본 템플릿 설정
     scwin.setDefaultTemplates();
@@ -283,35 +281,35 @@ scwin.close_btn_onclick = function (e) {
     });
 };
 ]]></script>
-    </head>
-    <body ev:onpageload="scwin.onpageload">
-        <xf:group class="main-container">
-            <!-- 불합격자 메일 템플릿 섹션 -->
-            <xf:group class="template-section">
-                <w2:textbox class="section-title" label="불합격자 메일 템플릿"></w2:textbox>
-                
-                <xf:group class="form-group">
-                    <xf:textarea class="form-textarea" id="txtFailTemplate"></xf:textarea>
-                </xf:group>
-                
-                <xf:group class="checkbox-group">
-                    <xf:select appearance="full" selectedindex="-1" style="float: right;">
-                        <xf:choices>
-                            <xf:item>
-                                <xf:label><![CDATA[이메일 발송]]></xf:label>
-                                <xf:value><![CDATA[1]]></xf:value>
-                            </xf:item>
-                        </xf:choices>
-                    </xf:select>
-                </xf:group>
-            </xf:group>
-            
-            <!-- 버튼 영역 -->
-            <xf:group class="button-container">
-                <w2:button class="btn-secondary" label="템플릿 초기화" ev:onclick="scwin.resetTemplates"></w2:button>
-                <w2:button class="btn-primary" label="확인" ev:onclick="scwin.close_btn_onclick" id="btn_sendEmail"></w2:button>
-                <w2:button class="btn-close" label="닫기" ev:onclick="scwin.btn_close_onclick"></w2:button>
-            </xf:group>
-        </xf:group>
-    </body>
+	</head>
+	<body ev:onpageload="scwin.onpageload">
+		<xf:group class="main-container">
+			<!-- 불합격자 메일 템플릿 섹션 -->
+			<xf:group class="template-section">
+				<w2:textbox class="section-title" label="불합격자 메일 템플릿"></w2:textbox>
+
+				<xf:group class="form-group">
+					<xf:textarea class="form-textarea" id="txtFailTemplate"></xf:textarea>
+				</xf:group>
+
+				<xf:group class="checkbox-group">
+					<xf:select appearance="full" selectedindex="-1" style="float: right;">
+						<xf:choices>
+							<xf:item>
+								<xf:label><![CDATA[이메일 발송]]></xf:label>
+								<xf:value><![CDATA[1]]></xf:value>
+							</xf:item>
+						</xf:choices>
+					</xf:select>
+				</xf:group>
+			</xf:group>
+
+			<!-- 버튼 영역 -->
+			<xf:group class="button-container">
+				<w2:button class="btn-secondary" label="템플릿 초기화" ev:onclick="scwin.resetTemplates"></w2:button>
+				<w2:button class="btn-primary" label="확인" ev:onclick="scwin.close_btn_onclick" id="btn_sendEmail"></w2:button>
+				<w2:button class="btn-close" label="닫기" ev:onclick="scwin.btn_close_onclick"></w2:button>
+			</xf:group>
+		</xf:group>
+	</body>
 </html>

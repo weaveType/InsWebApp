@@ -710,8 +710,13 @@ public class PostController {
 	@ElService(key = "POS0008List")
 	@RequestMapping(value = "POS0008List")
 	@ElDescription(sub = "매칭신청 공고 가져오기", desc = "유저에게 매칭신청을 한 공고를 가져온다.")
-	public List<ScoutListVo> selectScoutCompany(ScoutSearchVo scoutSearchVo) throws Exception {
-		return postService.selectScoutCompany(scoutSearchVo);
+	public Map<String, Object> selectScoutCompany(ScoutSearchVo scoutSearchVo) throws Exception {
+		List<ScoutListVo> scoutList = postService.selectScoutCompany(scoutSearchVo);
+		
+		Map<String, Object> response = new HashMap<>();
+		response.put("scoutListVoList", scoutList);
+		
+		return response;
 	}
 	
 }
