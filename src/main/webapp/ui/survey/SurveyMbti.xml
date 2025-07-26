@@ -339,15 +339,17 @@
                 $c.sbm.execute(sbm_submitSurvey);
             };
             
-            // 탭 전환 함수
+            // 개선된 탭 전환 함수
             scwin.switchTab = function(event) {
-                // WebSquare의 복잡한 DOM 구조 때문에 targetTab을 찾는 방법 개선
                 var targetTab = null;
                 var clickedElement = event.target;
+                
+                console.log('탭 전환 시도:', clickedElement);
                 
                 // 1. WebSquare xf:trigger의 value 속성을 통한 탭 매핑 (우선순위)
                 if (clickedElement && clickedElement.value) {
                     var buttonValue = clickedElement.value;
+                    console.log('버튼 값:', buttonValue);
                     
                     if (buttonValue === '코드 분석 결과') {
                         targetTab = 'code';
@@ -361,48 +363,56 @@
                     targetTab = clickedElement.getAttribute('data-tab');
                 }
                 
-                // 3. 찾지 못했다면 부모 요소에서 찾기
-                if (!targetTab && clickedElement && clickedElement.parentElement) {
+                // 3. 부모 요소에서 찾기 (더 강화된 버전)
+                if (!targetTab && clickedElement) {
                     var parent = clickedElement.parentElement;
-                    while (parent && !targetTab) {
+                    var depth = 0;
+                    while (parent && !targetTab && depth < 10) {
                         if (parent.getAttribute && parent.getAttribute('data-tab')) {
                             targetTab = parent.getAttribute('data-tab');
                             break;
                         }
+                        // WebSquare 특수 구조에서 클래스로도 찾기
+                        if (parent.classList && parent.classList.contains('tab-button')) {
+                            targetTab = parent.getAttribute('data-tab');
+                            break;
+                        }
                         parent = parent.parentElement;
+                        depth++;
                     }
                 }
                 
-                // 4. 여전히 찾지 못했다면 클릭된 요소의 자식에서 찾기
-                if (!targetTab && clickedElement) {
-                    var tabButton = clickedElement.querySelector('.tab-button');
-                    if (tabButton && tabButton.getAttribute) {
-                        targetTab = tabButton.getAttribute('data-tab');
-                    }
-                }
-                
-                // 5. 마지막 방법: 모든 탭 버튼 중에서 현재 포커스된 것 찾기
+                // 4. 클릭된 요소가 속한 탭 버튼 찾기
                 if (!targetTab) {
-                    var tabButtons = document.querySelectorAll('.tab-button');
-                    for (var i = 0; i < tabButtons.length; i++) {
-                        if (tabButtons[i].contains(clickedElement) || tabButtons[i] === clickedElement) {
-                            targetTab = tabButtons[i].getAttribute('data-tab');
+                    var allTabButtons = document.querySelectorAll('.tab-button, [data-tab]');
+                    for (var i = 0; i < allTabButtons.length; i++) {
+                        var tabButton = allTabButtons[i];
+                        if (tabButton.contains(clickedElement) || tabButton === clickedElement) {
+                            targetTab = tabButton.getAttribute('data-tab');
+                            console.log('탭 버튼에서 찾은 targetTab:', targetTab);
                             break;
                         }
                     }
                 }
                 
-                // targetTab이 null이면 함수 종료
+                // targetTab이 여전히 null이면 기본값 설정
                 if (!targetTab) {
-                    console.error('탭을 찾을 수 없습니다. 클릭된 요소의 value:', clickedElement ? clickedElement.value : 'undefined');
-                    return;
+                    console.warn('targetTab을 찾을 수 없어 기본값 설정');
+                    targetTab = 'code'; // 기본값으로 코드 분석 탭 설정
                 }
+                
+                console.log('최종 targetTab:', targetTab);
                 
                 // 모든 탭 버튼 비활성화
                 var tabButtons = document.querySelectorAll('.tab-button');
                 tabButtons.forEach(function(button) {
                     button.classList.remove('active');
                     button.setAttribute('aria-selected', 'false');
+                    // 스타일 초기화
+                    button.style.background = 'transparent';
+                    button.style.color = '#6c757d';
+                    button.style.boxShadow = 'none';
+                    button.style.transform = 'none';
                 });
                 
                 // 모든 탭 패널 숨기기
@@ -410,19 +420,20 @@
                 tabPanels.forEach(function(panel) {
                     panel.classList.remove('active');
                     panel.setAttribute('aria-hidden', 'true');
+                    panel.style.display = 'none';
                 });
                 
-                // 선택된 탭 활성화
-                var targetButton = document.querySelector('.tab-button[data-tab="' + targetTab + '"]');
-                if (targetButton) {
-                    targetButton.classList.add('active');
-                    targetButton.setAttribute('aria-selected', 'true');
-                }
+                // 클릭된 요소를 활성화 (가장 확실한 방법)
+                clickedElement.classList.add('active');
+                clickedElement.setAttribute('aria-selected', 'true');
+                clickedElement.style.background = 'linear-gradient(135deg, #2196f3 0%, #007bff 100%)';
+                clickedElement.style.color = 'white';
+                clickedElement.style.boxShadow = '0 4px 16px rgba(33, 150, 243, 0.3)';
+                clickedElement.style.transform = 'translateY(-2px)';
+                console.log('탭 버튼 활성화됨:', clickedElement);
                 
-                // 인덱스 기반으로 탭 패널 찾기 (가장 확실한 방법)
-                var tabPanels = document.querySelectorAll('.tab-panel');
+                // 선택된 탭 패널 활성화 (인덱스 기반으로 더 안전하게)
                 var targetPanel = null;
-                
                 if (targetTab === 'code' && tabPanels.length > 0) {
                     targetPanel = tabPanels[0];
                 } else if (targetTab === 'survey' && tabPanels.length > 1) {
@@ -432,14 +443,21 @@
                 if (targetPanel) {
                     targetPanel.classList.add('active');
                     targetPanel.setAttribute('aria-hidden', 'false');
+                    targetPanel.style.display = 'block';
+                    console.log('탭 패널 활성화됨:', targetPanel);
                     
-                    // 탭 전환 후 스크롤 조정
+                    // 탭 전환 후 부드러운 스크롤
                     setTimeout(function() {
-                        targetPanel.scrollIntoView({
-                            behavior: 'smooth',
-                            block: 'start'
-                        });
-                    }, 100);
+                        var tabsContainer = targetPanel.closest('.analysis-tabs');
+                        if (tabsContainer) {
+                            tabsContainer.scrollIntoView({
+                                behavior: 'smooth',
+                                block: 'start'
+                            });
+                        }
+                    }, 150);
+                } else {
+                    console.error('targetPanel을 찾을 수 없습니다:', targetTab);
                 }
             };
             
@@ -516,32 +534,26 @@
                 
                 var html = '';
                 
-                // 답변별 상세 분석
-                if (result.answerAnalyses && result.answerAnalyses.length > 0) {
-                    html += '<div class="answer-item">';
-                    html += '<div class="answer-header">';
-                    html += '<h4 class="answer-title">선택한 답변 분석</h4>';
+                // 체계적인 성향 분석
+                html += '<div class="answer-item">';
+                html += '<div class="answer-header">';
+                html += '<h4 class="answer-title">성향 분석 결과</h4>';
+                html += '</div>';
+                
+                // 축별 성향 분석
+                var axisAnalyses = scwin.generateAxisAnalyses(result);
+                axisAnalyses.forEach(function(axisAnalysis) {
+                    html += '<div class="axis-analysis-card">';
+                    html += '<div class="axis-analysis-header">';
+                    html += '<h5 class="axis-analysis-name">' + axisAnalysis.axisName + '</h5>';
+                    html += '<div class="axis-analysis-tendency">' + axisAnalysis.tendency + '</div>';
                     html += '</div>';
-                    
-                    result.answerAnalyses.forEach(function(analysis) {
-                        var impactClass = analysis.impact === '높음' ? 'high' : analysis.impact === '보통' ? 'medium' : 'low';
-                        
-                        html += '<div class="answer-card ' + impactClass + '">';
-                        html += '<div class="answer-question">';
-                        html += '<span class="question-number">Q' + analysis.questionId + '</span>';
-                        html += '<span class="question-text">' + analysis.questionText + '</span>';
-                        html += '</div>';
-                        html += '<div class="answer-details">';
-                        html += '<div class="answer-value">답변: ' + analysis.answerValue + '점</div>';
-                        html += '<div class="answer-axis">' + analysis.axisDescription + '</div>';
-                        html += '<div class="answer-contribution">기여도: ' + analysis.contribution.toFixed(1) + '점</div>';
-                        html += '<div class="answer-impact">영향도: ' + analysis.impact + '</div>';
-                        html += '</div>';
-                        html += '<div class="answer-reasoning">' + analysis.reasoning + '</div>';
-                        html += '</div>';
-                    });
+                    html += '<div class="axis-analysis-content">';
+                    html += '<div class="axis-analysis-description">' + axisAnalysis.description + '</div>';
                     html += '</div>';
-                }
+                    html += '</div>';
+                });
+                html += '</div>';
                 
                 // 축별 기여도
                 if (result.axisContributions) {
@@ -586,7 +598,8 @@
                     html += '<div class="answer-header">';
                     html += '<h4 class="answer-title">답변 패턴 분석</h4>';
                     html += '</div>';
-                    html += '<div class="pattern-analysis">' + result.answerPattern.replace(/\n/g, '<br>') + '</div>';
+                    var processedPattern = scwin.processInsightText(result.answerPattern, result);
+                    html += '<div class="pattern-analysis">' + processedPattern.replace(/\n/g, '<br>') + '</div>';
                     html += '</div>';
                 }
                 
@@ -601,7 +614,8 @@
                             html += '</div>';
                             html += '<ul class="insights-list">';
                             keyInsights.forEach(function(insight) {
-                                html += '<li class="insight-item">' + insight + '</li>';
+                                var processedInsight = scwin.processInsightText(insight, result);
+                                html += '<li class="insight-item">' + processedInsight + '</li>';
                             });
                             html += '</ul>';
                             html += '</div>';
@@ -629,13 +643,8 @@
                     });
                 }, 500);
                 
-                // 탭 전환 애니메이션 완료 후 설문 답변 분석 탭으로 자동 전환
-                setTimeout(function() {
-                    var surveyTabButton = document.querySelector('.tab-button[data-tab="survey"]');
-                    if (surveyTabButton) {
-                        surveyTabButton.click();
-                    }
-                }, 1000);
+                // 자동 탭 전환 제거 - 사용자가 원하는 탭을 클릭해서 볼 수 있도록 함
+                console.log('답변 분석 데이터 준비 완료 - 사용자가 탭을 클릭해서 확인할 수 있습니다.');
             };
             
             // 축 표시 이름 가져오기
@@ -647,6 +656,174 @@
                     'D_F': 'Debug vs Feature'
                 };
                 return names[axis] || axis;
+            };
+            
+            // 축별 성향 분석 생성 (실제 점수 기반)
+            scwin.generateAxisAnalyses = function(result) {
+                var analyses = [];
+                var axisInfo = {
+                    'A_B': {
+                        name: '개발 스타일',
+                        leftType: 'Builder', rightType: 'Architect',
+                        leftDesc: '빠른 구현과 실용적 해결책을 선호하며, 당면한 문제를 즉시 해결하는 것을 중시합니다.',
+                        rightDesc: '체계적 설계와 확장성을 중시하며, 장기적인 관점에서 안정적인 구조를 만들어갑니다.'
+                    },
+                    'R_I': {
+                        name: '기술 접근법',
+                        leftType: 'Innovator', rightType: 'Refactor',
+                        leftDesc: '새로운 기술과 실험적 접근을 선호하며, 혁신적인 솔루션 개발에 흥미를 느낍니다.',
+                        rightDesc: '기존 코드의 개선과 안정성을 중시하며, 검증된 방법으로 점진적 발전을 추구합니다.'
+                    },
+                    'S_T': {
+                        name: '협업 방식',
+                        leftType: 'Solo', rightType: 'Team',
+                        leftDesc: '독립적인 작업을 선호하며, 개인의 집중력과 창의성을 발휘할 때 최고의 성과를 냅니다.',
+                        rightDesc: '팀워크와 협업적 개발을 중시하며, 함께 소통하며 문제를 해결해나가는 것을 선호합니다.'
+                    },
+                    'D_F': {
+                        name: '작업 선호도',
+                        leftType: 'Debug', rightType: 'Feature',
+                        leftDesc: '문제 해결과 버그 수정에 집중하며, 복잡한 이슈를 분석하고 해결하는 것에서 성취감을 느낍니다.',
+                        rightDesc: '새로운 기능 개발과 창작 활동을 선호하며, 무언가를 새롭게 만들어내는 것에 흥미를 느낍니다.'
+                    }
+                };
+                
+                // 실제 점수 데이터 사용
+                var scores = result.scores || {};
+                
+                // 각 축별로 분석 생성
+                Object.keys(axisInfo).forEach(function(axis) {
+                    var info = axisInfo[axis];
+                    var score = scores[axis] || 0;
+                    var absScore = Math.abs(score);
+                    var tendency, description, strengthLevel;
+                    
+                    // 강도 판단 (절댓값 기준)
+                    if (absScore >= 25) {
+                        strengthLevel = '매우 강한';
+                    } else if (absScore >= 15) {
+                        strengthLevel = '강한';
+                    } else if (absScore >= 5) {
+                        strengthLevel = '약간의';
+                    } else {
+                        strengthLevel = '균형잡힌';
+                    }
+                    
+                    // 방향과 성향 결정
+                    if (absScore < 5) {
+                        tendency = '균형잡힌 성향';
+                        description = info.leftType + '와 ' + info.rightType + ' 사이의 균형잡힌 성향을 보입니다. 상황에 따라 유연하게 접근하는 특성을 가지고 있습니다.';
+                    } else if (score > 0) {
+                        // 양수: rightType
+                        tendency = strengthLevel + ' ' + info.rightType + ' 성향';
+                        description = '당신은 ' + strengthLevel + ' ' + info.rightType + ' 성향을 보입니다. ' + info.rightDesc;
+                    } else {
+                        // 음수: leftType  
+                        tendency = strengthLevel + ' ' + info.leftType + ' 성향';
+                        description = '당신은 ' + strengthLevel + ' ' + info.leftType + ' 성향을 보입니다. ' + info.leftDesc;
+                    }
+                    
+                    analyses.push({
+                        axisName: info.name,
+                        tendency: tendency,
+                        description: description
+                    });
+                });
+                
+                return analyses;
+            };
+            
+            // 인사이트 텍스트를 명확한 성향으로 변환
+            scwin.processInsightText = function(text, result) {
+                if (!text) return text;
+                
+                var processed = text;
+                
+                // 최종 유형 코드에서 실제 성향 추출  
+                var typeCode = (result && result.typeCode) ? result.typeCode : '';
+                var actualTypes = scwin.getActualTypes(typeCode);
+                
+                // 애매한 축 표현을 명확한 성향으로 변환
+                var conversions = [
+                    // B/A 축 - 실제 성향으로 교체
+                    { 
+                        patterns: ['강한 Builder/Architect 성향', 'Builder/Architect 성향', 'B/A 성향', '강한 B/A'],
+                        replacement: '강한 ' + actualTypes.style + ' 성향'
+                    },
+                    {
+                        patterns: ['강한 Architect/Builder 성향', 'Architect/Builder 성향', 'A/B 성향', '강한 A/B'], 
+                        replacement: '강한 ' + actualTypes.style + ' 성향'
+                    },
+                    
+                    // R/I 축 - 실제 성향으로 교체
+                    {
+                        patterns: ['강한 Refactor/Innovator 성향', 'Refactor/Innovator 성향', 'R/I 성향', '강한 R/I'],
+                        replacement: '강한 ' + actualTypes.tech + ' 성향'
+                    },
+                    {
+                        patterns: ['강한 Innovator/Refactor 성향', 'Innovator/Refactor 성향', 'I/R 성향', '강한 I/R'],
+                        replacement: '강한 ' + actualTypes.tech + ' 성향'
+                    },
+                    
+                    // S/T 축 - 실제 성향으로 교체
+                    {
+                        patterns: ['강한 Solo/Team 성향', 'Solo/Team 성향', 'S/T 성향', '강한 S/T'],
+                        replacement: '강한 ' + actualTypes.collab + ' 성향'
+                    },
+                    {
+                        patterns: ['강한 Team/Solo 성향', 'Team/Solo 성향', 'T/S 성향', '강한 T/S'],
+                        replacement: '강한 ' + actualTypes.collab + ' 성향'
+                    },
+                    
+                    // D/F 축 - 실제 성향으로 교체
+                    {
+                        patterns: ['강한 Debug/Feature 성향', 'Debug/Feature 성향', 'D/F 성향', '강한 D/F'],
+                        replacement: '강한 ' + actualTypes.work + ' 성향'
+                    },
+                    {
+                        patterns: ['강한 Feature/Debug 성향', 'Feature/Debug 성향', 'F/D 성향', '강한 F/D'],
+                        replacement: '강한 ' + actualTypes.work + ' 성향'
+                    }
+                ];
+                
+                // 변환 적용
+                conversions.forEach(function(conversion) {
+                    conversion.patterns.forEach(function(pattern) {
+                        var regex = new RegExp(pattern.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g');
+                        processed = processed.replace(regex, conversion.replacement);
+                    });
+                });
+                
+                // 남은 중복 문제 정리
+                processed = processed.replace(/Builder(\w+)\/Architect/g, 'Builder/Architect');
+                processed = processed.replace(/Architect(\w+)\/Builder/g, 'Architect/Builder');
+                processed = processed.replace(/Solo(\w+)\/Team/g, 'Solo/Team');
+                processed = processed.replace(/Team(\w+)\/Solo/g, 'Team/Solo');
+                processed = processed.replace(/Refactor(\w+)\/Innovator/g, 'Refactor/Innovator');
+                processed = processed.replace(/Innovator(\w+)\/Refactor/g, 'Innovator/Refactor');
+                processed = processed.replace(/Debug(\w+)\/Feature/g, 'Debug/Feature');
+                processed = processed.replace(/Feature(\w+)\/Debug/g, 'Feature/Debug');
+                
+                return processed;
+            };
+            
+            // 유형 코드에서 실제 성향 추출
+            scwin.getActualTypes = function(typeCode) {
+                if (!typeCode || typeCode.length < 4) {
+                    return {
+                        style: 'Builder',
+                        tech: 'Innovator', 
+                        collab: 'Solo',
+                        work: 'Debug'
+                    };
+                }
+                
+                return {
+                    style: typeCode[0] === 'A' ? 'Architect' : 'Builder',
+                    tech: typeCode[1] === 'R' ? 'Refactor' : 'Innovator',
+                    collab: typeCode[2] === 'T' ? 'Team' : 'Solo', 
+                    work: typeCode[3] === 'F' ? 'Feature' : 'Debug'
+                };
             };
             
             // 설문 제출 성공 콜백
@@ -666,10 +843,8 @@
 					// 쿠키에 다시 저장
 					var updatedUserInfoStr = JSON.stringify(userInfo);
 					WebSquare.cookie.setCookie("userInfo", updatedUserInfoStr);
-
-					debugger;
 				} else {
-					console.error("분석 결과 데이터가 없습니다:", response.typeCode);
+					console.error("분석 결과 데이터가 없습니다:", response);
 					$c.win.alert("설문 분석에 실패했습니다.");
 				}
 			};
@@ -836,22 +1011,26 @@
                     );
                 }
 
-                // 코드 분석 코멘트 및 상세 분석 표시 (CodeAnalysisMain.xml 스타일)
-                var commentEl = document.querySelector('.code-analysis-comment');
-                var detailSection = document.querySelector('.detailed-section');
-                
-                if (commentEl && result.codeAnalysisComment) {
-                    commentEl.textContent = result.codeAnalysisComment;
-                }
-                
-                // 상세 분석 결과 표시 (최신 코드 분석 페이지 스타일)
-                if (detailSection && result.codeAnalysisDetail) {
-                    try {
-                        var detailObj = JSON.parse(result.codeAnalysisDetail);
-                        scwin.displayDetailedAnalysis(detailObj);
-                    } catch(e) {
-                        console.error('코드 분석 결과 파싱 오류:', e);
-                        detailSection.innerHTML = '<div class="error-message">코드 분석 결과를 불러올 수 없습니다.</div>';
+                // 코드 분석 결과 표시 (완전한 CodeAnalysisMain.xml 방식)
+                if (result.codeAnalysisComment || result.codeAnalysisDetail) {
+                    console.log('코드 분석 결과 데이터:', {
+                        comment: result.codeAnalysisComment,
+                        detail: result.codeAnalysisDetail
+                    });
+                    
+                    // 상세 분석 결과 표시
+                    scwin.displayDetailedAnalysis(result);
+                } else {
+                    console.warn('코드 분석 결과가 없습니다.');
+                    // 기본 메시지 표시
+                    var tabPanels = document.querySelectorAll('.tab-panel');
+                    var codeTabPanel = tabPanels.length > 0 ? tabPanels[0] : null;
+                    if (codeTabPanel) {
+                        codeTabPanel.innerHTML = 
+                            '<div class="code-analysis-section">' +
+                                '<div class="code-analysis-title">코드 분석 AI 코멘트</div>' +
+                                '<div class="code-analysis-comment">코드 분석을 먼저 수행해주세요. 프로필 페이지에서 코드 분석을 진행할 수 있습니다.</div>' +
+                            '</div>';
                     }
                 }
                 
@@ -890,43 +1069,67 @@
                 $p.url("../user/UserDetail.xml");
             };
             
-            // 최신 코드 분석 상세 분석 렌더링 함수 (CodeAnalysisMain.xml 스타일 이식)
+            // CodeAnalysisMain.xml에서 완벽하게 이식된 상세 분석 렌더링 함수
             scwin.displayDetailedAnalysis = function(data) {
-                var detailSection = document.querySelector('.detailed-section');
-                if (!detailSection) return;
                 try {
-                    // fullAnalysis JSON 파싱
+                    // 코드 분석 탭 패널 찾기 (첫 번째 탭)
+                    var tabPanels = document.querySelectorAll('.tab-panel');
+                    var codeTabPanel = tabPanels.length > 0 ? tabPanels[0] : null;
+                    
+                    if (!codeTabPanel) {
+                        console.error('코드 분석 탭 패널을 찾을 수 없습니다.');
+                        return;
+                    }
+
+                    // fullAnalysis JSON 파싱 (CodeAnalysisMain.xml과 동일한 방식)
                     var fullAnalysis = {};
                     var detailedAnalysis = {};
-                    if (data && data.detailed_analysis) {
-                        detailedAnalysis = data.detailed_analysis;
-                    } else if (data && typeof data === 'string') {
+                    
+                    if (data && data.codeAnalysisDetail && typeof data.codeAnalysisDetail === 'string') {
                         try {
-                            fullAnalysis = JSON.parse(data);
+                            fullAnalysis = JSON.parse(data.codeAnalysisDetail);
                             detailedAnalysis = fullAnalysis.detailed_analysis || {};
                         } catch (e) {
-                            console.warn('fullAnalysis JSON 파싱 실패:', e);
+                            console.warn('codeAnalysisDetail JSON 파싱 실패:', e);
+                        }
+                    } else if (data && data.analysisResult && typeof data.analysisResult === 'string') {
+                        try {
+                            fullAnalysis = JSON.parse(data.analysisResult);
+                            detailedAnalysis = fullAnalysis.detailed_analysis || {};
+                        } catch (e) {
+                            console.warn('analysisResult JSON 파싱 실패:', e);
                         }
                     }
 
-                    // 분석 근거 표시
-                    var reasoning = detailedAnalysis.reasoning || '코드 구조와 패턴을 분석하여 개발 스타일을 도출했습니다.';
-                    var reasoningHtml = '<xf:group class="section-item reasoning-section">'
-                        + '<w2:textbox class="section-header" label="분석 근거" tagname="h3"></w2:textbox>'
-                        + '<xf:group class="reasoning-content">'
-                        + '<w2:textbox class="detailed-reasoning" label="' + reasoning + '" tagname="p"></w2:textbox>'
-                        + '</xf:group></xf:group>';
+                    // 코드 분석 섹션 생성 (CodeAnalysisMain.xml 구조와 완전히 동일)
+                    var codeAnalysisHtml = 
+                        '<div class="code-analysis-section">' +
+                            '<div class="code-analysis-title">코드 분석 AI 코멘트</div>' +
+                            '<div class="code-analysis-comment">' + (data.codeAnalysisComment || '코드 구조와 패턴을 분석하여 개발 스타일을 도출했습니다.') + '</div>' +
+                            '<div class="detailed-section">' +
+                                '<div class="detailed-title">상세 분석 결과</div>';
 
-                    // 코드 패턴 표시
+                    // 분석 근거 섹션
+                    var reasoning = detailedAnalysis.reasoning || '코드 구조와 패턴을 분석하여 개발 스타일을 도출했습니다.';
+                    codeAnalysisHtml += 
+                        '<div class="section-item reasoning-section">' +
+                            '<div class="section-header">분석 근거</div>' +
+                            '<div class="reasoning-content">' +
+                                '<div class="detailed-reasoning">' + reasoning + '</div>' +
+                            '</div>' +
+                        '</div>';
+
+                    // 코드 패턴 섹션
                     var codePatterns = detailedAnalysis.code_patterns || [];
-                    var patternsHtml = '';
+                    codeAnalysisHtml += '<div class="section-item patterns-section">' +
+                        '<div class="section-header">발견된 코드 패턴</div>' +
+                        '<div class="code-patterns-list">';
+                    
                     if (codePatterns.length > 0) {
-                        patternsHtml = '<xf:group class="section-item patterns-section">'
-                            + '<w2:textbox class="section-header" label="발견된 코드 패턴" tagname="h3"></w2:textbox>'
-                            + '<xf:group class="code-patterns-list">';
                         for (var i = 0; i < codePatterns.length; i++) {
                             var pattern = codePatterns[i];
                             var evidenceHtml = '';
+                            
                             if (pattern.evidence && pattern.evidence.length > 0) {
                                 evidenceHtml = '<ul>';
                                 for (var j = 0; j < pattern.evidence.length; j++) {
@@ -934,89 +1137,91 @@
                                 }
                                 evidenceHtml += '</ul>';
                             }
+                            
                             var impactScore = pattern.impact_score || 0;
                             var impactBars = '';
                             for (var k = 0; k < 10; k++) {
                                 impactBars += '<span class="impact-bar ' + (k < impactScore ? 'filled' : '') + '"></span>';
                             }
-                            patternsHtml += '<div class="pattern-item">'
-                                + '<div class="pattern-header">'
-                                + '<h4 class="pattern-title">' + (pattern.pattern || 'Code Pattern') + '</h4>'
-                                + '<div class="pattern-impact">'
-                                + '<span class="impact-label">영향도</span>'
-                                + '<div class="impact-score">' + impactBars + '</div>'
-                                + '<span class="impact-number">' + impactScore + '/10</span>'
-                                + '</div></div>'
-                                + '<p class="pattern-description">' + (pattern.description || '') + '</p>'
-                                + '<div class="pattern-evidence">' + evidenceHtml + '</div>'
-                                + '</div>';
+                            
+                            codeAnalysisHtml += 
+                                '<div class="pattern-item">' +
+                                    '<div class="pattern-header">' +
+                                        '<h4 class="pattern-title">' + (pattern.pattern || 'Code Pattern') + '</h4>' +
+                                        '<div class="pattern-impact">' +
+                                            '<span class="impact-label">영향도</span>' +
+                                            '<div class="impact-score">' + impactBars + '</div>' +
+                                            '<span class="impact-number">' + impactScore + '/10</span>' +
+                                        '</div>' +
+                                    '</div>' +
+                                    '<p class="pattern-description">' + (pattern.description || '') + '</p>' +
+                                    '<div class="pattern-evidence">' + evidenceHtml + '</div>' +
+                                '</div>';
                         }
-                        patternsHtml += '</xf:group></xf:group>';
                     } else {
-                        patternsHtml = '<xf:group class="section-item patterns-section">'
-                            + '<w2:textbox class="section-header" label="발견된 코드 패턴" tagname="h3"></w2:textbox>'
-                            + '<xf:group class="code-patterns-list">'
-                            + '<div class="no-patterns">발견된 코드 패턴이 없습니다.</div>'
-                            + '</xf:group></xf:group>';
+                        codeAnalysisHtml += '<div class="no-patterns">발견된 코드 패턴이 없습니다.</div>';
                     }
+                    codeAnalysisHtml += '</div></div>';
 
-                    // 강점 표시
+                    // 강점 섹션
                     var strengths = detailedAnalysis.strengths || [];
-                    var strengthsHtml = '';
+                    codeAnalysisHtml += '<div class="section-item strengths-section">' +
+                        '<div class="section-header">개발 강점</div>' +
+                        '<div class="strengths-content">';
+                    
                     if (strengths.length > 0) {
-                        strengthsHtml = '<xf:group class="section-item strengths-section">'
-                            + '<w2:textbox class="section-header" label="개발 강점" tagname="h3"></w2:textbox>'
-                            + '<xf:group class="strengths-content">'
-                            + '<ul class="strengths-list">';
+                        codeAnalysisHtml += '<ul class="strengths-list">';
                         for (var i = 0; i < strengths.length; i++) {
-                            strengthsHtml += '<li class="strength-item"><span class="strength-icon"><i class="fas fa-check"></i></span>' + strengths[i] + '</li>';
+                            codeAnalysisHtml += '<li class="strength-item"><span class="strength-icon"><i class="fas fa-check"></i></span>' + strengths[i] + '</li>';
                         }
-                        strengthsHtml += '</ul></xf:group></xf:group>';
+                        codeAnalysisHtml += '</ul>';
                     } else {
-                        strengthsHtml = '<xf:group class="section-item strengths-section">'
-                            + '<w2:textbox class="section-header" label="개발 강점" tagname="h3"></w2:textbox>'
-                            + '<xf:group class="strengths-content">'
-                            + '<div class="no-strengths">분석된 강점이 없습니다.</div>'
-                            + '</xf:group></xf:group>';
+                        codeAnalysisHtml += '<div class="no-strengths">분석된 강점이 없습니다.</div>';
                     }
+                    codeAnalysisHtml += '</div></div>';
 
-                    // 개선 제안 표시
+                    // 개선 제안 섹션
                     var suggestions = detailedAnalysis.suggestions || [];
-                    var suggestionsHtml = '';
+                    codeAnalysisHtml += '<div class="section-item suggestions-section">' +
+                        '<div class="section-header">개선 제안</div>' +
+                        '<div class="suggestions-content">';
+                    
                     if (suggestions.length > 0) {
-                        suggestionsHtml = '<xf:group class="section-item suggestions-section">'
-                            + '<w2:textbox class="section-header" label="개선 제안" tagname="h3"></w2:textbox>'
-                            + '<xf:group class="suggestions-content">'
-                            + '<ul class="suggestions-list">';
+                        codeAnalysisHtml += '<ul class="suggestions-list">';
                         for (var i = 0; i < suggestions.length; i++) {
-                            suggestionsHtml += '<li class="suggestion-item"><span class="suggestion-icon"><i class="fas fa-lightbulb"></i></span>' + suggestions[i] + '</li>';
+                            codeAnalysisHtml += '<li class="suggestion-item"><span class="suggestion-icon"><i class="fas fa-lightbulb"></i></span>' + suggestions[i] + '</li>';
                         }
-                        suggestionsHtml += '</ul></xf:group></xf:group>';
+                        codeAnalysisHtml += '</ul>';
                     } else {
-                        suggestionsHtml = '<xf:group class="section-item suggestions-section">'
-                            + '<w2:textbox class="section-header" label="개선 제안" tagname="h3"></w2:textbox>'
-                            + '<xf:group class="suggestions-content">'
-                            + '<div class="no-suggestions">개선 제안사항이 없습니다.</div>'
-                            + '</xf:group></xf:group>';
+                        codeAnalysisHtml += '<div class="no-suggestions">개선 제안사항이 없습니다.</div>';
                     }
+                    codeAnalysisHtml += '</div></div>';
 
-                    // 최종 렌더링
-                    detailSection.innerHTML =
-                        '<w2:textbox class="detailed-title" label="상세 분석 결과" tagname="h2"></w2:textbox>'
-                        + reasoningHtml + patternsHtml + strengthsHtml + suggestionsHtml;
+                    // 닫는 태그
+                    codeAnalysisHtml += '</div></div>';
 
-                    // 순차 애니메이션 적용
+                    // 탭 패널에 내용 설정
+                    codeTabPanel.innerHTML = codeAnalysisHtml;
+
+                    // 순차 애니메이션 적용 (CodeAnalysisMain.xml과 동일)
                     setTimeout(function() {
-                        var items = detailSection.querySelectorAll('.section-item');
+                        var items = codeTabPanel.querySelectorAll('.section-item');
                         items.forEach(function(element, index) {
                             setTimeout(function() {
                                 element.classList.add('animated');
                             }, index * 200);
                         });
                     }, 500);
+
+                    console.log('상세 분석 표시 완료 - 패턴:', codePatterns.length, '강점:', strengths.length, '제안:', suggestions.length);
+                    
                 } catch (error) {
                     console.error('상세 분석 표시 중 오류:', error);
-                    detailSection.innerHTML = '<div class="error-message">상세 분석 정보를 불러오는 중 오류가 발생했습니다.</div>';
+                    var tabPanels = document.querySelectorAll('.tab-panel');
+                    var codeTabPanel = tabPanels.length > 0 ? tabPanels[0] : null;
+                    if (codeTabPanel) {
+                        codeTabPanel.innerHTML = '<div class="error-message">상세 분석 정보를 불러오는 중 오류가 발생했습니다.</div>';
+                    }
                 }
             };
 
@@ -1441,7 +1646,7 @@
                 margin-bottom: 30px;
             }
             
-            /* 코드 분석 결과 스타일 (CodeAnalysisMain.xml 참고) */
+            /* 코드 분석 결과 스타일 (CodeAnalysisMain.xml에서 완전히 이식) */
             .code-analysis-section {
                 max-width: 800px;
                 margin: 30px auto 40px auto;
@@ -1651,7 +1856,8 @@
                 box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
             }
 
-            .tab-button {
+            .tab-button,
+            input[data-tab] {
                 flex: 1;
                 background: transparent;
                 border: none;
@@ -1664,6 +1870,8 @@
                 transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
                 position: relative;
                 overflow: hidden;
+                outline: none;
+                text-align: center;
             }
 
             .tab-button::before {
@@ -1684,23 +1892,27 @@
                 left: 100%;
             }
 
-            .tab-button:hover {
+            .tab-button:hover,
+            input[data-tab]:hover {
                 color: #495057;
                 background: rgba(255, 255, 255, 0.8);
                 transform: translateY(-1px);
             }
 
-            .tab-button.active {
-                background: linear-gradient(135deg, #2196f3 0%, #007bff 100%);
-                color: white;
-                box-shadow: 0 4px 16px rgba(33, 150, 243, 0.3);
-                transform: translateY(-2px);
+            .tab-button.active,
+            input[data-tab].active {
+                background: linear-gradient(135deg, #2196f3 0%, #007bff 100%) !important;
+                color: white !important;
+                box-shadow: 0 4px 16px rgba(33, 150, 243, 0.3) !important;
+                transform: translateY(-2px) !important;
+                border: none !important;
             }
 
-            .tab-button.active:hover {
-                background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
-                transform: translateY(-3px);
-                box-shadow: 0 6px 20px rgba(33, 150, 243, 0.4);
+            .tab-button.active:hover,
+            input[data-tab].active:hover {
+                background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%) !important;
+                transform: translateY(-3px) !important;
+                box-shadow: 0 6px 20px rgba(33, 150, 243, 0.4) !important;
             }
 
             .tab-content {
@@ -1709,14 +1921,14 @@
             }
 
             .tab-panel {
-                display: none;
+                display: none !important;
                 opacity: 0;
                 transform: translateY(20px);
                 transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             }
 
             .tab-panel.active {
-                display: block;
+                display: block !important;
                 opacity: 1;
                 transform: translateY(0);
             }
@@ -1850,6 +2062,64 @@
                 font-size: 14px;
                 color: #495057;
                 line-height: 1.6;
+            }
+
+            /* 축별 분석 카드 */
+            .axis-analysis-card {
+                background: linear-gradient(135deg, #f8faff, #ffffff);
+                border-radius: 16px;
+                padding: 24px;
+                border: 1px solid #e3f2fd;
+                margin-bottom: 20px;
+                transition: all 0.3s ease;
+                box-shadow: 0 2px 12px rgba(33, 150, 243, 0.08);
+            }
+
+            .axis-analysis-card:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 20px rgba(33, 150, 243, 0.15);
+            }
+
+            .axis-analysis-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 20px;
+                padding-bottom: 16px;
+                border-bottom: 2px solid #e3f2fd;
+            }
+
+            .axis-analysis-name {
+                font-size: 20px;
+                font-weight: bold;
+                color: #2d3436;
+                margin: 0;
+            }
+
+            .axis-analysis-tendency {
+                background: linear-gradient(135deg, #2196f3, #007bff);
+                color: white;
+                padding: 8px 16px;
+                border-radius: 20px;
+                font-size: 14px;
+                font-weight: 600;
+                box-shadow: 0 2px 8px rgba(33, 150, 243, 0.3);
+            }
+
+            .axis-analysis-content {
+                display: flex;
+                flex-direction: column;
+                gap: 16px;
+            }
+
+            .axis-analysis-description {
+                font-size: 16px;
+                color: #495057;
+                line-height: 1.7;
+                padding: 20px;
+                background: #f8faff;
+                border-radius: 12px;
+                border-left: 4px solid #2196f3;
             }
 
             /* 축별 기여도 카드 */
@@ -2775,6 +3045,9 @@
                 transform: translateX(-50%) rotate(45deg);
             }
         ]]></style>
+
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
 	</head>
 
 	<body ev:onpageload="scwin.onpageload">
@@ -2911,17 +3184,12 @@
                           
                           <xf:group class="tab-content">
                             <!-- 코드 분석 탭 -->
-                            <xf:group class="tab-panel active" id="code-tab" data-tab="code" role="tabpanel" aria-hidden="false">
-                              <xf:group class="code-analysis-section">
-                                <w2:textbox class="code-analysis-title" label="코드 분석 AI 코멘트" tagname="h3"></w2:textbox>
-                                <w2:textbox class="code-analysis-comment" label="" tagname="div"></w2:textbox>
-                                <xf:group class="detailed-section"></xf:group>
-                                <w2:textbox class="code-analysis-detail" label="" tagname="div"></w2:textbox>
-                              </xf:group>
+                            <xf:group class="tab-panel active" id="code-tab" data-tab="code" role="tabpanel" aria-hidden="false" style="display: block;">
+                              <!-- 코드 분석 내용은 JavaScript에서 동적으로 생성됨 -->
                             </xf:group>
                             
                             <!-- 설문 답변 분석 탭 -->
-                            <xf:group class="tab-panel" id="survey-tab" data-tab="survey" role="tabpanel" aria-hidden="true">
+                            <xf:group class="tab-panel" id="survey-tab" data-tab="survey" role="tabpanel" aria-hidden="true" style="display: none;">
                               <!-- 답변 분석 내용은 JavaScript에서 동적으로 생성됨 -->
                             </xf:group>
                           </xf:group>
