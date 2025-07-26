@@ -62,7 +62,8 @@
 
         .pageframe-container {
             width: 100%;
-            min-height: 300px;
+            min-height: 200px;
+            margin-top: -8px;
         }
 
         @media (max-width: 768px) {
@@ -104,13 +105,13 @@ scwin.loadResults = function () {
             mbti_result_container.hide();
         }
 
-        // 코드분석 결과 로드 - PageFrame으로 MBTI 설명 표시
+        // 코드분석 결과 로드 - PageFrame으로 코드 분석 설명 표시
         if (isCodeDone) {
             var userInfo = scwin.getUserInfoByCookie();
             if (userInfo && userInfo.mbti) {
                 code_result_container.show();
-                // PageFrame에 MBTI 설명 컴포넌트 로드
-                code_pageframe.setSrc("MbtiDescriptionFrame.xml");
+                // PageFrame에 코드 분석 설명 컴포넌트 로드
+                code_pageframe.setSrc("CodeAnalysisDescriptionFrame.xml");
             }
         } else {
             code_result_container.hide();

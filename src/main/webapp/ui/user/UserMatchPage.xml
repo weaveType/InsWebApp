@@ -136,7 +136,6 @@ scwin.onpageload = function () {
     var mainContent = document.querySelector('.main-content');
     if (mainContent) {
         mainContent.addEventListener('scroll', function() {
-            // 스크롤이 거의 끝에 도달했는지 확인 (하단 100px 여유)
             if (mainContent.scrollTop + mainContent.clientHeight >= mainContent.scrollHeight - 100) {
                 scwin.loadMoreScouts();
             }
@@ -170,7 +169,6 @@ scwin.loadMoreScouts = function () {
 scwin.bindScoutData = function () {
     var rowCount = dlt_scoutListVo.getRowCount();
     
-    // 기존 generator 아이템 모두 제거 후 다시 그림
     gen_scouts.removeAll(); 
     if (rowCount === 0) {
         return;
@@ -210,7 +208,6 @@ scwin.bindScoutData = function () {
                 }
             }
         } catch (err) {
-            // 파싱 실패 시 모든 태그 숨김
             for (var j = 1; j <= 4; j++) {
                 gen_scouts.getChild(i, "tag" + j).hide();
             }
@@ -241,15 +238,12 @@ scwin.sbm_scoutList_submitdone = function (e) {
             var currentData = dlt_scoutListVo.getAllJSON();
             var newData = res.scoutListVoList;
 
-            // 첫 페이지 로드 시 데이터 교체
             if (dmp_searchParam.get("pageIndex") === 1) {
                 dlt_scoutListVo.setJSON(newData);
             } else {
-            // 다음 페이지 로드 시 데이터 추가
                 dlt_scoutListVo.setJSON(currentData.concat(newData));
             }
 
-            // 더 이상 데이터가 없는지 확인
             if (newData.length < dmp_searchParam.get("pageSize")) {
                 scwin.hasMoreData = false;
             } else {
@@ -293,28 +287,30 @@ scwin.sbm_scoutList_submitdone = function (e) {
 					<section class="scouts-section">
 						<xf:group class="scouts-grid">
 							<w2:generator id="gen_scouts" style="">
-								<xf:group
-									style="padding: 20px; margin-bottom: 15px; border: 1px solid #e8e8e8; border-radius: 8px; background-color: white; cursor: pointer;"
-									class="scout-row" ev:onclick="scwin.handleScoutRowClick" id="group2">
-									<xf:group style="display: flex; align-items: center; font-size: 16px; color: #333; flex-wrap: wrap;">
-										<span style="font-weight: bold; color: #4285f4; margin-right: 8px;">
-											<w2:textbox id="txt_company_name"></w2:textbox>
-										</span>
-										<span style="margin-right: 8px;">에서 </span>
-										<span style="font-weight: 600; color: #333; margin-right: 8px; font-weight: bold;">
-											<w2:textbox id="txt_experience_level"></w2:textbox>
-										</span>
-										<span style="margin-right: 8px;"> 개발자를 찾는 </span>
-										<span style="font-weight: 600; color: #333; margin-right: 8px; font-weight: bold;">
-											<w2:textbox id="txt_job_title"></w2:textbox>
-										</span>
-										<span style="margin-right: 8px;"> 공고에서 당신을 스카웃하고 싶어 합니다.</span>
+								<xf:group style="display:flex; padding: 20px; margin-bottom: 15px; border: 1px solid #e8e8e8; border-radius: 8px; background-color: white; cursor: pointer;" class="scout-row" ev:onclick="scwin.handleScoutRowClick" id="group2">
+									<xf:group style="flex:1; margin-right:20px;">
+										<xf:group id="grp_tags_container" class="dev-type-tag-container" style="margin-bottom: 10px;">
+											<w2:textbox id="tag1" class="dev-type-tag" style="display:none;"></w2:textbox>
+											<w2:textbox id="tag2" class="dev-type-tag" style="display:none;"></w2:textbox>
+											<w2:textbox id="tag3" class="dev-type-tag" style="display:none;"></w2:textbox>
+											<w2:textbox id="tag4" class="dev-type-tag" style="display:none;"></w2:textbox>
+										</xf:group>
+										<xf:group style="background-color: #f8f9fa; border: 1px solid #e8e8e8; border-radius: 8px; padding: 15px; min-height: 100px;">
+											<w2:textbox id="txt_description" style="color: #666; font-size: 14px;"></w2:textbox>
+										</xf:group>
 									</xf:group>
-									<xf:group id="grp_tags_container" class="dev-type-tag-container" style="margin-top: 10px;">
-										<w2:textbox id="tag1" class="dev-type-tag" style="display:none;"></w2:textbox>
-										<w2:textbox id="tag2" class="dev-type-tag" style="display:none;"></w2:textbox>
-										<w2:textbox id="tag3" class="dev-type-tag" style="display:none;"></w2:textbox>
-										<w2:textbox id="tag4" class="dev-type-tag" style="display:none;"></w2:textbox>
+									<xf:group style="flex:2;">
+										<xf:group style="display: flex; align-items: center; font-size: 16px; color: #333; flex-wrap: wrap; margin-bottom:10px;">
+											<span style="font-weight: bold; color: #4285f4; margin-right: 8px;">
+												<w2:textbox id="txt_company_name"></w2:textbox>
+											</span>
+											<span style="margin-right: 8px;">에서 </span>
+											<span style="font-weight: 600; color: #333; margin-right: 8px; font-weight: bold;">
+												<w2:textbox id="txt_experience_level"></w2:textbox>
+											</span>
+											<span style="margin-right: 8px;"> 개발자를 찾는 </span>
+										</xf:group>
+										<w2:textbox id="txt_job_title" style="background-color: #e0f7fa; color: #00796b; padding: 5px 10px; border-radius: 15px; font-size: 12px; font-weight: 500; white-space: nowrap; border: 1px solid #b2ebf2;"></w2:textbox>
 									</xf:group>
 								</xf:group>
 							</w2:generator>
