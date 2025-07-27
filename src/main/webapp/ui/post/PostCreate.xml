@@ -1875,15 +1875,15 @@ window.scwin.removeTechStackByName = scwin.removeTechStackByName;
                         <div class="personality-counter">0/4</div>
                         
                         <xf:group class="personality-grid">
-                            <!-- E*** -->
-                            <xf:trigger class="personality-btn" type="button" id="personality_ERSD" ev:onclick="scwin.personality_btn_onclick"><xf:label><![CDATA[ERSD]]></xf:label></xf:trigger>
-                            <xf:trigger class="personality-btn" type="button" id="personality_ERSF" ev:onclick="scwin.personality_btn_onclick"><xf:label><![CDATA[ERSF]]></xf:label></xf:trigger>
-                            <xf:trigger class="personality-btn" type="button" id="personality_ERTD" ev:onclick="scwin.personality_btn_onclick"><xf:label><![CDATA[ERTD]]></xf:label></xf:trigger>
-                            <xf:trigger class="personality-btn" type="button" id="personality_ERTF" ev:onclick="scwin.personality_btn_onclick"><xf:label><![CDATA[ERTF]]></xf:label></xf:trigger>
-                            <xf:trigger class="personality-btn" type="button" id="personality_EISD" ev:onclick="scwin.personality_btn_onclick"><xf:label><![CDATA[EISD]]></xf:label></xf:trigger>
-                            <xf:trigger class="personality-btn" type="button" id="personality_EISF" ev:onclick="scwin.personality_btn_onclick"><xf:label><![CDATA[EISF]]></xf:label></xf:trigger>
-                            <xf:trigger class="personality-btn" type="button" id="personality_EITD" ev:onclick="scwin.personality_btn_onclick"><xf:label><![CDATA[EITD]]></xf:label></xf:trigger>
-                            <xf:trigger class="personality-btn" type="button" id="personality_EITF" ev:onclick="scwin.personality_btn_onclick"><xf:label><![CDATA[EITF]]></xf:label></xf:trigger>
+                            <!-- A*** -->
+                            <xf:trigger class="personality-btn" type="button" id="personality_ARSD" ev:onclick="scwin.personality_btn_onclick"><xf:label><![CDATA[ARSD]]></xf:label></xf:trigger>
+                            <xf:trigger class="personality-btn" type="button" id="personality_ARSF" ev:onclick="scwin.personality_btn_onclick"><xf:label><![CDATA[ARSF]]></xf:label></xf:trigger>
+                            <xf:trigger class="personality-btn" type="button" id="personality_ARTD" ev:onclick="scwin.personality_btn_onclick"><xf:label><![CDATA[ARTD]]></xf:label></xf:trigger>
+                            <xf:trigger class="personality-btn" type="button" id="personality_ARTF" ev:onclick="scwin.personality_btn_onclick"><xf:label><![CDATA[ARTF]]></xf:label></xf:trigger>
+                            <xf:trigger class="personality-btn" type="button" id="personality_AISD" ev:onclick="scwin.personality_btn_onclick"><xf:label><![CDATA[AISD]]></xf:label></xf:trigger>
+                            <xf:trigger class="personality-btn" type="button" id="personality_AISF" ev:onclick="scwin.personality_btn_onclick"><xf:label><![CDATA[AISF]]></xf:label></xf:trigger>
+                            <xf:trigger class="personality-btn" type="button" id="personality_AITD" ev:onclick="scwin.personality_btn_onclick"><xf:label><![CDATA[AITD]]></xf:label></xf:trigger>
+                            <xf:trigger class="personality-btn" type="button" id="personality_AITF" ev:onclick="scwin.personality_btn_onclick"><xf:label><![CDATA[AITF]]></xf:label></xf:trigger>
                             
                             <!-- B*** -->
                             <xf:trigger class="personality-btn" type="button" id="personality_BRSD" ev:onclick="scwin.personality_btn_onclick"><xf:label><![CDATA[BRSD]]></xf:label></xf:trigger>
