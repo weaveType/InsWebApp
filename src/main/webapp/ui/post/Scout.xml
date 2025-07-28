@@ -233,9 +233,6 @@
     // 회사 아이디로 유저 불러오기
     scwin.getJobPostingId();
 
-    // 스카웃 상태 필터 기본값 설정
-    scoutStatusFilter.setValue("NOT_SCOUTED");
-
     // 그리드뷰 갱신하기
     setTimeout(function () {
         if (gridView1) {
@@ -513,8 +510,8 @@ scwin.initTechStackFilter = function () {
     // 기술스택 목록 정렬
     techStackList.sort();
 
-    // checkcombobox에 옵션 추가
-    // msb_techStackFilter.clear(); // 기존 아이템 초기화
+    // selectbox에 옵션 추가
+    msb_techStackFilter.removeAll(); // 기존 아이템 초기화
     for (var k = 0; k < techStackList.length; k++) {
         msb_techStackFilter.addItem(techStackList[k], techStackList[k]);
     }
@@ -522,20 +519,12 @@ scwin.initTechStackFilter = function () {
 
 // 기술스택 필터 적용 함수
 scwin.applyTechStackFilter = function () {
-    var selectedTechStacks = msb_techStackFilter.getValue();
-    console.log("selectedTechStacks from checkcombobox:", selectedTechStacks);
+    console.log("=== applyTechStackFilter 함수 호출됨 ===");
+    var selectedTechStack = msb_techStackFilter.getValue();
+    console.log("selectedTechStack from selectbox:", selectedTechStack);
 
-    var selectedArray = [];
-    if (typeof selectedTechStacks === 'string' && selectedTechStacks !== "") {
-        selectedArray = selectedTechStacks.split(",").map(function(item) { return item.trim().toLowerCase(); });
-    } else if (Array.isArray(selectedTechStacks)) {
-        selectedArray = selectedTechStacks.map(function(item) { return item.trim().toLowerCase(); });
-    }
-    // Convert selectedArray to a Set for efficient lookups
-    var selectedTechSet = new Set(selectedArray);
-
-    if (selectedTechSet.size === 0) {
-        // 선택된 기술스택이 없으면 모든 행 표시
+    // 선택된 기술스택이 없거나 빈 값이면 모든 행 표시
+    if (!selectedTechStack || selectedTechStack === "") {
         var rowCount = dlt_scoutListVo.getRowCount();
         for (var i = 0; i < rowCount; i++) {
             gridView1.setRowVisible(i, true);
@@ -545,6 +534,7 @@ scwin.applyTechStackFilter = function () {
 
     var dataList = dlt_scoutListVo;
     var rowCount = dataList.getRowCount();
+    var selectedTechLower = selectedTechStack.toLowerCase();
 
     // 필터링 로직
     for (var i = 0; i < rowCount; i++) {
@@ -552,32 +542,25 @@ scwin.applyTechStackFilter = function () {
         var showRow = false;
 
         if (techStackData && techStackData.trim() !== "") {
-            // Prepare rowTechStacks: split, trim, and lowercase all at once
-            var rowTechStacks = techStackData.split(",").map(function(item) { return item.trim().toLowerCase(); });
-            // Convert rowTechStacks to a Set for efficient lookups
-            var rowTechSet = new Set(rowTechStacks);
+            // 기술스택 데이터를 쉼표로 분리하여 확인
+            var rowTechStacks = techStackData.split(",").map(function(item) { 
+                return item.trim().toLowerCase(); 
+            });
 
-            // Check if any selected tech stack is present in the row's tech stacks
-            for (let selectedTech of selectedTechSet) {
-                if (rowTechSet.has(selectedTech)) {
-                    showRow = true;
-                    break; // Found a match, no need to check other selectedTechs for this row
-                }
+            // 선택된 기술스택이 행의 기술스택 목록에 포함되어 있는지 확인
+            if (rowTechStacks.indexOf(selectedTechLower) !== -1) {
+                showRow = true;
             }
         }
 
         // 행 표시/숨김 설정
-        if (showRow) {
-            gridView1.setRowVisible(i, true);
-        } else {
-            gridView1.setRowVisible(i, false);
-        }
+        gridView1.setRowVisible(i, showRow);
     }
 };
 
 // 기술스택 필터 초기화 버튼 (선택사항)
 scwin.btn_resetFilter_onclick = function () {
-    msb_techStackFilter.setValue(""); // checkcombobox의 선택 초기화
+    msb_techStackFilter.setValue(""); // selectbox의 선택 초기화
     var rowCount = dlt_scoutListVo.getRowCount();
     for (var i = 0; i < rowCount; i++) {
         gridView1.setRowVisible(i, true);
@@ -599,7 +582,7 @@ scwin.btn_resetFilter_onclick = function () {
 
 			</xf:group>
 
-			<!-- 컨트롤 바 -->fa
+			<!-- 컨트롤 바 -->
 			<xf:group
 				style="display:flex; justify-content:center; background-color:#ffffff; border-bottom:1px solid #e9ecef; padding:15px 0;">
 				<xf:group class="control-bar"
@@ -611,11 +594,11 @@ scwin.btn_resetFilter_onclick = function () {
 							direction="auto" chooseOption="true" chooseOptionLabel="스카웃 상태" ev:onviewchange="scwin.onScoutStatusFilterChange">
 							<w2:choices>
 								<w2:item>
-									<w2:label><![CDATA[스카웃 안한 유저]]></w2:label>
+									<w2:label><![CDATA[매칭가능한 유저]]></w2:label>
 									<w2:value><![CDATA[NOT_SCOUTED]]></w2:value>
 								</w2:item>
 								<w2:item>
-									<w2:label><![CDATA[스카웃 한 유저]]></w2:label>
+									<w2:label><![CDATA[매칭을 제안한 유저]]></w2:label>
 									<w2:value><![CDATA[SCOUTED]]></w2:value>
 								</w2:item>
 							</w2:choices>
@@ -648,9 +631,11 @@ scwin.btn_resetFilter_onclick = function () {
 								</xf:item>
 							</xf:choices>
 						</xf:select1>
-						<w2:checkcombobox id="msb_techStackFilter" appearance="minimal" style="width: 150px;height: 32px;" class=""
-							chooseOption="true" chooseOptionLabel="기술스택 선택" ev:onchange="scwin.applyTechStackFilter">
-						</w2:checkcombobox>
+						<w2:selectbox id="msb_techStackFilter" appearance="minimal" style="width: 150px;height: 32px;" class=""
+							chooseOption="true" chooseOptionLabel="기술스택 선택" ev:onviewchange="scwin.applyTechStackFilter">
+							<w2:choices>
+							</w2:choices>
+						</w2:selectbox>
 					</xf:group>
 
 					<xf:group class="button-group" style="display:flex; align-items:center; gap:10px;">
