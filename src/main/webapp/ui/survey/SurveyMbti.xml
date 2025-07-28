@@ -159,7 +159,7 @@
                 var html = '';
                 var axisNames = {
                     'B_A': { name: 'Builder vs Architect', desc: '개발 스타일' },
-                    'R_I': { name: 'Innovate vs Refactor', desc: '기술 성향 (양수: Refactor, 음수: Innovate)' },
+                    'R_I': { name: 'Innovate vs Refactor', desc: '기술 성향' },
                     'S_T': { name: 'Solo vs Team', desc: '협업 방식' },
                     'D_F': { name: 'Debug vs Feature', desc: '작업 선호' }
                 };
