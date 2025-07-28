@@ -250,9 +250,11 @@ SELECT /* QueryID : com.demo.proworks.domain.post.findPostsByMbti */
     p.expires_at as expiresAt,
     p.posted_at as postedAt,
     p.status as status,
+    p.job_image_file_name as jobImageFileName,
     u.name as companyName,
     c.industry as industry,
     c.emp_count as empCount,
+    c.logo_file_name as logoFileName,
     IFNULL(MAX(compat.match_cnt), 0) as bestMatchCount
 FROM posts p
 INNER JOIN companys c ON p.company_id = c.company_id
@@ -270,7 +272,7 @@ WHERE p.status = 'active'
 GROUP BY p.job_posting_id, p.company_id, p.title, p.description,
     p.experience_level, p.salary_range, p.location, p.work_type,
     p.preferred_developer_types, p.expires_at, p.posted_at, p.status,
-    u.name, c.industry, c.emp_count
+    p.job_image_file_name, u.name, c.industry, c.emp_count, c.logo_file_name
 <if test="mbtiMatchFilter != null and mbtiMatchFilter != '' and mbtiMatchFilter != '0'">
 HAVING IFNULL(MAX(compat.match_cnt), 0) >= CAST(#{mbtiMatchFilter} AS UNSIGNED)
 </if>
