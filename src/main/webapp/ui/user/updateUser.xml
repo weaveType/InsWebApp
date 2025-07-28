@@ -182,7 +182,7 @@
                 width: 100%;
                 padding: 12px 16px;
                 border: 1px solid #ddd;
-                border-radius: 8px;
+                border-radius: 4px;
                 font-size: 16px;
                 transition: border-color 0.2s;
             }
@@ -197,7 +197,7 @@
                 width: 100%;
                 padding: 12px 16px;
                 border: 1px solid #ddd;
-                border-radius: 8px;
+                border-radius: 4px;
                 font-size: 16px;
                 resize: vertical;
                 min-height: 120px;
@@ -208,10 +208,36 @@
                 width: 100%;
                 padding: 12px 16px;
                 border: 1px solid #ddd;
-                border-radius: 8px;
+                border-radius: 4px;
                 font-size: 16px;
                 background-color: white;
                 cursor: pointer;
+                /* 텍스트 수직 가운데 정렬을 위한 스타일 추가 */
+                line-height: 1.5;
+                display: flex;
+                align-items: center;
+                min-height: 34px;
+            }
+            
+            /* WebSquare select 컴포넌트의 내부 테이블 셀 정렬 */
+            .form-select table {
+                width: 100%;
+                height: 100%;
+            }
+            
+            .form-select table td {
+                vertical-align: middle;
+                padding: 0;
+                line-height: 1.5;
+            }
+            
+            /* WebSquare select의 document 요소 정렬 */
+            .form-select document {
+                display: block;
+                line-height: 1.5;
+                padding: 0;
+                margin: 0;
+                vertical-align: middle;
             }
             
             /* 버튼 영역 */
@@ -225,7 +251,7 @@
             .btn {
                 padding: 12px 40px;
                 border: none;
-                border-radius: 8px;
+                border-radius: 4px;
                 font-size: 16px;
                 font-weight: 600;
                 cursor: pointer;
@@ -322,7 +348,7 @@
             .location-container {
                 width: 100%;
                 margin-top: 10px;
-                border-radius: 8px;
+                border-radius: 4px;
                 border: 1px solid #ddd;
                 padding: 15px;
                 background-color: #f8f9fa;
@@ -347,7 +373,7 @@
             .location-option {
                 padding: 8px 6px;
                 border: 1px solid #e0e0e0;
-                border-radius: 6px;
+                border-radius: 4px;
                 background-color: #ffffff;
                 cursor: pointer;
                 text-align: center;
@@ -374,6 +400,7 @@
                 flex-wrap: wrap;
                 gap: 8px;
                 min-height: 40px;
+                margin-bottom: 15px; /* 선택된 태그와 지역 선택 버튼들 사이 여백 추가 */
             }
 
             .location-tag {
