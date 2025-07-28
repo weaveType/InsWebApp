@@ -54,18 +54,14 @@
 				target='data:json,{"id":"dlt_company_list","key":"elData.corporateMainVo"}' mode="asynchronous" encoding="UTF-8"
 				processMsg="참여 기업 목록을 조회 중입니다." ev:submitdone="scwin.sbm_selectCompanyList_submitdone" ev:submiterror="">
 			</xf:submission>
-			<xf:submission id="smb_selectMatchingChecked" action="/InsWebApp/US0001Match.pwkjson" method="post"
-				mediatype="application/json" ref='data:json,{"id":"dmp_matchingCheckedVo","key":"matchingCheckedVo"}'
+			<xf:submission id="smb_selectMatchingChecked" action="/InsWebApp/US0001Match.pwkjson" method="post" mediatype="application/json"
+				ref='data:json,{"id":"dmp_matchingCheckedVo","key":"matchingCheckedVo"}'
 				target='data:json,{"id":"dmp_matchingCheckedVo","key":"elData"}' encoding="UTF-8" mode="asynchronous" processMsg="매칭 정보 조회 중..."
 				ev:submitdone="scwin.smb_selectMatchingChecked_submitdone" ev:submiterror="">
 			</xf:submission>
-			<xf:submission id="sbm_selectPostingList" action="/InsWebApp/POS0003List.pwkjson" method="post"
-				mediatype="application/json" ref="" target='data:json,{"id":"dlt_posting_list","key":"mainPostingListVo.mainPostingVo"}'
-				encoding="UTF-8" instance="" replace="" errorHandler="" customHandler="" mode="asynchronous" processMsg="" ev:submit=""
+			<xf:submission id="sbm_selectPostingList" action="/InsWebApp/POS0003List.pwkjson" method="post" mediatype="application/json"
+				ref="" target='data:json,{"id":"dlt_posting_list","key":"mainPostingListVo.mainPostingVo"}' encoding="UTF-8" instance="" replace="" errorHandler="" customHandler="" mode="asynchronous" processMsg="" ev:submit=""
 				ev:submitdone="scwin.sbm_selectPostingList_submitdone" ev:submiterror="" abortTrigger="">
-			</xf:submission>
-			<xf:submission id="sbm_checkSession" action="/InsWebApp/CheckSession.pwkjson" method="post" mediatype="application/json"
-				ref="" target="" mode="asynchronous" encoding="UTF-8" ev:submitdone="scwin.sbm_checkSession_submitdone">
 			</xf:submission>
 		</xf:model>
 		<w2:layoutInfo />
@@ -95,44 +91,32 @@ scwin.onpageload = function () {
 // 로그인 영역 업데이트
 scwin.updateLoginArea = function () {
     var userInfoCookie = WebSquare.cookie.getCookie("userInfo");
+    var userInfo = null;
     if (userInfoCookie) {
-        $c.sbm.execute(sbm_checkSession);
-    } else {
-        // 비로그인 상태 - 로그인 영역 표시
-        grp_login_area.show();
-        grp_profile_area.hide();
-    }
-};
-
-scwin.sbm_checkSession_submitdone = function (e) {
-    var elHeader = e.responseJSON.elHeader;
-    if (elHeader && elHeader.resSuc === false) {
-        // 세션이 유효하지 않은 경우
-        WebSquare.cookie.delCookie("userInfo");
-        location.reload();
-    } else {
-        // 세션이 유효한 경우
-        var userInfoCookie = WebSquare.cookie.getCookie("userInfo");
-        var userInfo = null;
         try {
             userInfo = JSON.parse(userInfoCookie);
         } catch (e) {
             console.error("사용자 정보 파싱 오류:", e);
             userInfo = null;
         }
+    }
 
-        if (userInfo != null) {
-            // 로그인 상태 - 프로필 영역 표시
-            grp_login_area.hide();
-            grp_profile_area.show();
+    if (userInfo != null) {
+        // 로그인 상태 - 프로필 영역 표시
+        grp_login_area.hide();
+        grp_profile_area.show();
 
-            // 사용자 정보 업데이트
-            txb_user_name.setValue(userInfo.name + "님");
+        // 사용자 정보 업데이트
+        txb_user_name.setValue(userInfo.name + "님");
 
-            // 성향분석 및 코드분석 여부
-            dmp_matchingCheckedVo.set("accountId", userInfo.accountId);
-            $c.sbm.execute(smb_selectMatchingChecked);
-        }
+        // 성향분석 및 코드분석 여부
+        dmp_matchingCheckedVo.set("accountId", userInfo.accountId);
+        $c.sbm.execute(smb_selectMatchingChecked);
+
+    } else {
+        // 비로그인 상태 - 로그인 영역 표시
+        grp_login_area.show();
+        grp_profile_area.hide();
     }
 };
 
@@ -1189,13 +1173,11 @@ scwin.applicationStatus_onclick = function(e) {
 							<!-- 통계 영역 -->
 							<xf:group class="stats-section">
 								<xf:group class="stats-item">
-									<w2:textbox class="stats-number" id="txb_matching_proposal_count" label="0" ev:onclick="scwin.matchingProposal_onclick"
-										style="cursor: pointer;"></w2:textbox>
+									<w2:textbox class="stats-number" id="txb_matching_proposal_count" label="0" ev:onclick="scwin.matchingProposal_onclick" style="cursor: pointer;"></w2:textbox>
 									<w2:textbox class="stats-label" label="매칭 제안" ev:onclick="scwin.matchingProposal_onclick" style="cursor: pointer;"></w2:textbox>
 								</xf:group>
 								<xf:group class="stats-item">
-									<w2:textbox class="stats-number" id="txb_application_status_count" label="0"
-										ev:onclick="scwin.applicationStatus_onclick" style="cursor: pointer;"></w2:textbox>
+									<w2:textbox class="stats-number" id="txb_application_status_count" label="0" ev:onclick="scwin.applicationStatus_onclick" style="cursor: pointer;"></w2:textbox>
 									<w2:textbox class="stats-label" label="지원현황" ev:onclick="scwin.applicationStatus_onclick" style="cursor: pointer;"></w2:textbox>
 								</xf:group>
 							</xf:group>
@@ -1239,26 +1221,25 @@ scwin.applicationStatus_onclick = function(e) {
 				<w2:textbox class="section-title" label="로그인하고 내 조건에 맞는 포지션 추천받기"></w2:textbox>
 
 				<w2:generator id="gen_position_card" class="positions-container">
-					<xf:group class="position-card" style="position: relative;">
-						<xf:group class="position-header">
-							<xf:image id="img_job_image" style="width: 100%; height: 100%; object-fit: cover; border-radius: 5px;" />
+						<xf:group class="position-card" style="position: relative;">
+							<xf:group class="position-header">
+								<xf:image id="img_job_image" style="width: 100%; height: 100%; object-fit: cover; border-radius: 5px;" />
+							</xf:group>
+							<w2:textbox class="position-company" id="txt_name"></w2:textbox>
+							<w2:textbox class="position-title" id="txt_title"></w2:textbox>
+							<xf:group id="grp_tags_container" class="dev-type-tag-container">
+								<w2:textbox id="tag1" class="dev-type-tag" style="display:none;"></w2:textbox>
+								<w2:textbox id="tag2" class="dev-type-tag" style="display:none;"></w2:textbox>
+								<w2:textbox id="tag3" class="dev-type-tag" style="display:none;"></w2:textbox>
+								<w2:textbox id="tag4" class="dev-type-tag" style="display:none;"></w2:textbox>
+							</xf:group>
+							<xf:trigger
+								style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: transparent; border: none;"
+								type="button" id="btn_card_overlay" ev:onclick="scwin.handlePositionCardClick">
+								<xf:label><![CDATA[]]></xf:label>
+							</xf:trigger>
 						</xf:group>
-						<w2:textbox class="position-company" id="txt_name"></w2:textbox>
-						<w2:textbox class="position-title" id="txt_title"></w2:textbox>
-						<xf:group id="grp_tags_container" class="dev-type-tag-container">
-							<w2:textbox id="tag1" class="dev-type-tag" style="display:none;"></w2:textbox>
-							<w2:textbox id="tag2" class="dev-type-tag" style="display:none;"></w2:textbox>
-							<w2:textbox id="tag3" class="dev-type-tag" style="display:none;"></w2:textbox>
-							<w2:textbox id="tag4" class="dev-type-tag" style="display:none;"></w2:textbox>
-						</xf:group>
-						<xf:trigger
-							style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: transparent; border: none;" type="button"
-							id="btn_card_overlay" ev:onclick="scwin.handlePositionCardClick">
-							<xf:label><![CDATA[]]>
-							</xf:label>
-						</xf:trigger>
-					</xf:group>
-				</w2:generator>
+					</w2:generator>
 			</xf:group>
 
 			<!-- 매칭 참여 기업 섹션 -->
@@ -1272,9 +1253,7 @@ scwin.applicationStatus_onclick = function(e) {
 							<xf:image id="img_company_logo" style="max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;" />
 							<w2:textbox id="txt_company_name" class="company-name" style="font-weight:500;"></w2:textbox>
 						</xf:group>
-						<xf:trigger
-							style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: transparent; border: none;" type="button"
-							id="btn_company_card_overlay" ev:onclick="scwin.handleCompanyCardClick"></xf:trigger>
+						<xf:trigger style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: transparent; border: none;" type="button" id="btn_company_card_overlay" ev:onclick="scwin.handleCompanyCardClick"></xf:trigger>
 					</xf:group>
 				</w2:generator>
 			</xf:group>
