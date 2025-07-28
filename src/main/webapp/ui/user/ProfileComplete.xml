@@ -23,36 +23,20 @@
         <script type="text/javascript"><![CDATA[
 scwin.onpageload = function () {
     dma_complete.set("userName", "사용자");
-
-    // 애니메이션 시작
-    setTimeout(function () {
-        document.querySelector('.celebration-animation').classList.add('animate');
-    }, 500);
-
-    // 버튼 활성화 애니메이션
-    setTimeout(function () {
-        document.querySelector('.btn-start').classList.add('show');
-    }, 1000);
 };
 
-// 서비스 시작 버튼
-scwin.btn_start_onclick = function () {
-    console.log("서비스 시작");
+// 메인 페이지로 이동 버튼
+scwin.btn_main_onclick = function () {
+    console.log("메인 페이지로 이동");
     $p.url("../common/MainPage.xml");
-};
-
-// 프로필 수정 버튼 - $p.url 방식
-scwin.btn_edit_onclick = function () {
-    console.log("프로필 수정");
-    $p.url("ProfileAdditional.xml");
 };
 ]]></script>
         
         <style type="text/css"><![CDATA[
             .main-container {
-                background: linear-gradient(135deg, #f8fff9 0%, #e8f5e8 100%);
+                background-color: #ffffff;
                 min-height: 100vh;
-                font-family: "Malgun Gothic", "맑은 고딕", sans-serif;
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
                 display: flex;
                 flex-direction: column;
             }
@@ -92,19 +76,26 @@ scwin.btn_edit_onclick = function () {
                 justify-content: center;
                 padding: 40px 20px;
                 text-align: center;
-                max-width: 700px;
+                max-width: 600px;
                 margin: 0 auto;
             }
             
             .celebration-animation {
                 opacity: 0;
-                transform: translateY(30px);
-                transition: all 0.8s ease;
+                transform: translateY(20px);
+                transition: all 0.6s ease;
+                animation: fadeInUp 0.8s ease forwards;
             }
             
-            .celebration-animation.animate {
-                opacity: 1;
-                transform: translateY(0);
+            @keyframes fadeInUp {
+                0% {
+                    opacity: 0;
+                    transform: translateY(20px);
+                }
+                100% {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
             }
             
             .success-icon-container {
@@ -115,66 +106,92 @@ scwin.btn_edit_onclick = function () {
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                margin: 0 auto 40px auto;
-                box-shadow: 0 8px 30px rgba(0, 200, 81, 0.4);
+                margin: 0 auto 30px auto;
+                box-shadow: 0 8px 32px rgba(0, 123, 255, 0.3);
                 animation: pulse 2s infinite;
             }
             
             @keyframes pulse {
                 0% {
-                    box-shadow: 0 8px 30px rgba(0, 200, 81, 0.4);
+                    box-shadow: 0 8px 32px rgba(0, 123, 255, 0.3);
                 }
                 50% {
-                    box-shadow: 0 8px 40px rgba(0, 200, 81, 0.6);
-                    transform: scale(1.05);
+                    box-shadow: 0 8px 32px rgba(0, 123, 255, 0.6);
+                    transform: scale(1.02);
                 }
                 100% {
-                    box-shadow: 0 8px 30px rgba(0, 200, 81, 0.4);
+                    box-shadow: 0 8px 32px rgba(0, 123, 255, 0.3);
                 }
             }
             
             .success-icon {
-                font-size: 60px;
+                position: relative;
+                width: 60px;
+                height: 60px;
                 color: white;
+                font-weight: bold;
+            }
+            
+            /* CSS 체크마크 아이콘 - 크기 확대 */
+            .success-icon::before {
+                content: '';
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%) rotate(45deg);
+                width: 18px;
+                height: 36px;
+                border: solid white;
+                border-width: 0 5px 5px 0;
+            }
+            
+            @keyframes bounce {
+                0%, 20%, 50%, 80%, 100% {
+                    transform: translateY(0);
+                }
+                40% {
+                    transform: translateY(-8px);
+                }
+                60% {
+                    transform: translateY(-4px);
+                }
             }
             
             .main-title {
                 font-size: 32px;
                 font-weight: bold;
-                color: #007bff;
-                margin-bottom: 20px;
+                color: #333;
+                margin-bottom: 16px;
                 line-height: 1.3;
             }
             
             .sub-title {
                 font-size: 18px;
-                color: #333;
-                margin-bottom: 15px;
+                color: #666;
+                margin-bottom: 12px;
                 font-weight: 600;
             }
             
             .description {
                 font-size: 16px;
-                color: #666;
-                margin-bottom: 50px;
+                color: #888;
+                margin-bottom: 40px;
                 line-height: 1.6;
                 max-width: 500px;
-                margin-left: auto;
-                margin-right: auto;
             }
             
             .features-list {
-                background-color: #ffffff;
-                border-radius: 16px;
-                padding: 30px;
-                margin-bottom: 40px;
-                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+                background-color: #f0f8ff;
+                border-radius: 12px;
+                border: 2px solid #cce7ff;
+                padding: 24px;
+                margin: 0 auto 40px auto;
                 text-align: left;
                 max-width: 500px;
             }
             
             .features-title {
-                font-size: 20px;
+                font-size: 18px;
                 font-weight: bold;
                 color: #333;
                 margin-bottom: 20px;
@@ -185,10 +202,7 @@ scwin.btn_edit_onclick = function () {
                 display: flex;
                 align-items: center;
                 margin-bottom: 16px;
-                padding: 12px 16px;
-                background-color: #f0f8ff;
-                border-radius: 8px;
-                border-left: 4px solid #007bff;
+                gap: 12px;
             }
             
             .feature-item:last-child {
@@ -196,9 +210,16 @@ scwin.btn_edit_onclick = function () {
             }
             
             .feature-icon {
-                font-size: 24px;
-                margin-right: 12px;
-                color: #007bff;
+                width: 24px;
+                height: 24px;
+                background-color: #007bff;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: white;
+                font-size: 14px;
+                flex-shrink: 0;
             }
             
             .feature-text {
@@ -218,27 +239,22 @@ scwin.btn_edit_onclick = function () {
             }
             
             .btn-start {
-                background: linear-gradient(45deg, #007bff, #0d6efd);
+                background-color: #007bff;
                 color: white;
                 border: none;
                 padding: 18px 40px;
                 border-radius: 50px;
                 font-size: 18px;
-                font-weight: bold;
+                font-weight: 600;
                 cursor: pointer;
                 transition: all 0.3s ease;
                 box-shadow: 0 4px 20px rgba(0, 123, 255, 0.3);
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            
-            .btn-start.show {
-                opacity: 1;
-                transform: translateY(0);
+                width: 100%;
+                max-width: 280px;
             }
             
             .btn-start:hover {
-                background: linear-gradient(45deg, #0056b3, #0056b3);
+                background-color: #0056b3;
                 transform: translateY(-2px);
                 box-shadow: 0 6px 25px rgba(0, 123, 255, 0.4);
             }
@@ -253,6 +269,8 @@ scwin.btn_edit_onclick = function () {
                 font-weight: 600;
                 cursor: pointer;
                 transition: all 0.3s ease;
+                width: 100%;
+                max-width: 280px;
             }
             
             .btn-edit:hover {
@@ -261,18 +279,18 @@ scwin.btn_edit_onclick = function () {
                 background-color: #f0f8ff;
             }
             
-            .celebration-emoji {
-                font-size: 48px;
-                margin-bottom: 20px;
-                animation: bounce 1s ease-in-out infinite alternate;
-            }
-            
-            @keyframes bounce {
-                0% {
-                    transform: translateY(0);
+            /* 반응형 디자인 */
+            @media (max-width: 480px) {
+                .content-area {
+                    padding: 20px 16px;
                 }
-                100% {
-                    transform: translateY(-10px);
+                
+                .main-title {
+                    font-size: 28px;
+                }
+                
+                .features-list {
+                    padding: 20px;
                 }
             }
         ]]></style>
@@ -284,47 +302,49 @@ scwin.btn_edit_onclick = function () {
             
             <xf:group class="content-area">
                 <xf:group class="celebration-animation">
-                    <w2:textbox class="celebration-emoji" label="🎉" tagname="div"></w2:textbox>
-                    
                     <xf:group class="success-icon-container">
-                        <w2:textbox class="success-icon" label="✓" tagname="div"></w2:textbox>
+                        <w2:textbox class="success-icon" tagname="div"></w2:textbox>
                     </xf:group>
                     
                     <w2:textbox class="main-title" label="프로필 작성이 완료되었습니다!" tagname="h1"></w2:textbox>
                     <w2:textbox class="sub-title" ref="data:dma_complete.userName" formatter="#binding + '님의 개발자 여정이 시작됩니다!' " tagname="p"></w2:textbox>
-                    <w2:textbox class="description" label="이제 weaveType에서 맞춤형 개발자 유형 분석과 채용 정보를 받아보실 수 있습니다." tagname="p"></w2:textbox>
+                    <w2:textbox class="description" label="이제 CodeFIT에서 맞춤형 개발자 유형 분석과 채용 정보를 받아보실 수 있습니다." tagname="p"></w2:textbox>
                     
                     <xf:group class="features-list">
                         <w2:textbox class="features-title" label="앞으로 이런 서비스를 이용하실 수 있어요" tagname="div"></w2:textbox>
                         
                         <xf:group class="feature-item">
-                            <w2:textbox class="feature-icon" label="🧪" tagname="span"></w2:textbox>
+                            <xf:group class="feature-icon">
+                                <w2:textbox label="1" tagname="div"></w2:textbox>
+                            </xf:group>
                             <w2:textbox class="feature-text" label="개발자 유형 분석으로 나만의 개발 스타일 발견" tagname="div"></w2:textbox>
                         </xf:group>
                         
                         <xf:group class="feature-item">
-                            <w2:textbox class="feature-icon" label="🎯" tagname="span"></w2:textbox>
+                            <xf:group class="feature-icon">
+                                <w2:textbox label="2" tagname="div"></w2:textbox>
+                            </xf:group>
                             <w2:textbox class="feature-text" label="유형 기반 맞춤형 채용공고 추천" tagname="div"></w2:textbox>
                         </xf:group>
                         
                         <xf:group class="feature-item">
-                            <w2:textbox class="feature-icon" label="🤝" tagname="span"></w2:textbox>
+                            <xf:group class="feature-icon">
+                                <w2:textbox label="3" tagname="div"></w2:textbox>
+                            </xf:group>
                             <w2:textbox class="feature-text" label="기업과의 완벽한 매칭으로 성공적인 취업" tagname="div"></w2:textbox>
                         </xf:group>
                         
                         <xf:group class="feature-item">
-                            <w2:textbox class="feature-icon" label="📊" tagname="span"></w2:textbox>
+                            <xf:group class="feature-icon">
+                                <w2:textbox label="4" tagname="div"></w2:textbox>
+                            </xf:group>
                             <w2:textbox class="feature-text" label="개발 트렌드 분석 및 성장 가이드 제공" tagname="div"></w2:textbox>
                         </xf:group>
                     </xf:group>
                     
                     <xf:group class="button-area">
-                        <xf:trigger class="btn-start" ev:onclick="scwin.btn_start_onclick">
-                            <xf:label>weaveType 시작하기</xf:label>
-                        </xf:trigger>
-                        
-                        <xf:trigger class="btn-edit" ev:onclick="scwin.btn_edit_onclick">
-                            <xf:label>프로필 수정하기</xf:label>
+                        <xf:trigger class="btn-start" ev:onclick="scwin.btn_main_onclick">
+                            <xf:label>메인 페이지로 이동</xf:label>
                         </xf:trigger>
                     </xf:group>
                 </xf:group>
