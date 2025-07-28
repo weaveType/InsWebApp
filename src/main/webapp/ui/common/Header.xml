@@ -113,6 +113,25 @@ scwin.codefit_Logo_onclick = function () {
 };
 
 scwin.menu1_onclick = function () {
+    // 사용자 인증 체크
+    var userInfo = scwin.getUserInfoByCookie();
+    
+    // 로그인하지 않은 사용자 처리
+    if (!userInfo || !userInfo.accountId) {
+        console.warn("로그인되지 않은 사용자의 코드분석 접근 시도");
+        $c.win.alert("로그인이 필요한 서비스입니다.");
+        return;
+    }
+    
+    // 기업 사용자 접근 차단
+    if (userInfo.role === "COMPANY") {
+        console.warn("기업 사용자의 코드분석 접근 차단:", userInfo.accountId);
+        $c.win.alert("죄송합니다. 코드 분석은 개인 사용자만 이용 가능합니다.");
+        return;
+    }
+    
+    // 개인 사용자는 정상 접근
+    console.log("코드분석 접근 허용:", userInfo.accountId, "역할:", userInfo.role);
     $p.url("/InsWebApp/ui/user/CodeAnalysisMain.xml");
 };
 

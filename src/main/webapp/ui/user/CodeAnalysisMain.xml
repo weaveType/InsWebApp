@@ -39,11 +39,58 @@
             scwin.onpageload = function() {
                 console.log("코드분석 메인 페이지 로드됨");
                 
+                // 사용자 인증 확인 먼저 수행
+                if (!scwin.checkUserAuthentication()) {
+                    return; // 인증 실패 시 여기서 종료
+                }
+                
                 // 사용자 인증 정보 확인 및 설정
                 scwin.initializeUserInfo();
                 
                 // 멀티 파일 업로드 이벤트 설정
                 scwin.initializeMultiFileUpload();
+            };
+            
+            // 사용자 인증 체크 함수
+            scwin.checkUserAuthentication = function() {
+                // 쿠키에서 사용자 정보 확인
+                var userInfoCookie = WebSquare.cookie.getCookie("userInfo");
+                var userInfo = null;
+                
+                if (userInfoCookie) {
+                    try {
+                        userInfo = JSON.parse(userInfoCookie);
+                    } catch (e) {
+                        console.error("사용자 정보 파싱 오류:", e);
+                        userInfo = null;
+                    }
+                }
+                
+                // 로그인하지 않은 사용자 처리
+                if (!userInfo || !userInfo.accountId) {
+                    console.warn("로그인되지 않은 사용자의 코드분석 페이지 접근 시도");
+                    
+                    // 사용자에게 알림
+                    $c.win.alert("로그인이 필요한 서비스입니다. 메인 페이지로 이동합니다.", function() {
+                        // 메인 페이지로 리다이렉트
+                        $p.url("/InsWebApp/ui/common/MainPage.xml");
+                    });
+                    return false;
+                }
+                
+                // 기업 사용자 접근 차단
+                if (userInfo.role === "COMPANY") {
+                    console.warn("기업 사용자의 코드분석 페이지 접근 차단:", userInfo.accountId);
+                    
+                    $c.win.alert("죄송합니다. 코드 분석은 개인 사용자만 이용 가능합니다.", function() {
+                        // 메인 페이지로 리다이렉트
+                        $p.url("/InsWebApp/ui/common/MainPage.xml");
+                    });
+                    return false;
+                }
+                
+                console.log("사용자 인증 성공:", userInfo.accountId, "역할:", userInfo.role);
+                return true;
             };
             
             // 사용자 정보 초기화
@@ -544,6 +591,23 @@
                 scwin.showLoading(false);
                 console.log('=== 코드 분석 응답 (Manual AJAX) ===');
                 console.log('응답 데이터:', response);
+                
+                // 인증 오류 체크
+                if (response && response.errorCode) {
+                    if (response.errorCode === 'AUTH_REQUIRED') {
+                        console.error('인증 필요:', response.message);
+                        $c.win.alert('로그인이 필요한 서비스입니다. 메인 페이지로 이동합니다.', function() {
+                            $p.url("/InsWebApp/ui/common/MainPage.xml");
+                        });
+                        return;
+                    } else if (response.errorCode === 'ACCESS_DENIED') {
+                        console.error('접근 권한 없음:', response.message);
+                        $c.win.alert(response.message, function() {
+                            $p.url("/InsWebApp/ui/common/MainPage.xml");
+                        });
+                        return;
+                    }
+                }
                 
                 // ProWorks5 오류 응답 체크
                 if (response && response.elHeader) {
