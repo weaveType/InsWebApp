@@ -593,18 +593,13 @@ scwin.btn_resetFilter_onclick = function () {
 			<xf:group class="header-container"
 				style="display:flex; justify-content:space-between; align-items:center; padding:20px; background-color:#f8f9fa; border-bottom:1px solid #e9ecef;">
 				<xf:group class="header-left" style="display:flex; align-items:center;">
-					<w2:span
-						style="width:30px; height:30px; background-color:#007bff; border-radius:6px; margin-right:12px; display:inline-block; text-align:center; line-height:30px; color:white; font-weight:bold;">
-						🎯
-					</w2:span>
 					<w2:textbox id="" label="개발자 스카웃"
 						style="font-size:24px; font-weight:bold; color:#2c3e50; border:none; background:transparent;" />
 				</xf:group>
-				<w2:textbox id="totalCount_txt" label="총 8명의 개발자" style="color:#6c757d; font-size:14px; border:none; background:transparent;" />
 
 			</xf:group>
 
-			<!-- 컨트롤 바 -->
+			<!-- 컨트롤 바 -->fa
 			<xf:group
 				style="display:flex; justify-content:center; background-color:#ffffff; border-bottom:1px solid #e9ecef; padding:15px 0;">
 				<xf:group class="control-bar"
@@ -628,27 +623,27 @@ scwin.btn_resetFilter_onclick = function () {
 
 						<!-- MBTI 필터 -->
 						<xf:select1 id="w2selectbox_disabled" chooseOption="" style="width: 180px;height: 32px;" submenuSize="auto"
-							allOption="" disabled="false" direction="auto" appearance="minimal" disabledClass="w2selectbox_disabled" chooseOptionLabel="모든 MBTI"
+							allOption="" disabled="false" direction="auto" appearance="minimal" disabledClass="w2selectbox_disabled" chooseOptionLabel="모든 성향"
 							ref="" ev:onselected="scwin.w2selectbox_disabled_onselected" class="SelectBox" ev:onchange="scwin.w2selectbox_disabled_onchange">
 							<xf:choices>
 								<xf:item>
-									<xf:label><![CDATA[모든 MBTI]]></xf:label>
+									<xf:label><![CDATA[모든 성향]]></xf:label>
 									<xf:value><![CDATA[0]]></xf:value>
 								</xf:item>
 								<xf:item>
-									<xf:label><![CDATA[4개 이상만 보기]]></xf:label>
+									<xf:label><![CDATA[4개 이상]]></xf:label>
 									<xf:value><![CDATA[4]]></xf:value>
 								</xf:item>
 								<xf:item>
-									<xf:label><![CDATA[3개 이상만 보기]]></xf:label>
+									<xf:label><![CDATA[3개 이상]]></xf:label>
 									<xf:value><![CDATA[3]]></xf:value>
 								</xf:item>
 								<xf:item>
-									<xf:label><![CDATA[2개 이상만 보기]]></xf:label>
+									<xf:label><![CDATA[2개 이상]]></xf:label>
 									<xf:value><![CDATA[2]]></xf:value>
 								</xf:item>
 								<xf:item>
-									<xf:label><![CDATA[1개 이상만 보기]]></xf:label>
+									<xf:label><![CDATA[1개 이상]]></xf:label>
 									<xf:value><![CDATA[1]]></xf:value>
 								</xf:item>
 							</xf:choices>
