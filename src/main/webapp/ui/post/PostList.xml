@@ -217,8 +217,11 @@
                 color: #0f172a;
                 display: -webkit-box;
                 -webkit-box-orient: vertical;
+                -webkit-line-clamp: 2;
                 overflow: hidden;
                 letter-spacing: -0.01em;
+                line-height: 1.3;
+                max-height: 2.6em;
             }
 
             .job-company {
@@ -1092,13 +1095,6 @@ scwin.sbm_applicantList_submitdone = function (e) {
 									</xf:item>
 								</xf:choices>
 							</xf:select1>
-						</xf:group>
-					</xf:group>
-					<xf:group class="header-right">
-						<xf:group style="display: flex; gap: 12px; margin-left: 24px;">
-							<w2:textbox label="최신순" style="font-size: 13px; color: #666;"></w2:textbox>
-							<w2:textbox label="추천순" style="font-size: 13px; color: #666;"></w2:textbox>
-							<w2:textbox label="인기순" style="font-size: 13px; color: #666;"></w2:textbox>
 						</xf:group>
 					</xf:group>
 				</xf:group>

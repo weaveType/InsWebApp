@@ -767,10 +767,11 @@ scwin.applicationStatus_onclick = function(e) {
             }
 
             .company-logo {
-                max-width: 50px;
-                max-height: 50px;
+                width: 50px;
+                height: 50px;
                 object-fit: contain;
                 border-radius: 4px;
+                flex-shrink: 0;
             }
 
 
@@ -1249,9 +1250,9 @@ scwin.applicationStatus_onclick = function(e) {
 
 				<w2:generator id="gen_company_card" class="companies-container">
 					<xf:group class="company-item" style="cursor: pointer;">
-						<xf:group style="display:flex;align-items:center;justify-content:center;height:100%;gap:10px;">
-							<xf:image id="img_company_logo" style="max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;" />
-							<w2:textbox id="txt_company_name" class="company-name" style="font-weight:500;"></w2:textbox>
+						<xf:group style="display:flex;align-items:center;justify-content:flex-start;height:100%;gap:10px;padding:0 10px;">
+							<xf:image id="img_company_logo" class="company-logo" />
+							<w2:textbox id="txt_company_name" class="company-name" style="font-weight:500;flex:1;text-align:left;"></w2:textbox>
 						</xf:group>
 						<xf:trigger style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: transparent; border: none;" type="button" id="btn_company_card_overlay" ev:onclick="scwin.handleCompanyCardClick"></xf:trigger>
 					</xf:group>
