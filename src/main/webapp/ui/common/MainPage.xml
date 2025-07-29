@@ -430,7 +430,7 @@ scwin.applicationStatus_onclick = function(e) {
                 width: 100%;
                 min-height: 350px;
                 min-width: 400px; /* login-area와 동일한 최소 너비 */
-                background-color: #667eea;
+                background-color: #2196F3;
                 border-radius: 10px;
                 cursor: pointer;
                 text-align: center;
@@ -459,7 +459,7 @@ scwin.applicationStatus_onclick = function(e) {
 
             .ad-button {
                 background-color: #fff;
-                color: #667eea;
+                color: #2196F3;
                 border: none;
                 padding: 15px 40px;
                 border-radius: 30px;
@@ -490,7 +490,7 @@ scwin.applicationStatus_onclick = function(e) {
             .btn-main-login {
                 width: 100%;
                 padding: 15px;
-                background-color: #00c73c;
+                background-color: #007bff;
                 color: #fff;
                 border: none;
                 border-radius: 5px;
@@ -500,7 +500,7 @@ scwin.applicationStatus_onclick = function(e) {
             }
 
             .gift-area {
-                background-color: #f0fff5;
+                background-color: #e3f2fd;
                 padding: 20px;
                 border-radius: 5px;
                 text-align: center;
@@ -508,7 +508,7 @@ scwin.applicationStatus_onclick = function(e) {
 
             .gift-text {
                 font-size: clamp(12px, 1.8vw, 14px);
-                color: #00a832;
+                color: #1976D2;
                 margin-bottom: 5px;
                 display: block;
                 line-height: 1.4;
@@ -516,7 +516,7 @@ scwin.applicationStatus_onclick = function(e) {
 
             .gift-text-bold {
                 font-size: clamp(12px, 1.8vw, 14px);
-                color: #00a832;
+                color: #1976D2;
                 font-weight: bold;
                 margin-bottom: 5px;
                 display: block;
@@ -1122,7 +1122,7 @@ scwin.applicationStatus_onclick = function(e) {
 						<!-- 비로그인 상태 -->
 						<xf:group class="login-area" id="grp_login_area">
 							<w2:textbox class="login-title" label="로그인하고 기업 매칭에 참여해 보세요."></w2:textbox>
-							<xf:trigger class="btn-main-login" id="btnMainLogin" ev:onclick="scwin.btnLogin_onclick" type="button">
+							<xf:trigger class="btn-main-login" id="btnMainLogin" ev:onclick="scwin.btnLogin_onclick" type="button" style="">
 								<xf:label><![CDATA[로그인]]></xf:label>
 							</xf:trigger>
 							<xf:group class="gift-area">
