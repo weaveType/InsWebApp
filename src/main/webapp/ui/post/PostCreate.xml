@@ -364,6 +364,47 @@
     color: white;
 }
 
+/* 성향 카운터 스타일 */
+.personality-counter {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: #6b7280; /* 기본 상태: 회색 */
+    color: white;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    min-width: 40px;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    transform: scale(1);
+}
+
+.personality-counter.progress {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+}
+
+.personality-counter.complete {
+    background: linear-gradient(135deg, #10b981, #059669);
+    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
 /* 파일 업로드 스타일 */
 .upload-container {
     border: 2px dashed #d1d5db;
@@ -1197,7 +1238,7 @@ scwin.removeTechStackByIndex = function(rowIndex) {
     console.log("=== 기술스택 제거 완료 ===");
 };
 
-// CreatePosting.xml과 동일한 성향 카운터 업데이트
+// 개선된 성향 카운터 업데이트
 scwin.updatePersonalityCounter = function() {
     var counter = document.querySelector('.personality-counter');
     if (!counter) {
@@ -1217,11 +1258,21 @@ scwin.updatePersonalityCounter = function() {
         
         console.log("성향 카운터 업데이트:", selectedCount + '/' + scwin.maxPersonalities);
         
-        // 카운터 색상 변경
-        if (selectedCount >= scwin.maxPersonalities) {
-            counter.style.background = 'linear-gradient(135deg, #e53e3e, #c53030)';
+        // 기존 클래스 제거
+        counter.classList.remove('progress', 'complete');
+        
+        // 상태별 클래스 적용 (CSS에서 색상 처리)
+        if (selectedCount === 0) {
+            // 기본 상태 (회색) - 클래스 없음
+            console.log("카운터 상태: 기본 (회색)");
+        } else if (selectedCount >= scwin.maxPersonalities) {
+            // 완료 상태 (초록색)
+            counter.classList.add('complete');
+            console.log("카운터 상태: 완료 (초록색) - 클래스:", counter.className);
         } else {
-            counter.style.background = 'linear-gradient(135deg, #ed8936, #dd6b20)';
+            // 진행중 상태 (파란색)
+            counter.classList.add('progress');
+            console.log("카운터 상태: 진행중 (파란색) - 클래스:", counter.className);
         }
         
         // 강제로 보이게 하기

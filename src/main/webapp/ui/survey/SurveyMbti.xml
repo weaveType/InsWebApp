@@ -2304,14 +2304,14 @@
             .score-bar-track {
                 flex: 1;
                 height: 18px;
-                background: linear-gradient(145deg, #f1f3f6, #e2e6ea);
+                background: #007bff; /* 배경을 블루색상으로 변경 */
                 border-radius: 9px;
                 position: relative;
                 overflow: hidden;
                 box-shadow: 
-                    inset 0 1px 4px rgba(0, 0, 0, 0.06),
-                    inset 0 1px 2px rgba(0, 0, 0, 0.03);
-                border: 1px solid rgba(0, 0, 0, 0.04);
+                    inset 0 1px 4px rgba(0, 0, 0, 0.1),
+                    inset 0 1px 2px rgba(0, 0, 0, 0.05);
+                border: 1px solid rgba(0, 0, 0, 0.06);
             }
             
             .score-bar-center {
@@ -2328,33 +2328,13 @@
             }
             
             .score-bar-fill {
-                height: 100%;
-                border-radius: 9px;
-                position: relative;
-                z-index: 1;
-                transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1);
-                animation: fillAnimation 2s ease-in-out;
-                overflow: hidden;
+                display: none; /* 배경이 전체적으로 블루이므로 필요없음 */
             }
             
-            @keyframes fillAnimation {
-                0% { width: 50% !important; opacity: 0.5; }
-                50% { opacity: 0.8; }
-                100% { opacity: 1; }
-            }
+            /* @keyframes fillAnimation 제거 */
             
             .score-bar-fill::before {
-                content: '';
-                position: absolute;
-                top: 0;
-                left: 0;
-                right: 0;
-                bottom: 0;
-                background: linear-gradient(90deg, 
-                    rgba(255, 255, 255, 0.3) 0%, 
-                    rgba(255, 255, 255, 0.1) 50%, 
-                    rgba(255, 255, 255, 0.3) 100%);
-                animation: shimmer 3s infinite;
+                display: none; /* 그라데이션 효과 제거 */
             }
             
             @keyframes shimmer {
@@ -2387,33 +2367,17 @@
                 top: -6px;
                 width: 16px;
                 height: 30px;
-                background: linear-gradient(145deg, #2d3436, #636e72);
+                background: #ffffff;
                 border-radius: 10px;
                 transform: translateX(-50%);
                 transition: left 1.5s cubic-bezier(0.4, 0, 0.2, 1);
                 z-index: 4;
-                box-shadow: 
-                    0 6px 20px rgba(0, 0, 0, 0.2),
-                    0 3px 8px rgba(0, 0, 0, 0.15),
-                    inset 0 1px 0 rgba(255, 255, 255, 0.2);
-                border: 1px solid rgba(255, 255, 255, 0.3);
-                animation: indicatorPulse 2s ease-in-out infinite;
+                box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+                border: 1px solid rgba(0, 0, 0, 0.1);
+                animation: none; /* 애니메이션 효과 제거 */
             }
             
-            @keyframes indicatorPulse {
-                0%, 100% { 
-                    box-shadow: 
-                        0 8px 24px rgba(0, 0, 0, 0.2),
-                        0 4px 12px rgba(0, 0, 0, 0.15),
-                        0 0 0 0 rgba(255, 255, 255, 0.4);
-                }
-                50% { 
-                    box-shadow: 
-                        0 12px 32px rgba(0, 0, 0, 0.25),
-                        0 6px 16px rgba(0, 0, 0, 0.2),
-                        0 0 0 8px rgba(255, 255, 255, 0.1);
-                }
-            }
+            /* indicatorPulse 애니메이션 제거 */
             
             .score-bar-indicator::before {
                 content: '';
@@ -2424,29 +2388,16 @@
                 height: 0;
                 border-left: 8px solid transparent;
                 border-right: 8px solid transparent;
-                border-bottom: 9px solid #2d3436;
+                border-bottom: 9px solid #ffffff;
                 transform: translateX(-50%);
                 filter: drop-shadow(0 -2px 4px rgba(0, 0, 0, 0.2));
             }
             
             .score-bar-indicator::after {
-                content: '';
-                position: absolute;
-                top: 50%;
-                left: 50%;
-                width: 6px;
-                height: 6px;
-                background: radial-gradient(circle, #74b9ff 0%, #0984e3 100%);
-                border-radius: 50%;
-                transform: translate(-50%, -50%);
-                box-shadow: 0 0 8px rgba(116, 185, 255, 0.8);
-                animation: dotPulse 2s ease-in-out infinite;
+                display: none; /* 내부 점 효과 제거 */
             }
             
-            @keyframes dotPulse {
-                0%, 100% { transform: translate(-50%, -50%) scale(1); }
-                50% { transform: translate(-50%, -50%) scale(1.2); }
-            }
+            /* dotPulse 애니메이션 제거 */
             
             .score-bar-result {
                 font-size: 15px;
