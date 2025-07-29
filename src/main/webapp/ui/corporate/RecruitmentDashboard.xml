@@ -191,8 +191,8 @@
                 border-color: #28a745;
             }
             .stat_card.orange .stat_icon { 
-                background: #fff3e0; 
-                border-color: #fd7e14;
+                background: #ffebee; 
+                border-color: #dc3545;
             }
 
             .stat_value {
@@ -1176,7 +1176,7 @@ scwin.statCard_closedJobs_onclick = function () {
 					<!-- 총 공고 수 -->
 					<xf:group class="stat_card blue fade-in-up delay-100" id="" ev:onclick="scwin.statCard_totalJobs_onclick">
 						<xf:group class="stat_icon" id="">
-							<xf:image src="/InsWebApp/images/document/ChatGPT%20Image%202025년%207월%2029일%20오후%2005_04_05.png" style="width: 70px; height: 70px;"></xf:image>
+							<xf:image src="/InsWebApp/images/document/stack_sheets_star.png" style="width: 70px; height: 70px;"></xf:image>
 						</xf:group>
 						<w2:textbox id="tbx_totalJobs" label="0" class="stat_value"></w2:textbox>
 						<w2:textbox id="" label="총 공고 수" class="stat_label"></w2:textbox>
@@ -1185,7 +1185,7 @@ scwin.statCard_closedJobs_onclick = function () {
 					<!-- 활성 공고 -->
 					<xf:group class="stat_card green fade-in-up delay-200" id="" ev:onclick="scwin.statCard_activeJobs_onclick">
 						<xf:group class="stat_icon" id="">
-							<xf:image src="/InsWebApp/images/document/ChatGPT%20Image%202025년%207월%2029일%20오후%2005_05_04.png" style="width: 70px; height: 70px;"></xf:image>
+							<xf:image src="/InsWebApp/images/document/green_sheet_check.png" style="width: 70px; height: 70px;"></xf:image>
 						</xf:group>
 						<w2:textbox id="tbx_activeJobs" label="0" class="stat_value"></w2:textbox>
 						<w2:textbox id="" label="활성 공고" class="stat_label"></w2:textbox>
@@ -1194,7 +1194,7 @@ scwin.statCard_closedJobs_onclick = function () {
 					<!-- 마감된 공고 -->
 					<xf:group class="stat_card orange fade-in-up delay-300" id="" ev:onclick="scwin.statCard_closedJobs_onclick">
 						<xf:group class="stat_icon" id="">
-							<xf:image src="/InsWebApp/images/document/ChatGPT%20Image%202025년%207월%2029일%20오후%2005_06_05.png" style="width: 70px; height: 70px;"></xf:image>
+							<xf:image src="/InsWebApp/images/document/pink_sheet_x.png" style="width: 70px; height: 70px;"></xf:image>
 						</xf:group>
 						<w2:textbox id="tbx_closedJobs" label="0" class="stat_value"></w2:textbox>
 						<w2:textbox id="" label="마감된 공고" class="stat_label"></w2:textbox>
@@ -1207,7 +1207,7 @@ scwin.statCard_closedJobs_onclick = function () {
 					<xf:group class="action_card fade-in-up delay-100" id="">
 						<xf:group class="action_header" id="">
 							<xf:group class="action_icon" id="">
-								<xf:image src="/InsWebApp/images/document/edit.png" style="width: 48px; height: 48px;"></xf:image>
+								<xf:image src="/InsWebApp/images/document/blue_sheet_plus.png" style="width: 60px; height: 60px;"></xf:image>
 							</xf:group>
 							<w2:textbox id="" label="새로운 공고 작성" class="action_title"></w2:textbox>
 						</xf:group>
@@ -1221,7 +1221,7 @@ scwin.statCard_closedJobs_onclick = function () {
 					<xf:group class="action_card fade-in-up delay-200" id="">
 						<xf:group class="action_header" id="">
 							<xf:group class="action_icon" id="">
-								<xf:image src="/InsWebApp/images/document/manage.png" style="width: 48px; height: 48px;"></xf:image>
+								<xf:image src="/InsWebApp/images/document/stack_sheets_magnifier.png" style="width: 60px; height: 60px;"></xf:image>
 							</xf:group>
 							<w2:textbox id="" label="전체 공고 보기" class="action_title"></w2:textbox>
 						</xf:group>
@@ -1235,7 +1235,7 @@ scwin.statCard_closedJobs_onclick = function () {
 					<xf:group class="action_card fade-in-up delay-300" id="">
 						<xf:group class="action_header" id="">
 							<xf:group class="action_icon" id="">
-								<xf:image src="/InsWebApp/images/document/enterprise.png" style="width: 48px; height: 48px;"></xf:image>
+								<xf:image src="/InsWebApp/images/document/office_building_settings.png" style="width: 60px; height: 60px;"></xf:image>
 							</xf:group>
                             <w2:textbox id="" label="기업정보 관리" class="action_title"></w2:textbox>
 						</xf:group>
