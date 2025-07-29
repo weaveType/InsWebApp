@@ -191,29 +191,14 @@ scwin.card1_onclick = function () {
 };
 
 scwin.card2_onclick = function () {
-    // 로그인 상태 확인
-    var userInfoCookie = WebSquare.cookie.getCookie("userInfo");
-    if (!userInfoCookie) {
-        // 로그인되지 않은 경우 이벤트 차단
-        $c.win.alert("로그인이 필요한 서비스입니다.");
-        return;
-    }
-    
-    // 로그인된 경우에만 페이지 이동
+    // 로그인 유저가 아닐경우, 로그인 페이지로 이동
     $p.url("../survey/SurveyMbti.xml");
 };
 
 scwin.card3_onclick = function () {
-    // 로그인 상태 확인
-    var userInfoCookie = WebSquare.cookie.getCookie("userInfo");
-    if (!userInfoCookie) {
-        // 로그인되지 않은 경우 이벤트 차단
-        $c.win.alert("로그인이 필요한 서비스입니다.");
-        return;
-    }
-    
-    // 로그인된 경우에만 페이지 이동
+    // 로그인 유저가 아닐경우, 로그인 페이지로 이동
     $p.url("../user/CodeAnalysisMain.xml");
+
 };
 
 scwin.handlePositionCardClick = function () {
@@ -485,18 +470,13 @@ scwin.applicationStatus_onclick = function(e) {
                 width: fit-content;
             }
 
-            #grp_login_area.login-area {
+            .login-area {
                 width: 100%;
-                height: 350px !important;
                 min-height: 350px;
                 background-color: #fff;
                 padding: min(40px, 5vw);
                 border-radius: 10px;
                 border: 1px solid #e0e0e0;
-                display: flex !important;
-                flex-direction: column !important;
-                justify-content: center !important;
-                align-items: stretch !important;
             }
 
             .login-title {
@@ -929,16 +909,13 @@ scwin.applicationStatus_onclick = function(e) {
             }
 
             /* 프로필 영역 스타일 */
-            #grp_profile_area.profile-area,
-            #mf_grp_profile_area.profile-area,
             .profile-area {
-                width: 100% !important;
-                min-height: 350px !important;
-                background-color: #fff !important;
-                padding: 20px !important;
-                border-radius: 10px !important;
-                border: 1px solid #e0e0e0 !important;
-                display: block !important;
+                width: 100%;
+                min-height: 350px;
+                background-color: #fff;
+                padding: 20px;
+                border-radius: 10px;
+                border: 1px solid #e0e0e0;
             }
 
             .profile-header {
@@ -976,8 +953,7 @@ scwin.applicationStatus_onclick = function(e) {
             }
 
             .profile-completion {
-                margin-bottom: 30px;
-                margin-top: 15px;
+                margin-bottom: 20px;
             }
 
             .completion-text {
@@ -990,7 +966,7 @@ scwin.applicationStatus_onclick = function(e) {
                 border: 1px solid #e0e0e0;
                 border-radius: 8px;
                 padding: 15px;
-                margin-bottom: 25px;
+                margin-bottom: 15px;
             }
 
             .matching-status-header {
@@ -1037,7 +1013,6 @@ scwin.applicationStatus_onclick = function(e) {
                 grid-template-columns: 1fr 1fr;
                 gap: 15px;
                 padding: 0 5px;
-                margin-top: 10px;
             }
 
             .stats-item {
