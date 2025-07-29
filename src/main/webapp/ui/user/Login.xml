@@ -258,7 +258,7 @@ scwin.inp_userPw_onkeydown = function (e) {
             <!-- 로그인 헤더 -->
             <xf:group class="login-header">
                 <w2:textbox class="login-title2" label="로그인"></w2:textbox>
-                <w2:textbox class="login-subtitle" label="WeaveType에 오신 것을 환영합니다"></w2:textbox>
+                <w2:textbox class="login-subtitle" label="CodeFIT에 오신 것을 환영합니다"></w2:textbox>
             </xf:group>
             
             <!-- 로그인 폼 -->

@@ -1074,23 +1074,23 @@ scwin.sbm_applicantList_submitdone = function (e) {
 								chooseOptionLabel="모든 MBTI" ref="" ev:onselected="scwin.slb_dev_mbti_onselected">
 								<xf:choices>
 									<xf:item>
-										<xf:label><![CDATA[모든 MBTI]]></xf:label>
+										<xf:label><![CDATA[모든 성향]]></xf:label>
 										<xf:value><![CDATA[0]]></xf:value>
 									</xf:item>
 									<xf:item>
-										<xf:label><![CDATA[4개 이상만 보기]]></xf:label>
+										<xf:label><![CDATA[4개 이상]]></xf:label>
 										<xf:value><![CDATA[4]]></xf:value>
 									</xf:item>
 									<xf:item>
-										<xf:label><![CDATA[3개 이상만 보기]]></xf:label>
+										<xf:label><![CDATA[3개 이상]]></xf:label>
 										<xf:value><![CDATA[3]]></xf:value>
 									</xf:item>
 									<xf:item>
-										<xf:label><![CDATA[2개 이상만 보기]]></xf:label>
+										<xf:label><![CDATA[2개 이상]]></xf:label>
 										<xf:value><![CDATA[2]]></xf:value>
 									</xf:item>
 									<xf:item>
-										<xf:label><![CDATA[1개 이상만 보기]]></xf:label>
+										<xf:label><![CDATA[1개 이상]]></xf:label>
 										<xf:value><![CDATA[1]]></xf:value>
 									</xf:item>
 								</xf:choices>
