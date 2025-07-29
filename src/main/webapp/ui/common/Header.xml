@@ -303,7 +303,7 @@ scwin.txb_login_onclick = function () {
             .btn-main-login {
                 width: 100%;
                 padding: 15px;
-                background-color: #00c73c;
+                background-color: #007bff;
                 color: #fff;
                 border: none;
                 border-radius: 5px;
