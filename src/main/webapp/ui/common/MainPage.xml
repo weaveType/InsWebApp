@@ -472,11 +472,16 @@ scwin.applicationStatus_onclick = function(e) {
 
             .login-area {
                 width: 100%;
+                height: 350px !important;
                 min-height: 350px;
                 background-color: #fff;
                 padding: min(40px, 5vw);
                 border-radius: 10px;
                 border: 1px solid #e0e0e0;
+                display: flex !important;
+                flex-direction: column !important;
+                justify-content: center !important;
+                align-items: stretch !important;
             }
 
             .login-title {
