@@ -150,54 +150,63 @@
             }
             
             .stat_card {
-                background: rgba(255, 255, 255, 0.95);
-                backdrop-filter: blur(20px);
-                border-radius: 24px;
-                padding: 40px 35px;
+                background: #ffffff;
+                border-radius: 16px;
+                padding: 32px 28px;
                 text-align: center;
-                border: 1px solid rgba(255, 255, 255, 0.2);
-                box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
-                transition: all 0.4s cubic-bezier(0.4, 0.0, 0.2, 1);
+                border: 2px solid #e8f4ff;
+                box-shadow: 0 4px 20px rgba(0, 123, 255, 0.1);
+                transition: all 0.3s ease;
                 position: relative;
                 overflow: hidden;
                 cursor: pointer;
             }
 
             .stat_card:hover {
-                transform: translateY(-8px) scale(1.02);
-                box-shadow: 0 30px 80px rgba(0, 0, 0, 0.15);
-                background: rgba(255, 255, 255, 1);
+                transform: translateY(-4px);
+                box-shadow: 0 8px 30px rgba(0, 123, 255, 0.2);
+                border-color: #007bff;
             }
 
 
             .stat_icon {
-                width: 80px;
-                height: 80px;
+                width: 70px;
+                height: 70px;
+                border-radius: 16px;
                 display: flex;
                 align-items: center;
                 justify-content: center;
                 font-size: 36px;
-                margin: 0 auto 24px;
-                background: var(--icon-bg);
+                margin: 0 auto 20px;
+                background: #f8fbff;
+                border: 2px solid #e8f4ff;
+            }
+
+            .stat_card.blue .stat_icon { 
+                background: #e3f2fd; 
+                border-color: #007bff;
+            }
+            .stat_card.green .stat_icon { 
+                background: #e8f5e9; 
+                border-color: #28a745;
+            }
+            .stat_card.orange .stat_icon { 
+                background: #fff3e0; 
+                border-color: #fd7e14;
             }
 
             .stat_value {
-                font-size: 48px;
-                font-weight: 800;
-                color: #1a2332;
+                font-size: 42px;
+                font-weight: 700;
+                color: #2c3e50;
                 margin-bottom: 12px;
-                background: linear-gradient(135deg, #1a2332, #2c3e50);
-                -webkit-background-clip: text;
-                -webkit-text-fill-color: transparent;
-                background-clip: text;
             }
             
             .stat_label {
-                font-size: 18px;
-                color: #64748b;
-                font-weight: 600;
-                text-transform: uppercase;
-                letter-spacing: 1px;
+                font-size: 16px;
+                color: #6c757d;
+                font-weight: 500;
+                letter-spacing: 0.5px;
             }
 
             /* ==========================================================================
@@ -211,23 +220,23 @@
             }
 
             .action_card {
-                background: rgba(255, 255, 255, 0.95);
-                backdrop-filter: blur(20px);
-                border-radius: 24px;
-                padding: 35px;
-                border: 1px solid rgba(255, 255, 255, 0.2);
-                box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
-                transition: all 0.4s cubic-bezier(0.4, 0.0, 0.2, 1);
+                background: #ffffff;
+                border-radius: 16px;
+                padding: 32px;
+                border: 2px solid #f1f3f4;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+                transition: all 0.3s ease;
                 position: relative;
                 overflow: hidden;
                 display: flex;
                 flex-direction: column;
-                min-height: 280px;
+                min-height: 260px;
             }
 
             .action_card:hover {
-                transform: translateY(-5px);
-                box-shadow: 0 30px 80px rgba(0, 0, 0, 0.15);
+                transform: translateY(-3px);
+                box-shadow: 0 8px 30px rgba(0, 123, 255, 0.15);
+                border-color: #dee2e6;
             }
 
             .action_header {
@@ -237,30 +246,31 @@
             }
             
             .action_icon {
-                width: 50px;
-                height: 50px;
-                border-radius: 12px;
-                background: white; /* 보라색 그라데이션에서 흰색으로 변경 */
+                width: 56px;
+                height: 56px;
+                border-radius: 14px;
+                background: #f8fbff;
+                border: 2px solid #e8f4ff;
                 display: flex;
                 align-items: center;
                 justify-content: center;
                 font-size: 24px;
                 margin-right: 16px;
-                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1); /* 그림자 효과 조정 */
+                box-shadow: 0 2px 8px rgba(0, 123, 255, 0.1);
             }
             
             .action_title {
-                font-size: 22px;
-                font-weight: 700;
-                color: #1a2332;
+                font-size: 20px;
+                font-weight: 600;
+                color: #2c3e50;
                 margin: 0;
             }
             
             .action_description {
-                color: #64748b;
-                font-size: 16px;
-                line-height: 1.6;
-                margin-bottom: 25px;
+                color: #6c757d;
+                font-size: 15px;
+                line-height: 1.5;
+                margin-bottom: 24px;
                 flex-grow: 1;
             }
 
@@ -268,16 +278,16 @@
                버튼 스타일
                ========================================================================== */
             .btn_primary {
-                background: white; /* 흰색 배경 */
-                color: #667eea; /* 보라색 계열 글자색 */
-                border: none;
-                padding: 14px 32px;
-                border-radius: 12px;
-                font-size: 16px;
-                font-weight: 600;
+                background: #007bff;
+                color: #ffffff;
+                border: 2px solid #007bff;
+                padding: 12px 28px;
+                border-radius: 8px;
+                font-size: 15px;
+                font-weight: 500;
                 cursor: pointer;
                 transition: all 0.3s ease;
-                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1); /* 그림자 효과 조정 */
+                box-shadow: 0 3px 12px rgba(0, 123, 255, 0.2);
                 text-decoration: none;
                 display: inline-flex;
                 align-items: center;
@@ -286,29 +296,30 @@
             
             .btn_primary:hover {
                 transform: translateY(-2px);
-                box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15); /* hover 그림자 효과 조정 */
-                background: #f0f0f0; /* hover 시 약간 회색으로 변경 */
+                box-shadow: 0 6px 20px rgba(0, 123, 255, 0.3);
+                background: #0056b3;
+                border-color: #0056b3;
             }
             
             .btn_secondary {
-                background: white; /* 흰색 배경 */
-                color: #667eea; /* 보라색 계열 글자색 */
-                border: none; /* 테두리 제거 */
-                padding: 14px 32px; /* btn_primary와 동일하게 패딩 조정 */
-                border-radius: 12px;
-                font-size: 16px;
-                font-weight: 600;
+                background: #ffffff;
+                color: #007bff;
+                border: 2px solid #007bff;
+                padding: 12px 28px;
+                border-radius: 8px;
+                font-size: 15px;
+                font-weight: 500;
                 cursor: pointer;
                 transition: all 0.3s ease;
-                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1); /* btn_primary와 동일한 그림자 */
-                backdrop-filter: blur(10px); /* 기존 유지 */
+                box-shadow: 0 3px 12px rgba(0, 123, 255, 0.1);
             }
 
             .btn_secondary:hover {
-                transform: translateY(-2px); /* btn_primary와 동일한 hover 효과 */
-                box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15); /* btn_primary와 동일한 hover 그림자 */
-                background: #f0f0f0; /* btn_primary와 동일한 hover 배경색 */
-                color: #667eea; /* hover 시 글자색 유지 */
+                transform: translateY(-2px);
+                box-shadow: 0 6px 20px rgba(0, 123, 255, 0.2);
+                background: #007bff;
+                color: #ffffff;
+                border-color: #007bff;
             }
 
             /* ==========================================================================
@@ -405,22 +416,21 @@
             }
 
             .post_card {
-                background: rgba(255, 255, 255, 0.95);
-                backdrop-filter: blur(20px);
-                border-radius: 16px;
-                padding: 25px;
-                border: 1px solid rgba(255, 255, 255, 0.2);
-                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-                transition: all 0.4s cubic-bezier(0.4, 0.0, 0.2, 1);
+                background: #ffffff;
+                border-radius: 12px;
+                padding: 24px;
+                border: 2px solid #f1f3f4;
+                box-shadow: 0 3px 16px rgba(0, 0, 0, 0.06);
+                transition: all 0.3s ease;
                 cursor: pointer;
                 position: relative;
                 overflow: hidden;
             }
 
             .post_card:hover {
-                transform: translateY(-5px) scale(1.02);
-                box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
-                background: rgba(255, 255, 255, 1);
+                transform: translateY(-3px);
+                box-shadow: 0 6px 24px rgba(0, 123, 255, 0.12);
+                border-color: #007bff;
             }
 
 
@@ -1202,7 +1212,7 @@ scwin.statCard_closedJobs_onclick = function () {
 							<w2:textbox id="" label="새로운 공고 작성" class="action_title"></w2:textbox>
 						</xf:group>
 						<w2:textbox id="" label="새로운 채용공고를 작성하여 우수한 인재를 찾아보세요." class="action_description"></w2:textbox>
-						<xf:trigger id="btn_newJob" type="button" class="btn_primary" ev:onclick="scwin.btn_newJob_onclick">
+						<xf:trigger id="btn_newJob" type="button" class="btn_secondary" ev:onclick="scwin.btn_newJob_onclick">
 							<xf:label><![CDATA[공고 작성하기]]></xf:label>
 						</xf:trigger>
 					</xf:group>
