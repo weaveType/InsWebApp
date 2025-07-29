@@ -1181,7 +1181,7 @@ scwin.applicationStatus_onclick = function(e) {
 
 			<!-- 점수매칭 섹션 -->
 			<xf:group class="section section-white" tagname="section">
-				<w2:textbox class="section-title" label="점수매칭"></w2:textbox>
+				<w2:textbox class="section-title" label="성향을 분석하고 나와 맞는 기업에 지원하세요!"></w2:textbox>
 
 				<xf:group class="cards-container">
 					<!-- 카드 1: 튜토리얼 -->
@@ -1211,7 +1211,7 @@ scwin.applicationStatus_onclick = function(e) {
 
 			<!-- 포지션 추천 섹션 -->
 			<xf:group class="section section-gray" tagname="section">
-				<w2:textbox class="section-title" label="로그인하고 내 조건에 맞는 포지션 추천받기"></w2:textbox>
+				<w2:textbox class="section-title" label="최근 등록된 기업 공고"></w2:textbox>
 
 				<w2:generator id="gen_position_card" class="positions-container">
 						<xf:group class="position-card" style="position: relative;">

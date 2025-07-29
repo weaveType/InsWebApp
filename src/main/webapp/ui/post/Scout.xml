@@ -230,6 +230,9 @@
     window.scwin.openResumePreview = scwin.openResumePreview;
     window.scwin.displayResumeFileName = scwin.displayResumeFileName;
 
+    // 기술스택 필터 초기값 설정 (chooseOption 상태로 유지)
+    msb_techStackFilter.setValue("");
+
     // 회사 아이디로 유저 불러오기
     scwin.getJobPostingId();
 
@@ -510,8 +513,17 @@ scwin.initTechStackFilter = function () {
     // 기술스택 목록 정렬
     techStackList.sort();
 
-    // selectbox에 옵션 추가
-    msb_techStackFilter.removeAll(); // 기존 아이템 초기화
+    // selectbox에 옵션 추가 (기본 chooseOption은 유지)
+    // 기존 데이터 아이템만 제거 (chooseOption은 유지)
+    var itemCount = msb_techStackFilter.getItemCount();
+    for (var i = itemCount - 1; i >= 0; i--) {
+        var itemValue = msb_techStackFilter.getItemValue(i);
+        if (itemValue && itemValue !== "") { // 빈 값이 아닌 실제 데이터만 제거
+            msb_techStackFilter.removeItemByIndex(i);
+        }
+    }
+    
+    // 새로운 기술스택 목록 추가
     for (var k = 0; k < techStackList.length; k++) {
         msb_techStackFilter.addItem(techStackList[k], techStackList[k]);
     }
