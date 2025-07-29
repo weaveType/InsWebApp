@@ -199,7 +199,7 @@
             }
 
             .job-content {
-                padding: 10px 18px 8px;
+                padding: 0;
                 height: 120px;
                 display: flex;
                 flex-direction: column;
@@ -217,8 +217,11 @@
                 color: #0f172a;
                 display: -webkit-box;
                 -webkit-box-orient: vertical;
+                -webkit-line-clamp: 2;
                 overflow: hidden;
                 letter-spacing: -0.01em;
+                line-height: 1.3;
+                max-height: 2.6em;
             }
 
             .job-company {
@@ -339,6 +342,10 @@
             /* 빈 상태 - 새로운 디자인 */
             .empty-state {
                 grid-column: 1 / -1;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
                 text-align: center;
                 padding: 60px 30px;
                 color: #64748b;
@@ -349,6 +356,7 @@
             .empty-image {
                 filter: grayscale(20%) opacity(80%);
                 transition: all 0.3s ease;
+                margin-bottom: 24px;
             }
 
             .empty-state:hover .empty-image {
@@ -436,7 +444,7 @@
                 
                 .job-content {
                     height: 55%;
-                    padding: 12px 12px 10px;
+                    padding: 0;
                 }
                 
                 .job-title {
@@ -696,7 +704,7 @@ scwin.showEmptyState = function () {
     if (jobCardsContainer) {
         jobCardsContainer.innerHTML =
             '<xf:group class="empty-state">' +
-            '<img src="/InsWebApp/images/ws5/not_found.png" alt="빈 상태 이미지" class="empty-image" style="width: 150px; height: 150px; margin-top: 50px; margin-bottom: 50px;" />' +
+            '<img src="/InsWebApp/images/ws5/not_found.png" alt="빈 상태 이미지" class="empty-image" style="width: 150px; height: 150px;" />' +
             '<xf:group class="empty-message">등록된 채용공고가 없습니다</xf:group>' +
             '<xf:group class="empty-submessage">나중에 다시 확인해보세요</xf:group>' +
             '</xf:group>';
@@ -1008,14 +1016,28 @@ scwin.slb_dev_mbti_onselected = function () {
 };
 
 scwin.sbm_selectDevMbtiList_submitdone = function (e) {
+    console.log("=== MBTI 필터링 공고 목록 조회 완료 ===");
+    console.log("MBTI 필터링 응답 데이터:", e.responseJSON);
+
     // 로딩 상태 숨김
     scwin.hideLoadingState();
 
     // error 수신시
     var elData = e.responseJSON.elData;
     var elHeader = e.responseJSON.elHeader;
+    
+    // 첫 번째 공고 데이터 구조 분석 (MBTI 필터링)
+    if (elData.postVoList && elData.postVoList.length > 0) {
+        console.log("=== MBTI 필터링 첫 번째 공고 분석 ===");
+        var firstPost = elData.postVoList[0];
+        console.log("MBTI 필터링 첫 번째 공고 Keys:", Object.keys(firstPost));
+        console.log("MBTI 필터링 첫 번째 공고 전체:", firstPost);
+        console.log("MBTI 필터링 jobImageFileName:", firstPost.jobImageFileName);
+        console.log("MBTI 필터링 logoFileName:", firstPost.logoFileName);
+    }
+    
     dlt_postList.setJSON(elData.postVoList || []);
-    console.log("✅ 공고 목록 데이터 바인딩 완료 - 총 " + dlt_postList.getRowCount() + "개");
+    console.log("✅ MBTI 필터링 공고 목록 데이터 바인딩 완료 - 총 " + dlt_postList.getRowCount() + "개");
 
     // 공고 수 업데이트
     spn_jobCount.setLabel(elData.totalCount || 0);
@@ -1073,13 +1095,6 @@ scwin.sbm_applicantList_submitdone = function (e) {
 									</xf:item>
 								</xf:choices>
 							</xf:select1>
-						</xf:group>
-					</xf:group>
-					<xf:group class="header-right">
-						<xf:group style="display: flex; gap: 12px; margin-left: 24px;">
-							<w2:textbox label="최신순" style="font-size: 13px; color: #666;"></w2:textbox>
-							<w2:textbox label="추천순" style="font-size: 13px; color: #666;"></w2:textbox>
-							<w2:textbox label="인기순" style="font-size: 13px; color: #666;"></w2:textbox>
 						</xf:group>
 					</xf:group>
 				</xf:group>

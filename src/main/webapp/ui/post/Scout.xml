@@ -230,11 +230,11 @@
     window.scwin.openResumePreview = scwin.openResumePreview;
     window.scwin.displayResumeFileName = scwin.displayResumeFileName;
 
+    // 기술스택 필터 초기값 설정 (chooseOption 상태로 유지)
+    msb_techStackFilter.setValue("");
+
     // 회사 아이디로 유저 불러오기
     scwin.getJobPostingId();
-
-    // 스카웃 상태 필터 기본값 설정
-    scoutStatusFilter.setValue("NOT_SCOUTED");
 
     // 그리드뷰 갱신하기
     setTimeout(function () {
@@ -513,8 +513,17 @@ scwin.initTechStackFilter = function () {
     // 기술스택 목록 정렬
     techStackList.sort();
 
-    // checkcombobox에 옵션 추가
-    // msb_techStackFilter.clear(); // 기존 아이템 초기화
+    // selectbox에 옵션 추가 (기본 chooseOption은 유지)
+    // 기존 데이터 아이템만 제거 (chooseOption은 유지)
+    var itemCount = msb_techStackFilter.getItemCount();
+    for (var i = itemCount - 1; i >= 0; i--) {
+        var itemValue = msb_techStackFilter.getItemValue(i);
+        if (itemValue && itemValue !== "") { // 빈 값이 아닌 실제 데이터만 제거
+            msb_techStackFilter.removeItemByIndex(i);
+        }
+    }
+    
+    // 새로운 기술스택 목록 추가
     for (var k = 0; k < techStackList.length; k++) {
         msb_techStackFilter.addItem(techStackList[k], techStackList[k]);
     }
@@ -522,20 +531,12 @@ scwin.initTechStackFilter = function () {
 
 // 기술스택 필터 적용 함수
 scwin.applyTechStackFilter = function () {
-    var selectedTechStacks = msb_techStackFilter.getValue();
-    console.log("selectedTechStacks from checkcombobox:", selectedTechStacks);
+    console.log("=== applyTechStackFilter 함수 호출됨 ===");
+    var selectedTechStack = msb_techStackFilter.getValue();
+    console.log("selectedTechStack from selectbox:", selectedTechStack);
 
-    var selectedArray = [];
-    if (typeof selectedTechStacks === 'string' && selectedTechStacks !== "") {
-        selectedArray = selectedTechStacks.split(",").map(function(item) { return item.trim().toLowerCase(); });
-    } else if (Array.isArray(selectedTechStacks)) {
-        selectedArray = selectedTechStacks.map(function(item) { return item.trim().toLowerCase(); });
-    }
-    // Convert selectedArray to a Set for efficient lookups
-    var selectedTechSet = new Set(selectedArray);
-
-    if (selectedTechSet.size === 0) {
-        // 선택된 기술스택이 없으면 모든 행 표시
+    // 선택된 기술스택이 없거나 빈 값이면 모든 행 표시
+    if (!selectedTechStack || selectedTechStack === "") {
         var rowCount = dlt_scoutListVo.getRowCount();
         for (var i = 0; i < rowCount; i++) {
             gridView1.setRowVisible(i, true);
@@ -545,6 +546,7 @@ scwin.applyTechStackFilter = function () {
 
     var dataList = dlt_scoutListVo;
     var rowCount = dataList.getRowCount();
+    var selectedTechLower = selectedTechStack.toLowerCase();
 
     // 필터링 로직
     for (var i = 0; i < rowCount; i++) {
@@ -552,32 +554,25 @@ scwin.applyTechStackFilter = function () {
         var showRow = false;
 
         if (techStackData && techStackData.trim() !== "") {
-            // Prepare rowTechStacks: split, trim, and lowercase all at once
-            var rowTechStacks = techStackData.split(",").map(function(item) { return item.trim().toLowerCase(); });
-            // Convert rowTechStacks to a Set for efficient lookups
-            var rowTechSet = new Set(rowTechStacks);
+            // 기술스택 데이터를 쉼표로 분리하여 확인
+            var rowTechStacks = techStackData.split(",").map(function(item) { 
+                return item.trim().toLowerCase(); 
+            });
 
-            // Check if any selected tech stack is present in the row's tech stacks
-            for (let selectedTech of selectedTechSet) {
-                if (rowTechSet.has(selectedTech)) {
-                    showRow = true;
-                    break; // Found a match, no need to check other selectedTechs for this row
-                }
+            // 선택된 기술스택이 행의 기술스택 목록에 포함되어 있는지 확인
+            if (rowTechStacks.indexOf(selectedTechLower) !== -1) {
+                showRow = true;
             }
         }
 
         // 행 표시/숨김 설정
-        if (showRow) {
-            gridView1.setRowVisible(i, true);
-        } else {
-            gridView1.setRowVisible(i, false);
-        }
+        gridView1.setRowVisible(i, showRow);
     }
 };
 
 // 기술스택 필터 초기화 버튼 (선택사항)
 scwin.btn_resetFilter_onclick = function () {
-    msb_techStackFilter.setValue(""); // checkcombobox의 선택 초기화
+    msb_techStackFilter.setValue(""); // selectbox의 선택 초기화
     var rowCount = dlt_scoutListVo.getRowCount();
     for (var i = 0; i < rowCount; i++) {
         gridView1.setRowVisible(i, true);
@@ -593,14 +588,9 @@ scwin.btn_resetFilter_onclick = function () {
 			<xf:group class="header-container"
 				style="display:flex; justify-content:space-between; align-items:center; padding:20px; background-color:#f8f9fa; border-bottom:1px solid #e9ecef;">
 				<xf:group class="header-left" style="display:flex; align-items:center;">
-					<w2:span
-						style="width:30px; height:30px; background-color:#007bff; border-radius:6px; margin-right:12px; display:inline-block; text-align:center; line-height:30px; color:white; font-weight:bold;">
-						🎯
-					</w2:span>
 					<w2:textbox id="" label="개발자 스카웃"
 						style="font-size:24px; font-weight:bold; color:#2c3e50; border:none; background:transparent;" />
 				</xf:group>
-				<w2:textbox id="totalCount_txt" label="총 8명의 개발자" style="color:#6c757d; font-size:14px; border:none; background:transparent;" />
 
 			</xf:group>
 
@@ -616,11 +606,11 @@ scwin.btn_resetFilter_onclick = function () {
 							direction="auto" chooseOption="true" chooseOptionLabel="스카웃 상태" ev:onviewchange="scwin.onScoutStatusFilterChange">
 							<w2:choices>
 								<w2:item>
-									<w2:label><![CDATA[스카웃 안한 유저]]></w2:label>
+									<w2:label><![CDATA[매칭가능한 유저]]></w2:label>
 									<w2:value><![CDATA[NOT_SCOUTED]]></w2:value>
 								</w2:item>
 								<w2:item>
-									<w2:label><![CDATA[스카웃 한 유저]]></w2:label>
+									<w2:label><![CDATA[매칭을 제안한 유저]]></w2:label>
 									<w2:value><![CDATA[SCOUTED]]></w2:value>
 								</w2:item>
 							</w2:choices>
@@ -628,34 +618,36 @@ scwin.btn_resetFilter_onclick = function () {
 
 						<!-- MBTI 필터 -->
 						<xf:select1 id="w2selectbox_disabled" chooseOption="" style="width: 180px;height: 32px;" submenuSize="auto"
-							allOption="" disabled="false" direction="auto" appearance="minimal" disabledClass="w2selectbox_disabled" chooseOptionLabel="모든 MBTI"
+							allOption="" disabled="false" direction="auto" appearance="minimal" disabledClass="w2selectbox_disabled" chooseOptionLabel="모든 성향"
 							ref="" ev:onselected="scwin.w2selectbox_disabled_onselected" class="SelectBox" ev:onchange="scwin.w2selectbox_disabled_onchange">
 							<xf:choices>
 								<xf:item>
-									<xf:label><![CDATA[모든 MBTI]]></xf:label>
+									<xf:label><![CDATA[모든 성향]]></xf:label>
 									<xf:value><![CDATA[0]]></xf:value>
 								</xf:item>
 								<xf:item>
-									<xf:label><![CDATA[4개 이상만 보기]]></xf:label>
+									<xf:label><![CDATA[4개 이상]]></xf:label>
 									<xf:value><![CDATA[4]]></xf:value>
 								</xf:item>
 								<xf:item>
-									<xf:label><![CDATA[3개 이상만 보기]]></xf:label>
+									<xf:label><![CDATA[3개 이상]]></xf:label>
 									<xf:value><![CDATA[3]]></xf:value>
 								</xf:item>
 								<xf:item>
-									<xf:label><![CDATA[2개 이상만 보기]]></xf:label>
+									<xf:label><![CDATA[2개 이상]]></xf:label>
 									<xf:value><![CDATA[2]]></xf:value>
 								</xf:item>
 								<xf:item>
-									<xf:label><![CDATA[1개 이상만 보기]]></xf:label>
+									<xf:label><![CDATA[1개 이상]]></xf:label>
 									<xf:value><![CDATA[1]]></xf:value>
 								</xf:item>
 							</xf:choices>
 						</xf:select1>
-						<w2:checkcombobox id="msb_techStackFilter" appearance="minimal" style="width: 150px;height: 32px;" class=""
-							chooseOption="true" chooseOptionLabel="기술스택 선택" ev:onchange="scwin.applyTechStackFilter">
-						</w2:checkcombobox>
+						<w2:selectbox id="msb_techStackFilter" appearance="minimal" style="width: 150px;height: 32px;" class=""
+							chooseOption="true" chooseOptionLabel="기술스택 선택" ev:onviewchange="scwin.applyTechStackFilter">
+							<w2:choices>
+							</w2:choices>
+						</w2:selectbox>
 					</xf:group>
 
 					<xf:group class="button-group" style="display:flex; align-items:center; gap:10px;">
