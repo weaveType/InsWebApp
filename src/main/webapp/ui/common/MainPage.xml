@@ -191,14 +191,29 @@ scwin.card1_onclick = function () {
 };
 
 scwin.card2_onclick = function () {
-    // 로그인 유저가 아닐경우, 로그인 페이지로 이동
+    // 로그인 상태 확인
+    var userInfoCookie = WebSquare.cookie.getCookie("userInfo");
+    if (!userInfoCookie) {
+        // 로그인되지 않은 경우 이벤트 차단
+        $c.win.alert("로그인이 필요한 서비스입니다.");
+        return;
+    }
+    
+    // 로그인된 경우에만 페이지 이동
     $p.url("../survey/SurveyMbti.xml");
 };
 
 scwin.card3_onclick = function () {
-    // 로그인 유저가 아닐경우, 로그인 페이지로 이동
+    // 로그인 상태 확인
+    var userInfoCookie = WebSquare.cookie.getCookie("userInfo");
+    if (!userInfoCookie) {
+        // 로그인되지 않은 경우 이벤트 차단
+        $c.win.alert("로그인이 필요한 서비스입니다.");
+        return;
+    }
+    
+    // 로그인된 경우에만 페이지 이동
     $p.url("../user/CodeAnalysisMain.xml");
-
 };
 
 scwin.handlePositionCardClick = function () {
