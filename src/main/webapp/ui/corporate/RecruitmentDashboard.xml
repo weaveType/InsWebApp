@@ -340,10 +340,12 @@
                 background: rgba(255, 255, 255, 0.95);
                 backdrop-filter: blur(20px);
                 border-radius: 24px;
-                padding: 40px;
                 border: 1px solid rgba(255, 255, 255, 0.2);
                 box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
                 margin-bottom: 30px;
+                padding: 40px;
+                max-width: 1350px;
+                margin: 0 auto 30px auto;
             }
 
             .section_header {
@@ -358,11 +360,7 @@
             .section_title {
                 font-size: 28px;
                 font-weight: 700;
-                color: #1a2332;
-                background: linear-gradient(135deg, #1a2332, #667eea);
-                -webkit-background-clip: text;
-                -webkit-text-fill-color: transparent;
-                background-clip: text;
+                color: #000000;
             }
 
             /* ==========================================================================
@@ -1237,7 +1235,7 @@ scwin.statCard_closedJobs_onclick = function () {
 						</xf:group>
 						<w2:textbox id="" label="새로운 채용공고를 작성하여 우수한 인재를 찾아보세요." class="action_description"></w2:textbox>
 						<xf:trigger id="btn_newJob" type="button" class="btn_primary" ev:onclick="scwin.btn_newJob_onclick">
-							<xf:label><![CDATA[➕ 공고 작성하기]]></xf:label>
+							<xf:label><![CDATA[공고 작성하기]]></xf:label>
 						</xf:trigger>
 					</xf:group>
 
@@ -1251,7 +1249,7 @@ scwin.statCard_closedJobs_onclick = function () {
 						</xf:group>
 						<w2:textbox id="" label="시장의 다른 공고들을 확인하고 경쟁력을 분석해보세요." class="action_description"></w2:textbox>
 						<xf:trigger id="btn_allPosts" type="button" class="btn_secondary" ev:onclick="scwin.btn_allPosts_onclick">
-							<xf:label><![CDATA[������ 고 보기]]></xf:label>
+							<xf:label><![CDATA[전체 공고 보기]]></xf:label>
 						</xf:trigger>
 					</xf:group>
 
@@ -1265,7 +1263,7 @@ scwin.statCard_closedJobs_onclick = function () {
 						</xf:group>
 						<w2:textbox id="" label="회사 정보와 프로필을 최신 상태로 유지하세요." class="action_description"></w2:textbox>
 						<xf:trigger id="btn_companyUpdate" type="button" class="btn_secondary" ev:onclick="scwin.btn_companyUpdate_onclick">
-							<xf:label><![CDATA[⚙️ 정보 수정]]></xf:label>
+							<xf:label><![CDATA[정보 수정]]></xf:label>
 						</xf:trigger>
 					</xf:group>
 				</xf:group>
@@ -1274,7 +1272,7 @@ scwin.statCard_closedJobs_onclick = function () {
 			<!-- 채용공고 목록 섹션 -->
 			<xf:group class="posts_section fade-in-up" id="">
 				<xf:group class="section_header" id="">
-					<w2:textbox id="" label="📋 현재 진행 중인 채용공고" class="section_title"></w2:textbox>
+					<w2:textbox id="" label="현재 진행 중인 채용공고" class="section_title"></w2:textbox>
 				</xf:group>
 
 				<!-- 공고 카드 컨테이너 -->
