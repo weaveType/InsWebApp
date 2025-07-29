@@ -1121,13 +1121,16 @@ scwin.applicationStatus_onclick = function(e) {
 					<xf:group class="hero-right">
 						<!-- 비로그인 상태 -->
 						<xf:group class="login-area" id="grp_login_area">
-							<w2:textbox class="login-title" label="로그인하고 기업 매칭에 참여해 보세요."></w2:textbox>
-							<xf:trigger class="btn-main-login" id="btnMainLogin" ev:onclick="scwin.btnLogin_onclick" type="button" style="">
-								<xf:label><![CDATA[로그인]]></xf:label>
-							</xf:trigger>
-							<xf:group class="gift-area">
-								<w2:textbox class="gift-text" label="매칭 퀘스트 완료하고"></w2:textbox>
-								<w2:textbox class="gift-text-bold" label="원하는 기업에 지원하세요!"></w2:textbox>
+							<xf:group style="margin-top: 32.5px;margin-bottom: 32.5;" id="" class="grp_login_area_childgroup">
+								<w2:textbox label="로그인하고 기업 매칭에 참여해 보세요." class="login-title"></w2:textbox>
+								<xf:trigger ev:onclick="scwin.btnLogin_onclick" style="" id="btnMainLogin" type="button"
+									class="btn-main-login">
+									<xf:label><![CDATA[로그인]]></xf:label>
+								</xf:trigger>
+								<xf:group class="gift-area">
+									<w2:textbox label="매칭 퀘스트 완료하고" class="gift-text"></w2:textbox>
+									<w2:textbox label="원하는 기업에 지원하세요!" class="gift-text-bold"></w2:textbox>
+								</xf:group>
 							</xf:group>
 						</xf:group>
 
