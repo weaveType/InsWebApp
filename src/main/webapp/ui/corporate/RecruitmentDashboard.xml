@@ -1,97 +1,96 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<html xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:ev="http://www.w3.org/2001/xml-events"
-    xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
-    <head meta_screenName="채용관리 대시보드">
-        <w2:type>COMPONENT</w2:type>
-        <w2:buildDate/>
-        <w2:MSA/>
-        <xf:model>
-        	<w2:dataCollection baseNode="map">
-        		<!-- 공고 목록 조회용 -->
-        		<w2:dataMap baseNode="map" id="dmp_postVo" style="">
-        			<w2:keyInfo>
-        				<w2:key dataType="text" id="pageIndex" name="페이지_번호" defaultValue="1"></w2:key>
-        				<w2:key dataType="text" id="pageSize" name="페이지_건수" defaultValue="9"></w2:key>
-        				<w2:key dataType="text" id="companyId" name="회사_ID" defaultValue=""></w2:key>
-        			</w2:keyInfo>
-        			<w2:data use="false"></w2:data>
-        		</w2:dataMap>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare"
+	xmlns:xf="http://www.w3.org/2002/xforms">
+	<head meta_screenName="채용관리 대시보드">
+		<w2:type>COMPONENT</w2:type>
+		<w2:buildDate />
+		<w2:MSA />
+		<xf:model>
+			<w2:dataCollection baseNode="map">
+				<!-- 공고 목록 조회용 -->
+				<w2:dataMap baseNode="map" id="dmp_postVo" style="">
+					<w2:keyInfo>
+						<w2:key dataType="text" id="pageIndex" name="페이지_번호" defaultValue="1"></w2:key>
+						<w2:key dataType="text" id="pageSize" name="페이지_건수" defaultValue="9"></w2:key>
+						<w2:key dataType="text" id="companyId" name="회사_ID" defaultValue=""></w2:key>
+					</w2:keyInfo>
+					<w2:data use="false"></w2:data>
+				</w2:dataMap>
 
 
 
-        		<!-- 공고 목록 데이터 -->
-        		<w2:dataList baseNode="list" id="dlt_postVoList" repeatNode="map" saveRemovedData="true" style="">
-        			<w2:columnInfo>
-        				<w2:column dataType="text" id="jobPostingId" name="job_posting_id"></w2:column>
-        				<w2:column dataType="text" id="companyId" name="company_id"></w2:column>
-        				<w2:column dataType="text" id="title" name="title"></w2:column>
-        				<w2:column dataType="text" id="description" name="description"></w2:column>
-        				<w2:column dataType="text" id="requiredSkills" name="required_skills"></w2:column>
-        				<w2:column dataType="text" id="experienceLevel" name="experience_level"></w2:column>
-        				<w2:column dataType="text" id="salaryRange" name="salary_range"></w2:column>
-        				<w2:column dataType="text" id="location" name="location"></w2:column>
-        				<w2:column dataType="text" id="workType" name="work_type"></w2:column>
-        				<w2:column dataType="text" id="preferredDeveloperTypes" name="preferred_developer_types"></w2:column>
-        				<w2:column dataType="text" id="expiresAt" name="expires_at"></w2:column>
-        				<w2:column dataType="text" id="postedAt" name="posted_at"></w2:column>
-        				<w2:column dataType="text" id="status" name="status"></w2:column>
-        			</w2:columnInfo>
-        		</w2:dataList>
+				<!-- 공고 목록 데이터 -->
+				<w2:dataList baseNode="list" id="dlt_postVoList" repeatNode="map" saveRemovedData="true" style="">
+					<w2:columnInfo>
+						<w2:column dataType="text" id="jobPostingId" name="job_posting_id"></w2:column>
+						<w2:column dataType="text" id="companyId" name="company_id"></w2:column>
+						<w2:column dataType="text" id="title" name="title"></w2:column>
+						<w2:column dataType="text" id="description" name="description"></w2:column>
+						<w2:column dataType="text" id="requiredSkills" name="required_skills"></w2:column>
+						<w2:column dataType="text" id="experienceLevel" name="experience_level"></w2:column>
+						<w2:column dataType="text" id="salaryRange" name="salary_range"></w2:column>
+						<w2:column dataType="text" id="location" name="location"></w2:column>
+						<w2:column dataType="text" id="workType" name="work_type"></w2:column>
+						<w2:column dataType="text" id="preferredDeveloperTypes" name="preferred_developer_types"></w2:column>
+						<w2:column dataType="text" id="expiresAt" name="expires_at"></w2:column>
+						<w2:column dataType="text" id="postedAt" name="posted_at"></w2:column>
+						<w2:column dataType="text" id="status" name="status"></w2:column>
+					</w2:columnInfo>
+				</w2:dataList>
 
-        		<!-- 공고 상세 데이터 -->
-        		<w2:dataMap baseNode="map" id="dmp_postVoDetail" style="">
-        			<w2:keyInfo>
-        				<w2:key dataType="text" id="jobPostingId" name="job_posting_id"></w2:key>
-        				<w2:key dataType="text" id="companyId" name="company_id"></w2:key>
-        				<w2:key dataType="text" id="title" name="title"></w2:key>
-        				<w2:key dataType="text" id="description" name="description"></w2:key>
-        				<w2:key dataType="text" id="requiredSkills" name="required_skills"></w2:key>
-        				<w2:key dataType="text" id="experienceLevel" name="experience_level"></w2:key>
-        				<w2:key dataType="text" id="salaryRange" name="salary_range"></w2:key>
-        				<w2:key dataType="text" id="location" name="location"></w2:key>
-        				<w2:key dataType="text" id="workType" name="work_type"></w2:key>
-        				<w2:key dataType="text" id="preferredDeveloperTypes" name="preferred_developer_types"></w2:key>
-        				<w2:key dataType="text" id="expiresAt" name="expires_at"></w2:key>
-        				<w2:key dataType="text" id="postedAt" name="posted_at"></w2:key>
-        				<w2:key dataType="text" id="status" name="status"></w2:key>
-        			</w2:keyInfo>
-        		</w2:dataMap>
-        	</w2:dataCollection>
-        	<w2:workflowCollection />
-        	
+				<!-- 공고 상세 데이터 -->
+				<w2:dataMap baseNode="map" id="dmp_postVoDetail" style="">
+					<w2:keyInfo>
+						<w2:key dataType="text" id="jobPostingId" name="job_posting_id"></w2:key>
+						<w2:key dataType="text" id="companyId" name="company_id"></w2:key>
+						<w2:key dataType="text" id="title" name="title"></w2:key>
+						<w2:key dataType="text" id="description" name="description"></w2:key>
+						<w2:key dataType="text" id="requiredSkills" name="required_skills"></w2:key>
+						<w2:key dataType="text" id="experienceLevel" name="experience_level"></w2:key>
+						<w2:key dataType="text" id="salaryRange" name="salary_range"></w2:key>
+						<w2:key dataType="text" id="location" name="location"></w2:key>
+						<w2:key dataType="text" id="workType" name="work_type"></w2:key>
+						<w2:key dataType="text" id="preferredDeveloperTypes" name="preferred_developer_types"></w2:key>
+						<w2:key dataType="text" id="expiresAt" name="expires_at"></w2:key>
+						<w2:key dataType="text" id="postedAt" name="posted_at"></w2:key>
+						<w2:key dataType="text" id="status" name="status"></w2:key>
+					</w2:keyInfo>
+				</w2:dataMap>
+			</w2:dataCollection>
+			<w2:workflowCollection />
 
 
-        	<!-- 기업용 공고 목록 조회 (자신의 공고만) -->
-    	<xf:submission id="sbm_selectPostVoList" ref='data:json,{"id":"dmp_postVo","key":"postVo"}'
-    		target='data:json,{"id":"dlt_postVoList","key":"elData.postVoList"}' action="/InsWebApp/POS0005List.pwkjson" method="post"
-    		mediatype="application/json" encoding="UTF-8" instance="" replace="" errorHandler="" customHandler="" mode="asynchronous"
-    		processMsg="우리 회사의 공고정보를 조회 중입니다." ev:submit="" ev:submitdone="scwin.sbm_postList_submitdone" ev:submiterror="" abortTrigger="">
-    	</xf:submission>
 
-        	<!-- 공고 수정 -->
-        	<xf:submission id="sbm_updatePostVo" ref='data:json,{"id":"dmp_postVoDetail","key":"postVo"}'
-        		target="" action="/InsWebApp/POS0001Upd.pwkjson" method="post"
-        		mediatype="application/json" encoding="UTF-8" instance="" replace="" errorHandler="" customHandler="" mode="asynchronous"
-        		processMsg="공고정보를 수정 중입니다." ev:submit="" ev:submitdone="scwin.sbm_updatePost_submitdone" ev:submiterror="" abortTrigger="">
-        	</xf:submission>
-        	
-        	<!-- 공고 삭제 -->
-        	<xf:submission id="sbm_deletePostVo" ref='data:json,{"id":"dmp_postVoDetail","key":"postVo"}'
-        		target="" action="/InsWebApp/POS0001Del.pwkjson" method="post"
-        		mediatype="application/json" encoding="UTF-8" instance="" replace="" errorHandler="" customHandler="" mode="asynchronous"
-        		processMsg="공고정보를 삭제 중입니다." ev:submit="" ev:submitdone="scwin.sbm_deletePost_submitdone" ev:submiterror="" abortTrigger="">
-        	</xf:submission>
-        	
-        	<xf:submission id="sbm_deleteCorporateVo" action="/InsWebApp/CP0001Del.pwkjson" method="post" mediatype="application/json"
-        		ref='data:json,{"id":"dmp_corporateVoDetail","key":"corporateVo"}' target="" encoding="UTF-8" instance="" replace=""
-        		errorHandler="" customHandler="" mode="asynchronous" processMsg="" ev:submit=""
-        		ev:submitdone="scwin.sbm_deleteCorporateVo_submitdone" ev:submiterror="" abortTrigger="">
-        	</xf:submission>
-        </xf:model>
-        <w2:layoutInfo/>
-        <w2:publicInfo method=""/>
-        <style type="text/css"><![CDATA[
+			<!-- 기업용 공고 목록 조회 (자신의 공고만) -->
+			<xf:submission id="sbm_selectPostVoList" ref='data:json,{"id":"dmp_postVo","key":"postVo"}'
+				target='data:json,{"id":"dlt_postVoList","key":"elData.postVoList"}' action="/InsWebApp/POS0005List.pwkjson" method="post"
+				mediatype="application/json" encoding="UTF-8" instance="" replace="" errorHandler="" customHandler="" mode="asynchronous"
+				processMsg="우리 회사의 공고정보를 조회 중입니다." ev:submit="" ev:submitdone="scwin.sbm_postList_submitdone" ev:submiterror="" abortTrigger="">
+			</xf:submission>
+
+			<!-- 공고 수정 -->
+			<xf:submission id="sbm_updatePostVo" ref='data:json,{"id":"dmp_postVoDetail","key":"postVo"}' target=""
+				action="/InsWebApp/POS0001Upd.pwkjson" method="post" mediatype="application/json" encoding="UTF-8" instance="" replace=""
+				errorHandler="" customHandler="" mode="asynchronous" processMsg="공고정보를 수정 중입니다." ev:submit=""
+				ev:submitdone="scwin.sbm_updatePost_submitdone" ev:submiterror="" abortTrigger="">
+			</xf:submission>
+
+			<!-- 공고 삭제 -->
+			<xf:submission id="sbm_deletePostVo" ref='data:json,{"id":"dmp_postVoDetail","key":"postVo"}' target=""
+				action="/InsWebApp/POS0001Del.pwkjson" method="post" mediatype="application/json" encoding="UTF-8" instance="" replace=""
+				errorHandler="" customHandler="" mode="asynchronous" processMsg="공고정보를 삭제 중입니다." ev:submit=""
+				ev:submitdone="scwin.sbm_deletePost_submitdone" ev:submiterror="" abortTrigger="">
+			</xf:submission>
+
+			<xf:submission id="sbm_deleteCorporateVo" action="/InsWebApp/CP0001Del.pwkjson" method="post" mediatype="application/json"
+				ref='data:json,{"id":"dmp_corporateVoDetail","key":"corporateVo"}' target="" encoding="UTF-8" instance="" replace="" errorHandler=""
+				customHandler="" mode="asynchronous" processMsg="" ev:submit="" ev:submitdone="scwin.sbm_deleteCorporateVo_submitdone" ev:submiterror=""
+				abortTrigger="">
+			</xf:submission>
+		</xf:model>
+		<w2:layoutInfo />
+		<w2:publicInfo method="" />
+		<style type="text/css"><![CDATA[
             /* ==========================================================================
                전역 설정
                ========================================================================== */
@@ -241,6 +240,11 @@
                 border: 1px solid rgba(255, 255, 255, 0.2);
                 box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
                 transition: all 0.4s cubic-bezier(0.4, 0.0, 0.2, 1);
+                position: relative;
+                overflow: hidden;
+                display: flex;
+                flex-direction: column;
+                min-height: 280px;
             }
 
             .action_card:hover {
@@ -258,14 +262,13 @@
                 width: 50px;
                 height: 50px;
                 border-radius: 12px;
-                background: linear-gradient(135deg, #667eea, #764ba2);
+                background: white; /* 보라색 그라데이션에서 흰색으로 변경 */
                 display: flex;
                 align-items: center;
                 justify-content: center;
                 font-size: 24px;
-                color: white;
                 margin-right: 16px;
-                box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1); /* 그림자 효과 조정 */
             }
             
             .action_title {
@@ -280,14 +283,15 @@
                 font-size: 16px;
                 line-height: 1.6;
                 margin-bottom: 25px;
+                flex-grow: 1;
             }
 
             /* ==========================================================================
                버튼 스타일
                ========================================================================== */
             .btn_primary {
-                background: linear-gradient(135deg, #667eea, #764ba2);
-                color: white;
+                background: white; /* 흰색 배경 */
+                color: #667eea; /* 보라색 계열 글자색 */
                 border: none;
                 padding: 14px 32px;
                 border-radius: 12px;
@@ -295,7 +299,7 @@
                 font-weight: 600;
                 cursor: pointer;
                 transition: all 0.3s ease;
-                box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1); /* 그림자 효과 조정 */
                 text-decoration: none;
                 display: inline-flex;
                 align-items: center;
@@ -304,28 +308,29 @@
             
             .btn_primary:hover {
                 transform: translateY(-2px);
-                box-shadow: 0 12px 35px rgba(102, 126, 234, 0.4);
-                background: linear-gradient(135deg, #5a72e7, #6a44a0);
+                box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15); /* hover 그림자 효과 조정 */
+                background: #f0f0f0; /* hover 시 약간 회색으로 변경 */
             }
             
             .btn_secondary {
-                background: rgba(255, 255, 255, 0.9);
-                color: #667eea;
-                border: 2px solid rgba(102, 126, 234, 0.2);
-                padding: 12px 28px;
+                background: white; /* 흰색 배경 */
+                color: #667eea; /* 보라색 계열 글자색 */
+                border: none; /* 테두리 제거 */
+                padding: 14px 32px; /* btn_primary와 동일하게 패딩 조정 */
                 border-radius: 12px;
                 font-size: 16px;
                 font-weight: 600;
                 cursor: pointer;
                 transition: all 0.3s ease;
-                backdrop-filter: blur(10px);
+                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1); /* btn_primary와 동일한 그림자 */
+                backdrop-filter: blur(10px); /* 기존 유지 */
             }
 
             .btn_secondary:hover {
-                background: rgba(255, 255, 255, 1);
-                border-color: #667eea;
-                color: #5a72e7;
-                transform: translateY(-1px);
+                transform: translateY(-2px); /* btn_primary와 동일한 hover 효과 */
+                box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15); /* btn_primary와 동일한 hover 그림자 */
+                background: #f0f0f0; /* btn_primary와 동일한 hover 배경색 */
+                color: #667eea; /* hover 시 글자색 유지 */
             }
 
             /* ==========================================================================
@@ -649,7 +654,7 @@
             .delay-300 { animation-delay: 0.3s; }
             .delay-400 { animation-delay: 0.4s; }
         ]]></style>
-        <script lazy="false" type="text/javascript"><![CDATA[
+		<script lazy="false" type="text/javascript"><![CDATA[
 scwin.onpageload = function () {
 
     var userInfoStr = WebSquare.cookie.getCookie("userInfo");
@@ -754,7 +759,7 @@ scwin.calculateStatistics = function (postList) {
 // 카운터 애니메이션
 scwin.animateCounter = function (element, targetValue) {
     var currentValue = 0;
-    var increment = targetValue / 20; // 20단계로 나누어 애니메이션
+    var increment = targetValue / 20;
     var timer = setInterval(function() {
         currentValue += increment;
         if (currentValue >= targetValue) {
@@ -1179,135 +1184,135 @@ scwin.statCard_closedJobs_onclick = function () {
 
 
 ]]></script>
-    </head>
-    <body ev:onpageload="scwin.onpageload">
-        <w2:wframe src="../common/Header.xml" id="headerFrame" />
-        <xf:group class="dashboard_container" id="">
-        	<xf:group class="dashboard_content" id="">
-        		<!-- 헤더 섹션 -->
-        		<xf:group class="dashboard_header fade-in-up" id="">
-        			<w2:textbox id="" label="🎯 채용관리 대시보드" class="dashboard_title"></w2:textbox>
-        			<w2:textbox id="" label="우리 회사의 공고를 관리하고 우수한 인재를 찾아보세요" class="dashboard_subtitle"></w2:textbox>
-        		</xf:group>
+	</head>
+	<body ev:onpageload="scwin.onpageload">
+		<w2:wframe src="../common/Header.xml" id="headerFrame" />
+		<xf:group class="dashboard_container" id="">
+			<xf:group class="dashboard_content" id="">
+				<!-- 헤더 섹션 -->
+				<xf:group class="dashboard_header fade-in-up" id="">
+					<w2:textbox id="" label="채용관리 대시보드" class="dashboard_title"></w2:textbox>
+					<w2:textbox id="" label="우리 회사의 공고를 관리하고 우수한 인재를 찾아보세요" class="dashboard_subtitle"></w2:textbox>
+				</xf:group>
 
-        		<!-- 통계 카드 섹션 -->
-        		<xf:group class="stats_grid" id="">
-        			<!-- 총 공고 수 -->
-        			<xf:group class="stat_card blue fade-in-up delay-100" id="" ev:onclick="scwin.statCard_totalJobs_onclick">
-        				<xf:group class="stat_icon" id="">
-        					<w2:span label="📄"></w2:span>
-        				</xf:group>
-        				<w2:textbox id="tbx_totalJobs" label="0" class="stat_value"></w2:textbox>
-        				<w2:textbox id="" label="총 공고 수" class="stat_label"></w2:textbox>
-        			</xf:group>
+				<!-- 통계 카드 섹션 -->
+				<xf:group class="stats_grid" id="">
+					<!-- 총 공고 수 -->
+					<xf:group class="stat_card blue fade-in-up delay-100" id="" ev:onclick="scwin.statCard_totalJobs_onclick">
+						<xf:group class="stat_icon" id="">
+							<xf:image src="/InsWebApp/images/document/manage.png" style="width: 48px; height: 48px;"></xf:image>
+						</xf:group>
+						<w2:textbox id="tbx_totalJobs" label="0" class="stat_value"></w2:textbox>
+						<w2:textbox id="" label="총 공고 수" class="stat_label"></w2:textbox>
+					</xf:group>
 
-        			<!-- 활성 공고 -->
-        			<xf:group class="stat_card green fade-in-up delay-200" id="" ev:onclick="scwin.statCard_activeJobs_onclick">
-        				<xf:group class="stat_icon" id="">
-        					<w2:span label="📋"></w2:span>
-        				</xf:group>
-        				<w2:textbox id="tbx_activeJobs" label="0" class="stat_value"></w2:textbox>
-        				<w2:textbox id="" label="활성 공고" class="stat_label"></w2:textbox>
-        			</xf:group>
+					<!-- 활성 공고 -->
+					<xf:group class="stat_card green fade-in-up delay-200" id="" ev:onclick="scwin.statCard_activeJobs_onclick">
+						<xf:group class="stat_icon" id="">
+							<xf:image src="/InsWebApp/images/document/approve.png" style="width: 48px; height: 48px;"></xf:image>
+						</xf:group>
+						<w2:textbox id="tbx_activeJobs" label="0" class="stat_value"></w2:textbox>
+						<w2:textbox id="" label="활성 공고" class="stat_label"></w2:textbox>
+					</xf:group>
 
-        			<!-- 마감된 공고 -->
-        			<xf:group class="stat_card orange fade-in-up delay-300" id="" ev:onclick="scwin.statCard_closedJobs_onclick">
-        				<xf:group class="stat_icon" id="">
-        					<w2:span label="📪"></w2:span>
-        				</xf:group>
-        				<w2:textbox id="tbx_closedJobs" label="0" class="stat_value"></w2:textbox>
-        				<w2:textbox id="" label="마감된 공고" class="stat_label"></w2:textbox>
-        			</xf:group>
-        		</xf:group>
+					<!-- 마감된 공고 -->
+					<xf:group class="stat_card orange fade-in-up delay-300" id="" ev:onclick="scwin.statCard_closedJobs_onclick">
+						<xf:group class="stat_icon" id="">
+							<xf:image src="/InsWebApp/images/document/contract.png" style="width: 48px; height: 48px;"></xf:image>
+						</xf:group>
+						<w2:textbox id="tbx_closedJobs" label="0" class="stat_value"></w2:textbox>
+						<w2:textbox id="" label="마감된 공고" class="stat_label"></w2:textbox>
+					</xf:group>
+				</xf:group>
 
-        		<!-- 빠른 액션 카드 -->
-        		<xf:group class="action_grid" id="">
-        			<!-- 공고 작성 카드 -->
-        			<xf:group class="action_card fade-in-up delay-100" id="">
-        				<xf:group class="action_header" id="">
-        					<xf:group class="action_icon" id="">
-        						<w2:span label="✏️"></w2:span>
-        					</xf:group>
-        					<w2:textbox id="" label="새로운 공고 작성" class="action_title"></w2:textbox>
-        				</xf:group>
-        				<w2:textbox id="" label="새로운 채용공고를 작성하여 우수한 인재를 찾아보세요." class="action_description"></w2:textbox>
-        				<xf:trigger id="btn_newJob" type="button" class="btn_primary" ev:onclick="scwin.btn_newJob_onclick">
-        					<xf:label><![CDATA[➕ 공고 작성하기]]></xf:label>
-        				</xf:trigger>
-        			</xf:group>
+				<!-- 빠른 액션 카드 -->
+				<xf:group class="action_grid" id="">
+					<!-- 공고 작성 카드 -->
+					<xf:group class="action_card fade-in-up delay-100" id="">
+						<xf:group class="action_header" id="">
+							<xf:group class="action_icon" id="">
+								<xf:image src="/InsWebApp/images/document/edit.png" style="width: 48px; height: 48px;"></xf:image>
+							</xf:group>
+							<w2:textbox id="" label="새로운 공고 작성" class="action_title"></w2:textbox>
+						</xf:group>
+						<w2:textbox id="" label="새로운 채용공고를 작성하여 우수한 인재를 찾아보세요." class="action_description"></w2:textbox>
+						<xf:trigger id="btn_newJob" type="button" class="btn_primary" ev:onclick="scwin.btn_newJob_onclick">
+							<xf:label><![CDATA[➕ 공고 작성하기]]></xf:label>
+						</xf:trigger>
+					</xf:group>
 
-        			<!-- 전체 공고 보기 카드 -->
-        			<xf:group class="action_card fade-in-up delay-200" id="">
-        				<xf:group class="action_header" id="">
-        					<xf:group class="action_icon" id="">
-        						<w2:span label="📋"></w2:span>
-        					</xf:group>
-        					<w2:textbox id="" label="전체 공고 보기" class="action_title"></w2:textbox>
-        				</xf:group>
-        				<w2:textbox id="" label="시장의 다른 공고들을 확인하고 경쟁력을 분석해보세요." class="action_description"></w2:textbox>
-        				<xf:trigger id="btn_allPosts" type="button" class="btn_secondary" ev:onclick="scwin.btn_allPosts_onclick">
-        					<xf:label><![CDATA[🌐 전체 공고 보기]]></xf:label>
-        				</xf:trigger>
-        			</xf:group>
+					<!-- 전체 공고 보기 카드 -->
+					<xf:group class="action_card fade-in-up delay-200" id="">
+						<xf:group class="action_header" id="">
+							<xf:group class="action_icon" id="">
+								<xf:image src="/InsWebApp/images/document/manage.png" style="width: 48px; height: 48px;"></xf:image>
+							</xf:group>
+							<w2:textbox id="" label="전체 공고 보기" class="action_title"></w2:textbox>
+						</xf:group>
+						<w2:textbox id="" label="시장의 다른 공고들을 확인하고 경쟁력을 분석해보세요." class="action_description"></w2:textbox>
+						<xf:trigger id="btn_allPosts" type="button" class="btn_secondary" ev:onclick="scwin.btn_allPosts_onclick">
+							<xf:label><![CDATA[������ 고 보기]]></xf:label>
+						</xf:trigger>
+					</xf:group>
 
-        			<!-- 기업정보 관리 카드 -->
-        			<xf:group class="action_card fade-in-up delay-300" id="">
-        				<xf:group class="action_header" id="">
-        					<xf:group class="action_icon" id="">
-        						<w2:span label="🏢"></w2:span>
-        					</xf:group>
-        					<w2:textbox id="" label="기업정보 관리" class="action_title"></w2:textbox>
-        				</xf:group>
-        				<w2:textbox id="" label="회사 정보와 프로필을 최신 상태로 유지하세요." class="action_description"></w2:textbox>
-        				<xf:trigger id="btn_companyUpdate" type="button" class="btn_secondary" ev:onclick="scwin.btn_companyUpdate_onclick">
-        					<xf:label><![CDATA[⚙️ 정보 수정]]></xf:label>
-        				</xf:trigger>
-        			</xf:group>
-        		</xf:group>
+					<!-- 기업정보 관리 카드 -->
+					<xf:group class="action_card fade-in-up delay-300" id="">
+						<xf:group class="action_header" id="">
+							<xf:group class="action_icon" id="">
+								<xf:image src="/InsWebApp/images/document/enterprise.png" style="width: 48px; height: 48px;"></xf:image>
+							</xf:group>
+                            <w2:textbox id="" label="기업정보 관리" class="action_title"></w2:textbox>
+						</xf:group>
+						<w2:textbox id="" label="회사 정보와 프로필을 최신 상태로 유지하세요." class="action_description"></w2:textbox>
+						<xf:trigger id="btn_companyUpdate" type="button" class="btn_secondary" ev:onclick="scwin.btn_companyUpdate_onclick">
+							<xf:label><![CDATA[⚙️ 정보 수정]]></xf:label>
+						</xf:trigger>
+					</xf:group>
+				</xf:group>
+			</xf:group>
 
-        		<!-- 채용공고 목록 섹션 -->
-        		<xf:group class="posts_section fade-in-up" id="">
-        			<xf:group class="section_header" id="">
-        				<w2:textbox id="" label="📋 현재 진행 중인 채용공고" class="section_title"></w2:textbox>
-        			</xf:group>
+			<!-- 채용공고 목록 섹션 -->
+			<xf:group class="posts_section fade-in-up" id="">
+				<xf:group class="section_header" id="">
+					<w2:textbox id="" label="📋 현재 진행 중인 채용공고" class="section_title"></w2:textbox>
+				</xf:group>
 
-        			<!-- 공고 카드 컨테이너 -->
-        			<xf:group class="posts_container" id="">
-        				<xf:group class="posts_header_controls" id="">
-        					<xf:group class="record_count" id="">
-        						<w2:span id="" label="활성 공고"></w2:span>
-        						<w2:span class="record_number" id="spn_listCnt" label="0"></w2:span>
-        						<w2:span id="" label="개 (마감된 공고 제외)"></w2:span>
-        					</xf:group>
-        					<xf:group class="posts_actions" id="">
-        						<xf:trigger class="btn_refresh" id="btn_refresh" type="button" ev:onclick="scwin.btn_refresh_onclick">
-        							<xf:label><![CDATA[🔄 새로고침]]></xf:label>
-        						</xf:trigger>
-        					</xf:group>
-        				</xf:group>
+				<!-- 공고 카드 컨테이너 -->
+				<xf:group class="posts_container" id="">
+					<xf:group class="posts_header_controls" id="">
+						<xf:group class="record_count" id="">
+							<w2:span id="" label="활성 공고"></w2:span>
+							<w2:span class="record_number" id="spn_listCnt" label="0"></w2:span>
+							<w2:span id="" label="개 (마감된 공고 제외)"></w2:span>
+						</xf:group>
+						<xf:group class="posts_actions" id="">
+							<xf:trigger class="btn_refresh" id="btn_refresh" type="button" ev:onclick="scwin.btn_refresh_onclick">
+								<xf:label><![CDATA[🔄 새로고침]]></xf:label>
+							</xf:trigger>
+						</xf:group>
+					</xf:group>
 
-        				<!-- 공고 카드 목록 -->
-        				<xf:group class="posts_grid" id="grp_postsGrid">
-        					<!-- 공고 카드들이 동적으로 생성될 영역 -->
-        					<w2:textbox id="debug_message" label="카드 로딩 중..." style="display: none;"></w2:textbox>
-        				</xf:group>
+					<!-- 공고 카드 목록 -->
+					<xf:group class="posts_grid" id="grp_postsGrid">
+						<!-- 공고 카드들이 동적으로 생성될 영역 -->
+						<w2:textbox id="debug_message" label="카드 로딩 중..." style="display: none;"></w2:textbox>
+					</xf:group>
 
-        				<!-- 공고가 없을 때 표시 -->
-        				<xf:group class="no_posts" id="grp_noPosts" style="display: none;">
-        					<w2:textbox class="no_posts_icon" label="📭"></w2:textbox>
-        					<w2:textbox class="no_posts_title" label="등록된 공고가 없습니다"></w2:textbox>
-        					<w2:textbox class="no_posts_desc" label="새로운 채용공고를 등록하여 우수한 인재를 찾아보세요."></w2:textbox>
-        				</xf:group>
+					<!-- 공고가 없을 때 표시 -->
+					<xf:group class="no_posts" id="grp_noPosts" style="display: none;">
+						<w2:textbox class="no_posts_icon" label="📭"></w2:textbox>
+						<w2:textbox class="no_posts_title" label="등록된 공고가 없습니다"></w2:textbox>
+						<w2:textbox class="no_posts_desc" label="새로운 채용공고를 등록하여 우수한 인재를 찾아보세요."></w2:textbox>
+					</xf:group>
 
-        				<!-- 페이징 -->
-        				<xf:group style="text-align: center; padding: 25px 0;" id="grp_pagination">
-        					<w2:pageList displayButtonType="display" displayFormat="#" id="pgl_postList" pageSize="5" pagingType="0"
-        						style="display: inline-block;" ev:onclick="scwin.pgl_postList_onclick">
-        					</w2:pageList>
-        				</xf:group>
-        			</xf:group>
-        		</xf:group>
-        	</xf:group>
-        </xf:group>
-    </body>
+					<!-- 페이징 -->
+					<xf:group style="text-align: center; padding: 25px 0;" id="grp_pagination">
+						<w2:pageList displayButtonType="display" displayFormat="#" id="pgl_postList" pageSize="5" pagingType="0"
+							style="display: inline-block;" ev:onclick="scwin.pgl_postList_onclick">
+						</w2:pageList>
+					</xf:group>
+				</xf:group>
+			</xf:group>
+		</xf:group>
+	</body>
 </html>
