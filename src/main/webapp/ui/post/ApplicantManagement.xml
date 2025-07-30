@@ -186,6 +186,12 @@
 		</xf:model>
 		<script lazy="false" type="text/javascript"><![CDATA[
 scwin.onpageload = function () {
+    var userInfoStr = WebSquare.cookie.getCookie("userInfo");
+    if (!userInfoStr) {
+        $p.url("../common/MainPage.xml");
+        return;
+    }
+    
     // window 객체에 customRenderer 함수 등록
     window.scwin = window.scwin || {};
     window.scwin.openResumePreview = scwin.openResumePreview;
