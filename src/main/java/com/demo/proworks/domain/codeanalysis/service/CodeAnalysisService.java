@@ -6,7 +6,7 @@ import com.demo.proworks.domain.codeanalysis.vo.CodeAnalysisResultVo;
 /**
  * @subject : 코드 분석 서비스 인터페이스
  * @description : Gemini API를 통한 코드 분석 관련 서비스 인터페이스
- * @author : Inswave
+ * @author : 이재성
  * @since : 2025/07/04
  */
 public interface CodeAnalysisService {

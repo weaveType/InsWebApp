@@ -28,7 +28,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 /**
  * @subject : 코드 분석 관련 처리를 담당하는 컨트롤러
  * @description : Gemini API를 통한 코드 분석 관련 처리를 담당하는 컨트롤러
- * @author : Inswave
+ * @author : 이재성
  * @since : 2025/07/04
  */
 @Controller

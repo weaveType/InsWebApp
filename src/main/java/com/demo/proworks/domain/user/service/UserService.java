@@ -18,12 +18,12 @@ import com.demo.proworks.domain.user.vo.ApplicationStatsListVo;
 /**
  * @subject : 일반회원 관련 처리를 담당하는 인터페이스
  * @description : 일반회원 관련 처리를 담당하는 인터페이스
- * @author : Inswave
+ * @author : 이재성
  * @since : 2025/07/03
  * @modification ===========================================================
  *               DATE AUTHOR DESC
  *               ===========================================================
- *               2025/07/03 Inswave 최초 생성
+ *               2025/07/03 이재성 최초 생성
  * 
  */
 public interface UserService {
