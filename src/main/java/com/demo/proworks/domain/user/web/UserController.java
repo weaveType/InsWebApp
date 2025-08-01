@@ -59,12 +59,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 /**
  * @subject : 일반회원 관련 처리를 담당하는 컨트롤러
  * @description : 일반회원 관련 처리를 담당하는 컨트롤러
- * @author : Inswave
+ * @author : 이재성
  * @since : 2025/07/03
  * @modification ===========================================================
  *               DATE AUTHOR DESC
  *               ===========================================================
- *               2025/07/03 Inswave 최초 생성
+ *               2025/07/03 이재성 최초 생성
  * 
  */
 @Controller

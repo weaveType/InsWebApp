@@ -6,6 +6,12 @@ import com.inswave.elfw.annotation.ElVoField;
 import com.fasterxml.jackson.annotation.JsonFilter;
 import java.util.Date;
 
+/**
+ * @subject : 코드분석 결과 VO
+ * @description : 코드분석 결과 정보
+ * @author : 이재성
+ * @since : 2025/07/04
+ */
 @JsonFilter("elExcludeFilter")
 @ElDto(FldYn = "", delimeterYn = "", logicalName = "코드분석결과")
 public class CodeAnalysisResultVo extends com.demo.proworks.cmmn.ProworksCommVO {
