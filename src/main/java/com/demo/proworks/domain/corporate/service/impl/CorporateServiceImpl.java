@@ -26,12 +26,12 @@ import com.demo.proworks.domain.corporate.dao.CorporateDAO;
 /**
  * @subject : 회사정보 관련 처리를 담당하는 ServiceImpl
  * @description : 회사정보 관련 처리를 담당하는 ServiceImpl
- * @author : Inswave
+ * @author : 김지훈
  * @since : 2025/07/03
  * @modification ===========================================================
  *               DATE AUTHOR DESC
  *               ===========================================================
- *               2025/07/03 Inswave 최초 생성
+ *               2025/07/03 김지훈 최초 생성
  * 
  */
 @Service("corporateServiceImpl")
@@ -53,6 +53,7 @@ public class CorporateServiceImpl implements CorporateService {
 	 * 
 	 * @param corporateVo 회사정보 CorporateVo
 	 * @return 회사정보 목록 List<CorporateVo>
+	 * @author : 김지훈
 	 * @throws Exception
 	 */
 	public CorporateListVo selectListCorporate(CorporateVo corporateVo) throws Exception {
@@ -74,6 +75,7 @@ public class CorporateServiceImpl implements CorporateService {
 	 * 
 	 * @param corporateVo 회사정보 CorporateVo
 	 * @return 회사정보 목록 전체 카운트
+	 * @author : 김지훈
 	 * @throws Exception
 	 */
 	public long selectListCountCorporate(CorporateVo corporateVo) throws Exception {
@@ -87,12 +89,11 @@ public class CorporateServiceImpl implements CorporateService {
 	 * 
 	 * @param corporateVo 회사정보 CorporateVo
 	 * @return 단건 조회 결과
+	 * @author : 김지훈
 	 * @throws Exception
 	 */
 	public CorporateVo selectCorporate(CorporateVo corporateVo) throws Exception {
-		CorporateVo resultVO = corporateDAO.selectCorporate(corporateVo);
-
-		return resultVO;
+		return corporateDAO.selectCorporate(corporateVo);
 	}
 
 	/**
@@ -102,12 +103,11 @@ public class CorporateServiceImpl implements CorporateService {
 	 * 
 	 * @param corporateVo 회사정보 CorporateVo
 	 * @return 단건 조회 결과
+	 * @author : 김지훈
 	 * @throws Exception
 	 */
 	public CorporateVo selectCorporateByEmail(EmailVo emailVo) throws Exception {
-		CorporateVo resultVO = corporateDAO.selectCorporateByEmail(emailVo);
-
-		return resultVO;
+		return corporateDAO.selectCorporateByEmail(emailVo);
 	}
 
 	/**
@@ -117,6 +117,7 @@ public class CorporateServiceImpl implements CorporateService {
 	 * 
 	 * @param corporateVo 회사정보 CorporateVo
 	 * @return 번호
+	 * @author : 김지훈
 	 * @throws Exception
 	 */
 	public int insertCorporate(CorporateVo corporateVo) throws Exception {
@@ -142,6 +143,7 @@ public class CorporateServiceImpl implements CorporateService {
 	 * 
 	 * @param corporateVo 회사정보 CorporateVo
 	 * @return 번호
+	 * @author : 김지훈
 	 * @throws Exception
 	 */
 	public int updateCorporate(CorporateVo corporateVo) throws Exception {
@@ -165,6 +167,7 @@ public class CorporateServiceImpl implements CorporateService {
 	 * 산업정보 목록을 조회 한다.
 	 *
 	 * @process 산업정보 목록을 조회 한다.
+	 * @author : 김지훈
 	 * 
 	 */
 	public IndusrtyVoList industryList() throws Exception {
@@ -189,6 +192,7 @@ public class CorporateServiceImpl implements CorporateService {
 	 * 
 	 * @param CorporateVo 회사정보
 	 * @return 번호
+	 * @author : 김지훈
 	 * @throws ElException
 	 */
 	public int updateCorporateByEmail(CorporateVo vo) throws Exception {
@@ -204,6 +208,7 @@ public class CorporateServiceImpl implements CorporateService {
 	 * 
 	 * @param corporateVo 회사정보 CorporateVo
 	 * @return 단건 조회 결과
+	 * @author : 김지훈
 	 * @throws Exception
 	 */
 	public CorporateMainListVo selectCorporateMainList(CorporateSearchVo vo) throws Exception {
@@ -222,6 +227,7 @@ public class CorporateServiceImpl implements CorporateService {
 	 * 
 	 * @param userId 유저 ID
 	 * @return 회사 ID
+	 * @author : 김지훈
 	 * @throws Exception
 	 */
 	public Long getCompanyIdByUserId(int userId) throws Exception {

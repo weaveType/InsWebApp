@@ -172,8 +172,8 @@ scwin.btnLogin_onclick = function () {
     $c.win.openPopup("../user/Login.xml", {
         id: "login_popup",
         type: "pageFramePopup",
-        width: "450px",
-        height: "550px",
+        width: "430px",
+        height: "450px",
         modal: true,
         popupName: "로그인/회원가입",
         closeAction: "scwin.login_popup_closeAction",
@@ -191,12 +191,20 @@ scwin.card1_onclick = function () {
 };
 
 scwin.card2_onclick = function () {
-    // 로그인 유저가 아닐경우, 로그인 페이지로 이동
+    var userInfoCookie = WebSquare.cookie.getCookie("userInfo");
+    if (!userInfoCookie) {
+        $c.win.alert("로그인 후 이용해주세요.");
+        return;
+    }
     $p.url("../survey/SurveyMbti.xml");
 };
 
 scwin.card3_onclick = function () {
-    // 로그인 유저가 아닐경우, 로그인 페이지로 이동
+    var userInfoCookie = WebSquare.cookie.getCookie("userInfo");
+    if (!userInfoCookie) {
+        $c.win.alert("로그인 후 이용해주세요.");
+        return;
+    }
     $p.url("../user/CodeAnalysisMain.xml");
 
 };

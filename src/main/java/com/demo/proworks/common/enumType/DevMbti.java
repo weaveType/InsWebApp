@@ -9,6 +9,8 @@ import java.util.stream.Collectors;
 //System.out.println(mbti.getName()); // "빌더 리팩터"
 //System.out.println(mbti.getDescription()); // "실용적 구현과 리팩토링을 중시하며..."
 
+/* @author : 김지훈 */
+
 public enum DevMbti {
 
 	// Architect + Refactor + Solo + Debug

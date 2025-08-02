@@ -94,8 +94,8 @@ scwin.btnLogin_onclick = function () {
     $c.win.openPopup("../user/Login.xml", {
         id: "login_popup",
         type: "pageFramePopup",
-        width: "450px",
-        height: "550px",
+        width: "430px",
+        height: "450px",
         modal: true,
         popupName: "로그인/회원가입",
         closeAction: "scwin.login_popup_closeAction",

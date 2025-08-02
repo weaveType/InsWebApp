@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/* @author : 김지훈 */
 public enum IndustryType {
 
 	SOFTWARE_DEVELOPMENT("SOFTWARE_DEVELOPMENT", "소프트웨어 개발"), WEB_SERVICE("WEB_SERVICE", "웹 서비스"),

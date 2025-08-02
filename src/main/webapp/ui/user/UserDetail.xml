@@ -350,6 +350,10 @@
 
 		<script lazy="false" type="text/javascript"><![CDATA[scwin.onpageload = function () {
     var userInfoStr = WebSquare.cookie.getCookie("userInfo");
+    if (!userInfoStr) {
+        $p.url("../common/MainPage.xml");
+        return;
+    }
     var userInfo = JSON.parse(userInfoStr);
     dma_userInfoVo.set("accountId", userInfo.accountId);
 

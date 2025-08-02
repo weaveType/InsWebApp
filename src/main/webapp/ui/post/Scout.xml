@@ -225,6 +225,12 @@
 			</xf:submission>
 		</xf:model>
 		<script lazy="false" type="text/javascript"><![CDATA[scwin.onpageload = function () {
+    var userInfoStr = WebSquare.cookie.getCookie("userInfo");
+    if (!userInfoStr) {
+        $p.url("../common/MainPage.xml");
+        return;
+    }
+    
     // window 객체에 formatter 함수 등록
     window.scwin = window.scwin || {};
     window.scwin.openResumePreview = scwin.openResumePreview;
@@ -514,14 +520,8 @@ scwin.initTechStackFilter = function () {
     techStackList.sort();
 
     // selectbox에 옵션 추가 (기본 chooseOption은 유지)
-    // 기존 데이터 아이템만 제거 (chooseOption은 유지)
-    var itemCount = msb_techStackFilter.getItemCount();
-    for (var i = itemCount - 1; i >= 0; i--) {
-        var itemValue = msb_techStackFilter.getItemValue(i);
-        if (itemValue && itemValue !== "") { // 빈 값이 아닌 실제 데이터만 제거
-            msb_techStackFilter.removeItemByIndex(i);
-        }
-    }
+    // 기존 데이터 아이템만 제거 (chooseOption 유지)
+    msb_techStackFilter.removeAll(true);
     
     // 새로운 기술스택 목록 추가
     for (var k = 0; k < techStackList.length; k++) {
@@ -529,7 +529,7 @@ scwin.initTechStackFilter = function () {
     }
 };
 
-// 기술스택 필터 적용 함수
+// 기술스택 필터 적용 함수 (selectbox용)
 scwin.applyTechStackFilter = function () {
     console.log("=== applyTechStackFilter 함수 호출됨 ===");
     var selectedTechStack = msb_techStackFilter.getValue();
@@ -588,7 +588,7 @@ scwin.btn_resetFilter_onclick = function () {
 			<xf:group class="header-container"
 				style="display:flex; justify-content:space-between; align-items:center; padding:20px; background-color:#f8f9fa; border-bottom:1px solid #e9ecef;">
 				<xf:group class="header-left" style="display:flex; align-items:center;">
-					<w2:textbox id="" label="개발자 스카웃"
+					<w2:textbox id="" label="개발자 매칭"
 						style="font-size:24px; font-weight:bold; color:#2c3e50; border:none; background:transparent;" />
 				</xf:group>
 
@@ -653,7 +653,7 @@ scwin.btn_resetFilter_onclick = function () {
 					<xf:group class="button-group" style="display:flex; align-items:center; gap:10px;">
 						<xf:trigger class="btn-scout-all" style='background-color:#cccccc' type="button" id="scout_all_btn"
 							ev:onclick="scwin.scoutSelected" disabled="true">
-							<xf:label><![CDATA[일괄 스카웃 제안]]></xf:label>
+							<xf:label><![CDATA[일괄 매칭 제안]]></xf:label>
 						</xf:trigger>
 					</xf:group>
 				</xf:group>
