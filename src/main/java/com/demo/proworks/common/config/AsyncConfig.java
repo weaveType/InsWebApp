@@ -13,6 +13,7 @@ import java.util.concurrent.Executor;
  * 
  * @author system
  * @since 2025.01
+ * @author : 김지훈
  */
 @Configuration
 @EnableAsync

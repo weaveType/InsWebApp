@@ -26,12 +26,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 /**
  * @subject : 회사정보 관련 처리를 담당하는 컨트롤러
  * @description : 회사정보 관련 처리를 담당하는 컨트롤러
- * @author : Inswave
+ * @author : 김지훈
  * @since : 2025/07/03
  * @modification ===========================================================
  *               DATE AUTHOR DESC
  *               ===========================================================
- *               2025/07/03 Inswave 최초 생성
+ *               2025/07/03 김지훈 최초 생성
  * 
  */
 @Controller
@@ -46,6 +46,7 @@ public class CorporateController {
 	 *
 	 * @param corporateVo 회사정보
 	 * @return 목록조회 결과
+	 * @author : 김지훈
 	 * @throws Exception
 	 */
 	@ElService(key = "CP0001List")
@@ -61,6 +62,7 @@ public class CorporateController {
 	 *
 	 * @param corporateVo 회사정보
 	 * @return 단건 조회 결과
+	 * @author : 김지훈
 	 * @throws Exception
 	 */
 	@ElService(key = "CP0001UpdView")
@@ -75,6 +77,7 @@ public class CorporateController {
 	 *
 	 * @param corporateVo 회사정보
 	 * @return 단건 조회 결과
+	 * @author : 김지훈
 	 * @throws Exception
 	 */
 	@ElService(key = "CP0002UpdView")
@@ -95,6 +98,7 @@ public class CorporateController {
 	 * 회사정보를 등록 처리 한다.
 	 *
 	 * @param corporateVo 회사정보
+	 * @author : 김지훈
 	 * @throws Exception
 	 */
 	@ElService(key = "CP0001Ins")
@@ -108,6 +112,7 @@ public class CorporateController {
 	 * 회사정보를 갱신 처리 한다.
 	 *
 	 * @param corporateVo 회사정보
+	 * @author : 김지훈
 	 * @throws Exception
 	 */
 	@ElService(key = "CP0001Upd")
@@ -122,6 +127,7 @@ public class CorporateController {
 	 * 회사정보를 삭제 처리한다.
 	 *
 	 * @param corporateVo 회사정보
+	 * @author : 김지훈
 	 * @throws Exception
 	 */
 	@ElService(key = "CP0001Del")
@@ -135,6 +141,7 @@ public class CorporateController {
 	 * 산업 목록을 조회합니다.
 	 *
 	 * @return 산업 목록 조회 결과
+	 * @author : 김지훈
 	 * @throws Exception
 	 */
 	@ElService(key = "CP0001INDList")
@@ -148,6 +155,7 @@ public class CorporateController {
 	 * 회사정보를 갱신 처리 한다.
 	 *
 	 * @param corporateVo 회사정보
+	 * @author : 김지훈
 	 * @throws Exception
 	 */
 	@ElService(key = "CP0002Upd")
@@ -162,6 +170,7 @@ public class CorporateController {
 	 *
 	 * @param corporateVo 회사정보
 	 * @return 목록조회 결과
+	 * @author : 김지훈
 	 * @throws Exception
 	 */
 	@ElService(key = "CP0003List")

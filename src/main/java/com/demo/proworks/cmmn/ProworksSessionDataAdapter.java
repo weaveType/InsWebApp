@@ -46,6 +46,7 @@ public class ProworksSessionDataAdapter extends SessionDataAdapter {
 	 * @param id
 	 * @param obj     기타 동적 파라미터에 추가할 수 있다.(ex. 서비스 구현체 )
 	 * @return ProworksUserHeader
+	 * @author : 김지훈
 	 * @throws AdapterException
 	 */
 	@Override

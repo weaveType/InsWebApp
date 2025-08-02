@@ -59,7 +59,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 /**
  * @subject : 일반회원 관련 처리를 담당하는 컨트롤러
  * @description : 일반회원 관련 처리를 담당하는 컨트롤러
- * @author : 이재성
  * @since : 2025/07/03
  * @modification ===========================================================
  *               DATE AUTHOR DESC
@@ -90,6 +89,7 @@ public class UserController {
 	 * 
 	 * @param loginVo 로그인 정보 LoginVo
 	 * @param request 요청 정보 HttpServletRequest
+	 * @author : 김지훈
 	 * @throws Exception
 	 */
 	@ElService(key = "USLogin")
@@ -109,6 +109,7 @@ public class UserController {
 	 *
 	 * @param userVo 일반회원
 	 * @return 목록조회 결과
+	 * @author : 김지훈
 	 * @throws Exception
 	 */
 	@ElService(key = "US0001List")
@@ -190,6 +191,7 @@ public class UserController {
 	 *
 	 * @param request HttpServletRequest 요청 객체
 	 * @return 중복 확인 결과
+	 * @author : 이재성
 	 * @throws Exception
 	 */
 	@ElService(key = "USCheckEmail")
@@ -290,6 +292,7 @@ public class UserController {
 	 *
 	 * @param request HttpServletRequest 요청 객체
 	 * @return 가입 결과
+	 * @author : 이재성
 	 * @throws Exception
 	 */
 	@ElService(key = "USRegister")
@@ -501,6 +504,7 @@ public class UserController {
 	 *
 	 * @param request MultipartHttpServletRequest 요청 객체
 	 * @return 업로드 결과
+	 * @author : 이재성
 	 * @throws Exception
 	 */
 	@ElService(key = "USProfileImageUpload")
@@ -617,6 +621,7 @@ public class UserController {
 	 *
 	 * @param request 요청 정보 HttpServletRequest
 	 * @return 저장 결과
+	 * @author : 이재성
 	 * @throws Exception
 	 */
 	@ElService(key = "USUpdateAdditionalInfo")
@@ -710,6 +715,7 @@ public class UserController {
 	 *
 	 * @param request 요청 정보 HttpServletRequest
 	 * @return 수정 결과
+	 * @author : 이재성
 	 * @throws Exception
 	 */
 	@ElService(key = "USUpdateUserInfo")
@@ -890,6 +896,7 @@ public class UserController {
 	 *
 	 * @param request HttpServletRequest 요청 객체
 	 * @return 변경 결과
+	 * @author : 이재성
 	 * @throws Exception
 	 */
 	@ElService(key = "USUpdatePassword")
@@ -986,6 +993,7 @@ public class UserController {
 	 * 
 	 * @param salaryRange 연봉 범위 (예: "3,000만원 ~ 4,000만원")
 	 * @return 연봉 중간값 (만원 단위)
+	 * @author : 이재성
 	 */
 	private int parseSalaryRange(String salaryRange) {
 		if (salaryRange == null || salaryRange.trim().isEmpty()) {
@@ -1026,6 +1034,8 @@ public class UserController {
 
 	/**
 	 * 사용자 지역 정보 업데이트
+	 * 
+	 * @author : 이재성
 	 */
 	@ElService(key = "USUpdateLocation")
 	@RequestMapping(value = { "USUpdateLocation", "USUpdateLocation.pwkjson" }, method = RequestMethod.POST)
@@ -1112,6 +1122,8 @@ public class UserController {
 
 	/**
 	 * 사용자 연봉 정보 업데이트
+	 * 
+	 * @author : 이재성
 	 */
 	@ElService(key = "USUpdateSalary")
 	@RequestMapping(value = { "USUpdateSalary", "USUpdateSalary.pwkjson" }, method = RequestMethod.POST)
@@ -1201,6 +1213,8 @@ public class UserController {
 
 	/**
 	 * 사용자 경력 정보 업데이트
+	 * 
+	 * @author : 이재성
 	 */
 	@ElService(key = "USUpdateCareer")
 	@RequestMapping(value = { "USUpdateCareer", "USUpdateCareer.pwkjson" }, method = RequestMethod.POST)
@@ -1314,6 +1328,7 @@ public class UserController {
 	 *
 	 * @param UserInfoVo userInfoVo 유저 상세페이지에서 사용할 값
 	 * @return 단건 조회 결과
+	 * @author : 김지훈
 	 * @throws Exception
 	 */
 	@ElService(key = "US0002UpdView")
@@ -1329,6 +1344,7 @@ public class UserController {
 	 *
 	 * @param ApplicantVo 페이징 정보, 공고 ID
 	 * @return 등록된 행의 수
+	 * @author : 김지훈
 	 * @throws Exception
 	 */
 	@ElService(key = "US0002List")
@@ -1346,6 +1362,7 @@ public class UserController {
 	 *
 	 * @param ApplicantVo 페이징 정보, 공고 ID
 	 * @return 등록된 행의 수
+	 * @author : 김지훈
 	 * @throws Exception
 	 */
 	@ElService(key = "US0003List")
@@ -1359,7 +1376,8 @@ public class UserController {
 	 * 유저의 성향검사 및 코드검사 여부를 가져온다.
 	 *
 	 * @param MatchingCheckedVo 유저 ID
-	 * @return 유저의 성향검사 및 코드검사 여부
+	 * @return 유저의 성향검사 및 코드검사 여부.
+	 * @author : 김지훈
 	 * @throws Exception
 	 */
 	@ElService(key = "US0001Match")
@@ -1374,6 +1392,7 @@ public class UserController {
 	 * 
 	 * @param request MultipartHttpServletRequest
 	 * @return 업로드 결과
+	 * @author : 이재성
 	 * @throws Exception
 	 */
 	@ElService(key = "USUploadResume")
@@ -1512,6 +1531,8 @@ public class UserController {
 	 * 사용자의 지원현황 목록을 조회한다.
 	 * 
 	 * @param applicationHistoryVo 지원현황 조회 조건*@return 지원현황 목록*@throws Exception
+	 * 
+	 * @author : 김지훈
 	 */
 
 	@ElService(key = "USApplicationHistoryList")
@@ -1521,11 +1542,7 @@ public class UserController {
 			throws Exception {
 		// 세션에서 사용자 ID 가져오기
 		ProworksUserHeader userHeader = null;
-		try {
-			userHeader = (ProworksUserHeader) ControllerContextUtil.getUserHeader();
-		} catch (Exception e) {
-			System.out.println("사용자 헤더 조회 중 오류: " + e.getMessage());
-		}
+		userHeader = (ProworksUserHeader) ControllerContextUtil.getUserHeader();
 
 		if (userHeader != null) {
 			applicationHistoryVo.setUserId(userHeader.getAccountId());
@@ -1550,6 +1567,7 @@ public class UserController {
 	 * 
 	 * @param request  HttpServletRequest
 	 * @param response HttpServletResponse
+	 * @author : 이재성
 	 * @throws Exception
 	 */
 	@ElService(key = "USViewResume")
@@ -1636,6 +1654,7 @@ public class UserController {
 	 * 
 	 * @param request HttpServletRequest
 	 * @return 이력서 파일 정보
+	 * @author : 이재성
 	 * @throws Exception
 	 */
 	@ElService(key = "USGetResumeInfo")
@@ -1766,6 +1785,7 @@ public class UserController {
 	 *
 	 * @param applicationHistoryVo 지원현황 조회 조건
 	 * @return 지원현황 상세정보
+	 * @author : 김지훈
 	 * @throws Exception
 	 */
 	@ElService(key = "USApplicationHistoryDetail")
@@ -1781,6 +1801,7 @@ public class UserController {
 	 *
 	 * @param applicationHistoryVo 지원현황 정보
 	 * @return 등록 결과
+	 * @author : 김지훈
 	 * @throws Exception
 	 */
 	@ElService(key = "USApplicationHistoryInsert")
@@ -1807,6 +1828,7 @@ public class UserController {
 	 *
 	 * @param applicationHistoryVo 지원현황 정보
 	 * @return 수정 결과
+	 * @author : 김지훈
 	 * @throws Exception
 	 */
 	@ElService(key = "USApplicationHistoryUpdate")
@@ -1821,6 +1843,7 @@ public class UserController {
 	 *
 	 * @param applicationHistoryVo 지원현황 정보
 	 * @return 삭제 결과
+	 * @author : 김지훈
 	 * @throws Exception
 	 */
 	@ElService(key = "USApplicationHistoryDelete")
@@ -1835,6 +1858,7 @@ public class UserController {
 	 *
 	 * @param AccountIdVo 로그인한 User Id
 	 * @return 총 지원, 진행중, 합격, 불합격 공고 Count
+	 * @author : 이재성
 	 * @throws Exception
 	 */
 	@ElService(key = "US0001Cnt")
@@ -1850,7 +1874,7 @@ public class UserController {
 	 * @param request HttpServletRequest
 	 * 
 	 * @return 삭제 결과
-	 * 
+	 * @author : 이재성
 	 * @throws Exception
 	 */
 	@ElService(key = "USDeleteResume")
@@ -1858,13 +1882,13 @@ public class UserController {
 	@ElDescription(sub = "이력서 삭제", desc = "사용자의 이력서 PDF 파일을 삭제한다.")
 	public Map<String, Object> deleteResumeFile(HttpServletRequest request) throws Exception {
 		System.out.println("=== ProWorks5 이력서 삭제 요청 시작 ===");
-		
+
 		Map<String, Object> result = new HashMap<>();
-		
+
 		try {
 			// 사용자 ID 가져오기
 			int userId = 0;
-			
+
 			// 1. ProworksUserHeader 사용
 			ProworksUserHeader userHeader = null;
 			try {
@@ -1876,7 +1900,7 @@ public class UserController {
 			} catch (Exception e) {
 				System.out.println("사용자 헤더 조회 중 오류: " + e.getMessage());
 			}
-			
+
 			// 2. 요청 파라미터에서 사용자 ID 확인
 			if (userId == 0) {
 				try {
@@ -1889,7 +1913,7 @@ public class UserController {
 					System.out.println("사용자 ID 파싱 오류: " + e.getMessage());
 				}
 			}
-			
+
 			// 3. JSON 요청 본문에서 사용자 ID 확인 (REST 형태 요청)
 			if (userId == 0) {
 				try {
@@ -1901,12 +1925,12 @@ public class UserController {
 					}
 					String body = sb.toString();
 					System.out.println("요청 본문: " + body);
-					
+
 					if (body != null && !body.trim().isEmpty()) {
 						// JSON 파싱 시도
 						ObjectMapper objectMapper = new ObjectMapper();
 						JsonNode jsonNode = objectMapper.readTree(body);
-						
+
 						// accountId 필드 확인
 						if (jsonNode.has("accountId")) {
 							userId = jsonNode.get("accountId").asInt();
@@ -1917,49 +1941,49 @@ public class UserController {
 					System.out.println("JSON 요청 본문 처리 오류: " + e.getMessage());
 				}
 			}
-			
+
 			// 사용자 ID가 없는 경우 오류 반환
 			if (userId == 0) {
 				throw new IllegalArgumentException("사용자 ID를 찾을 수 없습니다.");
 			}
-			
+
 			// 사용자 정보 조회
 			UserInfoVo userInfoVo = new UserInfoVo();
 			userInfoVo.setAccountId(userId);
 			UserInfoVo userInfo = userService.selectUserDetail(userInfoVo);
-			
+
 			if (userInfo == null) {
 				throw new IllegalArgumentException("사용자 정보를 찾을 수 없습니다.");
 			}
-			
+
 			String resumeFileName = userInfo.getResumeFileName();
 			System.out.println("삭제할 이력서 파일명: " + resumeFileName);
-			
+
 			// 이력서 파일이 없는 경우
 			if (resumeFileName == null || resumeFileName.trim().isEmpty()) {
 				result.put("result", "success");
 				result.put("message", "삭제할 이력서 파일이 없습니다.");
 				return result;
 			}
-			
+
 			// 파일 경로가 RESUME_UPLOAD_DIR로 시작하는지 확인 (보안 검사)
 			if (!resumeFileName.startsWith(RESUME_UPLOAD_DIR)) {
 				throw new IllegalArgumentException("잘못된 파일 경로입니다.");
 			}
-			
+
 			// 상대 경로를 실제 경로로 변환
 			if (resumeFileName.startsWith("/")) {
 				resumeFileName = resumeFileName.substring(1);
 			}
-			
+
 			// 실제 파일 경로 생성
 			String realPath = request.getSession().getServletContext().getRealPath(resumeFileName);
 			File file = new File(realPath);
-			
+
 			System.out.println("이력서 파일 실제 경로: " + realPath);
-			
+
 			boolean fileDeleted = false;
-			
+
 			// 파일이 존재하면 삭제
 			if (file.exists() && file.isFile()) {
 				fileDeleted = file.delete();
@@ -1968,22 +1992,22 @@ public class UserController {
 				System.out.println("파일이 존재하지 않음: " + realPath);
 				// 파일이 없더라도 DB에서는 삭제 진행
 			}
-			
+
 			// 사용자 정보에서 이력서 파일명 제거
 			UserVo userVo = new UserVo();
 			userVo.setUserId(userId);
 			userVo.setResumeFileName(""); // 빈 문자열로 설정하여 이력서 파일명 제거
-			
+
 			// DB에서 이력서 파일명 업데이트
 			int updateResult = userService.updateResumeFileName(userVo);
 			System.out.println("DB 업데이트 결과: " + updateResult);
-			
+
 			// 결과 설정
 			result.put("result", "success");
 			result.put("fileDeleted", fileDeleted);
 			result.put("dbUpdated", updateResult > 0);
 			result.put("message", "이력서 파일이 성공적으로 삭제되었습니다.");
-			
+
 		} catch (IllegalArgumentException e) {
 			System.out.println("이력서 삭제 유효성 검사 오류: " + e.getMessage());
 			result.put("result", "fail");
@@ -1994,7 +2018,7 @@ public class UserController {
 			result.put("result", "fail");
 			result.put("message", "이력서 삭제 중 오류가 발생했습니다: " + e.getMessage());
 		}
-		
+
 		System.out.println("=== ProWorks5 이력서 삭제 요청 종료 ===");
 		return result;
 	}
