@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * 설문 관련 서비스 인터페이스
  * 
- * @author ProWorks
+ * @author 배상현
  * @since 2025/07/15
  */
 public interface SurveyService {

@@ -12,7 +12,7 @@ import java.util.Map;
 /**
  * 설문 관련 DAO
  * 
- * @author ProWorks
+ * @author 배상현
  * @since 2025/07/15
  */
 @Repository("surveyDAO")

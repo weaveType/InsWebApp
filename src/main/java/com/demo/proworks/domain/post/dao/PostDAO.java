@@ -22,12 +22,12 @@ import com.demo.proworks.domain.post.dao.PostDAO;
 /**
  * @subject : 공고정보 관련 처리를 담당하는 DAO
  * @description : 공고정보 관련 처리를 담당하는 DAO
- * @author : Inswave
+ * @author : 배상현
  * @since : 2025/07/03
  * @modification ===========================================================
  *               DATE AUTHOR DESC
  *               ===========================================================
- *               2025/07/03 Inswave 최초 생성
+ *               2025/07/03 배상현 최초 생성
  * 
  */
 @Repository("postDAO")

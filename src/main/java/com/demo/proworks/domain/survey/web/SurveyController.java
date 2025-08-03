@@ -31,7 +31,7 @@ import java.util.LinkedHashMap;
 /**
  * 설문 관련 처리를 담당하는 컨트롤러
  * 
- * @author ProWorks
+ * @author 배상현
  * @since 2025/07/15
  */
 @Controller
