@@ -32,12 +32,12 @@ import com.demo.proworks.common.vo.AccountIdVo;
 /**
  * @subject : 공고정보 관련 처리를 담당하는 ServiceImpl
  * @description : 공고정보 관련 처리를 담당하는 ServiceImpl
- * @author : Inswave
+ * @author : 배상현
  * @since : 2025/07/03
  * @modification ===========================================================
  *               DATE AUTHOR DESC
  *               ===========================================================
- *               2025/07/03 Inswave 최초 생성
+ *               2025/07/03 배상현 최초 생성
  * 
  */
 @Service("postServiceImpl")

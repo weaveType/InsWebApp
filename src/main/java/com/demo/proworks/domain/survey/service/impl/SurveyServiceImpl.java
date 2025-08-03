@@ -24,7 +24,7 @@ import java.util.Date;
 /**
  * 설문 관련 서비스 구현체
  * 
- * @author ProWorks
+ * @author 배상현
  * @since 2025/07/15
  */
 @Service("surveyServiceImpl")
