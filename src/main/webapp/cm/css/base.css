@@ -80,15 +80,15 @@
 	--ws-table-td-bg:var(--ws-gray-0);
 	--ws-table-bd:var(--ws-gray-300);
     
-	--ws-grid-header-bg:var(--ws-gray-0);
-	--ws-grid-header-bd:var(--ws-gray-400);
-	--ws-grid-header-color:var(--ws-gray-800);
+	--ws-grid-header-bg:#212529;
+	--ws-grid-header-bd:#495057;
+	--ws-grid-header-color:#F8F9FA;
 	--ws-grid-bg:var(--ws-gray-0);
 	--ws-grid-bd:var(--ws-gray-200);
 	--ws-grid-color:var(--ws-gray-700);
-	--ws-grid-hover-bg:var(--ws-gray-50);
-	--ws-grid-selected-row-bg:var(--ws-primary-50);
-	--ws-grid-selected-cell-bg:var(--ws-primary-100);
+	--ws-grid-hover-bg:#f5f5f5;
+	--ws-grid-selected-row-bg:#e3f2fd;
+	--ws-grid-selected-cell-bg:#bbdefb;
 	--ws-grid-subtotal-bg:var(--ws-gray-100);
 	--ws-grid-subtotal-bd:var(--ws-gray-300);
 	--ws-grid-footer-bg:var(--ws-gray-200);
@@ -595,27 +595,38 @@ span.w2autoComplete_label {padding:0 0 0 8px;text-align:left;color:var(--ws-form
 /* ############################## Grid ############################## */
 
 /* gridview */
-.w2grid {outline:0;background:var(--ws-grid-bg)}
+.w2grid, #gridView {outline:0;background:var(--ws-gray-0);border-radius:16px;overflow:hidden;box-shadow:0 4px 6px rgba(0,0,0,0.07),0 1px 3px rgba(0,0,0,0.05);border:1px solid var(--ws-gray-300);transition:all 0.3s ease}
+
+/* WebSquare GridView Table Structure */
+#gridView table {width:100%;border-collapse:collapse;border:none}
+#gridView .w2header table, #gridView .w2gBody table {width:100%;border-collapse:collapse}
 .w2grid .gridHeaderTableDefault {border:0}
-.w2grid th.gridHeaderTDDefault {height:37px;border-color:var(--ws-grid-header-bd);background:var(--ws-grid-header-bg);color:var(--ws-grid-header-color);font-size:14px;font-weight:bold}
+.w2grid th.gridHeaderTDDefault {height:52px;border-color:var(--ws-gray-800);background:var(--ws-gray-800);color:var(--ws-gray-100);font-size:15px;font-weight:700;text-shadow:0 1px 2px rgba(0,0,0,0.1);padding:0 20px;text-align:center;vertical-align:middle;border-left:none;border-right:none;border-top:none;border-bottom:2px solid var(--ws-gray-500)}
 .w2grid th.gridHeaderTDDefault nobr {padding:0}
-.w2grid td.gridBodyDefault {height:37px;border:1px dashed var(--ws-grid-bd);background-color:var(--ws-grid-bg);color:var(--ws-grid-color);font-size:14px}
-.w2grid .gridBodyDefault button {overflow:hidden;display:inline-block;position:relative;width:auto !important;height:26px !important;padding:0 8px;border:1px solid var(--ws-btn-bd);border-radius:var(--ws-btn-radius);background-color:var(--ws-btn-bg);background-position:center;background-repeat:no-repeat;color:var(--ws-btn-color);font-size:var(--ws-font-size-sm);vertical-align:middle;cursor:pointer}
-.w2grid .gridBodyDefault button:hover {border-color:var(--ws-btn-hover-bd);background-color:var(--ws-btn-hover-bg)}
+.w2grid td.gridBodyDefault {height:52px;border:none;border-bottom:1px solid var(--ws-gray-300);background-color:var(--ws-gray-0);color:var(--ws-gray-800);font-size:14px;transition:all 0.2s ease;padding:2px 4px;vertical-align:middle;text-align:center;border-left:none;border-right:none;border-top:none}
+.w2grid .gridBodyDefault button {overflow:hidden;display:inline-flex;align-items:center;justify-content:center;position:relative;width:100% !important;height:46px !important;padding:0 12px;border:1px solid var(--ws-gray-400);border-radius:6px;background-color:var(--ws-gray-0);color:var(--ws-gray-800);font-size:13px;font-weight:500;vertical-align:middle;cursor:pointer;transition:all 0.2s ease;margin:0 !important;box-sizing:border-box !important}
+.w2grid .gridBodyDefault button:hover {border-color:var(--ws-primary-500);background-color:var(--ws-primary-50);color:var(--ws-primary-600);transform:translateY(-1px);box-shadow:0 2px 4px rgba(0,0,0,0.1)}
 .w2grid .gridBodyDefault button:active {border-color:var(--ws-btn-focus-bd);background-color:var(--ws-btn-focus-bg)}
+
+/* Enhanced Row Hover Effects */
+.w2grid .grid_body_row:hover td.gridBodyDefault {background-color:var(--ws-gray-100) !important;transform:translateY(-1px);box-shadow:0 2px 4px rgba(0,0,0,0.05)}
+
+/* Enhanced Row Selection Effects */
+.w2grid .grid_body_row.w2grid_selected td.gridBodyDefault {background-color:var(--ws-primary-100) !important;border-left:4px solid var(--ws-primary-500);padding-left:0px;box-shadow:inset 0 0 0 1px var(--ws-primary-200)}
+
 .w2grid .gridBodyDefault a {color:var(--ws-primary-500);text-decoration:underline}
-.w2grid .w2input {min-width:auto;padding:0 2px;border-color:var(--ws-btn-focus-bd) !important;box-sizing:initial}
-.w2grid .w2selectbox {box-sizing:initial}
+.w2grid .w2input {width:100% !important;min-width:100% !important;height:48px !important;padding:0 12px !important;border:1px solid var(--ws-gray-300) !important;border-radius:4px !important;background:var(--ws-gray-0) !important;color:var(--ws-gray-800) !important;font-size:14px !important;box-sizing:border-box !important;margin:0 !important}
+.w2grid .w2selectbox {width:100% !important;height:48px !important;box-sizing:border-box !important;margin:0 !important}
 .w2grid .w2selectbox.w2selectbox_open {border-color:var(--ws-form-focus-bd) !important}
-.w2grid .w2inputCalendar_div {box-sizing:initial;margin-left:2px}
-.w2grid .w2inputCalendar_div .w2inputCalendar_divInput {outline:none;box-sizing:intial}
+.w2grid .w2inputCalendar_div {width:100% !important;height:48px !important;box-sizing:border-box !important;margin:0 !important}
+.w2grid .w2inputCalendar_div .w2inputCalendar_divInput {width:100% !important;height:100% !important;outline:none !important;box-sizing:border-box !important;border:1px solid var(--ws-gray-300) !important;border-radius:4px !important;padding:0 12px !important}
 .w2grid .gridBodyDefault_calendar {padding-right:30px;background:url(../images/base/ico_calendar.svg) no-repeat right 10px center}
 .w2grid .gridBodyDefault_autoComplete,
 .w2grid .gridBodyDefault_checkcombobox {background:url(../images/base/ico_select.svg) no-repeat right 10px center}
 .w2grid .gridBodyDefault_select {background:url(../images/base/ico_select.svg) no-repeat right 9px center}
 .w2grid .gridBodyDefault_select nobr,
 .w2grid .gridBodyDefault_autoComplete nobr,
-.w2grid .gridBodyDefault_checkcombobox nobr {overflow:hidden;display:block;padding:0 30px 0 8px;font-size:var(--ws-form-font-size);text-overflow:ellipsis}
+.w2grid .gridBodyDefault_checkcombobox nobr {overflow:hidden;display:block;width:100% !important;height:48px !important;padding:0 40px 0 12px !important;font-size:14px !important;line-height:46px !important;text-overflow:ellipsis;box-sizing:border-box !important}
 .w2grid .gridBodyDefault .w2grid_textImage_image {line-height:1;cursor:pointer}
 .w2grid .gridBodyDefault_spinner {background:url(../images/base/ico_spinner_up.svg) no-repeat right 11px top 5px, url(../images/base/ico_spinner_down.svg) no-repeat right 11px bottom 4px}
 .w2grid .w2grid_spinner_up_start,
@@ -633,14 +644,14 @@ span.w2autoComplete_label {padding:0 0 0 8px;text-align:left;color:var(--ws-form
 .w2grid .gridBodyDefault_spinner .w2input {box-sizing:border-box}
 .w2grid .gridBodyDefault_spinner .w2grid_spinner_up_image {position:static;top:0;width:24px;height:16px;margin-top:0;background:url(../images/base/ico_spinner_up.svg) no-repeat center}
 .w2grid .gridBodyDefault_spinner .w2grid_spinner_down_image {position:static;top:0;width:24px;height:16px;margin-top:0;background:url(../images/base/ico_spinner_down.svg) no-repeat center}
-.w2grid input[type="checkbox"] {flex:none;width:16px;height:16px;margin:3px;border:1px solid var(--ws-gray-300);border-radius:var(--ws-form-radius);vertical-align:middle;appearance:none;-webkit-appearance:none}
+.w2grid input[type="checkbox"] {flex:none;width:20px !important;height:20px !important;margin:auto !important;border:1px solid var(--ws-gray-300);border-radius:var(--ws-form-radius);vertical-align:middle;appearance:none;-webkit-appearance:none}
 .w2grid input[type="checkbox"]:hover {border-color:var(--ws-primary-400)}
 .w2grid input[type="checkbox"]:checked {border-color:var(--ws-primary-400);background:var(--ws-primary-400) url(../images/base/ico_check_on.svg) no-repeat center}
 .w2grid input[type="checkbox"]:disabled {border-color:var(--ws-gray-300);background:var(--ws-gray-200)}
 .w2grid input[type="checkbox"]:checked:disabled {border:0;background:var(--ws-gray-200) url(../images/base/ico_check_on_dis.svg) no-repeat center}
 .w2grid input[type="checkbox"]:indeterminate {padding:6px 2px;background:var(--ws-gray-600);background-clip:content-box}
 .w2grid .w2checkbox_label {font-size:14px;vertical-align:middle}
-.w2grid input[type="radio"] {width:16px;height:16px;margin:3px;border:1px solid var(--ws-gray-300);border-radius:50%;vertical-align:middle;appearance:none;-webkit-appearance:none}
+.w2grid input[type="radio"] {width:20px !important;height:20px !important;margin:auto !important;border:1px solid var(--ws-gray-300);border-radius:50%;vertical-align:middle;appearance:none;-webkit-appearance:none}
 .w2grid input[type="radio"]:hover {border-color:var(--ws-primary-400)}
 .w2grid input[type="radio"]:checked {padding:3px;border-color:var(--ws-primary-400);background:var(--ws-primary-400);background-clip:content-box}
 .w2grid input[type="radio"]:disabled {border-color:var(--ws-gray-300);background:var(--ws-gray-200)}

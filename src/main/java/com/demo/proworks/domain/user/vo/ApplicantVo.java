@@ -1,0 +1,96 @@
+package com.demo.proworks.domain.user.vo;
+
+import com.inswave.elfw.annotation.ElDto;
+import com.inswave.elfw.annotation.ElDtoField;
+import com.inswave.elfw.annotation.ElVoField;
+import com.fasterxml.jackson.annotation.JsonFilter;
+
+@JsonFilter("elExcludeFilter")
+@ElDto(FldYn = "", delimeterYn = "", logicalName = "일반회원")
+public class ApplicantVo extends com.demo.proworks.cmmn.ProworksCommVO {
+    private static final long serialVersionUID = 1L;
+
+    public ApplicantVo(){
+    }
+
+    @ElDtoField(logicalName = "페이지_번호", physicalName = "pageIndex", type = "long", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private long pageIndex;
+
+    @ElDtoField(logicalName = "페이지_건수", physicalName = "pageSize", type = "int", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private int pageSize;
+
+    @ElDtoField(logicalName = "공고_id", physicalName = "jobPostingId", type = "int", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private int jobPostingId;
+
+    @ElDtoField(logicalName = "상태", physicalName = "applicationStatus", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private String applicationStatus;
+
+    @ElVoField(physicalName = "pageIndex")
+    public long getPageIndex(){
+        return pageIndex;
+    }
+
+    @ElVoField(physicalName = "pageIndex")
+    public void setPageIndex(long pageIndex){
+        this.pageIndex = pageIndex;
+    }
+
+    @ElVoField(physicalName = "pageSize")
+    public int getPageSize(){
+        return pageSize;
+    }
+
+    @ElVoField(physicalName = "pageSize")
+    public void setPageSize(int pageSize){
+        this.pageSize = pageSize;
+    }
+
+    @ElVoField(physicalName = "jobPostingId")
+    public int getJobPostingId(){
+        return jobPostingId;
+    }
+
+    @ElVoField(physicalName = "jobPostingId")
+    public void setJobPostingId(int jobPostingId){
+        this.jobPostingId = jobPostingId;
+    }
+
+    @ElVoField(physicalName = "applicationStatus")
+    public String getApplicationStatus(){
+        String ret = this.applicationStatus;
+        return ret;
+    }
+
+    @ElVoField(physicalName = "applicationStatus")
+    public void setApplicationStatus(String applicationStatus){
+        this.applicationStatus = applicationStatus;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("ApplicantVo [");
+        sb.append("pageIndex").append("=").append(pageIndex).append(",");
+        sb.append("pageSize").append("=").append(pageSize).append(",");
+        sb.append("jobPostingId").append("=").append(jobPostingId).append(",");
+        sb.append("applicationStatus").append("=").append(applicationStatus);
+        sb.append("]");
+        return sb.toString();
+
+    }
+
+    public boolean isFixedLengthVo() {
+        return false;
+    }
+
+    @Override
+    public void _xStreamEnc() {
+    }
+
+
+    @Override
+    public void _xStreamDec() {
+    }
+
+
+}

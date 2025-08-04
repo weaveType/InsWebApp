@@ -1,0 +1,273 @@
+package com.demo.proworks.domain.survey.vo;
+
+import com.inswave.elfw.annotation.ElDto;
+import com.inswave.elfw.annotation.ElDtoField;
+import com.inswave.elfw.annotation.ElVoField;
+import com.fasterxml.jackson.annotation.JsonFilter;
+
+@JsonFilter("elExcludeFilter")
+@ElDto(FldYn = "", delimeterYn = "", logicalName = "MBTI 계산 결과")
+public class MbtiCalculationResultVo extends com.demo.proworks.cmmn.ProworksCommVO {
+    private static final long serialVersionUID = 1L;
+
+    public MbtiCalculationResultVo(){
+    }
+
+    @ElDtoField(logicalName = "타입 ID", physicalName = "typeId", type = "Long", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "사용자 MBTI 타입 ID", attr = "")
+    private Long typeId;
+
+    @ElDtoField(logicalName = "타입 코드", physicalName = "typeCode", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "4자리 MBTI 타입 (예: BRSD)", attr = "")
+    private String typeCode;
+
+    @ElDtoField(logicalName = "A/B 점수", physicalName = "aBScore", type = "double", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "Architect(100) vs Builder(0)", attr = "")
+    private double aBScore;
+
+    @ElDtoField(logicalName = "R/I 점수", physicalName = "rIScore", type = "double", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "Refactor(100) vs Innovate(0)", attr = "")
+    private double rIScore;
+
+    @ElDtoField(logicalName = "S/T 점수", physicalName = "sTScore", type = "double", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "Solo(100) vs Team(0)", attr = "")
+    private double sTScore;
+
+    @ElDtoField(logicalName = "D/F 점수", physicalName = "dFScore", type = "double", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "Debug(100) vs Feature(0)", attr = "")
+    private double dFScore;
+
+    @ElDtoField(logicalName = "타입 이름", physicalName = "typeName", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "타입 한글 이름 (예: 실용적 안정성 추구자)", attr = "")
+    private String typeName;
+
+    @ElDtoField(logicalName = "타입 설명", physicalName = "typeDescription", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "타입 상세 설명", attr = "")
+    private String typeDescription;
+
+    @ElDtoField(logicalName = "사용자 ID", physicalName = "userId", type = "Long", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "사용자 ID", attr = "")
+    private Long userId;
+
+    @ElDtoField(logicalName = "MBTI 체크 여부", physicalName = "isMbtiChecked", type = "boolean", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "MBTI 설문조사 완료 여부", attr = "")
+    private boolean isMbtiChecked;
+
+    @ElDtoField(logicalName = "코드 체크 여부", physicalName = "isCodeChecked", type = "boolean", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "코드 분석 완료 여부", attr = "")
+    private boolean isCodeChecked;
+
+    @ElDtoField(logicalName = "분석 일시", physicalName = "analyzedAt", type = "java.sql.Timestamp", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "분석 완료 일시", attr = "")
+    private java.sql.Timestamp analyzedAt;
+
+    private String codeAnalysisComment;
+    private String codeAnalysisDetail;
+
+    @ElDtoField(logicalName = "답변 분석 목록", physicalName = "answerAnalyses", type = "com.demo.proworks.domain.survey.vo.AnswerAnalysisVo", typeKind = "List", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "각 답변별 상세 분석 정보", attr = "")
+    private java.util.List<com.demo.proworks.domain.survey.vo.AnswerAnalysisVo> answerAnalyses;
+
+    @ElDtoField(logicalName = "축별 기여도", physicalName = "axisContributions", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "JSON 형식의 축별 기여도 정보", attr = "")
+    private String axisContributions;
+
+    @ElDtoField(logicalName = "답변 패턴", physicalName = "answerPattern", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "답변 패턴 분석 결과", attr = "")
+    private String answerPattern;
+
+    @ElDtoField(logicalName = "주요 인사이트", physicalName = "keyInsights", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "JSON 형식의 주요 인사이트 목록", attr = "")
+    private String keyInsights;
+
+    @ElVoField(physicalName = "typeId")
+    public Long getTypeId(){
+        return typeId;
+    }
+
+    @ElVoField(physicalName = "typeId")
+    public void setTypeId(Long typeId){
+        this.typeId = typeId;
+    }
+
+    @ElVoField(physicalName = "typeCode")
+    public String getTypeCode(){
+        String ret = this.typeCode;
+        return ret;
+    }
+
+    @ElVoField(physicalName = "typeCode")
+    public void setTypeCode(String typeCode){
+        this.typeCode = typeCode;
+    }
+
+    @ElVoField(physicalName = "aBScore")
+    public double getABScore(){
+        return aBScore;
+    }
+
+    @ElVoField(physicalName = "aBScore")
+    public void setABScore(double aBScore){
+        this.aBScore = aBScore;
+    }
+
+    @ElVoField(physicalName = "rIScore")
+    public double getRIScore(){
+        return rIScore;
+    }
+
+    @ElVoField(physicalName = "rIScore")
+    public void setRIScore(double rIScore){
+        this.rIScore = rIScore;
+    }
+
+    @ElVoField(physicalName = "sTScore")
+    public double getSTScore(){
+        return sTScore;
+    }
+
+    @ElVoField(physicalName = "sTScore")
+    public void setSTScore(double sTScore){
+        this.sTScore = sTScore;
+    }
+
+    @ElVoField(physicalName = "dFScore")
+    public double getDFScore(){
+        return dFScore;
+    }
+
+    @ElVoField(physicalName = "dFScore")
+    public void setDFScore(double dFScore){
+        this.dFScore = dFScore;
+    }
+
+    @ElVoField(physicalName = "typeName")
+    public String getTypeName(){
+        String ret = this.typeName;
+        return ret;
+    }
+
+    @ElVoField(physicalName = "typeName")
+    public void setTypeName(String typeName){
+        this.typeName = typeName;
+    }
+
+    @ElVoField(physicalName = "typeDescription")
+    public String getTypeDescription(){
+        String ret = this.typeDescription;
+        return ret;
+    }
+
+    @ElVoField(physicalName = "typeDescription")
+    public void setTypeDescription(String typeDescription){
+        this.typeDescription = typeDescription;
+    }
+
+    @ElVoField(physicalName = "userId")
+    public Long getUserId(){
+        return userId;
+    }
+
+    @ElVoField(physicalName = "userId")
+    public void setUserId(Long userId){
+        this.userId = userId;
+    }
+
+    @ElVoField(physicalName = "isMbtiChecked")
+    public boolean getIsMbtiChecked(){
+        return isMbtiChecked;
+    }
+
+    @ElVoField(physicalName = "isMbtiChecked")
+    public void setIsMbtiChecked(boolean isMbtiChecked){
+        this.isMbtiChecked = isMbtiChecked;
+    }
+
+    @ElVoField(physicalName = "isCodeChecked")
+    public boolean getIsCodeChecked(){
+        return isCodeChecked;
+    }
+
+    @ElVoField(physicalName = "isCodeChecked")
+    public void setIsCodeChecked(boolean isCodeChecked){
+        this.isCodeChecked = isCodeChecked;
+    }
+
+    @ElVoField(physicalName = "analyzedAt")
+    public java.sql.Timestamp getAnalyzedAt(){
+        return analyzedAt;
+    }
+
+    @ElVoField(physicalName = "analyzedAt")
+    public void setAnalyzedAt(java.sql.Timestamp analyzedAt){
+        this.analyzedAt = analyzedAt;
+    }
+
+    public String getCodeAnalysisComment() { return codeAnalysisComment; }
+    public void setCodeAnalysisComment(String codeAnalysisComment) { this.codeAnalysisComment = codeAnalysisComment; }
+    public String getCodeAnalysisDetail() { return codeAnalysisDetail; }
+    public void setCodeAnalysisDetail(String codeAnalysisDetail) { this.codeAnalysisDetail = codeAnalysisDetail; }
+
+    @ElVoField(physicalName = "answerAnalyses")
+    public java.util.List<com.demo.proworks.domain.survey.vo.AnswerAnalysisVo> getAnswerAnalyses() {
+        return answerAnalyses;
+    }
+
+    @ElVoField(physicalName = "answerAnalyses")
+    public void setAnswerAnalyses(java.util.List<com.demo.proworks.domain.survey.vo.AnswerAnalysisVo> answerAnalyses) {
+        this.answerAnalyses = answerAnalyses;
+    }
+
+    @ElVoField(physicalName = "axisContributions")
+    public String getAxisContributions() {
+        String ret = this.axisContributions;
+        return ret;
+    }
+
+    @ElVoField(physicalName = "axisContributions")
+    public void setAxisContributions(String axisContributions) {
+        this.axisContributions = axisContributions;
+    }
+
+    @ElVoField(physicalName = "answerPattern")
+    public String getAnswerPattern() {
+        String ret = this.answerPattern;
+        return ret;
+    }
+
+    @ElVoField(physicalName = "answerPattern")
+    public void setAnswerPattern(String answerPattern) {
+        this.answerPattern = answerPattern;
+    }
+
+    @ElVoField(physicalName = "keyInsights")
+    public String getKeyInsights() {
+        String ret = this.keyInsights;
+        return ret;
+    }
+
+    @ElVoField(physicalName = "keyInsights")
+    public void setKeyInsights(String keyInsights) {
+        this.keyInsights = keyInsights;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("MbtiCalculationResultVo [");
+        sb.append("typeId").append("=").append(typeId).append(",");
+        sb.append("typeCode").append("=").append(typeCode).append(",");
+        sb.append("aBScore").append("=").append(aBScore).append(",");
+        sb.append("rIScore").append("=").append(rIScore).append(",");
+        sb.append("sTScore").append("=").append(sTScore).append(",");
+        sb.append("dFScore").append("=").append(dFScore).append(",");
+        sb.append("typeName").append("=").append(typeName).append(",");
+        sb.append("typeDescription").append("=").append(typeDescription).append(",");
+        sb.append("userId").append("=").append(userId).append(",");
+        sb.append("isMbtiChecked").append("=").append(isMbtiChecked).append(",");
+        sb.append("isCodeChecked").append("=").append(isCodeChecked).append(",");
+        sb.append("analyzedAt").append("=").append(analyzedAt);
+        sb.append("]");
+        return sb.toString();
+
+    }
+
+    public boolean isFixedLengthVo() {
+        return false;
+    }
+
+    @Override
+    public void _xStreamEnc() {
+    }
+
+
+    @Override
+    public void _xStreamDec() {
+    }
+
+
+}

@@ -3,11 +3,11 @@ package com.demo.proworks.cmmn;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-
+import com.inswave.elfw.exception.ElException;
 import com.inswave.elfw.annotation.ElDto;
 import com.inswave.elfw.annotation.ElDtoField;
+import com.inswave.elfw.annotation.ElVoField;
 import com.fasterxml.jackson.annotation.JsonFilter;
-import com.inswave.elfw.exception.ElException;
 import com.inswave.elfw.log.AppLog;
 
 @JsonFilter("elExcludeFilter")
@@ -25,57 +25,70 @@ public class Test01UserHeader extends com.inswave.elfw.core.UserHeader {
         this._offset = iOffset;
     }
 
-    @ElDtoField(logicalName = "사원번호", physicalName = "empno", type = "int", typeKind = "", fldYn = "Yes", delimeterYn = "Yes", cryptoGbn = "", cryptoKind = "", length = 4, dotLen = 0, baseValue = "", desc = "사원번호 설명")
+    @ElDtoField(logicalName = "사원번호", physicalName = "empno", type = "int", typeKind = "", fldYn = "Yes", delimeterYn = "Yes", cryptoGbn = "", cryptoKind = "", length = 4, dotLen = 0, baseValue = "", desc = "사원번호 설명", attr = "")
     private int empno;
 
-    @ElDtoField(logicalName = "사원명", physicalName = "ename", type = "String", typeKind = "", fldYn = "Yes", delimeterYn = "Yes", cryptoGbn = "", cryptoKind = "", length = 10, dotLen = 0, baseValue = "", desc = "")
+    @ElDtoField(logicalName = "사원명", physicalName = "ename", type = "String", typeKind = "", fldYn = "Yes", delimeterYn = "Yes", cryptoGbn = "", cryptoKind = "", length = 10, dotLen = 0, baseValue = "", desc = "", attr = "")
     private String ename;
 
-    @ElDtoField(logicalName = "직업", physicalName = "job", type = "String", typeKind = "", fldYn = "Yes", delimeterYn = "Yes", cryptoGbn = "", cryptoKind = "", length = 9, dotLen = 0, baseValue = "", desc = "")
+    @ElDtoField(logicalName = "직업", physicalName = "job", type = "String", typeKind = "", fldYn = "Yes", delimeterYn = "Yes", cryptoGbn = "", cryptoKind = "", length = 9, dotLen = 0, baseValue = "", desc = "", attr = "")
     private String job;
 
-    @ElDtoField(logicalName = "직속상사번호", physicalName = "mgr", type = "int", typeKind = "", fldYn = "Yes", delimeterYn = "Yes", cryptoGbn = "", cryptoKind = "", length = 4, dotLen = 0, baseValue = "", desc = "")
+    @ElDtoField(logicalName = "직속상사번호", physicalName = "mgr", type = "int", typeKind = "", fldYn = "Yes", delimeterYn = "Yes", cryptoGbn = "", cryptoKind = "", length = 4, dotLen = 0, baseValue = "", desc = "", attr = "")
     private int mgr;
 
-    @ElDtoField(logicalName = "입사일", physicalName = "hiredate", type = "String", typeKind = "", fldYn = "Yes", delimeterYn = "Yes", cryptoGbn = "", cryptoKind = "", length = 10, dotLen = 0, baseValue = "", desc = "")
+    @ElDtoField(logicalName = "입사일", physicalName = "hiredate", type = "String", typeKind = "", fldYn = "Yes", delimeterYn = "Yes", cryptoGbn = "", cryptoKind = "", length = 10, dotLen = 0, baseValue = "", desc = "", attr = "")
     private String hiredate;
 
+    @ElVoField(physicalName = "empno")
     public int getEmpno(){
         return empno;
     }
 
+    @ElVoField(physicalName = "empno")
     public void setEmpno(int empno){
         this.empno = empno;
     }
 
+    @ElVoField(physicalName = "ename")
     public String getEname(){
-        return ename;
+        String ret = this.ename;
+        return ret;
     }
 
+    @ElVoField(physicalName = "ename")
     public void setEname(String ename){
         this.ename = ename;
     }
 
+    @ElVoField(physicalName = "job")
     public String getJob(){
-        return job;
+        String ret = this.job;
+        return ret;
     }
 
+    @ElVoField(physicalName = "job")
     public void setJob(String job){
         this.job = job;
     }
 
+    @ElVoField(physicalName = "mgr")
     public int getMgr(){
         return mgr;
     }
 
+    @ElVoField(physicalName = "mgr")
     public void setMgr(int mgr){
         this.mgr = mgr;
     }
 
+    @ElVoField(physicalName = "hiredate")
     public String getHiredate(){
-        return hiredate;
+        String ret = this.hiredate;
+        return ret;
     }
 
+    @ElVoField(physicalName = "hiredate")
     public void setHiredate(String hiredate){
         this.hiredate = hiredate;
     }

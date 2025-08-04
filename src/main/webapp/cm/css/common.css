@@ -388,3 +388,47 @@
 .fid .wd650.fn {width:650px}
 .fid.fn .wd700,
 .fid .wd700.fn {width:700px}
+/* Custom styles for $c.win.alert */
+.sub_contents {
+    padding: 25px; /* Increased padding */
+    background-color: #ffffff; /* White background */
+}
+.poptxt {
+    margin-bottom: 25px; /* Increased margin */
+    text-align: center;
+}
+.poptxt .tit {
+    font-size: 16px; /* Adjusted font size */
+    color: #333333;
+    line-height: 1.6;
+    word-break: keep-all; /* Prevent breaking words */
+}
+.btnbox {
+    text-align: center;
+    margin-top: 40px; /* 더 많은 간격으로 하단 이동 */
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+/* Alert dialog button override - higher specificity */
+.btnbox .btn_cm {
+    background-color: #36f; /* btnApply 색상 */
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 25px; /* btnApply 둥근 모서리 */
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    margin: 0;
+    line-height: 1; /* line-height 정상화 */
+    display: inline-flex; /* flexbox로 정렬 */
+    align-items: center; /* 수직 중앙 정렬 */
+    justify-content: center; /* 수평 중앙 정렬 */
+}
+.btnbox .btn_cm:hover {
+    background-color: #2a5bd6; /* btnApply 호버 색상 */
+}
+.btn_cm.active {
+    /* No specific active style for now, can be added later if needed */
+}

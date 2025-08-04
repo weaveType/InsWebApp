@@ -1,0 +1,161 @@
+/* GridView Enhancement CSS for a Dark, Static, Professional Theme */
+
+/* Main GridView Container */
+#gridView, .w2grid#gridView {
+    outline: 0 !important;
+    background: var(--ws-gray-50) !important;
+    border-radius: 8px !important;
+    overflow: hidden !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.09) !important;
+    border: 1px solid var(--ws-gray-400) !important;
+    margin: 20px 0 !important;
+}
+
+/* GridView Header */
+#gridView .w2header th,
+#gridView thead th,
+#gridView .w2header .w2column,
+#gridView th,
+.w2grid#gridView th.gridHeaderTDDefault {
+    height: 48px !important;
+    background: var(--ws-gray-800) !important;
+    color: var(--ws-gray-100) !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    text-shadow: none !important;
+    padding: 0 20px !important;
+    text-align: center !important;
+    vertical-align: middle !important;
+    border: none !important;
+    border-bottom: 1px solid var(--ws-gray-900) !important;
+}
+
+/* GridView Body Cells */
+#gridView .w2gBody td,
+#gridView tbody td,
+#gridView .w2gBody .w2column,
+#gridView td,
+.w2grid#gridView td.gridBodyDefault {
+    height: 52px !important;
+    padding: 16px 20px !important;
+    border: none !important;
+    border-bottom: 1px solid var(--ws-gray-200) !important;
+    background-color: var(--ws-gray-0) !important;
+    color: var(--ws-gray-700) !important;
+    font-size: 14px !important;
+    font-weight: 400 !important;
+    transition: background-color 0.2s ease !important;
+}
+
+/* Row Hover Effect */
+#gridView .w2gBody tr:hover td,
+#gridView tbody tr:hover td,
+#gridView tr:hover td,
+.w2grid#gridView .grid_body_row:hover td.gridBodyDefault {
+    background-color: var(--ws-gray-100) !important;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+/* Row Selection Effect */
+#gridView .w2gBody tr.selected td,
+#gridView tbody tr.selected td,
+#gridView .w2gBody tr.w2grid_selected td,
+#gridView tr.selected td,
+.w2grid#gridView .grid_body_row.w2grid_selected td.gridBodyDefault {
+    background-color: var(--ws-gray-200) !important;
+    color: var(--ws-gray-900) !important;
+    border-left: 4px solid var(--ws-gray-800) !important;
+    padding-left: 16px !important;
+    box-shadow: none !important;
+}
+
+/* Checkbox Styles */
+#gridView input[type="checkbox"] {
+    width: 18px !important;
+    height: 18px !important;
+    border: 1.5px solid var(--ws-gray-400) !important;
+    border-radius: 4px !important;
+    background-color: var(--ws-gray-50) !important;
+    transition: all 0.2s ease !important;
+}
+
+#gridView input[type="checkbox"]:hover {
+    border-color: var(--ws-gray-600) !important;
+}
+
+#gridView input[type="checkbox"]:checked {
+    border-color: var(--ws-gray-800) !important;
+    background-color: var(--ws-gray-800) !important;
+    background-image: url(../images/base/ico_check_on.svg) !important;
+}
+
+/* Button Styles in Grid */
+#gridView .w2gBody button,
+#gridView tbody button,
+#gridView button {
+    height: 30px !important;
+    padding: 0 12px !important;
+    border: 1px solid var(--ws-gray-400) !important;
+    border-radius: 4px !important;
+    background-color: var(--ws-gray-100) !important;
+    color: var(--ws-gray-800) !important;
+    font-size: 13px !important;
+    font-weight: 500 !important;
+}
+
+#gridView .w2gBody button:hover,
+#gridView tbody button:hover,
+#gridView button:hover {
+    border-color: var(--ws-gray-600) !important;
+    background-color: var(--ws-gray-200) !important;
+    color: var(--ws-gray-900) !important;
+}
+
+/* Link Styles */
+#gridView .w2gBody a,
+#gridView tbody a,
+#gridView a {
+    color: var(--ws-gray-800) !important;
+    text-decoration: underline !important;
+    font-weight: 500 !important;
+}
+
+#gridView .w2gBody a:hover,
+#gridView tbody a:hover,
+#gridView a:hover {
+    color: var(--ws-gray-900) !important;
+}
+
+/* Input Styles */
+#gridView .w2input {
+    border: 1px solid var(--ws-gray-400) !important;
+    background: var(--ws-gray-50) !important;
+}
+
+#gridView .w2input:focus {
+    border-color: var(--ws-gray-800) !importan;
+    box-shadow: 0 0 0 2px rgba(33, 43, 54, 0.1) !important;
+}
+
+/* Scrollbar Styles */
+#gridView::-webkit-scrollbar,
+.w2grid .w2grid_scrollX > table td div::-webkit-scrollbar,
+.w2grid .w2grid_scrollY::-webkit-scrollbar {
+    background: var(--ws-gray-200) !important;
+}
+
+#gridView::-webkit-scrollbar-thumb,
+.w2grid .w2grid_scrollX > table td div::-webkit-scrollbar-thumb,
+.w2grid .w2grid_scrollY::-webkit-scrollbar-thumb {
+    background: var(--ws-gray-500) !important;
+}
+
+#gridView::-webkit-scrollbar-thumb:hover {
+    background: var(--ws-gray-600) !important;
+}
+
+/* Empty State */
+#gridView .w2grid_noresult {
+    color: var(--ws-gray-600) !important;
+}

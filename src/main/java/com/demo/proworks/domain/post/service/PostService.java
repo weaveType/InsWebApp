@@ -1,0 +1,218 @@
+package com.demo.proworks.domain.post.service;
+
+import java.util.List;
+
+import com.demo.proworks.common.vo.AccountIdVo;
+import com.demo.proworks.domain.post.vo.ApplicationListVo;
+import com.demo.proworks.domain.post.vo.ApplicationSearchVo;
+import com.demo.proworks.domain.post.vo.JobApplicationVo;
+import com.demo.proworks.domain.post.vo.MainPostingListVo;
+import com.demo.proworks.domain.post.vo.PostMatchVo;
+import com.demo.proworks.domain.post.vo.PostVo;
+import com.demo.proworks.domain.post.vo.ScoutListVo;
+import com.demo.proworks.domain.post.vo.ScoutSearchVo;
+import com.demo.proworks.domain.post.vo.ScoutUserVo;
+import com.demo.proworks.domain.post.vo.SendEmailVo;
+import com.demo.proworks.domain.post.vo.TechStackVo;
+import com.demo.proworks.domain.user.vo.ApplicationStatsListVo;
+
+/**
+ * @subject : 공고정보 관련 처리를 담당하는 인터페이스
+ * @description : 공고정보 관련 처리를 담당하는 인터페이스
+ * @author : 배상현
+ * @since : 2025/07/03
+ * @modification ===========================================================
+ *               DATE AUTHOR DESC
+ *               ===========================================================
+ *               2025/07/03 배상현 최초 생성
+ * 
+ */
+public interface PostService {
+
+	/**
+	 * 공고정보 페이징 처리하여 목록을 조회한다.
+	 *
+	 * @param postVo 공고정보 PostVo
+	 * @return 공고정보 목록 List<PostVo>
+	 * @throws Exception
+	 */
+	public List<PostVo> selectListPost(PostVo postVo) throws Exception;
+
+	/**
+	 * 조회한 공고정보 전체 카운트
+	 * 
+	 * @param postVo 공고정보 PostVo
+	 * @return 공고정보 목록 전체 카운트
+	 * @throws Exception
+	 */
+	public long selectListCountPost(PostVo postVo) throws Exception;
+
+	/**
+	 * 공고정보를 상세 조회한다.
+	 *
+	 * @param postVo 공고정보 PostVo
+	 * @return 단건 조회 결과
+	 * @throws Exception
+	 */
+	public PostVo selectPost(PostVo postVo) throws Exception;
+
+	/**
+	 * 공고정보를 등록 처리 한다.
+	 *
+	 * @param postVo 공고정보 PostVo
+	 * @return 번호
+	 * @throws Exception
+	 */
+	public int insertPost(PostVo postVo) throws Exception;
+
+	/**
+	 * 공고정보를 갱신 처리 한다.
+	 *
+	 * @param postVo 공고정보 PostVo
+	 * @return 번호
+	 * @throws Exception
+	 */
+	public int updatePost(PostVo postVo) throws Exception;
+
+	/**
+	 * 공고정보를 삭제 처리 한다.
+	 *
+	 * @param postVo 공고정보 PostVo
+	 * @return 번호
+	 * @throws Exception
+	 */
+	public int deletePost(PostVo postVo) throws Exception;
+
+	/**
+	 * 기술스택 목록을 조회한다.
+	 *
+	 * @return 기술스택 목록 List<TechStackVo>
+	 * @throws Exception
+	 */
+	public List<TechStackVo> selectListTechStack() throws Exception;
+
+	/**
+	 * 공고 등록 시 선택된 기술스택들을 company_tech_stack_relation 테이블에 저장한다.
+	 *
+	 * @param postVo       공고정보 PostVo (jobPostingId 포함)
+	 * @param techStackIds 선택된 기술스택 ID 목록
+	 * @throws Exception
+	 */
+	public void saveTechStackRelations(PostVo postVo, List<String> techStackIds) throws Exception;
+
+	/**
+	 * 특정 공고의 기술스택 관계를 모두 삭제한다.
+	 *
+	 * @param jobPostingId 공고 ID
+	 * @throws Exception
+	 */
+	public void deleteTechStackRelationsByPostId(String jobPostingId) throws Exception;
+
+	/**
+	 * 특정 공고의 기술스택 목록을 조회한다.
+	 *
+	 * @param jobPostingId 공고 ID
+	 * @return 기술스택 목록 List<TechStackVo>
+	 * @throws Exception
+	 */
+	public List<TechStackVo> selectTechStacksByPostId(String jobPostingId) throws Exception;
+
+	/**
+	 * 사용자 ID로 회사 ID를 조회한다.
+	 *
+	 * @param userId 사용자 ID
+	 * @return 회사 ID String
+	 * @throws Exception
+	 */
+	public String selectCompanyIdByUserId(String userId) throws Exception;
+
+	/**
+	 * 사용자 mbti, mbti 별 갯수 필터를 통해 회사 list를 정렬한다
+	 *
+	 * @param PostMatchVo = PostVo + 사용자 mbti, mbti 갯수
+	 * @return 회사 ID String
+	 * @throws Exception
+	 */
+	public List<PostVo> findPostsByMbti(PostMatchVo postMatchVo) throws Exception;
+
+	/**
+	 * 사용자 mbti, mbti 별 갯수 필터를 통해 회사 list의 갯수를 가져온다
+	 *
+	 * @param PostMatchVo = PostVo + 사용자 mbti, mbti 갯수
+	 * @return 회사 ID String
+	 * @throws Exception
+	 */
+	public long findPostsByMbtiCount(PostMatchVo postMatchVo) throws Exception;
+
+	/**
+	 * 사용자 mbti, mbti 별 갯수 필터를 통해 회사 list의 갯수를 가져온다
+	 *
+	 * @param PostMatchVo = PostVo + 사용자 mbti, mbti 갯수
+	 * @return 회사 ID String
+	 * @throws Exception
+	 */
+	public void sendToEmails(SendEmailVo sendEmailVo) throws Exception;
+
+	/**
+	 * 공고에 이력서 지원처리를 한다.
+	 *
+	 * @param sendEmailVo 합불여부, 메일 전송할 email, 메일 내용
+	 * @return 등록된 행의 수
+	 * @throws Exception
+	 */
+	public int insertJobApplication(JobApplicationVo jobApplicationVo) throws Exception;
+
+	/**
+	 * 메인 페이지에서 출력할 공고목록을 조회한다.
+	 *
+	 * @return 기술스택 목록 조회 결과
+	 * @throws Exception
+	 */
+	public MainPostingListVo selectPostingList() throws Exception;
+
+	/**
+	 * 기업이 스카웃한 유저를 저장한다.
+	 * 
+	 * @param jobPostingId 공고 ID, accountIds 스카웃 된 User ID List
+	 * @return 기술스택 목록 조회 결과
+	 * @throws Exception
+	 */
+	public void insertScoutRequest(ScoutUserVo scoutUserVo) throws Exception;
+
+	/**
+	 * 유저가 지원한 공고를 가져온다.
+	 * 
+	 * @param pageIndex 페이지번호, pageSize 페이지크기, userId 사용자ID, applicationStatus 이력서
+	 *                  상태
+	 * @return jobPostingId 공고 ID, name 회사명, title 공고명, experienceLevel 경력,
+	 *         preferredDeveloperTypes MBTI_JSON_LIST
+	 * @throws Exception
+	 */
+	public List<ApplicationListVo> getApplicationHistoryList(ApplicationSearchVo applicationSearchVo) throws Exception;
+
+	/**
+	 * 유저에게 매칭신청을 한 공고를 가져온다.
+	 *
+	 * @param 	pageIndex 페이지번호, pageSize	페이지크기, userId 사용자ID
+	 * @return 	jobPostingId 공고 ID, name 회사명, title 공고명, experienceLevel 경력, preferredDeveloperTypes MBTI_JSON_LIST
+	 * @throws 	Exception							
+	 */
+	public List<ScoutListVo> selectScoutCompany(ScoutSearchVo scoutSearchVo) throws Exception;
+	
+	
+		/*
+	 * 사용자의 특정 공고 지원 상태를 확인한다.
+	 *
+	 * @process 1. JobApplicationVo를 생성하여 파라미터 설정 2. DAO를 통해 지원 여부 확인 3. 결과 반환 (0:
+	 * 지원하지 않음, 1 이상: 지원함)
+	 *
+	 * @param jobPostingId 공고 ID
+	 * 
+	 * @param accountId 사용자 계정 ID
+	 * 
+	 * @return 지원 여부 (true: 지원함, false: 지원하지 않음)
+	 * 
+	 * @throws Exception
+	 */
+	public boolean checkApplicationStatus(int jobPostingId, int accountId) throws Exception;
+}

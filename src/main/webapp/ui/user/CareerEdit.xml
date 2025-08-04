@@ -429,19 +429,17 @@ scwin.goNext = function() {
     var careerDescription = dma_career.get("careerDescription");
     
     if (!careerType || careerType === "") {
-        alert("경력 정보를 선택해주세요.");
+        $c.win.alert("경력 정보를 선택해주세요.");
         return;
     }
     
     if (careerType === 'experienced' && (!careerDescription || careerDescription.trim() === '')) {
-        alert("경력 상세 내용을 입력해주세요.");
+        $c.win.alert("경력 상세 내용을 입력해주세요.");
         return;
     }
     
     // 사용자 정보 업데이트
-    console.log("경력 유형:", careerType);
-    console.log("경력 설명:", careerDescription);
-    alert("경력 정보가 업데이트되었습니다!");
+    $c.win.alert("경력 정보가 업데이트되었습니다!");
     
     // 마이페이지로 돌아가기
     location.href = '/websquare/websquare.html?w2xPath=/ui/user/userDetail.xml';

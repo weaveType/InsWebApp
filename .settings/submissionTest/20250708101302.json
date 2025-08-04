@@ -1,0 +1,9 @@
+{
+   "charset": "UTF-8",
+   "reqMethod": "POST",
+   "serviceURL": "http://localhost:9093/InsWebApp/CP0001Del.pwkjson",
+   "contentType": "application/json",
+   "requestContent": "{\"corporateVo\": {\n   \"companyId\": \"SampleValue_0\",\n   \"businessCertificate\": \"SampleValue_2\",\n   \"empCount\": \"SampleValue_4\",\n   \"logoFileName\": \"SampleValue_6\",\n   \"description\": \"SampleValue_5\",\n   \"businessNumber\": \"SampleValue_1\",\n   \"industry\": \"SampleValue_3\"\n}}",
+   "responseContent": "{\"elHeader\":{\"reqUrl\":\"/InsWebApp/CP0001Del.pwkjson\",\"traceId\":\"2025070810130222800027927\",\"serviceKey\":\"CP0001Del\",\"bArgResolveParsing\":false,\"resSuc\":false,\"resMsg\":\"세션이 존재하지 않습니다.\",\"resCode\":\"ERROR.LOGIN.004\",\"validateSuc\":false,\"saveTokenKey\":false,\"removeTokenKey\":false,\"locale\":\"ko\",\"language\":\"ko\",\"startTime\":0,\"svcTimeOut\":0,\"inOutDataEnc\":true,\"dbDataEnc\":false,\"gTraceId\":\"2025070810130222800027927\",\"fieldApplyAttr\":true,\"simurate\":false,\"deferredSvc\":false,\"centerCutSvc\":false}}",
+   "sendTime": "2025-07-08 10:13:02"
+}

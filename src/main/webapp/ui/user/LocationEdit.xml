@@ -404,7 +404,7 @@ scwin.selectLocation = function(locationValue) {
             
             // 2. 최대 개수 확인
             if (scwin.selectedLocationsArray.length >= scwin.maxSelections) {
-                alert("최대 " + scwin.maxSelections + "개까지만 선택 가능합니다.");
+                $c.win.alert("최대 " + scwin.maxSelections + "개까지만 선택 가능합니다.");
                 return;
             }
             
@@ -538,23 +538,22 @@ scwin.updateNextButton = function() {
 // 이전 버튼 클릭
 scwin.goBack = function() {
     if (confirm("이전 단계로 돌아가시겠습니까? 선택하신 지역이 사라질 수 있습니다.")) {
-        location.href = '/websquare/websquare.html?w2xPath=/ui/user/userDetail.xml';
+        $p.url("UserDetail.xml");
     }
 };
 
 // 다음 버튼 클릭 (완료)
 scwin.goNext = function() {
     if (scwin.selectedLocationsArray.length === 0) {
-        alert("희망 근무지역을 하나 이상 선택해주세요.");
+        $c.win.alert("희망 근무지역을 하나 이상 선택해주세요.");
         return;
     }
     
     // 사용자 정보 업데이트
-    console.log("선택된 지역:", scwin.selectedLocationsArray);
-    alert("지역 정보가 성공적으로 업데이트되었습니다!\\n선택된 지역: " + scwin.selectedLocationsArray.join(', '));
+    $c.win.alert("지역 정보가 성공적으로 업데이트되었습니다!\\n선택된 지역: " + scwin.selectedLocationsArray.join(', '));
     
     // 마이페이지로 돌아가기
-    location.href = '/websquare/websquare.html?w2xPath=/ui/user/userDetail.xml';
+    $p.url("UserDetail.xml");
 };
 ]]></script>
     </head>

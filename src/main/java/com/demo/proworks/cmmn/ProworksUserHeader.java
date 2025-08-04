@@ -3,9 +3,10 @@ package com.demo.proworks.cmmn;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-
+import com.inswave.elfw.exception.ElException;
 import com.inswave.elfw.annotation.ElDto;
 import com.inswave.elfw.annotation.ElDtoField;
+import com.inswave.elfw.annotation.ElVoField;
 import com.fasterxml.jackson.annotation.JsonFilter;
 import com.inswave.elfw.log.AppLog;
 
@@ -24,171 +25,308 @@ public class ProworksUserHeader extends com.inswave.elfw.core.UserHeader {
         this._offset = iOffset;
     }
 
-    @ElDtoField(logicalName = "전문길이", physicalName = "fldLen", type = "int", typeKind = "", fldYn = "Yes", delimeterYn = "Yes", cryptoGbn = "", cryptoKind = "", length = 10, dotLen = 0, baseValue = "", desc = "")
+    @ElDtoField(logicalName = "전문길이", physicalName = "fldLen", type = "int", typeKind = "", fldYn = "Yes", delimeterYn = "Yes", cryptoGbn = "", cryptoKind = "", length = 10, dotLen = 0, baseValue = "", desc = "", attr = "")
     private int fldLen;
 
-    @ElDtoField(logicalName = "서비스ID", physicalName = "svcId", type = "String", typeKind = "", fldYn = "Yes", delimeterYn = "Yes", cryptoGbn = "", cryptoKind = "", length = 20, dotLen = 0, baseValue = "", desc = "")
+    @ElDtoField(logicalName = "서비스ID", physicalName = "svcId", type = "String", typeKind = "", fldYn = "Yes", delimeterYn = "Yes", cryptoGbn = "", cryptoKind = "", length = 20, dotLen = 0, baseValue = "", desc = "", attr = "")
     private String svcId;
 
-    @ElDtoField(logicalName = "전문입력ID", physicalName = "inInfId", type = "String", typeKind = "", fldYn = "Yes", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 30, dotLen = 0, baseValue = "", desc = "")
+    @ElDtoField(logicalName = "전문입력ID", physicalName = "inInfId", type = "String", typeKind = "", fldYn = "Yes", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 30, dotLen = 0, baseValue = "", desc = "", attr = "")
     private String inInfId;
 
-    @ElDtoField(logicalName = "전문출력ID", physicalName = "outInfId", type = "String", typeKind = "", fldYn = "Yes", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 30, dotLen = 0, baseValue = "", desc = "")
+    @ElDtoField(logicalName = "전문출력ID", physicalName = "outInfId", type = "String", typeKind = "", fldYn = "Yes", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 30, dotLen = 0, baseValue = "", desc = "", attr = "")
     private String outInfId;
 
-    @ElDtoField(logicalName = "성공실패여부", physicalName = "sucYn", type = "String", typeKind = "", fldYn = "Yes", delimeterYn = "Yes", cryptoGbn = "", cryptoKind = "", length = 1, dotLen = 0, baseValue = "", desc = "")
+    @ElDtoField(logicalName = "성공실패여부", physicalName = "sucYn", type = "String", typeKind = "", fldYn = "Yes", delimeterYn = "Yes", cryptoGbn = "", cryptoKind = "", length = 1, dotLen = 0, baseValue = "", desc = "", attr = "")
     private String sucYn;
 
-    @ElDtoField(logicalName = "에러코드", physicalName = "errorCode", type = "String", typeKind = "", fldYn = "Yes", delimeterYn = "Yes", cryptoGbn = "", cryptoKind = "", length = 30, dotLen = 0, baseValue = "", desc = "")
+    @ElDtoField(logicalName = "에러코드", physicalName = "errorCode", type = "String", typeKind = "", fldYn = "Yes", delimeterYn = "Yes", cryptoGbn = "", cryptoKind = "", length = 30, dotLen = 0, baseValue = "", desc = "", attr = "")
     private String errorCode;
 
-    @ElDtoField(logicalName = "에러메시지", physicalName = "errMag", type = "String", typeKind = "", fldYn = "Yes", delimeterYn = "Yes", cryptoGbn = "", cryptoKind = "", length = 100, dotLen = 0, baseValue = "", desc = "")
+    @ElDtoField(logicalName = "에러메시지", physicalName = "errMag", type = "String", typeKind = "", fldYn = "Yes", delimeterYn = "Yes", cryptoGbn = "", cryptoKind = "", length = 100, dotLen = 0, baseValue = "", desc = "", attr = "")
     private String errMag;
 
-    @ElDtoField(logicalName = "테스트", physicalName = "location", type = "String", typeKind = "", fldYn = "Yes", delimeterYn = "Yes", cryptoGbn = "", cryptoKind = "", length = 10, dotLen = 0, baseValue = "", desc = "")
+    @ElDtoField(logicalName = "유저 ID", physicalName = "userId", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private String userId;
+
+    @ElDtoField(logicalName = "테스트", physicalName = "location", type = "String", typeKind = "", fldYn = "Yes", delimeterYn = "Yes", cryptoGbn = "", cryptoKind = "", length = 10, dotLen = 0, baseValue = "", desc = "", attr = "")
     private String location;
 
-    @ElDtoField(logicalName = "사용자ID", physicalName = "testId", type = "String", typeKind = "", fldYn = "Yes", delimeterYn = "Yes", cryptoGbn = "", cryptoKind = "", length = 10, dotLen = 0, baseValue = "", desc = "")
-    private String testId;
+    @ElDtoField(logicalName = "사용자ID", physicalName = "testId", type = "int", typeKind = "", fldYn = "No", delimeterYn = "No", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private int testId;
 
-    @ElDtoField(logicalName = "테스트01 카운트", physicalName = "test01Cnt", type = "String", typeKind = "", fldYn = "No", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 11, dotLen = 0, baseValue = "", desc = "")
+    @ElDtoField(logicalName = "테스트01 카운트", physicalName = "test01Cnt", type = "String", typeKind = "", fldYn = "No", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 11, dotLen = 0, baseValue = "", desc = "", attr = "")
     private String test01Cnt;
 
-    @ElDtoField(logicalName = "테스트01유저헤더", physicalName = "test01UserHeader", type = "", typeKind = "List", fldYn = "No", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "test01Cnt", desc = "")
+    @ElDtoField(logicalName = "테스트01유저헤더", physicalName = "test01UserHeader", type = "", typeKind = "List", fldYn = "No", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "test01Cnt", desc = "", attr = "")
     private java.util.List<com.demo.proworks.cmmn.Test01UserHeader> test01UserHeader;
 
-    @ElDtoField(logicalName = "테스트 유저헤더 02", physicalName = "test02UserHeader", type = "", typeKind = "List", fldYn = "No", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "")
+    @ElDtoField(logicalName = "테스트 유저헤더 02", physicalName = "test02UserHeader", type = "", typeKind = "List", fldYn = "No", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
     private java.util.List<com.demo.proworks.cmmn.Test02UserHeader> test02UserHeader;
 
-    @ElDtoField(logicalName = "사용자이름", physicalName = "testUserName", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "")
+    @ElDtoField(logicalName = "사용자이름", physicalName = "testUserName", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
     private String testUserName;
 
-    @ElDtoField(logicalName = "부서명", physicalName = "testDeptName", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "")
+    @ElDtoField(logicalName = "부서명", physicalName = "testDeptName", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
     private String testDeptName;
 
-    @ElDtoField(logicalName = "부서코드", physicalName = "testDeptNo", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "")
+    @ElDtoField(logicalName = "부서코드", physicalName = "testDeptNo", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
     private String testDeptNo;
-    
+
+    @ElDtoField(logicalName = "이메일", physicalName = "email", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private String email;
+
+    @ElDtoField(logicalName = "권한", physicalName = "role", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private String role;
+
+    @ElDtoField(logicalName = "유저이름", physicalName = "name", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private String name;
+
+    @ElDtoField(logicalName = "로그인유저", physicalName = "accountId", type = "int", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private int accountId;
+
+    @ElDtoField(logicalName = "회사 ID", physicalName = "companyId", type = "long", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private long companyId;
+
+    @ElDtoField(logicalName = "MBTI 종류", physicalName = "mbti", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private String mbti;
+
+    @ElVoField(physicalName = "fldLen")
     public int getFldLen(){
         return fldLen;
     }
 
+    @ElVoField(physicalName = "fldLen")
     public void setFldLen(int fldLen){
         this.fldLen = fldLen;
     }
 
+    @ElVoField(physicalName = "svcId")
     public String getSvcId(){
-        return svcId;
+        String ret = this.svcId;
+        return ret;
     }
 
+    @ElVoField(physicalName = "svcId")
     public void setSvcId(String svcId){
         this.svcId = svcId;
     }
 
+    @ElVoField(physicalName = "inInfId")
     public String getInInfId(){
-        return inInfId;
+        String ret = this.inInfId;
+        return ret;
     }
 
+    @ElVoField(physicalName = "inInfId")
     public void setInInfId(String inInfId){
         this.inInfId = inInfId;
     }
 
+    @ElVoField(physicalName = "outInfId")
     public String getOutInfId(){
-        return outInfId;
+        String ret = this.outInfId;
+        return ret;
     }
 
+    @ElVoField(physicalName = "outInfId")
     public void setOutInfId(String outInfId){
         this.outInfId = outInfId;
     }
 
+    @ElVoField(physicalName = "sucYn")
     public String getSucYn(){
-        return sucYn;
+        String ret = this.sucYn;
+        return ret;
     }
 
+    @ElVoField(physicalName = "sucYn")
     public void setSucYn(String sucYn){
         this.sucYn = sucYn;
     }
 
+    @ElVoField(physicalName = "errorCode")
     public String getErrorCode(){
-        return errorCode;
+        String ret = this.errorCode;
+        return ret;
     }
 
+    @ElVoField(physicalName = "errorCode")
     public void setErrorCode(String errorCode){
         this.errorCode = errorCode;
     }
 
+    @ElVoField(physicalName = "errMag")
     public String getErrMag(){
-        return errMag;
+        String ret = this.errMag;
+        return ret;
     }
 
+    @ElVoField(physicalName = "errMag")
     public void setErrMag(String errMag){
         this.errMag = errMag;
     }
 
-    public String getLocation(){
-        return location;
+    @ElVoField(physicalName = "userId")
+    public String getUserId(){
+        String ret = this.userId;
+        return ret;
     }
 
+    @ElVoField(physicalName = "userId")
+    public void setUserId(String userId){
+        this.userId = userId;
+    }
+
+    @ElVoField(physicalName = "location")
+    public String getLocation(){
+        String ret = this.location;
+        return ret;
+    }
+
+    @ElVoField(physicalName = "location")
     public void setLocation(String location){
         this.location = location;
     }
 
-    public String getTestId(){
+    @ElVoField(physicalName = "testId")
+    public int getTestId(){
         return testId;
     }
 
-    public void setTestId(String testId){
+    @ElVoField(physicalName = "testId")
+    public void setTestId(int testId){
         this.testId = testId;
     }
 
+    @ElVoField(physicalName = "test01Cnt")
     public String getTest01Cnt(){
-        return test01Cnt;
+        String ret = this.test01Cnt;
+        return ret;
     }
 
+    @ElVoField(physicalName = "test01Cnt")
     public void setTest01Cnt(String test01Cnt){
         this.test01Cnt = test01Cnt;
     }
 
+    @ElVoField(physicalName = "test01UserHeader")
     public java.util.List<com.demo.proworks.cmmn.Test01UserHeader> getTest01UserHeader(){
         return test01UserHeader;
     }
 
+    @ElVoField(physicalName = "test01UserHeader")
     public void setTest01UserHeader(java.util.List<com.demo.proworks.cmmn.Test01UserHeader> test01UserHeader){
         this.test01UserHeader = test01UserHeader;
     }
 
+    @ElVoField(physicalName = "test02UserHeader")
     public java.util.List<com.demo.proworks.cmmn.Test02UserHeader> getTest02UserHeader(){
         return test02UserHeader;
     }
 
+    @ElVoField(physicalName = "test02UserHeader")
     public void setTest02UserHeader(java.util.List<com.demo.proworks.cmmn.Test02UserHeader> test02UserHeader){
         this.test02UserHeader = test02UserHeader;
     }
 
+    @ElVoField(physicalName = "testUserName")
     public String getTestUserName(){
-        return testUserName;
+        String ret = this.testUserName;
+        return ret;
     }
 
+    @ElVoField(physicalName = "testUserName")
     public void setTestUserName(String testUserName){
         this.testUserName = testUserName;
     }
 
+    @ElVoField(physicalName = "testDeptName")
     public String getTestDeptName(){
-        return testDeptName;
+        String ret = this.testDeptName;
+        return ret;
     }
 
+    @ElVoField(physicalName = "testDeptName")
     public void setTestDeptName(String testDeptName){
         this.testDeptName = testDeptName;
     }
 
+    @ElVoField(physicalName = "testDeptNo")
     public String getTestDeptNo(){
-        return testDeptNo;
+        String ret = this.testDeptNo;
+        return ret;
     }
 
+    @ElVoField(physicalName = "testDeptNo")
     public void setTestDeptNo(String testDeptNo){
         this.testDeptNo = testDeptNo;
     }
-    
+
+    @ElVoField(physicalName = "email")
+    public String getEmail(){
+        String ret = this.email;
+        return ret;
+    }
+
+    @ElVoField(physicalName = "email")
+    public void setEmail(String email){
+        this.email = email;
+    }
+
+    @ElVoField(physicalName = "role")
+    public String getRole(){
+        String ret = this.role;
+        return ret;
+    }
+
+    @ElVoField(physicalName = "role")
+    public void setRole(String role){
+        this.role = role;
+    }
+
+    @ElVoField(physicalName = "name")
+    public String getName(){
+        String ret = this.name;
+        return ret;
+    }
+
+    @ElVoField(physicalName = "name")
+    public void setName(String name){
+        this.name = name;
+    }
+
+    @ElVoField(physicalName = "accountId")
+    public int getAccountId(){
+        return accountId;
+    }
+
+    @ElVoField(physicalName = "accountId")
+    public void setAccountId(int accountId){
+        this.accountId = accountId;
+    }
+
+    @ElVoField(physicalName = "companyId")
+    public long getCompanyId(){
+        return companyId;
+    }
+
+    @ElVoField(physicalName = "companyId")
+    public void setCompanyId(long companyId){
+        this.companyId = companyId;
+    }
+
+    @ElVoField(physicalName = "mbti")
+    public String getMbti(){
+        String ret = this.mbti;
+        return ret;
+    }
+
+    @ElVoField(physicalName = "mbti")
+    public void setMbti(String mbti){
+        this.mbti = mbti;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -200,6 +338,7 @@ public class ProworksUserHeader extends com.inswave.elfw.core.UserHeader {
         sb.append("sucYn").append("=").append(sucYn).append(",");
         sb.append("errorCode").append("=").append(errorCode).append(",");
         sb.append("errMag").append("=").append(errMag).append(",");
+        sb.append("userId").append("=").append(userId).append(",");
         sb.append("location").append("=").append(location).append(",");
         sb.append("testId").append("=").append(testId).append(",");
         sb.append("test01Cnt").append("=").append(test01Cnt).append(",");
@@ -207,7 +346,14 @@ public class ProworksUserHeader extends com.inswave.elfw.core.UserHeader {
         sb.append("test02UserHeader").append("=").append(test02UserHeader).append(",");
         sb.append("testUserName").append("=").append(testUserName).append(",");
         sb.append("testDeptName").append("=").append(testDeptName).append(",");
-        sb.append("testDeptNo").append("=").append(testDeptNo);
+        sb.append("testDeptNo").append("=").append(testDeptNo).append(",");
+        sb.append("email").append("=").append(email).append(",");
+        sb.append("role").append("=").append(role).append(",");
+        sb.append("name").append("=").append(name).append(",");
+        sb.append("accountId").append("=").append(accountId).append(",");
+        sb.append("companyId").append("=").append(companyId).append(",");
+        sb.append("mbti").append("=").append(mbti);
+        sb.append("]");
         return sb.toString();
 
     }
@@ -216,11 +362,11 @@ public class ProworksUserHeader extends com.inswave.elfw.core.UserHeader {
         return true;
     }
 
-    public byte[] marshalFld() throws Exception{
+    public byte[] marshalFld() throws IOException{
         return marshalFld( com.inswave.elfw.ElConfig.getFldEncode() ); 
     }
 
-	public byte[] marshalFld(String encode) throws Exception{
+	public byte[] marshalFld(String encode) throws IOException{
     	ByteArrayOutputStream bout = new ByteArrayOutputStream();
         DataOutputStream out = null;
         try {
@@ -233,8 +379,7 @@ public class ProworksUserHeader extends com.inswave.elfw.core.UserHeader {
             out.write( com.inswave.elfw.util.TypeConversionUtil.strToSpBytes(this.errorCode , 30, encode ) );
             out.write( com.inswave.elfw.util.TypeConversionUtil.strToSpBytes(this.errMag , 100, encode ) );
             out.write( com.inswave.elfw.util.TypeConversionUtil.strToSpBytes(this.location , 10, encode ) );
-            out.write( com.inswave.elfw.util.TypeConversionUtil.strToSpBytes(this.testId , 10, encode ) );
-        } catch (Exception e) {
+        } catch (IOException e) {
                 AppLog.error("marshalFld Error:["+ toString()+"]", e);
                 throw e;
         } finally {
@@ -252,11 +397,11 @@ public class ProworksUserHeader extends com.inswave.elfw.core.UserHeader {
         return bout.toByteArray();
     }
 
-    public void unMarshalFld( byte[] bytes ) throws Exception{
+    public void unMarshalFld( byte[] bytes ) throws ElException{
         unMarshalFld( bytes, com.inswave.elfw.ElConfig.getFldEncode() ); 
     }
 
-    public void unMarshalFld( byte[] bytes , String encode) throws Exception{
+    public void unMarshalFld( byte[] bytes , String encode) throws ElException{
         try{ 
              this.fldLen = com.inswave.elfw.util.TypeConversionUtil.bytesToInt( bytes, _offset, 10, encode );
              _offset += 10;
@@ -274,9 +419,7 @@ public class ProworksUserHeader extends com.inswave.elfw.core.UserHeader {
              _offset += 100;
             this.location = com.inswave.elfw.util.TypeConversionUtil.getTrimmedString( bytes, _offset, 10, encode );
              _offset += 10;
-            this.testId = com.inswave.elfw.util.TypeConversionUtil.getTrimmedString( bytes, _offset, 10, encode );
-             _offset += 10;
-        }catch(Exception e) { 
+        }catch(ElException e) { 
             String errorLine = com.inswave.elfw.util.TypeConversionUtil.getTrimmedString( bytes, 0, bytes.length, encode );
             AppLog.error("unMarshalFld Error:["+ errorLine+"]", e);
             throw e;
@@ -288,7 +431,7 @@ public class ProworksUserHeader extends com.inswave.elfw.core.UserHeader {
     }
 
     public int getFixedTotalLength(){
-        return 241;
+        return 231;
     }
 
     @Override

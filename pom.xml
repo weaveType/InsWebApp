@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>InsWebApp</groupId>
 	<artifactId>InsWebApp</artifactId>
@@ -9,17 +11,18 @@
 	<url>http://maven.apache.org</url>
 
 	<licenses>
-	        <license>
-	            <name>The Apache Software License, Version 2.0</name>
-	            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-	        </license>
+		<license>
+			<name>The Apache Software License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+		</license>
 	</licenses>
-    
+
 	<properties>
 		<java.version>8</java.version>
 		<encoding>UTF-8</encoding>
 		<spring.maven.artifact.version>5.3.39</spring.maven.artifact.version>
-		<project.lib.path>C:\InswaveToolSP1\workspace\InsWebApp\src\main\webapp\WEB-INF\lib</project.lib.path>
+		<project.lib.path>
+			C:\InswaveToolSP1\workspace\InsWebApp\src\main\webapp\WEB-INF\lib</project.lib.path>
 	</properties>
 
 	<repositories>
@@ -151,19 +154,19 @@
 			<artifactId>mybatis</artifactId>
 			<version>3.5.19</version>
 		</dependency>
-		
+
 		<!--MyBatis -->
 		<dependency>
 			<groupId>org.mybatis</groupId>
 			<artifactId>mybatis-spring</artifactId>
 			<version>3.0.0</version>
 		</dependency>
-        
+
 		<dependency>
-		    <groupId>javax.annotation</groupId>
-		    <artifactId>jsr250-api</artifactId>
-		    <version>1.0</version>
-        	</dependency>
+			<groupId>javax.annotation</groupId>
+			<artifactId>jsr250-api</artifactId>
+			<version>1.0</version>
+		</dependency>
 
 		<dependency>
 			<groupId>javax.servlet</groupId>
@@ -183,18 +186,18 @@
 			<artifactId>standard</artifactId>
 			<version>1.1.2</version>
 		</dependency>-->
-		
+
 		<dependency>
-		    <groupId>org.apache.taglibs</groupId>
-		    <artifactId>taglibs-standard-impl</artifactId>
-		    <version>1.2.5</version>
-		    <scope>runtime</scope>
+			<groupId>org.apache.taglibs</groupId>
+			<artifactId>taglibs-standard-impl</artifactId>
+			<version>1.2.5</version>
+			<scope>runtime</scope>
 		</dependency>
-		
+
 		<dependency>
-		    <groupId>org.apache.taglibs</groupId>
-		    <artifactId>taglibs-standard-jstlel</artifactId>
-		    <version>1.2.5</version>
+			<groupId>org.apache.taglibs</groupId>
+			<artifactId>taglibs-standard-jstlel</artifactId>
+			<version>1.2.5</version>
 		</dependency>
 
 		<dependency>
@@ -227,7 +230,7 @@
 			<artifactId>junit</artifactId>
 			<version>4.13.2</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>cglib</groupId>
 			<artifactId>cglib</artifactId>
@@ -291,9 +294,9 @@
 		</dependency>
 
 		<dependency>
-		    <groupId>org.apache.commons</groupId>
-		    <artifactId>commons-digester3</artifactId>
-		    <version>3.2</version>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-digester3</artifactId>
+			<version>3.2</version>
 		</dependency>
 
 		<!--버전 3.5.1, 3.5.2, 3.5.3, 4.13.0 오류-->
@@ -340,7 +343,8 @@
 			</exclusions>
 		</dependency>-->
 
-		<!-- Json  Spring4.0 지원안함 :  View resolver 에서 org.codehaus.jackson lib 로 부터 상속 방아 처리하고 있다면 com.fasterxml.jackson lib 로 수정 필요  -->
+		<!-- Json  Spring4.0 지원안함 :  View resolver 에서 org.codehaus.jackson lib 로
+		부터 상속 방아 처리하고 있다면 com.fasterxml.jackson lib 로 수정 필요  -->
 		<!-- dependency>
 	        <groupId>org.codehaus.jackson</groupId>
 	        <artifactId>jackson-mapper-asl</artifactId>
@@ -362,7 +366,7 @@
 		<dependency>
 			<groupId>org.json</groupId>
 			<artifactId>json</artifactId>
-			<version>20230227</version>
+			<version>20240303</version>
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/com.github.javadev/underscore -->
@@ -376,15 +380,15 @@
 		<dependency>
 			<groupId>com.thoughtworks.xstream</groupId>
 			<artifactId>xstream</artifactId>
-            <version>1.4.20</version>
+			<version>1.4.20</version>
 		</dependency>
-		
+
 		<dependency>
-		    <groupId>io.jsonwebtoken</groupId>
-		    <artifactId>jjwt-api</artifactId>
-		    <version>0.10.8</version>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-api</artifactId>
+			<version>0.10.8</version>
 		</dependency>
-		
+
 		<!-- Castor -->
 		<dependency>
 			<groupId>org.codehaus.castor</groupId>
@@ -392,18 +396,18 @@
 			<version>1.4.1</version>
 			<type>pom</type>
 		</dependency>
-		
+
 		<dependency>
-		    <groupId>net.sourceforge.jexcelapi</groupId>
-		    <artifactId>jxl</artifactId>
-		    <version>2.6.12</version>
-		</dependency>		
-		
+			<groupId>net.sourceforge.jexcelapi</groupId>
+			<artifactId>jxl</artifactId>
+			<version>2.6.12</version>
+		</dependency>
+
 		<!--jdk 8에서만 사용, 상위버전에서는 주석 처리-->
 		<dependency>
-		    <groupId>xml-apis</groupId>
-		    <artifactId>xml-apis</artifactId>
-		    <version>1.4.01</version>
+			<groupId>xml-apis</groupId>
+			<artifactId>xml-apis</artifactId>
+			<version>1.4.01</version>
 		</dependency>
 		<dependency>
 			<groupId>xerces</groupId>
@@ -419,16 +423,16 @@
 
 		<!-- Validator -->
 		<dependency>
-		    <groupId>commons-validator</groupId>
-		    <artifactId>commons-validator</artifactId>
-		    <version>1.7</version>
+			<groupId>commons-validator</groupId>
+			<artifactId>commons-validator</artifactId>
+			<version>1.7</version>
 		</dependency>
 
 		<!-- Java Parser -->
 		<dependency>
-    		<groupId>com.github.javaparser</groupId>
-    		<artifactId>javaparser-core</artifactId>
-    		<version>3.25.1</version>
+			<groupId>com.github.javaparser</groupId>
+			<artifactId>javaparser-core</artifactId>
+			<version>3.25.1</version>
 		</dependency>
 
 		<!-- SAAJ - Because : WebService -->
@@ -483,6 +487,12 @@
 			<version>1.15</version>
 		</dependency>
 
+		<!-- SMTP 메일전송 -->
+		<dependency>
+			<groupId>javax.mail</groupId>
+			<artifactId>mail</artifactId>
+			<version>1.4.7</version>
+		</dependency>
 
 		<!-- Jedis for Redis -->
 		<!--  
@@ -509,7 +519,7 @@
 			<scope>system</scope>
 			<systemPath>${project.lib.path}/commons-net-3.9.0.jar</systemPath>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>inswave-spring</groupId>
 			<artifactId>inswave-spring</artifactId>
@@ -517,7 +527,7 @@
 			<scope>system</scope>
 			<systemPath>${project.lib.path}/inswave-spring-1.1.jar</systemPath>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>jsch</groupId>
 			<artifactId>jsch</artifactId>
@@ -525,7 +535,7 @@
 			<scope>system</scope>
 			<systemPath>${project.lib.path}/jsch-0.1.55.jar</systemPath>
 		</dependency>
-		
+
 		<!--<dependency>
 			<groupId>log4jdbc3</groupId>
 			<artifactId>log4jdbc3</artifactId>
@@ -555,7 +565,7 @@
 			<artifactId>jaxb-api</artifactId>
 			<version>2.3.1</version>
 		</dependency>
-		
+
 		<!-- JDK 11이상
 		<dependency>
 			<groupId>com.sun.xml.bind</groupId>
@@ -569,32 +579,60 @@
 			<version>2.3.8</version>
 		</dependency>
 		-->
-		
+
 		<dependency>
 			<groupId>com.sun.xml.bind</groupId>
 			<artifactId>jaxb-core</artifactId>
 			<version>2.3.0.1</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>com.sun.xml.bind</groupId>
 			<artifactId>jaxb-impl</artifactId>
 			<version>2.3.1</version>
 		</dependency>
-		
+
 		<!-- ProcessExecute -->
 		<dependency>
-		    <groupId>org.zeroturnaround</groupId>
-		    <artifactId>zt-exec</artifactId>
-		    <version>1.12</version>
+			<groupId>org.zeroturnaround</groupId>
+			<artifactId>zt-exec</artifactId>
+			<version>1.12</version>
 		</dependency>
-		
+
 		<!-- dependency>
 		    <groupId>org.springframework.kafka</groupId>
 		    <artifactId>spring-kafka</artifactId>
 		    <version>2.9.12</version>
 		</dependency -->
-		
+
+		<dependency>
+			<groupId>org.mindrot</groupId>
+			<artifactId>jbcrypt</artifactId>
+			<version>0.4</version>
+		</dependency>
+
+		<!-- Google Genai SDK for Gemini API -->
+		<!-- 
+		<dependency>
+			<groupId>com.google.cloud</groupId>
+			<artifactId>google-cloud-vertexai</artifactId>
+			<version>1.7.0</version>
+			<exclusions>
+				<exclusion>
+					<groupId>io.grpc</groupId>
+					<artifactId>grpc-netty-shaded</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		-->
+
+		<dependency>
+			<groupId>org.jsoup</groupId>
+			<artifactId>jsoup</artifactId>
+			<version>1.11.3</version>
+		</dependency>
+
+
 	</dependencies>
 
 	<build>
@@ -608,7 +646,7 @@
 					<artifactId>maven-war-plugin</artifactId>
 					<version>3.3.1</version>
 				</plugin>
-				
+
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
@@ -624,7 +662,7 @@
 						<encoding>${encoding}</encoding>
 					</configuration>
 				</plugin>
-				
+
 				<plugin>
 					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>hibernate3-maven-plugin</artifactId>
@@ -644,7 +682,7 @@
 					<artifactId>emma-maven-plugin</artifactId>
 					<version>1.0-alpha-3</version>
 				</plugin>
-				
+
 				<!-- PMD manven plugin -->
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -672,14 +710,14 @@
 					</includes>
 				</configuration>
 			</plugin>
-			
+
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>emma-maven-plugin</artifactId>
 				<!--<version>1.0-alpha-1</version>-->
 				<inherited>true</inherited>
 			</plugin>
-			
+
 			<!--  JavaDoc -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -704,20 +742,21 @@
 						<inherited>true</inherited>
 						<configuration>
 							<links>
-								<link>https://docs.oracle.com/en/java/javase/11/docs/api/</link>
+								<link>
+									https://docs.oracle.com/en/java/javase/11/docs/api/</link>
 							</links>
 						</configuration>
 					</reportSet>
 				</reportSets>
 			</plugin>
-			
+
 			<!-- JUnit Test Results & EMMA Coverage Reporting -->
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>emma-maven-plugin</artifactId>
 				<inherited>true</inherited>
 			</plugin>
-			
+
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>surefire-report-maven-plugin</artifactId>
@@ -730,7 +769,7 @@
 					</reportSet>
 				</reportSets>
 			</plugin>
-			
+
 			<!-- PMD manven plugin -->
 			<!--
 				<plugin> <groupId>org.apache.maven.plugins</groupId>
@@ -766,7 +805,7 @@
 					<charset>${encoding}</charset>
 				</configuration>
 			</plugin>
-			
+
 			<!-- Generating Java Source in HTML -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

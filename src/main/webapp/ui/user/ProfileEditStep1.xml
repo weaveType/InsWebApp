@@ -406,7 +406,7 @@ scwin.updateNextButton = function() {
 // 이전 버튼 클릭
 scwin.goBack = function() {
     if (confirm("이전 페이지로 돌아가시겠습니까? 입력하신 내용이 사라질 수 있습니다.")) {
-        location.href = '/websquare/websquare.html?w2xPath=/ui/user/userDetail.xml';
+        $p.url("UserDetail.xml");
     }
 };
 
@@ -415,17 +415,14 @@ scwin.goNext = function() {
     var introduction = dma_profile.get("introduction");
     
     if (!introduction || introduction.trim().length < 10) {
-        alert("간단 소개를 10자 이상 입력해주세요.");
+        $c.win.alert("간단 소개를 10자 이상 입력해주세요.");
         return;
     }
     
-    // 사용자 정보 업데이트
-    console.log("프로필 이미지:", dma_profile.get("profileImage"));
-    console.log("간단 소개:", introduction);
-    alert("프로필 정보가 업데이트되었습니다!");
+    $c.win.alert("프로필 정보가 업데이트되었습니다!");
     
     // 마이페이지로 돌아가기
-    location.href = '/websquare/websquare.html?w2xPath=/ui/user/userDetail.xml';
+    $p.url("UserDetail.xml");
 };
 ]]></script>
     </head>

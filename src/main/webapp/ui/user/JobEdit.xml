@@ -425,7 +425,7 @@ scwin.updateUI = function() {
 // 뒤로가기
 scwin.goBack = function() {
     if (confirm("변경사항이 저장되지 않을 수 있습니다. 계속하시겠습니까?")) {
-        location.href = '/websquare/websquare.html?w2xPath=/ui/user/userDetail.xml';
+        $p.url("UserDetail.xml");
     }
 };
 
@@ -436,20 +436,20 @@ scwin.saveJobInfo = function() {
     var careerLevel = dma_jobInfo.get("careerLevel");
     
     if (!jobCategory) {
-        alert("직무 분야를 선택해주세요.");
+        $c.win.alert("직무 분야를 선택해주세요.");
         return;
     }
     
     if (!careerLevel) {
-        alert("경력 수준을 선택해주세요.");
+        $c.win.alert("경력 수준을 선택해주세요.");
         return;
     }
     
     // 실제 환경에서는 서버에 저장
-    alert("직무/분야 정보가 저장되었습니다.");
+    $c.win.alert("직무/분야 정보가 저장되었습니다.");
     
     // 사용자 상세 페이지로 돌아가기
-    location.href = '/websquare/websquare.html?w2xPath=/ui/user/userDetail.xml';
+    $p.url("UserDetail.xml");
 };
 
 // 직무 분야 선택
@@ -616,67 +616,50 @@ scwin.updateNextButtonState = function() {
             <!-- 메인 컨테이너 -->
             <div class="container">
                 <!-- 진행도 표시 -->
-                <section class="progress-container">
-                    <div class="progress-header">
-                        <w2:textbox class="progress-title" label="직무 정보 설정"></w2:textbox>
-                        <w2:textbox class="progress-subtitle" label="나에게 맞는 기회를 찾기 위해 직무 정보를 설정해주세요"></w2:textbox>
-                    </div>
-                    
-                    <div class="progress-bar">
-                        <div class="progress-step active">1</div>
-                        <div class="progress-step inactive">2</div>
-                        <div class="progress-step inactive">3</div>
-                    </div>
-                    
-                    <div class="progress-labels">
-                        <div class="progress-label active">직무분야</div>
-                        <div class="progress-label">경력수준</div>
-                        <div class="progress-label">근무형태</div>
-                    </div>
-                </section>
 
                 <!-- 직무 분야 선택 -->
                 <section class="form-section">
-                    <w2:textbox class="section-title" label="어떤 분야에서 일하고 싶으신가요?"></w2:textbox>
-                    <w2:textbox class="section-subtitle" label="관심 있는 직무 분야를 선택해주세요"></w2:textbox>
-                    
-                    <div class="option-grid">
-                        <div class="option-card" data-category="개발" onclick="scwin.selectJobCategory('개발')">
-                            <div class="option-icon">💻</div>
-                            <div class="option-title">개발</div>
-                            <div class="option-subtitle">백엔드, 프론트엔드, 풀스택 등</div>
-                        </div>
-                        
-                        <div class="option-card" data-category="데이터" onclick="scwin.selectJobCategory('데이터')">
-                            <div class="option-icon">📊</div>
-                            <div class="option-title">데이터</div>
-                            <div class="option-subtitle">데이터 분석, 엔지니어링</div>
-                        </div>
-                        
-                        <div class="option-card" data-category="기획" onclick="scwin.selectJobCategory('기획')">
-                            <div class="option-icon">📋</div>
-                            <div class="option-title">기획</div>
-                            <div class="option-subtitle">서비스, 프로덕트 기획</div>
-                        </div>
-                        
-                        <div class="option-card" data-category="디자인" onclick="scwin.selectJobCategory('디자인')">
-                            <div class="option-icon">🎨</div>
-                            <div class="option-title">디자인</div>
-                            <div class="option-subtitle">UI/UX, 그래픽 디자인</div>
-                        </div>
-                        
-                        <div class="option-card" data-category="마케팅" onclick="scwin.selectJobCategory('마케팅')">
-                            <div class="option-icon">📢</div>
-                            <div class="option-title">마케팅</div>
-                            <div class="option-subtitle">디지털, 퍼포먼스 마케팅</div>
-                        </div>
-                        
-                        <div class="option-card" data-category="기타" onclick="scwin.selectJobCategory('기타')">
-                            <div class="option-icon">📝</div>
-                            <div class="option-title">기타</div>
-                            <div class="option-subtitle">다른 분야</div>
-                        </div>
-                    </div>
+                	<w2:textbox class="progress-title" label="개인정보 수정"></w2:textbox>
+                	<w2:textbox class="section-title" label="어떤 분야에서 일하고 싶으신가요?"></w2:textbox>
+                	<w2:textbox class="section-subtitle" label="관심 있는 직무 분야를 선택해주세요"></w2:textbox>
+
+                	<div class="option-grid">
+                		<div class="option-card" data-category="개발" onclick="scwin.selectJobCategory('개발')">
+                			<div class="option-icon">💻</div>
+                			<div class="option-title">개발</div>
+                			<div class="option-subtitle">백엔드, 프론트엔드, 풀스택 등</div>
+                		</div>
+
+                		<div class="option-card" data-category="데이터" onclick="scwin.selectJobCategory('데이터')">
+                			<div class="option-icon">📊</div>
+                			<div class="option-title">데이터</div>
+                			<div class="option-subtitle">데이터 분석, 엔지니어링</div>
+                		</div>
+
+                		<div class="option-card" data-category="기획" onclick="scwin.selectJobCategory('기획')">
+                			<div class="option-icon">📋</div>
+                			<div class="option-title">기획</div>
+                			<div class="option-subtitle">서비스, 프로덕트 기획</div>
+                		</div>
+
+                		<div class="option-card" data-category="디자인" onclick="scwin.selectJobCategory('디자인')">
+                			<div class="option-icon">🎨</div>
+                			<div class="option-title">디자인</div>
+                			<div class="option-subtitle">UI/UX, 그래픽 디자인</div>
+                		</div>
+
+                		<div class="option-card" data-category="마케팅" onclick="scwin.selectJobCategory('마케팅')">
+                			<div class="option-icon">📢</div>
+                			<div class="option-title">마케팅</div>
+                			<div class="option-subtitle">디지털, 퍼포먼스 마케팅</div>
+                		</div>
+
+                		<div class="option-card" data-category="기타" onclick="scwin.selectJobCategory('기타')">
+                			<div class="option-icon">📝</div>
+                			<div class="option-title">기타</div>
+                			<div class="option-subtitle">다른 분야</div>
+                		</div>
+                	</div>
                 </section>
 
                 <!-- 세부 직무 선택 (처음에는 숨김) -->
@@ -722,36 +705,6 @@ scwin.updateNextButtonState = function() {
                 </section>
 
                 <!-- 근무 형태 선택 -->
-                <section class="form-section">
-                    <w2:textbox class="section-title" label="선호하는 근무 형태는?"></w2:textbox>
-                    <w2:textbox class="section-subtitle" label="원하는 근무 방식을 선택해주세요 (선택사항)"></w2:textbox>
-                    
-                    <div class="option-grid">
-                        <div class="option-card" data-work="정규직" onclick="scwin.selectWorkType('정규직')">
-                            <div class="option-icon">🏢</div>
-                            <div class="option-title">정규직</div>
-                            <div class="option-subtitle">풀타임 근무</div>
-                        </div>
-                        
-                        <div class="option-card" data-work="계약직" onclick="scwin.selectWorkType('계약직')">
-                            <div class="option-icon">📝</div>
-                            <div class="option-title">계약직</div>
-                            <div class="option-subtitle">기간제 근무</div>
-                        </div>
-                        
-                        <div class="option-card" data-work="프리랜서" onclick="scwin.selectWorkType('프리랜서')">
-                            <div class="option-icon">💼</div>
-                            <div class="option-title">프리랜서</div>
-                            <div class="option-subtitle">프로젝트 기반</div>
-                        </div>
-                        
-                        <div class="option-card" data-work="인턴" onclick="scwin.selectWorkType('인턴')">
-                            <div class="option-icon">🎓</div>
-                            <div class="option-title">인턴</div>
-                            <div class="option-subtitle">인턴십</div>
-                        </div>
-                    </div>
-                </section>
 
                 <!-- 푸터 액션 -->
                 <div class="footer-actions">

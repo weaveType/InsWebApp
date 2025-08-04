@@ -1,0 +1,147 @@
+package com.demo.proworks.common.service.impl;
+
+import com.demo.proworks.common.service.EmailService;
+import com.demo.proworks.domain.post.vo.SendEmailVo;
+import com.demo.proworks.domain.post.vo.SendEmailInfoListVo;
+import com.demo.proworks.domain.post.dao.PostDAO;
+import com.demo.proworks.domain.post.vo.JobApplicationVo;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Service;
+
+import java.util.concurrent.CompletableFuture;
+
+import javax.annotation.Resource;
+
+import java.util.List;
+import java.util.ArrayList;
+
+/**
+ * 이메일 전송 서비스 구현체
+ * SMTP를 통한 비동기 이메일 전송 기능을 제공합니다.
+ * 
+ * @author system
+ * @since 2025.01
+ */
+@Service("emailService")
+public class EmailServiceImpl implements EmailService {
+
+    @Autowired
+    private JavaMailSender javaMailSender;
+
+    @Resource(name = "postDAO")
+    private PostDAO postDAO;
+
+    /**
+     * 단일 이메일을 비동기로 전송합니다.
+     * 
+     * @param to 수신자 이메일
+     * @param subject 제목
+     * @param content 내용
+     * @return CompletableFuture<Boolean> 전송 성공 여부
+     */
+    @Async("emailTaskExecutor")
+    @Override
+    public CompletableFuture<Boolean> sendEmailAsync(String to, String subject, String content) {
+        try {
+            SimpleMailMessage message = new SimpleMailMessage();
+            message.setTo(to);
+            message.setSubject(subject);
+            message.setText(content);
+            message.setFrom("inswave03@gmail.com"); // 실제 발신자 이메일
+            
+            javaMailSender.send(message);
+            
+            return CompletableFuture.completedFuture(true);
+            
+        } catch (Exception e) {
+            System.err.println("오류: " + e.getMessage());
+            e.printStackTrace();
+            return CompletableFuture.completedFuture(false);
+        }
+    }
+
+    /**
+     * 여러 이메일을 일괄 비동기 전송합니다.
+     * 
+     * @param sendEmailVo 이메일 전송 정보
+     * @return CompletableFuture<Integer> 성공한 이메일 전송 개수
+     */
+    @Async("emailTaskExecutor")
+    @Override
+    public CompletableFuture<Integer> sendToEmails(SendEmailVo sendEmailVo) {
+        if (sendEmailVo == null) {
+            System.err.println("❌ SendEmailVo가 null입니다.");
+            return CompletableFuture.completedFuture(0);
+        }
+
+        List<SendEmailInfoListVo> emailList = sendEmailVo.getSendEmailInfoListVo();
+        if (emailList == null || emailList.isEmpty()) {
+            System.err.println("❌ 전송할 이메일 목록이 비어있습니다.");
+            return CompletableFuture.completedFuture(0);
+        }
+
+        String emailContent = sendEmailVo.getEmailContent();
+        boolean isPassed = sendEmailVo.getIsPassed().equals("Y") ? true : false;
+
+        int successCount = 0;
+        List<CompletableFuture<Boolean>> futures = new ArrayList<>();
+
+        // 각 이메일을 비동기로 전송
+        for (SendEmailInfoListVo emailVo : emailList) {
+            if (emailVo != null && emailVo.getEmail() != null && !emailVo.getEmail().trim().isEmpty()) {
+            	String subject = emailVo.getName() + "님. 채용결과 안내 메일입니다.";
+                CompletableFuture<Boolean> future = sendEmailAsync(emailVo.getEmail(), subject, emailContent);
+                futures.add(future);
+            } else {
+                System.err.println("⚠️ 잘못된 이메일 주소 건너뜀: " + 
+                    (emailVo != null ? emailVo.getEmail() : "null"));
+            }
+        }
+
+        // 모든 이메일 전송 완료 대기
+        try {
+            CompletableFuture<Void> allFutures = CompletableFuture.allOf(
+                futures.toArray(new CompletableFuture[0])
+            );
+            
+            allFutures.get(); // 모든 작업 완료 대기
+            
+            // 성공 개수 계산
+            for (CompletableFuture<Boolean> future : futures) {
+                if (future.get()) {
+                    successCount++;
+                }
+            }
+            
+        } catch (Exception e) {
+            System.err.println("❌ 일괄 이메일 전송 중 오류: " + e.getMessage());
+            e.printStackTrace();
+        }
+        
+        System.out.println("=== 일괄 이메일 전송 완료 ===");
+        System.out.println("성공: " + successCount + "/" + futures.size());
+
+        // 이메일 전송 후 job_applications 상태 업데이트
+        String applicationStatus = isPassed ? "서류합격" : "불합격";
+        for (SendEmailInfoListVo emailVo : emailList) {
+            if (emailVo != null) {
+                JobApplicationVo jobApplicationVo = new JobApplicationVo();
+                jobApplicationVo.setAccountId(emailVo.getAccountId());
+                jobApplicationVo.setApplicationStatus(applicationStatus);
+                try {
+                    postDAO.updateApplicationStatus(jobApplicationVo);
+                    System.out.println("✅ " + emailVo.getAccountId() + "님의 상태가 " + applicationStatus + "으로 업데이트되었습니다.");
+                } catch (Exception e) {
+                    System.err.println("❌ " + emailVo.getAccountId() + "님의 상태 업데이트 실패: " + e.getMessage());
+                    e.printStackTrace();
+                }
+            }
+        }
+        
+        return CompletableFuture.completedFuture(successCount);
+    }
+}

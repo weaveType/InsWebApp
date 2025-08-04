@@ -6,68 +6,100 @@ import com.inswave.elfw.annotation.ElVoField;
 import com.fasterxml.jackson.annotation.JsonFilter;
 
 @JsonFilter("elExcludeFilter")
-@ElDto(FldYn = "", logicalName = "회사정보")
+@ElDto(FldYn = "", delimeterYn = "", logicalName = "회사정보")
 public class CorporateVo extends com.demo.proworks.cmmn.ProworksCommVO {
     private static final long serialVersionUID = 1L;
 
-    @ElDtoField(logicalName = "id", physicalName = "id", type = "String", typeKind = "", fldYn = "", length = 0, dotLen = 0, baseValue = "", desc = "")
-    private String id;
-
-    @ElDtoField(logicalName = "business_number", physicalName = "businessNumber", type = "String", typeKind = "", fldYn = "", length = 0, dotLen = 0, baseValue = "", desc = "")
-    private String businessNumber;
-
-    @ElDtoField(logicalName = "industry", physicalName = "industry", type = "String", typeKind = "", fldYn = "", length = 0, dotLen = 0, baseValue = "", desc = "")
-    private String industry;
-
-    @ElDtoField(logicalName = "emp_count", physicalName = "empCount", type = "String", typeKind = "", fldYn = "", length = 0, dotLen = 0, baseValue = "", desc = "")
-    private String empCount;
-
-    @ElDtoField(logicalName = "description", physicalName = "description", type = "String", typeKind = "", fldYn = "", length = 0, dotLen = 0, baseValue = "", desc = "")
-    private String description;
-
-    @ElDtoField(logicalName = "company_name", physicalName = "companyName", type = "String", typeKind = "", fldYn = "", length = 0, dotLen = 0, baseValue = "", desc = "")
-    private String companyName;
-
-    @ElDtoField(logicalName = "company_logo", physicalName = "companyLogo", type = "String", typeKind = "", fldYn = "", length = 0, dotLen = 0, baseValue = "", desc = "")
-    private String companyLogo;
-
-    @ElDtoField(logicalName = "company_image", physicalName = "companyImage", type = "String", typeKind = "", fldYn = "", length = 0, dotLen = 0, baseValue = "", desc = "")
-    private String companyImage;
-
-    @ElDtoField(logicalName = "search_business_number", physicalName = "scBusinessNumber", type = "String", typeKind = "", fldYn = "", length = 0, dotLen = 0, baseValue = "", desc = "")
-    private String scBusinessNumber;
-
-    @ElDtoField(logicalName = "search_industry", physicalName = "scIndustry", type = "String", typeKind = "", fldYn = "", length = 0, dotLen = 0, baseValue = "", desc = "")
-    private String scIndustry;
-
-    @ElDtoField(logicalName = "search_emp_count", physicalName = "scEmpCount", type = "String", typeKind = "", fldYn = "", length = 0, dotLen = 0, baseValue = "", desc = "")
-    private String scEmpCount;
-
-    @ElDtoField(logicalName = "search_description", physicalName = "scDescription", type = "String", typeKind = "", fldYn = "", length = 0, dotLen = 0, baseValue = "", desc = "")
-    private String scDescription;
-
-    @ElDtoField(logicalName = "search_company_name", physicalName = "scCompanyName", type = "String", typeKind = "", fldYn = "", length = 0, dotLen = 0, baseValue = "", desc = "")
-    private String scCompanyName;
-
-    @ElDtoField(logicalName = "search_company_logo", physicalName = "scCompanyLogo", type = "String", typeKind = "", fldYn = "", length = 0, dotLen = 0, baseValue = "", desc = "")
-    private String scCompanyLogo;
-
-    @ElDtoField(logicalName = "search_company_image", physicalName = "scCompanyImage", type = "String", typeKind = "", fldYn = "", length = 0, dotLen = 0, baseValue = "", desc = "")
-    private String scCompanyImage;
-
-    @ElVoField(physicalName = "id")
-    public String getId(){
-        return id;
+    public CorporateVo(){
     }
 
-    @ElVoField(physicalName = "id")
-    public void setId(String id){
-        this.id = id;
+    @ElDtoField(logicalName = "기업ID", physicalName = "companyId", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private String companyId;
+
+    @ElDtoField(logicalName = "이메일", physicalName = "email", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private String email;
+
+    @ElDtoField(logicalName = "비밀번호", physicalName = "password", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private String password;
+
+    @ElDtoField(logicalName = "회사명", physicalName = "name", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private String name;
+
+    @ElDtoField(logicalName = "사업자등록번호", physicalName = "businessNumber", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private String businessNumber;
+
+    @ElDtoField(logicalName = "사업자등록증 파일경로", physicalName = "businessCertificate", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private String businessCertificate;
+
+    @ElDtoField(logicalName = "업종", physicalName = "industry", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private String industry;
+
+    @ElDtoField(logicalName = "직원 수", physicalName = "empCount", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private String empCount;
+
+    @ElDtoField(logicalName = "회사 설명", physicalName = "description", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private String description;
+
+    @ElDtoField(logicalName = "로고 파일명", physicalName = "logoFileName", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private String logoFileName;
+
+    @ElDtoField(logicalName = "권한", physicalName = "role", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private String role;
+
+    @ElDtoField(logicalName = "유저 ID", physicalName = "userId", type = "int", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private int userId;
+
+    @ElDtoField(logicalName = "수정시각", physicalName = "updatedAt", type = "String", typeKind = "", fldYn = "", delimeterYn = "", cryptoGbn = "", cryptoKind = "", length = 0, dotLen = 0, baseValue = "", desc = "", attr = "")
+    private String updatedAt;
+
+    @ElVoField(physicalName = "companyId")
+    public String getCompanyId(){
+        String ret = this.companyId;
+        return ret;
+    }
+
+    @ElVoField(physicalName = "companyId")
+    public void setCompanyId(String companyId){
+        this.companyId = companyId;
+    }
+
+    @ElVoField(physicalName = "email")
+    public String getEmail(){
+        String ret = this.email;
+        return ret;
+    }
+
+    @ElVoField(physicalName = "email")
+    public void setEmail(String email){
+        this.email = email;
+    }
+
+    @ElVoField(physicalName = "password")
+    public String getPassword(){
+        String ret = this.password;
+        return ret;
+    }
+
+    @ElVoField(physicalName = "password")
+    public void setPassword(String password){
+        this.password = password;
+    }
+
+    @ElVoField(physicalName = "name")
+    public String getName(){
+        String ret = this.name;
+        return ret;
+    }
+
+    @ElVoField(physicalName = "name")
+    public void setName(String name){
+        this.name = name;
     }
 
     @ElVoField(physicalName = "businessNumber")
     public String getBusinessNumber(){
-        return businessNumber;
+        String ret = this.businessNumber;
+        return ret;
     }
 
     @ElVoField(physicalName = "businessNumber")
@@ -75,9 +107,21 @@ public class CorporateVo extends com.demo.proworks.cmmn.ProworksCommVO {
         this.businessNumber = businessNumber;
     }
 
+    @ElVoField(physicalName = "businessCertificate")
+    public String getBusinessCertificate(){
+        String ret = this.businessCertificate;
+        return ret;
+    }
+
+    @ElVoField(physicalName = "businessCertificate")
+    public void setBusinessCertificate(String businessCertificate){
+        this.businessCertificate = businessCertificate;
+    }
+
     @ElVoField(physicalName = "industry")
     public String getIndustry(){
-        return industry;
+        String ret = this.industry;
+        return ret;
     }
 
     @ElVoField(physicalName = "industry")
@@ -87,7 +131,8 @@ public class CorporateVo extends com.demo.proworks.cmmn.ProworksCommVO {
 
     @ElVoField(physicalName = "empCount")
     public String getEmpCount(){
-        return empCount;
+        String ret = this.empCount;
+        return ret;
     }
 
     @ElVoField(physicalName = "empCount")
@@ -97,7 +142,8 @@ public class CorporateVo extends com.demo.proworks.cmmn.ProworksCommVO {
 
     @ElVoField(physicalName = "description")
     public String getDescription(){
-        return description;
+        String ret = this.description;
+        return ret;
     }
 
     @ElVoField(physicalName = "description")
@@ -105,113 +151,83 @@ public class CorporateVo extends com.demo.proworks.cmmn.ProworksCommVO {
         this.description = description;
     }
 
-    @ElVoField(physicalName = "companyName")
-    public String getCompanyName(){
-        return companyName;
+    @ElVoField(physicalName = "logoFileName")
+    public String getLogoFileName(){
+        String ret = this.logoFileName;
+        return ret;
     }
 
-    @ElVoField(physicalName = "companyName")
-    public void setCompanyName(String companyName){
-        this.companyName = companyName;
+    @ElVoField(physicalName = "logoFileName")
+    public void setLogoFileName(String logoFileName){
+        this.logoFileName = logoFileName;
     }
 
-    @ElVoField(physicalName = "companyLogo")
-    public String getCompanyLogo(){
-        return companyLogo;
+    @ElVoField(physicalName = "role")
+    public String getRole(){
+        String ret = this.role;
+        return ret;
     }
 
-    @ElVoField(physicalName = "companyLogo")
-    public void setCompanyLogo(String companyLogo){
-        this.companyLogo = companyLogo;
+    @ElVoField(physicalName = "role")
+    public void setRole(String role){
+        this.role = role;
     }
 
-    @ElVoField(physicalName = "companyImage")
-    public String getCompanyImage(){
-        return companyImage;
+    @ElVoField(physicalName = "userId")
+    public int getUserId(){
+        return userId;
     }
 
-    @ElVoField(physicalName = "companyImage")
-    public void setCompanyImage(String companyImage){
-        this.companyImage = companyImage;
+    @ElVoField(physicalName = "userId")
+    public void setUserId(int userId){
+        this.userId = userId;
     }
 
-    @ElVoField(physicalName = "scBusinessNumber")
-    public String getScBusinessNumber(){
-        return scBusinessNumber;
+    @ElVoField(physicalName = "updatedAt")
+    public String getUpdatedAt(){
+        String ret = this.updatedAt;
+        return ret;
     }
 
-    @ElVoField(physicalName = "scBusinessNumber")
-    public void setScBusinessNumber(String scBusinessNumber) {
-        this.scBusinessNumber = scBusinessNumber;
-    }
-
-    @ElVoField(physicalName = "scIndustry")
-    public String getScIndustry(){
-        return scIndustry;
-    }
-
-    @ElVoField(physicalName = "scIndustry")
-    public void setScIndustry(String scIndustry) {
-        this.scIndustry = scIndustry;
-    }
-
-    @ElVoField(physicalName = "scEmpCount")
-    public String getScEmpCount(){
-        return scEmpCount;
-    }
-
-    @ElVoField(physicalName = "scEmpCount")
-    public void setScEmpCount(String scEmpCount) {
-        this.scEmpCount = scEmpCount;
-    }
-
-    @ElVoField(physicalName = "scDescription")
-    public String getScDescription(){
-        return scDescription;
-    }
-
-    @ElVoField(physicalName = "scDescription")
-    public void setScDescription(String scDescription) {
-        this.scDescription = scDescription;
-    }
-
-    @ElVoField(physicalName = "scCompanyName")
-    public String getScCompanyName(){
-        return scCompanyName;
-    }
-
-    @ElVoField(physicalName = "scCompanyName")
-    public void setScCompanyName(String scCompanyName) {
-        this.scCompanyName = scCompanyName;
-    }
-
-    @ElVoField(physicalName = "scCompanyLogo")
-    public String getScCompanyLogo(){
-        return scCompanyLogo;
-    }
-
-    @ElVoField(physicalName = "scCompanyLogo")
-    public void setScCompanyLogo(String scCompanyLogo) {
-        this.scCompanyLogo = scCompanyLogo;
-    }
-
-    @ElVoField(physicalName = "scCompanyImage")
-    public String getScCompanyImage(){
-        return scCompanyImage;
-    }
-
-    @ElVoField(physicalName = "scCompanyImage")
-    public void setScCompanyImage(String scCompanyImage) {
-        this.scCompanyImage = scCompanyImage;
+    @ElVoField(physicalName = "updatedAt")
+    public void setUpdatedAt(String updatedAt){
+        this.updatedAt = updatedAt;
     }
 
     @Override
     public String toString() {
-        return "CorporateVo [id=" + id + ",businessNumber=" + businessNumber + ",industry=" + industry + ",empCount=" + empCount + ",description=" + description + ",companyName=" + companyName + ",companyLogo=" + companyLogo + ",companyImage=" + companyImage + ",scBusinessNumber=" + scBusinessNumber + ",scIndustry=" + scIndustry + ",scEmpCount=" + scEmpCount + ",scDescription=" + scDescription + ",scCompanyName=" + scCompanyName + ",scCompanyLogo=" + scCompanyLogo + ",scCompanyImage=" + scCompanyImage + "]";
+        StringBuilder sb = new StringBuilder();
+        sb.append("CorporateVo [");
+        sb.append("companyId").append("=").append(companyId).append(",");
+        sb.append("email").append("=").append(email).append(",");
+        sb.append("password").append("=").append(password).append(",");
+        sb.append("name").append("=").append(name).append(",");
+        sb.append("businessNumber").append("=").append(businessNumber).append(",");
+        sb.append("businessCertificate").append("=").append(businessCertificate).append(",");
+        sb.append("industry").append("=").append(industry).append(",");
+        sb.append("empCount").append("=").append(empCount).append(",");
+        sb.append("description").append("=").append(description).append(",");
+        sb.append("logoFileName").append("=").append(logoFileName).append(",");
+        sb.append("role").append("=").append(role).append(",");
+        sb.append("userId").append("=").append(userId).append(",");
+        sb.append("updatedAt").append("=").append(updatedAt);
+        sb.append("]");
+        return sb.toString();
+
     }
 
     public boolean isFixedLengthVo() {
         return false;
     }
+
+    @Override
+    public void _xStreamEnc() {
+    }
+
+
+    @Override
+    public void _xStreamDec() {
+    }
+
 
 }

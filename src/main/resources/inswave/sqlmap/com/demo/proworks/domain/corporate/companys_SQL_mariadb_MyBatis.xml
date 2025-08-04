@@ -4,143 +4,174 @@
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <!--
-	@subject     : 회사정보 관련 처리를 담당하는 Sql Mapper
+	@subject : 회사정보 관련 처리를 담당하는 Sql Mapper
 	@description : 회사정보 관련 처리를 담당하는 Sql Mapper
-	@author      : Inswave
-	@since       : 2025/06/30
+	@author : Inswave
+	@since : 2025/07/03
 	@modification
 	===========================================================
-	DATE              AUTHOR             DESC
+	DATE AUTHOR DESC
 	===========================================================
-	2025/06/30              Inswave             최초 생성
- -->
+	2025/07/03 Inswave 최초 생성
+-->
 <mapper namespace="com.demo.proworks.domain.corporate">
-    <insert id="insertCorporate" parameterType="com.demo.proworks.domain.corporate.vo.CorporateVo">
-    	<!-- 회사정보를 등록한다. -->	
-    		
-        INSERT INTO COMPANYS   /* QueryID : com.demo.proworks.domain.corporate.insertCorporate */
-        ( 
-            ID
-            <if test="businessNumber!= null"> , BUSINESS_NUMBER </if>
-            <if test="industry       != null"> , INDUSTRY        </if>
-            <if test="empCount      != null"> , EMP_COUNT       </if>
-            <if test="description    != null"> , DESCRIPTION     </if>
-            <if test="companyName   != null"> , COMPANY_NAME    </if>
-            <if test="companyLogo   != null"> , COMPANY_LOGO    </if>
-            <if test="companyImage  != null"> , COMPANY_IMAGE   </if>
-        )
-        VALUES  
-        ( 
-            #{id}
-            <if test="businessNumber!= null"> , #{businessNumber} </if>
-            <if test="industry       != null"> , #{industry}        </if>
-            <if test="empCount      != null"> , #{empCount}       </if>
-            <if test="description    != null"> , #{description}     </if>
-            <if test="companyName   != null"> , #{companyName}    </if>
-            <if test="companyLogo   != null"> , #{companyLogo}    </if>
-            <if test="companyImage  != null"> , #{companyImage}   </if> 
-        )          
-    </insert>	
-	
-    <update id="updateCorporate" parameterType="com.demo.proworks.domain.corporate.vo.CorporateVo">
-    	<!-- 회사정보를 갱신한다. -->
-    	
-        UPDATE COMPANYS    /* QueryID : com.demo.proworks.domain.corporate.updateCorporate */      
-      	  SET  
-                ID              = #{id}                     	                       
-            <if test="businessNumber!= null"> , BUSINESS_NUMBER = #{businessNumber} </if>
-            <if test="industry       != null"> , INDUSTRY        = #{industry}        </if>
-            <if test="empCount      != null"> , EMP_COUNT       = #{empCount}       </if>
-            <if test="description    != null"> , DESCRIPTION     = #{description}     </if>
-            <if test="companyName   != null"> , COMPANY_NAME    = #{companyName}    </if>
-            <if test="companyLogo   != null"> , COMPANY_LOGO    = #{companyLogo}    </if>
-            <if test="companyImage  != null"> , COMPANY_IMAGE   = #{companyImage}   </if>                 
-        WHERE   
-                ID              = #{id}             
-    </update>
-	
-    <delete id="deleteCorporate" parameterType="com.demo.proworks.domain.corporate.vo.CorporateVo">
-    	<!-- 회사정보를 삭제한다. -->
-    	
-        DELETE FROM COMPANYS   /* QueryID : com.demo.proworks.domain.corporate.deleteCorporate */ 
-        WHERE   
-                ID              = #{id}                     
-    </delete>
-	
-    <select id="selectCorporate" parameterType="com.demo.proworks.domain.corporate.vo.CorporateVo" resultType="com.demo.proworks.domain.corporate.vo.CorporateVo">
-    	<!-- 회사정보를 상세 조회한다. -->	
-        SELECT     /* QueryID : com.demo.proworks.domain.corporate.selectCorporate */
-            ID as id, BUSINESS_NUMBER as businessNumber, INDUSTRY as industry, EMP_COUNT as empCount, DESCRIPTION as description, COMPANY_NAME as companyName, COMPANY_LOGO as companyLogo, COMPANY_IMAGE as companyImage
-        FROM COMPANYS 
-        WHERE 
-                ID              = #{id}             			
-    </select>
-	
-    <select id="selectListCorporate" parameterType="com.demo.proworks.domain.corporate.vo.CorporateVo" resultType="com.demo.proworks.domain.corporate.vo.CorporateVo">
-    	<!-- 회사정보 목록을 조회한다. -->
-           SELECT    /* QueryID : com.demo.proworks.domain.corporate.selectListCorporate */
-               ID as id, BUSINESS_NUMBER as businessNumber, INDUSTRY as industry, EMP_COUNT as empCount, DESCRIPTION as description, COMPANY_NAME as companyName, COMPANY_LOGO as companyLogo, COMPANY_IMAGE as companyImage		       
-           FROM (
-               SELECT  S.*, CEIL( (@ROWNUM:=@ROWNUM+1) / #{pageSize} ) AS PAGE
-               FROM (				
-                   SELECT 
-                       *  		                  
-                   FROM COMPANYS
-                   WHERE  1=1    		
-                        <if test="scBusinessNumber != null and scBusinessNumber != ''">
-                             AND BUSINESS_NUMBER like '%${scBusinessNumber}%'
-                        </if>
-                        <if test="scIndustry != null and scIndustry != ''">
-                             AND INDUSTRY like '%${scIndustry}%'
-                        </if>
-                        <if test="scEmpCount != null and scEmpCount != ''">
-                             AND EMP_COUNT like '%${scEmpCount}%'
-                        </if>
-                        <if test="scDescription != null and scDescription != ''">
-                             AND DESCRIPTION like '%${scDescription}%'
-                        </if>
-                        <if test="scCompanyName != null and scCompanyName != ''">
-                             AND COMPANY_NAME like '%${scCompanyName}%'
-                        </if>
-                        <if test="scCompanyLogo != null and scCompanyLogo != ''">
-                             AND COMPANY_LOGO like '%${scCompanyLogo}%'
-                        </if>
-                        <if test="scCompanyImage != null and scCompanyImage != ''">
-                             AND COMPANY_IMAGE like '%${scCompanyImage}%'
-                        </if>	     																														
-               ) S, (SELECT @ROWNUM := 0) TMP
-           ) A
-            WHERE PAGE = #{pageIndex}
-    </select>
-	
-    <select id="selectListCountCorporate" parameterType="com.demo.proworks.domain.corporate.vo.CorporateVo" resultType="long">
-    <!-- 회사정보 목록의 카운트를 조회한다. -->
-    
-         SELECT    /* QueryID : com.demo.proworks.domain.corporate.selectListCountCorporate */
-             COUNT(*) totcnt  		                  
-         FROM COMPANYS
-         WHERE  1=1    		
-            <if test="scBusinessNumber != null and scBusinessNumber != ''">
-                 AND BUSINESS_NUMBER like '%${scBusinessNumber}%'
-            </if>
-            <if test="scIndustry != null and scIndustry != ''">
-                 AND INDUSTRY like '%${scIndustry}%'
-            </if>
-            <if test="scEmpCount != null and scEmpCount != ''">
-                 AND EMP_COUNT like '%${scEmpCount}%'
-            </if>
-            <if test="scDescription != null and scDescription != ''">
-                 AND DESCRIPTION like '%${scDescription}%'
-            </if>
-            <if test="scCompanyName != null and scCompanyName != ''">
-                 AND COMPANY_NAME like '%${scCompanyName}%'
-            </if>
-            <if test="scCompanyLogo != null and scCompanyLogo != ''">
-                 AND COMPANY_LOGO like '%${scCompanyLogo}%'
-            </if>
-            <if test="scCompanyImage != null and scCompanyImage != ''">
-                 AND COMPANY_IMAGE like '%${scCompanyImage}%'
-            </if>
-    </select>
+	<insert id="insertCorporate" parameterType="com.demo.proworks.domain.corporate.vo.CorporateVo">
+		<!-- 회사정보를 등록한다. -->
+		INSERT INTO COMPANYS /* QueryID : com.demo.proworks.domain.corporate.insertCorporate */ ( COMPANY_ID
+		<if test="businessNumber     != null"> , BUSINESS_NUMBER      </if>
+		<if test="businessCertificate!= null"> , BUSINESS_CERTIFICATE </if>
+		<if test="industry            != null"> , INDUSTRY             </if>
+		<if test="empCount           != null"> , EMP_COUNT            </if>
+		<if test="description         != null"> , DESCRIPTION          </if>
+		<if test="logoFileName      != null"> , LOGO_FILE_NAME       </if>
+		<if test="userId             != null"> , USER_ID              </if>
+		)
+		VALUES
+		(
+		#{companyId}
+		<if test="businessNumber     != null"> , #{businessNumber}      </if>
+		<if test="businessCertificate!= null"> , #{businessCertificate} </if>
+		<if test="industry            != null"> , #{industry}             </if>
+		<if test="empCount           != null"> , #{empCount}            </if>
+		<if test="description         != null"> , #{description}          </if>
+		<if test="logoFileName      != null"> , #{logoFileName}       </if>
+		<if test="userId             != null"> , #{userId}              </if>
+		)
+	</insert>
 
+	<update id="updateCorporate" parameterType="com.demo.proworks.domain.corporate.vo.CorporateVo">
+<!-- 회사정보를 갱신한다. -->
+
+		UPDATE COMPANYS /* QueryID : com.demo.proworks.domain.corporate.updateCorporate */
+		SET
+		COMPANY_ID = #{companyId}
+		<if test="businessNumber     != null"> , BUSINESS_NUMBER = #{businessNumber}      </if>
+		<if test="businessCertificate!= null"> , BUSINESS_CERTIFICATE = #{businessCertificate} </if>
+		<if test="industry            != null"> , INDUSTRY = #{industry}             </if>
+		<if test="empCount           != null"> , EMP_COUNT = #{empCount}            </if>
+		<if test="description         != null"> , DESCRIPTION = #{description}          </if>
+		<if test="logoFileName      != null"> , LOGO_FILE_NAME = #{logoFileName}       </if>
+		WHERE COMPANY_ID = #{companyId}
+</update>
+
+	<delete id="deleteCorporate" parameterType="com.demo.proworks.domain.corporate.vo.CorporateVo">
+<!-- 회사정보를 삭제한다. -->
+		UPDATE COMPANYS /* QueryID : com.demo.proworks.domain.corporate.deleteCorporate */
+		SET is_deleted = TRUE
+		WHERE
+		COMPANY_ID = #{companyId}
+</delete>
+
+	<select id="selectCorporate" parameterType="com.demo.proworks.domain.corporate.vo.CorporateVo"
+		resultType="com.demo.proworks.domain.corporate.vo.CorporateVo">
+<!-- 회사정보를 상세 조회한다. -->
+		SELECT /* QueryID : com.demo.proworks.domain.corporate.selectCorporate */
+		COMPANY_ID as companyId, BUSINESS_NUMBER as businessNumber,
+		BUSINESS_CERTIFICATE as businessCertificate, INDUSTRY as industry, EMP_COUNT as
+		empCount, DESCRIPTION as description, LOGO_FILE_NAME as
+		logoFileName
+		FROM COMPANYS
+		WHERE
+		COMPANY_ID = #{companyId} AND is_deleted = FALSE;
+</select>
+
+	<select id="selectListCorporate" parameterType="com.demo.proworks.domain.corporate.vo.CorporateVo"
+		resultType="com.demo.proworks.domain.corporate.vo.CorporateVo">
+<!-- 회사정보 목록을 조회한다. -->
+		SELECT /* QueryID : com.demo.proworks.domain.corporate.selectListCorporate */
+		COMPANY_ID as companyId, BUSINESS_NUMBER as businessNumber,
+		BUSINESS_CERTIFICATE as businessCertificate, INDUSTRY as industry, EMP_COUNT as
+		empCount, DESCRIPTION as description, LOGO_FILE_NAME as
+		logoFileName
+		FROM (
+		SELECT S.*, CEIL( (@ROWNUM:=@ROWNUM+1) / #{pageSize} ) AS PAGE
+		FROM (
+		SELECT
+		*
+		FROM COMPANYS
+		WHERE 1=1
+		AND is_deleted = FALSE 
+
+		) S, (SELECT @ROWNUM := 0) TMP
+		) A
+		WHERE PAGE = #{pageIndex}
+</select>
+
+	<select id="selectListCountCorporate" parameterType="com.demo.proworks.domain.corporate.vo.CorporateVo" resultType="long">
+		<!-- 회사정보 목록의 카운트를 조회한다. -->
+
+		SELECT /* QueryID : com.demo.proworks.domain.corporate.selectListCountCorporate */
+		COUNT(*) totcnt
+		FROM COMPANYS
+		WHERE 1=1
+		AND is_deleted =
+		FALSE
+	</select>
+	<select id="selectCorporateByEmail" parameterType="com.demo.proworks.domain.corporate.vo.CorporateVo"
+		resultType="com.demo.proworks.domain.corporate.vo.CorporateVo">
+<!-- 이메일로 회사정보를 상세 조회한다. -->
+SELECT /* QueryID : com.demo.proworks.domain.corporate.selectCorporateByEmail */
+    c.COMPANY_ID as companyId,
+    c.BUSINESS_NUMBER as businessNumber,
+    c.BUSINESS_CERTIFICATE as businessCertificate,
+    c.INDUSTRY as industry,
+    c.EMP_COUNT as empCount,
+    c.DESCRIPTION as description,
+    c.LOGO_FILE_NAME as logoFileName,
+    u.NAME as name,
+    u.email as email,
+    r.role_name as role
+FROM COMPANYS c
+INNER JOIN USERS u ON c.USER_ID = u.USER_ID
+LEFT JOIN ROLES r ON u.role_id = r.role_id
+WHERE u.email = #{email}
+  AND u.is_deleted = FALSE;
+</select>
+
+<update id="updateCorporateByEmail" parameterType="com.demo.proworks.domain.corporate.vo.CorporateVo">
+<!-- 이메일로 회사정보 및 user 정보를 갱신한다. -->
+UPDATE COMPANYS C
+    JOIN   USERS    U ON C.USER_ID = U.USER_ID
+    <set>
+        <!-- ===== COMPANYS 컬럼 ===== -->
+        <if test="companyId           != null"> C.COMPANY_ID           = #{companyId},           </if>
+        <if test="businessNumber      != null"> C.BUSINESS_NUMBER      = #{businessNumber},      </if>
+        <if test="businessCertificate != null"> C.BUSINESS_CERTIFICATE = #{businessCertificate}, </if>
+        <if test="industry            != null"> C.INDUSTRY             = #{industry},            </if>
+        <if test="empCount            != null"> C.EMP_COUNT            = #{empCount},            </if>
+        <if test="description         != null"> C.DESCRIPTION          = #{description},         </if>
+        <if test="logoFileName        != null"> C.LOGO_FILE_NAME       = #{logoFileName},        </if>
+
+        <!-- ===== USERS 컬럼 ===== -->
+        <if test="password            != null"> U.PASSWORD             = #{password},            </if>
+        <if test="name                != null"> U.NAME                 = #{name},                </if>
+        <if test="updatedAt           != null"> U.UPDATED_AT           = #{updatedAt},           </if>
+    </set>
+    <!-- ▼ ③ EMAIL 은 PK 역할·고정값 → WHERE 절로만 사용 -->
+    WHERE U.EMAIL = #{email}
+</update>
+
+<select id="selectCorporateMainList" parameterType="com.demo.proworks.domain.corporate.vo.CorporateSearchVo"
+    resultType="com.demo.proworks.domain.corporate.vo.CorporateMainVo">
+<!-- 메인에서 사용할 회사 정보를 조회한다. -->
+    SELECT
+        U.USER_ID         AS userId,
+        U.NAME            AS name,
+        C.LOGO_FILE_NAME  AS logoFileName
+    FROM COMPANYS  C
+        JOIN USERS U ON C.USER_ID = U.USER_ID
+    WHERE
+        U.ROLE_ID     = #{roleId}           -- 기업(ROLE_ID=2)
+        AND C.IS_DELETED = FALSE
+   ORDER BY U.CREATED_AT DESC               <!-- 또는 U.CREATED_AT DESC -->
+    LIMIT  #{pageSize}
+    OFFSET #{offset}
+</select>
+<select id="getCompanyIdByUserId" resultType="long" parameterType="long">
+<!-- 유저 ID로 회사 ID를 조회한다. -->
+SELECT c.company_id 
+    FROM users u 
+    INNER JOIN companys c ON u.user_id = c.user_id 
+    WHERE u.user_id = #{userId}
+</select>
 </mapper>
